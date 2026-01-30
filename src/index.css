@@ -42,10 +42,18 @@
     --mood-elevated: 38 92% 50%;
     --mood-elevated-light: 38 92% 95%;
     --mood-elevated-foreground: 38 92% 25%;
+
+    --mood-somewhat-elevated: 45 80% 55%;
+    --mood-somewhat-elevated-light: 45 80% 95%;
+    --mood-somewhat-elevated-foreground: 45 80% 28%;
     
     --mood-stable: 160 84% 39%;
     --mood-stable-light: 160 60% 94%;
     --mood-stable-foreground: 160 84% 20%;
+
+    --mood-somewhat-depressed: 220 60% 55%;
+    --mood-somewhat-depressed-light: 220 60% 95%;
+    --mood-somewhat-depressed-foreground: 220 60% 28%;
     
     --mood-depressed: 0 84% 60%;
     --mood-depressed-light: 0 60% 95%;
@@ -95,10 +103,18 @@
     --mood-elevated: 38 85% 55%;
     --mood-elevated-light: 38 40% 20%;
     --mood-elevated-foreground: 38 85% 85%;
+
+    --mood-somewhat-elevated: 45 75% 50%;
+    --mood-somewhat-elevated-light: 45 40% 20%;
+    --mood-somewhat-elevated-foreground: 45 75% 85%;
     
     --mood-stable: 160 70% 45%;
     --mood-stable-light: 160 30% 18%;
     --mood-stable-foreground: 160 70% 85%;
+
+    --mood-somewhat-depressed: 220 55% 50%;
+    --mood-somewhat-depressed-light: 220 30% 20%;
+    --mood-somewhat-depressed-foreground: 220 55% 85%;
     
     --mood-depressed: 0 70% 55%;
     --mood-depressed-light: 0 30% 20%;
@@ -143,10 +159,22 @@
     @apply focus:ring-mood-elevated;
   }
 
+  .mood-btn-somewhat-elevated {
+    @apply bg-mood-somewhat-elevated text-white;
+    @apply hover:shadow-lg hover:shadow-mood-somewhat-elevated/30;
+    @apply focus:ring-mood-somewhat-elevated;
+  }
+
   .mood-btn-stable {
     @apply bg-mood-stable text-white;
     @apply hover:shadow-lg hover:shadow-mood-stable/30;
     @apply focus:ring-mood-stable;
+  }
+
+  .mood-btn-somewhat-depressed {
+    @apply bg-mood-somewhat-depressed text-white;
+    @apply hover:shadow-lg hover:shadow-mood-somewhat-depressed/30;
+    @apply focus:ring-mood-somewhat-depressed;
   }
 
   .mood-btn-depressed {
@@ -164,8 +192,16 @@
     @apply bg-mood-elevated text-white;
   }
 
+  .calendar-day-somewhat-elevated {
+    @apply bg-mood-somewhat-elevated text-white;
+  }
+
   .calendar-day-stable {
     @apply bg-mood-stable text-white;
+  }
+
+  .calendar-day-somewhat-depressed {
+    @apply bg-mood-somewhat-depressed text-white;
   }
 
   .calendar-day-depressed {
@@ -239,6 +275,25 @@
     --tw-ring-color: hsl(var(--mood-elevated));
   }
 
+  .bg-mood-somewhat-elevated {
+    background-color: hsl(var(--mood-somewhat-elevated));
+  }
+  .bg-mood-somewhat-elevated-light {
+    background-color: hsl(var(--mood-somewhat-elevated-light));
+  }
+  .text-mood-somewhat-elevated {
+    color: hsl(var(--mood-somewhat-elevated));
+  }
+  .text-mood-somewhat-elevated-foreground {
+    color: hsl(var(--mood-somewhat-elevated-foreground));
+  }
+  .shadow-mood-somewhat-elevated\/30 {
+    --tw-shadow-color: hsl(var(--mood-somewhat-elevated) / 0.3);
+  }
+  .ring-mood-somewhat-elevated {
+    --tw-ring-color: hsl(var(--mood-somewhat-elevated));
+  }
+
   .bg-mood-stable {
     background-color: hsl(var(--mood-stable));
   }
@@ -256,6 +311,25 @@
   }
   .ring-mood-stable {
     --tw-ring-color: hsl(var(--mood-stable));
+  }
+
+  .bg-mood-somewhat-depressed {
+    background-color: hsl(var(--mood-somewhat-depressed));
+  }
+  .bg-mood-somewhat-depressed-light {
+    background-color: hsl(var(--mood-somewhat-depressed-light));
+  }
+  .text-mood-somewhat-depressed {
+    color: hsl(var(--mood-somewhat-depressed));
+  }
+  .text-mood-somewhat-depressed-foreground {
+    color: hsl(var(--mood-somewhat-depressed-foreground));
+  }
+  .shadow-mood-somewhat-depressed\/30 {
+    --tw-shadow-color: hsl(var(--mood-somewhat-depressed) / 0.3);
+  }
+  .ring-mood-somewhat-depressed {
+    --tw-ring-color: hsl(var(--mood-somewhat-depressed));
   }
 
   .bg-mood-depressed {

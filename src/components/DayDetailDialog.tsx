@@ -1,7 +1,7 @@
 import { format } from 'date-fns';
 import { sv } from 'date-fns/locale';
-import { Zap, Sun, CloudRain, Moon, Utensils, Dumbbell, Pill, MessageSquare, ThumbsUp, ThumbsDown, Check, X } from 'lucide-react';
-import { MoodEntry, MOOD_LABELS, QUALITY_LABELS } from '@/types/mood';
+import { Zap, Sun, CloudRain, Moon, Utensils, Dumbbell, Pill, MessageSquare, ThumbsUp, ThumbsDown, Check, X, CloudSun, Cloud } from 'lucide-react';
+import { MoodEntry, MoodType, MOOD_LABELS, QUALITY_LABELS } from '@/types/mood';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
 
@@ -24,12 +24,25 @@ export function DayDetailDialog({
 
   const formattedDate = format(date, "EEEE d MMMM yyyy", { locale: sv });
 
-  const getMoodIcon = (mood: string) => {
+  const getMoodIcon = (mood: MoodType) => {
     switch (mood) {
       case 'elevated': return <Zap className="w-6 h-6 text-mood-elevated" />;
+      case 'somewhat_elevated': return <CloudSun className="w-6 h-6 text-mood-somewhat-elevated" />;
       case 'stable': return <Sun className="w-6 h-6 text-mood-stable" />;
+      case 'somewhat_depressed': return <Cloud className="w-6 h-6 text-mood-somewhat-depressed" />;
       case 'depressed': return <CloudRain className="w-6 h-6 text-mood-depressed" />;
       default: return null;
+    }
+  };
+
+  const getMoodBgClass = (mood: MoodType) => {
+    switch (mood) {
+      case 'elevated': return "bg-mood-elevated/10";
+      case 'somewhat_elevated': return "bg-mood-somewhat-elevated/10";
+      case 'stable': return "bg-mood-stable/10";
+      case 'somewhat_depressed': return "bg-mood-somewhat-depressed/10";
+      case 'depressed': return "bg-mood-depressed/10";
+      default: return "";
     }
   };
 
@@ -55,12 +68,7 @@ export function DayDetailDialog({
         ) : (
           <div className="space-y-4">
             {/* Mood */}
-            <div className={cn(
-              "p-4 rounded-xl",
-              entry.mood === 'elevated' && "bg-mood-elevated/10",
-              entry.mood === 'stable' && "bg-mood-stable/10",
-              entry.mood === 'depressed' && "bg-mood-depressed/10"
-            )}>
+            <div className={cn("p-4 rounded-xl", getMoodBgClass(entry.mood))}>
               <div className="flex items-center gap-3">
                 {getMoodIcon(entry.mood)}
                 <div>
