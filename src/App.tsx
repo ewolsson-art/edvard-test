@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
 import Index from "./pages/Index";
+import WeeklyOverview from "./pages/WeeklyOverview";
 import MonthlyOverview from "./pages/MonthlyOverview";
 import YearlyOverview from "./pages/YearlyOverview";
 import NotFound from "./pages/NotFound";
@@ -27,6 +28,7 @@ const App = () => (
               </header>
               <Routes>
                 <Route path="/" element={<Index />} />
+                <Route path="/vecka" element={<WeeklyOverview />} />
                 <Route path="/manad" element={<MonthlyOverview />} />
                 <Route path="/ar" element={<YearlyOverview />} />
                 <Route path="*" element={<NotFound />} />
