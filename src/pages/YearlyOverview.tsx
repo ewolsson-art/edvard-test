@@ -38,8 +38,8 @@ const YearlyOverview = () => {
           </p>
         </header>
 
-        <div className="space-y-6">
-          {/* Calendar/Heatmap card - first */}
+        <div className="grid grid-cols-1 xl:grid-cols-[1fr_350px] gap-6">
+          {/* Calendar/Heatmap card */}
           <div className="glass-card p-6 fade-in overflow-x-auto">
             <CalendarHeader
               title={`${currentYear}`}
@@ -49,8 +49,10 @@ const YearlyOverview = () => {
             <YearHeatmap year={currentYear} entries={yearEntries} showHeader={false} />
           </div>
           
-          {/* Stats card - second */}
-          <MoodStats stats={yearStats} periodLabel={`${currentYear}`} />
+          {/* Stats card */}
+          <div className="xl:sticky xl:top-8 xl:self-start">
+            <MoodStats stats={yearStats} periodLabel={`${currentYear}`} />
+          </div>
         </div>
       </div>
     </div>
