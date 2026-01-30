@@ -10,6 +10,7 @@ import { ProtectedRoute } from "@/components/ProtectedRoute";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import Overview from "./pages/Overview";
+import Chat from "./pages/Chat";
 import Medications from "./pages/Medications";
 import Reports from "./pages/Reports";
 import NotFound from "./pages/NotFound";
@@ -47,6 +48,11 @@ const App = () => (
             <Route path="/oversikt" element={
               <ProtectedRoute>
                 <AppLayout><Overview /></AppLayout>
+              </ProtectedRoute>
+            } />
+            <Route path="/chatt" element={
+              <ProtectedRoute>
+                <AppLayout><Chat /></AppLayout>
               </ProtectedRoute>
             } />
             <Route path="/mediciner" element={
