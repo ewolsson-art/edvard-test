@@ -1,4 +1,4 @@
-export type MoodType = 'elevated' | 'stable' | 'depressed';
+export type MoodType = 'elevated' | 'somewhat_elevated' | 'stable' | 'somewhat_depressed' | 'depressed';
 export type QualityType = 'good' | 'bad';
 
 export interface MoodEntry {
@@ -36,13 +36,17 @@ export interface MoodStats {
 
 export const MOOD_LABELS: Record<MoodType, string> = {
   elevated: 'Uppvarvad',
+  somewhat_elevated: 'Något uppvarvad',
   stable: 'Stabil',
+  somewhat_depressed: 'Något nedstämd',
   depressed: 'Nedstämd',
 };
 
 export const MOOD_ICONS: Record<MoodType, string> = {
   elevated: '⚡',
+  somewhat_elevated: '🌤️',
   stable: '☀️',
+  somewhat_depressed: '🌥️',
   depressed: '🌧️',
 };
 

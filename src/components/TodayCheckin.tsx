@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { format } from 'date-fns';
 import { sv } from 'date-fns/locale';
-import { Zap, Sun, CloudRain, MessageSquare, CheckCircle2, Pill, Pencil, Moon, Utensils, Dumbbell, ThumbsUp, ThumbsDown, Check, X, ChevronRight, ChevronLeft } from 'lucide-react';
+import { Zap, Sun, CloudRain, MessageSquare, CheckCircle2, Pill, Pencil, Moon, Utensils, Dumbbell, ThumbsUp, ThumbsDown, Check, X, ChevronRight, ChevronLeft, CloudSun, Cloud } from 'lucide-react';
 import { MoodType, MoodEntry, MOOD_LABELS, QualityType, QUALITY_LABELS, CheckinData } from '@/types/mood';
 import { Medication } from '@/types/medication';
 import { cn } from '@/lib/utils';
@@ -18,10 +18,12 @@ interface TodayCheckinProps {
   onToggleMedication: (medicationId: string, taken: boolean) => void;
 }
 
-const moodButtons: { mood: MoodType; icon: typeof Zap; label: string }[] = [
-  { mood: 'elevated', icon: Zap, label: MOOD_LABELS.elevated },
-  { mood: 'stable', icon: Sun, label: MOOD_LABELS.stable },
-  { mood: 'depressed', icon: CloudRain, label: MOOD_LABELS.depressed },
+const moodButtons: { mood: MoodType; icon: typeof Zap; label: string; cssClass: string }[] = [
+  { mood: 'elevated', icon: Zap, label: MOOD_LABELS.elevated, cssClass: 'mood-btn-elevated' },
+  { mood: 'somewhat_elevated', icon: CloudSun, label: MOOD_LABELS.somewhat_elevated, cssClass: 'mood-btn-somewhat-elevated' },
+  { mood: 'stable', icon: Sun, label: MOOD_LABELS.stable, cssClass: 'mood-btn-stable' },
+  { mood: 'somewhat_depressed', icon: Cloud, label: MOOD_LABELS.somewhat_depressed, cssClass: 'mood-btn-somewhat-depressed' },
+  { mood: 'depressed', icon: CloudRain, label: MOOD_LABELS.depressed, cssClass: 'mood-btn-depressed' },
 ];
 
 type Step = 'mood' | 'sleep' | 'eating' | 'exercise' | 'medication' | 'complete';
@@ -202,21 +204,19 @@ export function TodayCheckin({
             </h1>
           </div>
 
-          <div className="grid grid-cols-3 gap-4 md:gap-6 max-w-2xl mx-auto">
-            {moodButtons.map(({ mood, icon: Icon, label }) => (
+          <div className="grid grid-cols-5 gap-2 md:gap-4 max-w-3xl mx-auto">
+            {moodButtons.map(({ mood, icon: Icon, label, cssClass }) => (
               <button
                 key={mood}
                 onClick={() => handleMoodSelect(mood)}
                 className={cn(
-                  "mood-btn rounded-2xl p-6 md:p-8 flex flex-col items-center gap-3",
-                  mood === 'elevated' && "mood-btn-elevated",
-                  mood === 'stable' && "mood-btn-stable",
-                  mood === 'depressed' && "mood-btn-depressed",
+                  "mood-btn rounded-2xl p-3 md:p-6 flex flex-col items-center gap-2",
+                  cssClass,
                   checkinData.mood === mood && "ring-4 ring-offset-2 ring-offset-background"
                 )}
               >
-                <Icon className="w-10 h-10 md:w-12 md:h-12" />
-                <span className="font-medium text-sm md:text-base">{label}</span>
+                <Icon className="w-8 h-8 md:w-10 md:h-10" />
+                <span className="font-medium text-xs md:text-sm text-center leading-tight">{label}</span>
               </button>
             ))}
           </div>

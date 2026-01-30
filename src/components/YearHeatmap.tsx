@@ -165,7 +165,9 @@ export function YearHeatmap({ year, entries, medicationDates = [], onPrevYear, o
                           !isCurrentMonth && "opacity-0",
                           isCurrentMonth && !mood && "bg-muted/80 text-muted-foreground",
                           isCurrentMonth && mood === 'elevated' && "bg-mood-elevated text-white",
+                          isCurrentMonth && mood === 'somewhat_elevated' && "bg-mood-somewhat-elevated text-white",
                           isCurrentMonth && mood === 'stable' && "bg-mood-stable text-white",
+                          isCurrentMonth && mood === 'somewhat_depressed' && "bg-mood-somewhat-depressed text-white",
                           isCurrentMonth && mood === 'depressed' && "bg-mood-depressed text-white",
                           isTodayDate && isCurrentMonth && "ring-1 ring-primary ring-offset-1 ring-offset-background"
                         )}
@@ -187,24 +189,32 @@ export function YearHeatmap({ year, entries, medicationDates = [], onPrevYear, o
       </div>
 
       {/* Legend */}
-      <div className="flex flex-wrap items-center gap-4 mt-6 pt-4 border-t border-border justify-center">
-        <div className="flex items-center gap-2">
-          <div className="w-3.5 h-3.5 rounded-sm bg-mood-elevated" />
+      <div className="flex flex-wrap items-center gap-3 mt-6 pt-4 border-t border-border justify-center">
+        <div className="flex items-center gap-1.5">
+          <div className="w-3 h-3 rounded-sm bg-mood-elevated" />
           <span className="text-xs text-muted-foreground">Uppvarvad</span>
         </div>
-        <div className="flex items-center gap-2">
-          <div className="w-3.5 h-3.5 rounded-sm bg-mood-stable" />
+        <div className="flex items-center gap-1.5">
+          <div className="w-3 h-3 rounded-sm bg-mood-somewhat-elevated" />
+          <span className="text-xs text-muted-foreground">Något uppvarvad</span>
+        </div>
+        <div className="flex items-center gap-1.5">
+          <div className="w-3 h-3 rounded-sm bg-mood-stable" />
           <span className="text-xs text-muted-foreground">Stabil</span>
         </div>
-        <div className="flex items-center gap-2">
-          <div className="w-3.5 h-3.5 rounded-sm bg-mood-depressed" />
+        <div className="flex items-center gap-1.5">
+          <div className="w-3 h-3 rounded-sm bg-mood-somewhat-depressed" />
+          <span className="text-xs text-muted-foreground">Något nedstämd</span>
+        </div>
+        <div className="flex items-center gap-1.5">
+          <div className="w-3 h-3 rounded-sm bg-mood-depressed" />
           <span className="text-xs text-muted-foreground">Nedstämd</span>
         </div>
-        <div className="flex items-center gap-2">
-          <div className="w-3.5 h-3.5 rounded-sm bg-muted/50" />
+        <div className="flex items-center gap-1.5">
+          <div className="w-3 h-3 rounded-sm bg-muted/50" />
           <span className="text-xs text-muted-foreground">Ej registrerat</span>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5">
           <Pill className="h-3 w-3 text-primary" />
           <span className="text-xs text-muted-foreground">Medicin</span>
         </div>
