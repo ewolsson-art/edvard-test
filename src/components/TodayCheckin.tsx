@@ -481,6 +481,22 @@ export function TodayCheckin({
             </h1>
           </div>
 
+          {/* Show medications list */}
+          {hasMedications && (
+            <div className="max-w-md mx-auto space-y-2 mb-6">
+              {activeMedications.map(med => (
+                <div
+                  key={med.id}
+                  className="flex items-center gap-3 p-3 rounded-xl bg-muted/30"
+                >
+                  <Pill className="w-4 h-4 text-primary" />
+                  <span className="font-medium">{med.name}</span>
+                  <span className="text-muted-foreground text-sm">{med.dosage}</span>
+                </div>
+              ))}
+            </div>
+          )}
+
           <div className="grid grid-cols-2 gap-4 max-w-md mx-auto">
             <button
               onClick={() => {
