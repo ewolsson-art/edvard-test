@@ -11,7 +11,9 @@ export interface MoodStats {
   elevated: number;
   stable: number;
   depressed: number;
+  unregistered: number;
   total: number;
+  totalDays: number;
 }
 
 export const MOOD_LABELS: Record<MoodType, string> = {

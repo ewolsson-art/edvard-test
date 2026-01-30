@@ -41,8 +41,12 @@ const MonthlyOverview = () => {
       if (mood === 'stable') stable++;
       if (mood === 'depressed') depressed++;
     });
-    return { elevated, stable, depressed, total: elevated + stable + depressed };
-  }, [monthMoodData]);
+    const total = elevated + stable + depressed;
+    const end = endOfMonth(currentMonth);
+    const totalDays = end.getDate();
+    const unregistered = totalDays - total;
+    return { elevated, stable, depressed, unregistered, total, totalDays };
+  }, [monthMoodData, currentMonth]);
 
   const monthLabel = format(currentMonth, 'MMMM yyyy', { locale: sv });
 
