@@ -25,7 +25,7 @@ const moodButtons: { mood: MoodType; icon: typeof Zap; label: string; cssClass: 
   { mood: 'depressed', icon: CloudRain, label: MOOD_LABELS.depressed, cssClass: 'mood-btn-depressed' },
 ];
 
-type Step = 'mood' | 'sleep' | 'eating' | 'exercise' | 'medication' | 'complete';
+type Step = 'mood' | 'sleep' | 'eating' | 'exercise' | 'medication' | 'success-animation' | 'complete';
 
 const STEPS: Step[] = ['mood', 'sleep', 'eating', 'exercise', 'medication'];
 
@@ -109,8 +109,12 @@ export function TodayCheckin({
   const handleComplete = async () => {
     const success = await onSaveCheckin(checkinData);
     if (success) {
-      setCurrentStep('complete');
-      setIsEditing(false);
+      setCurrentStep('success-animation');
+      // Show animation for 2 seconds, then show complete state
+      setTimeout(() => {
+        setCurrentStep('complete');
+        setIsEditing(false);
+      }, 2000);
     }
   };
 
@@ -513,6 +517,15 @@ export function TodayCheckin({
               Slutför incheckning
               <ChevronRight className="w-5 h-5" />
             </Button>
+          </div>
+        </div>
+      )}
+
+      {/* Success Animation */}
+      {currentStep === 'success-animation' && (
+        <div className="flex flex-col items-center justify-center py-16 fade-in">
+          <div className="success-circle">
+            <Check className="w-16 h-16 md:w-20 md:h-20 text-white success-check" />
           </div>
         </div>
       )}
