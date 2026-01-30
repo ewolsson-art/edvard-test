@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { format, subMonths } from 'date-fns';
 import { sv } from 'date-fns/locale';
-import { FileText, Download, Share2, Calendar, BarChart3, Link as LinkIcon, Check, Loader2 } from 'lucide-react';
+import { Download, Share2, Calendar, BarChart3, Link as LinkIcon, Check, Loader2 } from 'lucide-react';
 import { jsPDF } from 'jspdf';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -9,8 +9,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useMoodData } from '@/hooks/useMoodData';
 import { useMedications } from '@/hooks/useMedications';
 import { useToast } from '@/hooks/use-toast';
-import { useAuth } from '@/hooks/useAuth';
-import { supabase } from '@/integrations/supabase/client';
 import { MOOD_LABELS, MoodType } from '@/types/mood';
 
 const Reports = () => {
@@ -23,7 +21,6 @@ const Reports = () => {
   
   const { entries, isLoaded, getEntriesForMonth, getEntriesForYear, getStatsForYear } = useMoodData();
   const { medications, isLoaded: medsLoaded } = useMedications();
-  const { user } = useAuth();
   const { toast } = useToast();
 
   // Generate month options (last 12 months)
@@ -474,25 +471,8 @@ const Reports = () => {
     });
   };
 
-  const generateShareKey = () => {
-    const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
-    let result = '';
-    for (let i = 0; i < 12; i++) {
-      result += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
-    return result;
-  };
 
   const shareReport = async (type: 'month' | 'year') => {
-    if (!user) {
-      toast({
-        title: "Inte inloggad",
-        description: "Du måste vara inloggad för att dela rapporter.",
-        variant: "destructive",
-      });
-      return;
-    }
-
     if (type === 'month') {
       setSharingMonth(true);
     } else {
@@ -500,55 +480,9 @@ const Reports = () => {
     }
 
     try {
-      let stats: { elevated: number; stable: number; depressed: number; total: number };
-      let period: string;
-
-      if (type === 'month') {
-        const [year, month] = selectedMonth.split('-').map(Number);
-        const monthData = getEntriesForMonth(year, month - 1);
-        
-        let elevated = 0, stable = 0, depressed = 0;
-        Object.values(monthData).forEach(mood => {
-          if (mood === 'elevated') elevated++;
-          if (mood === 'stable') stable++;
-          if (mood === 'depressed') depressed++;
-        });
-        
-        stats = { elevated, stable, depressed, total: elevated + stable + depressed };
-        period = selectedMonth;
-      } else {
-        const yearStats = getStatsForYear(Number(selectedYear));
-        stats = {
-          elevated: yearStats.elevated,
-          stable: yearStats.stable,
-          depressed: yearStats.depressed,
-          total: yearStats.total,
-        };
-        period = selectedYear;
-      }
-
-      const activeMeds = medications.filter(m => m.active).map(m => ({
-        name: m.name,
-        dosage: m.dosage,
-        started_at: m.started_at,
-      }));
-
-      const shareKey = generateShareKey();
-
-      const { error } = await supabase
-        .from('shared_reports')
-        .insert({
-          user_id: user.id,
-          share_key: shareKey,
-          report_type: type,
-          period,
-          stats,
-          medications: activeMeds.length > 0 ? activeMeds : null,
-        });
-
-      if (error) throw error;
-
-      const shareUrl = `${window.location.origin}/dela/${shareKey}`;
+      // Create share URL to overview page with period parameter
+      const period = type === 'month' ? selectedMonth : selectedYear;
+      const shareUrl = `${window.location.origin}/oversikt?period=${period}&view=${type === 'month' ? 'month' : 'year'}`;
       
       // Try to copy to clipboard, but show link in toast either way
       let copied = false;
@@ -571,7 +505,7 @@ const Reports = () => {
         title: copied ? "Länk kopierad!" : "Delningslänk skapad!",
         description: (
           <div className="space-y-2">
-            <p>{copied ? "Delningslänken har kopierats." : "Kopiera länken nedan:"}</p>
+            <p>{copied ? "Länken har kopierats." : "Kopiera länken nedan:"}</p>
             <code className="block p-2 bg-muted rounded text-xs break-all select-all">
               {shareUrl}
             </code>
@@ -582,8 +516,8 @@ const Reports = () => {
     } catch (err) {
       console.error('Share error:', err);
       toast({
-        title: "Kunde inte skapa delningslänk",
-        description: "Försök igen eller ladda ner PDF istället.",
+        title: "Kunde inte skapa länk",
+        description: "Försök igen.",
         variant: "destructive",
       });
     } finally {

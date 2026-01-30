@@ -13,7 +13,6 @@ import Overview from "./pages/Overview";
 import Chat from "./pages/Chat";
 import Medications from "./pages/Medications";
 import Reports from "./pages/Reports";
-import SharedReport from "./pages/SharedReport";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -66,7 +65,6 @@ const App = () => (
                 <AppLayout><Reports /></AppLayout>
               </ProtectedRoute>
             } />
-            <Route path="/dela/:shareKey" element={<SharedReport />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

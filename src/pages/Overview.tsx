@@ -16,19 +16,39 @@ type ViewType = 'week' | 'month' | 'year';
 
 const Overview = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const initialView = (searchParams.get('view') as ViewType) || 'month';
   
-  const [view, setView] = useState<ViewType>(initialView);
-  const [currentWeek, setCurrentWeek] = useState(new Date());
-  const [currentMonth, setCurrentMonth] = useState(() => {
-    const yearParam = searchParams.get('year');
-    const monthParam = searchParams.get('month');
-    if (yearParam && monthParam) {
-      return new Date(parseInt(yearParam), parseInt(monthParam), 1);
+  // Parse period parameter (format: "2026-01" for month, "2026" for year)
+  const periodParam = searchParams.get('period');
+  const viewParam = searchParams.get('view') as ViewType | null;
+  
+  const getInitialState = () => {
+    if (periodParam && viewParam === 'month' && periodParam.includes('-')) {
+      const [year, month] = periodParam.split('-').map(Number);
+      return {
+        view: 'month' as ViewType,
+        month: new Date(year, month - 1, 1),
+        year: year,
+      };
+    } else if (periodParam && viewParam === 'year' && !periodParam.includes('-')) {
+      return {
+        view: 'year' as ViewType,
+        month: new Date(),
+        year: parseInt(periodParam),
+      };
     }
-    return new Date();
-  });
-  const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
+    return {
+      view: (viewParam || 'month') as ViewType,
+      month: new Date(),
+      year: new Date().getFullYear(),
+    };
+  };
+  
+  const initialState = getInitialState();
+  
+  const [view, setView] = useState<ViewType>(initialState.view);
+  const [currentWeek, setCurrentWeek] = useState(new Date());
+  const [currentMonth, setCurrentMonth] = useState(initialState.month);
+  const [currentYear, setCurrentYear] = useState(initialState.year);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   const navigate = useNavigate();
