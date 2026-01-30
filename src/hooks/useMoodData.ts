@@ -1,46 +1,107 @@
 import { useState, useEffect, useCallback } from 'react';
 import { MoodEntry, MoodType, MoodStats } from '@/types/mood';
-
-const STORAGE_KEY = 'bipolar-mood-tracker';
+import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/hooks/useAuth';
+import { useToast } from '@/hooks/use-toast';
 
 export function useMoodData() {
   const [entries, setEntries] = useState<MoodEntry[]>([]);
   const [isLoaded, setIsLoaded] = useState(false);
+  const { user } = useAuth();
+  const { toast } = useToast();
 
-  // Load data from localStorage on mount
+  // Fetch entries from database
   useEffect(() => {
-    const stored = localStorage.getItem(STORAGE_KEY);
-    if (stored) {
-      try {
-        const parsed = JSON.parse(stored);
-        setEntries(parsed);
-      } catch (e) {
-        console.error('Failed to parse mood data:', e);
+    if (!user) {
+      setEntries([]);
+      setIsLoaded(true);
+      return;
+    }
+
+    const fetchEntries = async () => {
+      const { data, error } = await supabase
+        .from('mood_entries')
+        .select('*')
+        .eq('user_id', user.id)
+        .order('date', { ascending: false });
+
+      if (error) {
+        console.error('Error fetching mood entries:', error);
+        toast({
+          title: "Kunde inte hämta data",
+          description: "Försök ladda om sidan.",
+          variant: "destructive",
+        });
+      } else {
+        const formattedEntries: MoodEntry[] = (data || []).map(entry => ({
+          date: entry.date,
+          mood: entry.mood as MoodType,
+          comment: entry.comment || undefined,
+          timestamp: new Date(entry.created_at).getTime(),
+        }));
+        setEntries(formattedEntries);
       }
+      setIsLoaded(true);
+    };
+
+    fetchEntries();
+  }, [user, toast]);
+
+  const addEntry = useCallback(async (date: string, mood: MoodType, comment?: string) => {
+    if (!user) return;
+
+    const { error } = await supabase
+      .from('mood_entries')
+      .upsert({
+        user_id: user.id,
+        date,
+        mood,
+        comment: comment || null,
+      }, {
+        onConflict: 'user_id,date'
+      });
+
+    if (error) {
+      console.error('Error saving mood entry:', error);
+      toast({
+        title: "Kunde inte spara",
+        description: "Försök igen.",
+        variant: "destructive",
+      });
+    } else {
+      // Update local state
+      setEntries(prev => {
+        const filtered = prev.filter(e => e.date !== date);
+        return [...filtered, { date, mood, comment, timestamp: Date.now() }];
+      });
     }
-    setIsLoaded(true);
-  }, []);
+  }, [user, toast]);
 
-  // Save to localStorage whenever entries change
-  useEffect(() => {
-    if (isLoaded) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
+  const updateComment = useCallback(async (date: string, comment: string) => {
+    if (!user) return;
+
+    const { error } = await supabase
+      .from('mood_entries')
+      .update({ comment: comment || null })
+      .eq('user_id', user.id)
+      .eq('date', date);
+
+    if (error) {
+      console.error('Error updating comment:', error);
+      toast({
+        title: "Kunde inte uppdatera",
+        description: "Försök igen.",
+        variant: "destructive",
+      });
+    } else {
+      setEntries(prev => prev.map(e => 
+        e.date === date ? { ...e, comment } : e
+      ));
+      toast({
+        title: "Kommentar sparad",
+      });
     }
-  }, [entries, isLoaded]);
-
-  const addEntry = useCallback((date: string, mood: MoodType, comment?: string) => {
-    setEntries(prev => {
-      // Remove any existing entry for this date
-      const filtered = prev.filter(e => e.date !== date);
-      return [...filtered, { date, mood, comment, timestamp: Date.now() }];
-    });
-  }, []);
-
-  const updateComment = useCallback((date: string, comment: string) => {
-    setEntries(prev => prev.map(e => 
-      e.date === date ? { ...e, comment } : e
-    ));
-  }, []);
+  }, [user, toast]);
 
   const getEntryForDate = useCallback((date: string): MoodEntry | undefined => {
     return entries.find(e => e.date === date);
@@ -74,9 +135,26 @@ export function useMoodData() {
     };
   }, [getEntriesForYear]);
 
-  const removeEntry = useCallback((date: string) => {
-    setEntries(prev => prev.filter(e => e.date !== date));
-  }, []);
+  const removeEntry = useCallback(async (date: string) => {
+    if (!user) return;
+
+    const { error } = await supabase
+      .from('mood_entries')
+      .delete()
+      .eq('user_id', user.id)
+      .eq('date', date);
+
+    if (error) {
+      console.error('Error removing entry:', error);
+      toast({
+        title: "Kunde inte ta bort",
+        description: "Försök igen.",
+        variant: "destructive",
+      });
+    } else {
+      setEntries(prev => prev.filter(e => e.date !== date));
+    }
+  }, [user, toast]);
 
   return {
     entries,
