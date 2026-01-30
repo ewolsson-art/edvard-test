@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { format, subMonths } from 'date-fns';
 import { sv } from 'date-fns/locale';
-import { FileText, Download, Share2, Calendar, BarChart3, Copy, Check } from 'lucide-react';
+import { FileText, Download, Share2, Calendar, BarChart3, Link as LinkIcon, Check, Loader2 } from 'lucide-react';
 import { jsPDF } from 'jspdf';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -9,16 +9,21 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useMoodData } from '@/hooks/useMoodData';
 import { useMedications } from '@/hooks/useMedications';
 import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/hooks/useAuth';
+import { supabase } from '@/integrations/supabase/client';
 import { MOOD_LABELS, MoodType } from '@/types/mood';
 
 const Reports = () => {
   const [selectedMonth, setSelectedMonth] = useState(format(new Date(), 'yyyy-MM'));
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear().toString());
+  const [sharingMonth, setSharingMonth] = useState(false);
+  const [sharingYear, setSharingYear] = useState(false);
   const [copiedMonth, setCopiedMonth] = useState(false);
   const [copiedYear, setCopiedYear] = useState(false);
   
   const { entries, isLoaded, getEntriesForMonth, getEntriesForYear, getStatsForYear } = useMoodData();
   const { medications, isLoaded: medsLoaded } = useMedications();
+  const { user } = useAuth();
   const { toast } = useToast();
 
   // Generate month options (last 12 months)
@@ -469,111 +474,108 @@ const Reports = () => {
     });
   };
 
-  const generateTextReport = (type: 'month' | 'year') => {
-    if (type === 'month') {
-      const [year, month] = selectedMonth.split('-').map(Number);
-      const monthData = getEntriesForMonth(year, month - 1);
-      const monthName = format(new Date(year, month - 1), 'MMMM yyyy', { locale: sv });
-      
-      let elevated = 0, stable = 0, depressed = 0;
-      Object.values(monthData).forEach(mood => {
-        if (mood === 'elevated') elevated++;
-        if (mood === 'stable') stable++;
-        if (mood === 'depressed') depressed++;
-      });
-      const total = elevated + stable + depressed;
-
-      let report = `MÅNADSRAPPORT - ${monthName.toUpperCase()}\n${'='.repeat(40)}\n\n`;
-      report += `SAMMANFATTNING\n--------------\n`;
-      report += `Antal registrerade dagar: ${total}\n`;
-      report += `${MOOD_LABELS.elevated}: ${elevated} dagar (${total > 0 ? Math.round((elevated / total) * 100) : 0}%)\n`;
-      report += `${MOOD_LABELS.stable}: ${stable} dagar (${total > 0 ? Math.round((stable / total) * 100) : 0}%)\n`;
-      report += `${MOOD_LABELS.depressed}: ${depressed} dagar (${total > 0 ? Math.round((depressed / total) * 100) : 0}%)\n\n`;
-      
-      if (medications.length > 0) {
-        report += `MEDICINER\n---------\n`;
-        medications.filter(m => m.active).forEach(med => {
-          const startDate = format(new Date(med.started_at), 'd MMM yyyy', { locale: sv });
-          report += `• ${med.name} - ${med.dosage} (sedan ${startDate})\n`;
-        });
-        report += '\n';
-      }
-
-      report += `DAGLIGA REGISTRERINGAR\n----------------------\n`;
-      Object.entries(monthData)
-        .sort(([a], [b]) => Number(a) - Number(b))
-        .forEach(([day, mood]) => {
-          const entry = entries.find(e => {
-            const d = new Date(e.date);
-            return d.getFullYear() === year && d.getMonth() === month - 1 && d.getDate() === Number(day);
-          });
-          const comment = entry?.comment ? ` - "${entry.comment}"` : '';
-          report += `${day}/${month}: ${MOOD_LABELS[mood as MoodType]}${comment}\n`;
-        });
-
-      report += `\n---\nGenererad: ${format(new Date(), 'yyyy-MM-dd HH:mm')}`;
-      return report;
-    } else {
-      const year = Number(selectedYear);
-      const yearEntries = getEntriesForYear(year);
-      const stats = getStatsForYear(year);
-
-      let report = `ÅRSRAPPORT - ${year}\n${'='.repeat(40)}\n\n`;
-      report += `ÅRSSAMMANFATTNING\n-----------------\n`;
-      report += `Totalt antal registrerade dagar: ${stats.total}\n`;
-      report += `${MOOD_LABELS.elevated}: ${stats.elevated} dagar (${stats.total > 0 ? Math.round((stats.elevated / stats.total) * 100) : 0}%)\n`;
-      report += `${MOOD_LABELS.stable}: ${stats.stable} dagar (${stats.total > 0 ? Math.round((stats.stable / stats.total) * 100) : 0}%)\n`;
-      report += `${MOOD_LABELS.depressed}: ${stats.depressed} dagar (${stats.total > 0 ? Math.round((stats.depressed / stats.total) * 100) : 0}%)\n\n`;
-
-      if (medications.length > 0) {
-        report += `MEDICINER\n---------\n`;
-        medications.filter(m => m.active).forEach(med => {
-          const startDate = format(new Date(med.started_at), 'd MMM yyyy', { locale: sv });
-          report += `• ${med.name} - ${med.dosage} (sedan ${startDate})\n`;
-        });
-        report += '\n';
-      }
-
-      report += `MÅNADSVIS FÖRDELNING\n--------------------\n`;
-      const months = ['Januari', 'Februari', 'Mars', 'April', 'Maj', 'Juni', 
-                      'Juli', 'Augusti', 'September', 'Oktober', 'November', 'December'];
-      
-      months.forEach((monthName, i) => {
-        const monthEntries = yearEntries.filter(e => new Date(e.date).getMonth() === i);
-        const elevated = monthEntries.filter(e => e.mood === 'elevated').length;
-        const stable = monthEntries.filter(e => e.mood === 'stable').length;
-        const depressed = monthEntries.filter(e => e.mood === 'depressed').length;
-        const total = elevated + stable + depressed;
-        report += `${monthName.padEnd(12)}: ${total} dagar (↑${elevated} ●${stable} ↓${depressed})\n`;
-      });
-
-      report += `\n---\nGenererad: ${format(new Date(), 'yyyy-MM-dd HH:mm')}`;
-      return report;
+  const generateShareKey = () => {
+    const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+    let result = '';
+    for (let i = 0; i < 12; i++) {
+      result += chars.charAt(Math.floor(Math.random() * chars.length));
     }
+    return result;
   };
 
-  const copyToClipboard = async (type: 'month' | 'year') => {
-    const report = generateTextReport(type);
-    
-    try {
-      await navigator.clipboard.writeText(report);
-      if (type === 'month') {
-        setCopiedMonth(true);
-        setTimeout(() => setCopiedMonth(false), 2000);
-      } else {
-        setCopiedYear(true);
-        setTimeout(() => setCopiedYear(false), 2000);
-      }
+  const shareReport = async (type: 'month' | 'year') => {
+    if (!user) {
       toast({
-        title: "Kopierat till urklipp",
-        description: "Du kan nu klistra in rapporten i ett meddelande till din läkare.",
-      });
-    } catch (err) {
-      toast({
-        title: "Kunde inte kopiera",
-        description: "Försök ladda ner rapporten istället.",
+        title: "Inte inloggad",
+        description: "Du måste vara inloggad för att dela rapporter.",
         variant: "destructive",
       });
+      return;
+    }
+
+    if (type === 'month') {
+      setSharingMonth(true);
+    } else {
+      setSharingYear(true);
+    }
+
+    try {
+      let stats: { elevated: number; stable: number; depressed: number; total: number };
+      let period: string;
+
+      if (type === 'month') {
+        const [year, month] = selectedMonth.split('-').map(Number);
+        const monthData = getEntriesForMonth(year, month - 1);
+        
+        let elevated = 0, stable = 0, depressed = 0;
+        Object.values(monthData).forEach(mood => {
+          if (mood === 'elevated') elevated++;
+          if (mood === 'stable') stable++;
+          if (mood === 'depressed') depressed++;
+        });
+        
+        stats = { elevated, stable, depressed, total: elevated + stable + depressed };
+        period = selectedMonth;
+      } else {
+        const yearStats = getStatsForYear(Number(selectedYear));
+        stats = {
+          elevated: yearStats.elevated,
+          stable: yearStats.stable,
+          depressed: yearStats.depressed,
+          total: yearStats.total,
+        };
+        period = selectedYear;
+      }
+
+      const activeMeds = medications.filter(m => m.active).map(m => ({
+        name: m.name,
+        dosage: m.dosage,
+        started_at: m.started_at,
+      }));
+
+      const shareKey = generateShareKey();
+
+      const { error } = await supabase
+        .from('shared_reports')
+        .insert({
+          user_id: user.id,
+          share_key: shareKey,
+          report_type: type,
+          period,
+          stats,
+          medications: activeMeds.length > 0 ? activeMeds : null,
+        });
+
+      if (error) throw error;
+
+      const shareUrl = `${window.location.origin}/dela/${shareKey}`;
+      await navigator.clipboard.writeText(shareUrl);
+
+      if (type === 'month') {
+        setCopiedMonth(true);
+        setTimeout(() => setCopiedMonth(false), 3000);
+      } else {
+        setCopiedYear(true);
+        setTimeout(() => setCopiedYear(false), 3000);
+      }
+
+      toast({
+        title: "Länk kopierad!",
+        description: "Delningslänken har kopierats till urklipp. Du kan nu klistra in den i ett meddelande.",
+      });
+    } catch (err) {
+      console.error('Share error:', err);
+      toast({
+        title: "Kunde inte skapa delningslänk",
+        description: "Försök igen eller ladda ner PDF istället.",
+        variant: "destructive",
+      });
+    } finally {
+      if (type === 'month') {
+        setSharingMonth(false);
+      } else {
+        setSharingYear(false);
+      }
     }
   };
 
@@ -636,14 +638,17 @@ const Reports = () => {
                 </Button>
                 <Button 
                   className="flex-1 gap-2"
-                  onClick={() => copyToClipboard('month')}
+                  onClick={() => shareReport('month')}
+                  disabled={sharingMonth}
                 >
-                  {copiedMonth ? (
+                  {sharingMonth ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : copiedMonth ? (
                     <Check className="h-4 w-4" />
                   ) : (
-                    <Copy className="h-4 w-4" />
+                    <LinkIcon className="h-4 w-4" />
                   )}
-                  {copiedMonth ? 'Kopierat!' : 'Kopiera'}
+                  {copiedMonth ? 'Kopierat!' : 'Dela länk'}
                 </Button>
               </div>
             </CardContent>
@@ -687,14 +692,17 @@ const Reports = () => {
                 </Button>
                 <Button 
                   className="flex-1 gap-2"
-                  onClick={() => copyToClipboard('year')}
+                  onClick={() => shareReport('year')}
+                  disabled={sharingYear}
                 >
-                  {copiedYear ? (
+                  {sharingYear ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : copiedYear ? (
                     <Check className="h-4 w-4" />
                   ) : (
-                    <Copy className="h-4 w-4" />
+                    <LinkIcon className="h-4 w-4" />
                   )}
-                  {copiedYear ? 'Kopierat!' : 'Kopiera'}
+                  {copiedYear ? 'Kopierat!' : 'Dela länk'}
                 </Button>
               </div>
             </CardContent>
@@ -709,8 +717,9 @@ const Reports = () => {
               <div className="space-y-1">
                 <p className="text-sm font-medium">Tips för att dela med din läkare</p>
                 <p className="text-sm text-muted-foreground">
-                  Ladda ner PDF-rapporten och bifoga den som bilaga i ett e-postmeddelande eller skriv ut den. 
-                  Du kan också kopiera textrapporten och klistra in i 1177-appen.
+                  Klicka på "Dela länk" för att skapa en unik URL som du kan skicka till din läkare. 
+                  Länken visar en sammanfattning av ditt mående utan att din läkare behöver logga in. 
+                  Du kan också ladda ner en PDF för utskrift.
                 </p>
               </div>
             </div>
