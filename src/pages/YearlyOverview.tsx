@@ -1,10 +1,12 @@
-import { useMemo } from 'react';
+import { useState, useMemo } from 'react';
+import { addYears, subYears } from 'date-fns';
 import { YearHeatmap } from '@/components/YearHeatmap';
 import { MoodStats } from '@/components/MoodStats';
+import { CalendarHeader } from '@/components/CalendarHeader';
 import { useMoodData } from '@/hooks/useMoodData';
 
 const YearlyOverview = () => {
-  const currentYear = new Date().getFullYear();
+  const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
   
   const { isLoaded, getEntriesForYear, getStatsForYear } = useMoodData();
 
@@ -36,9 +38,19 @@ const YearlyOverview = () => {
           </p>
         </header>
 
-        <div className="space-y-8">
+        <div className="space-y-6">
+          {/* Calendar/Heatmap card - first */}
+          <div className="glass-card p-6 fade-in overflow-x-auto">
+            <CalendarHeader
+              title={`${currentYear}`}
+              onPrev={() => setCurrentYear(prev => prev - 1)}
+              onNext={() => setCurrentYear(prev => prev + 1)}
+            />
+            <YearHeatmap year={currentYear} entries={yearEntries} showHeader={false} />
+          </div>
+          
+          {/* Stats card - second */}
           <MoodStats stats={yearStats} periodLabel={`${currentYear}`} />
-          <YearHeatmap year={currentYear} entries={yearEntries} />
         </div>
       </div>
     </div>

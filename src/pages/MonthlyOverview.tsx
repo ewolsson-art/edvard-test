@@ -52,8 +52,7 @@ const MonthlyOverview = () => {
         </header>
 
         <div className="space-y-6">
-          <MoodStats stats={monthStats} periodLabel={monthLabel} />
-          
+          {/* Calendar card - first */}
           <MonthCalendar
             currentDate={currentMonth}
             moodData={monthMoodData}
@@ -61,6 +60,9 @@ const MonthlyOverview = () => {
             onNextMonth={() => setCurrentMonth(prev => addMonths(prev, 1))}
             onDayClick={handleDayClick}
           />
+          
+          {/* Stats card - second */}
+          <MoodStats stats={monthStats} periodLabel={monthLabel} />
         </div>
       </div>
     </div>
