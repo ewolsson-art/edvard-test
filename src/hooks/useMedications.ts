@@ -51,7 +51,7 @@ export function useMedications() {
     fetchData();
   }, [user]);
 
-  const addMedication = useCallback(async (name: string, dosage: string) => {
+  const addMedication = useCallback(async (name: string, dosage: string, startedAt: string) => {
     if (!user) return;
 
     const { data, error } = await supabase
@@ -60,6 +60,7 @@ export function useMedications() {
         user_id: user.id,
         name,
         dosage,
+        started_at: startedAt,
       })
       .select()
       .single();
@@ -80,12 +81,12 @@ export function useMedications() {
     }
   }, [user, toast]);
 
-  const updateMedication = useCallback(async (id: string, name: string, dosage: string) => {
+  const updateMedication = useCallback(async (id: string, name: string, dosage: string, startedAt: string) => {
     if (!user) return;
 
     const { error } = await supabase
       .from('medications')
-      .update({ name, dosage })
+      .update({ name, dosage, started_at: startedAt })
       .eq('id', id)
       .eq('user_id', user.id);
 
@@ -97,7 +98,7 @@ export function useMedications() {
       });
     } else {
       setMedications(prev => prev.map(m => 
-        m.id === id ? { ...m, name, dosage } : m
+        m.id === id ? { ...m, name, dosage, started_at: startedAt } : m
       ));
       toast({ title: "Medicin uppdaterad" });
     }

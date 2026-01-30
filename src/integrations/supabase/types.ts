@@ -56,6 +56,7 @@ export type Database = {
           dosage: string
           id: string
           name: string
+          started_at: string
           updated_at: string
           user_id: string
         }
@@ -65,6 +66,7 @@ export type Database = {
           dosage: string
           id?: string
           name: string
+          started_at?: string
           updated_at?: string
           user_id: string
         }
@@ -74,6 +76,7 @@ export type Database = {
           dosage?: string
           id?: string
           name?: string
+          started_at?: string
           updated_at?: string
           user_id?: string
         }

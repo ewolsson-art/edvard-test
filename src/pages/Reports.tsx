@@ -138,7 +138,8 @@ const Reports = () => {
       doc.setFontSize(10);
       doc.setFont('helvetica', 'normal');
       medications.filter(m => m.active).forEach(med => {
-        doc.text(`• ${med.name} - ${med.dosage}`, 25, y);
+        const startDate = format(new Date(med.started_at), 'd MMM yyyy', { locale: sv });
+        doc.text(`• ${med.name} - ${med.dosage} (sedan ${startDate})`, 25, y);
         y += 6;
       });
       y += 10;
@@ -292,7 +293,8 @@ const Reports = () => {
       doc.setFontSize(10);
       doc.setFont('helvetica', 'normal');
       medications.filter(m => m.active).forEach(med => {
-        doc.text(`• ${med.name} - ${med.dosage}`, 25, y);
+        const startDate = format(new Date(med.started_at), 'd MMM yyyy', { locale: sv });
+        doc.text(`• ${med.name} - ${med.dosage} (sedan ${startDate})`, 25, y);
         y += 6;
       });
       y += 10;
@@ -398,7 +400,8 @@ const Reports = () => {
       if (medications.length > 0) {
         report += `MEDICINER\n---------\n`;
         medications.filter(m => m.active).forEach(med => {
-          report += `• ${med.name} - ${med.dosage}\n`;
+          const startDate = format(new Date(med.started_at), 'd MMM yyyy', { locale: sv });
+          report += `• ${med.name} - ${med.dosage} (sedan ${startDate})\n`;
         });
         report += '\n';
       }
@@ -432,7 +435,8 @@ const Reports = () => {
       if (medications.length > 0) {
         report += `MEDICINER\n---------\n`;
         medications.filter(m => m.active).forEach(med => {
-          report += `• ${med.name} - ${med.dosage}\n`;
+          const startDate = format(new Date(med.started_at), 'd MMM yyyy', { locale: sv });
+          report += `• ${med.name} - ${med.dosage} (sedan ${startDate})\n`;
         });
         report += '\n';
       }
