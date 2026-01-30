@@ -4,10 +4,10 @@ import { cn } from '@/lib/utils';
 
 interface MoodStatsProps {
   stats: MoodStatsType;
-  year: number;
+  periodLabel: string;
 }
 
-export function MoodStats({ stats, year }: MoodStatsProps) {
+export function MoodStats({ stats, periodLabel }: MoodStatsProps) {
   const statCards = [
     {
       mood: 'elevated' as const,
@@ -45,7 +45,7 @@ export function MoodStats({ stats, year }: MoodStatsProps) {
       <div className="flex items-center gap-2 mb-6">
         <Calendar className="w-5 h-5 text-muted-foreground" />
         <h3 className="font-display text-xl font-semibold">
-          Statistik {year}
+          Statistik – {periodLabel}
         </h3>
       </div>
 

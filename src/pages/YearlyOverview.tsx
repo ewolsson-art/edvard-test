@@ -37,7 +37,7 @@ const YearlyOverview = () => {
         </header>
 
         <div className="space-y-8">
-          <MoodStats stats={yearStats} year={currentYear} />
+          <MoodStats stats={yearStats} periodLabel={`${currentYear}`} />
           <YearHeatmap year={currentYear} entries={yearEntries} />
         </div>
       </div>
