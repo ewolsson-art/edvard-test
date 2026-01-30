@@ -1,0 +1,103 @@
+import { useState, useEffect } from 'react';
+import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from './useAuth';
+
+export interface UserPreferences {
+  id: string;
+  user_id: string;
+  include_mood: boolean;
+  include_sleep: boolean;
+  include_eating: boolean;
+  include_exercise: boolean;
+  include_medication: boolean;
+  onboarding_completed: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export const useUserPreferences = () => {
+  const { user } = useAuth();
+  const [preferences, setPreferences] = useState<UserPreferences | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (user) {
+      fetchPreferences();
+    } else {
+      setPreferences(null);
+      setLoading(false);
+    }
+  }, [user]);
+
+  const fetchPreferences = async () => {
+    if (!user) return;
+    
+    setLoading(true);
+    try {
+      const { data, error } = await supabase
+        .from('user_preferences')
+        .select('*')
+        .eq('user_id', user.id)
+        .maybeSingle();
+
+      if (error) throw error;
+      setPreferences(data);
+    } catch (error) {
+      console.error('Error fetching preferences:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const createPreferences = async (prefs: Partial<Omit<UserPreferences, 'id' | 'user_id' | 'created_at' | 'updated_at'>>) => {
+    if (!user) return { error: new Error('Not authenticated') };
+
+    try {
+      const { data, error } = await supabase
+        .from('user_preferences')
+        .insert({
+          user_id: user.id,
+          ...prefs,
+          onboarding_completed: true,
+        })
+        .select()
+        .single();
+
+      if (error) throw error;
+      setPreferences(data);
+      return { data, error: null };
+    } catch (error) {
+      console.error('Error creating preferences:', error);
+      return { data: null, error };
+    }
+  };
+
+  const updatePreferences = async (prefs: Partial<Omit<UserPreferences, 'id' | 'user_id' | 'created_at' | 'updated_at'>>) => {
+    if (!user || !preferences) return { error: new Error('No preferences found') };
+
+    try {
+      const { data, error } = await supabase
+        .from('user_preferences')
+        .update(prefs)
+        .eq('user_id', user.id)
+        .select()
+        .single();
+
+      if (error) throw error;
+      setPreferences(data);
+      return { data, error: null };
+    } catch (error) {
+      console.error('Error updating preferences:', error);
+      return { data: null, error };
+    }
+  };
+
+  return {
+    preferences,
+    loading,
+    createPreferences,
+    updatePreferences,
+    refetch: fetchPreferences,
+    needsOnboarding: !loading && user && !preferences?.onboarding_completed,
+  };
+};
