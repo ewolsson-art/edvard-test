@@ -52,114 +52,139 @@ const Reports = () => {
 
     const doc = new jsPDF();
     const pageWidth = doc.internal.pageSize.getWidth();
-    let y = 20;
+    const margin = 20;
+    const contentWidth = pageWidth - margin * 2;
+    let y = 25;
 
     // Title
-    doc.setFontSize(24);
+    doc.setFontSize(22);
     doc.setFont('helvetica', 'bold');
     doc.text('Manadsrapport', pageWidth / 2, y, { align: 'center' });
-    y += 10;
+    y += 8;
     
-    doc.setFontSize(16);
+    doc.setFontSize(14);
     doc.setFont('helvetica', 'normal');
+    doc.setTextColor(100, 100, 100);
     doc.text(monthName.charAt(0).toUpperCase() + monthName.slice(1), pageWidth / 2, y, { align: 'center' });
-    y += 20;
+    doc.setTextColor(0, 0, 0);
+    y += 18;
 
     // Stats overview box
-    doc.setFillColor(245, 245, 245);
-    doc.roundedRect(20, y, pageWidth - 40, 50, 3, 3, 'F');
-    y += 15;
+    doc.setFillColor(248, 250, 252);
+    doc.roundedRect(margin, y, contentWidth, 55, 4, 4, 'F');
+    doc.setDrawColor(226, 232, 240);
+    doc.roundedRect(margin, y, contentWidth, 55, 4, 4, 'S');
+    y += 12;
 
-    doc.setFontSize(12);
+    doc.setFontSize(11);
     doc.setFont('helvetica', 'bold');
-    doc.text('Sammanfattning', 30, y);
+    doc.text('Sammanfattning', margin + 10, y);
     y += 10;
 
+    doc.setFontSize(10);
     doc.setFont('helvetica', 'normal');
-    doc.text(`Antal registrerade dagar: ${total}`, 30, y);
-    y += 8;
+    doc.text(`Registrerade dagar: ${total}`, margin + 10, y);
+    y += 12;
 
-    // Stats with percentages
+    // Stats in columns
     const elevatedPct = total > 0 ? Math.round((elevated / total) * 100) : 0;
     const stablePct = total > 0 ? Math.round((stable / total) * 100) : 0;
     const depressedPct = total > 0 ? Math.round((depressed / total) * 100) : 0;
 
-    doc.setTextColor(234, 88, 12); // Orange
-    doc.text(`Uppvarvad: ${elevated} dagar (${elevatedPct}%)`, 30, y);
+    const colWidth = contentWidth / 3;
     
-    doc.setTextColor(34, 197, 94); // Green
-    doc.text(`Stabil: ${stable} dagar (${stablePct}%)`, 100, y);
+    // Elevated
+    doc.setFillColor(254, 215, 170);
+    doc.circle(margin + 15, y - 1, 3, 'F');
+    doc.setTextColor(194, 65, 12);
+    doc.setFont('helvetica', 'bold');
+    doc.text('Uppvarvad', margin + 22, y);
+    doc.setFont('helvetica', 'normal');
+    doc.text(`${elevated} dagar (${elevatedPct}%)`, margin + 22, y + 6);
     
-    doc.setTextColor(239, 68, 68); // Red
-    doc.text(`Nedstamd: ${depressed} dagar (${depressedPct}%)`, 160, y);
+    // Stable
+    doc.setFillColor(187, 247, 208);
+    doc.circle(margin + colWidth + 15, y - 1, 3, 'F');
+    doc.setTextColor(22, 101, 52);
+    doc.setFont('helvetica', 'bold');
+    doc.text('Stabil', margin + colWidth + 22, y);
+    doc.setFont('helvetica', 'normal');
+    doc.text(`${stable} dagar (${stablePct}%)`, margin + colWidth + 22, y + 6);
+    
+    // Depressed
+    doc.setFillColor(254, 202, 202);
+    doc.circle(margin + colWidth * 2 + 15, y - 1, 3, 'F');
+    doc.setTextColor(185, 28, 28);
+    doc.setFont('helvetica', 'bold');
+    doc.text('Nedstamd', margin + colWidth * 2 + 22, y);
+    doc.setFont('helvetica', 'normal');
+    doc.text(`${depressed} dagar (${depressedPct}%)`, margin + colWidth * 2 + 22, y + 6);
     
     doc.setTextColor(0, 0, 0);
     y += 25;
 
     // Visual bar chart
-    const barWidth = pageWidth - 60;
-    const barHeight = 20;
+    const barHeight = 14;
     
     doc.setFillColor(229, 231, 235);
-    doc.roundedRect(30, y, barWidth, barHeight, 2, 2, 'F');
+    doc.roundedRect(margin, y, contentWidth, barHeight, 3, 3, 'F');
     
     if (total > 0) {
-      let barX = 30;
+      let barX = margin;
       
       if (elevated > 0) {
-        const elevatedWidth = (elevated / total) * barWidth;
-        doc.setFillColor(251, 146, 60); // Orange
-        doc.rect(barX, y, elevatedWidth, barHeight, 'F');
+        const elevatedWidth = (elevated / total) * contentWidth;
+        doc.setFillColor(251, 146, 60);
+        doc.roundedRect(barX, y, elevatedWidth, barHeight, 3, 3, 'F');
         barX += elevatedWidth;
       }
       
       if (stable > 0) {
-        const stableWidth = (stable / total) * barWidth;
-        doc.setFillColor(74, 222, 128); // Green
+        const stableWidth = (stable / total) * contentWidth;
+        doc.setFillColor(74, 222, 128);
         doc.rect(barX, y, stableWidth, barHeight, 'F');
         barX += stableWidth;
       }
       
       if (depressed > 0) {
-        const depressedWidth = (depressed / total) * barWidth;
-        doc.setFillColor(248, 113, 113); // Red
-        doc.rect(barX, y, depressedWidth, barHeight, 'F');
+        const depressedWidth = (depressed / total) * contentWidth;
+        doc.setFillColor(248, 113, 113);
+        doc.roundedRect(barX, y, depressedWidth, barHeight, 3, 3, 'F');
       }
     }
-    y += 35;
+    y += 25;
 
     // Medications section
     if (medications.length > 0) {
-      doc.setFontSize(14);
+      doc.setFontSize(12);
       doc.setFont('helvetica', 'bold');
-      doc.text('Mediciner', 20, y);
+      doc.text('Mediciner', margin, y);
       y += 8;
       
-      doc.setFontSize(10);
+      doc.setFontSize(9);
       doc.setFont('helvetica', 'normal');
       medications.filter(m => m.active).forEach(med => {
         const startDate = format(new Date(med.started_at), 'd MMM yyyy', { locale: sv });
-        doc.text(`• ${med.name} - ${med.dosage} (sedan ${startDate})`, 25, y);
-        y += 6;
+        doc.text(`• ${med.name} - ${med.dosage} (sedan ${startDate})`, margin + 5, y);
+        y += 5;
       });
-      y += 10;
+      y += 8;
     }
 
     // Daily entries
-    doc.setFontSize(14);
+    doc.setFontSize(12);
     doc.setFont('helvetica', 'bold');
-    doc.text('Dagliga registreringar', 20, y);
+    doc.text('Dagliga registreringar', margin, y);
     y += 10;
 
     doc.setFontSize(9);
-    doc.setFont('helvetica', 'normal');
     
     const sortedEntries = Object.entries(monthData).sort(([a], [b]) => Number(a) - Number(b));
     
     sortedEntries.forEach(([day, mood]) => {
       if (y > 270) {
         doc.addPage();
-        y = 20;
+        y = 25;
       }
       
       const entry = entries.find(e => {
@@ -172,26 +197,50 @@ const Reports = () => {
       else if (mood === 'stable') doc.setFillColor(74, 222, 128);
       else doc.setFillColor(248, 113, 113);
       
-      doc.circle(25, y - 1.5, 2, 'F');
+      doc.circle(margin + 3, y - 1, 2, 'F');
       
       doc.setTextColor(0, 0, 0);
-      const dateText = `${day}/${month} - ${MOOD_LABELS[mood as MoodType]}`;
-      doc.text(dateText, 30, y);
+      doc.setFont('helvetica', 'bold');
+      const dateText = `${day}/${month}`;
+      doc.text(dateText, margin + 8, y);
+      
+      doc.setFont('helvetica', 'normal');
+      doc.text(`- ${MOOD_LABELS[mood as MoodType]}`, margin + 20, y);
       
       if (entry?.comment) {
-        doc.setTextColor(100, 100, 100);
-        const commentText = entry.comment.length > 60 ? entry.comment.substring(0, 60) + '...' : entry.comment;
-        doc.text(`"${commentText}"`, 35, y + 5);
         y += 5;
+        doc.setTextColor(100, 100, 100);
+        doc.setFontSize(8);
+        // Word wrap for long comments
+        const maxWidth = contentWidth - 15;
+        const lines = doc.splitTextToSize(`"${entry.comment}"`, maxWidth);
+        lines.forEach((line: string) => {
+          if (y > 270) {
+            doc.addPage();
+            y = 25;
+          }
+          doc.text(line, margin + 8, y);
+          y += 4;
+        });
+        doc.setFontSize(9);
       }
       
-      y += 8;
+      y += 6;
     });
 
     // Footer
-    doc.setFontSize(8);
-    doc.setTextColor(150, 150, 150);
-    doc.text(`Genererad: ${format(new Date(), 'yyyy-MM-dd HH:mm')} | Between Clouds`, pageWidth / 2, 290, { align: 'center' });
+    const pageCount = doc.getNumberOfPages();
+    for (let i = 1; i <= pageCount; i++) {
+      doc.setPage(i);
+      doc.setFontSize(8);
+      doc.setTextColor(150, 150, 150);
+      doc.text(
+        `Between Clouds | Genererad ${format(new Date(), 'yyyy-MM-dd HH:mm')} | Sida ${i}/${pageCount}`,
+        pageWidth / 2,
+        287,
+        { align: 'center' }
+      );
+    }
 
     doc.save(`maende-rapport-${selectedMonth}.pdf`);
     
@@ -208,111 +257,149 @@ const Reports = () => {
 
     const doc = new jsPDF();
     const pageWidth = doc.internal.pageSize.getWidth();
-    let y = 20;
+    const margin = 20;
+    const contentWidth = pageWidth - margin * 2;
+    let y = 25;
 
     // Title
-    doc.setFontSize(24);
+    doc.setFontSize(22);
     doc.setFont('helvetica', 'bold');
     doc.text('Arsrapport', pageWidth / 2, y, { align: 'center' });
-    y += 10;
+    y += 8;
     
-    doc.setFontSize(16);
+    doc.setFontSize(14);
     doc.setFont('helvetica', 'normal');
+    doc.setTextColor(100, 100, 100);
     doc.text(year.toString(), pageWidth / 2, y, { align: 'center' });
-    y += 20;
+    doc.setTextColor(0, 0, 0);
+    y += 18;
 
     // Stats overview box
-    doc.setFillColor(245, 245, 245);
-    doc.roundedRect(20, y, pageWidth - 40, 50, 3, 3, 'F');
-    y += 15;
+    doc.setFillColor(248, 250, 252);
+    doc.roundedRect(margin, y, contentWidth, 55, 4, 4, 'F');
+    doc.setDrawColor(226, 232, 240);
+    doc.roundedRect(margin, y, contentWidth, 55, 4, 4, 'S');
+    y += 12;
 
-    doc.setFontSize(12);
+    doc.setFontSize(11);
     doc.setFont('helvetica', 'bold');
-    doc.text('Arssammanfattning', 30, y);
+    doc.text('Arssammanfattning', margin + 10, y);
     y += 10;
 
+    doc.setFontSize(10);
     doc.setFont('helvetica', 'normal');
-    doc.text(`Totalt antal registrerade dagar: ${stats.total}`, 30, y);
-    y += 8;
+    doc.text(`Totalt registrerade dagar: ${stats.total}`, margin + 10, y);
+    y += 12;
 
     const elevatedPct = stats.total > 0 ? Math.round((stats.elevated / stats.total) * 100) : 0;
     const stablePct = stats.total > 0 ? Math.round((stats.stable / stats.total) * 100) : 0;
     const depressedPct = stats.total > 0 ? Math.round((stats.depressed / stats.total) * 100) : 0;
 
-    doc.setTextColor(234, 88, 12);
-    doc.text(`Uppvarvad: ${stats.elevated} dagar (${elevatedPct}%)`, 30, y);
+    const colWidth = contentWidth / 3;
     
-    doc.setTextColor(34, 197, 94);
-    doc.text(`Stabil: ${stats.stable} dagar (${stablePct}%)`, 100, y);
+    // Elevated
+    doc.setFillColor(254, 215, 170);
+    doc.circle(margin + 15, y - 1, 3, 'F');
+    doc.setTextColor(194, 65, 12);
+    doc.setFont('helvetica', 'bold');
+    doc.text('Uppvarvad', margin + 22, y);
+    doc.setFont('helvetica', 'normal');
+    doc.text(`${stats.elevated} dagar (${elevatedPct}%)`, margin + 22, y + 6);
     
-    doc.setTextColor(239, 68, 68);
-    doc.text(`Nedstamd: ${stats.depressed} dagar (${depressedPct}%)`, 160, y);
+    // Stable
+    doc.setFillColor(187, 247, 208);
+    doc.circle(margin + colWidth + 15, y - 1, 3, 'F');
+    doc.setTextColor(22, 101, 52);
+    doc.setFont('helvetica', 'bold');
+    doc.text('Stabil', margin + colWidth + 22, y);
+    doc.setFont('helvetica', 'normal');
+    doc.text(`${stats.stable} dagar (${stablePct}%)`, margin + colWidth + 22, y + 6);
+    
+    // Depressed
+    doc.setFillColor(254, 202, 202);
+    doc.circle(margin + colWidth * 2 + 15, y - 1, 3, 'F');
+    doc.setTextColor(185, 28, 28);
+    doc.setFont('helvetica', 'bold');
+    doc.text('Nedstamd', margin + colWidth * 2 + 22, y);
+    doc.setFont('helvetica', 'normal');
+    doc.text(`${stats.depressed} dagar (${depressedPct}%)`, margin + colWidth * 2 + 22, y + 6);
     
     doc.setTextColor(0, 0, 0);
     y += 25;
 
     // Visual bar chart
-    const barWidth = pageWidth - 60;
-    const barHeight = 20;
+    const barHeight = 14;
     
     doc.setFillColor(229, 231, 235);
-    doc.roundedRect(30, y, barWidth, barHeight, 2, 2, 'F');
+    doc.roundedRect(margin, y, contentWidth, barHeight, 3, 3, 'F');
     
     if (stats.total > 0) {
-      let barX = 30;
+      let barX = margin;
       
       if (stats.elevated > 0) {
-        const elevatedWidth = (stats.elevated / stats.total) * barWidth;
+        const elevatedWidth = (stats.elevated / stats.total) * contentWidth;
         doc.setFillColor(251, 146, 60);
-        doc.rect(barX, y, elevatedWidth, barHeight, 'F');
+        doc.roundedRect(barX, y, elevatedWidth, barHeight, 3, 3, 'F');
         barX += elevatedWidth;
       }
       
       if (stats.stable > 0) {
-        const stableWidth = (stats.stable / stats.total) * barWidth;
+        const stableWidth = (stats.stable / stats.total) * contentWidth;
         doc.setFillColor(74, 222, 128);
         doc.rect(barX, y, stableWidth, barHeight, 'F');
         barX += stableWidth;
       }
       
       if (stats.depressed > 0) {
-        const depressedWidth = (stats.depressed / stats.total) * barWidth;
+        const depressedWidth = (stats.depressed / stats.total) * contentWidth;
         doc.setFillColor(248, 113, 113);
-        doc.rect(barX, y, depressedWidth, barHeight, 'F');
+        doc.roundedRect(barX, y, depressedWidth, barHeight, 3, 3, 'F');
       }
     }
-    y += 35;
+    y += 25;
 
     // Medications section
     if (medications.length > 0) {
-      doc.setFontSize(14);
+      doc.setFontSize(12);
       doc.setFont('helvetica', 'bold');
-      doc.text('Mediciner', 20, y);
+      doc.text('Mediciner', margin, y);
       y += 8;
       
-      doc.setFontSize(10);
+      doc.setFontSize(9);
       doc.setFont('helvetica', 'normal');
       medications.filter(m => m.active).forEach(med => {
         const startDate = format(new Date(med.started_at), 'd MMM yyyy', { locale: sv });
-        doc.text(`• ${med.name} - ${med.dosage} (sedan ${startDate})`, 25, y);
-        y += 6;
+        doc.text(`• ${med.name} - ${med.dosage} (sedan ${startDate})`, margin + 5, y);
+        y += 5;
       });
-      y += 10;
+      y += 8;
     }
 
     // Monthly breakdown
-    doc.setFontSize(14);
+    doc.setFontSize(12);
     doc.setFont('helvetica', 'bold');
-    doc.text('Manadsvis fordelning', 20, y);
+    doc.text('Manadsvis fordelning', margin, y);
     y += 12;
 
     const months = ['Januari', 'Februari', 'Mars', 'April', 'Maj', 'Juni', 
                     'Juli', 'Augusti', 'September', 'Oktober', 'November', 'December'];
 
+    // Table header
+    doc.setFillColor(248, 250, 252);
+    doc.rect(margin, y - 4, contentWidth, 8, 'F');
+    doc.setFontSize(8);
+    doc.setFont('helvetica', 'bold');
+    doc.text('Manad', margin + 5, y);
+    doc.text('Dagar', margin + 45, y);
+    doc.text('Fordelning', margin + 70, y);
+    y += 8;
+
+    doc.setFont('helvetica', 'normal');
+
     months.forEach((monthName, i) => {
-      if (y > 260) {
+      if (y > 265) {
         doc.addPage();
-        y = 20;
+        y = 25;
       }
 
       const monthEntries = yearEntries.filter(e => new Date(e.date).getMonth() === i);
@@ -321,20 +408,17 @@ const Reports = () => {
       const depressed = monthEntries.filter(e => e.mood === 'depressed').length;
       const monthTotal = elevated + stable + depressed;
 
-      doc.setFontSize(10);
-      doc.setFont('helvetica', 'bold');
-      doc.text(monthName, 25, y);
-      
-      doc.setFont('helvetica', 'normal');
-      doc.text(`${monthTotal} dagar`, 70, y);
+      doc.setFontSize(9);
+      doc.text(monthName, margin + 5, y);
+      doc.text(`${monthTotal}`, margin + 45, y);
 
       // Mini bar for each month
-      const miniBarWidth = 80;
+      const miniBarWidth = 90;
       const miniBarHeight = 6;
-      const miniBarX = 100;
+      const miniBarX = margin + 70;
       
       doc.setFillColor(229, 231, 235);
-      doc.rect(miniBarX, y - 4, miniBarWidth, miniBarHeight, 'F');
+      doc.roundedRect(miniBarX, y - 4, miniBarWidth, miniBarHeight, 2, 2, 'F');
       
       if (monthTotal > 0) {
         let barX = miniBarX;
@@ -342,7 +426,7 @@ const Reports = () => {
         if (elevated > 0) {
           const w = (elevated / monthTotal) * miniBarWidth;
           doc.setFillColor(251, 146, 60);
-          doc.rect(barX, y - 4, w, miniBarHeight, 'F');
+          doc.roundedRect(barX, y - 4, w, miniBarHeight, 2, 2, 'F');
           barX += w;
         }
         
@@ -356,17 +440,26 @@ const Reports = () => {
         if (depressed > 0) {
           const w = (depressed / monthTotal) * miniBarWidth;
           doc.setFillColor(248, 113, 113);
-          doc.rect(barX, y - 4, w, miniBarHeight, 'F');
+          doc.roundedRect(barX, y - 4, w, miniBarHeight, 2, 2, 'F');
         }
       }
 
-      y += 12;
+      y += 10;
     });
 
-    // Footer
-    doc.setFontSize(8);
-    doc.setTextColor(150, 150, 150);
-    doc.text(`Genererad: ${format(new Date(), 'yyyy-MM-dd HH:mm')} | Between Clouds`, pageWidth / 2, 290, { align: 'center' });
+    // Footer on all pages
+    const pageCount = doc.getNumberOfPages();
+    for (let i = 1; i <= pageCount; i++) {
+      doc.setPage(i);
+      doc.setFontSize(8);
+      doc.setTextColor(150, 150, 150);
+      doc.text(
+        `Between Clouds | Genererad ${format(new Date(), 'yyyy-MM-dd HH:mm')} | Sida ${i}/${pageCount}`,
+        pageWidth / 2,
+        287,
+        { align: 'center' }
+      );
+    }
 
     doc.save(`maende-rapport-${selectedYear}.pdf`);
     
