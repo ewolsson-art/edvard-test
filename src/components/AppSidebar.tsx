@@ -1,6 +1,8 @@
-import { CalendarDays, CalendarRange, Calendar, BarChart3 } from "lucide-react";
+import { CalendarDays, CalendarRange, Calendar, BarChart3, LogOut } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useSidebar } from "@/components/ui/sidebar";
+import { useAuth } from "@/hooks/useAuth";
+import { Button } from "@/components/ui/button";
 
 import {
   Sidebar,
@@ -10,6 +12,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarFooter,
 } from "@/components/ui/sidebar";
 
 const navItems = [
@@ -21,7 +24,12 @@ const navItems = [
 
 export function AppSidebar() {
   const { state } = useSidebar();
+  const { user, signOut } = useAuth();
   const isCollapsed = state === "collapsed";
+
+  const handleSignOut = async () => {
+    await signOut();
+  };
 
   return (
     <Sidebar collapsible="icon">
@@ -58,12 +66,35 @@ export function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
 
-      {/* Footer */}
-      {!isCollapsed && (
-        <div className="mt-auto p-4 text-xs text-muted-foreground">
-          <p>Data sparas lokalt</p>
-        </div>
-      )}
+      <SidebarFooter className="p-4">
+        {!isCollapsed && user && (
+          <div className="space-y-3">
+            <p className="text-xs text-muted-foreground truncate">
+              {user.email}
+            </p>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleSignOut}
+              className="w-full gap-2"
+            >
+              <LogOut className="h-4 w-4" />
+              Logga ut
+            </Button>
+          </div>
+        )}
+        {isCollapsed && (
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={handleSignOut}
+            className="w-full"
+            title="Logga ut"
+          >
+            <LogOut className="h-4 w-4" />
+          </Button>
+        )}
+      </SidebarFooter>
     </Sidebar>
   );
 }
