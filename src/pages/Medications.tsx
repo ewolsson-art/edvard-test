@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { format } from 'date-fns';
 import { sv } from 'date-fns/locale';
-import { Pill, Plus, Pencil, Trash2, Check, X } from 'lucide-react';
+import { Pill, Plus, Pencil, Trash2, Check, X, Calendar } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -35,8 +35,10 @@ const Medications = () => {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [newName, setNewName] = useState('');
   const [newDosage, setNewDosage] = useState('');
+  const [newStartDate, setNewStartDate] = useState(format(new Date(), 'yyyy-MM-dd'));
   const [editName, setEditName] = useState('');
   const [editDosage, setEditDosage] = useState('');
+  const [editStartDate, setEditStartDate] = useState('');
 
   const {
     medications,
@@ -54,23 +56,25 @@ const Medications = () => {
   const todayLabel = format(new Date(), 'EEEE d MMMM', { locale: sv });
 
   const handleAdd = async () => {
-    if (newName.trim() && newDosage.trim()) {
-      await addMedication(newName.trim(), newDosage.trim());
+    if (newName.trim() && newDosage.trim() && newStartDate) {
+      await addMedication(newName.trim(), newDosage.trim(), newStartDate);
       setNewName('');
       setNewDosage('');
+      setNewStartDate(format(new Date(), 'yyyy-MM-dd'));
       setIsAddOpen(false);
     }
   };
 
-  const handleEdit = (id: string, name: string, dosage: string) => {
+  const handleEdit = (id: string, name: string, dosage: string, startedAt: string) => {
     setEditingId(id);
     setEditName(name);
     setEditDosage(dosage);
+    setEditStartDate(startedAt);
   };
 
   const handleSaveEdit = async () => {
-    if (editingId && editName.trim() && editDosage.trim()) {
-      await updateMedication(editingId, editName.trim(), editDosage.trim());
+    if (editingId && editName.trim() && editDosage.trim() && editStartDate) {
+      await updateMedication(editingId, editName.trim(), editDosage.trim(), editStartDate);
       setEditingId(null);
     }
   };
@@ -78,6 +82,14 @@ const Medications = () => {
   const handleToggleTaken = async (medicationId: string) => {
     const isTaken = isMedicationTakenOnDate(medicationId, today);
     await logMedication(medicationId, today, !isTaken);
+  };
+
+  const formatStartDate = (dateStr: string) => {
+    try {
+      return format(new Date(dateStr), 'd MMM yyyy', { locale: sv });
+    } catch {
+      return dateStr;
+    }
   };
 
   if (!isLoaded) {
@@ -171,7 +183,7 @@ const Medications = () => {
                     <DialogHeader>
                       <DialogTitle>Lägg till medicin</DialogTitle>
                       <DialogDescription>
-                        Ange namn och dosering för din medicin
+                        Ange namn, dosering och startdatum för din medicin
                       </DialogDescription>
                     </DialogHeader>
                     <div className="space-y-4 py-4">
@@ -193,12 +205,21 @@ const Medications = () => {
                           onChange={e => setNewDosage(e.target.value)}
                         />
                       </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="startDate">Startdatum</Label>
+                        <Input
+                          id="startDate"
+                          type="date"
+                          value={newStartDate}
+                          onChange={e => setNewStartDate(e.target.value)}
+                        />
+                      </div>
                     </div>
                     <DialogFooter>
                       <Button variant="outline" onClick={() => setIsAddOpen(false)}>
                         Avbryt
                       </Button>
-                      <Button onClick={handleAdd} disabled={!newName.trim() || !newDosage.trim()}>
+                      <Button onClick={handleAdd} disabled={!newName.trim() || !newDosage.trim() || !newStartDate}>
                         Lägg till
                       </Button>
                     </DialogFooter>
@@ -232,6 +253,11 @@ const Medications = () => {
                             onChange={e => setEditDosage(e.target.value)}
                             placeholder="Dosering"
                           />
+                          <Input
+                            type="date"
+                            value={editStartDate}
+                            onChange={e => setEditStartDate(e.target.value)}
+                          />
                           <div className="flex gap-2">
                             <Button size="sm" onClick={handleSaveEdit}>
                               <Check className="h-4 w-4 mr-1" />
@@ -248,6 +274,10 @@ const Medications = () => {
                           <div className="flex-1">
                             <p className="font-medium">{med.name}</p>
                             <p className="text-sm text-muted-foreground">{med.dosage}</p>
+                            <p className="text-xs text-muted-foreground flex items-center gap-1 mt-1">
+                              <Calendar className="h-3 w-3" />
+                              Sedan {formatStartDate(med.started_at)}
+                            </p>
                           </div>
                           <div className="flex items-center gap-2">
                             <Switch
@@ -258,7 +288,7 @@ const Medications = () => {
                             <Button 
                               size="icon" 
                               variant="ghost"
-                              onClick={() => handleEdit(med.id, med.name, med.dosage)}
+                              onClick={() => handleEdit(med.id, med.name, med.dosage, med.started_at)}
                             >
                               <Pencil className="h-4 w-4" />
                             </Button>
