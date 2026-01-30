@@ -216,7 +216,7 @@ export function TodayCheckin({
                 )}
               >
                 <Icon className="w-8 h-8 md:w-10 md:h-10" />
-                <span className="font-medium text-xs md:text-sm text-center leading-tight">{label}</span>
+                <span className="font-semibold text-sm md:text-base text-center leading-tight drop-shadow-sm">{label}</span>
               </button>
             ))}
           </div>
