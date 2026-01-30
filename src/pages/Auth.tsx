@@ -127,8 +127,8 @@ const Auth = () => {
       
       <div className="w-full max-w-5xl flex flex-col md:flex-row items-center gap-8 md:gap-16 relative z-10">
         <div className="flex-1 text-center md:text-left fade-in">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold text-foreground leading-tight">
-            Få bättre koll på ditt mående
+          <h1 className="text-5xl md:text-6xl lg:text-7xl font-display font-bold text-foreground leading-tight">
+            Håll bättre koll på ditt mående
           </h1>
         </div>
         <div className="w-full md:w-auto md:min-w-[400px] glass-card p-8 fade-in">
