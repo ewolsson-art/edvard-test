@@ -2,14 +2,17 @@ import { useState, useMemo } from 'react';
 import { format, startOfWeek, endOfWeek, addWeeks, subWeeks, eachDayOfInterval, isToday } from 'date-fns';
 import { sv } from 'date-fns/locale';
 import { useMoodData } from '@/hooks/useMoodData';
+import { useMedications } from '@/hooks/useMedications';
 import { MoodStats } from '@/components/MoodStats';
 import { CalendarHeader } from '@/components/CalendarHeader';
+import { MedicationBadges } from '@/components/MedicationBadges';
 import { MOOD_LABELS, MOOD_ICONS, MoodStats as MoodStatsType } from '@/types/mood';
 import { cn } from '@/lib/utils';
 
 const WeeklyOverview = () => {
   const [currentWeek, setCurrentWeek] = useState(new Date());
   const { isLoaded, getEntryForDate } = useMoodData();
+  const { isLoaded: medsLoaded, getMedicationsTakenOnDate } = useMedications();
 
   const weekDays = useMemo(() => {
     const start = startOfWeek(currentWeek, { weekStartsOn: 1 });
@@ -32,7 +35,7 @@ const WeeklyOverview = () => {
   const weekEnd = endOfWeek(currentWeek, { weekStartsOn: 1 });
   const weekLabel = `${format(weekStart, 'd MMM', { locale: sv })} – ${format(weekEnd, 'd MMM yyyy', { locale: sv })}`;
 
-  if (!isLoaded) {
+  if (!isLoaded || !medsLoaded) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
@@ -65,6 +68,7 @@ const WeeklyOverview = () => {
               {weekDays.map(day => {
                 const dateStr = format(day, 'yyyy-MM-dd');
                 const entry = getEntryForDate(dateStr);
+                const medicationsTaken = getMedicationsTakenOnDate(dateStr);
                 const isTodayDate = isToday(day);
 
                 return (
@@ -105,6 +109,7 @@ const WeeklyOverview = () => {
                           {entry.comment}
                         </p>
                       )}
+                      <MedicationBadges medications={medicationsTaken} />
                     </div>
                   </div>
                 );

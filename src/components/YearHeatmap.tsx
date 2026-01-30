@@ -7,6 +7,7 @@ import { cn } from '@/lib/utils';
 interface YearHeatmapProps {
   year: number;
   entries: MoodEntry[];
+  medicationDates?: string[]; // array of date strings where medications were taken
   showHeader?: boolean;
 }
 
@@ -15,7 +16,7 @@ const months = [
   'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dec'
 ];
 
-export function YearHeatmap({ year, entries, showHeader = true }: YearHeatmapProps) {
+export function YearHeatmap({ year, entries, medicationDates = [], showHeader = true }: YearHeatmapProps) {
   const moodMap = useMemo(() => {
     const map: Record<string, MoodType> = {};
     entries.forEach(entry => {
@@ -23,6 +24,10 @@ export function YearHeatmap({ year, entries, showHeader = true }: YearHeatmapPro
     });
     return map;
   }, [entries]);
+
+  const medicationSet = useMemo(() => {
+    return new Set(medicationDates);
+  }, [medicationDates]);
 
   const days = useMemo(() => {
     const start = startOfYear(new Date(year, 0, 1));
@@ -65,19 +70,21 @@ export function YearHeatmap({ year, entries, showHeader = true }: YearHeatmapPro
               {monthDays.map(day => {
                 const dateStr = format(day, 'yyyy-MM-dd');
                 const mood = moodMap[dateStr];
+                const hasMedication = medicationSet.has(dateStr);
                 const isTodayDate = isToday(day);
 
                 return (
                   <div
                     key={dateStr}
-                    title={`${format(day, 'd MMMM', { locale: sv })}${mood ? ` - ${mood}` : ''}`}
+                    title={`${format(day, 'd MMMM', { locale: sv })}${mood ? ` - ${mood}` : ''}${hasMedication ? ' 💊' : ''}`}
                     className={cn(
-                      "w-3 h-3 rounded-sm transition-all",
+                      "w-3 h-3 rounded-sm transition-all relative",
                       !mood && "bg-muted/50",
                       mood === 'elevated' && "bg-mood-elevated",
                       mood === 'stable' && "bg-mood-stable",
                       mood === 'depressed' && "bg-mood-depressed",
-                      isTodayDate && "ring-1 ring-primary"
+                      isTodayDate && "ring-1 ring-primary",
+                      hasMedication && "ring-1 ring-primary/50"
                     )}
                   />
                 );

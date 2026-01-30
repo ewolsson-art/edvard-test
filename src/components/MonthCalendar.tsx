@@ -1,13 +1,14 @@
 import { useMemo } from 'react';
 import { format, startOfMonth, endOfMonth, startOfWeek, endOfWeek, eachDayOfInterval, isSameMonth, isToday, isSameDay } from 'date-fns';
 import { sv } from 'date-fns/locale';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Pill } from 'lucide-react';
 import { MoodType } from '@/types/mood';
 import { cn } from '@/lib/utils';
 
 interface MonthCalendarProps {
   currentDate: Date;
   moodData: Record<number, MoodType>;
+  medicationData?: Record<number, number>; // day -> count of medications taken
   onPrevMonth: () => void;
   onNextMonth: () => void;
   onDayClick?: (date: Date) => void;
@@ -17,7 +18,8 @@ const weekDays = ['Mån', 'Tis', 'Ons', 'Tor', 'Fre', 'Lör', 'Sön'];
 
 export function MonthCalendar({ 
   currentDate, 
-  moodData, 
+  moodData,
+  medicationData = {},
   onPrevMonth, 
   onNextMonth,
   onDayClick 
@@ -66,6 +68,7 @@ export function MonthCalendar({
         {days.map(day => {
           const dayOfMonth = day.getDate();
           const mood = isSameMonth(day, currentDate) ? moodData[dayOfMonth] : undefined;
+          const medCount = isSameMonth(day, currentDate) ? medicationData[dayOfMonth] : undefined;
           const isCurrentMonth = isSameMonth(day, currentDate);
           const isTodayDate = isToday(day);
 
@@ -75,7 +78,7 @@ export function MonthCalendar({
               onClick={() => onDayClick?.(day)}
               disabled={!isCurrentMonth}
               className={cn(
-                "calendar-day",
+                "calendar-day relative",
                 !isCurrentMonth && "opacity-30 cursor-not-allowed",
                 isCurrentMonth && !mood && "calendar-day-empty cursor-pointer",
                 mood === 'elevated' && "calendar-day-elevated",
@@ -85,6 +88,11 @@ export function MonthCalendar({
               )}
             >
               {dayOfMonth}
+              {medCount && medCount > 0 && (
+                <span className="absolute -bottom-0.5 left-1/2 -translate-x-1/2">
+                  <Pill className="h-2.5 w-2.5 text-primary" />
+                </span>
+              )}
             </button>
           );
         })}
