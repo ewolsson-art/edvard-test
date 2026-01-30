@@ -1,9 +1,10 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { format, eachDayOfInterval, startOfMonth, endOfMonth, startOfWeek, endOfWeek, isSameMonth, isToday, getWeek } from 'date-fns';
 import { sv } from 'date-fns/locale';
 import { ChevronLeft, ChevronRight, Pill } from 'lucide-react';
 import { MoodEntry, MoodType } from '@/types/mood';
 import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
 
 interface YearHeatmapProps {
   year: number;
@@ -22,6 +23,7 @@ const months = [
 const weekDays = ['M', 'T', 'O', 'T', 'F', 'L', 'S'];
 
 export function YearHeatmap({ year, entries, medicationDates = [], onPrevYear, onNextYear, onMonthClick }: YearHeatmapProps) {
+  const [showSecondHalf, setShowSecondHalf] = useState(false);
   const moodMap = useMemo(() => {
     const map: Record<string, MoodType> = {};
     entries.forEach(entry => {
@@ -69,6 +71,11 @@ export function YearHeatmap({ year, entries, medicationDates = [], onPrevYear, o
     });
   }, [year]);
 
+  // Filter months based on current half
+  const visibleMonths = showSecondHalf 
+    ? monthsData.slice(6, 12) 
+    : monthsData.slice(0, 6);
+
   return (
     <div className="glass-card p-6 fade-in">
       {/* Header with navigation */}
@@ -94,9 +101,27 @@ export function YearHeatmap({ year, entries, medicationDates = [], onPrevYear, o
         </button>
       </div>
 
-      {/* Calendar grid - 2x2 on mobile, 3 cols on md, 4 cols on lg */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-        {monthsData.map(({ monthName, monthIndex, monthDate, weeks }) => (
+      {/* Half-year toggle */}
+      <div className="flex items-center justify-center gap-2 mb-6">
+        <Button
+          variant={!showSecondHalf ? "default" : "outline"}
+          size="sm"
+          onClick={() => setShowSecondHalf(false)}
+        >
+          Jan – Jun
+        </Button>
+        <Button
+          variant={showSecondHalf ? "default" : "outline"}
+          size="sm"
+          onClick={() => setShowSecondHalf(true)}
+        >
+          Jul – Dec
+        </Button>
+      </div>
+
+      {/* Calendar grid - 2 cols on mobile, 3 cols on larger screens */}
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+        {visibleMonths.map(({ monthName, monthIndex, monthDate, weeks }) => (
           <button
             key={monthIndex}
             onClick={() => onMonthClick?.(monthIndex)}
