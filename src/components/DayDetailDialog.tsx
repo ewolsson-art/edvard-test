@@ -1,9 +1,10 @@
 import { format } from 'date-fns';
 import { sv } from 'date-fns/locale';
 import { Zap, Sun, CloudRain, Moon, Utensils, Dumbbell, Pill, MessageSquare, ThumbsUp, ThumbsDown, Check, X } from 'lucide-react';
-import { MoodEntry, MoodType, MOOD_LABELS, QUALITY_LABELS } from '@/types/mood';
+import { MoodEntry, MoodType, MOOD_LABELS, QUALITY_LABELS, EXERCISE_TYPE_LABELS } from '@/types/mood';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
+import { Badge } from '@/components/ui/badge';
 
 interface DayDetailDialogProps {
   open: boolean;
@@ -146,6 +147,17 @@ export function DayDetailDialog({
                     </div>
                   </div>
                 </div>
+                {entry.exerciseTypes && entry.exerciseTypes.length > 0 && (
+                  <div className="mt-3 pt-3 border-t border-border/50">
+                    <div className="flex flex-wrap gap-2">
+                      {entry.exerciseTypes.map(type => (
+                        <Badge key={type} variant="secondary">
+                          {EXERCISE_TYPE_LABELS[type]}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+                )}
                 {entry.exerciseComment && (
                   <div className="mt-3 pt-3 border-t border-border/50">
                     <div className="flex items-start gap-2 text-sm text-muted-foreground">

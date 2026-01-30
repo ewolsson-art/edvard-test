@@ -90,6 +90,7 @@ export type Database = {
           eating_comment: string | null
           eating_quality: string | null
           exercise_comment: string | null
+          exercise_types: string[] | null
           exercised: boolean | null
           id: string
           mood: string
@@ -105,6 +106,7 @@ export type Database = {
           eating_comment?: string | null
           eating_quality?: string | null
           exercise_comment?: string | null
+          exercise_types?: string[] | null
           exercised?: boolean | null
           id?: string
           mood: string
@@ -120,6 +122,7 @@ export type Database = {
           eating_comment?: string | null
           eating_quality?: string | null
           exercise_comment?: string | null
+          exercise_types?: string[] | null
           exercised?: boolean | null
           id?: string
           mood?: string

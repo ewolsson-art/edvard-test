@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { MoodEntry, MoodType, MoodStats, CheckinData, QualityType } from '@/types/mood';
+import { MoodEntry, MoodType, MoodStats, CheckinData, QualityType, ExerciseType } from '@/types/mood';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
@@ -43,6 +43,7 @@ export function useMoodData() {
           eatingComment: entry.eating_comment || undefined,
           exercised: entry.exercised ?? undefined,
           exerciseComment: entry.exercise_comment || undefined,
+          exerciseTypes: (entry.exercise_types as ExerciseType[] | null) ?? undefined,
           timestamp: new Date(entry.created_at).getTime(),
         }));
         setEntries(formattedEntries);
@@ -69,6 +70,7 @@ export function useMoodData() {
         eating_comment: data.eatingComment || null,
         exercised: data.exercised ?? null,
         exercise_comment: data.exerciseComment || null,
+        exercise_types: data.exerciseTypes || null,
       }, {
         onConflict: 'user_id,date'
       });
@@ -93,6 +95,7 @@ export function useMoodData() {
         eatingComment: data.eatingComment,
         exercised: data.exercised,
         exerciseComment: data.exerciseComment,
+        exerciseTypes: data.exerciseTypes,
         timestamp: Date.now(),
       };
       setEntries(prev => {
@@ -101,6 +104,34 @@ export function useMoodData() {
       });
       toast({
         title: "Incheckning sparad!",
+      });
+      return true;
+    }
+  }, [user, toast]);
+
+  const updateExerciseTypes = useCallback(async (date: string, exerciseTypes: ExerciseType[]) => {
+    if (!user) return false;
+
+    const { error } = await supabase
+      .from('mood_entries')
+      .update({ exercise_types: exerciseTypes.length > 0 ? exerciseTypes : null })
+      .eq('user_id', user.id)
+      .eq('date', date);
+
+    if (error) {
+      console.error('Error updating exercise types:', error);
+      toast({
+        title: "Kunde inte uppdatera",
+        description: "Försök igen.",
+        variant: "destructive",
+      });
+      return false;
+    } else {
+      setEntries(prev => prev.map(e => 
+        e.date === date ? { ...e, exerciseTypes: exerciseTypes.length > 0 ? exerciseTypes : undefined } : e
+      ));
+      toast({
+        title: "Träningstyp sparad!",
       });
       return true;
     }
@@ -230,6 +261,7 @@ export function useMoodData() {
     addEntry,
     saveCheckin,
     updateComment,
+    updateExerciseTypes,
     getEntryForDate,
     getEntriesForMonth,
     getEntriesForYear,
