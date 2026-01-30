@@ -11,7 +11,8 @@ import { MonthCalendar } from '@/components/MonthCalendar';
 import { ExerciseMonthCalendar } from '@/components/ExerciseMonthCalendar';
 import { YearHeatmap } from '@/components/YearHeatmap';
 import { DayDetailDialog } from '@/components/DayDetailDialog';
-import { MoodStats as MoodStatsType } from '@/types/mood';
+import { ExerciseTypeDialog } from '@/components/ExerciseTypeDialog';
+import { MoodStats as MoodStatsType, ExerciseType } from '@/types/mood';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Dumbbell } from 'lucide-react';
 
@@ -54,9 +55,11 @@ const Overview = () => {
   const [currentYear, setCurrentYear] = useState(initialState.year);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [exerciseDialogOpen, setExerciseDialogOpen] = useState(false);
+  const [exerciseDialogDate, setExerciseDialogDate] = useState<Date | null>(null);
   const navigate = useNavigate();
 
-  const { isLoaded, getEntryForDate, getEntriesForMonth, getEntriesForYear, getStatsForYear } = useMoodData();
+  const { isLoaded, getEntryForDate, getEntriesForMonth, getEntriesForYear, getStatsForYear, updateExerciseTypes } = useMoodData();
   const { isLoaded: medsLoaded, getMedicationsTakenOnDate, logs } = useMedications();
 
   // Week data
@@ -150,7 +153,7 @@ const Overview = () => {
   }, [currentMonth, getEntryForDate]);
 
   const monthExerciseData = useMemo(() => {
-    const result: Record<number, boolean> = {};
+    const result: Record<number, { exercised: boolean; types?: ExerciseType[] }> = {};
     const start = startOfMonth(currentMonth);
     const end = endOfMonth(currentMonth);
     const days = eachDayOfInterval({ start, end });
@@ -158,7 +161,10 @@ const Overview = () => {
     days.forEach(day => {
       const entry = getEntryForDate(format(day, 'yyyy-MM-dd'));
       if (entry?.exercised !== undefined) {
-        result[day.getDate()] = entry.exercised;
+        result[day.getDate()] = {
+          exercised: entry.exercised,
+          types: entry.exerciseTypes,
+        };
       }
     });
     
@@ -198,6 +204,21 @@ const Overview = () => {
   const handleDayClick = (date: Date) => {
     setSelectedDate(date);
     setDialogOpen(true);
+  };
+
+  const handleExerciseDayClick = (date: Date) => {
+    const entry = getEntryForDate(format(date, 'yyyy-MM-dd'));
+    // Only allow editing if the day has been marked as exercised
+    if (entry?.exercised === true) {
+      setExerciseDialogDate(date);
+      setExerciseDialogOpen(true);
+    }
+  };
+
+  const handleSaveExerciseTypes = async (types: ExerciseType[]) => {
+    if (!exerciseDialogDate) return false;
+    const dateStr = format(exerciseDialogDate, 'yyyy-MM-dd');
+    return await updateExerciseTypes(dateStr, types);
   };
 
   const handleMonthClick = (month: number) => {
@@ -313,7 +334,7 @@ const Overview = () => {
                 exerciseData={monthExerciseData}
                 onPrevMonth={() => setCurrentMonth(prev => subMonths(prev, 1))}
                 onNextMonth={() => setCurrentMonth(prev => addMonths(prev, 1))}
-                onDayClick={handleDayClick}
+                onDayClick={handleExerciseDayClick}
               />
             )}
 
@@ -336,6 +357,14 @@ const Overview = () => {
           date={selectedDate}
           entry={selectedEntry}
           medicationsTaken={selectedMedications}
+        />
+
+        <ExerciseTypeDialog
+          open={exerciseDialogOpen}
+          onOpenChange={setExerciseDialogOpen}
+          date={exerciseDialogDate}
+          currentTypes={exerciseDialogDate ? (getEntryForDate(format(exerciseDialogDate, 'yyyy-MM-dd'))?.exerciseTypes || []) : []}
+          onSave={handleSaveExerciseTypes}
         />
       </div>
     </div>

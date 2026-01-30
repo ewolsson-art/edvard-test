@@ -1,5 +1,6 @@
 export type MoodType = 'elevated' | 'stable' | 'depressed';
 export type QualityType = 'good' | 'bad';
+export type ExerciseType = 'chest' | 'shoulders' | 'back' | 'legs';
 
 export interface MoodEntry {
   date: string; // ISO date string YYYY-MM-DD
@@ -11,6 +12,7 @@ export interface MoodEntry {
   eatingComment?: string;
   exercised?: boolean;
   exerciseComment?: string;
+  exerciseTypes?: ExerciseType[];
   timestamp: number;
 }
 
@@ -23,6 +25,7 @@ export interface CheckinData {
   eatingComment?: string;
   exercised?: boolean;
   exerciseComment?: string;
+  exerciseTypes?: ExerciseType[];
 }
 
 export interface MoodStats {
@@ -49,4 +52,11 @@ export const MOOD_ICONS: Record<MoodType, string> = {
 export const QUALITY_LABELS: Record<QualityType, string> = {
   good: 'Bra',
   bad: 'Dåligt',
+};
+
+export const EXERCISE_TYPE_LABELS: Record<ExerciseType, string> = {
+  chest: 'Bröst',
+  shoulders: 'Axlar',
+  back: 'Rygg',
+  legs: 'Ben',
 };
