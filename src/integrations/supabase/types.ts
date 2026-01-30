@@ -87,8 +87,14 @@ export type Database = {
           comment: string | null
           created_at: string
           date: string
+          eating_comment: string | null
+          eating_quality: string | null
+          exercise_comment: string | null
+          exercised: boolean | null
           id: string
           mood: string
+          sleep_comment: string | null
+          sleep_quality: string | null
           updated_at: string
           user_id: string
         }
@@ -96,8 +102,14 @@ export type Database = {
           comment?: string | null
           created_at?: string
           date: string
+          eating_comment?: string | null
+          eating_quality?: string | null
+          exercise_comment?: string | null
+          exercised?: boolean | null
           id?: string
           mood: string
+          sleep_comment?: string | null
+          sleep_quality?: string | null
           updated_at?: string
           user_id: string
         }
@@ -105,8 +117,14 @@ export type Database = {
           comment?: string | null
           created_at?: string
           date?: string
+          eating_comment?: string | null
+          eating_quality?: string | null
+          exercise_comment?: string | null
+          exercised?: boolean | null
           id?: string
           mood?: string
+          sleep_comment?: string | null
+          sleep_quality?: string | null
           updated_at?: string
           user_id?: string
         }
