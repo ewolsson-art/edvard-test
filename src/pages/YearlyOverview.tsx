@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { YearHeatmap } from '@/components/YearHeatmap';
 import { MoodStats } from '@/components/MoodStats';
 import { useMoodData } from '@/hooks/useMoodData';
@@ -6,6 +7,7 @@ import { useMedications } from '@/hooks/useMedications';
 
 const YearlyOverview = () => {
   const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
+  const navigate = useNavigate();
   
   const { isLoaded, getEntriesForYear, getStatsForYear } = useMoodData();
   const { isLoaded: medsLoaded, logs } = useMedications();
@@ -24,6 +26,11 @@ const YearlyOverview = () => {
       .map(log => log.date);
   }, [logs, currentYear]);
 
+  const handleMonthClick = (month: number) => {
+    // Navigate to monthly overview with the selected month
+    navigate(`/manad?year=${currentYear}&month=${month}`);
+  };
+
   if (!isLoaded || !medsLoaded) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -40,7 +47,7 @@ const YearlyOverview = () => {
             Årsöversikt
           </h1>
           <p className="text-muted-foreground">
-            Se ditt mående över hela året
+            Se ditt mående över hela året – klicka på en månad för detaljer
           </p>
         </header>
 
@@ -52,6 +59,7 @@ const YearlyOverview = () => {
             medicationDates={yearMedicationDates}
             onPrevYear={() => setCurrentYear(prev => prev - 1)}
             onNextYear={() => setCurrentYear(prev => prev + 1)}
+            onMonthClick={handleMonthClick}
           />
           
           {/* Stats card */}

@@ -11,6 +11,7 @@ interface YearHeatmapProps {
   medicationDates?: string[];
   onPrevYear?: () => void;
   onNextYear?: () => void;
+  onMonthClick?: (month: number) => void;
 }
 
 const months = [
@@ -20,7 +21,7 @@ const months = [
 
 const weekDays = ['M', 'T', 'O', 'T', 'F', 'L', 'S'];
 
-export function YearHeatmap({ year, entries, medicationDates = [], onPrevYear, onNextYear }: YearHeatmapProps) {
+export function YearHeatmap({ year, entries, medicationDates = [], onPrevYear, onNextYear, onMonthClick }: YearHeatmapProps) {
   const moodMap = useMemo(() => {
     const map: Record<string, MoodType> = {};
     entries.forEach(entry => {
@@ -96,9 +97,12 @@ export function YearHeatmap({ year, entries, medicationDates = [], onPrevYear, o
       {/* Calendar grid - 3 columns x 4 rows */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
         {monthsData.map(({ monthName, monthIndex, monthDate, weeks }) => (
-          <div key={monthIndex} className="p-3 rounded-xl bg-muted/30 border border-border">
+          <button
+            key={monthIndex}
+            onClick={() => onMonthClick?.(monthIndex)}
+            className="p-3 rounded-xl bg-muted/30 border border-border hover:bg-muted/50 hover:border-primary/30 transition-colors text-left cursor-pointer"
+          >
             <h4 className="font-medium text-sm mb-2 text-center">{monthName}</h4>
-            
             {/* Week day headers */}
             <div className="grid grid-cols-8 gap-[2px] mb-1">
               <div className="text-[10px] text-muted-foreground text-center">v</div>
@@ -152,7 +156,7 @@ export function YearHeatmap({ year, entries, medicationDates = [], onPrevYear, o
                 </div>
               ))}
             </div>
-          </div>
+          </button>
         ))}
       </div>
 

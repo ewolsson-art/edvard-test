@@ -1,4 +1,5 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { format, addMonths, subMonths, eachDayOfInterval, startOfMonth, endOfMonth } from 'date-fns';
 import { sv } from 'date-fns/locale';
 import { MonthCalendar } from '@/components/MonthCalendar';
@@ -8,7 +9,15 @@ import { useMedications } from '@/hooks/useMedications';
 import { MoodStats as MoodStatsType } from '@/types/mood';
 
 const MonthlyOverview = () => {
-  const [currentMonth, setCurrentMonth] = useState(new Date());
+  const [searchParams] = useSearchParams();
+  const [currentMonth, setCurrentMonth] = useState(() => {
+    const yearParam = searchParams.get('year');
+    const monthParam = searchParams.get('month');
+    if (yearParam && monthParam) {
+      return new Date(parseInt(yearParam), parseInt(monthParam), 1);
+    }
+    return new Date();
+  });
   
   const { isLoaded, getEntriesForMonth } = useMoodData();
   const { isLoaded: medsLoaded, getMedicationsTakenOnDate } = useMedications();
