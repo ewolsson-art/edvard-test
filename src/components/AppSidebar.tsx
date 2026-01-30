@@ -1,4 +1,4 @@
-import { CalendarDays, Calendar, BarChart3 } from "lucide-react";
+import { CalendarDays, CalendarRange, Calendar, BarChart3 } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useSidebar } from "@/components/ui/sidebar";
 
@@ -14,6 +14,7 @@ import {
 
 const navItems = [
   { title: "Idag", url: "/", icon: CalendarDays },
+  { title: "Veckoöversikt", url: "/vecka", icon: CalendarRange },
   { title: "Månadsöversikt", url: "/manad", icon: Calendar },
   { title: "Årsöversikt", url: "/ar", icon: BarChart3 },
 ];
