@@ -94,31 +94,32 @@ export function YearHeatmap({ year, entries, medicationDates = [], onPrevYear, o
         </button>
       </div>
 
-      {/* Calendar grid - 3 columns x 4 rows */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+      {/* Calendar grid - 2x2 on mobile, 3 cols on md, 4 cols on lg */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {monthsData.map(({ monthName, monthIndex, monthDate, weeks }) => (
           <button
             key={monthIndex}
             onClick={() => onMonthClick?.(monthIndex)}
-            className="p-3 rounded-xl bg-muted/30 border border-border hover:bg-muted/50 hover:border-primary/30 transition-colors text-left cursor-pointer"
+            className="p-4 rounded-xl bg-muted/30 border border-border hover:bg-muted/50 hover:border-primary/30 transition-colors text-left cursor-pointer"
           >
-            <h4 className="font-medium text-sm mb-2 text-center">{monthName}</h4>
+            <h4 className="font-medium text-base mb-3 text-center">{monthName}</h4>
+            
             {/* Week day headers */}
-            <div className="grid grid-cols-8 gap-[2px] mb-1">
-              <div className="text-[10px] text-muted-foreground text-center">v</div>
+            <div className="grid grid-cols-8 gap-1 mb-2">
+              <div className="text-xs text-muted-foreground text-center font-medium">v</div>
               {weekDays.map((day, i) => (
-                <div key={i} className="text-[10px] text-muted-foreground text-center font-medium">
+                <div key={i} className="text-xs text-muted-foreground text-center font-medium">
                   {day}
                 </div>
               ))}
             </div>
             
             {/* Weeks */}
-            <div className="space-y-[2px]">
+            <div className="space-y-1">
               {weeks.map(({ weekNumber, days }) => (
-                <div key={weekNumber} className="grid grid-cols-8 gap-[2px]">
+                <div key={weekNumber} className="grid grid-cols-8 gap-1">
                   {/* Week number */}
-                  <div className="text-[9px] text-muted-foreground flex items-center justify-center">
+                  <div className="text-xs text-muted-foreground flex items-center justify-center font-medium">
                     {weekNumber}
                   </div>
                   
@@ -135,19 +136,19 @@ export function YearHeatmap({ year, entries, medicationDates = [], onPrevYear, o
                         key={dateStr}
                         title={isCurrentMonth ? `${format(day, 'd MMMM', { locale: sv })}${mood ? ` - ${mood}` : ''}${hasMedication ? ' 💊' : ''}` : ''}
                         className={cn(
-                          "w-full aspect-square rounded-sm flex items-center justify-center text-[9px] relative",
-                          !isCurrentMonth && "opacity-20",
-                          isCurrentMonth && !mood && "bg-muted/50",
+                          "w-full aspect-square rounded-md flex items-center justify-center text-xs font-medium relative",
+                          !isCurrentMonth && "opacity-0",
+                          isCurrentMonth && !mood && "bg-muted/60 text-muted-foreground",
                           isCurrentMonth && mood === 'elevated' && "bg-mood-elevated text-white",
                           isCurrentMonth && mood === 'stable' && "bg-mood-stable text-white",
                           isCurrentMonth && mood === 'depressed' && "bg-mood-depressed text-white",
-                          isTodayDate && isCurrentMonth && "ring-1 ring-primary ring-offset-1 ring-offset-background"
+                          isTodayDate && isCurrentMonth && "ring-2 ring-primary ring-offset-1 ring-offset-background"
                         )}
                       >
                         {isCurrentMonth && day.getDate()}
                         {hasMedication && isCurrentMonth && (
                           <span className="absolute -bottom-0.5 -right-0.5">
-                            <Pill className="h-1.5 w-1.5 text-primary" />
+                            <Pill className="h-2 w-2 text-primary" />
                           </span>
                         )}
                       </div>
