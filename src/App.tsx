@@ -13,6 +13,7 @@ import Overview from "./pages/Overview";
 import Chat from "./pages/Chat";
 import Medications from "./pages/Medications";
 import Reports from "./pages/Reports";
+import Onboarding from "./pages/Onboarding";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -40,6 +41,11 @@ const App = () => (
         <BrowserRouter>
           <Routes>
             <Route path="/auth" element={<Auth />} />
+            <Route path="/onboarding" element={
+              <ProtectedRoute skipOnboardingCheck>
+                <Onboarding />
+              </ProtectedRoute>
+            } />
             <Route path="/" element={
               <ProtectedRoute>
                 <AppLayout><Index /></AppLayout>

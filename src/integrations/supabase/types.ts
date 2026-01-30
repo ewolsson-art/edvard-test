@@ -166,6 +166,45 @@ export type Database = {
         }
         Relationships: []
       }
+      user_preferences: {
+        Row: {
+          created_at: string
+          id: string
+          include_eating: boolean
+          include_exercise: boolean
+          include_medication: boolean
+          include_mood: boolean
+          include_sleep: boolean
+          onboarding_completed: boolean
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          include_eating?: boolean
+          include_exercise?: boolean
+          include_medication?: boolean
+          include_mood?: boolean
+          include_sleep?: boolean
+          onboarding_completed?: boolean
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          include_eating?: boolean
+          include_exercise?: boolean
+          include_medication?: boolean
+          include_mood?: boolean
+          include_sleep?: boolean
+          onboarding_completed?: boolean
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
