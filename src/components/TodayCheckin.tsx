@@ -161,7 +161,7 @@ export function TodayCheckin({
         <div className="space-y-6">
           <div className="text-center mb-6">
             <h1 className="font-display text-3xl md:text-4xl font-bold mb-2">
-              {isEditing ? 'Hur mår du egentligen?' : 'Hej! Hur har din dag varit?'}
+              {isEditing ? 'Hej! Hur har du mått idag?' : 'Hej! Hur har din dag varit?'}
             </h1>
             {isEditing && (
               <Button
