@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { format, eachDayOfInterval, startOfYear, endOfYear, getMonth, getDate, isToday } from 'date-fns';
+import { format, eachDayOfInterval, startOfYear, endOfYear, getMonth, isToday } from 'date-fns';
 import { sv } from 'date-fns/locale';
 import { MoodEntry, MoodType } from '@/types/mood';
 import { cn } from '@/lib/utils';
@@ -7,6 +7,7 @@ import { cn } from '@/lib/utils';
 interface YearHeatmapProps {
   year: number;
   entries: MoodEntry[];
+  showHeader?: boolean;
 }
 
 const months = [
@@ -14,7 +15,7 @@ const months = [
   'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dec'
 ];
 
-export function YearHeatmap({ year, entries }: YearHeatmapProps) {
+export function YearHeatmap({ year, entries, showHeader = true }: YearHeatmapProps) {
   const moodMap = useMemo(() => {
     const map: Record<string, MoodType> = {};
     entries.forEach(entry => {
@@ -47,10 +48,12 @@ export function YearHeatmap({ year, entries }: YearHeatmapProps) {
   }, [days]);
 
   return (
-    <div className="glass-card p-6 fade-in overflow-x-auto">
-      <h3 className="font-display text-xl font-semibold mb-6">
-        Årsöversikt {year}
-      </h3>
+    <div className={showHeader ? "glass-card p-6 fade-in overflow-x-auto" : ""}>
+      {showHeader && (
+        <h3 className="font-display text-xl font-semibold mb-6">
+          Årsöversikt {year}
+        </h3>
+      )}
 
       <div className="flex gap-1">
         {monthGroups.map(({ month, days: monthDays }) => (
