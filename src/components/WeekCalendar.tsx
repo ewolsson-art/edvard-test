@@ -76,9 +76,7 @@ export function WeekCalendar({
                 "calendar-day relative cursor-pointer",
                 !entry && "calendar-day-empty",
                 entry?.mood === 'elevated' && "calendar-day-elevated",
-                entry?.mood === 'somewhat_elevated' && "calendar-day-somewhat-elevated",
                 entry?.mood === 'stable' && "calendar-day-stable",
-                entry?.mood === 'somewhat_depressed' && "calendar-day-somewhat-depressed",
                 entry?.mood === 'depressed' && "calendar-day-depressed",
                 isTodayDate && "calendar-day-today"
               )}
@@ -110,9 +108,7 @@ export function WeekCalendar({
                 "flex items-start gap-3 p-3 rounded-xl border transition-colors",
                 isTodayDate && "ring-2 ring-primary/30",
                 entry.mood === 'elevated' && "bg-mood-elevated/10 border-mood-elevated/30",
-                entry.mood === 'somewhat_elevated' && "bg-mood-somewhat-elevated/10 border-mood-somewhat-elevated/30",
                 entry.mood === 'stable' && "bg-mood-stable/10 border-mood-stable/30",
-                entry.mood === 'somewhat_depressed' && "bg-mood-somewhat-depressed/10 border-mood-somewhat-depressed/30",
                 entry.mood === 'depressed' && "bg-mood-depressed/10 border-mood-depressed/30"
               )}
             >

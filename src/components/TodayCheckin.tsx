@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { format } from 'date-fns';
 import { sv } from 'date-fns/locale';
-import { Zap, Sun, CloudRain, MessageSquare, CheckCircle2, Pill, Pencil, Moon, Utensils, Dumbbell, ThumbsUp, ThumbsDown, Check, X, ChevronRight, ChevronLeft, CloudSun, Cloud } from 'lucide-react';
+import { Zap, Sun, CloudRain, MessageSquare, CheckCircle2, Pill, Pencil, Moon, Utensils, Dumbbell, ThumbsUp, ThumbsDown, Check, X, ChevronRight, ChevronLeft } from 'lucide-react';
 import { MoodType, MoodEntry, MOOD_LABELS, QualityType, QUALITY_LABELS, CheckinData } from '@/types/mood';
 import { Medication } from '@/types/medication';
 import { cn } from '@/lib/utils';
@@ -20,9 +20,7 @@ interface TodayCheckinProps {
 
 const moodButtons: { mood: MoodType; icon: typeof Zap; label: string; cssClass: string }[] = [
   { mood: 'elevated', icon: Zap, label: MOOD_LABELS.elevated, cssClass: 'mood-btn-elevated' },
-  { mood: 'somewhat_elevated', icon: CloudSun, label: MOOD_LABELS.somewhat_elevated, cssClass: 'mood-btn-somewhat-elevated' },
   { mood: 'stable', icon: Sun, label: MOOD_LABELS.stable, cssClass: 'mood-btn-stable' },
-  { mood: 'somewhat_depressed', icon: Cloud, label: MOOD_LABELS.somewhat_depressed, cssClass: 'mood-btn-somewhat-depressed' },
   { mood: 'depressed', icon: CloudRain, label: MOOD_LABELS.depressed, cssClass: 'mood-btn-depressed' },
 ];
 
@@ -204,13 +202,13 @@ export function TodayCheckin({
             </h1>
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6 md:gap-8 max-w-5xl mx-auto">
+          <div className="grid grid-cols-3 gap-6 md:gap-8 max-w-3xl mx-auto">
             {moodButtons.map(({ mood, icon: Icon, label, cssClass }) => (
               <button
                 key={mood}
                 onClick={() => handleMoodSelect(mood)}
                 className={cn(
-                  "mood-btn rounded-2xl p-5 md:p-8 flex flex-col items-center gap-3 min-w-[120px]",
+                  "mood-btn rounded-2xl p-5 md:p-8 flex flex-col items-center gap-3",
                   cssClass,
                   checkinData.mood === mood && "ring-4 ring-offset-2 ring-offset-background"
                 )}

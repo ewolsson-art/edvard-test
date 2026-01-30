@@ -82,9 +82,7 @@ export function MonthCalendar({
                 !isCurrentMonth && "opacity-30 cursor-not-allowed",
                 isCurrentMonth && !mood && "calendar-day-empty cursor-pointer",
                 mood === 'elevated' && "calendar-day-elevated",
-                mood === 'somewhat_elevated' && "calendar-day-somewhat-elevated",
                 mood === 'stable' && "calendar-day-stable",
-                mood === 'somewhat_depressed' && "calendar-day-somewhat-depressed",
                 mood === 'depressed' && "calendar-day-depressed",
                 isTodayDate && "calendar-day-today"
               )}
