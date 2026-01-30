@@ -115,7 +115,12 @@ const Auth = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4">
-      <div className="w-full max-w-md">
+      <div className="w-full max-w-md space-y-8">
+        <div className="text-center fade-in">
+          <h1 className="text-3xl md:text-4xl font-display font-bold text-foreground leading-tight">
+            Få en bättre överblick över ditt mående
+          </h1>
+        </div>
         <div className="glass-card p-8 fade-in">
           <div className="text-center mb-8">
             <div className="flex items-center justify-center gap-3 mb-4">
