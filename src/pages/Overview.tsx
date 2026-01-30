@@ -8,10 +8,12 @@ import { MoodStats } from '@/components/MoodStats';
 import { ExerciseStats, ExerciseStatsType } from '@/components/ExerciseStats';
 import { WeekCalendar } from '@/components/WeekCalendar';
 import { MonthCalendar } from '@/components/MonthCalendar';
+import { ExerciseMonthCalendar } from '@/components/ExerciseMonthCalendar';
 import { YearHeatmap } from '@/components/YearHeatmap';
 import { DayDetailDialog } from '@/components/DayDetailDialog';
 import { MoodStats as MoodStatsType } from '@/types/mood';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Dumbbell } from 'lucide-react';
 
 type ViewType = 'week' | 'month' | 'year';
 
@@ -147,6 +149,22 @@ const Overview = () => {
     return { exercised, notExercised, unregistered, total, totalDays };
   }, [currentMonth, getEntryForDate]);
 
+  const monthExerciseData = useMemo(() => {
+    const result: Record<number, boolean> = {};
+    const start = startOfMonth(currentMonth);
+    const end = endOfMonth(currentMonth);
+    const days = eachDayOfInterval({ start, end });
+    
+    days.forEach(day => {
+      const entry = getEntryForDate(format(day, 'yyyy-MM-dd'));
+      if (entry?.exercised !== undefined) {
+        result[day.getDate()] = entry.exercised;
+      }
+    });
+    
+    return result;
+  }, [currentMonth, getEntryForDate]);
+
   const monthLabel = format(currentMonth, 'MMMM yyyy', { locale: sv });
 
   // Year data
@@ -220,7 +238,7 @@ const Overview = () => {
 
   return (
     <div className="py-8 px-4 md:px-8">
-      <div className="max-w-6xl mx-auto">
+      <div className="max-w-6xl mx-auto space-y-12">
         <header className="mb-8">
           <h1 className="font-display text-3xl md:text-4xl font-bold mb-4">
             Översikt
@@ -235,48 +253,82 @@ const Overview = () => {
           </Tabs>
         </header>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Calendar/View */}
-          {view === 'week' && (
-            <WeekCalendar
-              weekDays={weekDays}
-              weekLabel={weekLabel}
-              getEntryForDate={getEntryForDate}
-              getMedicationsTakenOnDate={getMedicationsTakenOnDate}
-              onPrevWeek={() => setCurrentWeek(prev => subWeeks(prev, 1))}
-              onNextWeek={() => setCurrentWeek(prev => addWeeks(prev, 1))}
-              onDayClick={handleDayClick}
-            />
-          )}
+        {/* Mående Section */}
+        <section>
+          <h2 className="font-display text-2xl font-semibold mb-6">Mående</h2>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Calendar/View */}
+            {view === 'week' && (
+              <WeekCalendar
+                weekDays={weekDays}
+                weekLabel={weekLabel}
+                getEntryForDate={getEntryForDate}
+                getMedicationsTakenOnDate={getMedicationsTakenOnDate}
+                onPrevWeek={() => setCurrentWeek(prev => subWeeks(prev, 1))}
+                onNextWeek={() => setCurrentWeek(prev => addWeeks(prev, 1))}
+                onDayClick={handleDayClick}
+              />
+            )}
 
-          {view === 'month' && (
-            <MonthCalendar
-              currentDate={currentMonth}
-              moodData={monthMoodData}
-              medicationData={monthMedicationData}
-              onPrevMonth={() => setCurrentMonth(prev => subMonths(prev, 1))}
-              onNextMonth={() => setCurrentMonth(prev => addMonths(prev, 1))}
-              onDayClick={handleDayClick}
-            />
-          )}
+            {view === 'month' && (
+              <MonthCalendar
+                currentDate={currentMonth}
+                moodData={monthMoodData}
+                medicationData={monthMedicationData}
+                onPrevMonth={() => setCurrentMonth(prev => subMonths(prev, 1))}
+                onNextMonth={() => setCurrentMonth(prev => addMonths(prev, 1))}
+                onDayClick={handleDayClick}
+              />
+            )}
 
-          {view === 'year' && (
-            <YearHeatmap 
-              year={currentYear} 
-              entries={yearEntries} 
-              medicationDates={yearMedicationDates}
-              onPrevYear={() => setCurrentYear(prev => prev - 1)}
-              onNextYear={() => setCurrentYear(prev => prev + 1)}
-              onMonthClick={handleMonthClick}
-            />
-          )}
-          
-          {/* Stats cards */}
-          <div className="lg:sticky lg:top-8 lg:self-start space-y-6">
-            <MoodStats stats={stats} periodLabel={label} />
-            <ExerciseStats stats={exerciseStats} periodLabel={label} />
+            {view === 'year' && (
+              <YearHeatmap 
+                year={currentYear} 
+                entries={yearEntries} 
+                medicationDates={yearMedicationDates}
+                onPrevYear={() => setCurrentYear(prev => prev - 1)}
+                onNextYear={() => setCurrentYear(prev => prev + 1)}
+                onMonthClick={handleMonthClick}
+              />
+            )}
+            
+            {/* Mood Stats */}
+            <div className="lg:self-start">
+              <MoodStats stats={stats} periodLabel={label} />
+            </div>
           </div>
-        </div>
+        </section>
+
+        {/* Träning Section */}
+        <section>
+          <div className="flex items-center gap-3 mb-6">
+            <Dumbbell className="w-6 h-6 text-primary" />
+            <h2 className="font-display text-2xl font-semibold">Träning</h2>
+          </div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Exercise Calendar - only month view for now */}
+            {view === 'month' && (
+              <ExerciseMonthCalendar
+                currentDate={currentMonth}
+                exerciseData={monthExerciseData}
+                onPrevMonth={() => setCurrentMonth(prev => subMonths(prev, 1))}
+                onNextMonth={() => setCurrentMonth(prev => addMonths(prev, 1))}
+                onDayClick={handleDayClick}
+              />
+            )}
+
+            {view !== 'month' && (
+              <div className="glass-card p-6 flex items-center justify-center text-muted-foreground">
+                <p>Byt till månadsvyn för att se träningskalendern</p>
+              </div>
+            )}
+            
+            {/* Exercise Stats */}
+            <div className="lg:self-start">
+              <ExerciseStats stats={exerciseStats} periodLabel={label} />
+            </div>
+          </div>
+        </section>
 
         <DayDetailDialog
           open={dialogOpen}
