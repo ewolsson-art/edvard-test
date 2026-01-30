@@ -28,12 +28,18 @@ export function useMoodData() {
     }
   }, [entries, isLoaded]);
 
-  const addEntry = useCallback((date: string, mood: MoodType) => {
+  const addEntry = useCallback((date: string, mood: MoodType, comment?: string) => {
     setEntries(prev => {
       // Remove any existing entry for this date
       const filtered = prev.filter(e => e.date !== date);
-      return [...filtered, { date, mood, timestamp: Date.now() }];
+      return [...filtered, { date, mood, comment, timestamp: Date.now() }];
     });
+  }, []);
+
+  const updateComment = useCallback((date: string, comment: string) => {
+    setEntries(prev => prev.map(e => 
+      e.date === date ? { ...e, comment } : e
+    ));
   }, []);
 
   const getEntryForDate = useCallback((date: string): MoodEntry | undefined => {
@@ -76,6 +82,7 @@ export function useMoodData() {
     entries,
     isLoaded,
     addEntry,
+    updateComment,
     getEntryForDate,
     getEntriesForMonth,
     getEntriesForYear,
