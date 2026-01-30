@@ -1,9 +1,10 @@
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { format, addMonths, subMonths, eachDayOfInterval, startOfMonth, endOfMonth } from 'date-fns';
 import { sv } from 'date-fns/locale';
 import { MonthCalendar } from '@/components/MonthCalendar';
 import { MoodStats } from '@/components/MoodStats';
+import { DayDetailDialog } from '@/components/DayDetailDialog';
 import { useMoodData } from '@/hooks/useMoodData';
 import { useMedications } from '@/hooks/useMedications';
 import { MoodStats as MoodStatsType } from '@/types/mood';
@@ -19,7 +20,10 @@ const MonthlyOverview = () => {
     return new Date();
   });
   
-  const { isLoaded, getEntriesForMonth } = useMoodData();
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [dialogOpen, setDialogOpen] = useState(false);
+
+  const { isLoaded, getEntriesForMonth, getEntryForDate } = useMoodData();
   const { isLoaded: medsLoaded, getMedicationsTakenOnDate } = useMedications();
 
   const monthMoodData = useMemo(() => {
@@ -60,8 +64,17 @@ const MonthlyOverview = () => {
   const monthLabel = format(currentMonth, 'MMMM yyyy', { locale: sv });
 
   const handleDayClick = (date: Date) => {
-    console.log('Clicked day:', format(date, 'yyyy-MM-dd'));
+    setSelectedDate(date);
+    setDialogOpen(true);
   };
+
+  const selectedEntry = selectedDate 
+    ? getEntryForDate(format(selectedDate, 'yyyy-MM-dd'))
+    : undefined;
+
+  const selectedMedications = selectedDate
+    ? getMedicationsTakenOnDate(format(selectedDate, 'yyyy-MM-dd'))
+    : [];
 
   if (!isLoaded || !medsLoaded) {
     return (
@@ -99,6 +112,14 @@ const MonthlyOverview = () => {
             <MoodStats stats={monthStats} periodLabel={monthLabel} />
           </div>
         </div>
+
+        <DayDetailDialog
+          open={dialogOpen}
+          onOpenChange={setDialogOpen}
+          date={selectedDate}
+          entry={selectedEntry}
+          medicationsTaken={selectedMedications}
+        />
       </div>
     </div>
   );
