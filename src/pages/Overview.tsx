@@ -5,6 +5,7 @@ import { sv } from 'date-fns/locale';
 import { useMoodData } from '@/hooks/useMoodData';
 import { useMedications } from '@/hooks/useMedications';
 import { MoodStats } from '@/components/MoodStats';
+import { ExerciseStats, ExerciseStatsType } from '@/components/ExerciseStats';
 import { WeekCalendar } from '@/components/WeekCalendar';
 import { MonthCalendar } from '@/components/MonthCalendar';
 import { YearHeatmap } from '@/components/YearHeatmap';
@@ -77,6 +78,19 @@ const Overview = () => {
     return { elevated, stable, depressed, unregistered, total, totalDays };
   }, [weekDays, getEntryForDate]);
 
+  const weekExerciseStats = useMemo((): ExerciseStatsType => {
+    let exercised = 0, notExercised = 0;
+    weekDays.forEach(day => {
+      const entry = getEntryForDate(format(day, 'yyyy-MM-dd'));
+      if (entry?.exercised === true) exercised++;
+      else if (entry?.exercised === false) notExercised++;
+    });
+    const total = exercised + notExercised;
+    const totalDays = weekDays.length;
+    const unregistered = totalDays - total;
+    return { exercised, notExercised, unregistered, total, totalDays };
+  }, [weekDays, getEntryForDate]);
+
   const weekStart = startOfWeek(currentWeek, { weekStartsOn: 1 });
   const weekEnd = endOfWeek(currentWeek, { weekStartsOn: 1 });
   const weekLabel = `${format(weekStart, 'd MMM', { locale: sv })} – ${format(weekEnd, 'd MMM yyyy', { locale: sv })}`;
@@ -117,6 +131,22 @@ const Overview = () => {
     return { elevated, stable, depressed, unregistered, total, totalDays };
   }, [monthMoodData, currentMonth]);
 
+  const monthExerciseStats = useMemo((): ExerciseStatsType => {
+    const start = startOfMonth(currentMonth);
+    const end = endOfMonth(currentMonth);
+    const days = eachDayOfInterval({ start, end });
+    let exercised = 0, notExercised = 0;
+    days.forEach(day => {
+      const entry = getEntryForDate(format(day, 'yyyy-MM-dd'));
+      if (entry?.exercised === true) exercised++;
+      else if (entry?.exercised === false) notExercised++;
+    });
+    const total = exercised + notExercised;
+    const totalDays = end.getDate();
+    const unregistered = totalDays - total;
+    return { exercised, notExercised, unregistered, total, totalDays };
+  }, [currentMonth, getEntryForDate]);
+
   const monthLabel = format(currentMonth, 'MMMM yyyy', { locale: sv });
 
   // Year data
@@ -127,6 +157,19 @@ const Overview = () => {
   const yearStats = useMemo(() => {
     return getStatsForYear(currentYear);
   }, [currentYear, getStatsForYear]);
+
+  const yearExerciseStats = useMemo((): ExerciseStatsType => {
+    let exercised = 0, notExercised = 0;
+    yearEntries.forEach(entry => {
+      if (entry.exercised === true) exercised++;
+      else if (entry.exercised === false) notExercised++;
+    });
+    const total = exercised + notExercised;
+    const isLeapYear = (currentYear % 4 === 0 && currentYear % 100 !== 0) || (currentYear % 400 === 0);
+    const totalDays = isLeapYear ? 366 : 365;
+    const unregistered = totalDays - total;
+    return { exercised, notExercised, unregistered, total, totalDays };
+  }, [yearEntries, currentYear]);
 
   const yearMedicationDates = useMemo(() => {
     return logs
@@ -167,13 +210,13 @@ const Overview = () => {
 
   const getStatsForView = () => {
     switch (view) {
-      case 'week': return { stats: weekStats, label: weekLabel };
-      case 'month': return { stats: monthStats, label: monthLabel };
-      case 'year': return { stats: yearStats, label: `${currentYear}` };
+      case 'week': return { stats: weekStats, exerciseStats: weekExerciseStats, label: weekLabel };
+      case 'month': return { stats: monthStats, exerciseStats: monthExerciseStats, label: monthLabel };
+      case 'year': return { stats: yearStats, exerciseStats: yearExerciseStats, label: `${currentYear}` };
     }
   };
 
-  const { stats, label } = getStatsForView();
+  const { stats, exerciseStats, label } = getStatsForView();
 
   return (
     <div className="py-8 px-4 md:px-8">
@@ -228,9 +271,10 @@ const Overview = () => {
             />
           )}
           
-          {/* Stats card */}
-          <div className="lg:sticky lg:top-8 lg:self-start">
+          {/* Stats cards */}
+          <div className="lg:sticky lg:top-8 lg:self-start space-y-6">
             <MoodStats stats={stats} periodLabel={label} />
+            <ExerciseStats stats={exerciseStats} periodLabel={label} />
           </div>
         </div>
 
