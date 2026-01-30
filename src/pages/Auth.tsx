@@ -130,6 +130,9 @@ const Auth = () => {
           <h1 className="text-5xl md:text-6xl lg:text-7xl font-display font-bold text-foreground leading-tight">
             Håll bättre koll på ditt mående
           </h1>
+          <p className="text-lg md:text-xl text-muted-foreground mt-4">
+            Din interaktiva och personliga dagbok ger dig bättre överblick över ditt mående
+          </p>
         </div>
         <div className="w-full md:w-auto md:min-w-[400px] glass-card p-8 fade-in">
           <div className="text-center mb-8">
