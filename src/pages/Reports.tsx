@@ -549,19 +549,35 @@ const Reports = () => {
       if (error) throw error;
 
       const shareUrl = `${window.location.origin}/dela/${shareKey}`;
-      await navigator.clipboard.writeText(shareUrl);
+      
+      // Try to copy to clipboard, but show link in toast either way
+      let copied = false;
+      try {
+        await navigator.clipboard.writeText(shareUrl);
+        copied = true;
+      } catch (clipboardErr) {
+        console.log('Clipboard not available:', clipboardErr);
+      }
 
       if (type === 'month') {
         setCopiedMonth(true);
-        setTimeout(() => setCopiedMonth(false), 3000);
+        setTimeout(() => setCopiedMonth(false), 5000);
       } else {
         setCopiedYear(true);
-        setTimeout(() => setCopiedYear(false), 3000);
+        setTimeout(() => setCopiedYear(false), 5000);
       }
 
       toast({
-        title: "Länk kopierad!",
-        description: "Delningslänken har kopierats till urklipp. Du kan nu klistra in den i ett meddelande.",
+        title: copied ? "Länk kopierad!" : "Delningslänk skapad!",
+        description: (
+          <div className="space-y-2">
+            <p>{copied ? "Delningslänken har kopierats." : "Kopiera länken nedan:"}</p>
+            <code className="block p-2 bg-muted rounded text-xs break-all select-all">
+              {shareUrl}
+            </code>
+          </div>
+        ),
+        duration: 10000,
       });
     } catch (err) {
       console.error('Share error:', err);
