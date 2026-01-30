@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/sidebar";
 
 const navItems = [
-  { title: "Idag", url: "/", icon: CalendarDays },
+  { title: "Check-in", url: "/", icon: CalendarDays },
   { title: "Veckoöversikt", url: "/vecka", icon: CalendarRange },
   { title: "Månadsöversikt", url: "/manad", icon: Calendar },
   { title: "Årsöversikt", url: "/ar", icon: BarChart3 },
