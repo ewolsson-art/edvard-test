@@ -169,16 +169,22 @@ export function TodayCheckin({
           </h1>
 
           {/* Encouragement message for depressed mood */}
-          {todayEntry?.mood === 'depressed' && encouragementData.goodDaysCount > 0 && (
+          {todayEntry?.mood === 'depressed' && (
             <div className="max-w-md mx-auto mt-6 p-4 rounded-xl bg-primary/10 border border-primary/20">
               <div className="flex items-center justify-center gap-2 mb-2">
                 <Heart className="w-5 h-5 text-primary" />
               </div>
               <p className="text-sm text-foreground leading-relaxed">
-                Kom ihåg att du faktiskt har mått bra <strong>{encouragementData.goodDaysCount} {encouragementData.goodDaysCount === 1 ? 'dag' : 'dagar'}</strong> det här året
-                {encouragementData.daysSinceGood !== null && encouragementData.daysSinceGood > 0 && (
-                  <> och att du mådde bra för <strong>{encouragementData.daysSinceGood} {encouragementData.daysSinceGood === 1 ? 'dag' : 'dagar'}</strong> sedan</>
-                )}.
+                {encouragementData.goodDaysCount > 0 ? (
+                  <>
+                    Kom ihåg att du faktiskt har mått bra <strong>{encouragementData.goodDaysCount} {encouragementData.goodDaysCount === 1 ? 'dag' : 'dagar'}</strong> det här året
+                    {encouragementData.daysSinceGood !== null && encouragementData.daysSinceGood > 0 && (
+                      <> och att du mådde bra för <strong>{encouragementData.daysSinceGood} {encouragementData.daysSinceGood === 1 ? 'dag' : 'dagar'}</strong> sedan</>
+                    )}.
+                  </>
+                ) : (
+                  <>Det är tufft just nu, men bättre dagar kommer.</>
+                )}
                 {' '}<span className="text-primary font-medium">Håll ut! 💪</span>
               </p>
             </div>
