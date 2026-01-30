@@ -1,9 +1,9 @@
 import { CalendarDays, CalendarRange, Calendar, BarChart3, Pill, FileText, LogOut } from "lucide-react";
+import { Link } from "react-router-dom";
 import { NavLink } from "@/components/NavLink";
 import { useSidebar } from "@/components/ui/sidebar";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
-
 import {
   Sidebar,
   SidebarContent,
@@ -39,9 +39,11 @@ export function AppSidebar() {
         {/* Logo/Brand */}
         <div className="px-4 mb-6">
           {!isCollapsed && (
-          <h2 className="font-display text-xl font-bold text-foreground">
-            Between Clouds
-          </h2>
+            <Link to="/" className="block hover:opacity-80 transition-opacity">
+              <h2 className="font-display text-xl font-bold text-foreground">
+                Between Clouds
+              </h2>
+            </Link>
           )}
         </div>
 
