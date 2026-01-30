@@ -127,12 +127,15 @@ export function useMoodData() {
 
   const getStatsForYear = useCallback((year: number): MoodStats => {
     const yearEntries = getEntriesForYear(year);
-    return {
-      elevated: yearEntries.filter(e => e.mood === 'elevated').length,
-      stable: yearEntries.filter(e => e.mood === 'stable').length,
-      depressed: yearEntries.filter(e => e.mood === 'depressed').length,
-      total: yearEntries.length,
-    };
+    const elevated = yearEntries.filter(e => e.mood === 'elevated').length;
+    const stable = yearEntries.filter(e => e.mood === 'stable').length;
+    const depressed = yearEntries.filter(e => e.mood === 'depressed').length;
+    const total = elevated + stable + depressed;
+    // Calculate total days in the year (handle leap years)
+    const isLeapYear = (year % 4 === 0 && year % 100 !== 0) || (year % 400 === 0);
+    const totalDays = isLeapYear ? 366 : 365;
+    const unregistered = totalDays - total;
+    return { elevated, stable, depressed, unregistered, total, totalDays };
   }, [getEntriesForYear]);
 
   const removeEntry = useCallback(async (date: string) => {

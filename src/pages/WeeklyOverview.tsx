@@ -26,7 +26,10 @@ const WeeklyOverview = () => {
       if (entry?.mood === 'stable') stable++;
       if (entry?.mood === 'depressed') depressed++;
     });
-    return { elevated, stable, depressed, total: elevated + stable + depressed };
+    const total = elevated + stable + depressed;
+    const totalDays = weekDays.length;
+    const unregistered = totalDays - total;
+    return { elevated, stable, depressed, unregistered, total, totalDays };
   }, [weekDays, getEntryForDate]);
 
   const weekStart = startOfWeek(currentWeek, { weekStartsOn: 1 });

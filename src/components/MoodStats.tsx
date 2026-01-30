@@ -1,5 +1,5 @@
 import { MoodStats as MoodStatsType, MOOD_LABELS } from '@/types/mood';
-import { Zap, Sun, CloudRain, Calendar } from 'lucide-react';
+import { Zap, Sun, CloudRain, Calendar, HelpCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface MoodStatsProps {
@@ -10,34 +10,46 @@ interface MoodStatsProps {
 export function MoodStats({ stats, periodLabel }: MoodStatsProps) {
   const statCards = [
     {
-      mood: 'elevated' as const,
+      key: 'elevated',
       icon: Zap,
       count: stats.elevated,
       bgClass: 'bg-mood-elevated-light',
       textClass: 'text-mood-elevated',
+      barClass: 'bg-mood-elevated',
       label: MOOD_LABELS.elevated,
     },
     {
-      mood: 'stable' as const,
+      key: 'stable',
       icon: Sun,
       count: stats.stable,
       bgClass: 'bg-mood-stable-light',
       textClass: 'text-mood-stable',
+      barClass: 'bg-mood-stable',
       label: MOOD_LABELS.stable,
     },
     {
-      mood: 'depressed' as const,
+      key: 'depressed',
       icon: CloudRain,
       count: stats.depressed,
       bgClass: 'bg-mood-depressed-light',
       textClass: 'text-mood-depressed',
+      barClass: 'bg-mood-depressed',
       label: MOOD_LABELS.depressed,
+    },
+    {
+      key: 'unregistered',
+      icon: HelpCircle,
+      count: stats.unregistered,
+      bgClass: 'bg-muted',
+      textClass: 'text-muted-foreground',
+      barClass: 'bg-muted-foreground/50',
+      label: 'Ej registrerat',
     },
   ];
 
   const percentage = (count: number) => {
-    if (stats.total === 0) return 0;
-    return Math.round((count / stats.total) * 100);
+    if (stats.totalDays === 0) return 0;
+    return Math.round((count / stats.totalDays) * 100);
   };
 
   return (
@@ -49,14 +61,14 @@ export function MoodStats({ stats, periodLabel }: MoodStatsProps) {
         </h3>
       </div>
 
-      <div className="grid grid-cols-3 gap-4 mb-6">
-        {statCards.map(({ mood, icon: Icon, count, bgClass, textClass, label }) => (
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
+        {statCards.map(({ key, icon: Icon, count, bgClass, textClass, label }) => (
           <div
-            key={mood}
-            className={cn("stat-card text-center", bgClass)}
+            key={key}
+            className={cn("stat-card text-center p-4", bgClass)}
           >
-            <Icon className={cn("w-6 h-6 mx-auto mb-2", textClass)} />
-            <p className={cn("text-3xl font-bold", textClass)}>{count}</p>
+            <Icon className={cn("w-5 h-5 mx-auto mb-2", textClass)} />
+            <p className={cn("text-2xl font-bold", textClass)}>{count}</p>
             <p className="text-xs text-muted-foreground mt-1">{label}</p>
             <p className="text-xs text-muted-foreground">
               {percentage(count)}%
@@ -66,20 +78,15 @@ export function MoodStats({ stats, periodLabel }: MoodStatsProps) {
       </div>
 
       <div className="space-y-3">
-        {statCards.map(({ mood, count, label }) => (
-          <div key={mood} className="space-y-1">
+        {statCards.map(({ key, count, label, barClass }) => (
+          <div key={key} className="space-y-1">
             <div className="flex justify-between text-sm">
               <span className="text-muted-foreground">{label}</span>
               <span className="font-medium">{count} dagar</span>
             </div>
             <div className="h-2 bg-muted rounded-full overflow-hidden">
               <div
-                className={cn(
-                  "h-full rounded-full transition-all duration-500",
-                  mood === 'elevated' && "bg-mood-elevated",
-                  mood === 'stable' && "bg-mood-stable",
-                  mood === 'depressed' && "bg-mood-depressed"
-                )}
+                className={cn("h-full rounded-full transition-all duration-500", barClass)}
                 style={{ width: `${percentage(count)}%` }}
               />
             </div>
@@ -90,7 +97,7 @@ export function MoodStats({ stats, periodLabel }: MoodStatsProps) {
       <div className="mt-6 pt-4 border-t border-border">
         <div className="flex justify-between text-sm">
           <span className="text-muted-foreground">Totalt registrerade dagar</span>
-          <span className="font-semibold">{stats.total}</span>
+          <span className="font-semibold">{stats.total} av {stats.totalDays}</span>
         </div>
       </div>
     </div>
