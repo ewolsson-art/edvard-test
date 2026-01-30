@@ -53,12 +53,15 @@ export const useUserPreferences = () => {
     if (!user) return { error: new Error('Not authenticated') };
 
     try {
+      // Use upsert to handle both create and update cases
       const { data, error } = await supabase
         .from('user_preferences')
-        .insert({
+        .upsert({
           user_id: user.id,
           ...prefs,
           onboarding_completed: true,
+        }, {
+          onConflict: 'user_id',
         })
         .select()
         .single();
