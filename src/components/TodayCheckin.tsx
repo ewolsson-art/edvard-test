@@ -175,17 +175,14 @@ export function TodayCheckin({
                 <Heart className="w-5 h-5 text-primary" />
               </div>
               <p className="text-sm text-foreground leading-relaxed">
-                {encouragementData.goodDaysCount > 0 ? (
+                Det är tufft just nu, men bättre dagar kommer. <span className="text-primary font-medium">Håll ut! 💪</span>
+                {encouragementData.goodDaysCount > 0 && (
                   <>
-                    Kom ihåg att du faktiskt har mått bra <strong>{encouragementData.goodDaysCount} {encouragementData.goodDaysCount === 1 ? 'dag' : 'dagar'}</strong> det här året
-                    {encouragementData.daysSinceGood !== null && encouragementData.daysSinceGood > 0 && (
-                      <> och att du mådde bra för <strong>{encouragementData.daysSinceGood} {encouragementData.daysSinceGood === 1 ? 'dag' : 'dagar'}</strong> sedan</>
-                    )}.
+                    {' '}Du mådde bra för{' '}
+                    <strong>{encouragementData.daysSinceGood !== null ? encouragementData.daysSinceGood : '?'} {encouragementData.daysSinceGood === 1 ? 'dag' : 'dagar'}</strong> sen
+                    {' '}och du har mått bra <strong>{encouragementData.goodDaysCount} {encouragementData.goodDaysCount === 1 ? 'dag' : 'dagar'}</strong> i år.
                   </>
-                ) : (
-                  <>Det är tufft just nu, men bättre dagar kommer.</>
                 )}
-                {' '}<span className="text-primary font-medium">Håll ut! 💪</span>
               </p>
             </div>
           )}
