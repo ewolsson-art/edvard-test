@@ -5,10 +5,14 @@ import { useMoodData } from '@/hooks/useMoodData';
 import { useMedications } from '@/hooks/useMedications';
 import { MoodStats } from '@/components/MoodStats';
 import { WeekCalendar } from '@/components/WeekCalendar';
+import { DayDetailDialog } from '@/components/DayDetailDialog';
 import { MoodStats as MoodStatsType } from '@/types/mood';
 
 const WeeklyOverview = () => {
   const [currentWeek, setCurrentWeek] = useState(new Date());
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [dialogOpen, setDialogOpen] = useState(false);
+
   const { isLoaded, getEntryForDate } = useMoodData();
   const { isLoaded: medsLoaded, getMedicationsTakenOnDate } = useMedications();
 
@@ -37,8 +41,17 @@ const WeeklyOverview = () => {
   const weekLabel = `${format(weekStart, 'd MMM', { locale: sv })} – ${format(weekEnd, 'd MMM yyyy', { locale: sv })}`;
 
   const handleDayClick = (date: Date) => {
-    console.log('Clicked day:', format(date, 'yyyy-MM-dd'));
+    setSelectedDate(date);
+    setDialogOpen(true);
   };
+
+  const selectedEntry = selectedDate 
+    ? getEntryForDate(format(selectedDate, 'yyyy-MM-dd'))
+    : undefined;
+
+  const selectedMedications = selectedDate
+    ? getMedicationsTakenOnDate(format(selectedDate, 'yyyy-MM-dd'))
+    : [];
 
   if (!isLoaded || !medsLoaded) {
     return (
@@ -78,6 +91,13 @@ const WeeklyOverview = () => {
           </div>
         </div>
       </div>
+      <DayDetailDialog
+        open={dialogOpen}
+        onOpenChange={setDialogOpen}
+        date={selectedDate}
+        entry={selectedEntry}
+        medicationsTaken={selectedMedications}
+      />
     </div>
   );
 };
