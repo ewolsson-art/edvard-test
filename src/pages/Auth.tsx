@@ -114,14 +114,14 @@ const Auth = () => {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4">
-      <div className="w-full max-w-md space-y-8">
-        <div className="text-center fade-in">
-          <h1 className="text-3xl md:text-4xl font-display font-bold text-foreground leading-tight">
+    <div className="min-h-screen flex items-center justify-center p-4 md:p-8">
+      <div className="w-full max-w-5xl flex flex-col md:flex-row items-center gap-8 md:gap-16">
+        <div className="flex-1 text-center md:text-left fade-in">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold text-foreground leading-tight">
             Få en bättre överblick över ditt mående
           </h1>
         </div>
-        <div className="glass-card p-8 fade-in">
+        <div className="w-full md:w-auto md:min-w-[400px] glass-card p-8 fade-in">
           <div className="text-center mb-8">
             <div className="flex items-center justify-center gap-3 mb-4">
               <img src={logo} alt="Between Clouds" className="w-12 h-12 object-contain" />
