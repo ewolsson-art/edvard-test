@@ -18,9 +18,9 @@ import {
 const navItems = [
   { title: "Check-in", url: "/", icon: CalendarDays },
   { title: "Översikt", url: "/oversikt", icon: BarChart3 },
-  { title: "Chatt", url: "/chatt", icon: MessageCircle },
   { title: "Mediciner", url: "/mediciner", icon: Pill },
   { title: "Rapporter", url: "/rapporter", icon: FileText },
+  { title: "Chatt", url: "/chatt", icon: MessageCircle },
 ];
 
 export function AppSidebar() {
