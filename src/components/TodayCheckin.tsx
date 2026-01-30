@@ -204,18 +204,18 @@ export function TodayCheckin({
             </h1>
           </div>
 
-          <div className="grid grid-cols-3 md:grid-cols-5 gap-3 md:gap-4 max-w-4xl mx-auto">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-5 max-w-5xl mx-auto">
             {moodButtons.map(({ mood, icon: Icon, label, cssClass }) => (
               <button
                 key={mood}
                 onClick={() => handleMoodSelect(mood)}
                 className={cn(
-                  "mood-btn rounded-2xl p-4 md:p-6 flex flex-col items-center gap-2 min-w-[100px]",
+                  "mood-btn rounded-2xl p-5 md:p-8 flex flex-col items-center gap-3 min-w-[120px]",
                   cssClass,
                   checkinData.mood === mood && "ring-4 ring-offset-2 ring-offset-background"
                 )}
               >
-                <Icon className="w-8 h-8 md:w-10 md:h-10" />
+                <Icon className="w-10 h-10 md:w-12 md:h-12" />
                 <span className="font-semibold text-sm md:text-base text-center leading-tight drop-shadow-sm">{label}</span>
               </button>
             ))}
