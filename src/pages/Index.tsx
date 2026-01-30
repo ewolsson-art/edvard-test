@@ -9,6 +9,7 @@ const Index = () => {
     isLoaded,
     saveCheckin,
     getEntryForDate,
+    getEntriesForYear,
   } = useMoodData();
 
   const {
@@ -20,6 +21,8 @@ const Index = () => {
 
   const todayStr = format(new Date(), 'yyyy-MM-dd');
   const todayEntry = getEntryForDate(todayStr);
+  const currentYear = new Date().getFullYear();
+  const yearEntries = getEntriesForYear(currentYear);
 
   const medicationsTakenToday = activeMedications
     .filter(med => isMedicationTakenOnDate(med.id, todayStr))
@@ -49,6 +52,7 @@ const Index = () => {
           todayEntry={todayEntry} 
           activeMedications={activeMedications}
           medicationsTakenToday={medicationsTakenToday}
+          yearEntries={yearEntries}
           onSaveCheckin={handleSaveCheckin}
           onToggleMedication={handleToggleMedication}
         />

@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
-import { format } from 'date-fns';
+import { useState, useEffect, useMemo } from 'react';
+import { format, differenceInDays, parseISO } from 'date-fns';
 import { sv } from 'date-fns/locale';
-import { Zap, Sun, CloudRain, MessageSquare, CheckCircle2, Pill, Pencil, Moon, Utensils, Dumbbell, ThumbsUp, ThumbsDown, Check, X, ChevronRight, ChevronLeft } from 'lucide-react';
+import { Zap, Sun, CloudRain, MessageSquare, CheckCircle2, Pill, Pencil, Moon, Utensils, Dumbbell, ThumbsUp, ThumbsDown, Check, X, ChevronRight, ChevronLeft, Heart } from 'lucide-react';
 import { MoodType, MoodEntry, MOOD_LABELS, QualityType, QUALITY_LABELS, CheckinData } from '@/types/mood';
 import { Medication } from '@/types/medication';
 import { cn } from '@/lib/utils';
@@ -14,6 +14,7 @@ interface TodayCheckinProps {
   todayEntry: MoodEntry | undefined;
   activeMedications: Medication[];
   medicationsTakenToday: string[];
+  yearEntries: MoodEntry[];
   onSaveCheckin: (data: CheckinData) => Promise<boolean>;
   onToggleMedication: (medicationId: string, taken: boolean) => void;
 }
@@ -32,11 +33,30 @@ export function TodayCheckin({
   todayEntry, 
   activeMedications,
   medicationsTakenToday,
+  yearEntries,
   onSaveCheckin,
   onToggleMedication,
 }: TodayCheckinProps) {
   const today = new Date();
   const formattedDate = format(today, "EEEE d MMMM", { locale: sv });
+
+  // Calculate encouragement data for depressed mood
+  const encouragementData = useMemo(() => {
+    const goodDays = yearEntries.filter(e => e.mood === 'stable' || e.mood === 'elevated');
+    const goodDaysCount = goodDays.length;
+    
+    // Find the most recent good day
+    const sortedGoodDays = goodDays
+      .map(e => ({ ...e, dateObj: parseISO(e.date) }))
+      .sort((a, b) => b.dateObj.getTime() - a.dateObj.getTime());
+    
+    const lastGoodDay = sortedGoodDays[0];
+    const daysSinceGood = lastGoodDay 
+      ? differenceInDays(today, lastGoodDay.dateObj)
+      : null;
+    
+    return { goodDaysCount, daysSinceGood };
+  }, [yearEntries, today]);
   
   const [currentStep, setCurrentStep] = useState<Step>('mood');
   const [isEditing, setIsEditing] = useState(false);
@@ -147,6 +167,22 @@ export function TodayCheckin({
           <h1 className="font-display text-2xl md:text-3xl font-bold mb-2 text-mood-stable">
             Du har checkat in!
           </h1>
+
+          {/* Encouragement message for depressed mood */}
+          {todayEntry?.mood === 'depressed' && encouragementData.goodDaysCount > 0 && (
+            <div className="max-w-md mx-auto mt-6 p-4 rounded-xl bg-primary/10 border border-primary/20">
+              <div className="flex items-center justify-center gap-2 mb-2">
+                <Heart className="w-5 h-5 text-primary" />
+              </div>
+              <p className="text-sm text-foreground leading-relaxed">
+                Kom ihåg att du faktiskt har mått bra <strong>{encouragementData.goodDaysCount} {encouragementData.goodDaysCount === 1 ? 'dag' : 'dagar'}</strong> det här året
+                {encouragementData.daysSinceGood !== null && encouragementData.daysSinceGood > 0 && (
+                  <> och att du mådde bra för <strong>{encouragementData.daysSinceGood} {encouragementData.daysSinceGood === 1 ? 'dag' : 'dagar'}</strong> sedan</>
+                )}.
+                {' '}<span className="text-primary font-medium">Håll ut! 💪</span>
+              </p>
+            </div>
+          )}
 
           {/* Summary */}
           <div className="max-w-md mx-auto mt-6 space-y-3 text-left">
