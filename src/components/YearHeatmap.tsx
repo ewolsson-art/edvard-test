@@ -1,14 +1,16 @@
 import { useMemo } from 'react';
 import { format, eachDayOfInterval, startOfYear, endOfYear, getMonth, isToday } from 'date-fns';
 import { sv } from 'date-fns/locale';
+import { ChevronLeft, ChevronRight, Pill } from 'lucide-react';
 import { MoodEntry, MoodType } from '@/types/mood';
 import { cn } from '@/lib/utils';
 
 interface YearHeatmapProps {
   year: number;
   entries: MoodEntry[];
-  medicationDates?: string[]; // array of date strings where medications were taken
-  showHeader?: boolean;
+  medicationDates?: string[];
+  onPrevYear?: () => void;
+  onNextYear?: () => void;
 }
 
 const months = [
@@ -16,7 +18,7 @@ const months = [
   'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dec'
 ];
 
-export function YearHeatmap({ year, entries, medicationDates = [], showHeader = true }: YearHeatmapProps) {
+export function YearHeatmap({ year, entries, medicationDates = [], onPrevYear, onNextYear }: YearHeatmapProps) {
   const moodMap = useMemo(() => {
     const map: Record<string, MoodType> = {};
     entries.forEach(entry => {
@@ -53,59 +55,93 @@ export function YearHeatmap({ year, entries, medicationDates = [], showHeader = 
   }, [days]);
 
   return (
-    <div className={showHeader ? "glass-card p-6 fade-in overflow-x-auto" : ""}>
-      {showHeader && (
-        <h3 className="font-display text-xl font-semibold mb-6">
-          Årsöversikt {year}
+    <div className="glass-card p-6 fade-in">
+      {/* Header with navigation */}
+      <div className="flex items-center justify-between mb-6">
+        <button
+          onClick={onPrevYear}
+          className="p-2 rounded-lg hover:bg-muted transition-colors"
+          aria-label="Föregående år"
+        >
+          <ChevronLeft className="w-5 h-5" />
+        </button>
+
+        <h3 className="font-display text-xl font-semibold">
+          {year}
         </h3>
-      )}
 
-      <div className="flex gap-1">
-        {monthGroups.map(({ month, days: monthDays }) => (
-          <div key={month} className="flex flex-col gap-1">
-            <span className="text-xs text-muted-foreground mb-1 text-center">
-              {months[month]}
-            </span>
-            <div className="grid grid-rows-[repeat(31,1fr)] gap-[2px]">
-              {monthDays.map(day => {
-                const dateStr = format(day, 'yyyy-MM-dd');
-                const mood = moodMap[dateStr];
-                const hasMedication = medicationSet.has(dateStr);
-                const isTodayDate = isToday(day);
-
-                return (
-                  <div
-                    key={dateStr}
-                    title={`${format(day, 'd MMMM', { locale: sv })}${mood ? ` - ${mood}` : ''}${hasMedication ? ' 💊' : ''}`}
-                    className={cn(
-                      "w-3 h-3 rounded-sm transition-all relative",
-                      !mood && "bg-muted/50",
-                      mood === 'elevated' && "bg-mood-elevated",
-                      mood === 'stable' && "bg-mood-stable",
-                      mood === 'depressed' && "bg-mood-depressed",
-                      isTodayDate && "ring-1 ring-primary",
-                      hasMedication && "ring-1 ring-primary/50"
-                    )}
-                  />
-                );
-              })}
-            </div>
-          </div>
-        ))}
+        <button
+          onClick={onNextYear}
+          className="p-2 rounded-lg hover:bg-muted transition-colors"
+          aria-label="Nästa år"
+        >
+          <ChevronRight className="w-5 h-5" />
+        </button>
       </div>
 
-      <div className="flex items-center gap-6 mt-6 justify-center">
+      {/* Heatmap */}
+      <div className="overflow-x-auto">
+        <div className="flex gap-1 min-w-max justify-center">
+          {monthGroups.map(({ month, days: monthDays }) => (
+            <div key={month} className="flex flex-col gap-1">
+              <span className="text-xs text-muted-foreground mb-1 text-center font-medium">
+                {months[month]}
+              </span>
+              <div className="grid grid-rows-[repeat(31,1fr)] gap-[2px]">
+                {monthDays.map(day => {
+                  const dateStr = format(day, 'yyyy-MM-dd');
+                  const mood = moodMap[dateStr];
+                  const hasMedication = medicationSet.has(dateStr);
+                  const isTodayDate = isToday(day);
+
+                  return (
+                    <div
+                      key={dateStr}
+                      title={`${format(day, 'd MMMM', { locale: sv })}${mood ? ` - ${mood}` : ''}${hasMedication ? ' 💊' : ''}`}
+                      className={cn(
+                        "w-3.5 h-3.5 rounded-sm transition-all relative cursor-default",
+                        !mood && "bg-muted/50",
+                        mood === 'elevated' && "bg-mood-elevated",
+                        mood === 'stable' && "bg-mood-stable",
+                        mood === 'depressed' && "bg-mood-depressed",
+                        isTodayDate && "ring-2 ring-primary ring-offset-1 ring-offset-background"
+                      )}
+                    >
+                      {hasMedication && (
+                        <span className="absolute -bottom-0.5 -right-0.5">
+                          <Pill className="h-2 w-2 text-primary" />
+                        </span>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Legend */}
+      <div className="flex flex-wrap items-center gap-4 mt-6 pt-4 border-t border-border justify-center">
         <div className="flex items-center gap-2">
-          <div className="w-3 h-3 rounded-sm bg-mood-elevated" />
+          <div className="w-3.5 h-3.5 rounded-sm bg-mood-elevated" />
           <span className="text-xs text-muted-foreground">Uppvarvad</span>
         </div>
         <div className="flex items-center gap-2">
-          <div className="w-3 h-3 rounded-sm bg-mood-stable" />
+          <div className="w-3.5 h-3.5 rounded-sm bg-mood-stable" />
           <span className="text-xs text-muted-foreground">Stabil</span>
         </div>
         <div className="flex items-center gap-2">
-          <div className="w-3 h-3 rounded-sm bg-mood-depressed" />
+          <div className="w-3.5 h-3.5 rounded-sm bg-mood-depressed" />
           <span className="text-xs text-muted-foreground">Nedstämd</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <div className="w-3.5 h-3.5 rounded-sm bg-muted/50" />
+          <span className="text-xs text-muted-foreground">Ej registrerat</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <Pill className="h-3 w-3 text-primary" />
+          <span className="text-xs text-muted-foreground">Medicin tagen</span>
         </div>
       </div>
     </div>

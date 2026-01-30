@@ -1,8 +1,6 @@
 import { useState, useMemo } from 'react';
-import { addYears, subYears } from 'date-fns';
 import { YearHeatmap } from '@/components/YearHeatmap';
 import { MoodStats } from '@/components/MoodStats';
-import { CalendarHeader } from '@/components/CalendarHeader';
 import { useMoodData } from '@/hooks/useMoodData';
 import { useMedications } from '@/hooks/useMedications';
 
@@ -36,7 +34,7 @@ const YearlyOverview = () => {
 
   return (
     <div className="py-8 px-4 md:px-8">
-      <div className="max-w-4xl mx-auto">
+      <div className="max-w-6xl mx-auto">
         <header className="mb-8">
           <h1 className="font-display text-3xl md:text-4xl font-bold mb-2">
             Årsöversikt
@@ -46,24 +44,18 @@ const YearlyOverview = () => {
           </p>
         </header>
 
-        <div className="grid grid-cols-1 xl:grid-cols-[1fr_350px] gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Calendar/Heatmap card */}
-          <div className="glass-card p-6 fade-in overflow-x-auto">
-            <CalendarHeader
-              title={`${currentYear}`}
-              onPrev={() => setCurrentYear(prev => prev - 1)}
-              onNext={() => setCurrentYear(prev => prev + 1)}
-            />
-            <YearHeatmap 
-              year={currentYear} 
-              entries={yearEntries} 
-              medicationDates={yearMedicationDates}
-              showHeader={false} 
-            />
-          </div>
+          <YearHeatmap 
+            year={currentYear} 
+            entries={yearEntries} 
+            medicationDates={yearMedicationDates}
+            onPrevYear={() => setCurrentYear(prev => prev - 1)}
+            onNextYear={() => setCurrentYear(prev => prev + 1)}
+          />
           
           {/* Stats card */}
-          <div className="xl:sticky xl:top-8 xl:self-start">
+          <div className="lg:sticky lg:top-8 lg:self-start">
             <MoodStats stats={yearStats} periodLabel={`${currentYear}`} />
           </div>
         </div>
