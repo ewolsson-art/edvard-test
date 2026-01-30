@@ -12,6 +12,7 @@ import Auth from "./pages/Auth";
 import WeeklyOverview from "./pages/WeeklyOverview";
 import MonthlyOverview from "./pages/MonthlyOverview";
 import YearlyOverview from "./pages/YearlyOverview";
+import Reports from "./pages/Reports";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -57,6 +58,11 @@ const App = () => (
             <Route path="/ar" element={
               <ProtectedRoute>
                 <AppLayout><YearlyOverview /></AppLayout>
+              </ProtectedRoute>
+            } />
+            <Route path="/rapporter" element={
+              <ProtectedRoute>
+                <AppLayout><Reports /></AppLayout>
               </ProtectedRoute>
             } />
             <Route path="*" element={<NotFound />} />
