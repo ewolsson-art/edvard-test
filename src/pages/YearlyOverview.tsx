@@ -4,11 +4,13 @@ import { YearHeatmap } from '@/components/YearHeatmap';
 import { MoodStats } from '@/components/MoodStats';
 import { CalendarHeader } from '@/components/CalendarHeader';
 import { useMoodData } from '@/hooks/useMoodData';
+import { useMedications } from '@/hooks/useMedications';
 
 const YearlyOverview = () => {
   const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
   
   const { isLoaded, getEntriesForYear, getStatsForYear } = useMoodData();
+  const { isLoaded: medsLoaded, logs } = useMedications();
 
   const yearEntries = useMemo(() => {
     return getEntriesForYear(currentYear);
@@ -18,7 +20,13 @@ const YearlyOverview = () => {
     return getStatsForYear(currentYear);
   }, [currentYear, getStatsForYear]);
 
-  if (!isLoaded) {
+  const yearMedicationDates = useMemo(() => {
+    return logs
+      .filter(log => log.date.startsWith(currentYear.toString()))
+      .map(log => log.date);
+  }, [logs, currentYear]);
+
+  if (!isLoaded || !medsLoaded) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
@@ -46,7 +54,12 @@ const YearlyOverview = () => {
               onPrev={() => setCurrentYear(prev => prev - 1)}
               onNext={() => setCurrentYear(prev => prev + 1)}
             />
-            <YearHeatmap year={currentYear} entries={yearEntries} showHeader={false} />
+            <YearHeatmap 
+              year={currentYear} 
+              entries={yearEntries} 
+              medicationDates={yearMedicationDates}
+              showHeader={false} 
+            />
           </div>
           
           {/* Stats card */}

@@ -12,6 +12,7 @@ import Auth from "./pages/Auth";
 import WeeklyOverview from "./pages/WeeklyOverview";
 import MonthlyOverview from "./pages/MonthlyOverview";
 import YearlyOverview from "./pages/YearlyOverview";
+import Medications from "./pages/Medications";
 import Reports from "./pages/Reports";
 import NotFound from "./pages/NotFound";
 
@@ -58,6 +59,11 @@ const App = () => (
             <Route path="/ar" element={
               <ProtectedRoute>
                 <AppLayout><YearlyOverview /></AppLayout>
+              </ProtectedRoute>
+            } />
+            <Route path="/mediciner" element={
+              <ProtectedRoute>
+                <AppLayout><Medications /></AppLayout>
               </ProtectedRoute>
             } />
             <Route path="/rapporter" element={
