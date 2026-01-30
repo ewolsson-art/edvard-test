@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { format } from 'date-fns';
 import { sv } from 'date-fns/locale';
-import { Zap, Sun, CloudRain, Check, MessageSquare, X } from 'lucide-react';
+import { Zap, Sun, CloudRain, Check, MessageSquare, X, CheckCircle2, Circle } from 'lucide-react';
 import { MoodType, MoodEntry, MOOD_LABELS } from '@/types/mood';
 import { cn } from '@/lib/utils';
 import { Textarea } from '@/components/ui/textarea';
@@ -40,8 +40,30 @@ export function TodayCheckin({ todayEntry, onCheckin, onUpdateComment }: TodayCh
     onUpdateComment(comment);
   };
 
+  const hasCheckedIn = !!todayEntry?.mood;
+
   return (
     <div className="glass-card p-8 md:p-12 fade-in">
+      {/* Check-in status indicator */}
+      <div className={cn(
+        "flex items-center justify-center gap-2 mb-6 py-2 px-4 rounded-full w-fit mx-auto",
+        hasCheckedIn 
+          ? "bg-mood-stable/20 text-mood-stable" 
+          : "bg-muted text-muted-foreground"
+      )}>
+        {hasCheckedIn ? (
+          <>
+            <CheckCircle2 className="w-5 h-5" />
+            <span className="text-sm font-medium">Du har checkat in idag</span>
+          </>
+        ) : (
+          <>
+            <Circle className="w-5 h-5" />
+            <span className="text-sm font-medium">Du har inte checkat in än</span>
+          </>
+        )}
+      </div>
+
       <div className="text-center mb-10">
         <h1 className="font-display text-3xl md:text-4xl font-bold mb-2">
           Hej! Hur har din dag varit?
