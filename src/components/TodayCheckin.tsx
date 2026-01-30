@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { format } from 'date-fns';
 import { sv } from 'date-fns/locale';
-import { Zap, Sun, CloudRain, MessageSquare, CheckCircle2, Pill } from 'lucide-react';
+import { Zap, Sun, CloudRain, MessageSquare, CheckCircle2, Pill, Pencil } from 'lucide-react';
 import { MoodType, MoodEntry, MOOD_LABELS } from '@/types/mood';
 import { Medication } from '@/types/medication';
 import { cn } from '@/lib/utils';
@@ -34,6 +34,7 @@ export function TodayCheckin({
 }: TodayCheckinProps) {
   const today = new Date();
   const formattedDate = format(today, "EEEE d MMMM", { locale: sv });
+  const [isEditing, setIsEditing] = useState(false);
   const [showComment, setShowComment] = useState(false);
   const [comment, setComment] = useState('');
 
@@ -46,6 +47,7 @@ export function TodayCheckin({
 
   const handleMoodSelect = (mood: MoodType) => {
     onCheckin(mood, comment || undefined);
+    setIsEditing(false);
   };
 
   const handleSaveComment = () => {
@@ -54,6 +56,7 @@ export function TodayCheckin({
 
   const hasCheckedIn = !!todayEntry?.mood;
   const hasMedications = activeMedications.length > 0;
+  const showMoodSelection = !hasCheckedIn || isEditing;
 
   return (
     <div className="glass-card p-8 md:p-12 fade-in">
@@ -63,7 +66,7 @@ export function TodayCheckin({
         </p>
       </div>
 
-      {hasCheckedIn ? (
+      {hasCheckedIn && !isEditing ? (
         // Checked in state - show success message
         <div className="text-center fade-in">
           <div className="inline-flex items-center justify-center w-24 h-24 md:w-32 md:h-32 rounded-full bg-mood-stable/20 mb-6">
@@ -74,9 +77,19 @@ export function TodayCheckin({
             Du har checkat in!
           </h1>
           
-          <p className="text-muted-foreground mb-8">
+          <p className="text-muted-foreground mb-4">
             Du mår <span className="font-medium">{MOOD_LABELS[todayEntry.mood].toLowerCase()}</span> idag
           </p>
+
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setIsEditing(true)}
+            className="mb-8 gap-2"
+          >
+            <Pencil className="w-4 h-4" />
+            Ändra mående
+          </Button>
 
           {/* Medication section */}
           {hasMedications && (
@@ -144,12 +157,22 @@ export function TodayCheckin({
           </div>
         </div>
       ) : (
-        // Not checked in - show mood selection
+        // Not checked in or editing - show mood selection
         <div className="space-y-6">
           <div className="text-center mb-6">
             <h1 className="font-display text-3xl md:text-4xl font-bold mb-2">
-              Hej! Hur har din dag varit?
+              {isEditing ? 'Hur mår du egentligen?' : 'Hej! Hur har din dag varit?'}
             </h1>
+            {isEditing && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setIsEditing(false)}
+                className="mt-2"
+              >
+                Avbryt
+              </Button>
+            )}
           </div>
 
           <div className="grid grid-cols-3 gap-4 md:gap-6 max-w-2xl mx-auto">
@@ -161,7 +184,8 @@ export function TodayCheckin({
                   "mood-btn rounded-2xl p-6 md:p-8 flex flex-col items-center gap-3",
                   mood === 'elevated' && "mood-btn-elevated",
                   mood === 'stable' && "mood-btn-stable",
-                  mood === 'depressed' && "mood-btn-depressed"
+                  mood === 'depressed' && "mood-btn-depressed",
+                  todayEntry?.mood === mood && "ring-4 ring-offset-2 ring-offset-background"
                 )}
               >
                 <Icon className="w-10 h-10 md:w-12 md:h-12" />
