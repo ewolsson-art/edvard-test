@@ -1,11 +1,97 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { useState, useMemo } from 'react';
+import { format, addMonths, subMonths } from 'date-fns';
+import { TodayCheckin } from '@/components/TodayCheckin';
+import { MonthCalendar } from '@/components/MonthCalendar';
+import { YearHeatmap } from '@/components/YearHeatmap';
+import { MoodStats } from '@/components/MoodStats';
+import { useMoodData } from '@/hooks/useMoodData';
+import { MoodType } from '@/types/mood';
 
 const Index = () => {
+  const [currentMonth, setCurrentMonth] = useState(new Date());
+  const currentYear = new Date().getFullYear();
+  
+  const {
+    entries,
+    isLoaded,
+    addEntry,
+    getEntryForDate,
+    getEntriesForMonth,
+    getEntriesForYear,
+    getStatsForYear,
+  } = useMoodData();
+
+  const todayStr = format(new Date(), 'yyyy-MM-dd');
+  const todayMood = getEntryForDate(todayStr)?.mood;
+
+  const monthMoodData = useMemo(() => {
+    return getEntriesForMonth(currentMonth.getFullYear(), currentMonth.getMonth());
+  }, [currentMonth, getEntriesForMonth]);
+
+  const yearEntries = useMemo(() => {
+    return getEntriesForYear(currentYear);
+  }, [currentYear, getEntriesForYear]);
+
+  const yearStats = useMemo(() => {
+    return getStatsForYear(currentYear);
+  }, [currentYear, getStatsForYear]);
+
+  const handleCheckin = (mood: MoodType) => {
+    addEntry(todayStr, mood);
+  };
+
+  const handleDayClick = (date: Date) => {
+    // For now, just log. Could open a modal to edit past entries.
+    console.log('Clicked day:', format(date, 'yyyy-MM-dd'));
+  };
+
+  if (!isLoaded) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="mb-4 text-4xl font-bold">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
+    <div className="min-h-screen py-8 px-4">
+      <div className="max-w-6xl mx-auto">
+        {/* Header */}
+        <header className="text-center mb-12">
+          <h1 className="font-display text-4xl md:text-5xl font-bold mb-3">
+            Moodtracker
+          </h1>
+          <p className="text-muted-foreground text-lg">
+            Följ ditt mående dag för dag
+          </p>
+        </header>
+
+        {/* Main Grid */}
+        <div className="grid lg:grid-cols-2 gap-8">
+          {/* Left Column */}
+          <div className="space-y-8">
+            <TodayCheckin todayMood={todayMood} onCheckin={handleCheckin} />
+            
+            <MonthCalendar
+              currentDate={currentMonth}
+              moodData={monthMoodData}
+              onPrevMonth={() => setCurrentMonth(prev => subMonths(prev, 1))}
+              onNextMonth={() => setCurrentMonth(prev => addMonths(prev, 1))}
+              onDayClick={handleDayClick}
+            />
+          </div>
+
+          {/* Right Column */}
+          <div className="space-y-8">
+            <MoodStats stats={yearStats} year={currentYear} />
+            <YearHeatmap year={currentYear} entries={yearEntries} />
+          </div>
+        </div>
+
+        {/* Footer */}
+        <footer className="text-center mt-16 text-sm text-muted-foreground">
+          <p>Din data sparas lokalt i webbläsaren</p>
+        </footer>
       </div>
     </div>
   );
