@@ -2,13 +2,12 @@ import { format } from 'date-fns';
 import { TodayCheckin } from '@/components/TodayCheckin';
 import { useMoodData } from '@/hooks/useMoodData';
 import { useMedications } from '@/hooks/useMedications';
-import { MoodType } from '@/types/mood';
+import { CheckinData } from '@/types/mood';
 
 const Index = () => {
   const {
     isLoaded,
-    addEntry,
-    updateComment,
+    saveCheckin,
     getEntryForDate,
   } = useMoodData();
 
@@ -26,12 +25,9 @@ const Index = () => {
     .filter(med => isMedicationTakenOnDate(med.id, todayStr))
     .map(med => med.id);
 
-  const handleCheckin = (mood: MoodType, comment?: string) => {
-    addEntry(todayStr, mood, comment);
-  };
-
-  const handleUpdateComment = (comment: string) => {
-    updateComment(todayStr, comment);
+  const handleSaveCheckin = async (data: CheckinData): Promise<boolean> => {
+    const result = await saveCheckin(todayStr, data);
+    return result ?? false;
   };
 
   const handleToggleMedication = (medicationId: string, taken: boolean) => {
@@ -53,8 +49,7 @@ const Index = () => {
           todayEntry={todayEntry} 
           activeMedications={activeMedications}
           medicationsTakenToday={medicationsTakenToday}
-          onCheckin={handleCheckin}
-          onUpdateComment={handleUpdateComment}
+          onSaveCheckin={handleSaveCheckin}
           onToggleMedication={handleToggleMedication}
         />
       </div>

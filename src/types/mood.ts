@@ -1,10 +1,28 @@
 export type MoodType = 'elevated' | 'stable' | 'depressed';
+export type QualityType = 'good' | 'bad';
 
 export interface MoodEntry {
   date: string; // ISO date string YYYY-MM-DD
   mood: MoodType;
   comment?: string;
+  sleepQuality?: QualityType;
+  sleepComment?: string;
+  eatingQuality?: QualityType;
+  eatingComment?: string;
+  exercised?: boolean;
+  exerciseComment?: string;
   timestamp: number;
+}
+
+export interface CheckinData {
+  mood?: MoodType;
+  moodComment?: string;
+  sleepQuality?: QualityType;
+  sleepComment?: string;
+  eatingQuality?: QualityType;
+  eatingComment?: string;
+  exercised?: boolean;
+  exerciseComment?: string;
 }
 
 export interface MoodStats {
@@ -26,4 +44,9 @@ export const MOOD_ICONS: Record<MoodType, string> = {
   elevated: '⚡',
   stable: '☀️',
   depressed: '🌧️',
+};
+
+export const QUALITY_LABELS: Record<QualityType, string> = {
+  good: 'Bra',
+  bad: 'Dåligt',
 };

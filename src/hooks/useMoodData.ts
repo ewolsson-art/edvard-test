@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { MoodEntry, MoodType, MoodStats } from '@/types/mood';
+import { MoodEntry, MoodType, MoodStats, CheckinData, QualityType } from '@/types/mood';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
@@ -37,6 +37,12 @@ export function useMoodData() {
           date: entry.date,
           mood: entry.mood as MoodType,
           comment: entry.comment || undefined,
+          sleepQuality: entry.sleep_quality as QualityType | undefined,
+          sleepComment: entry.sleep_comment || undefined,
+          eatingQuality: entry.eating_quality as QualityType | undefined,
+          eatingComment: entry.eating_comment || undefined,
+          exercised: entry.exercised ?? undefined,
+          exerciseComment: entry.exercise_comment || undefined,
           timestamp: new Date(entry.created_at).getTime(),
         }));
         setEntries(formattedEntries);
@@ -45,6 +51,59 @@ export function useMoodData() {
     };
 
     fetchEntries();
+  }, [user, toast]);
+
+  const saveCheckin = useCallback(async (date: string, data: CheckinData) => {
+    if (!user) return;
+
+    const { error } = await supabase
+      .from('mood_entries')
+      .upsert({
+        user_id: user.id,
+        date,
+        mood: data.mood,
+        comment: data.moodComment || null,
+        sleep_quality: data.sleepQuality || null,
+        sleep_comment: data.sleepComment || null,
+        eating_quality: data.eatingQuality || null,
+        eating_comment: data.eatingComment || null,
+        exercised: data.exercised ?? null,
+        exercise_comment: data.exerciseComment || null,
+      }, {
+        onConflict: 'user_id,date'
+      });
+
+    if (error) {
+      console.error('Error saving checkin:', error);
+      toast({
+        title: "Kunde inte spara",
+        description: "Försök igen.",
+        variant: "destructive",
+      });
+      return false;
+    } else {
+      // Update local state
+      const newEntry: MoodEntry = {
+        date,
+        mood: data.mood!,
+        comment: data.moodComment,
+        sleepQuality: data.sleepQuality,
+        sleepComment: data.sleepComment,
+        eatingQuality: data.eatingQuality,
+        eatingComment: data.eatingComment,
+        exercised: data.exercised,
+        exerciseComment: data.exerciseComment,
+        timestamp: Date.now(),
+      };
+      setEntries(prev => {
+        const filtered = prev.filter(e => e.date !== date);
+        return [...filtered, newEntry];
+      });
+      toast({
+        title: "Incheckning sparad!",
+      });
+      return true;
+    }
   }, [user, toast]);
 
   const addEntry = useCallback(async (date: string, mood: MoodType, comment?: string) => {
@@ -71,8 +130,15 @@ export function useMoodData() {
     } else {
       // Update local state
       setEntries(prev => {
+        const existing = prev.find(e => e.date === date);
         const filtered = prev.filter(e => e.date !== date);
-        return [...filtered, { date, mood, comment, timestamp: Date.now() }];
+        return [...filtered, { 
+          ...existing,
+          date, 
+          mood, 
+          comment, 
+          timestamp: Date.now() 
+        }];
       });
     }
   }, [user, toast]);
@@ -131,7 +197,6 @@ export function useMoodData() {
     const stable = yearEntries.filter(e => e.mood === 'stable').length;
     const depressed = yearEntries.filter(e => e.mood === 'depressed').length;
     const total = elevated + stable + depressed;
-    // Calculate total days in the year (handle leap years)
     const isLeapYear = (year % 4 === 0 && year % 100 !== 0) || (year % 400 === 0);
     const totalDays = isLeapYear ? 366 : 365;
     const unregistered = totalDays - total;
@@ -163,6 +228,7 @@ export function useMoodData() {
     entries,
     isLoaded,
     addEntry,
+    saveCheckin,
     updateComment,
     getEntryForDate,
     getEntriesForMonth,
