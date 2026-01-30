@@ -3,7 +3,8 @@ import { format, startOfWeek, endOfWeek, addWeeks, subWeeks, eachDayOfInterval, 
 import { sv } from 'date-fns/locale';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useMoodData } from '@/hooks/useMoodData';
-import { MOOD_LABELS, MOOD_ICONS, MoodType } from '@/types/mood';
+import { MoodStats } from '@/components/MoodStats';
+import { MOOD_LABELS, MOOD_ICONS, MoodStats as MoodStatsType } from '@/types/mood';
 import { cn } from '@/lib/utils';
 
 const WeeklyOverview = () => {
@@ -15,6 +16,17 @@ const WeeklyOverview = () => {
     const end = endOfWeek(currentWeek, { weekStartsOn: 1 });
     return eachDayOfInterval({ start, end });
   }, [currentWeek]);
+
+  const weekStats = useMemo((): MoodStatsType => {
+    let elevated = 0, stable = 0, depressed = 0;
+    weekDays.forEach(day => {
+      const entry = getEntryForDate(format(day, 'yyyy-MM-dd'));
+      if (entry?.mood === 'elevated') elevated++;
+      if (entry?.mood === 'stable') stable++;
+      if (entry?.mood === 'depressed') depressed++;
+    });
+    return { elevated, stable, depressed, total: elevated + stable + depressed };
+  }, [weekDays, getEntryForDate]);
 
   const weekStart = startOfWeek(currentWeek, { weekStartsOn: 1 });
   const weekEnd = endOfWeek(currentWeek, { weekStartsOn: 1 });
@@ -39,6 +51,8 @@ const WeeklyOverview = () => {
             Se hur du mått under veckan
           </p>
         </header>
+
+        <MoodStats stats={weekStats} periodLabel={weekLabel} />
 
         <div className="glass-card p-6 fade-in">
           <div className="flex items-center justify-between mb-6">
