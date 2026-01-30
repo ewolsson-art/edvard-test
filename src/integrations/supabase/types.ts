@@ -130,6 +130,42 @@ export type Database = {
         }
         Relationships: []
       }
+      shared_reports: {
+        Row: {
+          created_at: string
+          expires_at: string | null
+          id: string
+          medications: Json | null
+          period: string
+          report_type: string
+          share_key: string
+          stats: Json
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          medications?: Json | null
+          period: string
+          report_type: string
+          share_key: string
+          stats: Json
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          medications?: Json | null
+          period?: string
+          report_type?: string
+          share_key?: string
+          stats?: Json
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
