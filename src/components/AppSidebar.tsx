@@ -4,6 +4,7 @@ import { NavLink } from "@/components/NavLink";
 import { useSidebar } from "@/components/ui/sidebar";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
+import logo from "@/assets/logo.png";
 import {
   Sidebar,
   SidebarContent,
@@ -37,13 +38,18 @@ export function AppSidebar() {
       <SidebarContent className="pt-4">
         {/* Logo/Brand */}
         <div className="px-4 mb-6">
-          {!isCollapsed && (
-            <Link to="/" className="block hover:opacity-80 transition-opacity">
-              <h2 className="font-display text-xl font-bold text-foreground">
-                Between Clouds
-              </h2>
-            </Link>
-          )}
+          <Link to="/" className="block hover:opacity-80 transition-opacity">
+            {isCollapsed ? (
+              <img src={logo} alt="Between Clouds" className="w-8 h-8 object-contain" />
+            ) : (
+              <div className="flex items-center gap-3">
+                <img src={logo} alt="Between Clouds" className="w-10 h-10 object-contain" />
+                <h2 className="font-display text-lg font-bold text-foreground">
+                  Between Clouds
+                </h2>
+              </div>
+            )}
+          </Link>
         </div>
 
         <SidebarGroup>
