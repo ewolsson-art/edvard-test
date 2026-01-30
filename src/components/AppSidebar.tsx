@@ -28,9 +28,9 @@ export function AppSidebar() {
         {/* Logo/Brand */}
         <div className="px-4 mb-6">
           {!isCollapsed && (
-            <h2 className="font-display text-xl font-bold text-foreground">
-              Moodtracker
-            </h2>
+          <h2 className="font-display text-xl font-bold text-foreground">
+            Between Clouds
+          </h2>
           )}
         </div>
 
