@@ -105,40 +105,24 @@ export function TodayCheckin({ todayEntry, onCheckin, onUpdateComment }: TodayCh
         </div>
 
         {todayEntry?.mood && (
-          <div className="text-center fade-in">
-            <p className="text-sm text-muted-foreground mb-4">
+          <div className="fade-in max-w-lg mx-auto">
+            <p className="text-sm text-muted-foreground mb-4 text-center">
               Du har checkat in som <span className="font-medium">{MOOD_LABELS[todayEntry.mood].toLowerCase()}</span> idag ✓
             </p>
             
-            {!showComment ? (
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setShowComment(true)}
-                className="gap-2"
-              >
+            <div className="space-y-3">
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
                 <MessageSquare className="w-4 h-4" />
-                Lägg till kommentar
-              </Button>
-            ) : (
-              <div className="max-w-lg mx-auto space-y-3 fade-in">
-                <div className="relative">
-                  <Textarea
-                    placeholder="Hur kändes dagen? Vad hände?"
-                    value={comment}
-                    onChange={(e) => setComment(e.target.value)}
-                    className="min-h-[100px] resize-none pr-10"
-                  />
-                  <button
-                    onClick={() => {
-                      setShowComment(false);
-                      setComment(todayEntry.comment || '');
-                    }}
-                    className="absolute top-2 right-2 p-1 rounded hover:bg-muted"
-                  >
-                    <X className="w-4 h-4 text-muted-foreground" />
-                  </button>
-                </div>
+                <span>Lägg till en kommentar (valfritt)</span>
+              </div>
+              <Textarea
+                placeholder="Hur kändes dagen? Vad hände?"
+                value={comment}
+                onChange={(e) => setComment(e.target.value)}
+                className="min-h-[100px] resize-none"
+                maxLength={500}
+              />
+              {comment !== (todayEntry.comment || '') && (
                 <Button
                   onClick={handleSaveComment}
                   size="sm"
@@ -146,8 +130,13 @@ export function TodayCheckin({ todayEntry, onCheckin, onUpdateComment }: TodayCh
                 >
                   Spara kommentar
                 </Button>
-              </div>
-            )}
+              )}
+              {todayEntry.comment && comment === todayEntry.comment && (
+                <p className="text-xs text-muted-foreground text-center">
+                  ✓ Kommentar sparad
+                </p>
+              )}
+            </div>
           </div>
         )}
       </div>
