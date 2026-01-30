@@ -6,7 +6,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Mail, Lock, Cloud } from 'lucide-react';
+import { Loader2, Mail, Lock } from 'lucide-react';
+import logo from '@/assets/logo.png';
 
 const authSchema = z.object({
   email: z.string().trim().email({ message: "Ogiltig e-postadress" }).max(255),
@@ -117,8 +118,8 @@ const Auth = () => {
       <div className="w-full max-w-md">
         <div className="glass-card p-8 fade-in">
           <div className="text-center mb-8">
-            <div className="flex items-center justify-center gap-2 mb-4">
-              <Cloud className="w-8 h-8 text-primary" />
+            <div className="flex items-center justify-center gap-3 mb-4">
+              <img src={logo} alt="Between Clouds" className="w-12 h-12 object-contain" />
               <h1 className="font-display text-2xl font-bold">Between Clouds</h1>
             </div>
             <p className="text-muted-foreground">
