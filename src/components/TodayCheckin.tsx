@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { format } from 'date-fns';
 import { sv } from 'date-fns/locale';
-import { Zap, Sun, CloudRain, MessageSquare, CheckCircle2, Pill, Pencil, Moon, Utensils, Dumbbell, ThumbsUp, ThumbsDown, Check, X, ChevronRight } from 'lucide-react';
+import { Zap, Sun, CloudRain, MessageSquare, CheckCircle2, Pill, Pencil, Moon, Utensils, Dumbbell, ThumbsUp, ThumbsDown, Check, X, ChevronRight, ChevronLeft } from 'lucide-react';
 import { MoodType, MoodEntry, MOOD_LABELS, QualityType, QUALITY_LABELS, CheckinData } from '@/types/mood';
 import { Medication } from '@/types/medication';
 import { cn } from '@/lib/utils';
@@ -103,6 +103,13 @@ export function TodayCheckin({
     const stepIndex = STEPS.indexOf(currentStep);
     if (currentStep === 'complete' || isCheckinComplete) return 100;
     return ((stepIndex) / STEPS.length) * 100;
+  };
+
+  const goBack = () => {
+    const currentIndex = STEPS.indexOf(currentStep);
+    if (currentIndex > 0) {
+      setCurrentStep(STEPS[currentIndex - 1]);
+    }
   };
 
   const updateComment = (step: Step, comment: string) => {
@@ -239,6 +246,10 @@ export function TodayCheckin({
       {/* Step: Sleep */}
       {currentStep === 'sleep' && (
         <div className="space-y-6 fade-in">
+          <Button variant="ghost" size="sm" onClick={goBack} className="mb-4 gap-1">
+            <ChevronLeft className="w-4 h-4" />
+            Tillbaka
+          </Button>
           <div className="text-center mb-6">
             <Moon className="w-12 h-12 mx-auto mb-4 text-primary" />
             <h1 className="font-display text-2xl md:text-3xl font-bold mb-2">
@@ -296,6 +307,10 @@ export function TodayCheckin({
       {/* Step: Eating */}
       {currentStep === 'eating' && (
         <div className="space-y-6 fade-in">
+          <Button variant="ghost" size="sm" onClick={goBack} className="mb-4 gap-1">
+            <ChevronLeft className="w-4 h-4" />
+            Tillbaka
+          </Button>
           <div className="text-center mb-6">
             <Utensils className="w-12 h-12 mx-auto mb-4 text-primary" />
             <h1 className="font-display text-2xl md:text-3xl font-bold mb-2">
@@ -353,6 +368,10 @@ export function TodayCheckin({
       {/* Step: Exercise */}
       {currentStep === 'exercise' && (
         <div className="space-y-6 fade-in">
+          <Button variant="ghost" size="sm" onClick={goBack} className="mb-4 gap-1">
+            <ChevronLeft className="w-4 h-4" />
+            Tillbaka
+          </Button>
           <div className="text-center mb-6">
             <Dumbbell className="w-12 h-12 mx-auto mb-4 text-primary" />
             <h1 className="font-display text-2xl md:text-3xl font-bold mb-2">
@@ -410,6 +429,10 @@ export function TodayCheckin({
       {/* Step: Medication */}
       {currentStep === 'medication' && (
         <div className="space-y-6 fade-in">
+          <Button variant="ghost" size="sm" onClick={goBack} className="mb-4 gap-1">
+            <ChevronLeft className="w-4 h-4" />
+            Tillbaka
+          </Button>
           <div className="text-center mb-6">
             <Pill className="w-12 h-12 mx-auto mb-4 text-primary" />
             <h1 className="font-display text-2xl md:text-3xl font-bold mb-2">
