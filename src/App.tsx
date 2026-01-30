@@ -9,9 +9,7 @@ import { AuthProvider } from "@/hooks/useAuth";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
-import WeeklyOverview from "./pages/WeeklyOverview";
-import MonthlyOverview from "./pages/MonthlyOverview";
-import YearlyOverview from "./pages/YearlyOverview";
+import Overview from "./pages/Overview";
 import Medications from "./pages/Medications";
 import Reports from "./pages/Reports";
 import NotFound from "./pages/NotFound";
@@ -46,19 +44,9 @@ const App = () => (
                 <AppLayout><Index /></AppLayout>
               </ProtectedRoute>
             } />
-            <Route path="/vecka" element={
+            <Route path="/oversikt" element={
               <ProtectedRoute>
-                <AppLayout><WeeklyOverview /></AppLayout>
-              </ProtectedRoute>
-            } />
-            <Route path="/manad" element={
-              <ProtectedRoute>
-                <AppLayout><MonthlyOverview /></AppLayout>
-              </ProtectedRoute>
-            } />
-            <Route path="/ar" element={
-              <ProtectedRoute>
-                <AppLayout><YearlyOverview /></AppLayout>
+                <AppLayout><Overview /></AppLayout>
               </ProtectedRoute>
             } />
             <Route path="/mediciner" element={

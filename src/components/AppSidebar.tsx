@@ -1,4 +1,4 @@
-import { CalendarDays, CalendarRange, Calendar, BarChart3, Pill, FileText, LogOut } from "lucide-react";
+import { CalendarDays, BarChart3, Pill, FileText, LogOut } from "lucide-react";
 import { Link } from "react-router-dom";
 import { NavLink } from "@/components/NavLink";
 import { useSidebar } from "@/components/ui/sidebar";
@@ -17,9 +17,7 @@ import {
 
 const navItems = [
   { title: "Check-in", url: "/", icon: CalendarDays },
-  { title: "Veckoöversikt", url: "/vecka", icon: CalendarRange },
-  { title: "Månadsöversikt", url: "/manad", icon: Calendar },
-  { title: "Årsöversikt", url: "/ar", icon: BarChart3 },
+  { title: "Översikt", url: "/oversikt", icon: BarChart3 },
   { title: "Mediciner", url: "/mediciner", icon: Pill },
   { title: "Rapporter", url: "/rapporter", icon: FileText },
 ];
