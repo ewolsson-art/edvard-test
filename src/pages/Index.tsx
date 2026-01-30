@@ -15,6 +15,7 @@ const Index = () => {
     entries,
     isLoaded,
     addEntry,
+    updateComment,
     getEntryForDate,
     getEntriesForMonth,
     getEntriesForYear,
@@ -22,7 +23,7 @@ const Index = () => {
   } = useMoodData();
 
   const todayStr = format(new Date(), 'yyyy-MM-dd');
-  const todayMood = getEntryForDate(todayStr)?.mood;
+  const todayEntry = getEntryForDate(todayStr);
 
   const monthMoodData = useMemo(() => {
     return getEntriesForMonth(currentMonth.getFullYear(), currentMonth.getMonth());
@@ -36,12 +37,15 @@ const Index = () => {
     return getStatsForYear(currentYear);
   }, [currentYear, getStatsForYear]);
 
-  const handleCheckin = (mood: MoodType) => {
-    addEntry(todayStr, mood);
+  const handleCheckin = (mood: MoodType, comment?: string) => {
+    addEntry(todayStr, mood, comment);
+  };
+
+  const handleUpdateComment = (comment: string) => {
+    updateComment(todayStr, comment);
   };
 
   const handleDayClick = (date: Date) => {
-    // For now, just log. Could open a modal to edit past entries.
     console.log('Clicked day:', format(date, 'yyyy-MM-dd'));
   };
 
@@ -56,22 +60,19 @@ const Index = () => {
   return (
     <div className="min-h-screen py-8 px-4">
       <div className="max-w-6xl mx-auto">
-        {/* Header */}
-        <header className="text-center mb-12">
-          <h1 className="font-display text-4xl md:text-5xl font-bold mb-3">
-            Moodtracker
-          </h1>
-          <p className="text-muted-foreground text-lg">
-            Följ ditt mående dag för dag
-          </p>
-        </header>
+        {/* Today Check-in - Full Width at Top */}
+        <div className="mb-8">
+          <TodayCheckin 
+            todayEntry={todayEntry} 
+            onCheckin={handleCheckin}
+            onUpdateComment={handleUpdateComment}
+          />
+        </div>
 
-        {/* Main Grid */}
+        {/* Calendar and Stats Grid */}
         <div className="grid lg:grid-cols-2 gap-8">
           {/* Left Column */}
           <div className="space-y-8">
-            <TodayCheckin todayMood={todayMood} onCheckin={handleCheckin} />
-            
             <MonthCalendar
               currentDate={currentMonth}
               moodData={monthMoodData}
@@ -84,8 +85,12 @@ const Index = () => {
           {/* Right Column */}
           <div className="space-y-8">
             <MoodStats stats={yearStats} year={currentYear} />
-            <YearHeatmap year={currentYear} entries={yearEntries} />
           </div>
+        </div>
+
+        {/* Year Heatmap - Full Width */}
+        <div className="mt-8">
+          <YearHeatmap year={currentYear} entries={yearEntries} />
         </div>
 
         {/* Footer */}

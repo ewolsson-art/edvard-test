@@ -3,6 +3,7 @@ export type MoodType = 'elevated' | 'stable' | 'depressed';
 export interface MoodEntry {
   date: string; // ISO date string YYYY-MM-DD
   mood: MoodType;
+  comment?: string;
   timestamp: number;
 }
 
