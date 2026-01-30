@@ -228,13 +228,15 @@ export function TodayCheckin({
         <p className="text-muted-foreground text-lg capitalize">{formattedDate}</p>
       </div>
 
-      {/* Progress bar */}
-      <div className="max-w-md mx-auto mb-8">
-        <Progress value={getStepProgress()} className="h-2" />
-        <p className="text-xs text-muted-foreground text-center mt-2">
-          Steg {STEPS.indexOf(currentStep) + 1} av {STEPS.length}
-        </p>
-      </div>
+      {/* Progress bar - hide during success animation */}
+      {currentStep !== 'success-animation' && (
+        <div className="max-w-md mx-auto mb-8">
+          <Progress value={getStepProgress()} className="h-2" />
+          <p className="text-xs text-muted-foreground text-center mt-2">
+            Steg {STEPS.indexOf(currentStep) + 1} av {STEPS.length}
+          </p>
+        </div>
+      )}
 
       {/* Step: Mood */}
       {currentStep === 'mood' && (
