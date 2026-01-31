@@ -40,18 +40,27 @@ export function useDoctorConnections() {
     if (error) {
       console.error('Error fetching connections:', error);
     } else {
-      // Fetch patient profiles for each connection
+      // Fetch patient profiles and emails for each connection
       const connectionsWithProfiles = await Promise.all(
         (data || []).map(async (conn) => {
+          // Fetch profile
           const { data: profile } = await supabase
             .from('profiles')
             .select('first_name, last_name')
             .eq('user_id', conn.patient_id)
             .maybeSingle();
 
+          // Fetch email via RPC function
+          const { data: email } = await supabase
+            .rpc('get_patient_email_for_doctor', {
+              p_patient_id: conn.patient_id,
+              p_doctor_id: user.id,
+            });
+
           return {
             ...conn,
             patient_profile: profile || undefined,
+            patient_email: email || undefined,
           } as PatientConnection;
         })
       );
