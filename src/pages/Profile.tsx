@@ -20,7 +20,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
-import { Loader2, User, Mail, Save, Trash2, AlertTriangle, Stethoscope, HeartPulse } from 'lucide-react';
+import { Loader2, User, Mail, Save, Trash2, AlertTriangle, Stethoscope, HeartPulse, Building2, Hospital } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const profileSchema = z.object({
@@ -35,8 +35,10 @@ const Profile = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
   
-  const [firstName, setFirstName] = useState('');
+const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
+  const [clinicName, setClinicName] = useState('');
+  const [hospitalName, setHospitalName] = useState('');
   const [isSaving, setIsSaving] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [deleteConfirmText, setDeleteConfirmText] = useState('');
@@ -46,6 +48,8 @@ const Profile = () => {
     if (profile) {
       setFirstName(profile.first_name || '');
       setLastName(profile.last_name || '');
+      setClinicName((profile as any).clinic_name || '');
+      setHospitalName((profile as any).hospital_name || '');
     }
   }, [profile]);
 
@@ -69,13 +73,21 @@ const Profile = () => {
     setIsSaving(true);
     
     try {
+      const profileData: any = {
+        user_id: user.id,
+        first_name: firstName.trim() || null,
+        last_name: lastName.trim() || null,
+      };
+
+      // Add doctor-specific fields only for doctors
+      if (isDoctor) {
+        profileData.clinic_name = clinicName.trim() || null;
+        profileData.hospital_name = hospitalName.trim() || null;
+      }
+
       const { error } = await supabase
         .from('profiles')
-        .upsert({
-          user_id: user.id,
-          first_name: firstName.trim() || null,
-          last_name: lastName.trim() || null,
-        }, {
+        .upsert(profileData, {
           onConflict: 'user_id'
         });
 
@@ -238,6 +250,43 @@ const Profile = () => {
                 )}
               </div>
             </div>
+
+            {/* Doctor-specific fields */}
+            {isDoctor && (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4 border-t border-border">
+                <div className="space-y-2">
+                  <Label htmlFor="clinicName">Mottagning</Label>
+                  <div className="relative">
+                    <Building2 className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                    <Input
+                      id="clinicName"
+                      type="text"
+                      placeholder="Namn på mottagning"
+                      value={clinicName}
+                      onChange={(e) => setClinicName(e.target.value)}
+                      className="pl-10"
+                      disabled={isSaving}
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="hospitalName">Sjukhus</Label>
+                  <div className="relative">
+                    <Hospital className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                    <Input
+                      id="hospitalName"
+                      type="text"
+                      placeholder="Namn på sjukhus"
+                      value={hospitalName}
+                      onChange={(e) => setHospitalName(e.target.value)}
+                      className="pl-10"
+                      disabled={isSaving}
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
 
             <Button type="submit" disabled={isSaving} className="gap-2">
               {isSaving ? (

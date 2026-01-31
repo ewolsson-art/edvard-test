@@ -180,24 +180,30 @@ export type Database = {
       }
       profiles: {
         Row: {
+          clinic_name: string | null
           created_at: string
           first_name: string | null
+          hospital_name: string | null
           id: string
           last_name: string | null
           updated_at: string
           user_id: string
         }
         Insert: {
+          clinic_name?: string | null
           created_at?: string
           first_name?: string | null
+          hospital_name?: string | null
           id?: string
           last_name?: string | null
           updated_at?: string
           user_id: string
         }
         Update: {
+          clinic_name?: string | null
           created_at?: string
           first_name?: string | null
+          hospital_name?: string | null
           id?: string
           last_name?: string | null
           updated_at?: string
