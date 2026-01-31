@@ -2,6 +2,7 @@ import { format } from 'date-fns';
 import { TodayCheckin } from '@/components/TodayCheckin';
 import { useMoodData } from '@/hooks/useMoodData';
 import { useMedications } from '@/hooks/useMedications';
+import { useProfile } from '@/hooks/useProfile';
 import { CheckinData } from '@/types/mood';
 
 const Index = () => {
@@ -18,6 +19,8 @@ const Index = () => {
     logMedication,
     isMedicationTakenOnDate,
   } = useMedications();
+
+  const { firstName, isLoading: profileLoading } = useProfile();
 
   const todayStr = format(new Date(), 'yyyy-MM-dd');
   const todayEntry = getEntryForDate(todayStr);
@@ -37,7 +40,7 @@ const Index = () => {
     logMedication(medicationId, todayStr, taken);
   };
 
-  if (!isLoaded || !medsLoaded) {
+  if (!isLoaded || !medsLoaded || profileLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
@@ -53,6 +56,7 @@ const Index = () => {
           activeMedications={activeMedications}
           medicationsTakenToday={medicationsTakenToday}
           yearEntries={yearEntries}
+          firstName={firstName}
           onSaveCheckin={handleSaveCheckin}
           onToggleMedication={handleToggleMedication}
         />
