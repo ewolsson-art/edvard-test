@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { MessageSquare, User, ArrowLeft } from 'lucide-react';
 import { useDoctorConnections, PatientConnection } from '@/hooks/useDoctorConnections';
 import { DoctorPatientChat } from '@/components/DoctorPatientChat';
@@ -7,6 +8,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { cn } from '@/lib/utils';
 
 const DoctorChat = () => {
+  const [searchParams] = useSearchParams();
   const { approvedConnections, isLoading } = useDoctorConnections();
   const [selectedConnection, setSelectedConnection] = useState<PatientConnection | null>(null);
 
@@ -21,6 +23,17 @@ const DoctorChat = () => {
 
   // Filter to only show connections with chat enabled
   const chatEnabledConnections = approvedConnections.filter(c => c.chat_enabled);
+
+  // Pre-select patient from URL param
+  useEffect(() => {
+    const patientId = searchParams.get('patient');
+    if (patientId && !isLoading && chatEnabledConnections.length > 0) {
+      const connection = chatEnabledConnections.find(c => c.patient_id === patientId);
+      if (connection) {
+        setSelectedConnection(connection);
+      }
+    }
+  }, [searchParams, isLoading, chatEnabledConnections]);
 
   if (isLoading) {
     return (
