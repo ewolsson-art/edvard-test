@@ -218,7 +218,7 @@ const ManageConnections = () => {
                   <div className="border-t pt-4">
                     <div className="flex items-center gap-2 mb-3">
                       <Settings className="w-4 h-4 text-muted-foreground" />
-                      <span className="text-sm font-medium">Delad data</span>
+                      <span className="text-sm font-medium">Välj vad du vill dela med {getDoctorName(connection)}</span>
                     </div>
                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                       {[
