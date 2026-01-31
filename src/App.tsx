@@ -22,6 +22,7 @@ import PatientDetail from "./pages/PatientDetail";
 import ManageConnections from "./pages/ManageConnections";
 import NotFound from "./pages/NotFound";
 import SharedReport from "./pages/SharedReport";
+import Settings from "./pages/Settings";
 
 const queryClient = new QueryClient();
 
@@ -106,6 +107,11 @@ const App = () => (
             <Route path="/mina-lakare" element={
               <ProtectedRoute>
                 <AppLayout><ManageConnections /></AppLayout>
+              </ProtectedRoute>
+            } />
+            <Route path="/installningar" element={
+              <ProtectedRoute>
+                <AppLayout><Settings /></AppLayout>
               </ProtectedRoute>
             } />
             <Route path="/rapport/:shareKey" element={<SharedReport />} />

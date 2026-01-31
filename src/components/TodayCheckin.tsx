@@ -4,6 +4,7 @@ import { sv } from 'date-fns/locale';
 import { Zap, Sun, CloudRain, MessageSquare, CheckCircle2, Pill, Pencil, Moon, Utensils, Dumbbell, ThumbsUp, ThumbsDown, Check, X, ChevronRight, ChevronLeft, Heart, AlertTriangle } from 'lucide-react';
 import { MoodType, MoodEntry, MOOD_LABELS, QualityType, QUALITY_LABELS, CheckinData } from '@/types/mood';
 import { Medication } from '@/types/medication';
+import { UserPreferences } from '@/hooks/useUserPreferences';
 import { cn } from '@/lib/utils';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
@@ -18,6 +19,7 @@ interface TodayCheckinProps {
   firstName: string | null;
   onSaveCheckin: (data: CheckinData) => Promise<boolean>;
   onToggleMedication: (medicationId: string, taken: boolean) => void;
+  preferences: UserPreferences | null;
 }
 
 const moodButtons: { mood: MoodType; icon: typeof Zap; label: string; cssClass: string }[] = [
@@ -28,7 +30,8 @@ const moodButtons: { mood: MoodType; icon: typeof Zap; label: string; cssClass: 
 
 type Step = 'mood' | 'sleep' | 'eating' | 'exercise' | 'medication' | 'success-animation' | 'complete';
 
-const STEPS: Step[] = ['mood', 'sleep', 'eating', 'exercise', 'medication'];
+// Default steps - will be filtered based on preferences
+const ALL_STEPS: Step[] = ['mood', 'sleep', 'eating', 'exercise', 'medication'];
 
 export function TodayCheckin({ 
   todayEntry, 
@@ -38,9 +41,22 @@ export function TodayCheckin({
   firstName,
   onSaveCheckin,
   onToggleMedication,
+  preferences,
 }: TodayCheckinProps) {
   const today = new Date();
   const formattedDate = format(today, "EEEE d MMMM", { locale: sv });
+
+  // Build dynamic steps based on preferences
+  const STEPS = useMemo(() => {
+    const steps: Step[] = ['mood']; // Mood is always included
+    
+    if (preferences?.include_sleep) steps.push('sleep');
+    if (preferences?.include_eating) steps.push('eating');
+    if (preferences?.include_exercise) steps.push('exercise');
+    if (preferences?.include_medication) steps.push('medication');
+    
+    return steps;
+  }, [preferences]);
 
   // Calculate encouragement data for depressed mood
   const encouragementData = useMemo(() => {
@@ -83,29 +99,79 @@ export function TodayCheckin({
     }
   }, [todayEntry]);
 
-  const isCheckinComplete = todayEntry?.mood && 
-    todayEntry?.sleepQuality !== undefined && 
-    todayEntry?.eatingQuality !== undefined && 
-    todayEntry?.exercised !== undefined;
+  // Check if checkin is complete based on active preferences
+  const isCheckinComplete = useMemo(() => {
+    if (!todayEntry?.mood) return false;
+    if (preferences?.include_sleep && todayEntry?.sleepQuality === undefined) return false;
+    if (preferences?.include_eating && todayEntry?.eatingQuality === undefined) return false;
+    if (preferences?.include_exercise && todayEntry?.exercised === undefined) return false;
+    return true;
+  }, [todayEntry, preferences]);
+
+  // Helper to get next step in the flow
+  const getNextStep = (currentStep: Step): Step | 'success-animation' => {
+    const currentIndex = STEPS.indexOf(currentStep);
+    if (currentIndex === STEPS.length - 1) {
+      return 'success-animation';
+    }
+    return STEPS[currentIndex + 1];
+  };
+
+  // Helper to check if current step is the last one
+  const isLastStep = (step: Step): boolean => {
+    return STEPS.indexOf(step) === STEPS.length - 1;
+  };
 
   const handleMoodSelect = (mood: MoodType) => {
     setCheckinData(prev => ({ ...prev, mood }));
-    setCurrentStep('sleep');
+    const nextStep = getNextStep('mood');
+    if (nextStep === 'success-animation') {
+      // Only mood is enabled, complete right away
+      handleCompleteWithData({ ...checkinData, mood });
+    } else {
+      setCurrentStep(nextStep);
+    }
   };
 
   const handleSleepSelect = (quality: QualityType) => {
     setCheckinData(prev => ({ ...prev, sleepQuality: quality }));
-    setCurrentStep('eating');
+    const nextStep = getNextStep('sleep');
+    if (nextStep === 'success-animation') {
+      handleCompleteWithData({ ...checkinData, sleepQuality: quality });
+    } else {
+      setCurrentStep(nextStep);
+    }
   };
 
   const handleEatingSelect = (quality: QualityType) => {
     setCheckinData(prev => ({ ...prev, eatingQuality: quality }));
-    setCurrentStep('exercise');
+    const nextStep = getNextStep('eating');
+    if (nextStep === 'success-animation') {
+      handleCompleteWithData({ ...checkinData, eatingQuality: quality });
+    } else {
+      setCurrentStep(nextStep);
+    }
   };
 
   const handleExerciseSelect = (exercised: boolean) => {
     setCheckinData(prev => ({ ...prev, exercised }));
-    setCurrentStep('medication');
+    const nextStep = getNextStep('exercise');
+    if (nextStep === 'success-animation') {
+      handleCompleteWithData({ ...checkinData, exercised });
+    } else {
+      setCurrentStep(nextStep);
+    }
+  };
+
+  const handleCompleteWithData = async (data: CheckinData) => {
+    const success = await onSaveCheckin(data);
+    if (success) {
+      setCurrentStep('success-animation');
+      setTimeout(() => {
+        setCurrentStep('complete');
+        setIsEditing(false);
+      }, 2000);
+    }
   };
 
   const handleComplete = async () => {
@@ -201,18 +267,24 @@ export function TodayCheckin({
               {todayEntry?.mood === 'depressed' && <CloudRain className="w-5 h-5 text-mood-depressed" />}
               <span>Mående: <strong>{MOOD_LABELS[todayEntry!.mood]}</strong></span>
             </div>
-            <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/30">
-              <Moon className="w-5 h-5 text-primary" />
-              <span>Sömn: <strong>{QUALITY_LABELS[todayEntry!.sleepQuality!]}</strong></span>
-            </div>
-            <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/30">
-              <Utensils className="w-5 h-5 text-primary" />
-              <span>Mat: <strong>{QUALITY_LABELS[todayEntry!.eatingQuality!]}</strong></span>
-            </div>
-            <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/30">
-              <Dumbbell className="w-5 h-5 text-primary" />
-              <span>Träning: <strong>{todayEntry!.exercised ? 'Ja' : 'Nej'}</strong></span>
-            </div>
+            {preferences?.include_sleep && todayEntry?.sleepQuality && (
+              <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/30">
+                <Moon className="w-5 h-5 text-primary" />
+                <span>Sömn: <strong>{QUALITY_LABELS[todayEntry.sleepQuality]}</strong></span>
+              </div>
+            )}
+            {preferences?.include_eating && todayEntry?.eatingQuality && (
+              <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/30">
+                <Utensils className="w-5 h-5 text-primary" />
+                <span>Mat: <strong>{QUALITY_LABELS[todayEntry.eatingQuality]}</strong></span>
+              </div>
+            )}
+            {preferences?.include_exercise && todayEntry?.exercised !== undefined && (
+              <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/30">
+                <Dumbbell className="w-5 h-5 text-primary" />
+                <span>Träning: <strong>{todayEntry.exercised ? 'Ja' : 'Nej'}</strong></span>
+              </div>
+            )}
           </div>
 
           <Button variant="ghost" size="sm" onClick={handleEdit} className="mt-6 gap-2">

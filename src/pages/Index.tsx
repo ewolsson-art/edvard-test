@@ -3,6 +3,7 @@ import { TodayCheckin } from '@/components/TodayCheckin';
 import { useMoodData } from '@/hooks/useMoodData';
 import { useMedications } from '@/hooks/useMedications';
 import { useProfile } from '@/hooks/useProfile';
+import { useUserPreferences } from '@/hooks/useUserPreferences';
 import { CheckinData } from '@/types/mood';
 
 const Index = () => {
@@ -21,6 +22,7 @@ const Index = () => {
   } = useMedications();
 
   const { firstName, isLoading: profileLoading } = useProfile();
+  const { preferences, loading: prefsLoading } = useUserPreferences();
 
   const todayStr = format(new Date(), 'yyyy-MM-dd');
   const todayEntry = getEntryForDate(todayStr);
@@ -40,7 +42,7 @@ const Index = () => {
     logMedication(medicationId, todayStr, taken);
   };
 
-  if (!isLoaded || !medsLoaded || profileLoading) {
+  if (!isLoaded || !medsLoaded || profileLoading || prefsLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
@@ -59,6 +61,7 @@ const Index = () => {
           firstName={firstName}
           onSaveCheckin={handleSaveCheckin}
           onToggleMedication={handleToggleMedication}
+          preferences={preferences}
         />
       </div>
     </div>
