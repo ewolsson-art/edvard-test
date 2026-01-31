@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { format, differenceInDays, parseISO } from 'date-fns';
 import { sv } from 'date-fns/locale';
-import { Zap, Sun, CloudRain, MessageSquare, CheckCircle2, Pill, Pencil, Moon, Utensils, Dumbbell, ThumbsUp, ThumbsDown, Check, X, ChevronRight, ChevronLeft, Heart } from 'lucide-react';
+import { Zap, Sun, CloudRain, MessageSquare, CheckCircle2, Pill, Pencil, Moon, Utensils, Dumbbell, ThumbsUp, ThumbsDown, Check, X, ChevronRight, ChevronLeft, Heart, AlertTriangle } from 'lucide-react';
 import { MoodType, MoodEntry, MOOD_LABELS, QualityType, QUALITY_LABELS, CheckinData } from '@/types/mood';
 import { Medication } from '@/types/medication';
 import { cn } from '@/lib/utils';
@@ -500,9 +500,11 @@ export function TodayCheckin({
                     onToggleMedication(med.id, true);
                   }
                 });
-                handleComplete();
               }}
-              className="p-6 rounded-2xl border-2 flex flex-col items-center gap-3 transition-all hover:border-primary hover:bg-primary/5"
+              className={cn(
+                "p-6 rounded-2xl border-2 flex flex-col items-center gap-3 transition-all hover:border-primary hover:bg-primary/5",
+                medicationsTakenToday.length === activeMedications.length && activeMedications.length > 0 && "border-primary bg-primary/10"
+              )}
             >
               <Check className="w-10 h-10 text-mood-stable" />
               <span className="font-medium">Ja</span>
@@ -515,9 +517,11 @@ export function TodayCheckin({
                     onToggleMedication(med.id, false);
                   }
                 });
-                handleComplete();
               }}
-              className="p-6 rounded-2xl border-2 flex flex-col items-center gap-3 transition-all hover:border-primary hover:bg-primary/5"
+              className={cn(
+                "p-6 rounded-2xl border-2 flex flex-col items-center gap-3 transition-all hover:border-primary hover:bg-primary/5",
+                medicationsTakenToday.length === 0 && activeMedications.length > 0 && "border-primary bg-primary/10"
+              )}
             >
               <X className="w-10 h-10 text-muted-foreground" />
               <span className="font-medium">Nej</span>
@@ -560,12 +564,115 @@ export function TodayCheckin({
                   );
                 })}
               </div>
-              <Button onClick={handleComplete} className="w-full mt-4 gap-2">
-                <ChevronRight className="w-4 h-4" />
-                Slutför incheckning
-              </Button>
             </div>
           )}
+
+          {/* Side effects section */}
+          <div className="max-w-md mx-auto space-y-4">
+            <div className="border-t pt-4">
+              <button
+                onClick={() => setCheckinData(prev => ({
+                  ...prev,
+                  medicationSideEffects: prev.medicationSideEffects?.length ? [] : ['other']
+                }))}
+                className={cn(
+                  "w-full flex items-center gap-3 p-4 rounded-xl border-2 transition-all text-left",
+                  checkinData.medicationSideEffects?.length 
+                    ? "border-amber-500/50 bg-amber-500/10" 
+                    : "border-border hover:border-amber-500/30"
+                )}
+              >
+                <AlertTriangle className={cn(
+                  "w-5 h-5",
+                  checkinData.medicationSideEffects?.length ? "text-amber-500" : "text-muted-foreground"
+                )} />
+                <div className="flex-1">
+                  <p className={cn(
+                    "font-medium text-sm",
+                    checkinData.medicationSideEffects?.length && "text-amber-600 dark:text-amber-400"
+                  )}>
+                    Rapportera biverkningar
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    Tryck här om du upplevt biverkningar
+                  </p>
+                </div>
+                <Checkbox 
+                  checked={!!checkinData.medicationSideEffects?.length}
+                  className="h-5 w-5"
+                />
+              </button>
+
+              {/* Side effects options */}
+              {checkinData.medicationSideEffects?.length ? (
+                <div className="mt-3 space-y-2">
+                  <p className="text-sm font-medium text-amber-600 dark:text-amber-400">
+                    Vilka biverkningar har du upplevt?
+                  </p>
+                  <div className="grid grid-cols-2 gap-2">
+                    {[
+                      { id: 'nausea', label: 'Illamående' },
+                      { id: 'headache', label: 'Huvudvärk' },
+                      { id: 'dizziness', label: 'Yrsel' },
+                      { id: 'fatigue', label: 'Trötthet' },
+                      { id: 'insomnia', label: 'Sömnproblem' },
+                      { id: 'appetite', label: 'Aptitförändringar' },
+                      { id: 'mood_changes', label: 'Humörförändringar' },
+                      { id: 'other', label: 'Annat' },
+                    ].map(effect => (
+                      <button
+                        key={effect.id}
+                        onClick={() => {
+                          const current = checkinData.medicationSideEffects || [];
+                          const updated = current.includes(effect.id)
+                            ? current.filter(e => e !== effect.id)
+                            : [...current, effect.id];
+                          setCheckinData(prev => ({
+                            ...prev,
+                            medicationSideEffects: updated.length ? updated : undefined
+                          }));
+                        }}
+                        className={cn(
+                          "p-2 rounded-lg border text-sm transition-all",
+                          checkinData.medicationSideEffects?.includes(effect.id)
+                            ? "border-amber-500 bg-amber-500/20 text-amber-700 dark:text-amber-300"
+                            : "border-border hover:border-amber-500/30"
+                        )}
+                      >
+                        {effect.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              ) : null}
+            </div>
+
+            {/* Comment section */}
+            <div className="space-y-3">
+              {showComment === 'medication' ? (
+                <Textarea
+                  placeholder="Skriv en kommentar om dina mediciner..."
+                  value={checkinData.medicationComment || ''}
+                  onChange={(e) => setCheckinData(prev => ({ ...prev, medicationComment: e.target.value }))}
+                  className="min-h-[80px] resize-none"
+                  maxLength={500}
+                />
+              ) : (
+                <button
+                  onClick={() => setShowComment('medication')}
+                  className="flex items-center gap-2 mx-auto text-sm text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  <MessageSquare className="w-4 h-4" />
+                  Lägg till kommentar
+                </button>
+              )}
+            </div>
+
+            <Button onClick={handleComplete} className="w-full mt-4 gap-2">
+              <ChevronRight className="w-4 h-4" />
+              Slutför incheckning
+            </Button>
+          </div>
         </div>
       )}
 
