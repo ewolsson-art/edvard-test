@@ -222,69 +222,66 @@ const Profile = () => {
           </form>
         </div>
 
-        {/* Danger Zone */}
-        <div className="glass-card p-6 border-destructive/30">
-          <div className="flex items-center gap-3 mb-4">
-            <AlertTriangle className="w-5 h-5 text-destructive" />
-            <h2 className="font-display text-xl font-semibold text-destructive">Farozon</h2>
-          </div>
-          
-          <p className="text-muted-foreground mb-4">
-            När du raderar ditt konto tas all din data bort permanent. Detta kan inte ångras.
-          </p>
+        {/* Delete Account */}
+        <div className="glass-card p-4 border-destructive/30">
+          <div className="flex items-center justify-between gap-4">
+            <p className="text-sm text-muted-foreground">
+              Radera ditt konto och all data permanent.
+            </p>
 
-          <AlertDialog>
-            <AlertDialogTrigger asChild>
-              <Button variant="destructive" className="gap-2">
-                <Trash2 className="w-4 h-4" />
-                Radera mitt konto
-              </Button>
-            </AlertDialogTrigger>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle className="flex items-center gap-2">
-                  <AlertTriangle className="w-5 h-5 text-destructive" />
-                  Radera konto permanent
-                </AlertDialogTitle>
-                <AlertDialogDescription className="space-y-3">
-                  <p>
-                    Är du säker på att du vill radera ditt konto? All din data kommer att tas bort permanent:
-                  </p>
-                  <ul className="list-disc list-inside text-sm space-y-1">
-                    <li>Alla mående-registreringar</li>
-                    <li>Alla mediciner och medicinloggar</li>
-                    <li>Alla delade rapporter</li>
-                    <li>Alla läkarkopplingar</li>
-                    <li>Din profil och inställningar</li>
-                  </ul>
-                  <p className="font-medium">
-                    Skriv <span className="text-destructive font-bold">RADERA</span> för att bekräfta:
-                  </p>
-                  <Input
-                    value={deleteConfirmText}
-                    onChange={(e) => setDeleteConfirmText(e.target.value)}
-                    placeholder="RADERA"
-                    className="mt-2"
-                  />
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel onClick={() => setDeleteConfirmText('')}>
-                  Avbryt
-                </AlertDialogCancel>
-                <AlertDialogAction
-                  onClick={handleDeleteAccount}
-                  disabled={deleteConfirmText !== 'RADERA' || isDeleting}
-                  className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                >
-                  {isDeleting ? (
-                    <Loader2 className="w-4 h-4 animate-spin mr-2" />
-                  ) : null}
-                  Radera permanent
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button variant="destructive" size="sm" className="gap-2">
+                  <Trash2 className="w-4 h-4" />
+                  Radera konto
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle className="flex items-center gap-2">
+                    <AlertTriangle className="w-5 h-5 text-destructive" />
+                    Radera konto permanent
+                  </AlertDialogTitle>
+                  <AlertDialogDescription className="space-y-3">
+                    <p>
+                      Är du säker på att du vill radera ditt konto? All din data kommer att tas bort permanent:
+                    </p>
+                    <ul className="list-disc list-inside text-sm space-y-1">
+                      <li>Alla mående-registreringar</li>
+                      <li>Alla mediciner och medicinloggar</li>
+                      <li>Alla delade rapporter</li>
+                      <li>Alla läkarkopplingar</li>
+                      <li>Din profil och inställningar</li>
+                    </ul>
+                    <p className="font-medium">
+                      Skriv <span className="text-destructive font-bold">RADERA</span> för att bekräfta:
+                    </p>
+                    <Input
+                      value={deleteConfirmText}
+                      onChange={(e) => setDeleteConfirmText(e.target.value)}
+                      placeholder="RADERA"
+                      className="mt-2"
+                    />
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel onClick={() => setDeleteConfirmText('')}>
+                    Avbryt
+                  </AlertDialogCancel>
+                  <AlertDialogAction
+                    onClick={handleDeleteAccount}
+                    disabled={deleteConfirmText !== 'RADERA' || isDeleting}
+                    className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                  >
+                    {isDeleting ? (
+                      <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                    ) : null}
+                    Radera permanent
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          </div>
         </div>
       </div>
     </div>
