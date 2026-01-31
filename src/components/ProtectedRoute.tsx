@@ -2,6 +2,7 @@ import { ReactNode } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { useUserPreferences } from '@/hooks/useUserPreferences';
+import { useUserRole } from '@/hooks/useUserRole';
 import { Loader2 } from 'lucide-react';
 
 interface ProtectedRouteProps {
@@ -12,9 +13,10 @@ interface ProtectedRouteProps {
 export function ProtectedRoute({ children, skipOnboardingCheck = false }: ProtectedRouteProps) {
   const { user, loading: authLoading } = useAuth();
   const { needsOnboarding, loading: prefsLoading } = useUserPreferences();
+  const { isDoctor, isLoading: roleLoading } = useUserRole();
   const location = useLocation();
 
-  if (authLoading || prefsLoading) {
+  if (authLoading || prefsLoading || roleLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <Loader2 className="w-8 h-8 animate-spin text-primary" />
@@ -26,9 +28,24 @@ export function ProtectedRoute({ children, skipOnboardingCheck = false }: Protec
     return <Navigate to="/auth" replace />;
   }
 
-  // Redirect to onboarding if user hasn't completed it
+  // Doctors don't need onboarding and should go to their dashboard
+  if (isDoctor) {
+    // Redirect doctors away from patient-specific pages
+    const patientOnlyPaths = ['/', '/oversikt', '/mediciner', '/chatt', '/onboarding'];
+    if (patientOnlyPaths.includes(location.pathname)) {
+      return <Navigate to="/lakare" replace />;
+    }
+    return <>{children}</>;
+  }
+
+  // Patients: Redirect to onboarding if user hasn't completed it
   if (!skipOnboardingCheck && needsOnboarding && location.pathname !== '/onboarding') {
     return <Navigate to="/onboarding" replace />;
+  }
+
+  // Redirect patients away from doctor-specific pages
+  if (location.pathname === '/lakare') {
+    return <Navigate to="/" replace />;
   }
 
   return <>{children}</>;

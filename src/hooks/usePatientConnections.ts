@@ -76,13 +76,11 @@ export function usePatientConnections() {
   ) => {
     if (!user) return { success: false, error: 'Inte inloggad' };
 
-    // Find doctor by email - we need to query profiles differently
-    // Since we can't directly query auth.users, we'll use an edge function or 
-    // check if there's a profile with a user who has this email
-    const { data: doctorData, error: doctorError } = await supabase
+    // Find doctor by email using the database function
+    const { data: doctorId, error: doctorError } = await supabase
       .rpc('get_doctor_id_by_email', { doctor_email: doctorEmail });
 
-    if (doctorError || !doctorData) {
+    if (doctorError || !doctorId) {
       return { success: false, error: 'Kunde inte hitta läkare med denna e-post' };
     }
 
@@ -90,8 +88,13 @@ export function usePatientConnections() {
       .from('patient_doctor_connections')
       .insert({
         patient_id: user.id,
-        doctor_id: doctorData,
-        ...shareSettings,
+        doctor_id: doctorId as string,
+        share_mood: shareSettings.share_mood,
+        share_sleep: shareSettings.share_sleep,
+        share_eating: shareSettings.share_eating,
+        share_exercise: shareSettings.share_exercise,
+        share_medication: shareSettings.share_medication,
+        share_comments: shareSettings.share_comments,
       });
 
     if (error) {
