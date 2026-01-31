@@ -359,6 +359,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      get_doctor_email_for_patient: {
+        Args: { p_doctor_id: string; p_patient_id: string }
+        Returns: string
+      }
       get_doctor_id_by_email: {
         Args: { doctor_email: string }
         Returns: string
