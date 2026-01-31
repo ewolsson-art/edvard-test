@@ -16,6 +16,7 @@ export function ProtectedRoute({ children, skipOnboardingCheck = false }: Protec
   const { isDoctor, isLoading: roleLoading } = useUserRole();
   const location = useLocation();
 
+  // Wait for all loading states to complete
   if (authLoading || prefsLoading || roleLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -29,8 +30,8 @@ export function ProtectedRoute({ children, skipOnboardingCheck = false }: Protec
   }
 
   // Doctors don't need onboarding and should go to their dashboard
+  // This check runs BEFORE any onboarding checks
   if (isDoctor) {
-    // Redirect doctors away from patient-specific pages
     const patientOnlyPaths = ['/', '/oversikt', '/mediciner', '/chatt', '/onboarding'];
     if (patientOnlyPaths.includes(location.pathname)) {
       return <Navigate to="/lakare" replace />;
