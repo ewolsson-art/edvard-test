@@ -152,9 +152,16 @@ const Auth = () => {
           <h1 className="text-5xl md:text-6xl lg:text-7xl font-display font-bold text-foreground leading-tight">
             Håll bättre koll på ditt mående
           </h1>
-          <p className="text-lg md:text-xl text-muted-foreground mt-4">
-            Ge både dig och din läkare bättre överblick över ditt mående med vår interaktiva och personliga dagbok
-          </p>
+          <ul className="mt-6 space-y-3">
+            <li className="flex items-center gap-3 text-lg md:text-xl text-muted-foreground">
+              <span className="w-2 h-2 rounded-full bg-primary shrink-0" />
+              Interaktiv och personlig stämningsdagbok
+            </li>
+            <li className="flex items-center gap-3 text-lg md:text-xl text-muted-foreground">
+              <span className="w-2 h-2 rounded-full bg-primary shrink-0" />
+              Dela valfri data med din läkare
+            </li>
+          </ul>
         </div>
         <div className="w-full md:w-auto md:min-w-[400px] glass-card p-8 fade-in">
           <div className="text-center mb-8">
