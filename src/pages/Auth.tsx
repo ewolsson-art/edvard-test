@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Mail, Lock, User } from 'lucide-react';
+import { Loader2, Mail, Lock, User, CheckCircle } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import logo from '@/assets/logo.png';
 
@@ -24,6 +24,7 @@ const Auth = () => {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showEmailConfirmation, setShowEmailConfirmation] = useState(false);
   const [errors, setErrors] = useState<{ email?: string; password?: string; firstName?: string; lastName?: string }>({});
   
   const { user, loading, signIn, signUp } = useAuth();
@@ -112,10 +113,8 @@ const Auth = () => {
               last_name: lastName.trim() || null,
             });
           }
-          toast({
-            title: "Konto skapat!",
-            description: "Kolla din e-post för att bekräfta kontot.",
-          });
+          // Show email confirmation screen
+          setShowEmailConfirmation(true);
         }
       }
     } finally {
@@ -158,113 +157,148 @@ const Auth = () => {
               <img src={logo} alt="Between Clouds" className="w-12 h-12 object-contain" />
               <h1 className="font-display text-2xl font-bold">Between Clouds</h1>
             </div>
-            <p className="text-muted-foreground">
-              {isLogin ? 'Logga in för att fortsätta' : 'Skapa ett konto för att börja'}
-            </p>
-          </div>
-
-          <form onSubmit={handleSubmit} className="space-y-4">
-            {!isLogin && (
-              <div className="grid grid-cols-2 gap-3">
-                <div className="space-y-2">
-                  <Label htmlFor="firstName">Förnamn</Label>
-                  <div className="relative">
-                    <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                    <Input
-                      id="firstName"
-                      type="text"
-                      placeholder="Förnamn"
-                      value={firstName}
-                      onChange={(e) => setFirstName(e.target.value)}
-                      className="pl-10"
-                      disabled={isSubmitting}
-                    />
-                  </div>
-                  {errors.firstName && (
-                    <p className="text-sm text-destructive">{errors.firstName}</p>
-                  )}
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="lastName">Efternamn</Label>
-                  <div className="relative">
-                    <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                    <Input
-                      id="lastName"
-                      type="text"
-                      placeholder="Efternamn"
-                      value={lastName}
-                      onChange={(e) => setLastName(e.target.value)}
-                      className="pl-10"
-                      disabled={isSubmitting}
-                    />
-                  </div>
-                  {errors.lastName && (
-                    <p className="text-sm text-destructive">{errors.lastName}</p>
-                  )}
-                </div>
-              </div>
+            {!showEmailConfirmation && (
+              <p className="text-muted-foreground">
+                {isLogin ? 'Logga in för att fortsätta' : 'Skapa ett konto för att börja'}
+              </p>
             )}
-
-            <div className="space-y-2">
-              <Label htmlFor="email">E-post</Label>
-              <div className="relative">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="din@epost.se"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="pl-10"
-                  disabled={isSubmitting}
-                />
-              </div>
-              {errors.email && (
-                <p className="text-sm text-destructive">{errors.email}</p>
-              )}
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="password">Lösenord</Label>
-              <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                <Input
-                  id="password"
-                  type="password"
-                  placeholder="••••••••"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="pl-10"
-                  disabled={isSubmitting}
-                />
-              </div>
-              {errors.password && (
-                <p className="text-sm text-destructive">{errors.password}</p>
-              )}
-            </div>
-
-            <Button
-              type="submit"
-              className="w-full"
-              disabled={isSubmitting}
-            >
-              {isSubmitting ? (
-                <Loader2 className="w-4 h-4 animate-spin mr-2" />
-              ) : null}
-              {isLogin ? 'Logga in' : 'Skapa konto'}
-            </Button>
-          </form>
-
-          <div className="mt-6 text-center">
-            <button
-              type="button"
-              onClick={() => setIsLogin(!isLogin)}
-              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-              disabled={isSubmitting}
-            >
-              {isLogin ? 'Har du inget konto? Skapa ett' : 'Har du redan ett konto? Logga in'}
-            </button>
           </div>
+
+          {showEmailConfirmation ? (
+            <div className="text-center space-y-6 py-4">
+              <div className="flex justify-center">
+                <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
+                  <CheckCircle className="w-8 h-8 text-primary" />
+                </div>
+              </div>
+              <div className="space-y-2">
+                <h2 className="text-xl font-semibold">Verifiera din e-post</h2>
+                <p className="text-muted-foreground">
+                  Vi har skickat ett bekräftelsemail till:
+                </p>
+                <p className="font-medium text-foreground">{email}</p>
+              </div>
+              <p className="text-sm text-muted-foreground">
+                Klicka på länken i mailet för att aktivera ditt konto. Kolla även skräpposten om du inte hittar det.
+              </p>
+              <Button
+                variant="outline"
+                className="w-full"
+                onClick={() => {
+                  setShowEmailConfirmation(false);
+                  setIsLogin(true);
+                  setPassword('');
+                }}
+              >
+                Tillbaka till inloggning
+              </Button>
+            </div>
+          ) : (
+            <>
+              <form onSubmit={handleSubmit} className="space-y-4">
+                {!isLogin && (
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="space-y-2">
+                      <Label htmlFor="firstName">Förnamn</Label>
+                      <div className="relative">
+                        <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                        <Input
+                          id="firstName"
+                          type="text"
+                          placeholder="Förnamn"
+                          value={firstName}
+                          onChange={(e) => setFirstName(e.target.value)}
+                          className="pl-10"
+                          disabled={isSubmitting}
+                        />
+                      </div>
+                      {errors.firstName && (
+                        <p className="text-sm text-destructive">{errors.firstName}</p>
+                      )}
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="lastName">Efternamn</Label>
+                      <div className="relative">
+                        <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                        <Input
+                          id="lastName"
+                          type="text"
+                          placeholder="Efternamn"
+                          value={lastName}
+                          onChange={(e) => setLastName(e.target.value)}
+                          className="pl-10"
+                          disabled={isSubmitting}
+                        />
+                      </div>
+                      {errors.lastName && (
+                        <p className="text-sm text-destructive">{errors.lastName}</p>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                <div className="space-y-2">
+                  <Label htmlFor="email">E-post</Label>
+                  <div className="relative">
+                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                    <Input
+                      id="email"
+                      type="email"
+                      placeholder="din@epost.se"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      className="pl-10"
+                      disabled={isSubmitting}
+                    />
+                  </div>
+                  {errors.email && (
+                    <p className="text-sm text-destructive">{errors.email}</p>
+                  )}
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="password">Lösenord</Label>
+                  <div className="relative">
+                    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                    <Input
+                      id="password"
+                      type="password"
+                      placeholder="••••••••"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      className="pl-10"
+                      disabled={isSubmitting}
+                    />
+                  </div>
+                  {errors.password && (
+                    <p className="text-sm text-destructive">{errors.password}</p>
+                  )}
+                </div>
+
+                <Button
+                  type="submit"
+                  className="w-full"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? (
+                    <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                  ) : null}
+                  {isLogin ? 'Logga in' : 'Skapa konto'}
+                </Button>
+              </form>
+
+              <div className="mt-6 text-center">
+                <button
+                  type="button"
+                  onClick={() => setIsLogin(!isLogin)}
+                  className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                  disabled={isSubmitting}
+                >
+                  {isLogin ? 'Har du inget konto? Skapa ett' : 'Har du redan ett konto? Logga in'}
+                </button>
+              </div>
+            </>
+          )}
         </div>
       </div>
     </div>
