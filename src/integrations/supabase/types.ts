@@ -54,6 +54,7 @@ export type Database = {
           active: boolean
           created_at: string
           dosage: string
+          frequency: string
           id: string
           name: string
           started_at: string
@@ -64,6 +65,7 @@ export type Database = {
           active?: boolean
           created_at?: string
           dosage: string
+          frequency?: string
           id?: string
           name: string
           started_at?: string
@@ -74,6 +76,7 @@ export type Database = {
           active?: boolean
           created_at?: string
           dosage?: string
+          frequency?: string
           id?: string
           name?: string
           started_at?: string

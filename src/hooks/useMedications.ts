@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Medication, MedicationLog } from '@/types/medication';
+import { Medication, MedicationLog, MedicationFrequency } from '@/types/medication';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
@@ -51,7 +51,7 @@ export function useMedications() {
     fetchData();
   }, [user]);
 
-  const addMedication = useCallback(async (name: string, dosage: string, startedAt: string) => {
+  const addMedication = useCallback(async (name: string, dosage: string, startedAt: string, frequency: MedicationFrequency = 'daily') => {
     if (!user) return;
 
     const { data, error } = await supabase
@@ -61,6 +61,7 @@ export function useMedications() {
         name,
         dosage,
         started_at: startedAt,
+        frequency,
       })
       .select()
       .single();
@@ -81,12 +82,12 @@ export function useMedications() {
     }
   }, [user, toast]);
 
-  const updateMedication = useCallback(async (id: string, name: string, dosage: string, startedAt: string) => {
+  const updateMedication = useCallback(async (id: string, name: string, dosage: string, startedAt: string, frequency: MedicationFrequency = 'daily') => {
     if (!user) return;
 
     const { error } = await supabase
       .from('medications')
-      .update({ name, dosage, started_at: startedAt })
+      .update({ name, dosage, started_at: startedAt, frequency })
       .eq('id', id)
       .eq('user_id', user.id);
 
@@ -98,7 +99,7 @@ export function useMedications() {
       });
     } else {
       setMedications(prev => prev.map(m => 
-        m.id === id ? { ...m, name, dosage, started_at: startedAt } : m
+        m.id === id ? { ...m, name, dosage, started_at: startedAt, frequency } : m
       ));
       toast({ title: "Medicin uppdaterad" });
     }
