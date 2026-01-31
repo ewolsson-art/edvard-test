@@ -201,57 +201,73 @@ export function PatientOverview({ connection, onBack }: PatientOverviewProps) {
       <div className="space-y-8">
         {/* Mood */}
         {connection.share_mood && (
-          <section className="space-y-4">
-            <h3 className="font-medium text-lg">Mående</h3>
-            <MoodStats stats={monthStats} periodLabel={monthLabel} />
-            <MonthCalendar
-              currentDate={currentMonth}
-              moodData={monthMoodData}
-              onPrevMonth={handlePrevMonth}
-              onNextMonth={handleNextMonth}
-            />
+          <section>
+            <h3 className="font-display text-2xl font-semibold mb-6">Mående</h3>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <MonthCalendar
+                currentDate={currentMonth}
+                moodData={monthMoodData}
+                onPrevMonth={handlePrevMonth}
+                onNextMonth={handleNextMonth}
+              />
+              <div className="lg:self-start">
+                <MoodStats stats={monthStats} periodLabel={monthLabel} />
+              </div>
+            </div>
           </section>
         )}
 
         {/* Sleep */}
         {connection.share_sleep && (
-          <section className="space-y-4">
-            <h3 className="font-medium text-lg">Sömn</h3>
-            <SleepStats stats={monthSleepStats} periodLabel={monthLabel} />
-            <SleepMonthCalendar
-              currentDate={currentMonth}
-              sleepData={monthSleepData}
-              onPrevMonth={handlePrevMonth}
-              onNextMonth={handleNextMonth}
-            />
+          <section>
+            <h3 className="font-display text-2xl font-semibold mb-6">Sömn</h3>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <SleepMonthCalendar
+                currentDate={currentMonth}
+                sleepData={monthSleepData}
+                onPrevMonth={handlePrevMonth}
+                onNextMonth={handleNextMonth}
+              />
+              <div className="lg:self-start">
+                <SleepStats stats={monthSleepStats} periodLabel={monthLabel} />
+              </div>
+            </div>
           </section>
         )}
 
         {/* Eating */}
         {connection.share_eating && (
-          <section className="space-y-4">
-            <h3 className="font-medium text-lg">Kost</h3>
-            <EatingStats stats={monthEatingStats} periodLabel={monthLabel} />
-            <EatingMonthCalendar
-              currentDate={currentMonth}
-              eatingData={monthEatingData}
-              onPrevMonth={handlePrevMonth}
-              onNextMonth={handleNextMonth}
-            />
+          <section>
+            <h3 className="font-display text-2xl font-semibold mb-6">Kost</h3>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <EatingMonthCalendar
+                currentDate={currentMonth}
+                eatingData={monthEatingData}
+                onPrevMonth={handlePrevMonth}
+                onNextMonth={handleNextMonth}
+              />
+              <div className="lg:self-start">
+                <EatingStats stats={monthEatingStats} periodLabel={monthLabel} />
+              </div>
+            </div>
           </section>
         )}
 
         {/* Exercise */}
         {connection.share_exercise && (
-          <section className="space-y-4">
-            <h3 className="font-medium text-lg">Träning</h3>
-            <ExerciseStats stats={monthExerciseStats} periodLabel={monthLabel} />
-            <ExerciseMonthCalendar
-              currentDate={currentMonth}
-              exerciseData={monthExerciseData}
-              onPrevMonth={handlePrevMonth}
-              onNextMonth={handleNextMonth}
-            />
+          <section>
+            <h3 className="font-display text-2xl font-semibold mb-6">Träning</h3>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <ExerciseMonthCalendar
+                currentDate={currentMonth}
+                exerciseData={monthExerciseData}
+                onPrevMonth={handlePrevMonth}
+                onNextMonth={handleNextMonth}
+              />
+              <div className="lg:self-start">
+                <ExerciseStats stats={monthExerciseStats} periodLabel={monthLabel} />
+              </div>
+            </div>
           </section>
         )}
 
