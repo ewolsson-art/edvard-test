@@ -6,20 +6,25 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Mail, Lock } from 'lucide-react';
+import { Loader2, Mail, Lock, User } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
 import logo from '@/assets/logo.png';
 
 const authSchema = z.object({
   email: z.string().trim().email({ message: "Ogiltig e-postadress" }).max(255),
   password: z.string().min(6, { message: "Lösenordet måste vara minst 6 tecken" }).max(100),
+  firstName: z.string().trim().max(50).optional(),
+  lastName: z.string().trim().max(50).optional(),
 });
 
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
+  const [errors, setErrors] = useState<{ email?: string; password?: string; firstName?: string; lastName?: string }>({});
   
   const { user, loading, signIn, signUp } = useAuth();
   const navigate = useNavigate();
@@ -32,12 +37,17 @@ const Auth = () => {
   }, [user, loading, navigate]);
 
   const validateForm = () => {
-    const result = authSchema.safeParse({ email, password });
+    const dataToValidate = isLogin 
+      ? { email, password } 
+      : { email, password, firstName, lastName };
+    const result = authSchema.safeParse(dataToValidate);
     if (!result.success) {
-      const fieldErrors: { email?: string; password?: string } = {};
+      const fieldErrors: { email?: string; password?: string; firstName?: string; lastName?: string } = {};
       result.error.errors.forEach((err) => {
         if (err.path[0] === 'email') fieldErrors.email = err.message;
         if (err.path[0] === 'password') fieldErrors.password = err.message;
+        if (err.path[0] === 'firstName') fieldErrors.firstName = err.message;
+        if (err.path[0] === 'lastName') fieldErrors.lastName = err.message;
       });
       setErrors(fieldErrors);
       return false;
@@ -78,7 +88,7 @@ const Auth = () => {
           }
         }
       } else {
-        const { error } = await signUp(email, password);
+        const { error, data } = await signUp(email, password);
         if (error) {
           if (error.message.includes('User already registered')) {
             toast({
@@ -94,6 +104,14 @@ const Auth = () => {
             });
           }
         } else {
+          // Save profile data if user was created
+          if (data?.user) {
+            await supabase.from('profiles').insert({
+              user_id: data.user.id,
+              first_name: firstName.trim() || null,
+              last_name: lastName.trim() || null,
+            });
+          }
           toast({
             title: "Konto skapat!",
             description: "Kolla din e-post för att bekräfta kontot.",
@@ -146,6 +164,47 @@ const Auth = () => {
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
+            {!isLogin && (
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-2">
+                  <Label htmlFor="firstName">Förnamn</Label>
+                  <div className="relative">
+                    <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                    <Input
+                      id="firstName"
+                      type="text"
+                      placeholder="Förnamn"
+                      value={firstName}
+                      onChange={(e) => setFirstName(e.target.value)}
+                      className="pl-10"
+                      disabled={isSubmitting}
+                    />
+                  </div>
+                  {errors.firstName && (
+                    <p className="text-sm text-destructive">{errors.firstName}</p>
+                  )}
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="lastName">Efternamn</Label>
+                  <div className="relative">
+                    <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                    <Input
+                      id="lastName"
+                      type="text"
+                      placeholder="Efternamn"
+                      value={lastName}
+                      onChange={(e) => setLastName(e.target.value)}
+                      className="pl-10"
+                      disabled={isSubmitting}
+                    />
+                  </div>
+                  {errors.lastName && (
+                    <p className="text-sm text-destructive">{errors.lastName}</p>
+                  )}
+                </div>
+              </div>
+            )}
+
             <div className="space-y-2">
               <Label htmlFor="email">E-post</Label>
               <div className="relative">
