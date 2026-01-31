@@ -44,6 +44,8 @@ export function useMoodData() {
           exercised: entry.exercised ?? undefined,
           exerciseComment: entry.exercise_comment || undefined,
           exerciseTypes: (entry.exercise_types as ExerciseType[] | null) ?? undefined,
+          medicationComment: (entry as { medication_comment?: string }).medication_comment || undefined,
+          medicationSideEffects: (entry as { medication_side_effects?: string[] }).medication_side_effects ?? undefined,
           timestamp: new Date(entry.created_at).getTime(),
         }));
         setEntries(formattedEntries);
@@ -57,21 +59,26 @@ export function useMoodData() {
   const saveCheckin = useCallback(async (date: string, data: CheckinData) => {
     if (!user) return;
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const upsertData: any = {
+      user_id: user.id,
+      date,
+      mood: data.mood,
+      comment: data.moodComment || null,
+      sleep_quality: data.sleepQuality || null,
+      sleep_comment: data.sleepComment || null,
+      eating_quality: data.eatingQuality || null,
+      eating_comment: data.eatingComment || null,
+      exercised: data.exercised ?? null,
+      exercise_comment: data.exerciseComment || null,
+      exercise_types: data.exerciseTypes || null,
+      medication_comment: data.medicationComment || null,
+      medication_side_effects: data.medicationSideEffects || null,
+    };
+
     const { error } = await supabase
       .from('mood_entries')
-      .upsert({
-        user_id: user.id,
-        date,
-        mood: data.mood,
-        comment: data.moodComment || null,
-        sleep_quality: data.sleepQuality || null,
-        sleep_comment: data.sleepComment || null,
-        eating_quality: data.eatingQuality || null,
-        eating_comment: data.eatingComment || null,
-        exercised: data.exercised ?? null,
-        exercise_comment: data.exerciseComment || null,
-        exercise_types: data.exerciseTypes || null,
-      }, {
+      .upsert(upsertData, {
         onConflict: 'user_id,date'
       });
 
@@ -96,6 +103,8 @@ export function useMoodData() {
         exercised: data.exercised,
         exerciseComment: data.exerciseComment,
         exerciseTypes: data.exerciseTypes,
+        medicationComment: data.medicationComment,
+        medicationSideEffects: data.medicationSideEffects,
         timestamp: Date.now(),
       };
       setEntries(prev => {
