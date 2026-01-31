@@ -1,9 +1,10 @@
 import { useMemo } from 'react';
 import { format, startOfMonth, endOfMonth, startOfWeek, endOfWeek, eachDayOfInterval, isSameMonth, isToday } from 'date-fns';
 import { sv } from 'date-fns/locale';
-import { ChevronLeft, ChevronRight, Check, X } from 'lucide-react';
+import { Check, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { ExerciseType, EXERCISE_TYPE_LABELS } from '@/types/mood';
+import { ExerciseType, EXERCISE_TYPE_LABELS, EXERCISE_TYPE_EMOJIS } from '@/types/mood';
+import { CalendarHeader } from './CalendarHeader';
 
 interface ExerciseMonthCalendarProps {
   currentDate: Date;
@@ -32,27 +33,11 @@ export function ExerciseMonthCalendar({
 
   return (
     <div className="glass-card p-6 fade-in">
-      <div className="flex items-center justify-between mb-6">
-        <button
-          onClick={onPrevMonth}
-          className="p-2 rounded-lg hover:bg-muted transition-colors"
-          aria-label="Föregående månad"
-        >
-          <ChevronLeft className="w-5 h-5" />
-        </button>
-        
-        <h3 className="font-display text-xl font-semibold capitalize">
-          {monthYear}
-        </h3>
-        
-        <button
-          onClick={onNextMonth}
-          className="p-2 rounded-lg hover:bg-muted transition-colors"
-          aria-label="Nästa månad"
-        >
-          <ChevronRight className="w-5 h-5" />
-        </button>
-      </div>
+      <CalendarHeader
+        title={monthYear}
+        onPrev={onPrevMonth}
+        onNext={onNextMonth}
+      />
 
       <div className="grid grid-cols-7 gap-2 mb-2">
         {weekDays.map(day => (
@@ -79,7 +64,7 @@ export function ExerciseMonthCalendar({
               disabled={!isCurrentMonth}
               title={types && types.length > 0 ? types.map(t => EXERCISE_TYPE_LABELS[t]).join(', ') : undefined}
               className={cn(
-                "calendar-day relative flex flex-col items-center justify-center",
+                "calendar-day relative flex flex-col items-center justify-center min-h-[44px]",
                 !isCurrentMonth && "opacity-30 cursor-not-allowed",
                 isCurrentMonth && !hasData && "calendar-day-empty cursor-pointer",
                 exercised === true && "calendar-day-stable cursor-pointer",
@@ -88,7 +73,18 @@ export function ExerciseMonthCalendar({
               )}
             >
               <span className="text-xs">{dayOfMonth}</span>
-              {hasData && (
+              {hasData && exercised && types && types.length > 0 ? (
+                <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 flex gap-0.5">
+                  {types.slice(0, 3).map((type, idx) => (
+                    <span key={idx} className="text-[10px] leading-none" title={EXERCISE_TYPE_LABELS[type]}>
+                      {EXERCISE_TYPE_EMOJIS[type]}
+                    </span>
+                  ))}
+                  {types.length > 3 && (
+                    <span className="text-[8px] font-medium text-primary">+{types.length - 3}</span>
+                  )}
+                </div>
+              ) : hasData ? (
                 <span className="absolute -bottom-0.5 left-1/2 -translate-x-1/2">
                   {exercised ? (
                     <Check className="h-2.5 w-2.5 text-mood-stable" />
@@ -96,18 +92,7 @@ export function ExerciseMonthCalendar({
                     <X className="h-2.5 w-2.5 text-mood-depressed" />
                   )}
                 </span>
-              )}
-              {types && types.length > 0 && (
-                <div className="absolute top-0.5 right-0.5 flex gap-0.5">
-                  {types.length <= 2 ? (
-                    types.map(type => (
-                      <span key={type} className="w-1.5 h-1.5 rounded-full bg-primary" title={EXERCISE_TYPE_LABELS[type]} />
-                    ))
-                  ) : (
-                    <span className="text-[8px] font-medium text-primary">{types.length}</span>
-                  )}
-                </div>
-              )}
+              ) : null}
             </button>
           );
         })}

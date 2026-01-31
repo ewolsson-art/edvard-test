@@ -60,3 +60,10 @@ export const EXERCISE_TYPE_LABELS: Record<ExerciseType, string> = {
   back: 'Rygg',
   legs: 'Ben',
 };
+
+export const EXERCISE_TYPE_EMOJIS: Record<ExerciseType, string> = {
+  chest: '💪',
+  shoulders: '🏋️',
+  back: '🧗',
+  legs: '🦵',
+};
