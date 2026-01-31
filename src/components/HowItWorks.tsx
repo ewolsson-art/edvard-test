@@ -1,26 +1,32 @@
 import { CalendarCheck, TrendingUp, Share2 } from 'lucide-react';
+import screenshotCheckin from '@/assets/screenshot-checkin.jpg';
+import screenshotStats from '@/assets/screenshot-stats.jpg';
+import screenshotShare from '@/assets/screenshot-share.jpg';
 
 const steps = [
   {
     icon: CalendarCheck,
     title: 'Checka in dagligen',
     description: 'Logga ditt mående, sömn, kost och träning med några enkla klick.',
+    image: screenshotCheckin,
   },
   {
     icon: TrendingUp,
     title: 'Följ din utveckling',
     description: 'Se trender och mönster över tid med tydliga grafer och statistik.',
+    image: screenshotStats,
   },
   {
     icon: Share2,
     title: 'Dela med din läkare',
     description: 'Skapa rapporter och dela valfri data säkert med din vårdgivare.',
+    image: screenshotShare,
   },
 ];
 
 export const HowItWorks = () => {
   return (
-    <section className="w-full py-16 md:py-24">
+    <section className="w-full py-16 md:py-24 bg-muted/30">
       <div className="max-w-5xl mx-auto px-4">
         <h2 className="text-3xl md:text-4xl font-display font-bold text-center text-foreground mb-12">
           Så funkar det
@@ -29,14 +35,23 @@ export const HowItWorks = () => {
           {steps.map((step, index) => (
             <div
               key={index}
-              className="flex flex-col items-center text-center p-6 rounded-2xl bg-card/50 backdrop-blur-sm border border-border/50 hover:border-primary/30 transition-colors"
+              className="flex flex-col items-center text-center"
             >
-              <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mb-4">
-                <step.icon className="w-8 h-8 text-primary" />
+              <div className="p-6 rounded-2xl bg-card/50 backdrop-blur-sm border border-border/50 hover:border-primary/30 transition-colors mb-6">
+                <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mb-4 mx-auto">
+                  <step.icon className="w-8 h-8 text-primary" />
+                </div>
+                <span className="text-sm font-medium text-primary mb-2 block">Steg {index + 1}</span>
+                <h3 className="text-xl font-semibold text-foreground mb-2">{step.title}</h3>
+                <p className="text-muted-foreground">{step.description}</p>
               </div>
-              <span className="text-sm font-medium text-primary mb-2">Steg {index + 1}</span>
-              <h3 className="text-xl font-semibold text-foreground mb-2">{step.title}</h3>
-              <p className="text-muted-foreground">{step.description}</p>
+              <div className="w-full overflow-hidden rounded-xl shadow-lg border border-border/50">
+                <img 
+                  src={step.image} 
+                  alt={step.title}
+                  className="w-full h-auto object-cover"
+                />
+              </div>
             </div>
           ))}
         </div>
