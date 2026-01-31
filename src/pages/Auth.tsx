@@ -9,6 +9,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Loader2, Mail, Lock, User, CheckCircle, Stethoscope, HeartPulse } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { Logo } from '@/components/Logo';
+import { HowItWorks } from '@/components/HowItWorks';
 import { cn } from '@/lib/utils';
 
 type UserRole = 'patient' | 'doctor';
@@ -136,7 +137,8 @@ const Auth = () => {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 md:p-8 relative overflow-hidden">
+    <div className="min-h-screen flex flex-col">
+      <div className="flex-1 flex items-center justify-center p-4 md:p-8 relative overflow-hidden">
       {/* Animated cloud */}
       <div className="absolute top-10 left-1/2 -translate-x-1/2 opacity-20 pointer-events-none animate-float">
         <svg 
@@ -152,14 +154,9 @@ const Auth = () => {
           <h1 className="text-5xl md:text-6xl lg:text-7xl font-display font-bold text-foreground leading-tight">
             Håll bättre koll på ditt mående
           </h1>
-          <ul className="mt-6 space-y-3">
-            <li className="text-lg md:text-xl text-muted-foreground">
-              Din interaktiva och personliga stämningsdagbok
-            </li>
-            <li className="text-lg md:text-xl text-muted-foreground">
-              Dela valfri data med din läkare
-            </li>
-          </ul>
+          <p className="text-lg md:text-xl text-muted-foreground mt-4">
+            Din interaktiva och personliga stämningsdagbok
+          </p>
         </div>
         <div className="w-full md:w-auto md:min-w-[400px] glass-card p-8 fade-in">
           <div className="text-center mb-8">
@@ -359,6 +356,8 @@ const Auth = () => {
           )}
         </div>
       </div>
+      </div>
+      <HowItWorks />
     </div>
   );
 };
