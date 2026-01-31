@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { z } from 'zod';
 import { useAuth } from '@/hooks/useAuth';
 import { useProfile } from '@/hooks/useProfile';
+import { useUserRole, AppRole } from '@/hooks/useUserRole';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
@@ -19,7 +20,8 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
-import { Loader2, User, Mail, Save, Trash2, AlertTriangle } from 'lucide-react';
+import { Loader2, User, Mail, Save, Trash2, AlertTriangle, Stethoscope, HeartPulse, ArrowRightLeft } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 const profileSchema = z.object({
   firstName: z.string().trim().max(50, { message: "Max 50 tecken" }).optional(),
@@ -29,6 +31,7 @@ const profileSchema = z.object({
 const Profile = () => {
   const { user, signOut } = useAuth();
   const { profile, isLoading: profileLoading } = useProfile();
+  const { role, isDoctor, isPatient, isLoading: roleLoading, setUserRole } = useUserRole();
   const { toast } = useToast();
   const navigate = useNavigate();
   
@@ -36,6 +39,7 @@ const Profile = () => {
   const [lastName, setLastName] = useState('');
   const [isSaving, setIsSaving] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [isChangingRole, setIsChangingRole] = useState(false);
   const [deleteConfirmText, setDeleteConfirmText] = useState('');
   const [errors, setErrors] = useState<{ firstName?: string; lastName?: string }>({});
 
@@ -138,7 +142,34 @@ const Profile = () => {
     }
   };
 
-  if (profileLoading) {
+  const handleChangeRole = async (newRole: AppRole) => {
+    setIsChangingRole(true);
+    try {
+      const success = await setUserRole(newRole);
+      if (success) {
+        toast({
+          title: newRole === 'doctor' ? "Bytt till läkarkonto" : "Bytt till patientkonto",
+          description: newRole === 'doctor' 
+            ? "Du kommer nu att omdirigeras till läkardashboarden."
+            : "Du kommer nu att omdirigeras till patientöversikten.",
+        });
+        // Navigate to appropriate page after role change
+        setTimeout(() => {
+          navigate(newRole === 'doctor' ? '/lakare' : '/');
+        }, 500);
+      } else {
+        toast({
+          title: "Kunde inte byta kontotyp",
+          description: "Försök igen senare.",
+          variant: "destructive",
+        });
+      }
+    } finally {
+      setIsChangingRole(false);
+    }
+  };
+
+  if (profileLoading || roleLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <Loader2 className="w-8 h-8 animate-spin text-primary" />
@@ -159,7 +190,100 @@ const Profile = () => {
         </header>
 
         <div className="glass-card p-6 space-y-6">
-          <div className="space-y-2">
+          {/* Account Type Section */}
+          <div className="space-y-3">
+            <Label className="text-muted-foreground">Kontotyp</Label>
+            <div className={cn(
+              "flex items-center gap-3 p-4 rounded-lg border-2",
+              isDoctor ? "border-primary bg-primary/5" : "border-primary bg-primary/5"
+            )}>
+              {isDoctor ? (
+                <Stethoscope className="w-5 h-5 text-primary" />
+              ) : (
+                <HeartPulse className="w-5 h-5 text-primary" />
+              )}
+              <div className="flex-1">
+                <span className="font-medium text-foreground">
+                  {isDoctor ? 'Läkarkonto' : 'Patientkonto'}
+                </span>
+                <p className="text-sm text-muted-foreground">
+                  {isDoctor 
+                    ? 'Du kan se dina patienters data men gör inga egna incheckningar.'
+                    : 'Du kan göra dagliga incheckningar och se dina egna översikter.'}
+                </p>
+              </div>
+            </div>
+            
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button variant="outline" size="sm" className="gap-2" disabled={isChangingRole}>
+                  {isChangingRole ? (
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  ) : (
+                    <ArrowRightLeft className="w-4 h-4" />
+                  )}
+                  Byt till {isDoctor ? 'patientkonto' : 'läkarkonto'}
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle className="flex items-center gap-2">
+                    {isDoctor ? (
+                      <HeartPulse className="w-5 h-5 text-primary" />
+                    ) : (
+                      <Stethoscope className="w-5 h-5 text-primary" />
+                    )}
+                    Byt till {isDoctor ? 'patientkonto' : 'läkarkonto'}?
+                  </AlertDialogTitle>
+                  <AlertDialogDescription className="space-y-3">
+                    {isDoctor ? (
+                      <>
+                        <p>
+                          Om du byter till patientkonto kommer du att:
+                        </p>
+                        <ul className="list-disc list-inside text-sm space-y-1">
+                          <li>Kunna göra dagliga incheckningar</li>
+                          <li>Se dina egna översikter och statistik</li>
+                          <li>Kunna bjuda in läkare att se din data</li>
+                        </ul>
+                        <p className="text-sm font-medium">
+                          Du förlorar tillgång till läkardashboarden och dina patientkopplingar.
+                        </p>
+                      </>
+                    ) : (
+                      <>
+                        <p>
+                          Om du byter till läkarkonto kommer du att:
+                        </p>
+                        <ul className="list-disc list-inside text-sm space-y-1">
+                          <li>Kunna ta emot inbjudningar från patienter</li>
+                          <li>Se dina patienters delade data</li>
+                          <li>Få tillgång till läkardashboarden</li>
+                        </ul>
+                        <p className="text-sm font-medium text-destructive">
+                          Du förlorar möjligheten att göra egna incheckningar och se dina egna översikter.
+                        </p>
+                      </>
+                    )}
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Avbryt</AlertDialogCancel>
+                  <AlertDialogAction
+                    onClick={() => handleChangeRole(isDoctor ? 'patient' : 'doctor')}
+                    disabled={isChangingRole}
+                  >
+                    {isChangingRole ? (
+                      <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                    ) : null}
+                    Byt kontotyp
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          </div>
+
+          <div className="border-t border-border pt-6 space-y-2">
             <Label className="text-muted-foreground">E-post</Label>
             <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/50">
               <Mail className="w-4 h-4 text-muted-foreground" />
