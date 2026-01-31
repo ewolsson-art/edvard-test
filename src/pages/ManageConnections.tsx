@@ -1,12 +1,11 @@
 import { useState } from 'react';
 import { z } from 'zod';
-import { usePatientConnections, DoctorConnection } from '@/hooks/usePatientConnections';
-import { DoctorPatientChat } from '@/components/DoctorPatientChat';
+import { usePatientConnections } from '@/hooks/usePatientConnections';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
-import { Loader2, UserPlus, Users, Trash2, Settings, MessageSquare, ChevronLeft } from 'lucide-react';
+import { Loader2, UserPlus, Users, Trash2, Settings } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import {
   Dialog,
@@ -26,7 +25,6 @@ const ManageConnections = () => {
   const [doctorEmail, setDoctorEmail] = useState('');
   const [isInviting, setIsInviting] = useState(false);
   const [inviteDialogOpen, setInviteDialogOpen] = useState(false);
-  const [activeChatConnection, setActiveChatConnection] = useState<DoctorConnection | null>(null);
   const [shareSettings, setShareSettings] = useState({
     share_mood: true,
     share_sleep: true,
@@ -68,7 +66,6 @@ const ManageConnections = () => {
         .filter(Boolean)
         .join(' ');
     }
-    // Fall back to email if no name is set
     if (connection.doctor_email) {
       return connection.doctor_email;
     }
@@ -97,34 +94,6 @@ const ManageConnections = () => {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <Loader2 className="w-8 h-8 animate-spin text-primary" />
-      </div>
-    );
-  }
-
-  // Show chat view if a connection is selected
-  if (activeChatConnection) {
-    return (
-      <div className="py-8 px-4 md:px-8">
-        <div className="max-w-3xl mx-auto">
-          <div className="mb-4">
-            <Button 
-              variant="ghost" 
-              onClick={() => setActiveChatConnection(null)}
-              className="gap-2"
-            >
-              <ChevronLeft className="w-4 h-4" />
-              Tillbaka till mina läkare
-            </Button>
-          </div>
-          <div className="glass-card h-[600px]">
-            <DoctorPatientChat
-              connectionId={activeChatConnection.id}
-              otherPartyName={getDoctorName(activeChatConnection)}
-              isDoctor={false}
-              chatEnabled={activeChatConnection.chat_enabled}
-            />
-          </div>
-        </div>
       </div>
     );
   }
@@ -237,26 +206,13 @@ const ManageConnections = () => {
                       </span>
                     </div>
                   </div>
-                  <div className="flex gap-2">
-                    {connection.status === 'approved' && connection.chat_enabled && (
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => setActiveChatConnection(connection)}
-                        className="gap-2"
-                      >
-                        <MessageSquare className="w-4 h-4" />
-                        Chatta
-                      </Button>
-                    )}
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      onClick={() => removeConnection(connection.id)}
-                    >
-                      <Trash2 className="w-4 h-4 text-destructive" />
-                    </Button>
-                  </div>
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={() => removeConnection(connection.id)}
+                  >
+                    <Trash2 className="w-4 h-4 text-destructive" />
+                  </Button>
                 </div>
 
                 {connection.status === 'approved' && (
