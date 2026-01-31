@@ -243,6 +243,12 @@ export function TodayCheckin({
       {/* Step: Mood */}
       {currentStep === 'mood' && (
         <div className="space-y-6 fade-in">
+          {isEditing && (
+            <Button variant="ghost" size="sm" onClick={() => setIsEditing(false)} className="mb-4 gap-1">
+              <ChevronLeft className="w-4 h-4" />
+              Avbryt
+            </Button>
+          )}
           <div className="text-center mb-6">
             <h1 className="font-display text-2xl md:text-3xl font-bold mb-2">
               {firstName ? `Hej ${firstName}! Hur har du mått idag?` : 'Hej! Hur har du mått idag?'}
@@ -572,14 +578,6 @@ export function TodayCheckin({
         </div>
       )}
 
-      {/* Cancel button when editing */}
-      {isEditing && (
-        <div className="text-center mt-6">
-          <Button variant="ghost" size="sm" onClick={() => setIsEditing(false)}>
-            Avbryt
-          </Button>
-        </div>
-      )}
     </div>
   );
 }
