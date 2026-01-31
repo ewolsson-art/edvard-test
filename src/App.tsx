@@ -14,6 +14,7 @@ import Chat from "./pages/Chat";
 import Medications from "./pages/Medications";
 import Reports from "./pages/Reports";
 import Onboarding from "./pages/Onboarding";
+import DoctorOnboarding from "./pages/DoctorOnboarding";
 import Profile from "./pages/Profile";
 import DoctorHome from "./pages/DoctorHome";
 import DoctorDashboard from "./pages/DoctorDashboard";
@@ -48,6 +49,11 @@ const App = () => (
             <Route path="/onboarding" element={
               <ProtectedRoute skipOnboardingCheck>
                 <Onboarding />
+              </ProtectedRoute>
+            } />
+            <Route path="/lakare-onboarding" element={
+              <ProtectedRoute skipOnboardingCheck>
+                <DoctorOnboarding />
               </ProtectedRoute>
             } />
             <Route path="/" element={
