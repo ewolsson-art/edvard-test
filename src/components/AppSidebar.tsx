@@ -1,9 +1,10 @@
-import { CalendarDays, BarChart3, Pill, FileText, LogOut, MessageCircle, UserCircle } from "lucide-react";
+import { CalendarDays, BarChart3, Pill, FileText, LogOut, MessageCircle, UserCircle, Users, Stethoscope } from "lucide-react";
 import { Link } from "react-router-dom";
 import { NavLink } from "@/components/NavLink";
 import { useSidebar } from "@/components/ui/sidebar";
 import { useAuth } from "@/hooks/useAuth";
 import { useProfile } from "@/hooks/useProfile";
+import { useUserRole } from "@/hooks/useUserRole";
 import { Button } from "@/components/ui/button";
 import logo from "@/assets/logo.png";
 import {
@@ -17,30 +18,39 @@ import {
   SidebarFooter,
 } from "@/components/ui/sidebar";
 
-const navItems = [
+const patientNavItems = [
   { title: "Check-in", url: "/", icon: CalendarDays },
   { title: "Översikt", url: "/oversikt", icon: BarChart3 },
   { title: "Mediciner", url: "/mediciner", icon: Pill },
   { title: "Rapporter", url: "/rapporter", icon: FileText },
   { title: "Chatt", url: "/chatt", icon: MessageCircle },
+  { title: "Mina läkare", url: "/mina-lakare", icon: Users },
+];
+
+const doctorNavItems = [
+  { title: "Mina patienter", url: "/lakare", icon: Stethoscope },
 ];
 
 export function AppSidebar() {
   const { state } = useSidebar();
   const { user, signOut } = useAuth();
   const { firstName, fullName } = useProfile();
+  const { isDoctor, isPatient, isLoading: roleLoading } = useUserRole();
   const isCollapsed = state === "collapsed";
 
   const handleSignOut = async () => {
     await signOut();
   };
 
+  // Determine which nav items to show based on role
+  const navItems = isDoctor ? doctorNavItems : patientNavItems;
+
   return (
     <Sidebar collapsible="icon">
       <SidebarContent className="pt-4">
         {/* Logo/Brand */}
         <div className="px-4 mb-6">
-          <Link to="/" className="block hover:opacity-80 transition-opacity">
+          <Link to={isDoctor ? "/lakare" : "/"} className="block hover:opacity-80 transition-opacity">
             {isCollapsed ? (
               <img src={logo} alt="Between Clouds" className="w-8 h-8 object-contain" />
             ) : (
@@ -54,6 +64,15 @@ export function AppSidebar() {
           </Link>
         </div>
 
+        {/* Role indicator */}
+        {!isCollapsed && !roleLoading && (
+          <div className="px-4 mb-4">
+            <span className="text-xs font-medium px-2 py-1 rounded-full bg-primary/10 text-primary">
+              {isDoctor ? 'Läkare' : 'Patient'}
+            </span>
+          </div>
+        )}
+
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu>
@@ -62,7 +81,7 @@ export function AppSidebar() {
                   <SidebarMenuButton asChild tooltip={item.title}>
                     <NavLink 
                       to={item.url} 
-                      end 
+                      end={item.url === '/' || item.url === '/lakare'}
                       className="flex items-center gap-3 px-3 py-2 rounded-lg transition-colors hover:bg-muted/50" 
                       activeClassName="bg-muted text-primary font-medium"
                     >

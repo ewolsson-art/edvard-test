@@ -15,6 +15,8 @@ import Medications from "./pages/Medications";
 import Reports from "./pages/Reports";
 import Onboarding from "./pages/Onboarding";
 import Profile from "./pages/Profile";
+import DoctorDashboard from "./pages/DoctorDashboard";
+import ManageConnections from "./pages/ManageConnections";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -75,6 +77,16 @@ const App = () => (
             <Route path="/profil" element={
               <ProtectedRoute>
                 <AppLayout><Profile /></AppLayout>
+              </ProtectedRoute>
+            } />
+            <Route path="/lakare" element={
+              <ProtectedRoute>
+                <AppLayout><DoctorDashboard /></AppLayout>
+              </ProtectedRoute>
+            } />
+            <Route path="/mina-lakare" element={
+              <ProtectedRoute>
+                <AppLayout><ManageConnections /></AppLayout>
               </ProtectedRoute>
             } />
             <Route path="*" element={<NotFound />} />

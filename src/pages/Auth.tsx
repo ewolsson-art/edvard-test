@@ -6,9 +6,12 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Mail, Lock, User, CheckCircle } from 'lucide-react';
+import { Loader2, Mail, Lock, User, CheckCircle, Stethoscope, HeartPulse } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import logo from '@/assets/logo.png';
+import { cn } from '@/lib/utils';
+
+type UserRole = 'patient' | 'doctor';
 
 const authSchema = z.object({
   email: z.string().trim().email({ message: "Ogiltig e-postadress" }).max(255),
@@ -23,6 +26,7 @@ const Auth = () => {
   const [password, setPassword] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
+  const [selectedRole, setSelectedRole] = useState<UserRole>('patient');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showEmailConfirmation, setShowEmailConfirmation] = useState(false);
   const [errors, setErrors] = useState<{ email?: string; password?: string; firstName?: string; lastName?: string }>({});
@@ -105,13 +109,19 @@ const Auth = () => {
             });
           }
         } else {
-          // Save profile data if user was created
+          // Save profile data and role if user was created
           if (data?.user) {
-            await supabase.from('profiles').insert({
-              user_id: data.user.id,
-              first_name: firstName.trim() || null,
-              last_name: lastName.trim() || null,
-            });
+            await Promise.all([
+              supabase.from('profiles').insert({
+                user_id: data.user.id,
+                first_name: firstName.trim() || null,
+                last_name: lastName.trim() || null,
+              }),
+              supabase.from('user_roles').insert({
+                user_id: data.user.id,
+                role: selectedRole,
+              }),
+            ]);
           }
           // Show email confirmation screen
           setShowEmailConfirmation(true);
@@ -196,6 +206,55 @@ const Auth = () => {
           ) : (
             <>
               <form onSubmit={handleSubmit} className="space-y-4">
+                {/* Role selection for signup */}
+                {!isLogin && (
+                  <div className="space-y-2">
+                    <Label>Jag är</Label>
+                    <div className="grid grid-cols-2 gap-3">
+                      <button
+                        type="button"
+                        onClick={() => setSelectedRole('patient')}
+                        disabled={isSubmitting}
+                        className={cn(
+                          "flex flex-col items-center gap-2 p-4 rounded-lg border-2 transition-all",
+                          selectedRole === 'patient'
+                            ? "border-primary bg-primary/10"
+                            : "border-border hover:border-primary/50"
+                        )}
+                      >
+                        <HeartPulse className={cn(
+                          "w-6 h-6",
+                          selectedRole === 'patient' ? "text-primary" : "text-muted-foreground"
+                        )} />
+                        <span className={cn(
+                          "font-medium text-sm",
+                          selectedRole === 'patient' ? "text-primary" : "text-foreground"
+                        )}>Patient</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setSelectedRole('doctor')}
+                        disabled={isSubmitting}
+                        className={cn(
+                          "flex flex-col items-center gap-2 p-4 rounded-lg border-2 transition-all",
+                          selectedRole === 'doctor'
+                            ? "border-primary bg-primary/10"
+                            : "border-border hover:border-primary/50"
+                        )}
+                      >
+                        <Stethoscope className={cn(
+                          "w-6 h-6",
+                          selectedRole === 'doctor' ? "text-primary" : "text-muted-foreground"
+                        )} />
+                        <span className={cn(
+                          "font-medium text-sm",
+                          selectedRole === 'doctor' ? "text-primary" : "text-foreground"
+                        )}>Läkare</span>
+                      </button>
+                    </div>
+                  </div>
+                )}
+
                 {!isLogin && (
                   <div className="grid grid-cols-2 gap-3">
                     <div className="space-y-2">
