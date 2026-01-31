@@ -15,6 +15,7 @@ interface TodayCheckinProps {
   activeMedications: Medication[];
   medicationsTakenToday: string[];
   yearEntries: MoodEntry[];
+  firstName: string | null;
   onSaveCheckin: (data: CheckinData) => Promise<boolean>;
   onToggleMedication: (medicationId: string, taken: boolean) => void;
 }
@@ -34,6 +35,7 @@ export function TodayCheckin({
   activeMedications,
   medicationsTakenToday,
   yearEntries,
+  firstName,
   onSaveCheckin,
   onToggleMedication,
 }: TodayCheckinProps) {
@@ -243,7 +245,7 @@ export function TodayCheckin({
         <div className="space-y-6 fade-in">
           <div className="text-center mb-6">
             <h1 className="font-display text-2xl md:text-3xl font-bold mb-2">
-              Hej! Hur har du mått idag?
+              {firstName ? `Hej ${firstName}! Hur har du mått idag?` : 'Hej! Hur har du mått idag?'}
             </h1>
           </div>
 
