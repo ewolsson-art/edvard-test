@@ -189,7 +189,7 @@ const Auth = () => {
                 <p className="font-medium text-foreground">{email}</p>
               </div>
               <p className="text-sm text-muted-foreground">
-                Klicka på länken i mailet för att aktivera ditt konto. Kolla även skräpposten om du inte hittar det.
+                Klicka på länken i mailet för att aktivera ditt konto. Det kan ta någon minut innan mailet kommer. Kolla även skräpposten om du inte hittar det.
               </p>
               <Button
                 variant="outline"
