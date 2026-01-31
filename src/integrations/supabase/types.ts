@@ -310,6 +310,10 @@ export type Database = {
         Args: { doctor_email: string }
         Returns: string
       }
+      get_patient_email_for_doctor: {
+        Args: { p_doctor_id: string; p_patient_id: string }
+        Returns: string
+      }
       get_user_role: {
         Args: { _user_id: string }
         Returns: Database["public"]["Enums"]["app_role"]

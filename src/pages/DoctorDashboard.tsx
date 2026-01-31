@@ -22,7 +22,21 @@ const DoctorDashboard = () => {
         .filter(Boolean)
         .join(' ');
     }
-    return 'Okänd patient';
+    // Fall back to email if no name is set
+    if (connection.patient_email) {
+      return connection.patient_email;
+    }
+    return 'Patient';
+  };
+
+  const getPatientInitial = (connection: PatientConnection) => {
+    if (connection.patient_profile?.first_name) {
+      return connection.patient_profile.first_name[0].toUpperCase();
+    }
+    if (connection.patient_email) {
+      return connection.patient_email[0].toUpperCase();
+    }
+    return 'P';
   };
 
   return (
@@ -109,7 +123,7 @@ const DoctorDashboard = () => {
                   <div className="flex items-start justify-between mb-4">
                     <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
                       <span className="text-lg font-semibold text-primary">
-                        {(connection.patient_profile?.first_name?.[0] || 'P').toUpperCase()}
+                        {getPatientInitial(connection)}
                       </span>
                     </div>
                     <Button size="sm" variant="ghost">
@@ -118,6 +132,9 @@ const DoctorDashboard = () => {
                     </Button>
                   </div>
                   <h3 className="font-semibold mb-1">{getPatientName(connection)}</h3>
+                  {connection.patient_email && connection.patient_profile?.first_name && (
+                    <p className="text-xs text-muted-foreground mb-1 truncate">{connection.patient_email}</p>
+                  )}
                   <p className="text-sm text-muted-foreground mb-3">
                     Kopplad sedan {new Date(connection.created_at).toLocaleDateString('sv-SE')}
                   </p>
