@@ -14,6 +14,7 @@ import Chat from "./pages/Chat";
 import Medications from "./pages/Medications";
 import Reports from "./pages/Reports";
 import Onboarding from "./pages/Onboarding";
+import Profile from "./pages/Profile";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -69,6 +70,11 @@ const App = () => (
             <Route path="/rapporter" element={
               <ProtectedRoute>
                 <AppLayout><Reports /></AppLayout>
+              </ProtectedRoute>
+            } />
+            <Route path="/profil" element={
+              <ProtectedRoute>
+                <AppLayout><Profile /></AppLayout>
               </ProtectedRoute>
             } />
             <Route path="*" element={<NotFound />} />
