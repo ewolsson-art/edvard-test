@@ -14,6 +14,7 @@ export interface PatientConnection {
   share_exercise: boolean;
   share_medication: boolean;
   share_comments: boolean;
+  chat_enabled: boolean;
   created_at: string;
   patient_profile?: {
     first_name: string | null;
@@ -97,6 +98,30 @@ export function useDoctorConnections() {
     return true;
   }, [toast]);
 
+  const toggleChatEnabled = useCallback(async (connectionId: string, enabled: boolean) => {
+    const { error } = await supabase
+      .from('patient_doctor_connections')
+      .update({ chat_enabled: enabled })
+      .eq('id', connectionId);
+
+    if (error) {
+      toast({
+        title: "Kunde inte uppdatera",
+        description: "Försök igen.",
+        variant: "destructive",
+      });
+      return false;
+    }
+
+    setConnections(prev => 
+      prev.map(c => c.id === connectionId ? { ...c, chat_enabled: enabled } : c)
+    );
+    toast({
+      title: enabled ? "Chatt aktiverad" : "Chatt inaktiverad",
+    });
+    return true;
+  }, [toast]);
+
   const approvedConnections = connections.filter(c => c.status === 'approved');
   const pendingConnections = connections.filter(c => c.status === 'pending');
 
@@ -106,6 +131,7 @@ export function useDoctorConnections() {
     pendingConnections,
     isLoading,
     updateConnectionStatus,
+    toggleChatEnabled,
     refetch: fetchConnections,
   };
 }

@@ -14,6 +14,7 @@ export interface DoctorConnection {
   share_exercise: boolean;
   share_medication: boolean;
   share_comments: boolean;
+  chat_enabled: boolean;
   created_at: string;
   doctor_profile?: {
     first_name: string | null;

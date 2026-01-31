@@ -6,7 +6,7 @@ import { Loader2 } from 'lucide-react';
 const PatientDetail = () => {
   const { patientId } = useParams<{ patientId: string }>();
   const navigate = useNavigate();
-  const { approvedConnections, isLoading } = useDoctorConnections();
+  const { approvedConnections, isLoading, toggleChatEnabled } = useDoctorConnections();
 
   const connection = approvedConnections.find(c => c.patient_id === patientId);
 
@@ -35,7 +35,8 @@ const PatientDetail = () => {
         <div className="glass-card p-6">
           <PatientOverview 
             connection={connection} 
-            onBack={() => navigate('/lakare')} 
+            onBack={() => navigate('/lakare')}
+            onToggleChatEnabled={toggleChatEnabled}
           />
         </div>
       </div>
