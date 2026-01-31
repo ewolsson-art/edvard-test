@@ -155,7 +155,7 @@ const Auth = () => {
           <ul className="mt-6 space-y-3">
             <li className="flex items-center gap-3 text-lg md:text-xl text-muted-foreground">
               <span className="w-2 h-2 rounded-full bg-primary shrink-0" />
-              Interaktiv och personlig stämningsdagbok
+              Din interaktiva och personliga stämningsdagbok
             </li>
             <li className="flex items-center gap-3 text-lg md:text-xl text-muted-foreground">
               <span className="w-2 h-2 rounded-full bg-primary shrink-0" />
