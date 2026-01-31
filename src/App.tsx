@@ -12,7 +12,7 @@ import Auth from "./pages/Auth";
 import Overview from "./pages/Overview";
 import Chat from "./pages/Chat";
 import Medications from "./pages/Medications";
-import Reports from "./pages/Reports";
+
 import Onboarding from "./pages/Onboarding";
 import DoctorOnboarding from "./pages/DoctorOnboarding";
 import Profile from "./pages/Profile";
@@ -77,11 +77,6 @@ const App = () => (
             <Route path="/mediciner" element={
               <ProtectedRoute>
                 <AppLayout><Medications /></AppLayout>
-              </ProtectedRoute>
-            } />
-            <Route path="/rapporter" element={
-              <ProtectedRoute>
-                <AppLayout><Reports /></AppLayout>
               </ProtectedRoute>
             } />
             <Route path="/profil" element={
