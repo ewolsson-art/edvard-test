@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { z } from 'zod';
 import { useAuth } from '@/hooks/useAuth';
 import { useProfile } from '@/hooks/useProfile';
@@ -7,7 +8,18 @@ import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Loader2, User, Mail, Save } from 'lucide-react';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
+import { Loader2, User, Mail, Save, Trash2, AlertTriangle } from 'lucide-react';
 
 const profileSchema = z.object({
   firstName: z.string().trim().max(50, { message: "Max 50 tecken" }).optional(),
@@ -15,13 +27,16 @@ const profileSchema = z.object({
 });
 
 const Profile = () => {
-  const { user } = useAuth();
+  const { user, signOut } = useAuth();
   const { profile, isLoading: profileLoading } = useProfile();
   const { toast } = useToast();
+  const navigate = useNavigate();
   
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [isSaving, setIsSaving] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [deleteConfirmText, setDeleteConfirmText] = useState('');
   const [errors, setErrors] = useState<{ firstName?: string; lastName?: string }>({});
 
   useEffect(() => {
@@ -74,6 +89,52 @@ const Profile = () => {
       }
     } finally {
       setIsSaving(false);
+    }
+  };
+
+  const handleDeleteAccount = async () => {
+    if (deleteConfirmText !== 'RADERA') return;
+    
+    setIsDeleting(true);
+    
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      if (!session) {
+        toast({
+          title: "Ej inloggad",
+          description: "Du måste vara inloggad för att radera ditt konto.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      const response = await supabase.functions.invoke('delete-account', {
+        headers: {
+          Authorization: `Bearer ${session.access_token}`,
+        },
+      });
+
+      if (response.error) {
+        throw new Error(response.error.message);
+      }
+
+      toast({
+        title: "Konto raderat",
+        description: "Ditt konto och all data har raderats.",
+      });
+
+      await signOut();
+      navigate('/auth');
+    } catch (error) {
+      console.error('Delete account error:', error);
+      toast({
+        title: "Kunde inte radera konto",
+        description: "Något gick fel. Försök igen senare.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -159,6 +220,71 @@ const Profile = () => {
               Spara ändringar
             </Button>
           </form>
+        </div>
+
+        {/* Danger Zone */}
+        <div className="glass-card p-6 border-destructive/30">
+          <div className="flex items-center gap-3 mb-4">
+            <AlertTriangle className="w-5 h-5 text-destructive" />
+            <h2 className="font-display text-xl font-semibold text-destructive">Farozon</h2>
+          </div>
+          
+          <p className="text-muted-foreground mb-4">
+            När du raderar ditt konto tas all din data bort permanent. Detta kan inte ångras.
+          </p>
+
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button variant="destructive" className="gap-2">
+                <Trash2 className="w-4 h-4" />
+                Radera mitt konto
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle className="flex items-center gap-2">
+                  <AlertTriangle className="w-5 h-5 text-destructive" />
+                  Radera konto permanent
+                </AlertDialogTitle>
+                <AlertDialogDescription className="space-y-3">
+                  <p>
+                    Är du säker på att du vill radera ditt konto? All din data kommer att tas bort permanent:
+                  </p>
+                  <ul className="list-disc list-inside text-sm space-y-1">
+                    <li>Alla mående-registreringar</li>
+                    <li>Alla mediciner och medicinloggar</li>
+                    <li>Alla delade rapporter</li>
+                    <li>Alla läkarkopplingar</li>
+                    <li>Din profil och inställningar</li>
+                  </ul>
+                  <p className="font-medium">
+                    Skriv <span className="text-destructive font-bold">RADERA</span> för att bekräfta:
+                  </p>
+                  <Input
+                    value={deleteConfirmText}
+                    onChange={(e) => setDeleteConfirmText(e.target.value)}
+                    placeholder="RADERA"
+                    className="mt-2"
+                  />
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel onClick={() => setDeleteConfirmText('')}>
+                  Avbryt
+                </AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={handleDeleteAccount}
+                  disabled={deleteConfirmText !== 'RADERA' || isDeleting}
+                  className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                >
+                  {isDeleting ? (
+                    <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                  ) : null}
+                  Radera permanent
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         </div>
       </div>
     </div>
