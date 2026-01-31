@@ -6,7 +6,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useProfile } from "@/hooks/useProfile";
 import { useUserRole } from "@/hooks/useUserRole";
 import { Button } from "@/components/ui/button";
-import logo from "@/assets/logo.png";
+import { Logo } from "@/components/Logo";
 import {
   Sidebar,
   SidebarContent,
@@ -52,16 +52,7 @@ export function AppSidebar() {
         {/* Logo/Brand */}
         <div className="px-4 mb-6">
           <Link to={isDoctor ? "/lakare" : "/"} className="block hover:opacity-80 transition-opacity">
-            {isCollapsed ? (
-              <img src={logo} alt="Between Clouds" className="w-8 h-8 object-contain" />
-            ) : (
-              <div className="flex items-center gap-3">
-                <img src={logo} alt="Between Clouds" className="w-10 h-10 object-contain" />
-                <h2 className="font-display text-lg font-bold text-foreground">
-                  Between Clouds
-                </h2>
-              </div>
-            )}
+            <Logo size={isCollapsed ? "sm" : "md"} showText={!isCollapsed} />
           </Link>
         </div>
 
