@@ -468,7 +468,7 @@ function MedicationRow({
             <Check className="h-4 w-4 mr-1" />
             Spara
           </Button>
-          <Button size="sm" variant="outline" onClick={() => setEditingId(null)}>
+          <Button size="sm" variant="outline" onClick={() => setEditingId(null)} className="text-destructive border-destructive/30 hover:bg-destructive/10 hover:text-destructive">
             <X className="h-4 w-4 mr-1" />
             Avbryt
           </Button>
