@@ -22,6 +22,7 @@ export interface DoctorConnection {
     clinic_name: string | null;
     hospital_name: string | null;
   };
+  doctor_email?: string;
 }
 
 export function usePatientConnections() {
@@ -45,6 +46,7 @@ export function usePatientConnections() {
       // Fetch doctor profiles for each connection using the secure function
       const connectionsWithProfiles = await Promise.all(
         (data || []).map(async (conn) => {
+          // Fetch profile
           const { data: profile } = await supabase
             .rpc('get_doctor_profile_for_patient', {
               p_doctor_id: conn.doctor_id,
@@ -52,9 +54,17 @@ export function usePatientConnections() {
             })
             .maybeSingle();
 
+          // Fetch email via RPC function
+          const { data: email } = await supabase
+            .rpc('get_doctor_email_for_patient', {
+              p_doctor_id: conn.doctor_id,
+              p_patient_id: user.id,
+            });
+
           return {
             ...conn,
             doctor_profile: profile || undefined,
+            doctor_email: email || undefined,
           } as DoctorConnection;
         })
       );

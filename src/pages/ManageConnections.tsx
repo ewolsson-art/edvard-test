@@ -68,6 +68,10 @@ const ManageConnections = () => {
         .filter(Boolean)
         .join(' ');
     }
+    // Fall back to email if no name is set
+    if (connection.doctor_email) {
+      return connection.doctor_email;
+    }
     return 'Okänd läkare';
   };
 
