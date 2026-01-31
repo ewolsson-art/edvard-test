@@ -16,7 +16,15 @@ import { ExerciseMonthCalendar } from '@/components/ExerciseMonthCalendar';
 import { SleepMonthCalendar } from '@/components/SleepMonthCalendar';
 import { EatingMonthCalendar } from '@/components/EatingMonthCalendar';
 import { MedicationMonthCalendar } from '@/components/MedicationMonthCalendar';
+import { SleepWeekCalendar } from '@/components/SleepWeekCalendar';
+import { EatingWeekCalendar } from '@/components/EatingWeekCalendar';
+import { ExerciseWeekCalendar } from '@/components/ExerciseWeekCalendar';
+import { MedicationWeekCalendar } from '@/components/MedicationWeekCalendar';
 import { YearHeatmap } from '@/components/YearHeatmap';
+import { SleepYearHeatmap } from '@/components/SleepYearHeatmap';
+import { EatingYearHeatmap } from '@/components/EatingYearHeatmap';
+import { ExerciseYearHeatmap } from '@/components/ExerciseYearHeatmap';
+import { MedicationYearHeatmap } from '@/components/MedicationYearHeatmap';
 import { DayDetailDialog } from '@/components/DayDetailDialog';
 import { ExerciseTypeDialog } from '@/components/ExerciseTypeDialog';
 import { MoodStats as MoodStatsType, ExerciseType } from '@/types/mood';
@@ -559,6 +567,17 @@ const Overview = () => {
             <h2 className="font-display text-2xl font-semibold">Sömn</h2>
           </div>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {view === 'week' && (
+              <SleepWeekCalendar
+                weekDays={weekDays}
+                weekLabel={weekLabel}
+                getSleepForDate={(dateStr) => getEntryForDate(dateStr)?.sleepQuality}
+                onPrevWeek={() => setCurrentWeek(prev => subWeeks(prev, 1))}
+                onNextWeek={() => setCurrentWeek(prev => addWeeks(prev, 1))}
+                onDayClick={handleDayClick}
+              />
+            )}
+
             {view === 'month' && (
               <SleepMonthCalendar
                 currentDate={currentMonth}
@@ -569,10 +588,14 @@ const Overview = () => {
               />
             )}
 
-            {view !== 'month' && (
-              <div className="glass-card p-6 flex items-center justify-center text-muted-foreground">
-                <p>Byt till månadsvyn för att se sömnkalendern</p>
-              </div>
+            {view === 'year' && (
+              <SleepYearHeatmap
+                year={currentYear}
+                entries={yearEntries}
+                onPrevYear={() => setCurrentYear(prev => prev - 1)}
+                onNextYear={() => setCurrentYear(prev => prev + 1)}
+                onMonthClick={handleMonthClick}
+              />
             )}
             
             <div className="lg:self-start">
@@ -590,6 +613,17 @@ const Overview = () => {
             <h2 className="font-display text-2xl font-semibold">Kost</h2>
           </div>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {view === 'week' && (
+              <EatingWeekCalendar
+                weekDays={weekDays}
+                weekLabel={weekLabel}
+                getEatingForDate={(dateStr) => getEntryForDate(dateStr)?.eatingQuality}
+                onPrevWeek={() => setCurrentWeek(prev => subWeeks(prev, 1))}
+                onNextWeek={() => setCurrentWeek(prev => addWeeks(prev, 1))}
+                onDayClick={handleDayClick}
+              />
+            )}
+
             {view === 'month' && (
               <EatingMonthCalendar
                 currentDate={currentMonth}
@@ -600,10 +634,14 @@ const Overview = () => {
               />
             )}
 
-            {view !== 'month' && (
-              <div className="glass-card p-6 flex items-center justify-center text-muted-foreground">
-                <p>Byt till månadsvyn för att se kostkalendern</p>
-              </div>
+            {view === 'year' && (
+              <EatingYearHeatmap
+                year={currentYear}
+                entries={yearEntries}
+                onPrevYear={() => setCurrentYear(prev => prev - 1)}
+                onNextYear={() => setCurrentYear(prev => prev + 1)}
+                onMonthClick={handleMonthClick}
+              />
             )}
             
             <div className="lg:self-start">
@@ -621,7 +659,21 @@ const Overview = () => {
             <h2 className="font-display text-2xl font-semibold">Träning</h2>
           </div>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* Exercise Calendar - only month view for now */}
+            {view === 'week' && (
+              <ExerciseWeekCalendar
+                weekDays={weekDays}
+                weekLabel={weekLabel}
+                getExerciseForDate={(dateStr) => {
+                  const entry = getEntryForDate(dateStr);
+                  if (entry?.exercised === undefined) return undefined;
+                  return { exercised: entry.exercised, types: entry.exerciseTypes };
+                }}
+                onPrevWeek={() => setCurrentWeek(prev => subWeeks(prev, 1))}
+                onNextWeek={() => setCurrentWeek(prev => addWeeks(prev, 1))}
+                onDayClick={handleExerciseDayClick}
+              />
+            )}
+
             {view === 'month' && (
               <ExerciseMonthCalendar
                 currentDate={currentMonth}
@@ -632,13 +684,16 @@ const Overview = () => {
               />
             )}
 
-            {view !== 'month' && (
-              <div className="glass-card p-6 flex items-center justify-center text-muted-foreground">
-                <p>Byt till månadsvyn för att se träningskalendern</p>
-              </div>
+            {view === 'year' && (
+              <ExerciseYearHeatmap
+                year={currentYear}
+                entries={yearEntries}
+                onPrevYear={() => setCurrentYear(prev => prev - 1)}
+                onNextYear={() => setCurrentYear(prev => prev + 1)}
+                onMonthClick={handleMonthClick}
+              />
             )}
             
-            {/* Exercise Stats */}
             <div className="lg:self-start">
               <ExerciseStats stats={exerciseStats} periodLabel={label} />
             </div>
@@ -654,6 +709,25 @@ const Overview = () => {
             <h2 className="font-display text-2xl font-semibold">Medicin</h2>
           </div>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {view === 'week' && (
+              <MedicationWeekCalendar
+                weekDays={weekDays}
+                weekLabel={weekLabel}
+                getMedicationForDate={(dateStr) => {
+                  const meds = getMedicationsTakenOnDate(dateStr);
+                  if (meds.length === 0 && !logs.some(log => log.date === dateStr)) return undefined;
+                  return {
+                    taken: meds.length,
+                    total: activeMedications.length,
+                    medicationNames: meds.map(m => m.name),
+                  };
+                }}
+                onPrevWeek={() => setCurrentWeek(prev => subWeeks(prev, 1))}
+                onNextWeek={() => setCurrentWeek(prev => addWeeks(prev, 1))}
+                onDayClick={handleDayClick}
+              />
+            )}
+
             {view === 'month' && (
               <MedicationMonthCalendar
                 currentDate={currentMonth}
@@ -664,10 +738,14 @@ const Overview = () => {
               />
             )}
 
-            {view !== 'month' && (
-              <div className="glass-card p-6 flex items-center justify-center text-muted-foreground">
-                <p>Byt till månadsvyn för att se medicinkalendern</p>
-              </div>
+            {view === 'year' && (
+              <MedicationYearHeatmap
+                year={currentYear}
+                medicationDates={yearMedicationDates}
+                onPrevYear={() => setCurrentYear(prev => prev - 1)}
+                onNextYear={() => setCurrentYear(prev => prev + 1)}
+                onMonthClick={handleMonthClick}
+              />
             )}
             
             <div className="lg:self-start">
