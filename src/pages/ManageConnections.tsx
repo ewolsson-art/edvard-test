@@ -195,6 +195,9 @@ const ManageConnections = () => {
                     </div>
                     <div>
                       <h3 className="font-semibold">{getDoctorName(connection)}</h3>
+                      {connection.doctor_profile?.clinic_name && (
+                        <p className="text-sm text-muted-foreground">{connection.doctor_profile.clinic_name}</p>
+                      )}
                       <span className={`text-xs px-2 py-0.5 rounded-full ${getStatusColor(connection.status)}`}>
                         {getStatusLabel(connection.status)}
                       </span>
