@@ -8,7 +8,7 @@ import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, Mail, Lock, User, CheckCircle, Stethoscope, HeartPulse } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
-import logo from '@/assets/logo.png';
+import { Logo } from '@/components/Logo';
 import { cn } from '@/lib/utils';
 
 type UserRole = 'patient' | 'doctor';
@@ -158,9 +158,8 @@ const Auth = () => {
         </div>
         <div className="w-full md:w-auto md:min-w-[400px] glass-card p-8 fade-in">
           <div className="text-center mb-8">
-            <div className="flex items-center justify-center gap-3 mb-4">
-              <img src={logo} alt="Between Clouds" className="w-12 h-12 object-contain" />
-              <h1 className="font-display text-2xl font-bold">Between Clouds</h1>
+            <div className="flex justify-center mb-4">
+              <Logo size="lg" />
             </div>
             {!showEmailConfirmation && (
               <p className="text-muted-foreground">
