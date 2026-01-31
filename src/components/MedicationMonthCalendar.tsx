@@ -67,12 +67,10 @@ export function MedicationMonthCalendar({
           const isTodayDate = isToday(day);
           const hasData = medData !== undefined;
           const allTaken = medData && medData.taken >= medData.total;
-          const partiallyTaken = medData && medData.taken > 0 && medData.taken < medData.total;
           const hasMedications = medData && medData.medicationNames.length > 0;
 
           const dayButton = (
             <button
-              key={day.toISOString()}
               onClick={() => onDayClick?.(day)}
               disabled={!isCurrentMonth}
               className={cn(
@@ -80,8 +78,7 @@ export function MedicationMonthCalendar({
                 !isCurrentMonth && "opacity-30 cursor-not-allowed",
                 isCurrentMonth && !hasData && "calendar-day-empty cursor-pointer",
                 allTaken && "calendar-day-stable cursor-pointer",
-                partiallyTaken && "calendar-day-elevated cursor-pointer",
-                hasData && !allTaken && !partiallyTaken && "calendar-day-depressed cursor-pointer",
+                hasData && !allTaken && "calendar-day-depressed cursor-pointer",
                 isTodayDate && "calendar-day-today"
               )}
             >
@@ -90,8 +87,6 @@ export function MedicationMonthCalendar({
                 <span className="absolute -bottom-0.5 left-1/2 -translate-x-1/2">
                   {allTaken ? (
                     <Check className="h-2.5 w-2.5 text-mood-stable" />
-                  ) : partiallyTaken ? (
-                    <Pill className="h-2.5 w-2.5 text-mood-elevated" />
                   ) : (
                     <X className="h-2.5 w-2.5 text-mood-depressed" />
                   )}
