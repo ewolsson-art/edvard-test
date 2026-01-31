@@ -158,7 +158,7 @@ const Auth = () => {
             Håll bättre koll på ditt mående
           </h1>
           <p className="text-lg md:text-xl text-muted-foreground mt-4">
-            Din interaktiva och personliga dagbok ger dig bättre överblick över ditt mående
+            Ge både dig och din läkare bättre överblick över ditt mående med vår interaktiva och personliga dagbok
           </p>
         </div>
         <div className="w-full md:w-auto md:min-w-[400px] glass-card p-8 fade-in">
