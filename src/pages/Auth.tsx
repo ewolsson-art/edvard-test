@@ -93,7 +93,8 @@ const Auth = () => {
           }
         }
       } else {
-        const { error, data } = await signUp(email, password);
+        // Pass role as metadata so the database trigger can create the role
+        const { error, data } = await signUp(email, password, { role: selectedRole });
         if (error) {
           if (error.message.includes('User already registered')) {
             toast({
@@ -109,19 +110,13 @@ const Auth = () => {
             });
           }
         } else {
-          // Save profile data and role if user was created
+          // Save profile data if user was created (role is handled by database trigger)
           if (data?.user) {
-            await Promise.all([
-              supabase.from('profiles').insert({
-                user_id: data.user.id,
-                first_name: firstName.trim() || null,
-                last_name: lastName.trim() || null,
-              }),
-              supabase.from('user_roles').insert({
-                user_id: data.user.id,
-                role: selectedRole,
-              }),
-            ]);
+            await supabase.from('profiles').insert({
+              user_id: data.user.id,
+              first_name: firstName.trim() || null,
+              last_name: lastName.trim() || null,
+            });
           }
           // Show email confirmation screen
           setShowEmailConfirmation(true);
