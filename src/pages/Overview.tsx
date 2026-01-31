@@ -4,8 +4,12 @@ import { format, startOfWeek, endOfWeek, addWeeks, subWeeks, eachDayOfInterval, 
 import { sv } from 'date-fns/locale';
 import { useMoodData } from '@/hooks/useMoodData';
 import { useMedications } from '@/hooks/useMedications';
+import { useUserPreferences } from '@/hooks/useUserPreferences';
 import { MoodStats } from '@/components/MoodStats';
 import { ExerciseStats, ExerciseStatsType } from '@/components/ExerciseStats';
+import { SleepStats, SleepStatsType } from '@/components/SleepStats';
+import { EatingStats, EatingStatsType } from '@/components/EatingStats';
+import { MedicationStats, MedicationStatsType } from '@/components/MedicationStats';
 import { WeekCalendar } from '@/components/WeekCalendar';
 import { MonthCalendar } from '@/components/MonthCalendar';
 import { ExerciseMonthCalendar } from '@/components/ExerciseMonthCalendar';
@@ -14,7 +18,7 @@ import { DayDetailDialog } from '@/components/DayDetailDialog';
 import { ExerciseTypeDialog } from '@/components/ExerciseTypeDialog';
 import { MoodStats as MoodStatsType, ExerciseType } from '@/types/mood';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Dumbbell } from 'lucide-react';
+import { Dumbbell, Moon, Utensils, Pill } from 'lucide-react';
 
 type ViewType = 'week' | 'month' | 'year';
 
@@ -60,7 +64,8 @@ const Overview = () => {
   const navigate = useNavigate();
 
   const { isLoaded, getEntryForDate, getEntriesForMonth, getEntriesForYear, getStatsForYear, updateExerciseTypes } = useMoodData();
-  const { isLoaded: medsLoaded, getMedicationsTakenOnDate, logs } = useMedications();
+  const { isLoaded: medsLoaded, getMedicationsTakenOnDate, logs, activeMedications } = useMedications();
+  const { preferences, loading: prefsLoading } = useUserPreferences();
 
   // Week data
   const weekDays = useMemo(() => {
@@ -95,6 +100,51 @@ const Overview = () => {
     const unregistered = totalDays - total;
     return { exercised, notExercised, unregistered, total, totalDays };
   }, [weekDays, getEntryForDate]);
+
+  const weekSleepStats = useMemo((): SleepStatsType => {
+    let good = 0, bad = 0;
+    weekDays.forEach(day => {
+      const entry = getEntryForDate(format(day, 'yyyy-MM-dd'));
+      if (entry?.sleepQuality === 'good') good++;
+      else if (entry?.sleepQuality === 'bad') bad++;
+    });
+    const total = good + bad;
+    const totalDays = weekDays.length;
+    const unregistered = totalDays - total;
+    return { good, bad, unregistered, total, totalDays };
+  }, [weekDays, getEntryForDate]);
+
+  const weekEatingStats = useMemo((): EatingStatsType => {
+    let good = 0, bad = 0;
+    weekDays.forEach(day => {
+      const entry = getEntryForDate(format(day, 'yyyy-MM-dd'));
+      if (entry?.eatingQuality === 'good') good++;
+      else if (entry?.eatingQuality === 'bad') bad++;
+    });
+    const total = good + bad;
+    const totalDays = weekDays.length;
+    const unregistered = totalDays - total;
+    return { good, bad, unregistered, total, totalDays };
+  }, [weekDays, getEntryForDate]);
+
+  const weekMedicationStats = useMemo((): MedicationStatsType => {
+    let taken = 0, notTaken = 0;
+    const medCount = activeMedications.length;
+    if (medCount === 0) {
+      return { taken: 0, notTaken: 0, unregistered: 0, total: 0, totalDays: 0 };
+    }
+    weekDays.forEach(day => {
+      const dateStr = format(day, 'yyyy-MM-dd');
+      const medsTaken = getMedicationsTakenOnDate(dateStr);
+      if (medsTaken.length >= medCount) taken++;
+      else if (medsTaken.length > 0) taken++; // At least some taken
+      // Count as not taken only if we know they logged but didn't take
+    });
+    const total = taken + notTaken;
+    const totalDays = weekDays.length;
+    const unregistered = totalDays - total;
+    return { taken, notTaken, unregistered, total, totalDays };
+  }, [weekDays, getMedicationsTakenOnDate, activeMedications]);
 
   const weekStart = startOfWeek(currentWeek, { weekStartsOn: 1 });
   const weekEnd = endOfWeek(currentWeek, { weekStartsOn: 1 });
@@ -152,6 +202,57 @@ const Overview = () => {
     return { exercised, notExercised, unregistered, total, totalDays };
   }, [currentMonth, getEntryForDate]);
 
+  const monthSleepStats = useMemo((): SleepStatsType => {
+    const start = startOfMonth(currentMonth);
+    const end = endOfMonth(currentMonth);
+    const days = eachDayOfInterval({ start, end });
+    let good = 0, bad = 0;
+    days.forEach(day => {
+      const entry = getEntryForDate(format(day, 'yyyy-MM-dd'));
+      if (entry?.sleepQuality === 'good') good++;
+      else if (entry?.sleepQuality === 'bad') bad++;
+    });
+    const total = good + bad;
+    const totalDays = end.getDate();
+    const unregistered = totalDays - total;
+    return { good, bad, unregistered, total, totalDays };
+  }, [currentMonth, getEntryForDate]);
+
+  const monthEatingStats = useMemo((): EatingStatsType => {
+    const start = startOfMonth(currentMonth);
+    const end = endOfMonth(currentMonth);
+    const days = eachDayOfInterval({ start, end });
+    let good = 0, bad = 0;
+    days.forEach(day => {
+      const entry = getEntryForDate(format(day, 'yyyy-MM-dd'));
+      if (entry?.eatingQuality === 'good') good++;
+      else if (entry?.eatingQuality === 'bad') bad++;
+    });
+    const total = good + bad;
+    const totalDays = end.getDate();
+    const unregistered = totalDays - total;
+    return { good, bad, unregistered, total, totalDays };
+  }, [currentMonth, getEntryForDate]);
+
+  const monthMedicationStats = useMemo((): MedicationStatsType => {
+    const start = startOfMonth(currentMonth);
+    const end = endOfMonth(currentMonth);
+    const days = eachDayOfInterval({ start, end });
+    const medCount = activeMedications.length;
+    if (medCount === 0) {
+      return { taken: 0, notTaken: 0, unregistered: 0, total: 0, totalDays: 0 };
+    }
+    let taken = 0;
+    days.forEach(day => {
+      const dateStr = format(day, 'yyyy-MM-dd');
+      const medsTaken = getMedicationsTakenOnDate(dateStr);
+      if (medsTaken.length > 0) taken++;
+    });
+    const totalDays = end.getDate();
+    const unregistered = totalDays - taken;
+    return { taken, notTaken: 0, unregistered, total: taken, totalDays };
+  }, [currentMonth, getMedicationsTakenOnDate, activeMedications]);
+
   const monthExerciseData = useMemo(() => {
     const result: Record<number, { exercised: boolean; types?: ExerciseType[] }> = {};
     const start = startOfMonth(currentMonth);
@@ -194,6 +295,47 @@ const Overview = () => {
     const unregistered = totalDays - total;
     return { exercised, notExercised, unregistered, total, totalDays };
   }, [yearEntries, currentYear]);
+
+  const yearSleepStats = useMemo((): SleepStatsType => {
+    let good = 0, bad = 0;
+    yearEntries.forEach(entry => {
+      if (entry.sleepQuality === 'good') good++;
+      else if (entry.sleepQuality === 'bad') bad++;
+    });
+    const total = good + bad;
+    const isLeapYear = (currentYear % 4 === 0 && currentYear % 100 !== 0) || (currentYear % 400 === 0);
+    const totalDays = isLeapYear ? 366 : 365;
+    const unregistered = totalDays - total;
+    return { good, bad, unregistered, total, totalDays };
+  }, [yearEntries, currentYear]);
+
+  const yearEatingStats = useMemo((): EatingStatsType => {
+    let good = 0, bad = 0;
+    yearEntries.forEach(entry => {
+      if (entry.eatingQuality === 'good') good++;
+      else if (entry.eatingQuality === 'bad') bad++;
+    });
+    const total = good + bad;
+    const isLeapYear = (currentYear % 4 === 0 && currentYear % 100 !== 0) || (currentYear % 400 === 0);
+    const totalDays = isLeapYear ? 366 : 365;
+    const unregistered = totalDays - total;
+    return { good, bad, unregistered, total, totalDays };
+  }, [yearEntries, currentYear]);
+
+  const yearMedicationStats = useMemo((): MedicationStatsType => {
+    const medCount = activeMedications.length;
+    if (medCount === 0) {
+      return { taken: 0, notTaken: 0, unregistered: 0, total: 0, totalDays: 0 };
+    }
+    const uniqueDates = new Set(logs
+      .filter(log => log.date.startsWith(currentYear.toString()) && log.taken)
+      .map(log => log.date));
+    const taken = uniqueDates.size;
+    const isLeapYear = (currentYear % 4 === 0 && currentYear % 100 !== 0) || (currentYear % 400 === 0);
+    const totalDays = isLeapYear ? 366 : 365;
+    const unregistered = totalDays - taken;
+    return { taken, notTaken: 0, unregistered, total: taken, totalDays };
+  }, [logs, currentYear, activeMedications]);
 
   const yearMedicationDates = useMemo(() => {
     return logs
@@ -239,7 +381,7 @@ const Overview = () => {
     ? getMedicationsTakenOnDate(format(selectedDate, 'yyyy-MM-dd'))
     : [];
 
-  if (!isLoaded || !medsLoaded) {
+  if (!isLoaded || !medsLoaded || prefsLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
@@ -249,13 +391,41 @@ const Overview = () => {
 
   const getStatsForView = () => {
     switch (view) {
-      case 'week': return { stats: weekStats, exerciseStats: weekExerciseStats, label: weekLabel };
-      case 'month': return { stats: monthStats, exerciseStats: monthExerciseStats, label: monthLabel };
-      case 'year': return { stats: yearStats, exerciseStats: yearExerciseStats, label: `${currentYear}` };
+      case 'week': return { 
+        stats: weekStats, 
+        exerciseStats: weekExerciseStats, 
+        sleepStats: weekSleepStats,
+        eatingStats: weekEatingStats,
+        medicationStats: weekMedicationStats,
+        label: weekLabel 
+      };
+      case 'month': return { 
+        stats: monthStats, 
+        exerciseStats: monthExerciseStats, 
+        sleepStats: monthSleepStats,
+        eatingStats: monthEatingStats,
+        medicationStats: monthMedicationStats,
+        label: monthLabel 
+      };
+      case 'year': return { 
+        stats: yearStats, 
+        exerciseStats: yearExerciseStats, 
+        sleepStats: yearSleepStats,
+        eatingStats: yearEatingStats,
+        medicationStats: yearMedicationStats,
+        label: `${currentYear}` 
+      };
     }
   };
 
-  const { stats, exerciseStats, label } = getStatsForView();
+  const { stats, exerciseStats, sleepStats, eatingStats, medicationStats, label } = getStatsForView();
+  
+  // Check which sections to show based on preferences
+  const showMood = preferences?.include_mood !== false;
+  const showSleep = preferences?.include_sleep !== false;
+  const showEating = preferences?.include_eating !== false;
+  const showExercise = preferences?.include_exercise !== false;
+  const showMedication = preferences?.include_medication !== false && activeMedications.length > 0;
 
   return (
     <div className="py-8 px-4 md:px-8">
@@ -275,52 +445,81 @@ const Overview = () => {
         </header>
 
         {/* Mående Section */}
-        <section>
-          <h2 className="font-display text-2xl font-semibold mb-6">Mående</h2>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* Calendar/View */}
-            {view === 'week' && (
-              <WeekCalendar
-                weekDays={weekDays}
-                weekLabel={weekLabel}
-                getEntryForDate={getEntryForDate}
-                getMedicationsTakenOnDate={getMedicationsTakenOnDate}
-                onPrevWeek={() => setCurrentWeek(prev => subWeeks(prev, 1))}
-                onNextWeek={() => setCurrentWeek(prev => addWeeks(prev, 1))}
-                onDayClick={handleDayClick}
-              />
-            )}
+        {showMood && (
+          <section>
+            <h2 className="font-display text-2xl font-semibold mb-6">Mående</h2>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Calendar/View */}
+              {view === 'week' && (
+                <WeekCalendar
+                  weekDays={weekDays}
+                  weekLabel={weekLabel}
+                  getEntryForDate={getEntryForDate}
+                  getMedicationsTakenOnDate={getMedicationsTakenOnDate}
+                  onPrevWeek={() => setCurrentWeek(prev => subWeeks(prev, 1))}
+                  onNextWeek={() => setCurrentWeek(prev => addWeeks(prev, 1))}
+                  onDayClick={handleDayClick}
+                />
+              )}
 
-            {view === 'month' && (
-              <MonthCalendar
-                currentDate={currentMonth}
-                moodData={monthMoodData}
-                medicationData={monthMedicationData}
-                onPrevMonth={() => setCurrentMonth(prev => subMonths(prev, 1))}
-                onNextMonth={() => setCurrentMonth(prev => addMonths(prev, 1))}
-                onDayClick={handleDayClick}
-              />
-            )}
+              {view === 'month' && (
+                <MonthCalendar
+                  currentDate={currentMonth}
+                  moodData={monthMoodData}
+                  medicationData={monthMedicationData}
+                  onPrevMonth={() => setCurrentMonth(prev => subMonths(prev, 1))}
+                  onNextMonth={() => setCurrentMonth(prev => addMonths(prev, 1))}
+                  onDayClick={handleDayClick}
+                />
+              )}
 
-            {view === 'year' && (
-              <YearHeatmap 
-                year={currentYear} 
-                entries={yearEntries} 
-                medicationDates={yearMedicationDates}
-                onPrevYear={() => setCurrentYear(prev => prev - 1)}
-                onNextYear={() => setCurrentYear(prev => prev + 1)}
-                onMonthClick={handleMonthClick}
-              />
-            )}
-            
-            {/* Mood Stats */}
-            <div className="lg:self-start">
-              <MoodStats stats={stats} periodLabel={label} />
+              {view === 'year' && (
+                <YearHeatmap 
+                  year={currentYear} 
+                  entries={yearEntries} 
+                  medicationDates={yearMedicationDates}
+                  onPrevYear={() => setCurrentYear(prev => prev - 1)}
+                  onNextYear={() => setCurrentYear(prev => prev + 1)}
+                  onMonthClick={handleMonthClick}
+                />
+              )}
+              
+              {/* Mood Stats */}
+              <div className="lg:self-start">
+                <MoodStats stats={stats} periodLabel={label} />
+              </div>
             </div>
+          </section>
+        )}
+
+        {/* Sömn Section */}
+        {showSleep && (
+        <section>
+          <div className="flex items-center gap-3 mb-6">
+            <Moon className="w-6 h-6 text-primary" />
+            <h2 className="font-display text-2xl font-semibold">Sömn</h2>
+          </div>
+          <div className="max-w-xl">
+            <SleepStats stats={sleepStats} periodLabel={label} />
           </div>
         </section>
+        )}
+
+        {/* Kost Section */}
+        {showEating && (
+        <section>
+          <div className="flex items-center gap-3 mb-6">
+            <Utensils className="w-6 h-6 text-primary" />
+            <h2 className="font-display text-2xl font-semibold">Kost</h2>
+          </div>
+          <div className="max-w-xl">
+            <EatingStats stats={eatingStats} periodLabel={label} />
+          </div>
+        </section>
+        )}
 
         {/* Träning Section */}
+        {showExercise && (
         <section>
           <div className="flex items-center gap-3 mb-6">
             <Dumbbell className="w-6 h-6 text-primary" />
@@ -350,6 +549,20 @@ const Overview = () => {
             </div>
           </div>
         </section>
+        )}
+
+        {/* Medicin Section */}
+        {showMedication && (
+        <section>
+          <div className="flex items-center gap-3 mb-6">
+            <Pill className="w-6 h-6 text-primary" />
+            <h2 className="font-display text-2xl font-semibold">Medicin</h2>
+          </div>
+          <div className="max-w-xl">
+            <MedicationStats stats={medicationStats} periodLabel={label} />
+          </div>
+        </section>
+        )}
 
         <DayDetailDialog
           open={dialogOpen}
