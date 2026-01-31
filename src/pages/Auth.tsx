@@ -9,7 +9,6 @@ import { useToast } from '@/hooks/use-toast';
 import { Loader2, Mail, Lock, User, CheckCircle, Stethoscope, HeartPulse } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { Logo } from '@/components/Logo';
-import { HowItWorks } from '@/components/HowItWorks';
 import { cn } from '@/lib/utils';
 
 type UserRole = 'patient' | 'doctor';
@@ -137,38 +136,39 @@ const Auth = () => {
   }
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <div className="flex-1 flex items-center justify-center p-4 md:p-8 relative overflow-hidden">
-      {/* Animated cloud */}
-      <div className="absolute top-10 left-1/2 -translate-x-1/2 opacity-20 pointer-events-none animate-float">
-        <svg 
-          viewBox="0 0 200 120" 
-          className="w-[400px] md:w-[600px] lg:w-[800px] h-auto fill-primary"
-        >
-          <path d="M170 80c16.569 0 30-13.431 30-30 0-13.807-9.33-25.44-22.024-28.935C175.333 9.048 163.644 0 150 0c-10.493 0-19.83 5.088-25.623 12.934C120.628 5.088 108.493 0 98 0 80.327 0 65.644 12.536 62.024 29.065 49.33 32.56 40 44.193 40 58c0 16.569 13.431 30 30 30h100zM30 90c-16.569 0-30 13.431-30 30h60c0-16.569-13.431-30-30-30z"/>
-        </svg>
+    <div className="min-h-screen flex items-center justify-center p-4 md:p-8 relative overflow-hidden bg-gradient-to-br from-background via-background to-primary/5">
+      {/* Decorative background elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-primary/10 rounded-full blur-3xl" />
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-primary/5 rounded-full blur-3xl" />
       </div>
       
-      <div className="w-full max-w-5xl flex flex-col md:flex-row items-center gap-8 md:gap-16 relative z-10">
-        <div className="flex-1 text-center md:text-left fade-in">
-          <h1 className="text-5xl md:text-6xl lg:text-7xl font-display font-bold text-foreground leading-tight">
+      <div className="w-full max-w-5xl flex flex-col md:flex-row items-center gap-12 md:gap-20 relative z-10">
+        <div className="flex-1 text-center md:text-left fade-in space-y-6">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium">
+            <HeartPulse className="w-4 h-4" />
+            <span>Din digitala hälsodagbok</span>
+          </div>
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold text-foreground leading-tight tracking-tight">
             Håll bättre koll på ditt mående
           </h1>
-          <p className="text-lg md:text-xl text-muted-foreground mt-4">
-            Din interaktiva och personliga stämningsdagbok
+          <p className="text-lg md:text-xl text-muted-foreground max-w-lg">
+            Följ din hälsa, identifiera mönster och dela insikter med din vårdgivare – allt på ett ställe.
           </p>
         </div>
-        <div className="w-full md:w-auto md:min-w-[400px] glass-card p-8 fade-in">
-          <div className="text-center mb-8">
-            <div className="flex justify-center mb-4">
-              <Logo size="lg" />
+        
+        <div className="w-full md:w-auto md:min-w-[420px] fade-in">
+          <div className="bg-card/80 backdrop-blur-xl border border-border/50 rounded-3xl p-8 shadow-2xl shadow-primary/5">
+            <div className="text-center mb-8">
+              <div className="flex justify-center mb-6">
+                <Logo size="lg" />
+              </div>
+              {!showEmailConfirmation && (
+                <p className="text-muted-foreground text-sm">
+                  {isLogin ? 'Välkommen tillbaka' : 'Skapa ditt konto'}
+                </p>
+              )}
             </div>
-            {!showEmailConfirmation && (
-              <p className="text-muted-foreground">
-                {isLogin ? 'Logga in för att fortsätta' : 'Skapa ett konto för att börja'}
-              </p>
-            )}
-          </div>
 
           {showEmailConfirmation ? (
             <div className="text-center space-y-6 py-4">
@@ -346,7 +346,7 @@ const Auth = () => {
                 <button
                   type="button"
                   onClick={() => setIsLogin(!isLogin)}
-                  className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                  className="text-sm text-muted-foreground hover:text-primary transition-colors"
                   disabled={isSubmitting}
                 >
                   {isLogin ? 'Har du inget konto? Skapa ett' : 'Har du redan ett konto? Logga in'}
@@ -354,10 +354,9 @@ const Auth = () => {
               </div>
             </>
           )}
+          </div>
         </div>
       </div>
-      </div>
-      <HowItWorks />
     </div>
   );
 };
