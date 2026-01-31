@@ -481,57 +481,60 @@ export function TodayCheckin({
           <div className="text-center mb-6">
             <Pill className="w-12 h-12 mx-auto mb-4 text-primary" />
             <h1 className="font-display text-2xl md:text-3xl font-bold mb-2">
-              Har du tagit din medicin?
+              Vilka mediciner har du tagit?
             </h1>
+            {hasMedications && (
+              <p className="text-muted-foreground text-sm">
+                Välj de mediciner du har tagit idag
+              </p>
+            )}
           </div>
 
-          {/* Show medications list */}
-          {hasMedications && (
-            <div className="max-w-md mx-auto space-y-2 mb-6">
-              {activeMedications.map(med => (
-                <div
-                  key={med.id}
-                  className="flex items-center gap-3 p-3 rounded-xl bg-muted/30"
-                >
-                  <Pill className="w-4 h-4 text-primary" />
-                  <span className="font-medium">{med.name}</span>
-                  <span className="text-muted-foreground text-sm">{med.dosage}</span>
-                </div>
-              ))}
+          {/* Show medications list with checkboxes */}
+          {hasMedications ? (
+            <div className="max-w-md mx-auto space-y-3 mb-6">
+              {activeMedications.map(med => {
+                const isTaken = medicationsTakenToday.includes(med.id);
+                return (
+                  <button
+                    key={med.id}
+                    onClick={() => onToggleMedication(med.id, !isTaken)}
+                    className={cn(
+                      "w-full flex items-center gap-3 p-4 rounded-xl border-2 transition-all text-left",
+                      isTaken 
+                        ? "border-primary bg-primary/10" 
+                        : "border-border bg-muted/30 hover:border-primary/50"
+                    )}
+                  >
+                    <Checkbox 
+                      checked={isTaken}
+                      onCheckedChange={(checked) => onToggleMedication(med.id, !!checked)}
+                      className="h-5 w-5"
+                    />
+                    <div className="flex-1">
+                      <p className={cn("font-medium", isTaken && "text-primary")}>
+                        {med.name}
+                      </p>
+                      <p className="text-sm text-muted-foreground">{med.dosage}</p>
+                    </div>
+                    {isTaken && <Check className="w-5 h-5 text-primary" />}
+                  </button>
+                );
+              })}
+            </div>
+          ) : (
+            <div className="max-w-md mx-auto text-center p-6 rounded-xl bg-muted/30 mb-6">
+              <p className="text-muted-foreground">
+                Du har inga aktiva mediciner.
+              </p>
             </div>
           )}
 
-          <div className="grid grid-cols-2 gap-4 max-w-md mx-auto">
-            <button
-              onClick={() => {
-                // Mark all medications as taken
-                activeMedications.forEach(med => {
-                  if (!medicationsTakenToday.includes(med.id)) {
-                    onToggleMedication(med.id, true);
-                  }
-                });
-                handleComplete();
-              }}
-              className="p-6 rounded-2xl border-2 flex flex-col items-center gap-3 transition-all hover:border-primary hover:bg-primary/5"
-            >
-              <Check className="w-10 h-10 text-mood-stable" />
-              <span className="font-medium">Ja</span>
-            </button>
-            <button
-              onClick={() => {
-                // Mark all medications as not taken
-                activeMedications.forEach(med => {
-                  if (medicationsTakenToday.includes(med.id)) {
-                    onToggleMedication(med.id, false);
-                  }
-                });
-                handleComplete();
-              }}
-              className="p-6 rounded-2xl border-2 flex flex-col items-center gap-3 transition-all hover:border-primary hover:bg-primary/5"
-            >
-              <X className="w-10 h-10 text-muted-foreground" />
-              <span className="font-medium">Nej</span>
-            </button>
+          <div className="max-w-md mx-auto">
+            <Button onClick={handleComplete} className="w-full gap-2">
+              <ChevronRight className="w-4 h-4" />
+              {hasMedications ? 'Slutför incheckning' : 'Slutför'}
+            </Button>
           </div>
         </div>
       )}
