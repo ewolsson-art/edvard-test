@@ -96,6 +96,8 @@ export type Database = {
           exercise_types: string[] | null
           exercised: boolean | null
           id: string
+          medication_comment: string | null
+          medication_side_effects: string[] | null
           mood: string
           sleep_comment: string | null
           sleep_quality: string | null
@@ -112,6 +114,8 @@ export type Database = {
           exercise_types?: string[] | null
           exercised?: boolean | null
           id?: string
+          medication_comment?: string | null
+          medication_side_effects?: string[] | null
           mood: string
           sleep_comment?: string | null
           sleep_quality?: string | null
@@ -128,6 +132,8 @@ export type Database = {
           exercise_types?: string[] | null
           exercised?: boolean | null
           id?: string
+          medication_comment?: string | null
+          medication_side_effects?: string[] | null
           mood?: string
           sleep_comment?: string | null
           sleep_quality?: string | null
