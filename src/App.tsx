@@ -18,6 +18,7 @@ import DoctorOnboarding from "./pages/DoctorOnboarding";
 import Profile from "./pages/Profile";
 import DoctorHome from "./pages/DoctorHome";
 import DoctorDashboard from "./pages/DoctorDashboard";
+import PatientDetail from "./pages/PatientDetail";
 import ManageConnections from "./pages/ManageConnections";
 import NotFound from "./pages/NotFound";
 
@@ -94,6 +95,11 @@ const App = () => (
             <Route path="/mina-patienter" element={
               <ProtectedRoute>
                 <AppLayout><DoctorDashboard /></AppLayout>
+              </ProtectedRoute>
+            } />
+            <Route path="/patient/:patientId" element={
+              <ProtectedRoute>
+                <AppLayout><PatientDetail /></AppLayout>
               </ProtectedRoute>
             } />
             <Route path="/mina-lakare" element={
