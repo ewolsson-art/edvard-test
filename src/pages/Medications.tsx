@@ -9,6 +9,14 @@ import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useMedications } from '@/hooks/useMedications';
+import { MedicationFrequency, FREQUENCY_LABELS } from '@/types/medication';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import {
   Dialog,
   DialogContent,
@@ -36,9 +44,11 @@ const Medications = () => {
   const [newName, setNewName] = useState('');
   const [newDosage, setNewDosage] = useState('');
   const [newStartDate, setNewStartDate] = useState(format(new Date(), 'yyyy-MM-dd'));
+  const [newFrequency, setNewFrequency] = useState<MedicationFrequency>('daily');
   const [editName, setEditName] = useState('');
   const [editDosage, setEditDosage] = useState('');
   const [editStartDate, setEditStartDate] = useState('');
+  const [editFrequency, setEditFrequency] = useState<MedicationFrequency>('daily');
 
   const {
     medications,
@@ -57,24 +67,26 @@ const Medications = () => {
 
   const handleAdd = async () => {
     if (newName.trim() && newDosage.trim() && newStartDate) {
-      await addMedication(newName.trim(), newDosage.trim(), newStartDate);
+      await addMedication(newName.trim(), newDosage.trim(), newStartDate, newFrequency);
       setNewName('');
       setNewDosage('');
       setNewStartDate(format(new Date(), 'yyyy-MM-dd'));
+      setNewFrequency('daily');
       setIsAddOpen(false);
     }
   };
 
-  const handleEdit = (id: string, name: string, dosage: string, startedAt: string) => {
+  const handleEdit = (id: string, name: string, dosage: string, startedAt: string, frequency: MedicationFrequency) => {
     setEditingId(id);
     setEditName(name);
     setEditDosage(dosage);
     setEditStartDate(startedAt);
+    setEditFrequency(frequency);
   };
 
   const handleSaveEdit = async () => {
     if (editingId && editName.trim() && editDosage.trim() && editStartDate) {
-      await updateMedication(editingId, editName.trim(), editDosage.trim(), editStartDate);
+      await updateMedication(editingId, editName.trim(), editDosage.trim(), editStartDate, editFrequency);
       setEditingId(null);
     }
   };
@@ -214,6 +226,19 @@ const Medications = () => {
                           onChange={e => setNewStartDate(e.target.value)}
                         />
                       </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="frequency">Hur ofta</Label>
+                        <Select value={newFrequency} onValueChange={(v) => setNewFrequency(v as MedicationFrequency)}>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Välj frekvens" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {Object.entries(FREQUENCY_LABELS).map(([value, label]) => (
+                              <SelectItem key={value} value={value}>{label}</SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
                     </div>
                     <DialogFooter>
                       <Button variant="outline" onClick={() => setIsAddOpen(false)}>
@@ -258,6 +283,16 @@ const Medications = () => {
                             value={editStartDate}
                             onChange={e => setEditStartDate(e.target.value)}
                           />
+                          <Select value={editFrequency} onValueChange={(v) => setEditFrequency(v as MedicationFrequency)}>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Välj frekvens" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {Object.entries(FREQUENCY_LABELS).map(([value, label]) => (
+                                <SelectItem key={value} value={value}>{label}</SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
                           <div className="flex gap-2">
                             <Button size="sm" onClick={handleSaveEdit}>
                               <Check className="h-4 w-4 mr-1" />
@@ -274,6 +309,9 @@ const Medications = () => {
                           <div className="flex-1">
                             <p className="font-medium">{med.name}</p>
                             <p className="text-sm text-muted-foreground">{med.dosage}</p>
+                            <p className="text-xs text-muted-foreground mt-1">
+                              {FREQUENCY_LABELS[med.frequency] || 'Dagligen'}
+                            </p>
                             <p className="text-xs text-muted-foreground flex items-center gap-1 mt-1">
                               <Calendar className="h-3 w-3" />
                               Sedan {formatStartDate(med.started_at)}
@@ -288,7 +326,7 @@ const Medications = () => {
                             <Button 
                               size="icon" 
                               variant="ghost"
-                              onClick={() => handleEdit(med.id, med.name, med.dosage, med.started_at)}
+                              onClick={() => handleEdit(med.id, med.name, med.dosage, med.started_at, med.frequency)}
                             >
                               <Pencil className="h-4 w-4" />
                             </Button>
