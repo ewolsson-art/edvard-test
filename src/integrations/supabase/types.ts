@@ -316,6 +316,15 @@ export type Database = {
         Args: { doctor_email: string }
         Returns: string
       }
+      get_doctor_profile_for_patient: {
+        Args: { p_doctor_id: string; p_patient_id: string }
+        Returns: {
+          clinic_name: string
+          first_name: string
+          hospital_name: string
+          last_name: string
+        }[]
+      }
       get_patient_email_for_doctor: {
         Args: { p_doctor_id: string; p_patient_id: string }
         Returns: string

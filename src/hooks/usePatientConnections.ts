@@ -18,6 +18,8 @@ export interface DoctorConnection {
   doctor_profile?: {
     first_name: string | null;
     last_name: string | null;
+    clinic_name: string | null;
+    hospital_name: string | null;
   };
 }
 
@@ -39,13 +41,14 @@ export function usePatientConnections() {
     if (error) {
       console.error('Error fetching connections:', error);
     } else {
-      // Fetch doctor profiles for each connection
+      // Fetch doctor profiles for each connection using the secure function
       const connectionsWithProfiles = await Promise.all(
         (data || []).map(async (conn) => {
           const { data: profile } = await supabase
-            .from('profiles')
-            .select('first_name, last_name')
-            .eq('user_id', conn.doctor_id)
+            .rpc('get_doctor_profile_for_patient', {
+              p_doctor_id: conn.doctor_id,
+              p_patient_id: user.id,
+            })
             .maybeSingle();
 
           return {
