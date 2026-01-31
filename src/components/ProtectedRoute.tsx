@@ -36,6 +36,7 @@ export function ProtectedRoute({ children, skipOnboardingCheck = false }: Protec
     if (patientOnlyPaths.includes(location.pathname)) {
       return <Navigate to="/lakare" replace />;
     }
+    // Allow doctors to access doctor-specific and shared pages
     return <>{children}</>;
   }
 
@@ -45,7 +46,8 @@ export function ProtectedRoute({ children, skipOnboardingCheck = false }: Protec
   }
 
   // Redirect patients away from doctor-specific pages
-  if (location.pathname === '/lakare') {
+  const doctorOnlyPaths = ['/lakare', '/mina-patienter'];
+  if (doctorOnlyPaths.includes(location.pathname)) {
     return <Navigate to="/" replace />;
   }
 

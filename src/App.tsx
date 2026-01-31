@@ -15,6 +15,7 @@ import Medications from "./pages/Medications";
 import Reports from "./pages/Reports";
 import Onboarding from "./pages/Onboarding";
 import Profile from "./pages/Profile";
+import DoctorHome from "./pages/DoctorHome";
 import DoctorDashboard from "./pages/DoctorDashboard";
 import ManageConnections from "./pages/ManageConnections";
 import NotFound from "./pages/NotFound";
@@ -80,6 +81,11 @@ const App = () => (
               </ProtectedRoute>
             } />
             <Route path="/lakare" element={
+              <ProtectedRoute>
+                <AppLayout><DoctorHome /></AppLayout>
+              </ProtectedRoute>
+            } />
+            <Route path="/mina-patienter" element={
               <ProtectedRoute>
                 <AppLayout><DoctorDashboard /></AppLayout>
               </ProtectedRoute>
