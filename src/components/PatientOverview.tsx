@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react';
 import { format, startOfMonth, endOfMonth, eachDayOfInterval, subMonths, addMonths } from 'date-fns';
 import { sv } from 'date-fns/locale';
 import { usePatientMoodData } from '@/hooks/usePatientMoodData';
+import { usePatientMedications } from '@/hooks/usePatientMedications';
 import { PatientConnection } from '@/hooks/useDoctorConnections';
 import { MoodStats } from '@/components/MoodStats';
 import { ExerciseStats, ExerciseStatsType } from '@/components/ExerciseStats';
@@ -12,8 +13,9 @@ import { ExerciseMonthCalendar } from '@/components/ExerciseMonthCalendar';
 import { SleepMonthCalendar } from '@/components/SleepMonthCalendar';
 import { EatingMonthCalendar } from '@/components/EatingMonthCalendar';
 import { MoodStats as MoodStatsType, ExerciseType } from '@/types/mood';
-import { Loader2, ChevronLeft, Radio } from 'lucide-react';
+import { Loader2, ChevronLeft, Radio, Pill, Check, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 
 interface PatientOverviewProps {
   connection: PatientConnection;
@@ -22,9 +24,14 @@ interface PatientOverviewProps {
 
 export function PatientOverview({ connection, onBack }: PatientOverviewProps) {
   const [currentMonth, setCurrentMonth] = useState(new Date());
-  const { entries, isLoaded, getEntryForDate, getEntriesForMonth } = usePatientMoodData({
+  const { entries, isLoaded: moodLoaded, getEntryForDate, getEntriesForMonth } = usePatientMoodData({
     patientId: connection.patient_id,
   });
+  const { activeMedications, inactiveMedications, isLoaded: medsLoaded } = usePatientMedications({
+    patientId: connection.patient_id,
+  });
+
+  const isLoaded = moodLoaded && medsLoaded;
 
   const patientName = useMemo(() => {
     if (connection.patient_profile?.first_name || connection.patient_profile?.last_name) {
@@ -248,8 +255,75 @@ export function PatientOverview({ connection, onBack }: PatientOverviewProps) {
           </section>
         )}
 
+        {/* Medications */}
+        {connection.share_medication && (
+          <section className="space-y-4">
+            <h3 className="font-medium text-lg flex items-center gap-2">
+              <Pill className="w-5 h-5" />
+              Läkemedel
+            </h3>
+            
+            {activeMedications.length > 0 && (
+              <div className="space-y-3">
+                <h4 className="text-sm font-medium text-muted-foreground">Aktiva mediciner</h4>
+                <div className="grid gap-3">
+                  {activeMedications.map((med) => (
+                    <div
+                      key={med.id}
+                      className="glass-card p-4 flex items-center justify-between"
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                          <Check className="w-5 h-5 text-primary" />
+                        </div>
+                        <div>
+                          <p className="font-medium">{med.name}</p>
+                          <p className="text-sm text-muted-foreground">{med.dosage}</p>
+                        </div>
+                      </div>
+                      <Badge variant="outline" className="text-xs">
+                        Sedan {format(new Date(med.started_at), 'd MMM yyyy', { locale: sv })}
+                      </Badge>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {inactiveMedications.length > 0 && (
+              <div className="space-y-3">
+                <h4 className="text-sm font-medium text-muted-foreground">Avslutade mediciner</h4>
+                <div className="grid gap-2">
+                  {inactiveMedications.map((med) => (
+                    <div
+                      key={med.id}
+                      className="glass-card p-3 flex items-center justify-between opacity-60"
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center">
+                          <X className="w-4 h-4 text-muted-foreground" />
+                        </div>
+                        <div>
+                          <p className="font-medium text-sm">{med.name}</p>
+                          <p className="text-xs text-muted-foreground">{med.dosage}</p>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {activeMedications.length === 0 && inactiveMedications.length === 0 && (
+              <div className="text-center py-6 text-muted-foreground">
+                <p>Inga läkemedel registrerade.</p>
+              </div>
+            )}
+          </section>
+        )}
+
         {/* No data shared message */}
-        {!connection.share_mood && !connection.share_sleep && !connection.share_eating && !connection.share_exercise && (
+        {!connection.share_mood && !connection.share_sleep && !connection.share_eating && !connection.share_exercise && !connection.share_medication && (
           <div className="text-center py-8 text-muted-foreground">
             <p>Patienten delar ingen data med dig.</p>
           </div>
