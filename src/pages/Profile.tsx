@@ -4,11 +4,13 @@ import { z } from 'zod';
 import { useAuth } from '@/hooks/useAuth';
 import { useProfile } from '@/hooks/useProfile';
 import { useUserRole } from '@/hooks/useUserRole';
+import { useUserPreferences } from '@/hooks/useUserPreferences';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Checkbox } from '@/components/ui/checkbox';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -20,8 +22,42 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
-import { Loader2, User, Mail, Save, Trash2, AlertTriangle, Stethoscope, HeartPulse, Building2, Hospital } from 'lucide-react';
+import { Loader2, User, Mail, Save, Trash2, AlertTriangle, Stethoscope, HeartPulse, Building2, Hospital, Brain, Moon, Utensils, Dumbbell, Pill, Settings as SettingsIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
+
+const CHECKIN_OPTIONS = [
+  {
+    id: 'include_mood',
+    label: 'Mående',
+    description: 'Hur du mår idag',
+    icon: Brain,
+    required: true,
+  },
+  {
+    id: 'include_sleep',
+    label: 'Sömn',
+    description: 'Hur du har sovit',
+    icon: Moon,
+  },
+  {
+    id: 'include_eating',
+    label: 'Mat',
+    description: 'Hur du har ätit',
+    icon: Utensils,
+  },
+  {
+    id: 'include_exercise',
+    label: 'Träning',
+    description: 'Om du har tränat',
+    icon: Dumbbell,
+  },
+  {
+    id: 'include_medication',
+    label: 'Medicin',
+    description: 'Om du tagit din medicin',
+    icon: Pill,
+  },
+];
 
 const profileSchema = z.object({
   firstName: z.string().trim().max(50, { message: "Max 50 tecken" }).optional(),
@@ -32,10 +68,11 @@ const Profile = () => {
   const { user, signOut } = useAuth();
   const { profile, isLoading: profileLoading } = useProfile();
   const { isDoctor, isLoading: roleLoading } = useUserRole();
+  const { preferences, loading: preferencesLoading, updatePreferences } = useUserPreferences();
   const { toast } = useToast();
   const navigate = useNavigate();
   
-const [firstName, setFirstName] = useState('');
+  const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [clinicName, setClinicName] = useState('');
   const [hospitalName, setHospitalName] = useState('');
@@ -43,6 +80,17 @@ const [firstName, setFirstName] = useState('');
   const [isDeleting, setIsDeleting] = useState(false);
   const [deleteConfirmText, setDeleteConfirmText] = useState('');
   const [errors, setErrors] = useState<{ firstName?: string; lastName?: string }>({});
+  
+  // Check-in preferences state
+  const [checkinSelections, setCheckinSelections] = useState({
+    include_mood: true,
+    include_sleep: true,
+    include_eating: true,
+    include_exercise: true,
+    include_medication: true,
+  });
+  const [isSavingCheckin, setIsSavingCheckin] = useState(false);
+  const [hasCheckinChanges, setHasCheckinChanges] = useState(false);
 
   useEffect(() => {
     if (profile) {
@@ -52,6 +100,66 @@ const [firstName, setFirstName] = useState('');
       setHospitalName((profile as any).hospital_name || '');
     }
   }, [profile]);
+
+  // Load check-in preferences
+  useEffect(() => {
+    if (preferences) {
+      setCheckinSelections({
+        include_mood: preferences.include_mood,
+        include_sleep: preferences.include_sleep,
+        include_eating: preferences.include_eating,
+        include_exercise: preferences.include_exercise,
+        include_medication: preferences.include_medication,
+      });
+    }
+  }, [preferences]);
+
+  // Check for check-in changes
+  useEffect(() => {
+    if (preferences) {
+      const changed = 
+        checkinSelections.include_mood !== preferences.include_mood ||
+        checkinSelections.include_sleep !== preferences.include_sleep ||
+        checkinSelections.include_eating !== preferences.include_eating ||
+        checkinSelections.include_exercise !== preferences.include_exercise ||
+        checkinSelections.include_medication !== preferences.include_medication;
+      setHasCheckinChanges(changed);
+    }
+  }, [checkinSelections, preferences]);
+
+  const handleCheckinToggle = (id: string) => {
+    // Don't allow disabling mood (it's required)
+    if (id === 'include_mood') return;
+    
+    setCheckinSelections(prev => ({
+      ...prev,
+      [id]: !prev[id as keyof typeof prev],
+    }));
+  };
+
+  const handleSaveCheckin = async () => {
+    setIsSavingCheckin(true);
+    
+    const { error } = await updatePreferences(checkinSelections);
+    
+    if (error) {
+      toast({
+        title: 'Något gick fel',
+        description: 'Kunde inte spara dina inställningar. Försök igen.',
+        variant: 'destructive',
+      });
+      setIsSavingCheckin(false);
+      return;
+    }
+
+    toast({
+      title: 'Sparat!',
+      description: 'Dina inställningar har uppdaterats.',
+    });
+    
+    setIsSavingCheckin(false);
+    setHasCheckinChanges(false);
+  };
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -153,7 +261,7 @@ const [firstName, setFirstName] = useState('');
     }
   };
 
-  if (profileLoading || roleLoading) {
+  if (profileLoading || roleLoading || preferencesLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <Loader2 className="w-8 h-8 animate-spin text-primary" />
@@ -298,6 +406,83 @@ const [firstName, setFirstName] = useState('');
             </Button>
           </form>
         </div>
+
+        {/* Check-in Preferences - Only for patients */}
+        {!isDoctor && (
+          <div className="glass-card p-6">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="p-2 rounded-lg bg-primary/10">
+                <SettingsIcon className="w-5 h-5 text-primary" />
+              </div>
+              <div>
+                <h2 className="font-display text-xl font-semibold">Anpassa din check-in</h2>
+                <p className="text-sm text-muted-foreground">
+                  Välj vilka kategorier du vill inkludera i din dagliga incheckning
+                </p>
+              </div>
+            </div>
+
+            <div className="space-y-3 mb-6">
+              {CHECKIN_OPTIONS.map((option) => {
+                const Icon = option.icon;
+                const isChecked = checkinSelections[option.id as keyof typeof checkinSelections];
+                const isDisabled = option.required;
+                
+                return (
+                  <div
+                    key={option.id}
+                    className={`flex items-center gap-4 p-4 rounded-xl border-2 transition-all ${
+                      isDisabled ? 'cursor-not-allowed opacity-75' : 'cursor-pointer'
+                    } ${
+                      isChecked 
+                        ? 'border-primary bg-primary/5' 
+                        : 'border-border bg-muted/30 hover:border-muted-foreground/30'
+                    }`}
+                    onClick={() => !isDisabled && handleCheckinToggle(option.id)}
+                  >
+                    <Checkbox
+                      id={option.id}
+                      checked={isChecked}
+                      onCheckedChange={() => !isDisabled && handleCheckinToggle(option.id)}
+                      disabled={isDisabled}
+                      className="pointer-events-none"
+                    />
+                    <div className={`p-2 rounded-lg ${isChecked ? 'bg-primary/10' : 'bg-muted'}`}>
+                      <Icon className={`w-5 h-5 ${isChecked ? 'text-primary' : 'text-muted-foreground'}`} />
+                    </div>
+                    <div className="flex-1">
+                      <Label 
+                        htmlFor={option.id} 
+                        className={`font-medium flex items-center gap-2 ${isDisabled ? 'cursor-not-allowed' : 'cursor-pointer'}`}
+                      >
+                        {option.label}
+                        {option.required && (
+                          <span className="text-xs bg-muted text-muted-foreground px-2 py-0.5 rounded-full">
+                            Obligatorisk
+                          </span>
+                        )}
+                      </Label>
+                      <p className="text-sm text-muted-foreground">{option.description}</p>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            <Button
+              onClick={handleSaveCheckin}
+              className="w-full gap-2"
+              disabled={isSavingCheckin || !hasCheckinChanges}
+            >
+              {isSavingCheckin ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : (
+                <Save className="w-4 h-4" />
+              )}
+              {hasCheckinChanges ? 'Spara ändringar' : 'Inga ändringar'}
+            </Button>
+          </div>
+        )}
 
         {/* Delete Account */}
         <div className="glass-card p-4 border-destructive/30">
