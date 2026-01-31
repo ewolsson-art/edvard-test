@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, useMemo } from 'react';
-import { Send, Bot, User, Sparkles, RefreshCw, Stethoscope, ArrowLeft } from 'lucide-react';
+import { Send, Bot, User, Sparkles, RefreshCw, Stethoscope } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -20,7 +20,7 @@ type ChatTarget = 'ai' | DoctorConnection;
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/mood-chat`;
 
 const Chat = () => {
-  const [selectedTarget, setSelectedTarget] = useState<ChatTarget | null>(null);
+  const [selectedTarget, setSelectedTarget] = useState<ChatTarget>('ai');
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -51,6 +51,11 @@ const Chat = () => {
         .join(' ');
     }
     return connection.doctor_email || 'Läkare';
+  };
+
+  const handleSelectTarget = (target: ChatTarget) => {
+    setSelectedTarget(target);
+    setMessages([]);
   };
 
   const sendMessage = async () => {
@@ -152,11 +157,6 @@ const Chat = () => {
     toast.success('Chatten har rensats');
   };
 
-  const handleBack = () => {
-    setSelectedTarget(null);
-    setMessages([]);
-  };
-
   if (!moodLoaded || connectionsLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -165,37 +165,118 @@ const Chat = () => {
     );
   }
 
-  // Show AI chat
-  if (selectedTarget === 'ai') {
-    return (
-      <div className="h-screen flex flex-col py-8 px-4 md:px-8">
-        <div className="max-w-3xl mx-auto w-full flex-1 flex flex-col min-h-0">
-          <header className="mb-6">
-            <Button variant="ghost" size="sm" onClick={handleBack} className="gap-2 mb-4">
-              <ArrowLeft className="w-4 h-4" />
-              Tillbaka
-            </Button>
-            <div className="flex items-center justify-between">
-              <div>
-                <h1 className="font-display text-2xl md:text-3xl font-bold mb-1 flex items-center gap-3">
-                  <Sparkles className="w-7 h-7 text-primary" />
-                  Mående-chatt
-                </h1>
-                <p className="text-muted-foreground text-sm">
-                  Diskutera ditt mående och få insikter baserat på din statistik
+  return (
+    <div className="h-screen flex">
+      {/* Sidebar */}
+      <div className="w-72 md:w-80 border-r bg-card flex flex-col">
+        <div className="p-4 border-b">
+          <h1 className="font-display text-xl font-bold">Chatt</h1>
+        </div>
+        
+        <ScrollArea className="flex-1">
+          <div className="p-2 space-y-1">
+            {/* AI Chat option */}
+            <button
+              onClick={() => handleSelectTarget('ai')}
+              className={cn(
+                "w-full flex items-center gap-3 p-3 rounded-lg text-left transition-colors",
+                selectedTarget === 'ai' 
+                  ? "bg-primary/10 text-primary" 
+                  : "hover:bg-muted"
+              )}
+            >
+              <div className={cn(
+                "w-10 h-10 rounded-full flex items-center justify-center shrink-0",
+                selectedTarget === 'ai' 
+                  ? "bg-primary/20" 
+                  : "bg-muted"
+              )}>
+                <Sparkles className="w-5 h-5" />
+              </div>
+              <div className="min-w-0 flex-1">
+                <p className="font-medium truncate">Mående-chatt</p>
+                <p className="text-xs text-muted-foreground truncate">AI-assistent</p>
+              </div>
+            </button>
+
+            {/* Divider */}
+            {chatEnabledDoctors.length > 0 && (
+              <div className="py-2 px-3">
+                <p className="text-xs text-muted-foreground font-medium uppercase tracking-wider">
+                  Läkare
                 </p>
               </div>
+            )}
+
+            {/* Doctor chat options */}
+            {chatEnabledDoctors.map((connection) => (
+              <button
+                key={connection.id}
+                onClick={() => handleSelectTarget(connection)}
+                className={cn(
+                  "w-full flex items-center gap-3 p-3 rounded-lg text-left transition-colors",
+                  selectedTarget !== 'ai' && (selectedTarget as DoctorConnection).id === connection.id
+                    ? "bg-primary/10 text-primary"
+                    : "hover:bg-muted"
+                )}
+              >
+                <div className={cn(
+                  "w-10 h-10 rounded-full flex items-center justify-center shrink-0",
+                  selectedTarget !== 'ai' && (selectedTarget as DoctorConnection).id === connection.id
+                    ? "bg-primary/20"
+                    : "bg-muted"
+                )}>
+                  <Stethoscope className="w-5 h-5" />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <p className="font-medium truncate">{getDoctorName(connection)}</p>
+                  {connection.doctor_profile?.clinic_name && (
+                    <p className="text-xs text-muted-foreground truncate">
+                      {connection.doctor_profile.clinic_name}
+                    </p>
+                  )}
+                </div>
+              </button>
+            ))}
+
+            {chatEnabledDoctors.length === 0 && (
+              <div className="px-3 py-4 text-center">
+                <Stethoscope className="w-8 h-8 mx-auto mb-2 text-muted-foreground/50" />
+                <p className="text-xs text-muted-foreground">
+                  Inga läkare med chatt aktiverad
+                </p>
+              </div>
+            )}
+          </div>
+        </ScrollArea>
+      </div>
+
+      {/* Chat area */}
+      <div className="flex-1 flex flex-col min-w-0">
+        {/* AI Chat */}
+        {selectedTarget === 'ai' && (
+          <>
+            {/* Header */}
+            <div className="p-4 border-b flex items-center justify-between bg-card">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                  <Sparkles className="w-5 h-5 text-primary" />
+                </div>
+                <div>
+                  <h2 className="font-semibold">Mående-chatt</h2>
+                  <p className="text-xs text-muted-foreground">AI-assistent för ditt mående</p>
+                </div>
+              </div>
               {messages.length > 0 && (
-                <Button variant="outline" size="sm" onClick={clearChat} className="gap-2">
+                <Button variant="ghost" size="sm" onClick={clearChat} className="gap-2">
                   <RefreshCw className="w-4 h-4" />
                   Rensa
                 </Button>
               )}
             </div>
-          </header>
 
-          <div className="flex-1 glass-card p-4 flex flex-col min-h-0">
-            <ScrollArea className="flex-1 pr-4" ref={scrollRef}>
+            {/* Messages */}
+            <ScrollArea className="flex-1 p-4" ref={scrollRef}>
               {messages.length === 0 ? (
                 <div className="h-full flex flex-col items-center justify-center text-center p-8">
                   <Bot className="w-16 h-16 text-muted-foreground/50 mb-4" />
@@ -279,130 +360,40 @@ const Chat = () => {
               )}
             </ScrollArea>
 
-            <div className="mt-4 flex gap-2">
-              <Textarea
-                ref={textareaRef}
-                value={input}
-                onChange={e => setInput(e.target.value)}
-                onKeyDown={handleKeyDown}
-                placeholder="Skriv ett meddelande..."
-                className="min-h-[48px] max-h-[120px] resize-none"
-                disabled={isLoading}
-              />
-              <Button
-                onClick={sendMessage}
-                disabled={!input.trim() || isLoading}
-                size="icon"
-                className="h-12 w-12 shrink-0"
-              >
-                <Send className="w-5 h-5" />
-              </Button>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  // Show doctor chat
-  if (selectedTarget && typeof selectedTarget === 'object') {
-    return (
-      <div className="h-screen flex flex-col py-8 px-4 md:px-8">
-        <div className="max-w-3xl mx-auto w-full flex-1 flex flex-col min-h-0">
-          <header className="mb-6">
-            <Button variant="ghost" size="sm" onClick={handleBack} className="gap-2 mb-4">
-              <ArrowLeft className="w-4 h-4" />
-              Tillbaka
-            </Button>
-          </header>
-          <div className="flex-1 glass-card flex flex-col min-h-0">
-            <DoctorPatientChat
-              connectionId={selectedTarget.id}
-              otherPartyName={getDoctorName(selectedTarget)}
-              isDoctor={false}
-              chatEnabled={selectedTarget.chat_enabled}
-            />
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  // Show chat selection
-  return (
-    <div className="py-8 px-4 md:px-8">
-      <div className="max-w-3xl mx-auto space-y-6">
-        <header>
-          <h1 className="font-display text-3xl md:text-4xl font-bold mb-2">Chatt</h1>
-          <p className="text-muted-foreground">
-            Välj vem du vill chatta med
-          </p>
-        </header>
-
-        <div className="space-y-4">
-          {/* AI Chat option */}
-          <button
-            onClick={() => setSelectedTarget('ai')}
-            className="w-full glass-card p-6 text-left hover:bg-muted/50 transition-colors"
-          >
-            <div className="flex items-center gap-4">
-              <div className="w-14 h-14 rounded-full bg-gradient-to-br from-primary/20 to-primary/10 flex items-center justify-center">
-                <Sparkles className="w-7 h-7 text-primary" />
-              </div>
-              <div className="flex-1">
-                <h3 className="font-semibold text-lg">Mående-chatt</h3>
-                <p className="text-muted-foreground text-sm">
-                  AI-assistent som hjälper dig reflektera över ditt mående
-                </p>
-              </div>
-            </div>
-          </button>
-
-          {/* Doctor chat options */}
-          {chatEnabledDoctors.length > 0 && (
-            <>
-              <div className="flex items-center gap-3 pt-4">
-                <div className="h-px flex-1 bg-border" />
-                <span className="text-sm text-muted-foreground">Dina läkare</span>
-                <div className="h-px flex-1 bg-border" />
-              </div>
-
-              {chatEnabledDoctors.map((connection) => (
-                <button
-                  key={connection.id}
-                  onClick={() => setSelectedTarget(connection)}
-                  className="w-full glass-card p-6 text-left hover:bg-muted/50 transition-colors"
+            {/* Input */}
+            <div className="p-4 border-t bg-card">
+              <div className="flex gap-2">
+                <Textarea
+                  ref={textareaRef}
+                  value={input}
+                  onChange={e => setInput(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                  placeholder="Skriv ett meddelande..."
+                  className="min-h-[48px] max-h-[120px] resize-none"
+                  disabled={isLoading}
+                />
+                <Button
+                  onClick={sendMessage}
+                  disabled={!input.trim() || isLoading}
+                  size="icon"
+                  className="h-12 w-12 shrink-0"
                 >
-                  <div className="flex items-center gap-4">
-                    <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center">
-                      <Stethoscope className="w-7 h-7 text-primary" />
-                    </div>
-                    <div className="flex-1">
-                      <h3 className="font-semibold text-lg">{getDoctorName(connection)}</h3>
-                      {connection.doctor_profile?.clinic_name && (
-                        <p className="text-muted-foreground text-sm">
-                          {connection.doctor_profile.clinic_name}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                </button>
-              ))}
-            </>
-          )}
-
-          {chatEnabledDoctors.length === 0 && (
-            <div className="text-center py-8 text-muted-foreground">
-              <Stethoscope className="w-10 h-10 mx-auto mb-3 opacity-50" />
-              <p className="text-sm">
-                Du har inga läkare med chatt aktiverad.
-              </p>
-              <p className="text-xs mt-1">
-                Bjud in en läkare via "Mina läkare" för att chatta.
-              </p>
+                  <Send className="w-5 h-5" />
+                </Button>
+              </div>
             </div>
-          )}
-        </div>
+          </>
+        )}
+
+        {/* Doctor Chat */}
+        {selectedTarget !== 'ai' && (
+          <DoctorPatientChat
+            connectionId={(selectedTarget as DoctorConnection).id}
+            otherPartyName={getDoctorName(selectedTarget as DoctorConnection)}
+            isDoctor={false}
+            chatEnabled={(selectedTarget as DoctorConnection).chat_enabled}
+          />
+        )}
       </div>
     </div>
   );
