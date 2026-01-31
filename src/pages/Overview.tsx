@@ -13,6 +13,9 @@ import { MedicationStats, MedicationStatsType } from '@/components/MedicationSta
 import { WeekCalendar } from '@/components/WeekCalendar';
 import { MonthCalendar } from '@/components/MonthCalendar';
 import { ExerciseMonthCalendar } from '@/components/ExerciseMonthCalendar';
+import { SleepMonthCalendar } from '@/components/SleepMonthCalendar';
+import { EatingMonthCalendar } from '@/components/EatingMonthCalendar';
+import { MedicationMonthCalendar } from '@/components/MedicationMonthCalendar';
 import { YearHeatmap } from '@/components/YearHeatmap';
 import { DayDetailDialog } from '@/components/DayDetailDialog';
 import { ExerciseTypeDialog } from '@/components/ExerciseTypeDialog';
@@ -272,6 +275,58 @@ const Overview = () => {
     return result;
   }, [currentMonth, getEntryForDate]);
 
+  const monthSleepData = useMemo(() => {
+    const result: Record<number, 'good' | 'bad'> = {};
+    const start = startOfMonth(currentMonth);
+    const end = endOfMonth(currentMonth);
+    const days = eachDayOfInterval({ start, end });
+    
+    days.forEach(day => {
+      const entry = getEntryForDate(format(day, 'yyyy-MM-dd'));
+      if (entry?.sleepQuality) {
+        result[day.getDate()] = entry.sleepQuality;
+      }
+    });
+    
+    return result;
+  }, [currentMonth, getEntryForDate]);
+
+  const monthEatingData = useMemo(() => {
+    const result: Record<number, 'good' | 'bad'> = {};
+    const start = startOfMonth(currentMonth);
+    const end = endOfMonth(currentMonth);
+    const days = eachDayOfInterval({ start, end });
+    
+    days.forEach(day => {
+      const entry = getEntryForDate(format(day, 'yyyy-MM-dd'));
+      if (entry?.eatingQuality) {
+        result[day.getDate()] = entry.eatingQuality;
+      }
+    });
+    
+    return result;
+  }, [currentMonth, getEntryForDate]);
+
+  const monthMedicationCalendarData = useMemo(() => {
+    const result: Record<number, { taken: number; total: number }> = {};
+    const start = startOfMonth(currentMonth);
+    const end = endOfMonth(currentMonth);
+    const days = eachDayOfInterval({ start, end });
+    const medCount = activeMedications.length;
+    
+    if (medCount === 0) return result;
+    
+    days.forEach(day => {
+      const dateStr = format(day, 'yyyy-MM-dd');
+      const meds = getMedicationsTakenOnDate(dateStr);
+      if (meds.length > 0 || logs.some(log => log.date === dateStr)) {
+        result[day.getDate()] = { taken: meds.length, total: medCount };
+      }
+    });
+    
+    return result;
+  }, [currentMonth, getMedicationsTakenOnDate, activeMedications, logs]);
+
   const monthLabel = format(currentMonth, 'MMMM yyyy', { locale: sv });
 
   // Year data
@@ -499,8 +554,26 @@ const Overview = () => {
             <Moon className="w-6 h-6 text-primary" />
             <h2 className="font-display text-2xl font-semibold">Sömn</h2>
           </div>
-          <div className="max-w-xl">
-            <SleepStats stats={sleepStats} periodLabel={label} />
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {view === 'month' && (
+              <SleepMonthCalendar
+                currentDate={currentMonth}
+                sleepData={monthSleepData}
+                onPrevMonth={() => setCurrentMonth(prev => subMonths(prev, 1))}
+                onNextMonth={() => setCurrentMonth(prev => addMonths(prev, 1))}
+                onDayClick={handleDayClick}
+              />
+            )}
+
+            {view !== 'month' && (
+              <div className="glass-card p-6 flex items-center justify-center text-muted-foreground">
+                <p>Byt till månadsvyn för att se sömnkalendern</p>
+              </div>
+            )}
+            
+            <div className="lg:self-start">
+              <SleepStats stats={sleepStats} periodLabel={label} />
+            </div>
           </div>
         </section>
         )}
@@ -512,8 +585,26 @@ const Overview = () => {
             <Utensils className="w-6 h-6 text-primary" />
             <h2 className="font-display text-2xl font-semibold">Kost</h2>
           </div>
-          <div className="max-w-xl">
-            <EatingStats stats={eatingStats} periodLabel={label} />
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {view === 'month' && (
+              <EatingMonthCalendar
+                currentDate={currentMonth}
+                eatingData={monthEatingData}
+                onPrevMonth={() => setCurrentMonth(prev => subMonths(prev, 1))}
+                onNextMonth={() => setCurrentMonth(prev => addMonths(prev, 1))}
+                onDayClick={handleDayClick}
+              />
+            )}
+
+            {view !== 'month' && (
+              <div className="glass-card p-6 flex items-center justify-center text-muted-foreground">
+                <p>Byt till månadsvyn för att se kostkalendern</p>
+              </div>
+            )}
+            
+            <div className="lg:self-start">
+              <EatingStats stats={eatingStats} periodLabel={label} />
+            </div>
           </div>
         </section>
         )}
@@ -558,8 +649,26 @@ const Overview = () => {
             <Pill className="w-6 h-6 text-primary" />
             <h2 className="font-display text-2xl font-semibold">Medicin</h2>
           </div>
-          <div className="max-w-xl">
-            <MedicationStats stats={medicationStats} periodLabel={label} />
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {view === 'month' && (
+              <MedicationMonthCalendar
+                currentDate={currentMonth}
+                medicationData={monthMedicationCalendarData}
+                onPrevMonth={() => setCurrentMonth(prev => subMonths(prev, 1))}
+                onNextMonth={() => setCurrentMonth(prev => addMonths(prev, 1))}
+                onDayClick={handleDayClick}
+              />
+            )}
+
+            {view !== 'month' && (
+              <div className="glass-card p-6 flex items-center justify-center text-muted-foreground">
+                <p>Byt till månadsvyn för att se medicinkalendern</p>
+              </div>
+            )}
+            
+            <div className="lg:self-start">
+              <MedicationStats stats={medicationStats} periodLabel={label} />
+            </div>
           </div>
         </section>
         )}
