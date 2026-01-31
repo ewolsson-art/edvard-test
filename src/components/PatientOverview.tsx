@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { format, startOfMonth, endOfMonth, eachDayOfInterval, subMonths, addMonths } from 'date-fns';
+import { format, startOfMonth, endOfMonth, eachDayOfInterval, subMonths, addMonths, startOfWeek, endOfWeek, addWeeks, subWeeks } from 'date-fns';
 import { sv } from 'date-fns/locale';
 import { usePatientMoodData } from '@/hooks/usePatientMoodData';
 import { usePatientMedications } from '@/hooks/usePatientMedications';
@@ -9,16 +9,25 @@ import { MoodStats } from '@/components/MoodStats';
 import { ExerciseStats, ExerciseStatsType } from '@/components/ExerciseStats';
 import { SleepStats, SleepStatsType } from '@/components/SleepStats';
 import { EatingStats, EatingStatsType } from '@/components/EatingStats';
+import { WeekCalendar } from '@/components/WeekCalendar';
 import { MonthCalendar } from '@/components/MonthCalendar';
 import { ExerciseMonthCalendar } from '@/components/ExerciseMonthCalendar';
+import { ExerciseWeekCalendar } from '@/components/ExerciseWeekCalendar';
+import { ExerciseYearHeatmap } from '@/components/ExerciseYearHeatmap';
 import { SleepMonthCalendar } from '@/components/SleepMonthCalendar';
+import { SleepWeekCalendar } from '@/components/SleepWeekCalendar';
+import { SleepYearHeatmap } from '@/components/SleepYearHeatmap';
 import { EatingMonthCalendar } from '@/components/EatingMonthCalendar';
+import { EatingWeekCalendar } from '@/components/EatingWeekCalendar';
+import { EatingYearHeatmap } from '@/components/EatingYearHeatmap';
+import { YearHeatmap } from '@/components/YearHeatmap';
 import { MoodStats as MoodStatsType, ExerciseType } from '@/types/mood';
-import { Loader2, ChevronLeft, Radio, Pill, Check, X, MessageSquare } from 'lucide-react';
+import { Loader2, ChevronLeft, Radio, Pill, Check, X, MessageSquare, Moon, Utensils, Dumbbell } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 interface PatientOverviewProps {
   connection: PatientConnection;
@@ -26,11 +35,17 @@ interface PatientOverviewProps {
   onToggleChatEnabled?: (connectionId: string, enabled: boolean) => Promise<boolean>;
 }
 
+type ViewType = 'week' | 'month' | 'year';
+
 export function PatientOverview({ connection, onBack, onToggleChatEnabled }: PatientOverviewProps) {
   const navigate = useNavigate();
+  const [view, setView] = useState<ViewType>('month');
+  const [currentWeek, setCurrentWeek] = useState(new Date());
   const [currentMonth, setCurrentMonth] = useState(new Date());
+  const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
   const [isChatToggling, setIsChatToggling] = useState(false);
-  const { entries, isLoaded: moodLoaded, getEntryForDate, getEntriesForMonth } = usePatientMoodData({
+  
+  const { entries, isLoaded: moodLoaded, getEntryForDate, getEntriesForMonth, getEntriesForYear, getStatsForYear } = usePatientMoodData({
     patientId: connection.patient_id,
   });
   const { activeMedications, inactiveMedications, isLoaded: medsLoaded } = usePatientMedications({
@@ -48,7 +63,71 @@ export function PatientOverview({ connection, onBack, onToggleChatEnabled }: Pat
     return connection.patient_email || 'Patient';
   }, [connection]);
 
+  // Week data
+  const weekDays = useMemo(() => {
+    const start = startOfWeek(currentWeek, { weekStartsOn: 1 });
+    const end = endOfWeek(currentWeek, { weekStartsOn: 1 });
+    return eachDayOfInterval({ start, end });
+  }, [currentWeek]);
+
+  const weekStart = startOfWeek(currentWeek, { weekStartsOn: 1 });
+  const weekEnd = endOfWeek(currentWeek, { weekStartsOn: 1 });
+  const weekLabel = `${format(weekStart, 'd MMM', { locale: sv })} – ${format(weekEnd, 'd MMM yyyy', { locale: sv })}`;
   const monthLabel = format(currentMonth, 'MMMM yyyy', { locale: sv });
+
+  // Week stats
+  const weekStats = useMemo((): MoodStatsType => {
+    let elevated = 0, stable = 0, depressed = 0;
+    weekDays.forEach(day => {
+      const entry = getEntryForDate(format(day, 'yyyy-MM-dd'));
+      if (entry?.mood === 'elevated') elevated++;
+      if (entry?.mood === 'stable') stable++;
+      if (entry?.mood === 'depressed') depressed++;
+    });
+    const total = elevated + stable + depressed;
+    const totalDays = weekDays.length;
+    const unregistered = totalDays - total;
+    return { elevated, stable, depressed, unregistered, total, totalDays };
+  }, [weekDays, getEntryForDate]);
+
+  const weekExerciseStats = useMemo((): ExerciseStatsType => {
+    let exercised = 0, notExercised = 0;
+    weekDays.forEach(day => {
+      const entry = getEntryForDate(format(day, 'yyyy-MM-dd'));
+      if (entry?.exercised === true) exercised++;
+      else if (entry?.exercised === false) notExercised++;
+    });
+    const total = exercised + notExercised;
+    const totalDays = weekDays.length;
+    const unregistered = totalDays - total;
+    return { exercised, notExercised, unregistered, total, totalDays };
+  }, [weekDays, getEntryForDate]);
+
+  const weekSleepStats = useMemo((): SleepStatsType => {
+    let good = 0, bad = 0;
+    weekDays.forEach(day => {
+      const entry = getEntryForDate(format(day, 'yyyy-MM-dd'));
+      if (entry?.sleepQuality === 'good') good++;
+      else if (entry?.sleepQuality === 'bad') bad++;
+    });
+    const total = good + bad;
+    const totalDays = weekDays.length;
+    const unregistered = totalDays - total;
+    return { good, bad, unregistered, total, totalDays };
+  }, [weekDays, getEntryForDate]);
+
+  const weekEatingStats = useMemo((): EatingStatsType => {
+    let good = 0, bad = 0;
+    weekDays.forEach(day => {
+      const entry = getEntryForDate(format(day, 'yyyy-MM-dd'));
+      if (entry?.eatingQuality === 'good') good++;
+      else if (entry?.eatingQuality === 'bad') bad++;
+    });
+    const total = good + bad;
+    const totalDays = weekDays.length;
+    const unregistered = totalDays - total;
+    return { good, bad, unregistered, total, totalDays };
+  }, [weekDays, getEntryForDate]);
 
   // Month data
   const monthMoodData = useMemo(() => {
@@ -168,12 +247,93 @@ export function PatientOverview({ connection, onBack, onToggleChatEnabled }: Pat
     return result;
   }, [currentMonth, getEntryForDate]);
 
-  const handlePrevMonth = () => {
-    setCurrentMonth(prev => subMonths(prev, 1));
+  // Year data
+  const yearEntries = useMemo(() => {
+    return getEntriesForYear(currentYear);
+  }, [currentYear, getEntriesForYear]);
+
+  const yearStats = useMemo(() => {
+    return getStatsForYear(currentYear);
+  }, [currentYear, getStatsForYear]);
+
+  const yearExerciseStats = useMemo((): ExerciseStatsType => {
+    let exercised = 0, notExercised = 0;
+    yearEntries.forEach(entry => {
+      if (entry.exercised === true) exercised++;
+      else if (entry.exercised === false) notExercised++;
+    });
+    const total = exercised + notExercised;
+    const isLeapYear = (currentYear % 4 === 0 && currentYear % 100 !== 0) || (currentYear % 400 === 0);
+    const totalDays = isLeapYear ? 366 : 365;
+    const unregistered = totalDays - total;
+    return { exercised, notExercised, unregistered, total, totalDays };
+  }, [yearEntries, currentYear]);
+
+  const yearSleepStats = useMemo((): SleepStatsType => {
+    let good = 0, bad = 0;
+    yearEntries.forEach(entry => {
+      if (entry.sleepQuality === 'good') good++;
+      else if (entry.sleepQuality === 'bad') bad++;
+    });
+    const total = good + bad;
+    const isLeapYear = (currentYear % 4 === 0 && currentYear % 100 !== 0) || (currentYear % 400 === 0);
+    const totalDays = isLeapYear ? 366 : 365;
+    const unregistered = totalDays - total;
+    return { good, bad, unregistered, total, totalDays };
+  }, [yearEntries, currentYear]);
+
+  const yearEatingStats = useMemo((): EatingStatsType => {
+    let good = 0, bad = 0;
+    yearEntries.forEach(entry => {
+      if (entry.eatingQuality === 'good') good++;
+      else if (entry.eatingQuality === 'bad') bad++;
+    });
+    const total = good + bad;
+    const isLeapYear = (currentYear % 4 === 0 && currentYear % 100 !== 0) || (currentYear % 400 === 0);
+    const totalDays = isLeapYear ? 366 : 365;
+    const unregistered = totalDays - total;
+    return { good, bad, unregistered, total, totalDays };
+  }, [yearEntries, currentYear]);
+
+  // Helper to get stats for current view
+  const getStatsForView = () => {
+    switch (view) {
+      case 'week': return {
+        stats: weekStats,
+        exerciseStats: weekExerciseStats,
+        sleepStats: weekSleepStats,
+        eatingStats: weekEatingStats,
+        label: weekLabel
+      };
+      case 'month': return {
+        stats: monthStats,
+        exerciseStats: monthExerciseStats,
+        sleepStats: monthSleepStats,
+        eatingStats: monthEatingStats,
+        label: monthLabel
+      };
+      case 'year': return {
+        stats: yearStats,
+        exerciseStats: yearExerciseStats,
+        sleepStats: yearSleepStats,
+        eatingStats: yearEatingStats,
+        label: `${currentYear}`
+      };
+    }
   };
 
-  const handleNextMonth = () => {
-    setCurrentMonth(prev => addMonths(prev, 1));
+  const { stats, exerciseStats, sleepStats, eatingStats, label } = getStatsForView();
+
+  const handlePrevWeek = () => setCurrentWeek(prev => subWeeks(prev, 1));
+  const handleNextWeek = () => setCurrentWeek(prev => addWeeks(prev, 1));
+  const handlePrevMonth = () => setCurrentMonth(prev => subMonths(prev, 1));
+  const handleNextMonth = () => setCurrentMonth(prev => addMonths(prev, 1));
+  const handlePrevYear = () => setCurrentYear(prev => prev - 1);
+  const handleNextYear = () => setCurrentYear(prev => prev + 1);
+
+  const handleMonthClick = (month: number) => {
+    setCurrentMonth(new Date(currentYear, month, 1));
+    setView('month');
   };
 
   const handleChatToggle = async (enabled: boolean) => {
@@ -246,6 +406,15 @@ export function PatientOverview({ connection, onBack, onToggleChatEnabled }: Pat
         </div>
       </div>
 
+      {/* View tabs */}
+      <Tabs value={view} onValueChange={(v) => setView(v as ViewType)} className="w-full">
+        <TabsList className="grid w-full max-w-md grid-cols-3">
+          <TabsTrigger value="week">Vecka</TabsTrigger>
+          <TabsTrigger value="month">Månad</TabsTrigger>
+          <TabsTrigger value="year">År</TabsTrigger>
+        </TabsList>
+      </Tabs>
+
       {/* Stats and calendars based on what's shared */}
       <div className="space-y-8">
         {/* Mood */}
@@ -253,14 +422,35 @@ export function PatientOverview({ connection, onBack, onToggleChatEnabled }: Pat
           <section>
             <h3 className="font-display text-2xl font-semibold mb-6">Mående</h3>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <MonthCalendar
-                currentDate={currentMonth}
-                moodData={monthMoodData}
-                onPrevMonth={handlePrevMonth}
-                onNextMonth={handleNextMonth}
-              />
+              {view === 'week' && (
+                <WeekCalendar
+                  weekDays={weekDays}
+                  weekLabel={weekLabel}
+                  getEntryForDate={getEntryForDate}
+                  getMedicationsTakenOnDate={() => []}
+                  onPrevWeek={handlePrevWeek}
+                  onNextWeek={handleNextWeek}
+                />
+              )}
+              {view === 'month' && (
+                <MonthCalendar
+                  currentDate={currentMonth}
+                  moodData={monthMoodData}
+                  onPrevMonth={handlePrevMonth}
+                  onNextMonth={handleNextMonth}
+                />
+              )}
+              {view === 'year' && (
+                <YearHeatmap
+                  year={currentYear}
+                  entries={yearEntries}
+                  onPrevYear={handlePrevYear}
+                  onNextYear={handleNextYear}
+                  onMonthClick={handleMonthClick}
+                />
+              )}
               <div className="lg:self-start">
-                <MoodStats stats={monthStats} periodLabel={monthLabel} />
+                <MoodStats stats={stats} periodLabel={label} />
               </div>
             </div>
           </section>
@@ -269,16 +459,39 @@ export function PatientOverview({ connection, onBack, onToggleChatEnabled }: Pat
         {/* Sleep */}
         {connection.share_sleep && (
           <section>
-            <h3 className="font-display text-2xl font-semibold mb-6">Sömn</h3>
+            <div className="flex items-center gap-3 mb-6">
+              <Moon className="w-6 h-6 text-primary" />
+              <h3 className="font-display text-2xl font-semibold">Sömn</h3>
+            </div>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <SleepMonthCalendar
-                currentDate={currentMonth}
-                sleepData={monthSleepData}
-                onPrevMonth={handlePrevMonth}
-                onNextMonth={handleNextMonth}
-              />
+              {view === 'week' && (
+                <SleepWeekCalendar
+                  weekDays={weekDays}
+                  weekLabel={weekLabel}
+                  getSleepForDate={(dateStr) => getEntryForDate(dateStr)?.sleepQuality}
+                  onPrevWeek={handlePrevWeek}
+                  onNextWeek={handleNextWeek}
+                />
+              )}
+              {view === 'month' && (
+                <SleepMonthCalendar
+                  currentDate={currentMonth}
+                  sleepData={monthSleepData}
+                  onPrevMonth={handlePrevMonth}
+                  onNextMonth={handleNextMonth}
+                />
+              )}
+              {view === 'year' && (
+                <SleepYearHeatmap
+                  year={currentYear}
+                  entries={yearEntries}
+                  onPrevYear={handlePrevYear}
+                  onNextYear={handleNextYear}
+                  onMonthClick={handleMonthClick}
+                />
+              )}
               <div className="lg:self-start">
-                <SleepStats stats={monthSleepStats} periodLabel={monthLabel} />
+                <SleepStats stats={sleepStats} periodLabel={label} />
               </div>
             </div>
           </section>
@@ -287,16 +500,39 @@ export function PatientOverview({ connection, onBack, onToggleChatEnabled }: Pat
         {/* Eating */}
         {connection.share_eating && (
           <section>
-            <h3 className="font-display text-2xl font-semibold mb-6">Kost</h3>
+            <div className="flex items-center gap-3 mb-6">
+              <Utensils className="w-6 h-6 text-primary" />
+              <h3 className="font-display text-2xl font-semibold">Kost</h3>
+            </div>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <EatingMonthCalendar
-                currentDate={currentMonth}
-                eatingData={monthEatingData}
-                onPrevMonth={handlePrevMonth}
-                onNextMonth={handleNextMonth}
-              />
+              {view === 'week' && (
+                <EatingWeekCalendar
+                  weekDays={weekDays}
+                  weekLabel={weekLabel}
+                  getEatingForDate={(dateStr) => getEntryForDate(dateStr)?.eatingQuality}
+                  onPrevWeek={handlePrevWeek}
+                  onNextWeek={handleNextWeek}
+                />
+              )}
+              {view === 'month' && (
+                <EatingMonthCalendar
+                  currentDate={currentMonth}
+                  eatingData={monthEatingData}
+                  onPrevMonth={handlePrevMonth}
+                  onNextMonth={handleNextMonth}
+                />
+              )}
+              {view === 'year' && (
+                <EatingYearHeatmap
+                  year={currentYear}
+                  entries={yearEntries}
+                  onPrevYear={handlePrevYear}
+                  onNextYear={handleNextYear}
+                  onMonthClick={handleMonthClick}
+                />
+              )}
               <div className="lg:self-start">
-                <EatingStats stats={monthEatingStats} periodLabel={monthLabel} />
+                <EatingStats stats={eatingStats} periodLabel={label} />
               </div>
             </div>
           </section>
@@ -305,16 +541,43 @@ export function PatientOverview({ connection, onBack, onToggleChatEnabled }: Pat
         {/* Exercise */}
         {connection.share_exercise && (
           <section>
-            <h3 className="font-display text-2xl font-semibold mb-6">Träning</h3>
+            <div className="flex items-center gap-3 mb-6">
+              <Dumbbell className="w-6 h-6 text-primary" />
+              <h3 className="font-display text-2xl font-semibold">Träning</h3>
+            </div>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <ExerciseMonthCalendar
-                currentDate={currentMonth}
-                exerciseData={monthExerciseData}
-                onPrevMonth={handlePrevMonth}
-                onNextMonth={handleNextMonth}
-              />
+              {view === 'week' && (
+                <ExerciseWeekCalendar
+                  weekDays={weekDays}
+                  weekLabel={weekLabel}
+                  getExerciseForDate={(dateStr) => {
+                    const entry = getEntryForDate(dateStr);
+                    if (entry?.exercised === undefined) return undefined;
+                    return { exercised: entry.exercised, types: entry.exerciseTypes };
+                  }}
+                  onPrevWeek={handlePrevWeek}
+                  onNextWeek={handleNextWeek}
+                />
+              )}
+              {view === 'month' && (
+                <ExerciseMonthCalendar
+                  currentDate={currentMonth}
+                  exerciseData={monthExerciseData}
+                  onPrevMonth={handlePrevMonth}
+                  onNextMonth={handleNextMonth}
+                />
+              )}
+              {view === 'year' && (
+                <ExerciseYearHeatmap
+                  year={currentYear}
+                  entries={yearEntries}
+                  onPrevYear={handlePrevYear}
+                  onNextYear={handleNextYear}
+                  onMonthClick={handleMonthClick}
+                />
+              )}
               <div className="lg:self-start">
-                <ExerciseStats stats={monthExerciseStats} periodLabel={monthLabel} />
+                <ExerciseStats stats={exerciseStats} periodLabel={label} />
               </div>
             </div>
           </section>
