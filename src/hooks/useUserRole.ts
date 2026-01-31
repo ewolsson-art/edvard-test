@@ -35,25 +35,22 @@ export function useUserRole() {
   const setUserRole = useCallback(async (newRole: AppRole) => {
     if (!user) return false;
 
-    // Try to update existing role first, then insert if not exists
-    const { error: updateError } = await supabase
+    // Use upsert to handle both insert and update in one operation
+    const { error } = await supabase
       .from('user_roles')
-      .update({ role: newRole })
-      .eq('user_id', user.id);
-
-    if (updateError) {
-      // If update fails (no existing row), try insert
-      const { error: insertError } = await supabase
-        .from('user_roles')
-        .insert({
+      .upsert(
+        {
           user_id: user.id,
           role: newRole,
-        });
+        },
+        {
+          onConflict: 'user_id',
+        }
+      );
 
-      if (insertError) {
-        console.error('Error setting role:', insertError);
-        return false;
-      }
+    if (error) {
+      console.error('Error setting role:', error);
+      return false;
     }
 
     setRole(newRole);
