@@ -14,6 +14,41 @@ export type Database = {
   }
   public: {
     Tables: {
+      chat_messages: {
+        Row: {
+          connection_id: string
+          content: string
+          created_at: string
+          id: string
+          read_at: string | null
+          sender_id: string
+        }
+        Insert: {
+          connection_id: string
+          content: string
+          created_at?: string
+          id?: string
+          read_at?: string | null
+          sender_id: string
+        }
+        Update: {
+          connection_id?: string
+          content?: string
+          created_at?: string
+          id?: string
+          read_at?: string | null
+          sender_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "chat_messages_connection_id_fkey"
+            columns: ["connection_id"]
+            isOneToOne: false
+            referencedRelation: "patient_doctor_connections"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       medication_logs: {
         Row: {
           created_at: string
@@ -144,6 +179,7 @@ export type Database = {
       }
       patient_doctor_connections: {
         Row: {
+          chat_enabled: boolean
           created_at: string
           doctor_id: string
           id: string
@@ -158,6 +194,7 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          chat_enabled?: boolean
           created_at?: string
           doctor_id: string
           id?: string
@@ -172,6 +209,7 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          chat_enabled?: boolean
           created_at?: string
           doctor_id?: string
           id?: string
