@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { format, startOfMonth, endOfMonth, eachDayOfInterval, subMonths, addMonths } from 'date-fns';
 import { sv } from 'date-fns/locale';
 import { usePatientMoodData } from '@/hooks/usePatientMoodData';
@@ -12,14 +13,12 @@ import { MonthCalendar } from '@/components/MonthCalendar';
 import { ExerciseMonthCalendar } from '@/components/ExerciseMonthCalendar';
 import { SleepMonthCalendar } from '@/components/SleepMonthCalendar';
 import { EatingMonthCalendar } from '@/components/EatingMonthCalendar';
-import { DoctorPatientChat } from '@/components/DoctorPatientChat';
 import { MoodStats as MoodStatsType, ExerciseType } from '@/types/mood';
 import { Loader2, ChevronLeft, Radio, Pill, Check, X, MessageSquare } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 interface PatientOverviewProps {
   connection: PatientConnection;
@@ -28,6 +27,7 @@ interface PatientOverviewProps {
 }
 
 export function PatientOverview({ connection, onBack, onToggleChatEnabled }: PatientOverviewProps) {
+  const navigate = useNavigate();
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [isChatToggling, setIsChatToggling] = useState(false);
   const { entries, isLoaded: moodLoaded, getEntryForDate, getEntriesForMonth } = usePatientMoodData({
@@ -183,6 +183,10 @@ export function PatientOverview({ connection, onBack, onToggleChatEnabled }: Pat
     setIsChatToggling(false);
   };
 
+  const handleOpenChat = () => {
+    navigate(`/lakare-chatt?patient=${connection.patient_id}`);
+  };
+
   if (!isLoaded) {
     return (
       <div className="flex items-center justify-center py-12">
@@ -204,206 +208,192 @@ export function PatientOverview({ connection, onBack, onToggleChatEnabled }: Pat
             <p className="text-sm text-muted-foreground">{connection.patient_email}</p>
           )}
         </div>
-        <div className="flex items-center gap-2 text-sm text-primary">
-          <Radio className="w-4 h-4 animate-pulse" />
-          <span>Live</span>
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 text-sm text-primary">
+            <Radio className="w-4 h-4 animate-pulse" />
+            <span>Live</span>
+          </div>
+          <Button 
+            variant="outline" 
+            size="sm" 
+            onClick={handleOpenChat}
+            className="gap-2"
+          >
+            <MessageSquare className="w-4 h-4" />
+            Chatt
+          </Button>
         </div>
       </div>
 
-      {/* Tabs for Overview and Chat */}
-      <Tabs defaultValue="overview" className="w-full">
-        <TabsList className="grid w-full grid-cols-2 max-w-md">
-          <TabsTrigger value="overview">Översikt</TabsTrigger>
-          <TabsTrigger value="chat" className="gap-2">
-            <MessageSquare className="w-4 h-4" />
-            Chatt
-          </TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="overview" className="mt-6">
-          {/* Stats and calendars based on what's shared */}
-          <div className="space-y-8">
-            {/* Mood */}
-            {connection.share_mood && (
-              <section>
-                <h3 className="font-display text-2xl font-semibold mb-6">Mående</h3>
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                  <MonthCalendar
-                    currentDate={currentMonth}
-                    moodData={monthMoodData}
-                    onPrevMonth={handlePrevMonth}
-                    onNextMonth={handleNextMonth}
-                  />
-                  <div className="lg:self-start">
-                    <MoodStats stats={monthStats} periodLabel={monthLabel} />
-                  </div>
-                </div>
-              </section>
-            )}
-
-            {/* Sleep */}
-            {connection.share_sleep && (
-              <section>
-                <h3 className="font-display text-2xl font-semibold mb-6">Sömn</h3>
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                  <SleepMonthCalendar
-                    currentDate={currentMonth}
-                    sleepData={monthSleepData}
-                    onPrevMonth={handlePrevMonth}
-                    onNextMonth={handleNextMonth}
-                  />
-                  <div className="lg:self-start">
-                    <SleepStats stats={monthSleepStats} periodLabel={monthLabel} />
-                  </div>
-                </div>
-              </section>
-            )}
-
-            {/* Eating */}
-            {connection.share_eating && (
-              <section>
-                <h3 className="font-display text-2xl font-semibold mb-6">Kost</h3>
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                  <EatingMonthCalendar
-                    currentDate={currentMonth}
-                    eatingData={monthEatingData}
-                    onPrevMonth={handlePrevMonth}
-                    onNextMonth={handleNextMonth}
-                  />
-                  <div className="lg:self-start">
-                    <EatingStats stats={monthEatingStats} periodLabel={monthLabel} />
-                  </div>
-                </div>
-              </section>
-            )}
-
-            {/* Exercise */}
-            {connection.share_exercise && (
-              <section>
-                <h3 className="font-display text-2xl font-semibold mb-6">Träning</h3>
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                  <ExerciseMonthCalendar
-                    currentDate={currentMonth}
-                    exerciseData={monthExerciseData}
-                    onPrevMonth={handlePrevMonth}
-                    onNextMonth={handleNextMonth}
-                  />
-                  <div className="lg:self-start">
-                    <ExerciseStats stats={monthExerciseStats} periodLabel={monthLabel} />
-                  </div>
-                </div>
-              </section>
-            )}
-
-            {/* Medications */}
-            {connection.share_medication && (
-              <section className="space-y-4">
-                <h3 className="font-medium text-lg flex items-center gap-2">
-                  <Pill className="w-5 h-5" />
-                  Läkemedel
-                </h3>
-                
-                {activeMedications.length > 0 && (
-                  <div className="space-y-3">
-                    <h4 className="text-sm font-medium text-muted-foreground">Aktiva mediciner</h4>
-                    <div className="grid gap-3">
-                      {activeMedications.map((med) => (
-                        <div
-                          key={med.id}
-                          className="glass-card p-4 flex items-center justify-between"
-                        >
-                          <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-                              <Check className="w-5 h-5 text-primary" />
-                            </div>
-                            <div>
-                              <p className="font-medium">{med.name}</p>
-                              <p className="text-sm text-muted-foreground">{med.dosage}</p>
-                            </div>
-                          </div>
-                          <Badge variant="outline" className="text-xs">
-                            Sedan {format(new Date(med.started_at), 'd MMM yyyy', { locale: sv })}
-                          </Badge>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {inactiveMedications.length > 0 && (
-                  <div className="space-y-3">
-                    <h4 className="text-sm font-medium text-muted-foreground">Avslutade mediciner</h4>
-                    <div className="grid gap-2">
-                      {inactiveMedications.map((med) => (
-                        <div
-                          key={med.id}
-                          className="glass-card p-3 flex items-center justify-between opacity-60"
-                        >
-                          <div className="flex items-center gap-3">
-                            <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center">
-                              <X className="w-4 h-4 text-muted-foreground" />
-                            </div>
-                            <div>
-                              <p className="font-medium text-sm">{med.name}</p>
-                              <p className="text-xs text-muted-foreground">{med.dosage}</p>
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {activeMedications.length === 0 && inactiveMedications.length === 0 && (
-                  <div className="text-center py-6 text-muted-foreground">
-                    <p>Inga läkemedel registrerade.</p>
-                  </div>
-                )}
-              </section>
-            )}
-
-            {/* No data shared message */}
-            {!connection.share_mood && !connection.share_sleep && !connection.share_eating && !connection.share_exercise && !connection.share_medication && (
-              <div className="text-center py-8 text-muted-foreground">
-                <p>Patienten delar ingen data med dig.</p>
-              </div>
-            )}
-          </div>
-        </TabsContent>
-
-        <TabsContent value="chat" className="mt-6">
-          {/* Chat settings for doctor */}
-          <div className="glass-card p-4 mb-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <MessageSquare className="w-5 h-5 text-primary" />
-                <div>
-                  <Label htmlFor="chat-toggle" className="font-medium">Tillåt chatt med patient</Label>
-                  <p className="text-sm text-muted-foreground">
-                    Patienten kan skicka meddelanden till dig när aktiverat
-                  </p>
-                </div>
-              </div>
-              <Switch
-                id="chat-toggle"
-                checked={connection.chat_enabled}
-                onCheckedChange={handleChatToggle}
-                disabled={isChatToggling}
-              />
+      {/* Chat toggle setting */}
+      <div className="glass-card p-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <MessageSquare className="w-5 h-5 text-primary" />
+            <div>
+              <Label htmlFor="chat-toggle" className="font-medium">Tillåt chatt med patient</Label>
+              <p className="text-sm text-muted-foreground">
+                Patienten kan skicka meddelanden till dig när aktiverat
+              </p>
             </div>
           </div>
+          <Switch
+            id="chat-toggle"
+            checked={connection.chat_enabled}
+            onCheckedChange={handleChatToggle}
+            disabled={isChatToggling}
+          />
+        </div>
+      </div>
 
-          {/* Chat component */}
-          <div className="glass-card h-[500px]">
-            <DoctorPatientChat
-              connectionId={connection.id}
-              otherPartyName={patientName}
-              isDoctor={true}
-              chatEnabled={connection.chat_enabled}
-            />
+      {/* Stats and calendars based on what's shared */}
+      <div className="space-y-8">
+        {/* Mood */}
+        {connection.share_mood && (
+          <section>
+            <h3 className="font-display text-2xl font-semibold mb-6">Mående</h3>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <MonthCalendar
+                currentDate={currentMonth}
+                moodData={monthMoodData}
+                onPrevMonth={handlePrevMonth}
+                onNextMonth={handleNextMonth}
+              />
+              <div className="lg:self-start">
+                <MoodStats stats={monthStats} periodLabel={monthLabel} />
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* Sleep */}
+        {connection.share_sleep && (
+          <section>
+            <h3 className="font-display text-2xl font-semibold mb-6">Sömn</h3>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <SleepMonthCalendar
+                currentDate={currentMonth}
+                sleepData={monthSleepData}
+                onPrevMonth={handlePrevMonth}
+                onNextMonth={handleNextMonth}
+              />
+              <div className="lg:self-start">
+                <SleepStats stats={monthSleepStats} periodLabel={monthLabel} />
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* Eating */}
+        {connection.share_eating && (
+          <section>
+            <h3 className="font-display text-2xl font-semibold mb-6">Kost</h3>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <EatingMonthCalendar
+                currentDate={currentMonth}
+                eatingData={monthEatingData}
+                onPrevMonth={handlePrevMonth}
+                onNextMonth={handleNextMonth}
+              />
+              <div className="lg:self-start">
+                <EatingStats stats={monthEatingStats} periodLabel={monthLabel} />
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* Exercise */}
+        {connection.share_exercise && (
+          <section>
+            <h3 className="font-display text-2xl font-semibold mb-6">Träning</h3>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <ExerciseMonthCalendar
+                currentDate={currentMonth}
+                exerciseData={monthExerciseData}
+                onPrevMonth={handlePrevMonth}
+                onNextMonth={handleNextMonth}
+              />
+              <div className="lg:self-start">
+                <ExerciseStats stats={monthExerciseStats} periodLabel={monthLabel} />
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* Medications */}
+        {connection.share_medication && (
+          <section className="space-y-4">
+            <h3 className="font-medium text-lg flex items-center gap-2">
+              <Pill className="w-5 h-5" />
+              Läkemedel
+            </h3>
+            
+            {activeMedications.length > 0 && (
+              <div className="space-y-3">
+                <h4 className="text-sm font-medium text-muted-foreground">Aktiva mediciner</h4>
+                <div className="grid gap-3">
+                  {activeMedications.map((med) => (
+                    <div
+                      key={med.id}
+                      className="glass-card p-4 flex items-center justify-between"
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                          <Check className="w-5 h-5 text-primary" />
+                        </div>
+                        <div>
+                          <p className="font-medium">{med.name}</p>
+                          <p className="text-sm text-muted-foreground">{med.dosage}</p>
+                        </div>
+                      </div>
+                      <Badge variant="outline" className="text-xs">
+                        Sedan {format(new Date(med.started_at), 'd MMM yyyy', { locale: sv })}
+                      </Badge>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {inactiveMedications.length > 0 && (
+              <div className="space-y-3">
+                <h4 className="text-sm font-medium text-muted-foreground">Avslutade mediciner</h4>
+                <div className="grid gap-2">
+                  {inactiveMedications.map((med) => (
+                    <div
+                      key={med.id}
+                      className="glass-card p-3 flex items-center justify-between opacity-60"
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center">
+                          <X className="w-4 h-4 text-muted-foreground" />
+                        </div>
+                        <div>
+                          <p className="font-medium text-sm">{med.name}</p>
+                          <p className="text-xs text-muted-foreground">{med.dosage}</p>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {activeMedications.length === 0 && inactiveMedications.length === 0 && (
+              <div className="text-center py-6 text-muted-foreground">
+                <p>Inga läkemedel registrerade.</p>
+              </div>
+            )}
+          </section>
+        )}
+
+        {/* No data shared message */}
+        {!connection.share_mood && !connection.share_sleep && !connection.share_eating && !connection.share_exercise && !connection.share_medication && (
+          <div className="text-center py-8 text-muted-foreground">
+            <p>Patienten delar ingen data med dig.</p>
           </div>
-        </TabsContent>
-      </Tabs>
+        )}
+      </div>
     </div>
   );
 }
