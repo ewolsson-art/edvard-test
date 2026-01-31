@@ -1,8 +1,9 @@
-import { CalendarDays, BarChart3, Pill, FileText, LogOut, MessageCircle } from "lucide-react";
+import { CalendarDays, BarChart3, Pill, FileText, LogOut, MessageCircle, UserCircle } from "lucide-react";
 import { Link } from "react-router-dom";
 import { NavLink } from "@/components/NavLink";
 import { useSidebar } from "@/components/ui/sidebar";
 import { useAuth } from "@/hooks/useAuth";
+import { useProfile } from "@/hooks/useProfile";
 import { Button } from "@/components/ui/button";
 import logo from "@/assets/logo.png";
 import {
@@ -27,6 +28,7 @@ const navItems = [
 export function AppSidebar() {
   const { state } = useSidebar();
   const { user, signOut } = useAuth();
+  const { firstName, fullName } = useProfile();
   const isCollapsed = state === "collapsed";
 
   const handleSignOut = async () => {
@@ -75,24 +77,45 @@ export function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
 
-      <SidebarFooter className="p-4">
-        {!isCollapsed && user && (
-          <div className="space-y-3">
-            <p className="text-xs text-muted-foreground truncate">
-              {user.email}
-            </p>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handleSignOut}
-              className="w-full gap-2"
-            >
-              <LogOut className="h-4 w-4" />
-              Logga ut
-            </Button>
-          </div>
-        )}
-        {isCollapsed && (
+      <SidebarFooter className="p-4 space-y-3">
+        {/* Profile link */}
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton asChild tooltip="Min profil">
+              <NavLink 
+                to="/profil" 
+                end 
+                className="flex items-center gap-3 px-3 py-2 rounded-lg transition-colors hover:bg-muted/50" 
+                activeClassName="bg-muted text-primary font-medium"
+              >
+                <UserCircle className="h-5 w-5 shrink-0" />
+                {!isCollapsed && (
+                  <div className="flex flex-col min-w-0">
+                    <span className="text-sm font-medium truncate">
+                      {fullName || firstName || 'Min profil'}
+                    </span>
+                    <span className="text-xs text-muted-foreground truncate">
+                      {user?.email}
+                    </span>
+                  </div>
+                )}
+              </NavLink>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
+
+        {/* Logout button */}
+        {!isCollapsed ? (
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleSignOut}
+            className="w-full gap-2"
+          >
+            <LogOut className="h-4 w-4" />
+            Logga ut
+          </Button>
+        ) : (
           <Button
             variant="ghost"
             size="icon"
