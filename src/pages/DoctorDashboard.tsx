@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useDoctorConnections, PatientConnection } from '@/hooks/useDoctorConnections';
+import { PatientOverview } from '@/components/PatientOverview';
 import { Button } from '@/components/ui/button';
 import { Loader2, Users, UserCheck, Clock, Eye } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -161,16 +162,13 @@ const DoctorDashboard = () => {
           )}
         </section>
 
-        {/* Patient detail view placeholder */}
+        {/* Patient detail view */}
         {selectedPatient && (
           <section className="glass-card p-6">
-            <h2 className="font-display text-xl font-semibold mb-4">
-              Översikt för {getPatientName(selectedPatient)}
-            </h2>
-            <p className="text-muted-foreground">
-              Patientens detaljerade statistik kommer visas här.
-            </p>
-            {/* TODO: Implement patient overview component */}
+            <PatientOverview 
+              connection={selectedPatient} 
+              onBack={() => setSelectedPatient(null)} 
+            />
           </section>
         )}
       </div>
