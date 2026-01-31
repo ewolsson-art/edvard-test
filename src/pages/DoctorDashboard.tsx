@@ -61,34 +61,40 @@ const DoctorDashboard = () => {
               </span>
             </div>
             <div className="space-y-3">
-              {pendingConnections.map((connection) => (
-                <div
-                  key={connection.id}
-                  className="flex items-center justify-between p-4 bg-muted/50 rounded-lg"
-                >
-                  <div>
-                    <p className="font-medium">{getPatientName(connection)}</p>
-                    <p className="text-sm text-muted-foreground">
-                      Vill dela sin data med dig
-                    </p>
+              {pendingConnections.map((connection) => {
+                const hasName = connection.patient_profile?.first_name || connection.patient_profile?.last_name;
+                return (
+                  <div
+                    key={connection.id}
+                    className="flex items-center justify-between p-4 bg-muted/50 rounded-lg"
+                  >
+                    <div>
+                      <p className="font-medium">{getPatientName(connection)}</p>
+                      {hasName && connection.patient_email && (
+                        <p className="text-sm text-muted-foreground">{connection.patient_email}</p>
+                      )}
+                      <p className="text-sm text-muted-foreground">
+                        Vill dela sin data med dig
+                      </p>
+                    </div>
+                    <div className="flex gap-2">
+                      <Button
+                        size="sm"
+                        onClick={() => updateConnectionStatus(connection.id, 'approved')}
+                      >
+                        Godkänn
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => updateConnectionStatus(connection.id, 'rejected')}
+                      >
+                        Avvisa
+                      </Button>
+                    </div>
                   </div>
-                  <div className="flex gap-2">
-                    <Button
-                      size="sm"
-                      onClick={() => updateConnectionStatus(connection.id, 'approved')}
-                    >
-                      Godkänn
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={() => updateConnectionStatus(connection.id, 'rejected')}
-                    >
-                      Avvisa
-                    </Button>
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </section>
         )}
