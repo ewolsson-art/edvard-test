@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from './useAuth';
+import { useUserRole } from './useUserRole';
 
 export interface UserPreferences {
   id: string;
@@ -17,6 +18,7 @@ export interface UserPreferences {
 
 export const useUserPreferences = () => {
   const { user } = useAuth();
+  const { isDoctor, isLoading: roleLoading } = useUserRole();
   const [preferences, setPreferences] = useState<UserPreferences | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -95,12 +97,15 @@ export const useUserPreferences = () => {
     }
   };
 
+  // Doctors don't need onboarding - they don't do check-ins
+  const needsOnboarding = !loading && !roleLoading && user && !isDoctor && !preferences?.onboarding_completed;
+
   return {
     preferences,
-    loading,
+    loading: loading || roleLoading,
     createPreferences,
     updatePreferences,
     refetch: fetchPreferences,
-    needsOnboarding: !loading && user && !preferences?.onboarding_completed,
+    needsOnboarding,
   };
 };
