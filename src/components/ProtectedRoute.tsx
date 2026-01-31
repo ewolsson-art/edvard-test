@@ -29,9 +29,13 @@ export function ProtectedRoute({ children, skipOnboardingCheck = false }: Protec
     return <Navigate to="/auth" replace />;
   }
 
-  // Doctors don't need onboarding and should go to their dashboard
-  // This check runs BEFORE any onboarding checks
+  // Doctors: Redirect to doctor onboarding if they haven't completed it
   if (isDoctor) {
+    // Check if doctor needs onboarding (no preferences record or not completed)
+    if (!skipOnboardingCheck && needsOnboarding && location.pathname !== '/lakare-onboarding') {
+      return <Navigate to="/lakare-onboarding" replace />;
+    }
+    
     const patientOnlyPaths = ['/', '/oversikt', '/mediciner', '/chatt', '/onboarding'];
     if (patientOnlyPaths.includes(location.pathname)) {
       return <Navigate to="/lakare" replace />;
