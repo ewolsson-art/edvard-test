@@ -244,8 +244,8 @@ export function TodayCheckin({
       {currentStep === 'mood' && (
         <div className="space-y-6 fade-in">
           {isEditing && (
-            <Button variant="ghost" size="sm" onClick={() => setIsEditing(false)} className="mb-4 gap-1">
-              <ChevronLeft className="w-4 h-4" />
+            <Button variant="ghost" size="sm" onClick={() => setIsEditing(false)} className="mb-4 gap-1 text-destructive hover:text-destructive hover:bg-destructive/10">
+              <X className="w-4 h-4" />
               Avbryt
             </Button>
           )}
