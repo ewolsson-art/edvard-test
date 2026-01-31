@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { format, subMonths } from 'date-fns';
+import { format, subMonths, startOfMonth, endOfMonth, eachDayOfInterval, startOfYear, endOfYear } from 'date-fns';
 import { sv } from 'date-fns/locale';
 import { Download, Share2, Calendar, BarChart3, Link as LinkIcon, Check, Loader2, Brain, Moon, Utensils, Dumbbell, Pill, Settings2 } from 'lucide-react';
 import { jsPDF } from 'jspdf';
@@ -12,7 +12,12 @@ import { useMoodData } from '@/hooks/useMoodData';
 import { useMedications } from '@/hooks/useMedications';
 import { useUserPreferences } from '@/hooks/useUserPreferences';
 import { useToast } from '@/hooks/use-toast';
-import { MOOD_LABELS, MoodType } from '@/types/mood';
+import { useAuth } from '@/hooks/useAuth';
+import { supabase } from '@/integrations/supabase/client';
+import { MOOD_LABELS, MoodType, MoodStats as MoodStatsType } from '@/types/mood';
+import { SleepStatsType } from '@/components/SleepStats';
+import { EatingStatsType } from '@/components/EatingStats';
+import { ExerciseStatsType } from '@/components/ExerciseStats';
 
 const REPORT_CATEGORIES = [
   { id: 'mood', label: 'Mående', icon: Brain, prefKey: 'include_mood' },
@@ -42,9 +47,10 @@ const Reports = () => {
     medication: true,
   });
   
-  const { entries, isLoaded, getEntriesForMonth, getEntriesForYear, getStatsForYear } = useMoodData();
-  const { medications, activeMedications, isLoaded: medsLoaded } = useMedications();
+  const { entries, isLoaded, getEntriesForMonth, getEntriesForYear, getStatsForYear, getEntryForDate } = useMoodData();
+  const { medications, activeMedications, inactiveMedications, isLoaded: medsLoaded } = useMedications();
   const { toast } = useToast();
+  const { user } = useAuth();
 
   // Update selections based on preferences when they load
   useState(() => {
@@ -551,6 +557,15 @@ const Reports = () => {
       return;
     }
 
+    if (!user) {
+      toast({
+        title: 'Inte inloggad',
+        description: 'Du måste vara inloggad för att dela rapporter.',
+        variant: 'destructive',
+      });
+      return;
+    }
+
     if (type === 'month') {
       setSharingMonth(true);
     } else {
@@ -558,17 +573,165 @@ const Reports = () => {
     }
 
     try {
-      // Build URL to overview page with period and view parameters
       const period = type === 'month' ? selectedMonth : selectedYear;
-      const viewType = type === 'month' ? 'month' : 'year';
-      
-      // Include selected categories in URL
       const categories = Object.entries(selectedCategories)
         .filter(([, enabled]) => enabled)
-        .map(([key]) => key)
-        .join(',');
-      
-      const shareUrl = `${window.location.origin}/oversikt?period=${period}&view=${viewType}&show=${categories}`;
+        .map(([key]) => key);
+
+      // Build stats object based on selected categories
+      const statsData: {
+        mood?: MoodStatsType;
+        sleep?: SleepStatsType;
+        eating?: EatingStatsType;
+        exercise?: ExerciseStatsType;
+        entries?: Array<{
+          date: string;
+          mood?: string;
+          sleepQuality?: string;
+          eatingQuality?: string;
+          exercised?: boolean;
+          exerciseTypes?: string[];
+          comment?: string;
+        }>;
+        categories: string[];
+      } = { categories };
+
+      // Get entries for the period
+      let periodEntries: typeof entries = [];
+      if (type === 'month') {
+        const [year, month] = selectedMonth.split('-').map(Number);
+        const start = startOfMonth(new Date(year, month - 1));
+        const end = endOfMonth(new Date(year, month - 1));
+        periodEntries = entries.filter(e => {
+          const d = new Date(e.date);
+          return d >= start && d <= end;
+        });
+      } else {
+        periodEntries = getEntriesForYear(Number(selectedYear));
+      }
+
+      // Build mood stats if selected
+      if (categories.includes('mood')) {
+        let elevated = 0, stable = 0, depressed = 0;
+        periodEntries.forEach(e => {
+          if (e.mood === 'elevated') elevated++;
+          else if (e.mood === 'stable') stable++;
+          else if (e.mood === 'depressed') depressed++;
+        });
+        const total = elevated + stable + depressed;
+        const totalDays = type === 'month' 
+          ? endOfMonth(new Date(selectedMonth + '-01')).getDate()
+          : 365;
+        statsData.mood = {
+          elevated,
+          stable,
+          depressed,
+          unregistered: totalDays - total,
+          total,
+          totalDays,
+        };
+        
+        // Include daily entries
+        statsData.entries = periodEntries.map(e => ({
+          date: e.date,
+          mood: e.mood,
+          sleepQuality: e.sleepQuality,
+          eatingQuality: e.eatingQuality,
+          exercised: e.exercised,
+          exerciseTypes: e.exerciseTypes,
+          comment: e.comment,
+        }));
+      }
+
+      // Build sleep stats if selected
+      if (categories.includes('sleep')) {
+        let good = 0, bad = 0;
+        periodEntries.forEach(e => {
+          if (e.sleepQuality === 'good') good++;
+          else if (e.sleepQuality === 'bad') bad++;
+        });
+        const total = good + bad;
+        const totalDays = type === 'month' 
+          ? endOfMonth(new Date(selectedMonth + '-01')).getDate()
+          : 365;
+        statsData.sleep = {
+          good,
+          bad,
+          unregistered: totalDays - total,
+          total,
+          totalDays,
+        };
+      }
+
+      // Build eating stats if selected
+      if (categories.includes('eating')) {
+        let good = 0, bad = 0;
+        periodEntries.forEach(e => {
+          if (e.eatingQuality === 'good') good++;
+          else if (e.eatingQuality === 'bad') bad++;
+        });
+        const total = good + bad;
+        const totalDays = type === 'month' 
+          ? endOfMonth(new Date(selectedMonth + '-01')).getDate()
+          : 365;
+        statsData.eating = {
+          good,
+          bad,
+          unregistered: totalDays - total,
+          total,
+          totalDays,
+        };
+      }
+
+      // Build exercise stats if selected
+      if (categories.includes('exercise')) {
+        let exercised = 0, notExercised = 0;
+        periodEntries.forEach(e => {
+          if (e.exercised === true) exercised++;
+          else if (e.exercised === false) notExercised++;
+        });
+        const total = exercised + notExercised;
+        const totalDays = type === 'month' 
+          ? endOfMonth(new Date(selectedMonth + '-01')).getDate()
+          : 365;
+        statsData.exercise = {
+          exercised,
+          notExercised,
+          unregistered: totalDays - total,
+          total,
+          totalDays,
+        };
+      }
+
+      // Build medications if selected
+      const medicationsData = categories.includes('medication')
+        ? [...activeMedications, ...inactiveMedications].map(m => ({
+            name: m.name,
+            dosage: m.dosage,
+            started_at: m.started_at,
+            active: m.active,
+          }))
+        : null;
+
+      // Generate unique share key
+      const shareKey = crypto.randomUUID().replace(/-/g, '').slice(0, 16);
+
+      // Save to database
+      const { error: insertError } = await supabase
+        .from('shared_reports')
+        .insert([{
+          user_id: user.id,
+          share_key: shareKey,
+          report_type: type,
+          period,
+          stats: JSON.parse(JSON.stringify(statsData)),
+          medications: medicationsData ? JSON.parse(JSON.stringify(medicationsData)) : null,
+          expires_at: null,
+        }]);
+
+      if (insertError) throw insertError;
+
+      const shareUrl = `${window.location.origin}/rapport/${shareKey}`;
       
       // Try to copy to clipboard
       let copied = false;
@@ -601,7 +764,7 @@ const Reports = () => {
               {shareUrl}
             </code>
             <p className="text-xs text-muted-foreground mt-2">
-              OBS: Mottagaren behöver vara inloggad för att se din data.
+              Vem som helst med länken kan se rapporten – ingen inloggning krävs.
             </p>
           </div>
         ),
@@ -819,8 +982,8 @@ const Reports = () => {
               <div className="space-y-1">
                 <p className="text-sm font-medium">Så fungerar delning</p>
                 <p className="text-sm text-muted-foreground">
-                  Klicka på "Dela länk" för att skapa en URL till din Översikt-sida med vald period. 
-                  Du väljer vilka kategorier som ska visas. Mottagaren behöver vara inloggad för att se datan.
+                  Klicka på "Dela länk" för att skapa en publik rapport med dina valda kategorier. 
+                  Länken kan delas med vem som helst – ingen inloggning krävs för att se rapporten.
                   Du kan också ladda ner en PDF för utskrift eller e-post.
                 </p>
               </div>

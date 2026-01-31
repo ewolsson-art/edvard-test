@@ -21,6 +21,7 @@ import DoctorDashboard from "./pages/DoctorDashboard";
 import PatientDetail from "./pages/PatientDetail";
 import ManageConnections from "./pages/ManageConnections";
 import NotFound from "./pages/NotFound";
+import SharedReport from "./pages/SharedReport";
 
 const queryClient = new QueryClient();
 
@@ -107,6 +108,7 @@ const App = () => (
                 <AppLayout><ManageConnections /></AppLayout>
               </ProtectedRoute>
             } />
+            <Route path="/rapport/:shareKey" element={<SharedReport />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
