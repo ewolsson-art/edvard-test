@@ -1,15 +1,28 @@
 import { useState } from 'react';
 import { format, subMonths } from 'date-fns';
 import { sv } from 'date-fns/locale';
-import { Download, Share2, Calendar, BarChart3, Link as LinkIcon, Check, Loader2 } from 'lucide-react';
+import { Download, Share2, Calendar, BarChart3, Link as LinkIcon, Check, Loader2, Brain, Moon, Utensils, Dumbbell, Pill, Settings2 } from 'lucide-react';
 import { jsPDF } from 'jspdf';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Label } from '@/components/ui/label';
 import { useMoodData } from '@/hooks/useMoodData';
 import { useMedications } from '@/hooks/useMedications';
+import { useUserPreferences } from '@/hooks/useUserPreferences';
 import { useToast } from '@/hooks/use-toast';
 import { MOOD_LABELS, MoodType } from '@/types/mood';
+
+const REPORT_CATEGORIES = [
+  { id: 'mood', label: 'Mående', icon: Brain, prefKey: 'include_mood' },
+  { id: 'sleep', label: 'Sömn', icon: Moon, prefKey: 'include_sleep' },
+  { id: 'eating', label: 'Kost', icon: Utensils, prefKey: 'include_eating' },
+  { id: 'exercise', label: 'Träning', icon: Dumbbell, prefKey: 'include_exercise' },
+  { id: 'medication', label: 'Mediciner', icon: Pill, prefKey: 'include_medication' },
+] as const;
+
+type CategoryId = typeof REPORT_CATEGORIES[number]['id'];
 
 const Reports = () => {
   const [selectedMonth, setSelectedMonth] = useState(format(new Date(), 'yyyy-MM'));
@@ -19,9 +32,41 @@ const Reports = () => {
   const [copiedMonth, setCopiedMonth] = useState(false);
   const [copiedYear, setCopiedYear] = useState(false);
   
+  // Report content selections - initialize with user preferences
+  const { preferences } = useUserPreferences();
+  const [selectedCategories, setSelectedCategories] = useState<Record<CategoryId, boolean>>({
+    mood: true,
+    sleep: true,
+    eating: true,
+    exercise: true,
+    medication: true,
+  });
+  
   const { entries, isLoaded, getEntriesForMonth, getEntriesForYear, getStatsForYear } = useMoodData();
-  const { medications, isLoaded: medsLoaded } = useMedications();
+  const { medications, activeMedications, isLoaded: medsLoaded } = useMedications();
   const { toast } = useToast();
+
+  // Update selections based on preferences when they load
+  useState(() => {
+    if (preferences) {
+      setSelectedCategories({
+        mood: preferences.include_mood,
+        sleep: preferences.include_sleep,
+        eating: preferences.include_eating,
+        exercise: preferences.include_exercise,
+        medication: preferences.include_medication,
+      });
+    }
+  });
+
+  const toggleCategory = (id: CategoryId) => {
+    setSelectedCategories(prev => ({
+      ...prev,
+      [id]: !prev[id],
+    }));
+  };
+
+  const hasAnySelection = Object.values(selectedCategories).some(Boolean);
 
   // Generate month options (last 12 months)
   const monthOptions = Array.from({ length: 12 }, (_, i) => {
@@ -40,6 +85,14 @@ const Reports = () => {
   }));
 
   const downloadMonthlyPDF = () => {
+    if (!hasAnySelection) {
+      toast({
+        title: 'Välj minst en kategori',
+        description: 'Du måste välja minst en kategori att inkludera i rapporten.',
+      });
+      return;
+    }
+
     const [year, month] = selectedMonth.split('-').map(Number);
     const monthData = getEntriesForMonth(year, month - 1);
     const monthName = format(new Date(year, month - 1), 'MMMM yyyy', { locale: sv });
@@ -71,93 +124,96 @@ const Reports = () => {
     doc.setTextColor(0, 0, 0);
     y += 18;
 
-    // Stats overview box
-    doc.setFillColor(248, 250, 252);
-    doc.roundedRect(margin, y, contentWidth, 55, 4, 4, 'F');
-    doc.setDrawColor(226, 232, 240);
-    doc.roundedRect(margin, y, contentWidth, 55, 4, 4, 'S');
-    y += 12;
+    // Only include mood stats if selected
+    if (selectedCategories.mood && total > 0) {
+      // Stats overview box
+      doc.setFillColor(248, 250, 252);
+      doc.roundedRect(margin, y, contentWidth, 55, 4, 4, 'F');
+      doc.setDrawColor(226, 232, 240);
+      doc.roundedRect(margin, y, contentWidth, 55, 4, 4, 'S');
+      y += 12;
 
-    doc.setFontSize(11);
-    doc.setFont('helvetica', 'bold');
-    doc.text('Sammanfattning', margin + 10, y);
-    y += 10;
+      doc.setFontSize(11);
+      doc.setFont('helvetica', 'bold');
+      doc.text('Maende - Sammanfattning', margin + 10, y);
+      y += 10;
 
-    doc.setFontSize(10);
-    doc.setFont('helvetica', 'normal');
-    doc.text(`Registrerade dagar: ${total}`, margin + 10, y);
-    y += 12;
+      doc.setFontSize(10);
+      doc.setFont('helvetica', 'normal');
+      doc.text(`Registrerade dagar: ${total}`, margin + 10, y);
+      y += 12;
 
-    // Stats in columns
-    const elevatedPct = total > 0 ? Math.round((elevated / total) * 100) : 0;
-    const stablePct = total > 0 ? Math.round((stable / total) * 100) : 0;
-    const depressedPct = total > 0 ? Math.round((depressed / total) * 100) : 0;
+      // Stats in columns
+      const elevatedPct = total > 0 ? Math.round((elevated / total) * 100) : 0;
+      const stablePct = total > 0 ? Math.round((stable / total) * 100) : 0;
+      const depressedPct = total > 0 ? Math.round((depressed / total) * 100) : 0;
 
-    const colWidth = contentWidth / 3;
-    
-    // Elevated
-    doc.setFillColor(254, 215, 170);
-    doc.circle(margin + 15, y - 1, 3, 'F');
-    doc.setTextColor(194, 65, 12);
-    doc.setFont('helvetica', 'bold');
-    doc.text('Uppvarvad', margin + 22, y);
-    doc.setFont('helvetica', 'normal');
-    doc.text(`${elevated} dagar (${elevatedPct}%)`, margin + 22, y + 6);
-    
-    // Stable
-    doc.setFillColor(187, 247, 208);
-    doc.circle(margin + colWidth + 15, y - 1, 3, 'F');
-    doc.setTextColor(22, 101, 52);
-    doc.setFont('helvetica', 'bold');
-    doc.text('Stabil', margin + colWidth + 22, y);
-    doc.setFont('helvetica', 'normal');
-    doc.text(`${stable} dagar (${stablePct}%)`, margin + colWidth + 22, y + 6);
-    
-    // Depressed
-    doc.setFillColor(254, 202, 202);
-    doc.circle(margin + colWidth * 2 + 15, y - 1, 3, 'F');
-    doc.setTextColor(185, 28, 28);
-    doc.setFont('helvetica', 'bold');
-    doc.text('Nedstamd', margin + colWidth * 2 + 22, y);
-    doc.setFont('helvetica', 'normal');
-    doc.text(`${depressed} dagar (${depressedPct}%)`, margin + colWidth * 2 + 22, y + 6);
-    
-    doc.setTextColor(0, 0, 0);
-    y += 25;
-
-    // Visual bar chart
-    const barHeight = 14;
-    
-    doc.setFillColor(229, 231, 235);
-    doc.roundedRect(margin, y, contentWidth, barHeight, 3, 3, 'F');
-    
-    if (total > 0) {
-      let barX = margin;
+      const colWidth = contentWidth / 3;
       
-      if (elevated > 0) {
-        const elevatedWidth = (elevated / total) * contentWidth;
-        doc.setFillColor(251, 146, 60);
-        doc.roundedRect(barX, y, elevatedWidth, barHeight, 3, 3, 'F');
-        barX += elevatedWidth;
-      }
+      // Elevated
+      doc.setFillColor(254, 215, 170);
+      doc.circle(margin + 15, y - 1, 3, 'F');
+      doc.setTextColor(194, 65, 12);
+      doc.setFont('helvetica', 'bold');
+      doc.text('Uppvarvad', margin + 22, y);
+      doc.setFont('helvetica', 'normal');
+      doc.text(`${elevated} dagar (${elevatedPct}%)`, margin + 22, y + 6);
       
-      if (stable > 0) {
-        const stableWidth = (stable / total) * contentWidth;
-        doc.setFillColor(74, 222, 128);
-        doc.rect(barX, y, stableWidth, barHeight, 'F');
-        barX += stableWidth;
-      }
+      // Stable
+      doc.setFillColor(187, 247, 208);
+      doc.circle(margin + colWidth + 15, y - 1, 3, 'F');
+      doc.setTextColor(22, 101, 52);
+      doc.setFont('helvetica', 'bold');
+      doc.text('Stabil', margin + colWidth + 22, y);
+      doc.setFont('helvetica', 'normal');
+      doc.text(`${stable} dagar (${stablePct}%)`, margin + colWidth + 22, y + 6);
       
-      if (depressed > 0) {
-        const depressedWidth = (depressed / total) * contentWidth;
-        doc.setFillColor(248, 113, 113);
-        doc.roundedRect(barX, y, depressedWidth, barHeight, 3, 3, 'F');
+      // Depressed
+      doc.setFillColor(254, 202, 202);
+      doc.circle(margin + colWidth * 2 + 15, y - 1, 3, 'F');
+      doc.setTextColor(185, 28, 28);
+      doc.setFont('helvetica', 'bold');
+      doc.text('Nedstamd', margin + colWidth * 2 + 22, y);
+      doc.setFont('helvetica', 'normal');
+      doc.text(`${depressed} dagar (${depressedPct}%)`, margin + colWidth * 2 + 22, y + 6);
+      
+      doc.setTextColor(0, 0, 0);
+      y += 25;
+
+      // Visual bar chart
+      const barHeight = 14;
+      
+      doc.setFillColor(229, 231, 235);
+      doc.roundedRect(margin, y, contentWidth, barHeight, 3, 3, 'F');
+      
+      if (total > 0) {
+        let barX = margin;
+        
+        if (elevated > 0) {
+          const elevatedWidth = (elevated / total) * contentWidth;
+          doc.setFillColor(251, 146, 60);
+          doc.roundedRect(barX, y, elevatedWidth, barHeight, 3, 3, 'F');
+          barX += elevatedWidth;
+        }
+        
+        if (stable > 0) {
+          const stableWidth = (stable / total) * contentWidth;
+          doc.setFillColor(74, 222, 128);
+          doc.rect(barX, y, stableWidth, barHeight, 'F');
+          barX += stableWidth;
+        }
+        
+        if (depressed > 0) {
+          const depressedWidth = (depressed / total) * contentWidth;
+          doc.setFillColor(248, 113, 113);
+          doc.roundedRect(barX, y, depressedWidth, barHeight, 3, 3, 'F');
+        }
       }
+      y += 25;
     }
-    y += 25;
 
     // Medications section
-    if (medications.length > 0) {
+    if (selectedCategories.medication && activeMedications.length > 0) {
       doc.setFontSize(12);
       doc.setFont('helvetica', 'bold');
       doc.text('Mediciner', margin, y);
@@ -165,7 +221,7 @@ const Reports = () => {
       
       doc.setFontSize(9);
       doc.setFont('helvetica', 'normal');
-      medications.filter(m => m.active).forEach(med => {
+      activeMedications.forEach(med => {
         const startDate = format(new Date(med.started_at), 'd MMM yyyy', { locale: sv });
         doc.text(`• ${med.name} - ${med.dosage} (sedan ${startDate})`, margin + 5, y);
         y += 5;
@@ -173,62 +229,63 @@ const Reports = () => {
       y += 8;
     }
 
-    // Daily entries
-    doc.setFontSize(12);
-    doc.setFont('helvetica', 'bold');
-    doc.text('Dagliga registreringar', margin, y);
-    y += 10;
-
-    doc.setFontSize(9);
-    
-    const sortedEntries = Object.entries(monthData).sort(([a], [b]) => Number(a) - Number(b));
-    
-    sortedEntries.forEach(([day, mood]) => {
-      if (y > 270) {
-        doc.addPage();
-        y = 25;
-      }
-      
-      const entry = entries.find(e => {
-        const d = new Date(e.date);
-        return d.getFullYear() === year && d.getMonth() === month - 1 && d.getDate() === Number(day);
-      });
-      
-      // Color indicator
-      if (mood === 'elevated') doc.setFillColor(251, 146, 60);
-      else if (mood === 'stable') doc.setFillColor(74, 222, 128);
-      else doc.setFillColor(248, 113, 113);
-      
-      doc.circle(margin + 3, y - 1, 2, 'F');
-      
-      doc.setTextColor(0, 0, 0);
+    // Daily entries (mood)
+    if (selectedCategories.mood) {
+      doc.setFontSize(12);
       doc.setFont('helvetica', 'bold');
-      const dateText = `${day}/${month}`;
-      doc.text(dateText, margin + 8, y);
+      doc.text('Dagliga registreringar', margin, y);
+      y += 10;
+
+      doc.setFontSize(9);
       
-      doc.setFont('helvetica', 'normal');
-      doc.text(`- ${MOOD_LABELS[mood as MoodType]}`, margin + 20, y);
+      const sortedEntries = Object.entries(monthData).sort(([a], [b]) => Number(a) - Number(b));
       
-      if (entry?.comment) {
-        y += 5;
-        doc.setTextColor(100, 100, 100);
-        doc.setFontSize(8);
-        // Word wrap for long comments
-        const maxWidth = contentWidth - 15;
-        const lines = doc.splitTextToSize(`"${entry.comment}"`, maxWidth);
-        lines.forEach((line: string) => {
-          if (y > 270) {
-            doc.addPage();
-            y = 25;
-          }
-          doc.text(line, margin + 8, y);
-          y += 4;
+      sortedEntries.forEach(([day, mood]) => {
+        if (y > 270) {
+          doc.addPage();
+          y = 25;
+        }
+        
+        const entry = entries.find(e => {
+          const d = new Date(e.date);
+          return d.getFullYear() === year && d.getMonth() === month - 1 && d.getDate() === Number(day);
         });
-        doc.setFontSize(9);
-      }
-      
-      y += 6;
-    });
+        
+        // Color indicator
+        if (mood === 'elevated') doc.setFillColor(251, 146, 60);
+        else if (mood === 'stable') doc.setFillColor(74, 222, 128);
+        else doc.setFillColor(248, 113, 113);
+        
+        doc.circle(margin + 3, y - 1, 2, 'F');
+        
+        doc.setTextColor(0, 0, 0);
+        doc.setFont('helvetica', 'bold');
+        const dateText = `${day}/${month}`;
+        doc.text(dateText, margin + 8, y);
+        
+        doc.setFont('helvetica', 'normal');
+        doc.text(`- ${MOOD_LABELS[mood as MoodType]}`, margin + 20, y);
+        
+        if (entry?.comment) {
+          y += 5;
+          doc.setTextColor(100, 100, 100);
+          doc.setFontSize(8);
+          const maxWidth = contentWidth - 15;
+          const lines = doc.splitTextToSize(`"${entry.comment}"`, maxWidth);
+          lines.forEach((line: string) => {
+            if (y > 270) {
+              doc.addPage();
+              y = 25;
+            }
+            doc.text(line, margin + 8, y);
+            y += 4;
+          });
+          doc.setFontSize(9);
+        }
+        
+        y += 6;
+      });
+    }
 
     // Footer
     const pageCount = doc.getNumberOfPages();
@@ -253,6 +310,14 @@ const Reports = () => {
   };
 
   const downloadYearlyPDF = () => {
+    if (!hasAnySelection) {
+      toast({
+        title: 'Välj minst en kategori',
+        description: 'Du måste välja minst en kategori att inkludera i rapporten.',
+      });
+      return;
+    }
+
     const year = Number(selectedYear);
     const yearEntries = getEntriesForYear(year);
     const stats = getStatsForYear(year);
@@ -276,92 +341,95 @@ const Reports = () => {
     doc.setTextColor(0, 0, 0);
     y += 18;
 
-    // Stats overview box
-    doc.setFillColor(248, 250, 252);
-    doc.roundedRect(margin, y, contentWidth, 55, 4, 4, 'F');
-    doc.setDrawColor(226, 232, 240);
-    doc.roundedRect(margin, y, contentWidth, 55, 4, 4, 'S');
-    y += 12;
+    // Only include mood stats if selected
+    if (selectedCategories.mood) {
+      // Stats overview box
+      doc.setFillColor(248, 250, 252);
+      doc.roundedRect(margin, y, contentWidth, 55, 4, 4, 'F');
+      doc.setDrawColor(226, 232, 240);
+      doc.roundedRect(margin, y, contentWidth, 55, 4, 4, 'S');
+      y += 12;
 
-    doc.setFontSize(11);
-    doc.setFont('helvetica', 'bold');
-    doc.text('Arssammanfattning', margin + 10, y);
-    y += 10;
+      doc.setFontSize(11);
+      doc.setFont('helvetica', 'bold');
+      doc.text('Maende - Arssammanfattning', margin + 10, y);
+      y += 10;
 
-    doc.setFontSize(10);
-    doc.setFont('helvetica', 'normal');
-    doc.text(`Totalt registrerade dagar: ${stats.total}`, margin + 10, y);
-    y += 12;
+      doc.setFontSize(10);
+      doc.setFont('helvetica', 'normal');
+      doc.text(`Totalt registrerade dagar: ${stats.total}`, margin + 10, y);
+      y += 12;
 
-    const elevatedPct = stats.total > 0 ? Math.round((stats.elevated / stats.total) * 100) : 0;
-    const stablePct = stats.total > 0 ? Math.round((stats.stable / stats.total) * 100) : 0;
-    const depressedPct = stats.total > 0 ? Math.round((stats.depressed / stats.total) * 100) : 0;
+      const elevatedPct = stats.total > 0 ? Math.round((stats.elevated / stats.total) * 100) : 0;
+      const stablePct = stats.total > 0 ? Math.round((stats.stable / stats.total) * 100) : 0;
+      const depressedPct = stats.total > 0 ? Math.round((stats.depressed / stats.total) * 100) : 0;
 
-    const colWidth = contentWidth / 3;
-    
-    // Elevated
-    doc.setFillColor(254, 215, 170);
-    doc.circle(margin + 15, y - 1, 3, 'F');
-    doc.setTextColor(194, 65, 12);
-    doc.setFont('helvetica', 'bold');
-    doc.text('Uppvarvad', margin + 22, y);
-    doc.setFont('helvetica', 'normal');
-    doc.text(`${stats.elevated} dagar (${elevatedPct}%)`, margin + 22, y + 6);
-    
-    // Stable
-    doc.setFillColor(187, 247, 208);
-    doc.circle(margin + colWidth + 15, y - 1, 3, 'F');
-    doc.setTextColor(22, 101, 52);
-    doc.setFont('helvetica', 'bold');
-    doc.text('Stabil', margin + colWidth + 22, y);
-    doc.setFont('helvetica', 'normal');
-    doc.text(`${stats.stable} dagar (${stablePct}%)`, margin + colWidth + 22, y + 6);
-    
-    // Depressed
-    doc.setFillColor(254, 202, 202);
-    doc.circle(margin + colWidth * 2 + 15, y - 1, 3, 'F');
-    doc.setTextColor(185, 28, 28);
-    doc.setFont('helvetica', 'bold');
-    doc.text('Nedstamd', margin + colWidth * 2 + 22, y);
-    doc.setFont('helvetica', 'normal');
-    doc.text(`${stats.depressed} dagar (${depressedPct}%)`, margin + colWidth * 2 + 22, y + 6);
-    
-    doc.setTextColor(0, 0, 0);
-    y += 25;
-
-    // Visual bar chart
-    const barHeight = 14;
-    
-    doc.setFillColor(229, 231, 235);
-    doc.roundedRect(margin, y, contentWidth, barHeight, 3, 3, 'F');
-    
-    if (stats.total > 0) {
-      let barX = margin;
+      const colWidth = contentWidth / 3;
       
-      if (stats.elevated > 0) {
-        const elevatedWidth = (stats.elevated / stats.total) * contentWidth;
-        doc.setFillColor(251, 146, 60);
-        doc.roundedRect(barX, y, elevatedWidth, barHeight, 3, 3, 'F');
-        barX += elevatedWidth;
-      }
+      // Elevated
+      doc.setFillColor(254, 215, 170);
+      doc.circle(margin + 15, y - 1, 3, 'F');
+      doc.setTextColor(194, 65, 12);
+      doc.setFont('helvetica', 'bold');
+      doc.text('Uppvarvad', margin + 22, y);
+      doc.setFont('helvetica', 'normal');
+      doc.text(`${stats.elevated} dagar (${elevatedPct}%)`, margin + 22, y + 6);
       
-      if (stats.stable > 0) {
-        const stableWidth = (stats.stable / stats.total) * contentWidth;
-        doc.setFillColor(74, 222, 128);
-        doc.rect(barX, y, stableWidth, barHeight, 'F');
-        barX += stableWidth;
-      }
+      // Stable
+      doc.setFillColor(187, 247, 208);
+      doc.circle(margin + colWidth + 15, y - 1, 3, 'F');
+      doc.setTextColor(22, 101, 52);
+      doc.setFont('helvetica', 'bold');
+      doc.text('Stabil', margin + colWidth + 22, y);
+      doc.setFont('helvetica', 'normal');
+      doc.text(`${stats.stable} dagar (${stablePct}%)`, margin + colWidth + 22, y + 6);
       
-      if (stats.depressed > 0) {
-        const depressedWidth = (stats.depressed / stats.total) * contentWidth;
-        doc.setFillColor(248, 113, 113);
-        doc.roundedRect(barX, y, depressedWidth, barHeight, 3, 3, 'F');
+      // Depressed
+      doc.setFillColor(254, 202, 202);
+      doc.circle(margin + colWidth * 2 + 15, y - 1, 3, 'F');
+      doc.setTextColor(185, 28, 28);
+      doc.setFont('helvetica', 'bold');
+      doc.text('Nedstamd', margin + colWidth * 2 + 22, y);
+      doc.setFont('helvetica', 'normal');
+      doc.text(`${stats.depressed} dagar (${depressedPct}%)`, margin + colWidth * 2 + 22, y + 6);
+      
+      doc.setTextColor(0, 0, 0);
+      y += 25;
+
+      // Visual bar chart
+      const barHeight = 14;
+      
+      doc.setFillColor(229, 231, 235);
+      doc.roundedRect(margin, y, contentWidth, barHeight, 3, 3, 'F');
+      
+      if (stats.total > 0) {
+        let barX = margin;
+        
+        if (stats.elevated > 0) {
+          const elevatedWidth = (stats.elevated / stats.total) * contentWidth;
+          doc.setFillColor(251, 146, 60);
+          doc.roundedRect(barX, y, elevatedWidth, barHeight, 3, 3, 'F');
+          barX += elevatedWidth;
+        }
+        
+        if (stats.stable > 0) {
+          const stableWidth = (stats.stable / stats.total) * contentWidth;
+          doc.setFillColor(74, 222, 128);
+          doc.rect(barX, y, stableWidth, barHeight, 'F');
+          barX += stableWidth;
+        }
+        
+        if (stats.depressed > 0) {
+          const depressedWidth = (stats.depressed / stats.total) * contentWidth;
+          doc.setFillColor(248, 113, 113);
+          doc.roundedRect(barX, y, depressedWidth, barHeight, 3, 3, 'F');
+        }
       }
+      y += 25;
     }
-    y += 25;
 
     // Medications section
-    if (medications.length > 0) {
+    if (selectedCategories.medication && activeMedications.length > 0) {
       doc.setFontSize(12);
       doc.setFont('helvetica', 'bold');
       doc.text('Mediciner', margin, y);
@@ -369,7 +437,7 @@ const Reports = () => {
       
       doc.setFontSize(9);
       doc.setFont('helvetica', 'normal');
-      medications.filter(m => m.active).forEach(med => {
+      activeMedications.forEach(med => {
         const startDate = format(new Date(med.started_at), 'd MMM yyyy', { locale: sv });
         doc.text(`• ${med.name} - ${med.dosage} (sedan ${startDate})`, margin + 5, y);
         y += 5;
@@ -377,77 +445,79 @@ const Reports = () => {
       y += 8;
     }
 
-    // Monthly breakdown
-    doc.setFontSize(12);
-    doc.setFont('helvetica', 'bold');
-    doc.text('Manadsvis fordelning', margin, y);
-    y += 12;
+    // Monthly breakdown (mood)
+    if (selectedCategories.mood) {
+      doc.setFontSize(12);
+      doc.setFont('helvetica', 'bold');
+      doc.text('Manadsvis fordelning', margin, y);
+      y += 12;
 
-    const months = ['Januari', 'Februari', 'Mars', 'April', 'Maj', 'Juni', 
-                    'Juli', 'Augusti', 'September', 'Oktober', 'November', 'December'];
+      const months = ['Januari', 'Februari', 'Mars', 'April', 'Maj', 'Juni', 
+                      'Juli', 'Augusti', 'September', 'Oktober', 'November', 'December'];
 
-    // Table header
-    doc.setFillColor(248, 250, 252);
-    doc.rect(margin, y - 4, contentWidth, 8, 'F');
-    doc.setFontSize(8);
-    doc.setFont('helvetica', 'bold');
-    doc.text('Manad', margin + 5, y);
-    doc.text('Dagar', margin + 45, y);
-    doc.text('Fordelning', margin + 70, y);
-    y += 8;
+      // Table header
+      doc.setFillColor(248, 250, 252);
+      doc.rect(margin, y - 4, contentWidth, 8, 'F');
+      doc.setFontSize(8);
+      doc.setFont('helvetica', 'bold');
+      doc.text('Manad', margin + 5, y);
+      doc.text('Dagar', margin + 45, y);
+      doc.text('Fordelning', margin + 70, y);
+      y += 8;
 
-    doc.setFont('helvetica', 'normal');
+      doc.setFont('helvetica', 'normal');
 
-    months.forEach((monthName, i) => {
-      if (y > 265) {
-        doc.addPage();
-        y = 25;
-      }
-
-      const monthEntries = yearEntries.filter(e => new Date(e.date).getMonth() === i);
-      const elevated = monthEntries.filter(e => e.mood === 'elevated').length;
-      const stable = monthEntries.filter(e => e.mood === 'stable').length;
-      const depressed = monthEntries.filter(e => e.mood === 'depressed').length;
-      const monthTotal = elevated + stable + depressed;
-
-      doc.setFontSize(9);
-      doc.text(monthName, margin + 5, y);
-      doc.text(`${monthTotal}`, margin + 45, y);
-
-      // Mini bar for each month
-      const miniBarWidth = 90;
-      const miniBarHeight = 6;
-      const miniBarX = margin + 70;
-      
-      doc.setFillColor(229, 231, 235);
-      doc.roundedRect(miniBarX, y - 4, miniBarWidth, miniBarHeight, 2, 2, 'F');
-      
-      if (monthTotal > 0) {
-        let barX = miniBarX;
-        
-        if (elevated > 0) {
-          const w = (elevated / monthTotal) * miniBarWidth;
-          doc.setFillColor(251, 146, 60);
-          doc.roundedRect(barX, y - 4, w, miniBarHeight, 2, 2, 'F');
-          barX += w;
+      months.forEach((monthName, i) => {
+        if (y > 265) {
+          doc.addPage();
+          y = 25;
         }
-        
-        if (stable > 0) {
-          const w = (stable / monthTotal) * miniBarWidth;
-          doc.setFillColor(74, 222, 128);
-          doc.rect(barX, y - 4, w, miniBarHeight, 'F');
-          barX += w;
-        }
-        
-        if (depressed > 0) {
-          const w = (depressed / monthTotal) * miniBarWidth;
-          doc.setFillColor(248, 113, 113);
-          doc.roundedRect(barX, y - 4, w, miniBarHeight, 2, 2, 'F');
-        }
-      }
 
-      y += 10;
-    });
+        const monthEntries = yearEntries.filter(e => new Date(e.date).getMonth() === i);
+        const elevated = monthEntries.filter(e => e.mood === 'elevated').length;
+        const stable = monthEntries.filter(e => e.mood === 'stable').length;
+        const depressed = monthEntries.filter(e => e.mood === 'depressed').length;
+        const monthTotal = elevated + stable + depressed;
+
+        doc.setFontSize(9);
+        doc.text(monthName, margin + 5, y);
+        doc.text(`${monthTotal}`, margin + 45, y);
+
+        // Mini bar for each month
+        const miniBarWidth = 90;
+        const miniBarHeight = 6;
+        const miniBarX = margin + 70;
+        
+        doc.setFillColor(229, 231, 235);
+        doc.roundedRect(miniBarX, y - 4, miniBarWidth, miniBarHeight, 2, 2, 'F');
+        
+        if (monthTotal > 0) {
+          let barX = miniBarX;
+          
+          if (elevated > 0) {
+            const w = (elevated / monthTotal) * miniBarWidth;
+            doc.setFillColor(251, 146, 60);
+            doc.roundedRect(barX, y - 4, w, miniBarHeight, 2, 2, 'F');
+            barX += w;
+          }
+          
+          if (stable > 0) {
+            const w = (stable / monthTotal) * miniBarWidth;
+            doc.setFillColor(74, 222, 128);
+            doc.rect(barX, y - 4, w, miniBarHeight, 'F');
+            barX += w;
+          }
+          
+          if (depressed > 0) {
+            const w = (depressed / monthTotal) * miniBarWidth;
+            doc.setFillColor(248, 113, 113);
+            doc.roundedRect(barX, y - 4, w, miniBarHeight, 2, 2, 'F');
+          }
+        }
+
+        y += 10;
+      });
+    }
 
     // Footer on all pages
     const pageCount = doc.getNumberOfPages();
@@ -473,6 +543,14 @@ const Reports = () => {
 
 
   const shareReport = async (type: 'month' | 'year') => {
+    if (!hasAnySelection) {
+      toast({
+        title: 'Välj minst en kategori',
+        description: 'Du måste välja minst en kategori att dela.',
+      });
+      return;
+    }
+
     if (type === 'month') {
       setSharingMonth(true);
     } else {
@@ -480,11 +558,19 @@ const Reports = () => {
     }
 
     try {
-      // Create share URL to overview page with period parameter
+      // Build URL to overview page with period and view parameters
       const period = type === 'month' ? selectedMonth : selectedYear;
-      const shareUrl = `${window.location.origin}/oversikt?period=${period}&view=${type === 'month' ? 'month' : 'year'}`;
+      const viewType = type === 'month' ? 'month' : 'year';
       
-      // Try to copy to clipboard, but show link in toast either way
+      // Include selected categories in URL
+      const categories = Object.entries(selectedCategories)
+        .filter(([, enabled]) => enabled)
+        .map(([key]) => key)
+        .join(',');
+      
+      const shareUrl = `${window.location.origin}/oversikt?period=${period}&view=${viewType}&show=${categories}`;
+      
+      // Try to copy to clipboard
       let copied = false;
       try {
         await navigator.clipboard.writeText(shareUrl);
@@ -501,14 +587,22 @@ const Reports = () => {
         setTimeout(() => setCopiedYear(false), 5000);
       }
 
+      const selectedLabels = REPORT_CATEGORIES
+        .filter(cat => selectedCategories[cat.id])
+        .map(cat => cat.label.toLowerCase())
+        .join(', ');
+
       toast({
         title: copied ? "Länk kopierad!" : "Delningslänk skapad!",
         description: (
           <div className="space-y-2">
-            <p>{copied ? "Länken har kopierats." : "Kopiera länken nedan:"}</p>
+            <p>{copied ? `Länken inkluderar: ${selectedLabels}` : "Kopiera länken nedan:"}</p>
             <code className="block p-2 bg-muted rounded text-xs break-all select-all">
               {shareUrl}
             </code>
+            <p className="text-xs text-muted-foreground mt-2">
+              OBS: Mottagaren behöver vara inloggad för att se din data.
+            </p>
           </div>
         ),
         duration: 10000,
@@ -539,15 +633,71 @@ const Reports = () => {
 
   return (
     <div className="py-8 px-4 md:px-8">
-      <div className="max-w-4xl mx-auto">
-        <header className="mb-8">
+      <div className="max-w-4xl mx-auto space-y-6">
+        <header>
           <h1 className="font-display text-3xl md:text-4xl font-bold mb-2">
             Rapporter
           </h1>
           <p className="text-muted-foreground">
-            Exportera och dela dina måendedata med din läkare
+            Exportera och dela dina data med din läkare
           </p>
         </header>
+
+        {/* Category Selection */}
+        <Card className="glass-card">
+          <CardHeader className="pb-3">
+            <div className="flex items-center gap-3">
+              <div className="p-2 rounded-lg bg-primary/10">
+                <Settings2 className="h-5 w-5 text-primary" />
+              </div>
+              <div>
+                <CardTitle className="text-lg">Välj innehåll</CardTitle>
+                <CardDescription>Välj vad som ska inkluderas i rapporten och delningslänken</CardDescription>
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
+              {REPORT_CATEGORIES.map((category) => {
+                const Icon = category.icon;
+                const isSelected = selectedCategories[category.id];
+                const isAvailable = preferences ? preferences[category.prefKey as keyof typeof preferences] : true;
+                
+                return (
+                  <button
+                    key={category.id}
+                    onClick={() => toggleCategory(category.id)}
+                    disabled={!isAvailable}
+                    className={`flex flex-col items-center gap-2 p-4 rounded-xl border-2 transition-all ${
+                      !isAvailable 
+                        ? 'opacity-40 cursor-not-allowed border-border bg-muted/20'
+                        : isSelected
+                          ? 'border-primary bg-primary/5'
+                          : 'border-border hover:border-muted-foreground/30'
+                    }`}
+                  >
+                    <div className={`p-2 rounded-lg ${isSelected && isAvailable ? 'bg-primary/10' : 'bg-muted'}`}>
+                      <Icon className={`h-5 w-5 ${isSelected && isAvailable ? 'text-primary' : 'text-muted-foreground'}`} />
+                    </div>
+                    <span className={`text-sm font-medium ${isSelected && isAvailable ? '' : 'text-muted-foreground'}`}>
+                      {category.label}
+                    </span>
+                    <Checkbox
+                      checked={isSelected && (isAvailable === true)}
+                      className="pointer-events-none"
+                      disabled={isAvailable !== true}
+                    />
+                  </button>
+                );
+              })}
+            </div>
+            {!hasAnySelection && (
+              <p className="text-sm text-destructive mt-3 text-center">
+                Välj minst en kategori för att kunna skapa rapport eller dela länk
+              </p>
+            )}
+          </CardContent>
+        </Card>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Monthly Report Card */}
@@ -582,6 +732,7 @@ const Reports = () => {
                   variant="outline" 
                   className="flex-1 gap-2"
                   onClick={downloadMonthlyPDF}
+                  disabled={!hasAnySelection}
                 >
                   <Download className="h-4 w-4" />
                   Ladda ner PDF
@@ -589,7 +740,7 @@ const Reports = () => {
                 <Button 
                   className="flex-1 gap-2"
                   onClick={() => shareReport('month')}
-                  disabled={sharingMonth}
+                  disabled={sharingMonth || !hasAnySelection}
                 >
                   {sharingMonth ? (
                     <Loader2 className="h-4 w-4 animate-spin" />
@@ -636,6 +787,7 @@ const Reports = () => {
                   variant="outline" 
                   className="flex-1 gap-2"
                   onClick={downloadYearlyPDF}
+                  disabled={!hasAnySelection}
                 >
                   <Download className="h-4 w-4" />
                   Ladda ner PDF
@@ -643,7 +795,7 @@ const Reports = () => {
                 <Button 
                   className="flex-1 gap-2"
                   onClick={() => shareReport('year')}
-                  disabled={sharingYear}
+                  disabled={sharingYear || !hasAnySelection}
                 >
                   {sharingYear ? (
                     <Loader2 className="h-4 w-4 animate-spin" />
@@ -660,16 +812,16 @@ const Reports = () => {
         </div>
 
         {/* Info section */}
-        <Card className="mt-6 bg-muted/30 border-dashed">
+        <Card className="bg-muted/30 border-dashed">
           <CardContent className="pt-6">
             <div className="flex gap-3">
               <Share2 className="h-5 w-5 text-muted-foreground shrink-0 mt-0.5" />
               <div className="space-y-1">
-                <p className="text-sm font-medium">Tips för att dela med din läkare</p>
+                <p className="text-sm font-medium">Så fungerar delning</p>
                 <p className="text-sm text-muted-foreground">
-                  Klicka på "Dela länk" för att skapa en unik URL som du kan skicka till din läkare. 
-                  Länken visar en sammanfattning av ditt mående utan att din läkare behöver logga in. 
-                  Du kan också ladda ner en PDF för utskrift.
+                  Klicka på "Dela länk" för att skapa en URL till din Översikt-sida med vald period. 
+                  Du väljer vilka kategorier som ska visas. Mottagaren behöver vara inloggad för att se datan.
+                  Du kan också ladda ner en PDF för utskrift eller e-post.
                 </p>
               </div>
             </div>
