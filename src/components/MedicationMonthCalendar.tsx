@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { format, startOfMonth, endOfMonth, startOfWeek, endOfWeek, eachDayOfInterval, isSameMonth, isToday } from 'date-fns';
 import { sv } from 'date-fns/locale';
-import { Pill, Check, X } from 'lucide-react';
+import { Check, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { CalendarHeader } from './CalendarHeader';
 import {
@@ -69,19 +69,8 @@ export function MedicationMonthCalendar({
           const allTaken = medData && medData.taken >= medData.total;
           const hasMedications = medData && medData.medicationNames.length > 0;
 
-          const dayButton = (
-            <button
-              onClick={() => onDayClick?.(day)}
-              disabled={!isCurrentMonth}
-              className={cn(
-                "calendar-day relative flex flex-col items-center justify-center",
-                !isCurrentMonth && "opacity-30 cursor-not-allowed",
-                isCurrentMonth && !hasData && "calendar-day-empty cursor-pointer",
-                allTaken && "calendar-day-stable cursor-pointer",
-                hasData && !allTaken && "calendar-day-depressed cursor-pointer",
-                isTodayDate && "calendar-day-today"
-              )}
-            >
+          const buttonContent = (
+            <>
               <span className="text-xs">{dayOfMonth}</span>
               {hasData && (
                 <span className="absolute -bottom-0.5 left-1/2 -translate-x-1/2">
@@ -92,11 +81,29 @@ export function MedicationMonthCalendar({
                   )}
                 </span>
               )}
-            </button>
+            </>
+          );
+
+          const buttonClassName = cn(
+            "calendar-day relative flex flex-col items-center justify-center",
+            !isCurrentMonth && "opacity-30 cursor-not-allowed",
+            isCurrentMonth && !hasData && "calendar-day-empty cursor-pointer",
+            allTaken && "calendar-day-stable cursor-pointer",
+            hasData && !allTaken && "calendar-day-depressed cursor-pointer",
+            isTodayDate && "calendar-day-today"
           );
 
           if (!isCurrentMonth || !hasMedications) {
-            return <div key={day.toISOString()}>{dayButton}</div>;
+            return (
+              <button
+                key={day.toISOString()}
+                onClick={() => onDayClick?.(day)}
+                disabled={!isCurrentMonth}
+                className={buttonClassName}
+              >
+                {buttonContent}
+              </button>
+            );
           }
 
           return (
@@ -106,12 +113,14 @@ export function MedicationMonthCalendar({
               onOpenChange={(open) => setOpenPopover(open ? dayOfMonth : null)}
             >
               <PopoverTrigger asChild>
-                <div 
+                <button
+                  onClick={() => onDayClick?.(day)}
                   onMouseEnter={() => setOpenPopover(dayOfMonth)}
                   onMouseLeave={() => setOpenPopover(null)}
+                  className={buttonClassName}
                 >
-                  {dayButton}
-                </div>
+                  {buttonContent}
+                </button>
               </PopoverTrigger>
               <PopoverContent 
                 className="w-auto p-3" 
@@ -121,9 +130,9 @@ export function MedicationMonthCalendar({
               >
                 <div className="space-y-1">
                   <p className="text-xs font-medium text-muted-foreground mb-2">
-                    {format(day, 'd MMMM', { locale: sv })} – {medData.taken}/{medData.total} tagna
+                    {format(day, 'd MMMM', { locale: sv })} – {medData!.taken}/{medData!.total} tagna
                   </p>
-                  {medData.medicationNames.map((name, idx) => (
+                  {medData!.medicationNames.map((name, idx) => (
                     <div key={idx} className="flex items-center gap-2 text-sm">
                       <Check className="h-3 w-3 text-mood-stable" />
                       <span>{name}</span>
