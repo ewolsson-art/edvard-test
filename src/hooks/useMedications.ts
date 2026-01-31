@@ -201,10 +201,12 @@ export function useMedications() {
   }, [logs]);
 
   const activeMedications = medications.filter(m => m.active);
+  const inactiveMedications = medications.filter(m => !m.active);
 
   return {
     medications,
     activeMedications,
+    inactiveMedications,
     logs,
     isLoaded,
     addMedication,
