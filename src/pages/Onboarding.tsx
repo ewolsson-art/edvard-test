@@ -62,7 +62,17 @@ const Onboarding = () => {
     }));
   };
 
+  const hasAnySelection = Object.values(selections).some(Boolean);
+
   const handleSubmit = async () => {
+    if (!hasAnySelection) {
+      toast({
+        title: 'Välj minst ett alternativ',
+        description: 'Du behöver välja minst en kategori för din dagliga incheckning. Kryssa i det du vill ha med!',
+      });
+      return;
+    }
+
     setIsSubmitting(true);
     
     const { error } = await createPreferences(selections);
