@@ -1,13 +1,11 @@
-import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useDoctorConnections, PatientConnection } from '@/hooks/useDoctorConnections';
-import { PatientOverview } from '@/components/PatientOverview';
 import { Button } from '@/components/ui/button';
 import { Loader2, Users, UserCheck, Clock, Eye } from 'lucide-react';
-import { cn } from '@/lib/utils';
 
 const DoctorDashboard = () => {
+  const navigate = useNavigate();
   const { approvedConnections, pendingConnections, isLoading, updateConnectionStatus } = useDoctorConnections();
-  const [selectedPatient, setSelectedPatient] = useState<PatientConnection | null>(null);
 
   if (isLoading) {
     return (
@@ -115,11 +113,8 @@ const DoctorDashboard = () => {
               {approvedConnections.map((connection) => (
                 <div
                   key={connection.id}
-                  className={cn(
-                    "glass-card p-6 cursor-pointer transition-all hover:shadow-lg",
-                    selectedPatient?.id === connection.id && "ring-2 ring-primary"
-                  )}
-                  onClick={() => setSelectedPatient(connection)}
+                  className="glass-card p-6 cursor-pointer transition-all hover:shadow-lg"
+                  onClick={() => navigate(`/patient/${connection.patient_id}`)}
                 >
                   <div className="flex items-start justify-between mb-4">
                     <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
@@ -161,16 +156,6 @@ const DoctorDashboard = () => {
             </div>
           )}
         </section>
-
-        {/* Patient detail view */}
-        {selectedPatient && (
-          <section className="glass-card p-6">
-            <PatientOverview 
-              connection={selectedPatient} 
-              onBack={() => setSelectedPatient(null)} 
-            />
-          </section>
-        )}
       </div>
     </div>
   );
