@@ -308,7 +308,7 @@ const Overview = () => {
   }, [currentMonth, getEntryForDate]);
 
   const monthMedicationCalendarData = useMemo(() => {
-    const result: Record<number, { taken: number; total: number }> = {};
+    const result: Record<number, { taken: number; total: number; medicationNames: string[] }> = {};
     const start = startOfMonth(currentMonth);
     const end = endOfMonth(currentMonth);
     const days = eachDayOfInterval({ start, end });
@@ -320,7 +320,11 @@ const Overview = () => {
       const dateStr = format(day, 'yyyy-MM-dd');
       const meds = getMedicationsTakenOnDate(dateStr);
       if (meds.length > 0 || logs.some(log => log.date === dateStr)) {
-        result[day.getDate()] = { taken: meds.length, total: medCount };
+        result[day.getDate()] = { 
+          taken: meds.length, 
+          total: medCount,
+          medicationNames: meds.map(m => m.name),
+        };
       }
     });
     
