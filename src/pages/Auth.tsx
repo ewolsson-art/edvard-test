@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Mail, Lock, User, CheckCircle, Stethoscope, HeartPulse } from 'lucide-react';
+import { Loader2, Mail, Lock, User, CheckCircle, Stethoscope, HeartPulse, Sparkles } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { Logo } from '@/components/Logo';
 import { cn } from '@/lib/utils';
@@ -19,6 +19,24 @@ const authSchema = z.object({
   firstName: z.string().trim().max(50).optional(),
   lastName: z.string().trim().max(50).optional(),
 });
+
+// Animated Cloud Component
+const Cloud = ({ className, delay = 0, duration = 20 }: { className?: string; delay?: number; duration?: number }) => (
+  <div 
+    className={cn("absolute opacity-20", className)}
+    style={{
+      animation: `cloud-float ${duration}s ease-in-out infinite`,
+      animationDelay: `${delay}s`,
+    }}
+  >
+    <svg viewBox="0 0 100 50" className="w-full h-full fill-primary/30">
+      <ellipse cx="30" cy="35" rx="20" ry="15" />
+      <ellipse cx="50" cy="30" rx="25" ry="18" />
+      <ellipse cx="70" cy="35" rx="18" ry="13" />
+      <ellipse cx="45" cy="38" rx="22" ry="12" />
+    </svg>
+  </div>
+);
 
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -93,7 +111,6 @@ const Auth = () => {
           }
         }
       } else {
-        // Pass role as metadata so the database trigger can create the role
         const { error, data } = await signUp(email, password, { role: selectedRole });
         if (error) {
           if (error.message.includes('User already registered')) {
@@ -110,7 +127,6 @@ const Auth = () => {
             });
           }
         } else {
-          // Save profile data if user was created (role is handled by database trigger)
           if (data?.user) {
             await supabase.from('profiles').insert({
               user_id: data.user.id,
@@ -118,7 +134,6 @@ const Auth = () => {
               last_name: lastName.trim() || null,
             });
           }
-          // Show email confirmation screen
           setShowEmailConfirmation(true);
         }
       }
@@ -136,227 +151,252 @@ const Auth = () => {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 md:p-8 relative overflow-hidden bg-gradient-to-br from-background via-background to-primary/5">
-      {/* Decorative background elements */}
+    <div className="min-h-screen flex items-center justify-center p-4 md:p-8 relative overflow-hidden bg-gradient-to-br from-background via-primary/5 to-background">
+      {/* Animated clouds */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-primary/10 rounded-full blur-3xl" />
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-primary/5 rounded-full blur-3xl" />
+        <Cloud className="w-48 h-24 top-[10%] left-[5%]" delay={0} duration={25} />
+        <Cloud className="w-64 h-32 top-[20%] right-[10%]" delay={3} duration={30} />
+        <Cloud className="w-40 h-20 top-[60%] left-[15%]" delay={5} duration={22} />
+        <Cloud className="w-56 h-28 bottom-[15%] right-[5%]" delay={8} duration={28} />
+        <Cloud className="w-36 h-18 top-[40%] left-[60%]" delay={2} duration={20} />
+        <Cloud className="w-52 h-26 bottom-[30%] left-[40%]" delay={6} duration={24} />
+        
+        {/* Gradient orbs */}
+        <div className="absolute -top-40 -right-40 w-96 h-96 bg-primary/10 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-primary/5 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/3 rounded-full blur-3xl" />
       </div>
       
       <div className="w-full max-w-5xl flex flex-col md:flex-row items-center gap-12 md:gap-20 relative z-10">
-        <div className="flex-1 text-center md:text-left fade-in space-y-6">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium">
-            <HeartPulse className="w-4 h-4" />
-            <span>Din digitala hälsodagbok</span>
+        {/* Hero text */}
+        <div className="flex-1 text-center md:text-left space-y-8 animate-fade-in">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 text-primary text-sm font-medium backdrop-blur-sm">
+            <Sparkles className="w-4 h-4" />
+            <span>Stämningsdagbok för bipolär</span>
           </div>
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold text-foreground leading-tight tracking-tight">
-            Håll bättre koll på ditt mående
-          </h1>
-          <p className="text-lg md:text-xl text-muted-foreground max-w-lg">
-            Följ din hälsa, identifiera mönster och dela insikter med din vårdgivare – allt på ett ställe.
-          </p>
-          <p className="text-sm text-muted-foreground/80 max-w-lg border-l-2 border-primary/30 pl-4">
-            Utvecklad av och för personer med bipolär sjukdom – i samråd med läkare och experter.
-          </p>
+          
+          <div className="space-y-4">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold text-foreground leading-[1.1] tracking-tight">
+              Förstå ditt mående.
+              <br />
+              <span className="text-primary">Ta kontroll.</span>
+            </h1>
+            <p className="text-lg md:text-xl text-muted-foreground max-w-lg leading-relaxed">
+              Spåra mönster, identifiera triggers och dela insikter med din vårdgivare – allt i en vacker, enkel app.
+            </p>
+          </div>
+          
+          <div className="flex items-center gap-3 text-sm text-muted-foreground">
+            <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-muted/50 backdrop-blur-sm">
+              <HeartPulse className="w-4 h-4 text-primary" />
+              <span>Skapad av personer med bipolär</span>
+            </div>
+          </div>
         </div>
         
-        <div className="w-full md:w-auto md:min-w-[420px] fade-in">
-          <div className="bg-card/80 backdrop-blur-xl border border-border/50 rounded-3xl p-8 shadow-2xl shadow-primary/5">
-            <div className="text-center mb-8">
-              <div className="flex justify-center mb-6">
-                <Logo size="lg" />
+        {/* Login card */}
+        <div className="w-full md:w-auto md:min-w-[400px] animate-fade-in" style={{ animationDelay: '0.1s' }}>
+          <div className="relative">
+            {/* Card glow effect */}
+            <div className="absolute -inset-1 bg-gradient-to-r from-primary/20 via-primary/10 to-primary/20 rounded-[28px] blur-xl opacity-50" />
+            
+            <div className="relative bg-card/90 backdrop-blur-xl border border-border/40 rounded-[24px] p-8 shadow-2xl">
+              <div className="text-center mb-8">
+                <div className="flex justify-center mb-4">
+                  <Logo size="lg" />
+                </div>
+                {!showEmailConfirmation && (
+                  <p className="text-muted-foreground text-sm font-medium">
+                    {isLogin ? 'Välkommen tillbaka' : 'Skapa konto'}
+                  </p>
+                )}
               </div>
-              {!showEmailConfirmation && (
-                <p className="text-muted-foreground text-sm">
-                  {isLogin ? 'Välkommen tillbaka' : 'Skapa ditt konto'}
-                </p>
+
+              {showEmailConfirmation ? (
+                <div className="text-center space-y-6 py-4">
+                  <div className="flex justify-center">
+                    <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
+                      <CheckCircle className="w-8 h-8 text-primary" />
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <h2 className="text-xl font-semibold">Verifiera din e-post</h2>
+                    <p className="text-muted-foreground">
+                      Vi har skickat ett bekräftelsemail till:
+                    </p>
+                    <p className="font-medium text-foreground">{email}</p>
+                  </div>
+                  <p className="text-sm text-muted-foreground">
+                    Klicka på länken i mailet för att aktivera ditt konto. Det kan ta någon minut innan mailet kommer. Kolla även skräpposten om du inte hittar det.
+                  </p>
+                  <Button
+                    variant="outline"
+                    className="w-full"
+                    onClick={() => {
+                      setShowEmailConfirmation(false);
+                      setIsLogin(true);
+                      setPassword('');
+                    }}
+                  >
+                    Tillbaka till inloggning
+                  </Button>
+                </div>
+              ) : (
+                <>
+                  <form onSubmit={handleSubmit} className="space-y-5">
+                    {/* Role selection for signup */}
+                    {!isLogin && (
+                      <div className="space-y-3">
+                        <Label className="text-sm font-medium">Jag är</Label>
+                        <div className="grid grid-cols-2 gap-3">
+                          <button
+                            type="button"
+                            onClick={() => setSelectedRole('patient')}
+                            disabled={isSubmitting}
+                            className={cn(
+                              "flex flex-col items-center gap-2 p-4 rounded-xl border-2 transition-all duration-200",
+                              selectedRole === 'patient'
+                                ? "border-primary bg-primary/10 shadow-sm"
+                                : "border-border/60 hover:border-primary/40 hover:bg-muted/30"
+                            )}
+                          >
+                            <HeartPulse className={cn(
+                              "w-6 h-6 transition-colors",
+                              selectedRole === 'patient' ? "text-primary" : "text-muted-foreground"
+                            )} />
+                            <span className={cn(
+                              "font-medium text-sm transition-colors",
+                              selectedRole === 'patient' ? "text-primary" : "text-foreground"
+                            )}>Patient</span>
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => setSelectedRole('doctor')}
+                            disabled={isSubmitting}
+                            className={cn(
+                              "flex flex-col items-center gap-2 p-4 rounded-xl border-2 transition-all duration-200",
+                              selectedRole === 'doctor'
+                                ? "border-primary bg-primary/10 shadow-sm"
+                                : "border-border/60 hover:border-primary/40 hover:bg-muted/30"
+                            )}
+                          >
+                            <Stethoscope className={cn(
+                              "w-6 h-6 transition-colors",
+                              selectedRole === 'doctor' ? "text-primary" : "text-muted-foreground"
+                            )} />
+                            <span className={cn(
+                              "font-medium text-sm transition-colors",
+                              selectedRole === 'doctor' ? "text-primary" : "text-foreground"
+                            )}>Läkare</span>
+                          </button>
+                        </div>
+                      </div>
+                    )}
+
+                    {!isLogin && (
+                      <div className="grid grid-cols-2 gap-3">
+                        <div className="space-y-2">
+                          <Label htmlFor="firstName" className="text-sm font-medium">Förnamn</Label>
+                          <div className="relative">
+                            <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                            <Input
+                              id="firstName"
+                              type="text"
+                              placeholder="Anna"
+                              value={firstName}
+                              onChange={(e) => setFirstName(e.target.value)}
+                              className="pl-10 h-11 rounded-xl border-border/60 focus:border-primary"
+                              disabled={isSubmitting}
+                            />
+                          </div>
+                          {errors.firstName && (
+                            <p className="text-sm text-destructive">{errors.firstName}</p>
+                          )}
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="lastName" className="text-sm font-medium">Efternamn</Label>
+                          <div className="relative">
+                            <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                            <Input
+                              id="lastName"
+                              type="text"
+                              placeholder="Svensson"
+                              value={lastName}
+                              onChange={(e) => setLastName(e.target.value)}
+                              className="pl-10 h-11 rounded-xl border-border/60 focus:border-primary"
+                              disabled={isSubmitting}
+                            />
+                          </div>
+                          {errors.lastName && (
+                            <p className="text-sm text-destructive">{errors.lastName}</p>
+                          )}
+                        </div>
+                      </div>
+                    )}
+
+                    <div className="space-y-2">
+                      <Label htmlFor="email" className="text-sm font-medium">E-post</Label>
+                      <div className="relative">
+                        <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                        <Input
+                          id="email"
+                          type="email"
+                          placeholder="din@epost.se"
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
+                          className="pl-10 h-11 rounded-xl border-border/60 focus:border-primary"
+                          disabled={isSubmitting}
+                        />
+                      </div>
+                      {errors.email && (
+                        <p className="text-sm text-destructive">{errors.email}</p>
+                      )}
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="password" className="text-sm font-medium">Lösenord</Label>
+                      <div className="relative">
+                        <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                        <Input
+                          id="password"
+                          type="password"
+                          placeholder="••••••••"
+                          value={password}
+                          onChange={(e) => setPassword(e.target.value)}
+                          className="pl-10 h-11 rounded-xl border-border/60 focus:border-primary"
+                          disabled={isSubmitting}
+                        />
+                      </div>
+                      {errors.password && (
+                        <p className="text-sm text-destructive">{errors.password}</p>
+                      )}
+                    </div>
+
+                    <Button
+                      type="submit"
+                      className="w-full h-11 rounded-xl font-medium text-base shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all duration-200"
+                      disabled={isSubmitting}
+                    >
+                      {isSubmitting ? (
+                        <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                      ) : null}
+                      {isLogin ? 'Logga in' : 'Skapa konto'}
+                    </Button>
+                  </form>
+
+                  <div className="mt-6 text-center">
+                    <button
+                      type="button"
+                      onClick={() => setIsLogin(!isLogin)}
+                      className="text-sm text-muted-foreground hover:text-primary transition-colors font-medium"
+                      disabled={isSubmitting}
+                    >
+                      {isLogin ? 'Har du inget konto? Skapa ett' : 'Har du redan ett konto? Logga in'}
+                    </button>
+                  </div>
+                </>
               )}
             </div>
-
-          {showEmailConfirmation ? (
-            <div className="text-center space-y-6 py-4">
-              <div className="flex justify-center">
-                <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
-                  <CheckCircle className="w-8 h-8 text-primary" />
-                </div>
-              </div>
-              <div className="space-y-2">
-                <h2 className="text-xl font-semibold">Verifiera din e-post</h2>
-                <p className="text-muted-foreground">
-                  Vi har skickat ett bekräftelsemail till:
-                </p>
-                <p className="font-medium text-foreground">{email}</p>
-              </div>
-              <p className="text-sm text-muted-foreground">
-                Klicka på länken i mailet för att aktivera ditt konto. Det kan ta någon minut innan mailet kommer. Kolla även skräpposten om du inte hittar det.
-              </p>
-              <Button
-                variant="outline"
-                className="w-full"
-                onClick={() => {
-                  setShowEmailConfirmation(false);
-                  setIsLogin(true);
-                  setPassword('');
-                }}
-              >
-                Tillbaka till inloggning
-              </Button>
-            </div>
-          ) : (
-            <>
-              <form onSubmit={handleSubmit} className="space-y-4">
-                {/* Role selection for signup */}
-                {!isLogin && (
-                  <div className="space-y-2">
-                    <Label>Jag är</Label>
-                    <div className="grid grid-cols-2 gap-3">
-                      <button
-                        type="button"
-                        onClick={() => setSelectedRole('patient')}
-                        disabled={isSubmitting}
-                        className={cn(
-                          "flex flex-col items-center gap-2 p-4 rounded-lg border-2 transition-all",
-                          selectedRole === 'patient'
-                            ? "border-primary bg-primary/10"
-                            : "border-border hover:border-primary/50"
-                        )}
-                      >
-                        <HeartPulse className={cn(
-                          "w-6 h-6",
-                          selectedRole === 'patient' ? "text-primary" : "text-muted-foreground"
-                        )} />
-                        <span className={cn(
-                          "font-medium text-sm",
-                          selectedRole === 'patient' ? "text-primary" : "text-foreground"
-                        )}>Patient</span>
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setSelectedRole('doctor')}
-                        disabled={isSubmitting}
-                        className={cn(
-                          "flex flex-col items-center gap-2 p-4 rounded-lg border-2 transition-all",
-                          selectedRole === 'doctor'
-                            ? "border-primary bg-primary/10"
-                            : "border-border hover:border-primary/50"
-                        )}
-                      >
-                        <Stethoscope className={cn(
-                          "w-6 h-6",
-                          selectedRole === 'doctor' ? "text-primary" : "text-muted-foreground"
-                        )} />
-                        <span className={cn(
-                          "font-medium text-sm",
-                          selectedRole === 'doctor' ? "text-primary" : "text-foreground"
-                        )}>Läkare</span>
-                      </button>
-                    </div>
-                  </div>
-                )}
-
-                {!isLogin && (
-                  <div className="grid grid-cols-2 gap-3">
-                    <div className="space-y-2">
-                      <Label htmlFor="firstName">Förnamn</Label>
-                      <div className="relative">
-                        <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                        <Input
-                          id="firstName"
-                          type="text"
-                          placeholder="Förnamn"
-                          value={firstName}
-                          onChange={(e) => setFirstName(e.target.value)}
-                          className="pl-10"
-                          disabled={isSubmitting}
-                        />
-                      </div>
-                      {errors.firstName && (
-                        <p className="text-sm text-destructive">{errors.firstName}</p>
-                      )}
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="lastName">Efternamn</Label>
-                      <div className="relative">
-                        <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                        <Input
-                          id="lastName"
-                          type="text"
-                          placeholder="Efternamn"
-                          value={lastName}
-                          onChange={(e) => setLastName(e.target.value)}
-                          className="pl-10"
-                          disabled={isSubmitting}
-                        />
-                      </div>
-                      {errors.lastName && (
-                        <p className="text-sm text-destructive">{errors.lastName}</p>
-                      )}
-                    </div>
-                  </div>
-                )}
-
-                <div className="space-y-2">
-                  <Label htmlFor="email">E-post</Label>
-                  <div className="relative">
-                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                    <Input
-                      id="email"
-                      type="email"
-                      placeholder="din@epost.se"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      className="pl-10"
-                      disabled={isSubmitting}
-                    />
-                  </div>
-                  {errors.email && (
-                    <p className="text-sm text-destructive">{errors.email}</p>
-                  )}
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="password">Lösenord</Label>
-                  <div className="relative">
-                    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                    <Input
-                      id="password"
-                      type="password"
-                      placeholder="••••••••"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      className="pl-10"
-                      disabled={isSubmitting}
-                    />
-                  </div>
-                  {errors.password && (
-                    <p className="text-sm text-destructive">{errors.password}</p>
-                  )}
-                </div>
-
-                <Button
-                  type="submit"
-                  className="w-full"
-                  disabled={isSubmitting}
-                >
-                  {isSubmitting ? (
-                    <Loader2 className="w-4 h-4 animate-spin mr-2" />
-                  ) : null}
-                  {isLogin ? 'Logga in' : 'Skapa konto'}
-                </Button>
-              </form>
-
-              <div className="mt-6 text-center">
-                <button
-                  type="button"
-                  onClick={() => setIsLogin(!isLogin)}
-                  className="text-sm text-muted-foreground hover:text-primary transition-colors"
-                  disabled={isSubmitting}
-                >
-                  {isLogin ? 'Har du inget konto? Skapa ett' : 'Har du redan ett konto? Logga in'}
-                </button>
-              </div>
-            </>
-          )}
           </div>
         </div>
       </div>
