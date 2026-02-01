@@ -4,10 +4,12 @@ import { useMoodData } from '@/hooks/useMoodData';
 import { useMedications } from '@/hooks/useMedications';
 import { useProfile } from '@/hooks/useProfile';
 import { useUserPreferences } from '@/hooks/useUserPreferences';
+import { useStreak } from '@/hooks/useStreak';
 import { CheckinData } from '@/types/mood';
 
 const Index = () => {
   const {
+    entries,
     isLoaded,
     saveCheckin,
     getEntryForDate,
@@ -23,6 +25,7 @@ const Index = () => {
 
   const { firstName, isLoading: profileLoading } = useProfile();
   const { preferences, loading: prefsLoading } = useUserPreferences();
+  const streakData = useStreak(entries);
 
   const todayStr = format(new Date(), 'yyyy-MM-dd');
   const todayEntry = getEntryForDate(todayStr);
@@ -62,6 +65,7 @@ const Index = () => {
           onSaveCheckin={handleSaveCheckin}
           onToggleMedication={handleToggleMedication}
           preferences={preferences}
+          streakData={streakData}
         />
       </div>
     </div>

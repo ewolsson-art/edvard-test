@@ -10,6 +10,14 @@ import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Progress } from '@/components/ui/progress';
+import { StreakBadge } from '@/components/StreakBadge';
+
+interface StreakData {
+  currentStreak: number;
+  longestStreak: number;
+  hasCheckedInToday: boolean;
+  lastCheckinDate: string | null;
+}
 
 interface TodayCheckinProps {
   todayEntry: MoodEntry | undefined;
@@ -20,6 +28,7 @@ interface TodayCheckinProps {
   onSaveCheckin: (data: CheckinData) => Promise<boolean>;
   onToggleMedication: (medicationId: string, taken: boolean) => void;
   preferences: UserPreferences | null;
+  streakData: StreakData;
 }
 
 const moodButtons: { mood: MoodType; icon: typeof Zap; label: string; cssClass: string }[] = [
@@ -42,6 +51,7 @@ export function TodayCheckin({
   onSaveCheckin,
   onToggleMedication,
   preferences,
+  streakData,
 }: TodayCheckinProps) {
   const today = new Date();
   const formattedDate = format(today, "EEEE d MMMM", { locale: sv });
@@ -239,6 +249,17 @@ export function TodayCheckin({
           <h1 className="font-display text-2xl md:text-3xl font-bold mb-2 text-mood-stable">
             Du har checkat in!
           </h1>
+
+          {/* Streak badge */}
+          {streakData.currentStreak > 0 && (
+            <div className="max-w-md mx-auto mt-4">
+              <StreakBadge 
+                currentStreak={streakData.currentStreak}
+                longestStreak={streakData.longestStreak}
+                hasCheckedInToday={streakData.hasCheckedInToday}
+              />
+            </div>
+          )}
 
           {/* Encouragement message for depressed mood */}
           {todayEntry?.mood === 'depressed' && (
