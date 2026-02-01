@@ -24,12 +24,14 @@ const patientNavItems = [
   { title: "Mediciner", url: "/mediciner", icon: Pill },
   { title: "Chatt", url: "/chatt", icon: MessageCircle },
   { title: "Mina läkare", url: "/mina-lakare", icon: Users },
+  { title: "Min profil", url: "/profil", icon: UserCircle },
 ];
 
 const doctorNavItems = [
   { title: "Hem", url: "/lakare", icon: Home },
   { title: "Mina patienter", url: "/mina-patienter", icon: Users },
   { title: "Patientchatt", url: "/lakare-chatt", icon: MessagesSquare },
+  { title: "Min profil", url: "/profil", icon: UserCircle },
 ];
 
 export function AppSidebar() {
@@ -89,31 +91,6 @@ export function AppSidebar() {
       </SidebarContent>
 
       <SidebarFooter className="p-4 space-y-3">
-        {/* Profile link */}
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton asChild tooltip="Min profil">
-              <NavLink 
-                to="/profil" 
-                end 
-                className="flex items-center gap-3 px-3 py-2 rounded-lg transition-colors hover:bg-muted/50" 
-                activeClassName="bg-muted text-primary font-medium"
-              >
-                <UserCircle className="h-5 w-5 shrink-0" />
-                {!isCollapsed && (
-                  <div className="flex flex-col min-w-0">
-                    <span className="text-sm font-medium truncate">
-                      {fullName || firstName || 'Min profil'}
-                    </span>
-                    <span className="text-xs text-muted-foreground truncate">
-                      {user?.email}
-                    </span>
-                  </div>
-                )}
-              </NavLink>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        </SidebarMenu>
 
         {/* Logout button */}
         {!isCollapsed ? (
