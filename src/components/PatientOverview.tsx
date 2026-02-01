@@ -4,6 +4,7 @@ import { format, startOfMonth, endOfMonth, eachDayOfInterval, subMonths, addMont
 import { sv } from 'date-fns/locale';
 import { usePatientMoodData } from '@/hooks/usePatientMoodData';
 import { usePatientMedications } from '@/hooks/usePatientMedications';
+import { usePatientDiagnoses } from '@/hooks/usePatientDiagnoses';
 import { PatientConnection } from '@/hooks/useDoctorConnections';
 import { MoodStats } from '@/components/MoodStats';
 import { ExerciseStats, ExerciseStatsType } from '@/components/ExerciseStats';
@@ -22,7 +23,7 @@ import { EatingWeekCalendar } from '@/components/EatingWeekCalendar';
 import { EatingYearHeatmap } from '@/components/EatingYearHeatmap';
 import { YearHeatmap } from '@/components/YearHeatmap';
 import { MoodStats as MoodStatsType, ExerciseType } from '@/types/mood';
-import { Loader2, ChevronLeft, Radio, Pill, Check, X, MessageSquare, Moon, Utensils, Dumbbell } from 'lucide-react';
+import { Loader2, ChevronLeft, Radio, Pill, Check, X, MessageSquare, Moon, Utensils, Dumbbell, Stethoscope } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
@@ -51,8 +52,11 @@ export function PatientOverview({ connection, onBack, onToggleChatEnabled }: Pat
   const { activeMedications, inactiveMedications, isLoaded: medsLoaded } = usePatientMedications({
     patientId: connection.patient_id,
   });
+  const { diagnoses, isLoading: diagnosesLoading } = usePatientDiagnoses({
+    patientId: connection.patient_id,
+  });
 
-  const isLoaded = moodLoaded && medsLoaded;
+  const isLoaded = moodLoaded && medsLoaded && !diagnosesLoading;
 
   const patientName = useMemo(() => {
     if (connection.patient_profile?.first_name || connection.patient_profile?.last_name) {
@@ -384,6 +388,23 @@ export function PatientOverview({ connection, onBack, onToggleChatEnabled }: Pat
           </Button>
         </div>
       </div>
+
+      {/* Diagnoses section */}
+      {diagnoses.length > 0 && (
+        <div className="glass-card p-4">
+          <div className="flex items-center gap-3 mb-3">
+            <Stethoscope className="w-5 h-5 text-primary" />
+            <h3 className="font-medium">Diagnoser</h3>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {diagnoses.map((diagnosis) => (
+              <Badge key={diagnosis.id} variant="secondary" className="text-sm">
+                {diagnosis.name}
+              </Badge>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Chat toggle setting */}
       <div className="glass-card p-4">
