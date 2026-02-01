@@ -25,6 +25,8 @@ import {
 import { Loader2, User, Mail, Save, Trash2, AlertTriangle, Stethoscope, HeartPulse, Building2, Hospital, Brain, Moon, Utensils, Dumbbell, Pill, Settings as SettingsIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { DiagnosesSection } from '@/components/DiagnosesSection';
+import { MedicationsSection } from '@/components/MedicationsSection';
+import { DoctorConnectionsSection } from '@/components/DoctorConnectionsSection';
 
 const CHECKIN_OPTIONS = [
   {
@@ -407,6 +409,20 @@ const Profile = () => {
             </Button>
           </form>
         </div>
+
+        {/* Medications Section - Only for patients */}
+        {!isDoctor && (
+          <div className="glass-card p-6">
+            <MedicationsSection />
+          </div>
+        )}
+
+        {/* Doctor Connections Section - Only for patients */}
+        {!isDoctor && (
+          <div className="glass-card p-6">
+            <DoctorConnectionsSection />
+          </div>
+        )}
 
         {/* Diagnoses Section - Only for patients */}
         {!isDoctor && (
