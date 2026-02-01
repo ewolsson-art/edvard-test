@@ -346,6 +346,16 @@ export function TodayCheckin({
             <h1 className="font-display text-2xl md:text-3xl font-bold mb-2">
               {firstName ? `Hej ${firstName}! Hur har du mått idag?` : 'Hej! Hur har du mått idag?'}
             </h1>
+            {/* Show streak on initial check-in screen */}
+            {streakData.currentStreak > 0 && !isEditing && (
+              <div className="max-w-md mx-auto mt-4">
+                <StreakBadge 
+                  currentStreak={streakData.currentStreak}
+                  longestStreak={streakData.longestStreak}
+                  hasCheckedInToday={streakData.hasCheckedInToday}
+                />
+              </div>
+            )}
           </div>
 
           <div className="grid grid-cols-3 gap-6 md:gap-8 max-w-3xl mx-auto">
