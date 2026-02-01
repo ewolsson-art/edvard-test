@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
@@ -68,7 +67,6 @@ const FEATURES = [
 const TOTAL_STEPS = 3;
 
 const Onboarding = () => {
-  const navigate = useNavigate();
   const { toast } = useToast();
   const { createPreferences } = useUserPreferences();
   const [step, setStep] = useState(1);
@@ -130,7 +128,9 @@ const Onboarding = () => {
       description: 'Din dagbok är nu redo att använda.',
     });
     
-    navigate('/');
+    // Use window.location to force a full page reload
+    // This ensures all hooks re-initialize with the updated preferences
+    window.location.href = '/';
   };
 
   return (
