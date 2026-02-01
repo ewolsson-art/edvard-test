@@ -24,6 +24,7 @@ import {
 } from '@/components/ui/alert-dialog';
 import { Loader2, User, Mail, Save, Trash2, AlertTriangle, Stethoscope, HeartPulse, Building2, Hospital, Brain, Moon, Utensils, Dumbbell, Pill, Settings as SettingsIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { DiagnosesSection } from '@/components/DiagnosesSection';
 
 const CHECKIN_OPTIONS = [
   {
@@ -406,6 +407,13 @@ const Profile = () => {
             </Button>
           </form>
         </div>
+
+        {/* Diagnoses Section - Only for patients */}
+        {!isDoctor && (
+          <div className="glass-card p-6">
+            <DiagnosesSection />
+          </div>
+        )}
 
         {/* Check-in Preferences - Only for patients */}
         {!isDoctor && (
