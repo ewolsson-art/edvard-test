@@ -130,9 +130,9 @@ const Auth = () => {
           }
         }
       } else {
-        const { error, data } = await signUp(email, password, {
-          role: selectedRole,
-        });
+        // SECURITY: Never pass role from client - all new users start as patients
+        // Doctor roles must be granted through a separate admin/invitation process
+        const { error, data } = await signUp(email, password);
         if (error) {
           if (error.message.includes("User already registered")) {
             toast({
