@@ -200,12 +200,14 @@ export function useMedications() {
     return logs.some(l => l.medication_id === medicationId && l.date === date);
   }, [logs]);
 
-  const activeMedications = medications.filter(m => m.active);
+  const activeMedications = medications.filter(m => m.active && m.frequency !== 'as_needed');
+  const asNeededMedications = medications.filter(m => m.active && m.frequency === 'as_needed');
   const inactiveMedications = medications.filter(m => !m.active);
 
   return {
     medications,
     activeMedications,
+    asNeededMedications,
     inactiveMedications,
     logs,
     isLoaded,
