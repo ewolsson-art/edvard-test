@@ -205,8 +205,7 @@ const Auth = () => {
             <p className="text-lg md:text-xl text-muted-foreground max-w-lg leading-relaxed">Din interaktiva och personliga stämningsdagbok ger dig bättre koll på ditt mående - och delar valfri data med din läkare</p>
           </div>
           
-          <div className="flex items-center gap-3 text-sm text-muted-foreground">
-            <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-muted/50 backdrop-blur-sm">
+          <div className="flex items-center gap-3 text-sm text-muted-foreground">Din interaktiva och personliga stämningsdagbok ger dig bättre koll på ditt mående - och delar valfri data med din läkare<div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-muted/50 backdrop-blur-sm">
               <HeartPulse className="w-4 h-4 text-primary" />
               <span>Skapad av och för personer med bipolär sjukdom - i samråd med läkare och experter</span>
             </div>
@@ -315,7 +314,7 @@ const Auth = () => {
                   </form>
 
                   <div className="mt-6 text-center">
-                    <button type="button" onClick={() => setIsLogin(!isLogin)} className="text-sm text-muted-foreground hover:text-primary transition-colors font-medium" disabled={isSubmitting}>
+                    <button type="button" onClick={() => setIsLogin(!isLogin)} className="text-sm text-muted-foreground hover:text-primary transition-colors font-sans font-semibold" disabled={isSubmitting}>
                       {isLogin ? 'Har du inget konto? Skapa ett' : 'Har du redan ett konto? Logga in'}
                     </button>
                   </div>
