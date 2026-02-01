@@ -60,28 +60,37 @@ const SharedReport = () => {
       }
 
       try {
-        const { data, error: fetchError } = await supabase
-          .from('shared_reports')
-          .select('*')
-          .eq('share_key', shareKey)
-          .maybeSingle();
+        // Use secure edge function instead of direct database access
+        const response = await supabase.functions.invoke('get-shared-report', {
+          body: null,
+          headers: {},
+        });
 
-        if (fetchError) throw fetchError;
+        // The edge function uses query params, so we need to call it differently
+        const functionUrl = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/get-shared-report?share_key=${encodeURIComponent(shareKey)}`;
+        const fetchResponse = await fetch(functionUrl, {
+          method: 'GET',
+          headers: {
+            'apikey': import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
+            'Content-Type': 'application/json',
+          },
+        });
 
-        if (!data) {
-          setError('Rapporten hittades inte eller har gått ut.');
+        if (!fetchResponse.ok) {
+          const errorData = await fetchResponse.json();
+          if (fetchResponse.status === 404) {
+            setError('Rapporten hittades inte eller har gått ut.');
+          } else if (fetchResponse.status === 410) {
+            setError('Denna delningslänk har gått ut.');
+          } else {
+            setError(errorData.error || 'Kunde inte hämta rapporten.');
+          }
           setLoading(false);
           return;
         }
 
-        // Check if expired
-        if (data.expires_at && new Date(data.expires_at) < new Date()) {
-          setError('Denna delningslänk har gått ut.');
-          setLoading(false);
-          return;
-        }
-
-        setReport(data as unknown as SharedReportData);
+        const data = await fetchResponse.json();
+        setReport(data as SharedReportData);
       } catch (err) {
         console.error('Error fetching report:', err);
         setError('Kunde inte hämta rapporten.');

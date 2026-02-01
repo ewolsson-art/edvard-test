@@ -32,30 +32,13 @@ export function useUserRole() {
     fetchRole();
   }, [user]);
 
-  const setUserRole = useCallback(async (newRole: AppRole) => {
-    if (!user) return false;
-
-    // Use upsert to handle both insert and update in one operation
-    const { error } = await supabase
-      .from('user_roles')
-      .upsert(
-        {
-          user_id: user.id,
-          role: newRole,
-        },
-        {
-          onConflict: 'user_id',
-        }
-      );
-
-    if (error) {
-      console.error('Error setting role:', error);
-      return false;
-    }
-
-    setRole(newRole);
-    return true;
-  }, [user]);
+  // SECURITY: Role changes are no longer allowed from the client
+  // All new users are automatically assigned 'patient' role by the database trigger
+  // Doctor roles must be granted through a separate admin/invitation process
+  const setUserRole = useCallback(async (_newRole: AppRole) => {
+    console.warn('Role changes are not allowed from the client for security reasons');
+    return false;
+  }, []);
 
   const isDoctor = role === 'doctor';
   const isPatient = role === 'patient';
