@@ -1,54 +1,88 @@
-import { useState } from 'react';
-import { Plus, X, Stethoscope } from 'lucide-react';
+import { useState, useMemo } from 'react';
+import { Plus, X, Stethoscope, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { useDiagnoses } from '@/hooks/useDiagnoses';
+import { cn } from '@/lib/utils';
 
 const COMMON_DIAGNOSES = [
   'Bipolär sjukdom typ 1',
   'Bipolär sjukdom typ 2',
   'Cyklotymi',
   'Depression',
-  'Ångest',
+  'Generaliserat ångestsyndrom (GAD)',
+  'Paniksyndrom',
+  'Social fobi',
   'ADHD',
+  'ADD',
+  'Autismspektrumtillstånd (AST)',
   'PTSD',
+  'Borderline personlighetssyndrom',
+  'OCD (Tvångssyndrom)',
+  'Ätstörning',
+  'Schizofreni',
+  'Schizoaffektivt syndrom',
 ];
 
 export const DiagnosesSection = () => {
   const { diagnoses, isLoading, addDiagnosis, removeDiagnosis } = useDiagnoses();
   const [showForm, setShowForm] = useState(false);
-  const [customName, setCustomName] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showSuggestions, setShowSuggestions] = useState(false);
 
-  const handleAddCommon = async (name: string) => {
-    // Don't add if already exists
-    if (diagnoses.some(d => d.name.toLowerCase() === name.toLowerCase())) {
+  const existingNames = diagnoses.map(d => d.name.toLowerCase());
+
+  // Filter suggestions based on search query
+  const suggestions = useMemo(() => {
+    if (!searchQuery.trim()) return [];
+    
+    const query = searchQuery.toLowerCase();
+    return COMMON_DIAGNOSES.filter(
+      name => 
+        name.toLowerCase().includes(query) && 
+        !existingNames.includes(name.toLowerCase())
+    ).slice(0, 5);
+  }, [searchQuery, existingNames]);
+
+  const handleAddDiagnosis = async (name: string) => {
+    if (!name.trim()) return;
+    
+    // Check if already exists
+    if (existingNames.includes(name.toLowerCase().trim())) {
       return;
     }
+
     setIsSubmitting(true);
-    await addDiagnosis(name);
+    const success = await addDiagnosis(name);
+    if (success) {
+      setSearchQuery('');
+      setShowForm(false);
+      setShowSuggestions(false);
+    }
     setIsSubmitting(false);
   };
 
-  const handleAddCustom = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!customName.trim()) return;
+    await handleAddDiagnosis(searchQuery);
+  };
 
-    setIsSubmitting(true);
-    const success = await addDiagnosis(customName);
-    if (success) {
-      setCustomName('');
-      setShowForm(false);
-    }
-    setIsSubmitting(false);
+  const handleSelectSuggestion = async (name: string) => {
+    await handleAddDiagnosis(name);
   };
 
   const handleRemove = async (id: string) => {
     setIsSubmitting(true);
     await removeDiagnosis(id);
     setIsSubmitting(false);
+  };
+
+  const handleCancel = () => {
+    setShowForm(false);
+    setSearchQuery('');
+    setShowSuggestions(false);
   };
 
   if (isLoading) {
@@ -64,11 +98,6 @@ export const DiagnosesSection = () => {
       </div>
     );
   }
-
-  const existingNames = diagnoses.map(d => d.name.toLowerCase());
-  const availableCommon = COMMON_DIAGNOSES.filter(
-    name => !existingNames.includes(name.toLowerCase())
-  );
 
   return (
     <div className="space-y-4">
@@ -93,7 +122,7 @@ export const DiagnosesSection = () => {
               <button
                 onClick={() => handleRemove(diagnosis.id)}
                 disabled={isSubmitting}
-                className="ml-1 p-0.5 rounded-full hover:bg-destructive/20 transition-colors"
+                className="ml-1 p-0.5 rounded-full hover:bg-destructive/20 text-destructive transition-colors"
                 aria-label={`Ta bort ${diagnosis.name}`}
               >
                 <X className="w-3.5 h-3.5" />
@@ -103,67 +132,85 @@ export const DiagnosesSection = () => {
         </div>
       )}
 
-      {diagnoses.length === 0 && (
+      {diagnoses.length === 0 && !showForm && (
         <p className="text-sm text-muted-foreground">
           Inga diagnoser tillagda ännu.
         </p>
       )}
 
-      {/* Quick add common diagnoses */}
-      {availableCommon.length > 0 && (
-        <div className="space-y-2">
-          <Label className="text-sm text-muted-foreground">Lägg till vanliga:</Label>
-          <div className="flex flex-wrap gap-2">
-            {availableCommon.map((name) => (
-              <Button
-                key={name}
-                variant="outline"
-                size="sm"
-                onClick={() => handleAddCommon(name)}
-                disabled={isSubmitting}
-                className="text-xs"
-              >
-                <Plus className="w-3 h-3 mr-1" />
-                {name}
-              </Button>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* Custom diagnosis form */}
+      {/* Add diagnosis form */}
       {showForm ? (
-        <form onSubmit={handleAddCustom} className="flex gap-2">
-          <Input
-            value={customName}
-            onChange={(e) => setCustomName(e.target.value)}
-            placeholder="Ange diagnos..."
-            className="flex-1"
-            autoFocus
-          />
-          <Button type="submit" disabled={isSubmitting || !customName.trim()}>
-            Lägg till
-          </Button>
-          <Button
-            type="button"
-            variant="ghost"
-            onClick={() => {
-              setShowForm(false);
-              setCustomName('');
-            }}
-          >
-            Avbryt
-          </Button>
-        </form>
+        <div className="space-y-3">
+          <form onSubmit={handleSubmit} className="relative">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+              <Input
+                value={searchQuery}
+                onChange={(e) => {
+                  setSearchQuery(e.target.value);
+                  setShowSuggestions(true);
+                }}
+                onFocus={() => setShowSuggestions(true)}
+                placeholder="Sök diagnos..."
+                className="pl-10"
+                autoFocus
+                disabled={isSubmitting}
+              />
+            </div>
+            
+            {/* Suggestions dropdown */}
+            {showSuggestions && suggestions.length > 0 && (
+              <div className="absolute z-10 w-full mt-1 bg-popover border border-border rounded-lg shadow-lg overflow-hidden">
+                {suggestions.map((suggestion) => (
+                  <button
+                    key={suggestion}
+                    type="button"
+                    onClick={() => handleSelectSuggestion(suggestion)}
+                    disabled={isSubmitting}
+                    className={cn(
+                      "w-full text-left px-4 py-2.5 text-sm hover:bg-muted transition-colors",
+                      "focus:bg-muted focus:outline-none"
+                    )}
+                  >
+                    {suggestion}
+                  </button>
+                ))}
+              </div>
+            )}
+          </form>
+
+          <div className="flex gap-2">
+            <Button 
+              onClick={handleSubmit}
+              disabled={isSubmitting || !searchQuery.trim()}
+              className="flex-1"
+            >
+              <Plus className="w-4 h-4 mr-2" />
+              Lägg till "{searchQuery.trim() || '...'}"
+            </Button>
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              onClick={handleCancel}
+              className="text-destructive hover:text-destructive hover:bg-destructive/10"
+            >
+              <X className="w-5 h-5" />
+            </Button>
+          </div>
+          
+          <p className="text-xs text-muted-foreground">
+            Börja skriva för att se förslag, eller skriv in din diagnos och klicka på lägg till.
+          </p>
+        </div>
       ) : (
         <Button
           variant="outline"
-          size="sm"
           onClick={() => setShowForm(true)}
-          className="mt-2"
+          className="gap-2"
         >
-          <Plus className="w-4 h-4 mr-2" />
-          Lägg till annan diagnos
+          <Plus className="w-4 h-4" />
+          Lägg till diagnos
         </Button>
       )}
     </div>
