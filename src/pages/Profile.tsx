@@ -28,6 +28,7 @@ import { DiagnosesSection } from '@/components/DiagnosesSection';
 import { MedicationsSection } from '@/components/MedicationsSection';
 import { DoctorConnectionsSection } from '@/components/DoctorConnectionsSection';
 import { DelegatesSection } from '@/components/DelegatesSection';
+import { AvatarUpload } from '@/components/AvatarUpload';
 
 const CHECKIN_OPTIONS = [
   {
@@ -70,7 +71,7 @@ const profileSchema = z.object({
 
 const Profile = () => {
   const { user, signOut } = useAuth();
-  const { profile, isLoading: profileLoading } = useProfile();
+  const { profile, isLoading: profileLoading, avatarUrl, updateAvatarUrl } = useProfile();
   const { isDoctor, isLoading: roleLoading } = useUserRole();
   const { preferences, loading: preferencesLoading, updatePreferences } = useUserPreferences();
   const { toast } = useToast();
@@ -286,6 +287,15 @@ const Profile = () => {
         </header>
 
         <div className="glass-card p-6 space-y-6">
+          {/* Avatar Section */}
+          <div className="flex justify-center pb-6 border-b border-border">
+            <AvatarUpload
+              currentAvatarUrl={avatarUrl}
+              onAvatarChange={updateAvatarUrl}
+              firstName={firstName}
+              lastName={lastName}
+            />
+          </div>
           {/* Account Type Section */}
           <div className="space-y-3">
             <Label className="text-muted-foreground">Kontotyp</Label>
