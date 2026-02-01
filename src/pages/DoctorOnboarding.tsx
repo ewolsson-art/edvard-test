@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { 
@@ -55,7 +54,6 @@ const WORKFLOW_STEPS = [
 const TOTAL_STEPS = 3;
 
 const DoctorOnboarding = () => {
-  const navigate = useNavigate();
   const { toast } = useToast();
   const { user } = useAuth();
   const [step, setStep] = useState(1);
@@ -107,7 +105,9 @@ const DoctorOnboarding = () => {
       description: 'Din läkardashboard är nu redo.',
     });
     
-    navigate('/lakare');
+    // Use window.location to force a full page reload
+    // This ensures all hooks re-initialize with the updated preferences
+    window.location.href = '/lakare';
   };
 
   return (

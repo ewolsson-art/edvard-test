@@ -97,8 +97,8 @@ export const useUserPreferences = () => {
     }
   };
 
-  // Doctors don't need onboarding - they don't do check-ins
-  const needsOnboarding = !loading && !roleLoading && user && !isDoctor && !preferences?.onboarding_completed;
+  // Check if user needs onboarding (both patients and doctors need to complete their respective onboarding)
+  const needsOnboarding = !loading && !roleLoading && user && !preferences?.onboarding_completed;
 
   return {
     preferences,
