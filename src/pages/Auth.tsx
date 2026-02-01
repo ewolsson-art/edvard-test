@@ -205,9 +205,7 @@ const Auth = () => {
               <br />
               <span className="text-primary">Bättre insikt </span>
             </h1>
-            <p className="text-lg md:text-xl text-muted-foreground max-w-lg leading-relaxed">
-              Håll bättre koll på ditt mående      
-            </p>
+            <p className="text-lg md:text-xl text-muted-foreground max-w-lg leading-relaxed">Få bättre koll på ditt mående och dela valfri data med din läkare</p>
           </div>
           
           <div className="flex items-center gap-3 text-sm text-muted-foreground">
