@@ -43,7 +43,7 @@ export function Logo({
       </div>
       
       {showText && <span className={cn("font-logo font-semibold tracking-tight bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent", sizes[size].text)}>
-          ​Bipolic  
+          Checkin'  
         </span>}
     </div>;
 }
