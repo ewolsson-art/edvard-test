@@ -155,6 +155,9 @@ const Auth = () => {
           <p className="text-lg md:text-xl text-muted-foreground max-w-lg">
             Följ din hälsa, identifiera mönster och dela insikter med din vårdgivare – allt på ett ställe.
           </p>
+          <p className="text-sm text-muted-foreground/80 max-w-lg border-l-2 border-primary/30 pl-4">
+            Utvecklad av och för personer med bipolär sjukdom – i samråd med läkare och experter.
+          </p>
         </div>
         
         <div className="w-full md:w-auto md:min-w-[420px] fade-in">
