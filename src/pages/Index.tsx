@@ -5,6 +5,7 @@ import { useMedications } from '@/hooks/useMedications';
 import { useProfile } from '@/hooks/useProfile';
 import { useUserPreferences } from '@/hooks/useUserPreferences';
 import { useStreak } from '@/hooks/useStreak';
+import { StreakBadge } from '@/components/StreakBadge';
 import { CheckinData } from '@/types/mood';
 
 const Index = () => {
@@ -55,7 +56,18 @@ const Index = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center py-8 px-4">
-      <div className="w-full max-w-2xl">
+      <div className="w-full max-w-2xl relative">
+        {/* Subtle streak badge in top right */}
+        {streakData.currentStreak > 0 && (
+          <div className="absolute -top-2 right-0 z-10">
+            <StreakBadge 
+              currentStreak={streakData.currentStreak}
+              longestStreak={streakData.longestStreak}
+              hasCheckedInToday={streakData.hasCheckedInToday}
+              variant="compact"
+            />
+          </div>
+        )}
         <TodayCheckin 
           todayEntry={todayEntry} 
           activeMedications={activeMedications}
