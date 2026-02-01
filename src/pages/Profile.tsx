@@ -27,6 +27,7 @@ import { cn } from '@/lib/utils';
 import { DiagnosesSection } from '@/components/DiagnosesSection';
 import { MedicationsSection } from '@/components/MedicationsSection';
 import { DoctorConnectionsSection } from '@/components/DoctorConnectionsSection';
+import { DelegatesSection } from '@/components/DelegatesSection';
 
 const CHECKIN_OPTIONS = [
   {
@@ -409,6 +410,13 @@ const Profile = () => {
             </Button>
           </form>
         </div>
+
+        {/* Delegates Section - Only for doctors */}
+        {isDoctor && (
+          <div className="glass-card p-6">
+            <DelegatesSection />
+          </div>
+        )}
 
         {/* Medications Section - Only for patients */}
         {!isDoctor && (

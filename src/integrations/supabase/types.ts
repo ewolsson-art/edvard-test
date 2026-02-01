@@ -73,6 +73,45 @@ export type Database = {
         }
         Relationships: []
       }
+      doctor_delegates: {
+        Row: {
+          can_read_messages: boolean
+          can_send_messages: boolean
+          created_at: string
+          delegate_email: string
+          delegate_id: string | null
+          delegate_name: string | null
+          doctor_id: string
+          id: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          can_read_messages?: boolean
+          can_send_messages?: boolean
+          created_at?: string
+          delegate_email: string
+          delegate_id?: string | null
+          delegate_name?: string | null
+          doctor_id: string
+          id?: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          can_read_messages?: boolean
+          can_send_messages?: boolean
+          created_at?: string
+          delegate_email?: string
+          delegate_id?: string | null
+          delegate_name?: string | null
+          doctor_id?: string
+          id?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       medication_logs: {
         Row: {
           created_at: string
