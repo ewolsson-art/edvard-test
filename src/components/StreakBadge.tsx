@@ -51,9 +51,9 @@ export function StreakBadge({
             </div>
           </TooltipTrigger>
           <TooltipContent>
-            <p>{currentStreak} dagar i rad!</p>
+            <p>Du har checkat in {currentStreak} {currentStreak === 1 ? 'dag' : 'dagar'} i rad!</p>
             {longestStreak > currentStreak && (
-              <p className="text-xs text-muted-foreground">Bäst: {longestStreak} dagar</p>
+              <p className="text-xs text-muted-foreground">Ditt bästa: {longestStreak} dagar</p>
             )}
           </TooltipContent>
         </Tooltip>
@@ -91,7 +91,7 @@ export function StreakBadge({
               ? "text-orange-600 dark:text-orange-400" 
               : "text-primary"
           )}>
-            {currentStreak} {currentStreak === 1 ? 'dag' : 'dagar'} i rad
+            Du har checkat in {currentStreak} {currentStreak === 1 ? 'dag' : 'dagar'} i rad
           </span>
           {isNewRecord && currentStreak > 1 && (
             <span className="flex items-center gap-1 text-xs font-medium text-yellow-600 dark:text-yellow-400 bg-yellow-500/20 px-2 py-0.5 rounded-full">
