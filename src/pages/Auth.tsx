@@ -194,10 +194,7 @@ const Auth = () => {
       <div className="w-full max-w-5xl flex flex-col md:flex-row items-center gap-12 md:gap-20 relative z-10">
         {/* Hero text */}
         <div className="flex-1 text-center md:text-left space-y-8 animate-fade-in">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 text-primary text-sm font-medium backdrop-blur-sm">
-            <Sparkles className="w-4 h-4" />
-            <span>Din interaktiva och personliga stämningsdagbok</span>
-          </div>
+          
           
           <div className="space-y-4">
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold text-foreground leading-[1.1] tracking-tight">
@@ -205,7 +202,7 @@ const Auth = () => {
               <br />
               <span className="text-primary">Bättre insikt </span>
             </h1>
-            <p className="text-lg md:text-xl text-muted-foreground max-w-lg leading-relaxed">Få bättre koll på ditt mående och dela valfri data med din läkare</p>
+            <p className="text-lg md:text-xl text-muted-foreground max-w-lg leading-relaxed">Din interaktiva och personliga stämningsdagbok ger dig bättre koll på ditt mående - och delar valfri data med din läkare</p>
           </div>
           
           <div className="flex items-center gap-3 text-sm text-muted-foreground">
