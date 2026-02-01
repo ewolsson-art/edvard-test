@@ -267,6 +267,22 @@
     animation: float 6s ease-in-out infinite;
   }
 
+  /* Cloud animation for auth page */
+  @keyframes cloud-float {
+    0%, 100% {
+      transform: translateX(0) translateY(0);
+    }
+    25% {
+      transform: translateX(10px) translateY(-8px);
+    }
+    50% {
+      transform: translateX(5px) translateY(-15px);
+    }
+    75% {
+      transform: translateX(-5px) translateY(-8px);
+    }
+  }
+
   /* Success animation */
   @keyframes circleGrow {
     0% {
