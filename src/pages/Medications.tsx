@@ -61,6 +61,7 @@ const Medications = () => {
   const {
     medications,
     activeMedications,
+    asNeededMedications,
     inactiveMedications,
     isLoaded,
     addMedication,
@@ -323,6 +324,80 @@ const Medications = () => {
                   <CardContent className="pt-0">
                     <div className="divide-y divide-border">
                       {activeMedications.map(med => (
+                        <MedicationRow
+                          key={med.id}
+                          med={med}
+                          editingId={editingId}
+                          editName={editName}
+                          editDosage={editDosage}
+                          editStartDate={editStartDate}
+                          editFrequency={editFrequency}
+                          setEditName={setEditName}
+                          setEditDosage={setEditDosage}
+                          setEditStartDate={setEditStartDate}
+                          setEditFrequency={setEditFrequency}
+                          handleEdit={handleEdit}
+                          handleSaveEdit={handleSaveEdit}
+                          setEditingId={setEditingId}
+                          toggleMedicationActive={toggleMedicationActive}
+                          deleteMedication={deleteMedication}
+                          formatStartDate={formatStartDate}
+                        />
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
+
+              {/* As-needed medications */}
+              {asNeededMedications.length > 0 && (
+                <Card className="glass-card">
+                  <CardHeader className="pb-3">
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 rounded-full bg-amber-500" />
+                      <CardTitle className="text-base">Vid behov</CardTitle>
+                      <Badge variant="secondary" className="ml-auto">{asNeededMedications.length}</Badge>
+                    </div>
+                    <CardDescription className="text-sm">
+                      Mediciner du tar vid behov – logga när du tar dem
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="pt-0">
+                    <div className="space-y-2 mb-4">
+                      {asNeededMedications.map(med => {
+                        const isTaken = isMedicationTakenOnDate(med.id, today);
+                        return (
+                          <button
+                            key={med.id}
+                            onClick={() => handleToggleTaken(med.id)}
+                            className={`w-full flex items-center gap-4 p-4 rounded-xl border-2 transition-all text-left ${
+                              isTaken 
+                                ? 'border-amber-500/30 bg-amber-500/5' 
+                                : 'border-border bg-muted/30 hover:border-amber-500/30 hover:bg-amber-500/5'
+                            }`}
+                          >
+                            <div className={`flex-shrink-0 w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors ${
+                              isTaken 
+                                ? 'border-amber-500 bg-amber-500' 
+                                : 'border-muted-foreground/30'
+                            }`}>
+                              {isTaken && <Check className="h-4 w-4 text-white" />}
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <p className={`font-medium ${isTaken ? 'text-muted-foreground' : ''}`}>
+                                {med.name}
+                              </p>
+                              <p className="text-sm text-muted-foreground">{med.dosage}</p>
+                            </div>
+                            {isTaken && (
+                              <span className="text-xs text-amber-600 font-medium">Tagen idag ✓</span>
+                            )}
+                          </button>
+                        );
+                      })}
+                    </div>
+                    <div className="divide-y divide-border border-t pt-4">
+                      {asNeededMedications.map(med => (
                         <MedicationRow
                           key={med.id}
                           med={med}
