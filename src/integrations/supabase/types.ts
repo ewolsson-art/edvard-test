@@ -49,6 +49,30 @@ export type Database = {
           },
         ]
       }
+      diagnoses: {
+        Row: {
+          created_at: string
+          diagnosed_at: string | null
+          id: string
+          name: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          diagnosed_at?: string | null
+          id?: string
+          name: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          diagnosed_at?: string | null
+          id?: string
+          name?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       medication_logs: {
         Row: {
           created_at: string
