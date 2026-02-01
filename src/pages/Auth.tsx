@@ -196,7 +196,7 @@ const Auth = () => {
         <div className="flex-1 text-center md:text-left space-y-8 animate-fade-in">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 text-primary text-sm font-medium backdrop-blur-sm">
             <Sparkles className="w-4 h-4" />
-            <span>Stämningsdagbok för personer med bipolär sjukdom</span>
+            <span>Din interaktiva och personliga stämningsdagbok</span>
           </div>
           
           <div className="space-y-4">
