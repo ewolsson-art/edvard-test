@@ -172,7 +172,7 @@ const Auth = () => {
         <div className="flex-1 text-center md:text-left space-y-8 animate-fade-in">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 text-primary text-sm font-medium backdrop-blur-sm">
             <Sparkles className="w-4 h-4" />
-            <span>Stämningsdagbok för bipolär</span>
+            <span>Stämningsdagbok för personer med bipolär sjukdom</span>
           </div>
           
           <div className="space-y-4">
@@ -182,14 +182,14 @@ const Auth = () => {
               <span className="text-primary">Ta kontroll.</span>
             </h1>
             <p className="text-lg md:text-xl text-muted-foreground max-w-lg leading-relaxed">
-              Spåra mönster, identifiera triggers och dela insikter med din vårdgivare – allt i en vacker, enkel app.
+              Få bättre koll och förståelse på ditt mående.
             </p>
           </div>
           
           <div className="flex items-center gap-3 text-sm text-muted-foreground">
             <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-muted/50 backdrop-blur-sm">
               <HeartPulse className="w-4 h-4 text-primary" />
-              <span>Skapad av personer med bipolär</span>
+              <span>Skapad av och för personer med bipolär sjukdom - i samråd med läkare och experter</span>
             </div>
           </div>
         </div>
