@@ -124,7 +124,7 @@ const Onboarding = () => {
     }
 
     toast({
-      title: 'Välkommen till Between Clouds!',
+      title: 'Välkommen till Friendly!',
       description: 'Din dagbok är nu redo att använda.',
     });
     
@@ -136,16 +136,16 @@ const Onboarding = () => {
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-background via-primary/5 to-background">
       {/* Header with progress */}
-      <header className="p-4 md:p-6">
+      <header className="p-3">
         <div className="max-w-lg mx-auto">
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center justify-between mb-2">
             <Logo />
-            <span className="text-sm text-muted-foreground font-medium">
+            <span className="text-xs text-muted-foreground font-medium">
               Steg {step} av {TOTAL_STEPS}
             </span>
           </div>
           {/* Progress bar */}
-          <div className="h-1.5 bg-muted rounded-full overflow-hidden">
+          <div className="h-1 bg-muted rounded-full overflow-hidden">
             <div 
               className="h-full bg-primary rounded-full transition-all duration-500 ease-out"
               style={{ width: `${(step / TOTAL_STEPS) * 100}%` }}
@@ -155,40 +155,39 @@ const Onboarding = () => {
       </header>
 
       {/* Main content */}
-      <main className="flex-1 flex items-center justify-center p-4 md:p-8">
+      <main className="flex-1 flex items-center justify-center p-3">
         <div className="w-full max-w-lg">
           {/* Step 1: Welcome */}
           {step === 1 && (
             <div className="animate-fade-in">
-              <div className="text-center mb-8">
-                <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 mb-6">
-                  <Sparkles className="w-8 h-8 text-primary" />
+              <div className="text-center mb-4">
+                <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-primary/10 mb-3">
+                  <Sparkles className="w-6 h-6 text-primary" />
                 </div>
-                <h1 className="font-display text-3xl md:text-4xl font-bold mb-3">
-                  Välkommen till Between Clouds
+                <h1 className="font-display text-2xl md:text-3xl font-bold mb-2">
+                  Välkommen till Friendly
                 </h1>
-                <p className="text-lg text-muted-foreground max-w-md mx-auto">
-                  Din personliga stämningsdagbok för att förstå och följa ditt mående över tid
+                <p className="text-sm text-muted-foreground max-w-md mx-auto">
+                  Din personliga stämningsdagbok för att förstå och följa ditt mående
                 </p>
               </div>
 
-              <div className="glass-card p-6 mb-8">
-                <h2 className="font-semibold text-lg mb-4">Vad du kan göra:</h2>
-                <div className="space-y-4">
+              <div className="glass-card p-4 mb-4">
+                <h2 className="font-semibold text-sm mb-3">Vad du kan göra:</h2>
+                <div className="space-y-2.5">
                   {FEATURES.map((feature, index) => {
                     const Icon = feature.icon;
                     return (
                       <div 
                         key={index} 
-                        className="flex items-start gap-4"
-                        style={{ animationDelay: `${index * 100}ms` }}
+                        className="flex items-start gap-3"
                       >
-                        <div className="p-2.5 rounded-xl bg-primary/10 shrink-0">
-                          <Icon className="w-5 h-5 text-primary" />
+                        <div className="p-2 rounded-lg bg-primary/10 shrink-0">
+                          <Icon className="w-4 h-4 text-primary" />
                         </div>
                         <div>
-                          <h3 className="font-medium">{feature.title}</h3>
-                          <p className="text-sm text-muted-foreground">{feature.description}</p>
+                          <h3 className="font-medium text-sm">{feature.title}</h3>
+                          <p className="text-xs text-muted-foreground">{feature.description}</p>
                         </div>
                       </div>
                     );
@@ -196,14 +195,14 @@ const Onboarding = () => {
                 </div>
               </div>
 
-              <div className="bg-muted/50 rounded-xl p-4 text-center mb-8">
-                <p className="text-sm text-muted-foreground">
+              <div className="bg-muted/50 rounded-lg p-3 text-center mb-4">
+                <p className="text-xs text-muted-foreground">
                   <span className="font-medium text-foreground">Skapad av och för personer med bipolär sjukdom</span>
-                  <br />i samråd med läkare och experter
+                  {' '}i samråd med läkare och experter
                 </p>
               </div>
 
-              <Button onClick={handleNext} className="w-full" size="lg">
+              <Button onClick={handleNext} className="w-full" size="default">
                 Kom igång
                 <ArrowRight className="w-4 h-4 ml-2" />
               </Button>
@@ -213,17 +212,17 @@ const Onboarding = () => {
           {/* Step 2: Choose categories */}
           {step === 2 && (
             <div className="animate-fade-in">
-              <div className="text-center mb-6">
-                <h1 className="font-display text-2xl md:text-3xl font-bold mb-2">
+              <div className="text-center mb-3">
+                <h1 className="font-display text-xl md:text-2xl font-bold mb-1">
                   Skapa din incheckning
                 </h1>
-                <p className="text-muted-foreground">
+                <p className="text-sm text-muted-foreground">
                   Välj vad du vill ha med i din dagliga incheckning
                 </p>
               </div>
 
-              <div className="space-y-3 mb-6">
-                {CHECKIN_OPTIONS.map((option, index) => {
+              <div className="space-y-2 mb-3">
+                {CHECKIN_OPTIONS.map((option) => {
                   const Icon = option.icon;
                   const isChecked = selections[option.id as keyof typeof selections];
                   
@@ -231,13 +230,12 @@ const Onboarding = () => {
                     <div
                       key={option.id}
                       className={cn(
-                        "flex items-center gap-4 p-4 rounded-xl border-2 transition-all cursor-pointer",
+                        "flex items-center gap-3 p-2.5 rounded-lg border-2 transition-all cursor-pointer",
                         isChecked 
-                          ? 'border-primary bg-primary/5 shadow-sm' 
+                          ? 'border-primary bg-primary/5' 
                           : 'border-border bg-card hover:border-primary/30'
                       )}
                       onClick={() => handleToggle(option.id)}
-                      style={{ animationDelay: `${index * 50}ms` }}
                     >
                       <Checkbox
                         id={option.id}
@@ -246,27 +244,27 @@ const Onboarding = () => {
                         className="pointer-events-none"
                       />
                       <div className={cn(
-                        "p-2.5 rounded-xl transition-colors",
+                        "p-1.5 rounded-lg transition-colors",
                         isChecked ? 'bg-primary/10' : 'bg-muted'
                       )}>
                         <Icon className={cn(
-                          "w-5 h-5 transition-colors",
+                          "w-4 h-4 transition-colors",
                           isChecked ? 'text-primary' : 'text-muted-foreground'
                         )} />
                       </div>
                       <div className="flex-1 min-w-0">
                         <Label 
                           htmlFor={option.id} 
-                          className="font-medium cursor-pointer flex items-center gap-2 flex-wrap"
+                          className="text-sm font-medium cursor-pointer flex items-center gap-2"
                         >
                           {option.label}
                           {option.recommended && (
-                            <span className="text-xs bg-primary/10 text-primary px-2 py-0.5 rounded-full whitespace-nowrap">
+                            <span className="text-[10px] bg-primary/10 text-primary px-1.5 py-0.5 rounded-full">
                               Rekommenderas
                             </span>
                           )}
                         </Label>
-                        <p className="text-sm text-muted-foreground line-clamp-2">
+                        <p className="text-xs text-muted-foreground line-clamp-1">
                           {option.description}
                         </p>
                       </div>
@@ -276,33 +274,33 @@ const Onboarding = () => {
               </div>
 
               {!hasAnySelection && (
-                <p className="text-sm text-destructive text-center mb-4">
+                <p className="text-xs text-destructive text-center mb-2">
                   Välj minst en kategori för att fortsätta
                 </p>
               )}
 
-              <p className="text-sm text-muted-foreground text-center mb-6">
+              <p className="text-xs text-muted-foreground text-center mb-3">
                 Du kan ändra detta senare i inställningarna
               </p>
 
-              <div className="flex gap-3">
+              <div className="flex gap-2">
                 <Button 
                   variant="outline" 
                   onClick={handleBack}
                   className="flex-1"
-                  size="lg"
+                  size="default"
                 >
-                  <ArrowLeft className="w-4 h-4 mr-2" />
+                  <ArrowLeft className="w-4 h-4 mr-1" />
                   Tillbaka
                 </Button>
                 <Button 
                   onClick={handleNext} 
                   className="flex-1"
-                  size="lg"
+                  size="default"
                   disabled={!hasAnySelection}
                 >
                   Fortsätt
-                  <ArrowRight className="w-4 h-4 ml-2" />
+                  <ArrowRight className="w-4 h-4 ml-1" />
                 </Button>
               </div>
             </div>
@@ -311,64 +309,64 @@ const Onboarding = () => {
           {/* Step 3: Confirm & Start */}
           {step === 3 && (
             <div className="animate-fade-in">
-              <div className="text-center mb-8">
-                <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-green-100 dark:bg-green-900/30 mb-6">
-                  <CheckCircle2 className="w-8 h-8 text-green-600 dark:text-green-400" />
+              <div className="text-center mb-4">
+                <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-green-100 dark:bg-green-900/30 mb-3">
+                  <CheckCircle2 className="w-6 h-6 text-green-600 dark:text-green-400" />
                 </div>
-                <h1 className="font-display text-2xl md:text-3xl font-bold mb-2">
+                <h1 className="font-display text-xl md:text-2xl font-bold mb-1">
                   Allt är redo!
                 </h1>
-                <p className="text-muted-foreground">
+                <p className="text-sm text-muted-foreground">
                   Här är en sammanfattning av din incheckning
                 </p>
               </div>
 
-              <div className="glass-card p-6 mb-6">
-                <h2 className="font-semibold mb-4">Din incheckning innehåller:</h2>
-                <div className="grid grid-cols-2 gap-3">
+              <div className="glass-card p-4 mb-4">
+                <h2 className="font-semibold text-sm mb-3">Din incheckning innehåller:</h2>
+                <div className="grid grid-cols-2 gap-2">
                   {CHECKIN_OPTIONS.filter(opt => selections[opt.id as keyof typeof selections]).map((option) => {
                     const Icon = option.icon;
                     return (
                       <div 
                         key={option.id}
-                        className="flex items-center gap-2 p-3 rounded-lg bg-primary/5 border border-primary/10"
+                        className="flex items-center gap-2 p-2 rounded-lg bg-primary/5 border border-primary/10"
                       >
-                        <Icon className="w-4 h-4 text-primary" />
-                        <span className="text-sm font-medium">{option.label}</span>
+                        <Icon className="w-3.5 h-3.5 text-primary" />
+                        <span className="text-xs font-medium">{option.label}</span>
                       </div>
                     );
                   })}
                 </div>
               </div>
 
-              <div className="bg-muted/50 rounded-xl p-4 mb-8">
-                <h3 className="font-medium text-sm mb-2">Tips för att komma igång:</h3>
-                <ul className="text-sm text-muted-foreground space-y-1">
+              <div className="bg-muted/50 rounded-lg p-3 mb-4">
+                <h3 className="font-medium text-xs mb-1.5">Tips för att komma igång:</h3>
+                <ul className="text-xs text-muted-foreground space-y-0.5">
                   <li>• Försök checka in varje dag, gärna vid samma tid</li>
                   <li>• Var ärlig – din data är privat och säker</li>
                   <li>• Titta på statistiken efter någon vecka för insikter</li>
                 </ul>
               </div>
 
-              <div className="flex gap-3">
+              <div className="flex gap-2">
                 <Button 
                   variant="outline" 
                   onClick={handleBack}
-                  size="lg"
+                  size="default"
                 >
-                  <ArrowLeft className="w-4 h-4 mr-2" />
+                  <ArrowLeft className="w-4 h-4 mr-1" />
                   Tillbaka
                 </Button>
                 <Button 
                   onClick={handleSubmit}
                   className="flex-1"
-                  size="lg"
+                  size="default"
                   disabled={isSubmitting}
                 >
                   {isSubmitting ? (
-                    <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                    <Loader2 className="w-4 h-4 animate-spin mr-1" />
                   ) : (
-                    <Sparkles className="w-4 h-4 mr-2" />
+                    <Sparkles className="w-4 h-4 mr-1" />
                   )}
                   Starta min dagbok
                 </Button>
