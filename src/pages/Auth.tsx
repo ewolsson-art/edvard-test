@@ -197,10 +197,8 @@ const Auth = () => {
           
           
           <div className="space-y-4">
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold text-foreground leading-[1.1] tracking-tight">
-              Tydligare översikt 
-              <br />
-              <span className="text-primary">Bättre insikt </span>
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold text-foreground leading-[1.1] tracking-tight">Följ ditt mående med bättre insiktättre insikt<br />
+              <span className="text-primary">Följ ditt mående med bättre insikt</span>
             </h1>
             <p className="text-lg md:text-xl text-muted-foreground max-w-lg leading-relaxed">Din interaktiva och personliga stämningsdagbok ger dig bättre koll på ditt mående - och delar valfri data med din läkare</p>
           </div>
