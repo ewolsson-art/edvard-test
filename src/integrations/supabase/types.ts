@@ -14,6 +14,30 @@ export type Database = {
   }
   public: {
     Tables: {
+      characteristics: {
+        Row: {
+          created_at: string
+          id: string
+          mood_type: string
+          name: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          mood_type: string
+          name: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          mood_type?: string
+          name?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       chat_messages: {
         Row: {
           connection_id: string

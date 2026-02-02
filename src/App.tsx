@@ -38,6 +38,7 @@ import ManageConnections from "./pages/ManageConnections";
 import NotFound from "./pages/NotFound";
 import SharedReport from "./pages/SharedReport";
 import ResetPassword from "./pages/ResetPassword";
+import Characteristics from "./pages/Characteristics";
 
 const queryClient = new QueryClient();
 
@@ -110,6 +111,11 @@ const App = () => (
             <Route path="/oversikt" element={
               <ProtectedRoute>
                 <AppLayout><Overview /></AppLayout>
+              </ProtectedRoute>
+            } />
+            <Route path="/kannetecken" element={
+              <ProtectedRoute>
+                <AppLayout><Characteristics /></AppLayout>
               </ProtectedRoute>
             } />
             <Route path="/rapporter" element={
