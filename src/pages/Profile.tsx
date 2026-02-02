@@ -22,7 +22,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
-import { Loader2, User, Mail, Save, Trash2, AlertTriangle, Stethoscope, HeartPulse, Building2, Hospital, Brain, Moon, Utensils, Dumbbell, Pill, Settings as SettingsIcon } from 'lucide-react';
+import { Loader2, User, Mail, Save, Trash2, AlertTriangle, Stethoscope, HeartPulse, Building2, Hospital, Brain, Moon, Utensils, Dumbbell, Pill, Settings as SettingsIcon, Users } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { DiagnosesSection } from '@/components/DiagnosesSection';
 import { MedicationsSection } from '@/components/MedicationsSection';
@@ -75,7 +75,7 @@ const profileSchema = z.object({
 const Profile = () => {
   const { user, signOut } = useAuth();
   const { profile, isLoading: profileLoading, avatarUrl, updateAvatarUrl } = useProfile();
-  const { isDoctor, isLoading: roleLoading } = useUserRole();
+  const { isDoctor, isRelative, isPatient, isLoading: roleLoading } = useUserRole();
   const { preferences, loading: preferencesLoading, updatePreferences } = useUserPreferences();
   const { toast } = useToast();
   const navigate = useNavigate();
@@ -308,16 +308,20 @@ const Profile = () => {
             )}>
               {isDoctor ? (
                 <Stethoscope className="w-5 h-5 text-primary" />
+              ) : isRelative ? (
+                <Users className="w-5 h-5 text-primary" />
               ) : (
                 <HeartPulse className="w-5 h-5 text-primary" />
               )}
               <div className="flex-1">
                 <span className="font-medium text-foreground">
-                  {isDoctor ? 'Läkarkonto' : 'Patientkonto'}
+                  {isDoctor ? 'Läkarkonto' : isRelative ? 'Anhörigkonto' : 'Patientkonto'}
                 </span>
                 <p className="text-sm text-muted-foreground">
                   {isDoctor 
                     ? 'Du kan se dina patienters data men gör inga egna incheckningar.'
+                    : isRelative
+                    ? 'Du kan följa dina närståendes mående.'
                     : 'Du kan göra dagliga incheckningar och se dina egna översikter.'}
                 </p>
               </div>
@@ -432,35 +436,35 @@ const Profile = () => {
         )}
 
         {/* Medications Section - Only for patients */}
-        {!isDoctor && (
+        {isPatient && (
           <div className="glass-card p-6">
             <MedicationsSection />
           </div>
         )}
 
         {/* Doctor Connections Section - Only for patients */}
-        {!isDoctor && (
+        {isPatient && (
           <div className="glass-card p-6">
             <DoctorConnectionsSection />
           </div>
         )}
 
         {/* Relative Connections Section - Only for patients */}
-        {!isDoctor && (
+        {isPatient && (
           <div className="glass-card p-6">
             <RelativeConnectionsSection />
           </div>
         )}
 
         {/* Diagnoses Section - Only for patients */}
-        {!isDoctor && (
+        {isPatient && (
           <div className="glass-card p-6">
             <DiagnosesSection />
           </div>
         )}
 
         {/* Check-in Preferences - Only for patients */}
-        {!isDoctor && (
+        {isPatient && (
           <div className="glass-card p-6">
             <div className="flex items-center gap-3 mb-6">
               <div className="p-2 rounded-lg bg-primary/10">
@@ -537,7 +541,7 @@ const Profile = () => {
         )}
 
         {/* Notification Settings - Only for patients */}
-        {!isDoctor && (
+        {isPatient && (
           <NotificationSettings />
         )}
 
