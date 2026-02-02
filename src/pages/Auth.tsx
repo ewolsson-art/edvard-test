@@ -2,10 +2,10 @@ import { useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
-import { Loader2, HeartPulse, Calendar, Share2, MessageCircle, Shield, Sparkles } from "lucide-react";
+import { Loader2, HeartPulse } from "lucide-react";
 import { AuthNavbar } from "@/components/AuthNavbar";
 import { cn } from "@/lib/utils";
-
+import friendlyDog from "@/assets/friendly-dog.png";
 // Animated Cloud Component
 const Cloud = ({
   className,
@@ -80,15 +80,22 @@ const Auth = () => {
         {/* Hero Section */}
         <section className="relative z-10 min-h-[60vh] flex items-center justify-center px-4 md:px-8">
           <div className="max-w-4xl mx-auto text-center space-y-8 animate-fade-in">
-            <div className="space-y-4">
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold text-foreground leading-[1.1] tracking-tight">
-                Följ ditt mående med{" "}
-                <span className="text-primary">bättre insikt</span>
-              </h1>
-              <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-                Din interaktiva och personliga stämningsdagbok ger dig bättre koll på ditt mående 
-                och delar valfri data med din läkare
-              </p>
+            <div className="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-10">
+              <img 
+                src={friendlyDog} 
+                alt="Friendly maskot" 
+                className="w-32 h-32 md:w-40 md:h-40 object-contain drop-shadow-lg"
+              />
+              <div className="space-y-4 text-center md:text-left">
+                <h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold text-foreground leading-[1.1] tracking-tight">
+                  Följ ditt mående med{" "}
+                  <span className="text-primary">bättre insikt</span>
+                </h1>
+                <p className="text-lg md:text-xl text-muted-foreground max-w-2xl leading-relaxed">
+                  Din interaktiva och personliga stämningsdagbok ger dig bättre koll på ditt mående 
+                  och delar valfri data med din läkare
+                </p>
+              </div>
             </div>
 
             
