@@ -234,31 +234,41 @@ const Auth = () => {
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/3 rounded-full blur-3xl" />
       </div>
 
-      <div className="w-full max-w-5xl flex flex-col md:flex-row items-center gap-12 md:gap-20 relative z-10">
-        {/* Hero text */}
-        <div className="flex-1 text-center md:text-left space-y-8 animate-fade-in">
-          <div className="space-y-4">
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold text-foreground leading-[1.1] tracking-tight">
-              Följ ditt mående med bättre insikt <br />
-              <span className="text-primary"></span>
-            </h1>
-            <p className="text-lg md:text-xl text-muted-foreground max-w-lg leading-relaxed">
-              Din interaktiva och personliga stämningsdagbok ger dig bättre koll på ditt mående och delar valfri data
-              med din läkare
-            </p>
-          </div>
+      <div className={cn(
+        "w-full relative z-10",
+        showEmailConfirmation || resetEmailSent 
+          ? "max-w-md mx-auto" 
+          : "max-w-5xl flex flex-col md:flex-row items-center gap-12 md:gap-20"
+      )}>
+        {/* Hero text - hidden during email confirmation */}
+        {!showEmailConfirmation && !resetEmailSent && (
+          <div className="flex-1 text-center md:text-left space-y-8 animate-fade-in">
+            <div className="space-y-4">
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold text-foreground leading-[1.1] tracking-tight">
+                Följ ditt mående med bättre insikt <br />
+                <span className="text-primary"></span>
+              </h1>
+              <p className="text-lg md:text-xl text-muted-foreground max-w-lg leading-relaxed">
+                Din interaktiva och personliga stämningsdagbok ger dig bättre koll på ditt mående och delar valfri data
+                med din läkare
+              </p>
+            </div>
 
-          <div className="flex items-center gap-3 text-sm text-muted-foreground">
-            <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-muted/50 backdrop-blur-sm">
-              <HeartPulse className="w-4 h-4 text-primary" /> Skapad av och för människor med bipolär sjukdom - i samråd
-              med läkare och experter <br />
+            <div className="flex items-center gap-3 text-sm text-muted-foreground">
+              <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-muted/50 backdrop-blur-sm">
+                <HeartPulse className="w-4 h-4 text-primary" /> Skapad av och för människor med bipolär sjukdom - i samråd
+                med läkare och experter <br />
+              </div>
             </div>
           </div>
-        </div>
+        )}
 
         {/* Login card */}
         <div
-          className="w-full md:w-auto md:min-w-[400px] animate-fade-in"
+          className={cn(
+            "w-full animate-fade-in",
+            showEmailConfirmation || resetEmailSent ? "" : "md:w-auto md:min-w-[400px]"
+          )}
           style={{
             animationDelay: "0.1s",
           }}
