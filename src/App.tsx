@@ -10,6 +10,8 @@ import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { NotificationSchedulerProvider } from "@/components/NotificationSchedulerProvider";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
 import Overview from "./pages/Overview";
 import Reports from "./pages/Reports";
 import Chat from "./pages/Chat";
@@ -57,6 +59,8 @@ const App = () => (
           <BrowserRouter>
             <Routes>
             <Route path="/auth" element={<Auth />} />
+            <Route path="/logga-in" element={<Login />} />
+            <Route path="/skapa-konto" element={<Signup />} />
             <Route path="/aterstall-losenord" element={<ResetPassword />} />
             <Route path="/onboarding" element={
               <ProtectedRoute skipOnboardingCheck>
