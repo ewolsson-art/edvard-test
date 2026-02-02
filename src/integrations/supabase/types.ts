@@ -282,6 +282,7 @@ export type Database = {
           created_at: string
           doctor_id: string
           id: string
+          initiated_by: string
           patient_id: string
           share_comments: boolean
           share_eating: boolean
@@ -297,6 +298,7 @@ export type Database = {
           created_at?: string
           doctor_id: string
           id?: string
+          initiated_by?: string
           patient_id: string
           share_comments?: boolean
           share_eating?: boolean
@@ -312,6 +314,7 @@ export type Database = {
           created_at?: string
           doctor_id?: string
           id?: string
+          initiated_by?: string
           patient_id?: string
           share_comments?: boolean
           share_eating?: boolean
