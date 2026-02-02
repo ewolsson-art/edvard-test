@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Logo } from '@/components/Logo';
 import { Button } from '@/components/ui/button';
 import { Menu, X } from 'lucide-react';
@@ -19,6 +20,8 @@ const navItems: NavItem[] = [
 
 export function AuthNavbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const handleNavClick = (href: string) => {
     setIsMobileMenuOpen(false);
@@ -28,6 +31,20 @@ export function AuthNavbar() {
       element.scrollIntoView({ behavior: 'smooth' });
     }
   };
+
+  const handleLoginClick = () => {
+    setIsMobileMenuOpen(false);
+    navigate('/auth?mode=login');
+  };
+
+  const handleSignupClick = () => {
+    setIsMobileMenuOpen(false);
+    navigate('/auth?mode=signup');
+  };
+
+  // Check current mode from URL
+  const searchParams = new URLSearchParams(location.search);
+  const currentMode = searchParams.get('mode');
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border/40">
@@ -53,16 +70,22 @@ export function AuthNavbar() {
 
           {/* CTA buttons - desktop */}
           <div className="hidden lg:flex items-center gap-3">
-            <Button variant="ghost" size="sm" className="text-sm" onClick={() => {
-              const authCard = document.querySelector('.auth-card');
-              authCard?.scrollIntoView({ behavior: 'smooth' });
-            }}>
+            <Button 
+              variant={currentMode === 'login' ? 'secondary' : 'ghost'} 
+              size="sm" 
+              className="text-sm" 
+              onClick={handleLoginClick}
+            >
               Logga in
             </Button>
-            <Button size="sm" className="text-sm rounded-full px-5" onClick={() => {
-              const authCard = document.querySelector('.auth-card');
-              authCard?.scrollIntoView({ behavior: 'smooth' });
-            }}>
+            <Button 
+              size="sm" 
+              className={cn(
+                "text-sm rounded-full px-5",
+                currentMode === 'signup' && "ring-2 ring-primary/50"
+              )}
+              onClick={handleSignupClick}
+            >
               Kom igång
             </Button>
           </div>
@@ -103,18 +126,10 @@ export function AuthNavbar() {
             </button>
           ))}
           <div className="pt-4 pb-2 space-y-2">
-            <Button variant="outline" className="w-full" onClick={() => {
-              setIsMobileMenuOpen(false);
-              const authCard = document.querySelector('.auth-card');
-              authCard?.scrollIntoView({ behavior: 'smooth' });
-            }}>
+            <Button variant="outline" className="w-full" onClick={handleLoginClick}>
               Logga in
             </Button>
-            <Button className="w-full" onClick={() => {
-              setIsMobileMenuOpen(false);
-              const authCard = document.querySelector('.auth-card');
-              authCard?.scrollIntoView({ behavior: 'smooth' });
-            }}>
+            <Button className="w-full" onClick={handleSignupClick}>
               Kom igång
             </Button>
           </div>

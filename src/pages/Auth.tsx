@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { z } from "zod";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
@@ -48,7 +48,11 @@ const Cloud = ({ className, delay = 0, duration = 20 }: { className?: string; de
   </div>
 );
 const Auth = () => {
-  const [isLogin, setIsLogin] = useState(true);
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const mode = searchParams.get('mode');
+  
+  const [isLogin, setIsLogin] = useState(mode !== 'signup');
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [firstName, setFirstName] = useState("");
@@ -67,6 +71,16 @@ const Auth = () => {
   const { user, loading, signIn, signUp } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
+
+  // Update isLogin when URL mode changes
+  useEffect(() => {
+    if (mode === 'signup') {
+      setIsLogin(false);
+    } else if (mode === 'login') {
+      setIsLogin(true);
+    }
+  }, [mode]);
+
   useEffect(() => {
     if (!loading && user) {
       navigate("/");
@@ -596,7 +610,7 @@ const Auth = () => {
                   <div className="mt-6 text-center">
                     <button
                       type="button"
-                      onClick={() => setIsLogin(!isLogin)}
+                      onClick={() => navigate(isLogin ? '/auth?mode=signup' : '/auth?mode=login')}
                       className="text-sm text-muted-foreground hover:text-primary transition-colors font-sans font-semibold"
                       disabled={isSubmitting}
                     >
