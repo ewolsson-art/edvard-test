@@ -6,7 +6,7 @@ import { useToast } from '@/hooks/use-toast';
 export interface Characteristic {
   id: string;
   name: string;
-  mood_type: 'elevated' | 'depressed';
+  mood_type: 'elevated' | 'depressed' | 'stable';
   created_at: string;
 }
 
@@ -49,7 +49,7 @@ export function useCharacteristics() {
     }
   };
 
-  const addCharacteristic = async (name: string, moodType: 'elevated' | 'depressed') => {
+  const addCharacteristic = async (name: string, moodType: 'elevated' | 'depressed' | 'stable') => {
     if (!user) return false;
 
     try {
@@ -113,11 +113,13 @@ export function useCharacteristics() {
 
   const elevatedCharacteristics = characteristics.filter(c => c.mood_type === 'elevated');
   const depressedCharacteristics = characteristics.filter(c => c.mood_type === 'depressed');
+  const stableCharacteristics = characteristics.filter(c => c.mood_type === 'stable');
 
   return {
     characteristics,
     elevatedCharacteristics,
     depressedCharacteristics,
+    stableCharacteristics,
     isLoading,
     addCharacteristic,
     deleteCharacteristic,

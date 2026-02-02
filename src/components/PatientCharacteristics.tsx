@@ -1,4 +1,4 @@
-import { Zap, Cloud, Lock } from 'lucide-react';
+import { Zap, Cloud, Lock, Sun } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { usePatientCharacteristics } from '@/hooks/usePatientCharacteristics';
@@ -18,7 +18,7 @@ export const PatientCharacteristics = ({
   isShared,
   patientName = 'Patienten'
 }: PatientCharacteristicsProps) => {
-  const { elevatedCharacteristics, depressedCharacteristics, isLoading } = usePatientCharacteristics(patientId);
+  const { elevatedCharacteristics, depressedCharacteristics, stableCharacteristics, isLoading } = usePatientCharacteristics(patientId);
 
   if (!isShared) {
     return (
@@ -48,7 +48,7 @@ export const PatientCharacteristics = ({
     );
   }
 
-  const hasAnyCharacteristics = elevatedCharacteristics.length > 0 || depressedCharacteristics.length > 0;
+  const hasAnyCharacteristics = elevatedCharacteristics.length > 0 || depressedCharacteristics.length > 0 || stableCharacteristics.length > 0;
 
   if (!hasAnyCharacteristics) {
     return (
@@ -72,7 +72,7 @@ export const PatientCharacteristics = ({
     <div className="space-y-4">
       <h3 className="text-lg font-semibold">Kännetecken</h3>
       
-      <div className="grid md:grid-cols-2 gap-4">
+      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
         {/* Elevated/Uppvarvad */}
         <Card className={cn(
           "border-amber-200 dark:border-amber-900/50 transition-all duration-300",
@@ -142,6 +142,45 @@ export const PatientCharacteristics = ({
                     key={char.id}
                     variant="secondary"
                     className="bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300 py-1.5 px-3"
+                  >
+                    {char.name}
+                  </Badge>
+                ))
+              )}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Stable/Stabilt */}
+        <Card className={cn(
+          "border-emerald-200 dark:border-emerald-900/50 transition-all duration-300",
+          latestMood === 'stable' && "ring-2 ring-emerald-400 dark:ring-emerald-500"
+        )}>
+          <CardHeader className="pb-3">
+            {latestMood === 'stable' && (
+              <Badge className="bg-emerald-500 text-white text-xs w-fit mb-2">
+                Aktuellt läge
+              </Badge>
+            )}
+            <div className="flex items-center gap-2">
+              <div className="p-2 rounded-lg bg-emerald-100 dark:bg-emerald-900/30">
+                <Sun className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
+              </div>
+              <div>
+                <CardTitle className="text-base">Stabil period</CardTitle>
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="flex flex-wrap gap-2">
+              {stableCharacteristics.length === 0 ? (
+                <p className="text-sm text-muted-foreground italic">Inga kännetecken</p>
+              ) : (
+                stableCharacteristics.map((char) => (
+                  <Badge
+                    key={char.id}
+                    variant="secondary"
+                    className="bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-300 py-1.5 px-3"
                   >
                     {char.name}
                   </Badge>
