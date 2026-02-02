@@ -34,12 +34,21 @@ const doctorNavItems = [
   { title: "Min profil", url: "/profil", icon: UserCircle },
 ];
 
+const relativeNavItems = [
+  { title: "Hem", url: "/anhorig", icon: Home },
+  { title: "Min profil", url: "/profil", icon: UserCircle },
+];
+
 export function AppSidebar() {
   const { state } = useSidebar();
   const { user, signOut } = useAuth();
   const { firstName, fullName, avatarUrl } = useProfile();
-  const { isDoctor, isPatient, isLoading: roleLoading } = useUserRole();
+  const { isDoctor, isPatient, isRelative, isLoading: roleLoading } = useUserRole();
   const isCollapsed = state === "collapsed";
+
+  // Determine which nav items to show based on role
+  const navItems = isDoctor ? doctorNavItems : isRelative ? relativeNavItems : patientNavItems;
+  const homeUrl = isDoctor ? "/lakare" : isRelative ? "/anhorig" : "/";
 
   // Get initials for avatar fallback
   const getInitials = () => {
@@ -52,8 +61,6 @@ export function AppSidebar() {
     await signOut();
   };
 
-  // Determine which nav items to show based on role
-  const navItems = isDoctor ? doctorNavItems : patientNavItems;
 
   return (
     <Sidebar collapsible="icon" className="border-r-0">
@@ -61,7 +68,7 @@ export function AppSidebar() {
         {/* Logo/Brand */}
         <div className={`px-4 mb-8 ${isCollapsed ? 'flex justify-center' : ''}`}>
           <Link 
-            to={isDoctor ? "/lakare" : "/"} 
+            to={homeUrl} 
             className="block hover:opacity-80 transition-all duration-300 hover:scale-[1.02]"
           >
             <Logo size={isCollapsed ? "sm" : "md"} showText={!isCollapsed} />
@@ -76,7 +83,7 @@ export function AppSidebar() {
                   <SidebarMenuButton asChild tooltip={item.title}>
                     <NavLink 
                       to={item.url} 
-                      end={item.url === '/' || item.url === '/lakare'}
+                      end={item.url === '/' || item.url === '/lakare' || item.url === '/anhorig'}
                       className="group relative flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 hover:bg-primary/5 hover:shadow-sm" 
                       activeClassName="bg-primary/10 text-primary font-medium shadow-sm before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2 before:w-1 before:h-6 before:bg-primary before:rounded-full"
                       style={{ animationDelay: `${index * 50}ms` }}
