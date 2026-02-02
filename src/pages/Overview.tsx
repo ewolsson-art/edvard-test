@@ -497,7 +497,7 @@ const Overview = () => {
   return (
     <div className="py-8 px-4 md:px-8">
       <div className="max-w-6xl mx-auto space-y-12">
-        <header className="mb-8 pl-8 md:pl-0">
+        <header className="mb-8">
           <h1 className="font-display text-3xl md:text-4xl font-bold mb-4">
             Översikt
           </h1>
