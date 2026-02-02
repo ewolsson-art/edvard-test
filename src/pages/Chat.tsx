@@ -1,12 +1,14 @@
 import { useState, useRef, useEffect, useMemo } from 'react';
-import { Send, Bot, User, Sparkles, RefreshCw, Stethoscope } from 'lucide-react';
+import { Send, Bot, Sparkles, RefreshCw, Stethoscope } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useMoodData } from '@/hooks/useMoodData';
 import { usePatientConnections, DoctorConnection } from '@/hooks/usePatientConnections';
 import { DoctorPatientChat } from '@/components/DoctorPatientChat';
 import { useAuth } from '@/hooks/useAuth';
+import { useProfile } from '@/hooks/useProfile';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 import ReactMarkdown from 'react-markdown';
@@ -29,8 +31,16 @@ const Chat = () => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const { session } = useAuth();
+  const { firstName, avatarUrl } = useProfile();
   const { isLoaded: moodLoaded, getStatsForYear } = useMoodData();
   const { connections, isLoading: connectionsLoading } = usePatientConnections();
+
+  // Get initials for avatar fallback
+  const getInitials = () => {
+    if (firstName) return firstName.charAt(0).toUpperCase();
+    if (session?.user?.email) return session.user.email.charAt(0).toUpperCase();
+    return 'U';
+  };
 
   // Filter approved connections with chat enabled
   const chatEnabledDoctors = connections.filter(c => c.status === 'approved' && c.chat_enabled);
@@ -343,9 +353,12 @@ const Chat = () => {
                         )}
                       </div>
                       {message.role === 'user' && (
-                        <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center shrink-0">
-                          <User className="w-4 h-4 text-primary-foreground" />
-                        </div>
+                        <Avatar className="w-8 h-8 shrink-0">
+                          <AvatarImage src={avatarUrl || undefined} alt="Din profilbild" />
+                          <AvatarFallback className="bg-primary text-primary-foreground text-sm">
+                            {getInitials()}
+                          </AvatarFallback>
+                        </Avatar>
                       )}
                     </div>
                   ))}

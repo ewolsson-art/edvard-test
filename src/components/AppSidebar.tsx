@@ -7,6 +7,7 @@ import { useProfile } from "@/hooks/useProfile";
 import { useUserRole } from "@/hooks/useUserRole";
 import { Button } from "@/components/ui/button";
 import { Logo } from "@/components/Logo";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   Sidebar,
   SidebarContent,
@@ -35,9 +36,16 @@ const doctorNavItems = [
 export function AppSidebar() {
   const { state } = useSidebar();
   const { user, signOut } = useAuth();
-  const { firstName, fullName } = useProfile();
+  const { firstName, fullName, avatarUrl } = useProfile();
   const { isDoctor, isPatient, isLoading: roleLoading } = useUserRole();
   const isCollapsed = state === "collapsed";
+
+  // Get initials for avatar fallback
+  const getInitials = () => {
+    if (firstName) return firstName.charAt(0).toUpperCase();
+    if (user?.email) return user.email.charAt(0).toUpperCase();
+    return 'U';
+  };
 
   const handleSignOut = async () => {
     await signOut();
@@ -69,7 +77,14 @@ export function AppSidebar() {
                       className="flex items-center gap-3 px-3 py-2 rounded-lg transition-colors hover:bg-muted/50" 
                       activeClassName="bg-muted text-primary font-medium"
                     >
-                      <item.icon className="h-5 w-5 shrink-0" />
+                      {item.url === '/profil' && avatarUrl ? (
+                        <Avatar className="h-5 w-5 shrink-0">
+                          <AvatarImage src={avatarUrl} alt="Profilbild" />
+                          <AvatarFallback className="text-xs">{getInitials()}</AvatarFallback>
+                        </Avatar>
+                      ) : (
+                        <item.icon className="h-5 w-5 shrink-0" />
+                      )}
                       {!isCollapsed && <span>{item.title}</span>}
                     </NavLink>
                   </SidebarMenuButton>
