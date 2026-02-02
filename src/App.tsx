@@ -7,6 +7,7 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
 import { AuthProvider } from "@/hooks/useAuth";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
+import { NotificationSchedulerProvider } from "@/components/NotificationSchedulerProvider";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import Overview from "./pages/Overview";
@@ -23,7 +24,6 @@ import PatientDetail from "./pages/PatientDetail";
 import ManageConnections from "./pages/ManageConnections";
 import NotFound from "./pages/NotFound";
 import SharedReport from "./pages/SharedReport";
-
 
 const queryClient = new QueryClient();
 
@@ -45,10 +45,11 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <AuthProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <Routes>
+        <NotificationSchedulerProvider>
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <Routes>
             <Route path="/auth" element={<Auth />} />
             <Route path="/onboarding" element={
               <ProtectedRoute skipOnboardingCheck>
@@ -110,10 +111,11 @@ const App = () => (
                 <AppLayout><ManageConnections /></AppLayout>
               </ProtectedRoute>
             } />
-            <Route path="/rapport/:shareKey" element={<SharedReport />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
+              <Route path="/rapport/:shareKey" element={<SharedReport />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </BrowserRouter>
+        </NotificationSchedulerProvider>
       </AuthProvider>
     </TooltipProvider>
   </QueryClientProvider>

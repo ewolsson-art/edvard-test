@@ -240,6 +240,42 @@ export type Database = {
         }
         Relationships: []
       }
+      notification_preferences: {
+        Row: {
+          checkin_enabled: boolean
+          checkin_time: string
+          created_at: string
+          id: string
+          medication_enabled: boolean
+          medication_time: string
+          push_subscription: Json | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          checkin_enabled?: boolean
+          checkin_time?: string
+          created_at?: string
+          id?: string
+          medication_enabled?: boolean
+          medication_time?: string
+          push_subscription?: Json | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          checkin_enabled?: boolean
+          checkin_time?: string
+          created_at?: string
+          id?: string
+          medication_enabled?: boolean
+          medication_time?: string
+          push_subscription?: Json | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       patient_doctor_connections: {
         Row: {
           chat_enabled: boolean
