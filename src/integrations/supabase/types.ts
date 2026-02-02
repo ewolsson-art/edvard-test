@@ -411,6 +411,36 @@ export type Database = {
         }
         Relationships: []
       }
+      relative_comments: {
+        Row: {
+          comment: string
+          created_at: string
+          date: string
+          id: string
+          patient_id: string
+          relative_id: string
+          updated_at: string
+        }
+        Insert: {
+          comment: string
+          created_at?: string
+          date: string
+          id?: string
+          patient_id: string
+          relative_id: string
+          updated_at?: string
+        }
+        Update: {
+          comment?: string
+          created_at?: string
+          date?: string
+          id?: string
+          patient_id?: string
+          relative_id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       shared_reports: {
         Row: {
           created_at: string

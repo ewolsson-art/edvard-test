@@ -5,6 +5,7 @@ import { sv } from 'date-fns/locale';
 import { usePatientMoodData } from '@/hooks/usePatientMoodData';
 import { usePatientMedications } from '@/hooks/usePatientMedications';
 import { usePatientDiagnoses } from '@/hooks/usePatientDiagnoses';
+import { useRelativeComments } from '@/hooks/useRelativeComments';
 import { PatientConnection } from '@/hooks/useDoctorConnections';
 import { MoodStats } from '@/components/MoodStats';
 import { ExerciseStats, ExerciseStatsType } from '@/components/ExerciseStats';
@@ -22,6 +23,7 @@ import { EatingMonthCalendar } from '@/components/EatingMonthCalendar';
 import { EatingWeekCalendar } from '@/components/EatingWeekCalendar';
 import { EatingYearHeatmap } from '@/components/EatingYearHeatmap';
 import { YearHeatmap } from '@/components/YearHeatmap';
+import { RelativeCommentDialog } from '@/components/RelativeCommentDialog';
 import { MoodStats as MoodStatsType, ExerciseType } from '@/types/mood';
 import { Loader2, ChevronLeft, Radio, Pill, Check, X, MessageSquare, Moon, Utensils, Dumbbell, Stethoscope } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -46,6 +48,13 @@ export function PatientOverview({ connection, onBack, onToggleChatEnabled }: Pat
   const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
   const [isChatToggling, setIsChatToggling] = useState(false);
   
+  // State for relative comment dialog
+  const [commentDialogOpen, setCommentDialogOpen] = useState(false);
+  const [selectedDateForComment, setSelectedDateForComment] = useState<Date | null>(null);
+  
+  // Check if this is a relative viewing (no chat toggle means relative)
+  const isRelativeViewing = !onToggleChatEnabled;
+  
   const { entries, isLoaded: moodLoaded, getEntryForDate, getEntriesForMonth, getEntriesForYear, getStatsForYear } = usePatientMoodData({
     patientId: connection.patient_id,
   });
@@ -54,6 +63,16 @@ export function PatientOverview({ connection, onBack, onToggleChatEnabled }: Pat
   });
   const { diagnoses, isLoading: diagnosesLoading } = usePatientDiagnoses({
     patientId: connection.patient_id,
+  });
+  
+  // Relative comments - only fetch for relatives
+  const { 
+    getCommentForDate, 
+    getCommentsMap, 
+    saveComment, 
+    deleteComment 
+  } = useRelativeComments({
+    patientId: isRelativeViewing ? connection.patient_id : null,
   });
 
   const isLoaded = moodLoaded && medsLoaded && !diagnosesLoading;
@@ -340,6 +359,24 @@ export function PatientOverview({ connection, onBack, onToggleChatEnabled }: Pat
     setView('month');
   };
 
+  // Handle double-click on calendar day for relative comments
+  const handleDayDoubleClick = (date: Date) => {
+    if (!isRelativeViewing) return;
+    setSelectedDateForComment(date);
+    setCommentDialogOpen(true);
+  };
+
+  // Get existing comment for selected date
+  const existingCommentForDialog = selectedDateForComment 
+    ? getCommentForDate(format(selectedDateForComment, 'yyyy-MM-dd'))?.comment 
+    : undefined;
+
+  // Get relative comments data for the current month
+  const monthRelativeCommentsData = useMemo(() => {
+    if (!isRelativeViewing) return {};
+    return getCommentsMap();
+  }, [isRelativeViewing, getCommentsMap]);
+
   const handleChatToggle = async (enabled: boolean) => {
     if (!onToggleChatEnabled) return;
     setIsChatToggling(true);
@@ -442,10 +479,16 @@ export function PatientOverview({ connection, onBack, onToggleChatEnabled }: Pat
 
       {/* Stats and calendars based on what's shared */}
       <div className="space-y-8">
-        {/* Mood */}
         {connection.share_mood && (
           <section>
-            <h3 className="font-display text-2xl font-semibold mb-6">Mående</h3>
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="font-display text-2xl font-semibold">Mående</h3>
+              {isRelativeViewing && view === 'month' && (
+                <p className="text-sm text-muted-foreground">
+                  Dubbelklicka på ett datum för att lägga till egen anteckning
+                </p>
+              )}
+            </div>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {view === 'week' && (
                 <WeekCalendar
@@ -461,8 +504,10 @@ export function PatientOverview({ connection, onBack, onToggleChatEnabled }: Pat
                 <MonthCalendar
                   currentDate={currentMonth}
                   moodData={monthMoodData}
+                  relativeCommentsData={monthRelativeCommentsData}
                   onPrevMonth={handlePrevMonth}
                   onNextMonth={handleNextMonth}
+                  onDayDoubleClick={handleDayDoubleClick}
                 />
               )}
               {view === 'year' && (
@@ -682,6 +727,18 @@ export function PatientOverview({ connection, onBack, onToggleChatEnabled }: Pat
           </div>
         )}
       </div>
+
+      {/* Relative comment dialog */}
+      {isRelativeViewing && (
+        <RelativeCommentDialog
+          open={commentDialogOpen}
+          onOpenChange={setCommentDialogOpen}
+          date={selectedDateForComment}
+          existingComment={existingCommentForDialog}
+          onSave={saveComment}
+          onDelete={deleteComment}
+        />
+      )}
     </div>
   );
 }

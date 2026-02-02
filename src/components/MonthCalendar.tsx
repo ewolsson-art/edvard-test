@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { format, startOfMonth, endOfMonth, startOfWeek, endOfWeek, eachDayOfInterval, isSameMonth, isToday, isSameDay } from 'date-fns';
 import { sv } from 'date-fns/locale';
-import { ChevronLeft, ChevronRight, Pill } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Pill, MessageCircle } from 'lucide-react';
 import { MoodType } from '@/types/mood';
 import { cn } from '@/lib/utils';
 
@@ -9,9 +9,11 @@ interface MonthCalendarProps {
   currentDate: Date;
   moodData: Record<number, MoodType>;
   medicationData?: Record<number, number>; // day -> count of medications taken
+  relativeCommentsData?: Record<number, string>; // day -> comment from relative
   onPrevMonth: () => void;
   onNextMonth: () => void;
   onDayClick?: (date: Date) => void;
+  onDayDoubleClick?: (date: Date) => void;
 }
 
 const weekDays = ['Mån', 'Tis', 'Ons', 'Tor', 'Fre', 'Lör', 'Sön'];
@@ -20,9 +22,11 @@ export function MonthCalendar({
   currentDate, 
   moodData,
   medicationData = {},
+  relativeCommentsData = {},
   onPrevMonth, 
   onNextMonth,
-  onDayClick 
+  onDayClick,
+  onDayDoubleClick,
 }: MonthCalendarProps) {
   const days = useMemo(() => {
     const start = startOfWeek(startOfMonth(currentDate), { weekStartsOn: 1 });
@@ -69,6 +73,7 @@ export function MonthCalendar({
           const dayOfMonth = day.getDate();
           const mood = isSameMonth(day, currentDate) ? moodData[dayOfMonth] : undefined;
           const medCount = isSameMonth(day, currentDate) ? medicationData[dayOfMonth] : undefined;
+          const hasRelativeComment = isSameMonth(day, currentDate) && relativeCommentsData[dayOfMonth];
           const isCurrentMonth = isSameMonth(day, currentDate);
           const isTodayDate = isToday(day);
 
@@ -76,7 +81,9 @@ export function MonthCalendar({
             <button
               key={day.toISOString()}
               onClick={() => onDayClick?.(day)}
+              onDoubleClick={() => isCurrentMonth && onDayDoubleClick?.(day)}
               disabled={!isCurrentMonth}
+              title={hasRelativeComment ? relativeCommentsData[dayOfMonth] : undefined}
               className={cn(
                 "calendar-day relative",
                 !isCurrentMonth && "opacity-30 cursor-not-allowed",
@@ -88,11 +95,14 @@ export function MonthCalendar({
               )}
             >
               {dayOfMonth}
-              {medCount && medCount > 0 && (
-                <span className="absolute -bottom-0.5 left-1/2 -translate-x-1/2">
+              <div className="absolute -bottom-0.5 left-1/2 -translate-x-1/2 flex gap-0.5">
+                {medCount && medCount > 0 && (
                   <Pill className="h-2.5 w-2.5 text-primary" />
-                </span>
-              )}
+                )}
+                {hasRelativeComment && (
+                  <MessageCircle className="h-2.5 w-2.5 text-accent-foreground fill-accent" />
+                )}
+              </div>
             </button>
           );
         })}
