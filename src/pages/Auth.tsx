@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Loader2, HeartPulse } from "lucide-react";
 import { AuthNavbar } from "@/components/AuthNavbar";
 import { cn } from "@/lib/utils";
-import friendlyDog from "@/assets/friendly-dog.png";
+import platformIllustration from "@/assets/platform-illustration.png";
 // Animated Cloud Component
 const Cloud = ({
   className,
@@ -78,28 +78,34 @@ const Auth = () => {
         </div>
 
         {/* Hero Section */}
-        <section className="relative z-10 py-16 md:py-24 flex items-center justify-center px-4 md:px-8">
-          <div className="max-w-4xl mx-auto text-center space-y-8 animate-fade-in">
-            <div className="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-10">
-              
-              <div className="space-y-4 text-center md:text-left">
+        <section className="relative z-10 py-16 md:py-24 px-4 md:px-8">
+          <div className="max-w-6xl mx-auto">
+            <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
+              {/* Left side - Text */}
+              <div className="space-y-6 animate-fade-in">
                 <h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold text-foreground leading-[1.1] tracking-tight">
                   Följ ditt mående med{" "}
                   <span className="text-primary">bättre insikt</span>
                 </h1>
-                <p className="text-lg md:text-xl text-muted-foreground max-w-2xl leading-relaxed">
+                <p className="text-lg md:text-xl text-muted-foreground max-w-xl leading-relaxed">
                   Din interaktiva och personliga stämningsdagbok ger dig bättre koll på ditt mående 
                   och delar valfri data med din läkare
                 </p>
+                <div className="flex items-center gap-3 text-sm text-muted-foreground">
+                  <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-muted/50 backdrop-blur-sm">
+                    <HeartPulse className="w-4 h-4 text-primary" />
+                    <span>Skapad av och för människor med bipolär sjukdom</span>
+                  </div>
+                </div>
               </div>
-            </div>
 
-            
-
-            <div className="flex items-center justify-center gap-3 text-sm text-muted-foreground">
-              <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-muted/50 backdrop-blur-sm">
-                <HeartPulse className="w-4 h-4 text-primary" />
-                <span>Skapad av och för människor med bipolär sjukdom</span>
+              {/* Right side - Illustration */}
+              <div className="flex justify-center md:justify-end animate-fade-in">
+                <img 
+                  src={platformIllustration} 
+                  alt="Friendly plattformsillustration" 
+                  className="w-full max-w-md rounded-2xl shadow-2xl shadow-primary/10"
+                />
               </div>
             </div>
           </div>
