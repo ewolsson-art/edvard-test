@@ -9,6 +9,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Loader2, Mail, Lock, User, CheckCircle, Stethoscope, HeartPulse, Sparkles, Users } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Logo } from "@/components/Logo";
+import { AuthNavbar } from "@/components/AuthNavbar";
 import { cn } from "@/lib/utils";
 type UserRole = "patient" | "doctor" | "relative";
 const authSchema = z.object({
@@ -213,7 +214,9 @@ const Auth = () => {
     );
   }
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 md:p-8 relative overflow-hidden bg-gradient-to-br from-background via-primary/5 to-background">
+    <>
+      <AuthNavbar />
+      <div className="min-h-screen flex items-center justify-center p-4 md:p-8 pt-20 md:pt-24 relative overflow-hidden bg-gradient-to-br from-background via-primary/5 to-background">
       {/* Animated clouds */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <Cloud className="w-48 h-24 top-[10%] left-[5%]" delay={0} duration={25} />
@@ -266,7 +269,7 @@ const Auth = () => {
         {/* Login card */}
         <div
           className={cn(
-            "w-full animate-fade-in",
+            "w-full animate-fade-in auth-card",
             showEmailConfirmation || resetEmailSent ? "" : "md:w-auto md:min-w-[400px]"
           )}
           style={{
@@ -606,7 +609,8 @@ const Auth = () => {
           </div>
         </div>
       </div>
-    </div>
+      </div>
+    </>
   );
 };
 export default Auth;
