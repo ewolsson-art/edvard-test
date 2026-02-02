@@ -189,12 +189,7 @@ const RelativeDashboard = () => {
           </section>
         )}
 
-        {/* Approved connections */}
         <section>
-          <div className="flex items-center gap-3 mb-6">
-            <UserCheck className="w-6 h-6 text-primary" />
-            <h2 className="font-display text-2xl font-semibold">Godkända närstående</h2>
-          </div>
 
           {approvedConnections.length === 0 ? (
             <div className="glass-card p-12 text-center">
