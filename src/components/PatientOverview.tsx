@@ -77,6 +77,14 @@ export function PatientOverview({ connection, onBack, onToggleChatEnabled }: Pat
 
   const isLoaded = moodLoaded && medsLoaded && !diagnosesLoading;
 
+  // Get most recent mood entry
+  const latestMoodEntry = useMemo(() => {
+    if (entries.length === 0) return null;
+    // Entries are sorted by date, get the most recent one
+    const sorted = [...entries].sort((a, b) => b.date.localeCompare(a.date));
+    return sorted[0];
+  }, [entries]);
+
   const patientName = useMemo(() => {
     if (connection.patient_profile?.first_name || connection.patient_profile?.last_name) {
       return [connection.patient_profile.first_name, connection.patient_profile.last_name]
@@ -404,7 +412,21 @@ export function PatientOverview({ connection, onBack, onToggleChatEnabled }: Pat
           <ChevronLeft className="w-5 h-5" />
         </Button>
         <div className="flex-1">
-          <h2 className="font-display text-2xl font-semibold">{patientName}</h2>
+          <div className="flex items-center gap-3">
+            <h2 className="font-display text-2xl font-semibold">{patientName}</h2>
+            {latestMoodEntry && (
+              <div 
+                className={`w-4 h-4 rounded-full ring-2 ring-offset-2 ring-offset-background ${
+                  latestMoodEntry.mood === 'elevated' 
+                    ? 'bg-mood-elevated ring-mood-elevated/30' 
+                    : latestMoodEntry.mood === 'stable' 
+                      ? 'bg-mood-stable ring-mood-stable/30' 
+                      : 'bg-mood-depressed ring-mood-depressed/30'
+                }`}
+                title={`Senaste mående: ${latestMoodEntry.mood === 'elevated' ? 'Uppvarvad' : latestMoodEntry.mood === 'stable' ? 'Stabil' : 'Nedstämd'}`}
+              />
+            )}
+          </div>
           {connection.patient_email && connection.patient_profile?.first_name && (
             <p className="text-sm text-muted-foreground">{connection.patient_email}</p>
           )}
