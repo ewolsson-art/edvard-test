@@ -35,11 +35,13 @@ export function usePatientCharacteristics(patientId: string | undefined) {
 
   const elevatedCharacteristics = characteristics.filter(c => c.mood_type === 'elevated');
   const depressedCharacteristics = characteristics.filter(c => c.mood_type === 'depressed');
+  const stableCharacteristics = characteristics.filter(c => c.mood_type === 'stable');
 
   return {
     characteristics,
     elevatedCharacteristics,
     depressedCharacteristics,
+    stableCharacteristics,
     isLoading,
   };
 }
