@@ -184,14 +184,21 @@ const Auth = () => {
             });
           }
         } else {
-          if (data?.user) {
+          // Check if user already exists (Supabase returns user without identities for existing emails)
+          if (data?.user && (!data.user.identities || data.user.identities.length === 0)) {
+            toast({
+              title: "E-postadressen är redan registrerad",
+              description: "Ett konto med denna e-postadress finns redan. Försök logga in istället.",
+              variant: "destructive",
+            });
+          } else if (data?.user) {
             await supabase.from("profiles").insert({
               user_id: data.user.id,
               first_name: firstName.trim() || null,
               last_name: lastName.trim() || null,
             });
+            setShowEmailConfirmation(true);
           }
-          setShowEmailConfirmation(true);
         }
       }
     } finally {
