@@ -8,6 +8,7 @@ export interface DoctorConnection {
   patient_id: string;
   doctor_id: string;
   status: 'pending' | 'approved' | 'rejected';
+  initiated_by: 'patient' | 'doctor';
   share_mood: boolean;
   share_sleep: boolean;
   share_eating: boolean;
@@ -103,6 +104,7 @@ export function usePatientConnections() {
       .insert({
         patient_id: user.id,
         doctor_id: doctorId as string,
+        initiated_by: 'patient',
         share_mood: shareSettings.share_mood,
         share_sleep: shareSettings.share_sleep,
         share_eating: shareSettings.share_eating,
@@ -173,12 +175,61 @@ export function usePatientConnections() {
     return true;
   }, [toast]);
 
+  const respondToRequest = useCallback(async (
+    connectionId: string,
+    approved: boolean,
+    shareSettings?: {
+      share_mood: boolean;
+      share_sleep: boolean;
+      share_eating: boolean;
+      share_exercise: boolean;
+      share_medication: boolean;
+      share_comments: boolean;
+    }
+  ) => {
+    const updateData = approved && shareSettings
+      ? { status: 'approved', ...shareSettings }
+      : { status: approved ? 'approved' : 'rejected' };
+
+    const { error } = await supabase
+      .from('patient_doctor_connections')
+      .update(updateData)
+      .eq('id', connectionId);
+
+    if (error) {
+      toast({
+        title: "Kunde inte uppdatera",
+        variant: "destructive",
+      });
+      return false;
+    }
+
+    if (approved) {
+      setConnections(prev =>
+        prev.map(c => c.id === connectionId ? { ...c, status: 'approved' as const, ...shareSettings } : c)
+      );
+      toast({ title: "Förfrågan godkänd" });
+    } else {
+      setConnections(prev => prev.filter(c => c.id !== connectionId));
+      toast({ title: "Förfrågan avvisad" });
+    }
+    return true;
+  }, [toast]);
+
+  const pendingFromDoctors = connections.filter(c => c.status === 'pending' && c.initiated_by === 'doctor');
+  const pendingFromPatient = connections.filter(c => c.status === 'pending' && c.initiated_by === 'patient');
+  const approvedConnections = connections.filter(c => c.status === 'approved');
+
   return {
     connections,
+    pendingFromDoctors,
+    pendingFromPatient,
+    approvedConnections,
     isLoading,
     inviteDoctor,
     updateShareSettings,
     removeConnection,
+    respondToRequest,
     refetch: fetchConnections,
   };
 }
