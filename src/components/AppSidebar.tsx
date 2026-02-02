@@ -37,6 +37,7 @@ const doctorNavItems = [
 
 const relativeNavItems = [
   { title: "Hem", url: "/anhorig", icon: Home },
+  { title: "Rapporter", url: "/anhorig-rapporter", icon: FileText },
   { title: "Min profil", url: "/profil", icon: UserCircle },
 ];
 
