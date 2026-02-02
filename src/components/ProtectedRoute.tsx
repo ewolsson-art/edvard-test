@@ -13,7 +13,7 @@ interface ProtectedRouteProps {
 export function ProtectedRoute({ children, skipOnboardingCheck = false }: ProtectedRouteProps) {
   const { user, loading: authLoading } = useAuth();
   const { needsOnboarding, loading: prefsLoading } = useUserPreferences();
-  const { isDoctor, isLoading: roleLoading } = useUserRole();
+  const { isDoctor, isRelative, isLoading: roleLoading } = useUserRole();
   const location = useLocation();
 
   // Wait for all loading states to complete
@@ -36,11 +36,29 @@ export function ProtectedRoute({ children, skipOnboardingCheck = false }: Protec
       return <Navigate to="/lakare-onboarding" replace />;
     }
     
-    const patientOnlyPaths = ['/', '/oversikt', '/mediciner', '/chatt', '/onboarding'];
+    const patientOnlyPaths = ['/', '/oversikt', '/mediciner', '/chatt', '/onboarding', '/anhorig'];
     if (patientOnlyPaths.includes(location.pathname)) {
       return <Navigate to="/lakare" replace />;
     }
     // Allow doctors to access doctor-specific and shared pages
+    return <>{children}</>;
+  }
+
+  // Relatives: Redirect to relative dashboard, they can only view patient data
+  if (isRelative) {
+    // Check if relative needs onboarding
+    if (!skipOnboardingCheck && needsOnboarding && location.pathname !== '/anhorig-onboarding') {
+      return <Navigate to="/anhorig-onboarding" replace />;
+    }
+    
+    // Relatives can only access their dashboard and patient detail views
+    const relativeAllowedPaths = ['/anhorig', '/profil', '/anhorig-onboarding'];
+    const isPatientDetailPath = location.pathname.startsWith('/patient/');
+    
+    if (!relativeAllowedPaths.includes(location.pathname) && !isPatientDetailPath) {
+      return <Navigate to="/anhorig" replace />;
+    }
+    
     return <>{children}</>;
   }
 
@@ -49,9 +67,9 @@ export function ProtectedRoute({ children, skipOnboardingCheck = false }: Protec
     return <Navigate to="/onboarding" replace />;
   }
 
-  // Redirect patients away from doctor-specific pages
-  const doctorOnlyPaths = ['/lakare', '/mina-patienter'];
-  if (doctorOnlyPaths.includes(location.pathname)) {
+  // Redirect patients away from doctor-specific and relative-specific pages
+  const restrictedPaths = ['/lakare', '/mina-patienter', '/anhorig'];
+  if (restrictedPaths.includes(location.pathname)) {
     return <Navigate to="/" replace />;
   }
 
