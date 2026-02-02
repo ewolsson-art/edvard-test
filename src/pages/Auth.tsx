@@ -78,8 +78,8 @@ const Auth = () => {
         </div>
 
         {/* Hero Section */}
-        <section className="relative z-10 py-16 md:py-24 px-4 md:px-8">
-          <div className="max-w-6xl mx-auto">
+        <section className="relative z-10 min-h-[calc(100vh-4rem)] flex items-center justify-center px-4 md:px-8">
+          <div className="max-w-6xl mx-auto w-full">
             <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
               {/* Left side - Text */}
               <div className="space-y-6 animate-fade-in">
