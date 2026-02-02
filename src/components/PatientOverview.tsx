@@ -469,13 +469,27 @@ export function PatientOverview({ connection, onBack, onToggleChatEnabled }: Pat
       )}
 
       {/* View tabs */}
-      <Tabs value={view} onValueChange={(v) => setView(v as ViewType)} className="w-full">
-        <TabsList className="grid w-full max-w-md grid-cols-3">
-          <TabsTrigger value="week">Vecka</TabsTrigger>
-          <TabsTrigger value="month">Månad</TabsTrigger>
-          <TabsTrigger value="year">År</TabsTrigger>
-        </TabsList>
-      </Tabs>
+      <div className="flex items-center gap-4">
+        <Tabs value={view} onValueChange={(v) => setView(v as ViewType)} className="flex-1 max-w-md">
+          <TabsList className="grid w-full grid-cols-3">
+            <TabsTrigger value="week">Vecka</TabsTrigger>
+            <TabsTrigger value="month">Månad</TabsTrigger>
+            <TabsTrigger value="year">År</TabsTrigger>
+          </TabsList>
+        </Tabs>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => {
+            const today = new Date();
+            setCurrentWeek(today);
+            setCurrentMonth(today);
+            setCurrentYear(today.getFullYear());
+          }}
+        >
+          Idag
+        </Button>
+      </div>
 
       {/* Stats and calendars based on what's shared */}
       <div className="space-y-8">
