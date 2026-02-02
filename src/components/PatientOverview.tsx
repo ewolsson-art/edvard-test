@@ -505,9 +505,9 @@ export function PatientOverview({ connection, onBack, onToggleChatEnabled }: Pat
       <div className="space-y-8">
         {connection.share_mood && (
           <section>
-            <div className="flex items-center justify-between mb-6">
-              <h3 className="font-display text-2xl font-semibold">Mående</h3>
-              <div className="flex items-center gap-4">
+            <div className="mb-6">
+              <div className="flex items-center justify-between">
+                <h3 className="font-display text-2xl font-semibold">Mående</h3>
                 <Button
                   variant="outline"
                   size="sm"
@@ -520,12 +520,12 @@ export function PatientOverview({ connection, onBack, onToggleChatEnabled }: Pat
                 >
                   Idag
                 </Button>
-                {isRelativeViewing && view === 'month' && (
-                  <p className="text-sm text-muted-foreground">
-                    Dubbelklicka på ett datum för att lägga till egen anteckning
-                  </p>
-                )}
               </div>
+              {isRelativeViewing && view === 'month' && (
+                <p className="text-sm text-muted-foreground mt-2">
+                  Dubbelklicka på ett datum för att lägga till egen anteckning
+                </p>
+              )}
             </div>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {view === 'week' && (
