@@ -29,6 +29,7 @@ import { MedicationsSection } from '@/components/MedicationsSection';
 import { DoctorConnectionsSection } from '@/components/DoctorConnectionsSection';
 import { DelegatesSection } from '@/components/DelegatesSection';
 import { AvatarUpload } from '@/components/AvatarUpload';
+import { NotificationSettings } from '@/components/NotificationSettings';
 
 const CHECKIN_OPTIONS = [
   {
@@ -524,6 +525,11 @@ const Profile = () => {
               {hasCheckinChanges ? 'Spara ändringar' : 'Inga ändringar'}
             </Button>
           </div>
+        )}
+
+        {/* Notification Settings - Only for patients */}
+        {!isDoctor && (
+          <NotificationSettings />
         )}
 
         {/* Delete Account */}
