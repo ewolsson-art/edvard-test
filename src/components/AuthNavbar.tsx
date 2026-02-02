@@ -11,11 +11,11 @@ interface NavItem {
 }
 
 const navItems: NavItem[] = [
-  { label: 'Om oss', href: '#om-oss' },
-  { label: 'För patienter', href: '#for-patienter' },
-  { label: 'För vårdgivare', href: '#for-vardgivare' },
-  { label: 'För anhöriga', href: '#for-anhoriga' },
-  { label: 'Samarbetspartners', href: '#samarbetspartners' },
+  { label: 'Om oss', href: '/om-oss' },
+  { label: 'För patienter', href: '/for-patienter' },
+  { label: 'För vårdgivare', href: '/for-vardgivare' },
+  { label: 'För anhöriga', href: '/for-anhoriga' },
+  { label: 'Samarbetspartners', href: '/samarbetspartners' },
 ];
 
 export function AuthNavbar() {
@@ -25,11 +25,7 @@ export function AuthNavbar() {
 
   const handleNavClick = (href: string) => {
     setIsMobileMenuOpen(false);
-    // For now, just scroll or navigate - can be extended later
-    const element = document.querySelector(href);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
+    navigate(href);
   };
 
   const handleLoginClick = () => {
