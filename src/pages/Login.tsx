@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useSearchParams } from "react-router-dom";
 import { z } from "zod";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { AuthNavbar } from "@/components/AuthNavbar";
 import { Logo } from "@/components/Logo";
-import { Eye, EyeOff, ArrowRight, Loader2, Mail } from "lucide-react";
+import { Eye, EyeOff, ArrowRight, Loader2, Mail, CheckCircle2 } from "lucide-react";
 
 const loginSchema = z.object({
   email: z.string().email("Ogiltig e-postadress"),
@@ -21,6 +21,8 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [validationErrors, setValidationErrors] = useState<{ email?: string; password?: string }>({});
+  const [searchParams] = useSearchParams();
+  const isVerified = searchParams.get("verified") === "true";
 
   const { user, loading, signIn } = useAuth();
   const navigate = useNavigate();
@@ -99,6 +101,15 @@ const Login = () => {
                 Logga in på ditt konto
               </p>
             </div>
+
+            {isVerified && (
+              <div className="mb-6 p-4 rounded-xl bg-primary/10 border border-primary/20 flex items-center gap-3">
+                <CheckCircle2 className="h-5 w-5 text-primary flex-shrink-0" />
+                <p className="text-sm text-foreground">
+                  Din e-post är nu verifierad! Logga in för att fortsätta.
+                </p>
+              </div>
+            )}
 
             <form onSubmit={handleSubmit} className="space-y-5">
               <div className="space-y-2">
