@@ -44,6 +44,7 @@ export const RelativeConnectionsSection = () => {
     share_exercise: true,
     share_medication: true,
     share_comments: false,
+    share_characteristics: false,
   });
 
   const handleInvite = async () => {
@@ -98,6 +99,7 @@ export const RelativeConnectionsSection = () => {
       share_exercise: true,
       share_medication: true,
       share_comments: false,
+      share_characteristics: false,
     });
     setRespondDialogOpen(true);
   };
@@ -148,12 +150,13 @@ export const RelativeConnectionsSection = () => {
   }
 
   const shareOptions = [
-    { key: 'share_mood', label: 'Maende' },
-    { key: 'share_sleep', label: 'Somn' },
+    { key: 'share_mood', label: 'Mående' },
+    { key: 'share_sleep', label: 'Sömn' },
     { key: 'share_eating', label: 'Kost' },
-    { key: 'share_exercise', label: 'Traning' },
+    { key: 'share_exercise', label: 'Träning' },
     { key: 'share_medication', label: 'Mediciner' },
     { key: 'share_comments', label: 'Kommentarer' },
+    { key: 'share_characteristics', label: 'Kännetecken' },
   ];
 
   return (

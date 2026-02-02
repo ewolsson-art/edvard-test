@@ -15,6 +15,7 @@ export interface PatientConnection {
   share_exercise: boolean;
   share_medication: boolean;
   share_comments: boolean;
+  share_characteristics: boolean;
   created_at: string;
   patient_profile?: {
     first_name: string | null;
