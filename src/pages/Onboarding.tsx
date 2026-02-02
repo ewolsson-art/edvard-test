@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
@@ -72,7 +73,8 @@ const TOTAL_STEPS = 4;
 const Onboarding = () => {
   const { toast } = useToast();
   const { user } = useAuth();
-  const { createPreferences } = useUserPreferences();
+  const { createPreferences, refetch } = useUserPreferences();
+  const navigate = useNavigate();
   const [step, setStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [selectedDiagnoses, setSelectedDiagnoses] = useState<string[]>([]);
@@ -153,7 +155,11 @@ const Onboarding = () => {
       description: 'Din dagbok är nu redo att använda.',
     });
     
-    window.location.href = '/';
+    // Refetch preferences to update needsOnboarding state before navigating
+    await refetch();
+    
+    // Use React Router navigate for proper state management
+    navigate('/', { replace: true });
   };
 
   return (
