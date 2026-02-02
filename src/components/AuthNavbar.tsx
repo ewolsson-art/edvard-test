@@ -34,12 +34,12 @@ export function AuthNavbar() {
 
   const handleLoginClick = () => {
     setIsMobileMenuOpen(false);
-    navigate('/auth?mode=login');
+    navigate('/logga-in');
   };
 
   const handleSignupClick = () => {
     setIsMobileMenuOpen(false);
-    navigate('/auth?mode=signup');
+    navigate('/skapa-konto');
   };
 
   // Check current mode from URL
