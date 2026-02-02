@@ -377,15 +377,17 @@ export function PatientOverview({ connection, onBack, onToggleChatEnabled }: Pat
             <Radio className="w-4 h-4 animate-pulse" />
             <span>Live</span>
           </div>
-          <Button 
-            variant="outline" 
-            size="sm" 
-            onClick={handleOpenChat}
-            className="gap-2"
-          >
-            <MessageSquare className="w-4 h-4" />
-            Chatt
-          </Button>
+          {onToggleChatEnabled && (
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={handleOpenChat}
+              className="gap-2"
+            >
+              <MessageSquare className="w-4 h-4" />
+              Chatt
+            </Button>
+          )}
         </div>
       </div>
 
@@ -406,26 +408,28 @@ export function PatientOverview({ connection, onBack, onToggleChatEnabled }: Pat
         </div>
       )}
 
-      {/* Chat toggle setting */}
-      <div className="glass-card p-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <MessageSquare className="w-5 h-5 text-primary" />
-            <div>
-              <Label htmlFor="chat-toggle" className="font-medium">Tillåt chatt med patient</Label>
-              <p className="text-sm text-muted-foreground">
-                Patienten kan skicka meddelanden till dig när aktiverat
-              </p>
+      {/* Chat toggle setting - only for doctors */}
+      {onToggleChatEnabled && (
+        <div className="glass-card p-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <MessageSquare className="w-5 h-5 text-primary" />
+              <div>
+                <Label htmlFor="chat-toggle" className="font-medium">Tillåt chatt med patient</Label>
+                <p className="text-sm text-muted-foreground">
+                  Patienten kan skicka meddelanden till dig när aktiverat
+                </p>
+              </div>
             </div>
+            <Switch
+              id="chat-toggle"
+              checked={connection.chat_enabled}
+              onCheckedChange={handleChatToggle}
+              disabled={isChatToggling}
+            />
           </div>
-          <Switch
-            id="chat-toggle"
-            checked={connection.chat_enabled}
-            onCheckedChange={handleChatToggle}
-            disabled={isChatToggling}
-          />
         </div>
-      </div>
+      )}
 
       {/* View tabs */}
       <Tabs value={view} onValueChange={(v) => setView(v as ViewType)} className="w-full">
