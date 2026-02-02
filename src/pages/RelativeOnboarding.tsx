@@ -61,7 +61,8 @@ const RelativeOnboarding = () => {
       description: 'Du kan nu börja följa dina närstående.',
     });
     
-    navigate('/anhorig', { replace: true });
+    // Use window.location for a full page reload to ensure all hooks refetch fresh data
+    window.location.href = '/anhorig';
   };
 
   return (
