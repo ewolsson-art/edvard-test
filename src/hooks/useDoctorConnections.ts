@@ -8,6 +8,7 @@ export interface PatientConnection {
   patient_id: string;
   doctor_id: string;
   status: 'pending' | 'approved' | 'rejected';
+  initiated_by: 'patient' | 'doctor';
   share_mood: boolean;
   share_sleep: boolean;
   share_eating: boolean;
@@ -122,16 +123,83 @@ export function useDoctorConnections() {
     return true;
   }, [toast]);
 
+  const requestPatientAccess = useCallback(async (patientEmail: string) => {
+    if (!user) return { success: false, error: 'Inte inloggad' };
+
+    // Find patient by email using the database function
+    const { data: patientId, error: patientError } = await supabase
+      .rpc('get_patient_id_by_email', { patient_email: patientEmail });
+
+    if (patientError || !patientId) {
+      return { success: false, error: 'Kunde inte hitta patient med denna e-post' };
+    }
+
+    // Check if connection already exists
+    const { data: existing } = await supabase
+      .from('patient_doctor_connections')
+      .select('id')
+      .eq('patient_id', patientId)
+      .eq('doctor_id', user.id)
+      .maybeSingle();
+
+    if (existing) {
+      return { success: false, error: 'Du har redan en koppling till denna patient' };
+    }
+
+    const { error } = await supabase
+      .from('patient_doctor_connections')
+      .insert({
+        patient_id: patientId as string,
+        doctor_id: user.id,
+        initiated_by: 'doctor',
+        status: 'pending',
+      });
+
+    if (error) {
+      console.error('Error requesting access:', error);
+      return { success: false, error: 'Kunde inte skicka förfrågan' };
+    }
+
+    toast({ title: "Förfrågan skickad!" });
+    await fetchConnections();
+    return { success: true };
+  }, [user, toast, fetchConnections]);
+
+  const cancelRequest = useCallback(async (connectionId: string) => {
+    const { error } = await supabase
+      .from('patient_doctor_connections')
+      .delete()
+      .eq('id', connectionId);
+
+    if (error) {
+      toast({
+        title: "Kunde inte avbryta",
+        variant: "destructive",
+      });
+      return false;
+    }
+
+    setConnections(prev => prev.filter(c => c.id !== connectionId));
+    toast({ title: "Förfrågan avbruten" });
+    return true;
+  }, [toast]);
+
   const approvedConnections = connections.filter(c => c.status === 'approved');
   const pendingConnections = connections.filter(c => c.status === 'pending');
+  const pendingFromPatients = pendingConnections.filter(c => c.initiated_by === 'patient');
+  const pendingFromDoctor = pendingConnections.filter(c => c.initiated_by === 'doctor');
 
   return {
     connections,
     approvedConnections,
     pendingConnections,
+    pendingFromPatients,
+    pendingFromDoctor,
     isLoading,
     updateConnectionStatus,
     toggleChatEnabled,
+    requestPatientAccess,
+    cancelRequest,
     refetch: fetchConnections,
   };
 }

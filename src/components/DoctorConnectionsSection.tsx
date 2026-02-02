@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
-import { Loader2, UserPlus, Users, Trash2, Settings, Stethoscope } from 'lucide-react';
+import { Loader2, UserPlus, Users, Trash2, Settings, Stethoscope, Check, X, Bell } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import {
   Dialog,
@@ -15,16 +15,28 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
+import { Badge } from '@/components/ui/badge';
 
 const emailSchema = z.string().email({ message: "Ogiltig e-postadress" });
 
 export const DoctorConnectionsSection = () => {
-  const { connections, isLoading, inviteDoctor, updateShareSettings, removeConnection } = usePatientConnections();
+  const { 
+    connections, 
+    pendingFromDoctors,
+    isLoading, 
+    inviteDoctor, 
+    updateShareSettings, 
+    removeConnection,
+    respondToRequest,
+  } = usePatientConnections();
   const { toast } = useToast();
   
   const [doctorEmail, setDoctorEmail] = useState('');
   const [isInviting, setIsInviting] = useState(false);
   const [inviteDialogOpen, setInviteDialogOpen] = useState(false);
+  const [respondDialogOpen, setRespondDialogOpen] = useState(false);
+  const [selectedRequest, setSelectedRequest] = useState<string | null>(null);
+  const [isResponding, setIsResponding] = useState(false);
   const [shareSettings, setShareSettings] = useState({
     share_mood: true,
     share_sleep: true,
@@ -60,6 +72,36 @@ export const DoctorConnectionsSection = () => {
     }
   };
 
+  const handleRespondToRequest = async (approved: boolean) => {
+    if (!selectedRequest) return;
+    setIsResponding(true);
+    
+    const success = await respondToRequest(
+      selectedRequest, 
+      approved, 
+      approved ? shareSettings : undefined
+    );
+    
+    setIsResponding(false);
+    if (success) {
+      setRespondDialogOpen(false);
+      setSelectedRequest(null);
+    }
+  };
+
+  const openRespondDialog = (connectionId: string) => {
+    setSelectedRequest(connectionId);
+    setShareSettings({
+      share_mood: true,
+      share_sleep: true,
+      share_eating: true,
+      share_exercise: true,
+      share_medication: true,
+      share_comments: false,
+    });
+    setRespondDialogOpen(true);
+  };
+
   const getDoctorName = (connection: typeof connections[0]) => {
     if (connection.doctor_profile?.first_name || connection.doctor_profile?.last_name) {
       return [connection.doctor_profile.first_name, connection.doctor_profile.last_name]
@@ -72,16 +114,21 @@ export const DoctorConnectionsSection = () => {
     return 'Okänd läkare';
   };
 
-  const getStatusLabel = (status: string) => {
+  const getStatusLabel = (status: string, initiatedBy: string) => {
+    if (status === 'pending') {
+      return initiatedBy === 'doctor' ? 'Väntar på ditt svar' : 'Väntar på svar';
+    }
     switch (status) {
-      case 'pending': return 'Väntar';
       case 'approved': return 'Godkänd';
       case 'rejected': return 'Avvisad';
       default: return status;
     }
   };
 
-  const getStatusColor = (status: string) => {
+  const getStatusColor = (status: string, initiatedBy: string) => {
+    if (status === 'pending' && initiatedBy === 'doctor') {
+      return 'bg-blue-500/20 text-blue-700 dark:text-blue-400';
+    }
     switch (status) {
       case 'pending': return 'bg-amber-500/20 text-amber-700 dark:text-amber-400';
       case 'approved': return 'bg-green-500/20 text-green-700 dark:text-green-400';
@@ -89,6 +136,8 @@ export const DoctorConnectionsSection = () => {
       default: return 'bg-muted text-muted-foreground';
     }
   };
+
+  const selectedRequestData = connections.find(c => c.id === selectedRequest);
 
   if (isLoading) {
     return (
@@ -104,6 +153,11 @@ export const DoctorConnectionsSection = () => {
         <div className="flex items-center gap-2">
           <Stethoscope className="w-5 h-5 text-primary" />
           <h3 className="text-lg font-semibold">Mina läkare</h3>
+          {pendingFromDoctors.length > 0 && (
+            <Badge variant="destructive" className="h-5 px-1.5 text-xs">
+              {pendingFromDoctors.length}
+            </Badge>
+          )}
         </div>
         <Dialog open={inviteDialogOpen} onOpenChange={setInviteDialogOpen}>
           <DialogTrigger asChild>
@@ -169,7 +223,113 @@ export const DoctorConnectionsSection = () => {
 
       <p className="text-xs text-muted-foreground">Hantera vilka läkare som har tillgång till din data</p>
 
-      {connections.length === 0 ? (
+      {/* Pending requests from doctors */}
+      {pendingFromDoctors.length > 0 && (
+        <div className="space-y-2">
+          <div className="flex items-center gap-2 text-sm font-medium text-blue-600 dark:text-blue-400">
+            <Bell className="w-4 h-4" />
+            Inkommande förfrågningar
+          </div>
+          {pendingFromDoctors.map((connection) => (
+            <div key={connection.id} className="p-4 rounded-xl border-2 border-blue-200 dark:border-blue-800 bg-blue-50/50 dark:bg-blue-950/20">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center">
+                    <Stethoscope className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                  </div>
+                  <div>
+                    <h4 className="font-medium text-sm">{getDoctorName(connection)}</h4>
+                    {connection.doctor_profile?.clinic_name && (
+                      <p className="text-xs text-muted-foreground">{connection.doctor_profile.clinic_name}</p>
+                    )}
+                    <p className="text-xs text-blue-600 dark:text-blue-400">Vill ha tillgång till din data</p>
+                  </div>
+                </div>
+                <div className="flex gap-2">
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="gap-1"
+                    onClick={() => removeConnection(connection.id)}
+                  >
+                    <X className="w-4 h-4" />
+                    Avvisa
+                  </Button>
+                  <Button
+                    size="sm"
+                    className="gap-1"
+                    onClick={() => openRespondDialog(connection.id)}
+                  >
+                    <Check className="w-4 h-4" />
+                    Godkänn
+                  </Button>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Response dialog */}
+      <Dialog open={respondDialogOpen} onOpenChange={setRespondDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Godkänn åtkomst</DialogTitle>
+            <DialogDescription>
+              Välj vilken data du vill dela med {selectedRequestData ? getDoctorName(selectedRequestData) : 'läkaren'}.
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="space-y-6 pt-4">
+            <div className="space-y-4">
+              <Label>Dela följande data</Label>
+              <div className="space-y-3">
+                {[
+                  { key: 'share_mood', label: 'Mående' },
+                  { key: 'share_sleep', label: 'Sömn' },
+                  { key: 'share_eating', label: 'Kost' },
+                  { key: 'share_exercise', label: 'Träning' },
+                  { key: 'share_medication', label: 'Mediciner' },
+                  { key: 'share_comments', label: 'Kommentarer' },
+                ].map(({ key, label }) => (
+                  <div key={key} className="flex items-center justify-between">
+                    <span className="text-sm">{label}</span>
+                    <Switch
+                      checked={shareSettings[key as keyof typeof shareSettings]}
+                      onCheckedChange={(checked) =>
+                        setShareSettings(prev => ({ ...prev, [key]: checked }))
+                      }
+                      disabled={isResponding}
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="flex gap-2">
+              <Button 
+                variant="outline" 
+                onClick={() => handleRespondToRequest(false)} 
+                disabled={isResponding}
+                className="flex-1"
+              >
+                Avvisa
+              </Button>
+              <Button 
+                onClick={() => handleRespondToRequest(true)} 
+                disabled={isResponding}
+                className="flex-1"
+              >
+                {isResponding && <Loader2 className="w-4 h-4 animate-spin mr-2" />}
+                Godkänn
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Existing connections */}
+      {connections.filter(c => !(c.status === 'pending' && c.initiated_by === 'doctor')).length === 0 && pendingFromDoctors.length === 0 ? (
         <div className="text-center py-6 bg-muted/50 rounded-xl">
           <Users className="w-8 h-8 text-muted-foreground mx-auto mb-2" />
           <p className="text-sm text-muted-foreground">Inga läkare kopplade ännu</p>
@@ -184,7 +344,7 @@ export const DoctorConnectionsSection = () => {
         </div>
       ) : (
         <div className="space-y-3">
-          {connections.map((connection) => (
+          {connections.filter(c => !(c.status === 'pending' && c.initiated_by === 'doctor')).map((connection) => (
             <div key={connection.id} className="p-4 rounded-xl border bg-muted/30">
               <div className="flex items-start justify-between mb-3">
                 <div className="flex items-center gap-3">
@@ -198,8 +358,8 @@ export const DoctorConnectionsSection = () => {
                     {connection.doctor_profile?.clinic_name && (
                       <p className="text-xs text-muted-foreground">{connection.doctor_profile.clinic_name}</p>
                     )}
-                    <span className={`text-xs px-2 py-0.5 rounded-full ${getStatusColor(connection.status)}`}>
-                      {getStatusLabel(connection.status)}
+                    <span className={`text-xs px-2 py-0.5 rounded-full ${getStatusColor(connection.status, connection.initiated_by)}`}>
+                      {getStatusLabel(connection.status, connection.initiated_by)}
                     </span>
                   </div>
                 </div>
