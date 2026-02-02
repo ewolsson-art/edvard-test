@@ -149,38 +149,99 @@
 @layer components {
   .mood-btn {
     @apply relative overflow-hidden transition-all duration-300 ease-out;
-    @apply hover:scale-105 active:scale-95;
+    @apply hover:scale-[1.03] active:scale-[0.98];
     @apply focus:outline-none focus:ring-2 focus:ring-offset-2;
+    @apply backdrop-blur-sm;
+  }
+
+  .mood-btn::before {
+    content: '';
+    @apply absolute inset-0 opacity-0 transition-opacity duration-300;
+    background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, transparent 50%, rgba(0,0,0,0.1) 100%);
+  }
+
+  .mood-btn:hover::before {
+    @apply opacity-100;
   }
 
   .mood-btn-elevated {
-    @apply bg-mood-elevated text-white;
-    @apply hover:shadow-lg hover:shadow-mood-elevated/30;
+    background: linear-gradient(145deg, hsl(var(--mood-elevated)) 0%, hsl(38 85% 45%) 100%);
+    @apply text-white shadow-lg shadow-mood-elevated/20;
+    @apply hover:shadow-xl hover:shadow-mood-elevated/30;
     @apply focus:ring-mood-elevated;
   }
 
   .mood-btn-somewhat-elevated {
-    @apply bg-mood-somewhat-elevated text-white;
-    @apply hover:shadow-lg hover:shadow-mood-somewhat-elevated/30;
+    background: linear-gradient(145deg, hsl(var(--mood-somewhat-elevated)) 0%, hsl(45 75% 48%) 100%);
+    @apply text-white shadow-lg shadow-mood-somewhat-elevated/20;
+    @apply hover:shadow-xl hover:shadow-mood-somewhat-elevated/30;
     @apply focus:ring-mood-somewhat-elevated;
   }
 
   .mood-btn-stable {
-    @apply bg-mood-stable text-white;
-    @apply hover:shadow-lg hover:shadow-mood-stable/30;
+    background: linear-gradient(145deg, hsl(var(--mood-stable)) 0%, hsl(160 75% 32%) 100%);
+    @apply text-white shadow-lg shadow-mood-stable/20;
+    @apply hover:shadow-xl hover:shadow-mood-stable/30;
     @apply focus:ring-mood-stable;
   }
 
   .mood-btn-somewhat-depressed {
-    @apply bg-mood-somewhat-depressed text-white;
-    @apply hover:shadow-lg hover:shadow-mood-somewhat-depressed/30;
+    background: linear-gradient(145deg, hsl(var(--mood-somewhat-depressed)) 0%, hsl(220 55% 48%) 100%);
+    @apply text-white shadow-lg shadow-mood-somewhat-depressed/20;
+    @apply hover:shadow-xl hover:shadow-mood-somewhat-depressed/30;
     @apply focus:ring-mood-somewhat-depressed;
   }
 
   .mood-btn-depressed {
-    @apply bg-mood-depressed text-white;
-    @apply hover:shadow-lg hover:shadow-mood-depressed/30;
+    background: linear-gradient(145deg, hsl(var(--mood-depressed)) 0%, hsl(0 75% 52%) 100%);
+    @apply text-white shadow-lg shadow-mood-depressed/20;
+    @apply hover:shadow-xl hover:shadow-mood-depressed/30;
     @apply focus:ring-mood-depressed;
+  }
+
+  /* Modern checkin card styles */
+  .checkin-option-card {
+    @apply relative overflow-hidden rounded-3xl border-2 border-transparent;
+    @apply bg-gradient-to-br from-card via-card to-muted/30;
+    @apply p-8 flex flex-col items-center gap-4 transition-all duration-300;
+    @apply hover:border-primary/30 hover:shadow-xl hover:shadow-primary/10;
+    @apply hover:-translate-y-1;
+    @apply active:scale-[0.98];
+  }
+
+  .checkin-option-card::before {
+    content: '';
+    @apply absolute inset-0 opacity-0 transition-opacity duration-300;
+    background: linear-gradient(135deg, rgba(var(--primary), 0.05) 0%, transparent 100%);
+  }
+
+  .checkin-option-card:hover::before {
+    @apply opacity-100;
+  }
+
+  .checkin-option-card.selected {
+    @apply border-primary bg-primary/5 shadow-lg shadow-primary/15;
+  }
+
+  .checkin-option-card .icon-wrapper {
+    @apply w-16 h-16 rounded-2xl flex items-center justify-center;
+    @apply transition-all duration-300;
+  }
+
+  .checkin-option-card:hover .icon-wrapper {
+    @apply scale-110;
+  }
+
+  .checkin-option-card.positive .icon-wrapper {
+    @apply bg-gradient-to-br from-mood-stable/20 to-mood-stable/5;
+  }
+
+  .checkin-option-card.negative .icon-wrapper {
+    @apply bg-gradient-to-br from-mood-depressed/20 to-mood-depressed/5;
+  }
+
+  .checkin-option-card.neutral .icon-wrapper {
+    @apply bg-gradient-to-br from-muted to-muted/50;
   }
 
   .calendar-day {

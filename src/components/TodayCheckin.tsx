@@ -348,19 +348,22 @@ export function TodayCheckin({
             </h1>
           </div>
 
-          <div className="grid grid-cols-3 gap-6 md:gap-8 max-w-3xl mx-auto">
+          <div className="grid grid-cols-3 gap-4 md:gap-6 max-w-3xl mx-auto">
             {moodButtons.map(({ mood, icon: Icon, label, cssClass }) => (
               <button
                 key={mood}
                 onClick={() => handleMoodSelect(mood)}
                 className={cn(
-                  "mood-btn rounded-2xl p-5 md:p-8 flex flex-col items-center gap-3",
+                  "mood-btn rounded-3xl p-6 md:p-8 flex flex-col items-center gap-4 group",
                   cssClass,
-                  checkinData.mood === mood && "ring-4 ring-offset-2 ring-offset-background"
+                  checkinData.mood === mood && "ring-4 ring-offset-4 ring-offset-background scale-[1.02]"
                 )}
               >
-                <Icon className="w-10 h-10 md:w-12 md:h-12" />
-                <span className="font-medium text-sm md:text-base text-center leading-tight drop-shadow-sm">{label}</span>
+                <div className="relative">
+                  <div className="absolute inset-0 bg-white/20 rounded-full blur-xl scale-150 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  <Icon className="w-12 h-12 md:w-14 md:h-14 relative z-10 transition-transform duration-300 group-hover:scale-110" />
+                </div>
+                <span className="font-semibold text-sm md:text-base text-center leading-tight tracking-wide">{label}</span>
               </button>
             ))}
           </div>
@@ -401,28 +404,32 @@ export function TodayCheckin({
             </h1>
           </div>
 
-          <div className="grid grid-cols-2 gap-4 max-w-md mx-auto">
+          <div className="grid grid-cols-2 gap-5 max-w-lg mx-auto">
             <button
               onClick={() => handleSleepSelect('good')}
               className={cn(
-                "p-6 rounded-2xl border-2 flex flex-col items-center gap-3 transition-all",
-                "hover:border-primary hover:bg-primary/5",
-                checkinData.sleepQuality === 'good' && "border-primary bg-primary/10"
+                "checkin-option-card positive",
+                checkinData.sleepQuality === 'good' && "selected"
               )}
             >
-              <ThumbsUp className="w-10 h-10 text-mood-stable" />
-              <span className="font-medium">Bra</span>
+              <div className="icon-wrapper">
+                <ThumbsUp className="w-8 h-8 text-mood-stable" />
+              </div>
+              <span className="font-semibold text-lg">Bra</span>
+              <span className="text-xs text-muted-foreground">Jag sov gott</span>
             </button>
             <button
               onClick={() => handleSleepSelect('bad')}
               className={cn(
-                "p-6 rounded-2xl border-2 flex flex-col items-center gap-3 transition-all",
-                "hover:border-primary hover:bg-primary/5",
-                checkinData.sleepQuality === 'bad' && "border-primary bg-primary/10"
+                "checkin-option-card negative",
+                checkinData.sleepQuality === 'bad' && "selected"
               )}
             >
-              <ThumbsDown className="w-10 h-10 text-mood-depressed" />
-              <span className="font-medium">Dåligt</span>
+              <div className="icon-wrapper">
+                <ThumbsDown className="w-8 h-8 text-mood-depressed" />
+              </div>
+              <span className="font-semibold text-lg">Dåligt</span>
+              <span className="text-xs text-muted-foreground">Sov oroligt</span>
             </button>
           </div>
 
@@ -462,28 +469,32 @@ export function TodayCheckin({
             </h1>
           </div>
 
-          <div className="grid grid-cols-2 gap-4 max-w-md mx-auto">
+          <div className="grid grid-cols-2 gap-5 max-w-lg mx-auto">
             <button
               onClick={() => handleEatingSelect('good')}
               className={cn(
-                "p-6 rounded-2xl border-2 flex flex-col items-center gap-3 transition-all",
-                "hover:border-primary hover:bg-primary/5",
-                checkinData.eatingQuality === 'good' && "border-primary bg-primary/10"
+                "checkin-option-card positive",
+                checkinData.eatingQuality === 'good' && "selected"
               )}
             >
-              <ThumbsUp className="w-10 h-10 text-mood-stable" />
-              <span className="font-medium">Bra</span>
+              <div className="icon-wrapper">
+                <ThumbsUp className="w-8 h-8 text-mood-stable" />
+              </div>
+              <span className="font-semibold text-lg">Bra</span>
+              <span className="text-xs text-muted-foreground">Ätit regelbundet</span>
             </button>
             <button
               onClick={() => handleEatingSelect('bad')}
               className={cn(
-                "p-6 rounded-2xl border-2 flex flex-col items-center gap-3 transition-all",
-                "hover:border-primary hover:bg-primary/5",
-                checkinData.eatingQuality === 'bad' && "border-primary bg-primary/10"
+                "checkin-option-card negative",
+                checkinData.eatingQuality === 'bad' && "selected"
               )}
             >
-              <ThumbsDown className="w-10 h-10 text-mood-depressed" />
-              <span className="font-medium">Dåligt</span>
+              <div className="icon-wrapper">
+                <ThumbsDown className="w-8 h-8 text-mood-depressed" />
+              </div>
+              <span className="font-semibold text-lg">Dåligt</span>
+              <span className="text-xs text-muted-foreground">Oregelbundet</span>
             </button>
           </div>
 
@@ -523,28 +534,32 @@ export function TodayCheckin({
             </h1>
           </div>
 
-          <div className="grid grid-cols-2 gap-4 max-w-md mx-auto">
+          <div className="grid grid-cols-2 gap-5 max-w-lg mx-auto">
             <button
               onClick={() => handleExerciseSelect(true)}
               className={cn(
-                "p-6 rounded-2xl border-2 flex flex-col items-center gap-3 transition-all",
-                "hover:border-primary hover:bg-primary/5",
-                checkinData.exercised === true && "border-primary bg-primary/10"
+                "checkin-option-card positive",
+                checkinData.exercised === true && "selected"
               )}
             >
-              <Check className="w-10 h-10 text-mood-stable" />
-              <span className="font-medium">Ja</span>
+              <div className="icon-wrapper">
+                <Check className="w-8 h-8 text-mood-stable" />
+              </div>
+              <span className="font-semibold text-lg">Ja</span>
+              <span className="text-xs text-muted-foreground">Jag har tränat</span>
             </button>
             <button
               onClick={() => handleExerciseSelect(false)}
               className={cn(
-                "p-6 rounded-2xl border-2 flex flex-col items-center gap-3 transition-all",
-                "hover:border-primary hover:bg-primary/5",
-                checkinData.exercised === false && "border-primary bg-primary/10"
+                "checkin-option-card neutral",
+                checkinData.exercised === false && "selected"
               )}
             >
-              <X className="w-10 h-10 text-muted-foreground" />
-              <span className="font-medium">Nej</span>
+              <div className="icon-wrapper">
+                <X className="w-8 h-8 text-muted-foreground" />
+              </div>
+              <span className="font-semibold text-lg">Nej</span>
+              <span className="text-xs text-muted-foreground">Vilodag</span>
             </button>
           </div>
 
@@ -584,7 +599,7 @@ export function TodayCheckin({
             </h1>
           </div>
 
-          <div className="grid grid-cols-2 gap-4 max-w-md mx-auto">
+          <div className="grid grid-cols-2 gap-5 max-w-lg mx-auto">
             <button
               onClick={() => {
                 // Mark all medications as taken
@@ -595,12 +610,15 @@ export function TodayCheckin({
                 });
               }}
               className={cn(
-                "p-6 rounded-2xl border-2 flex flex-col items-center gap-3 transition-all hover:border-primary hover:bg-primary/5",
-                medicationsTakenToday.length === activeMedications.length && activeMedications.length > 0 && "border-primary bg-primary/10"
+                "checkin-option-card positive",
+                medicationsTakenToday.length === activeMedications.length && activeMedications.length > 0 && "selected"
               )}
             >
-              <Check className="w-10 h-10 text-mood-stable" />
-              <span className="font-medium">Ja</span>
+              <div className="icon-wrapper">
+                <Check className="w-8 h-8 text-mood-stable" />
+              </div>
+              <span className="font-semibold text-lg">Ja</span>
+              <span className="text-xs text-muted-foreground">Alla tagna</span>
             </button>
             <button
               onClick={() => {
@@ -612,12 +630,15 @@ export function TodayCheckin({
                 });
               }}
               className={cn(
-                "p-6 rounded-2xl border-2 flex flex-col items-center gap-3 transition-all hover:border-primary hover:bg-primary/5",
-                medicationsTakenToday.length === 0 && activeMedications.length > 0 && "border-primary bg-primary/10"
+                "checkin-option-card neutral",
+                medicationsTakenToday.length === 0 && activeMedications.length > 0 && "selected"
               )}
             >
-              <X className="w-10 h-10 text-muted-foreground" />
-              <span className="font-medium">Nej</span>
+              <div className="icon-wrapper">
+                <X className="w-8 h-8 text-muted-foreground" />
+              </div>
+              <span className="font-semibold text-lg">Nej</span>
+              <span className="text-xs text-muted-foreground">Inga tagna</span>
             </button>
           </div>
 
