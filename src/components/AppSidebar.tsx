@@ -5,6 +5,7 @@ import { useSidebar } from "@/components/ui/sidebar";
 import { useAuth } from "@/hooks/useAuth";
 import { useProfile } from "@/hooks/useProfile";
 import { useUserRole } from "@/hooks/useUserRole";
+import { usePendingNotifications } from "@/hooks/usePendingNotifications";
 import { Button } from "@/components/ui/button";
 import { Logo } from "@/components/Logo";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -44,6 +45,7 @@ export function AppSidebar() {
   const { user, signOut } = useAuth();
   const { firstName, fullName, avatarUrl } = useProfile();
   const { isDoctor, isPatient, isRelative, isLoading: roleLoading } = useUserRole();
+  const { hasPending } = usePendingNotifications();
   const isCollapsed = state === "collapsed";
 
   // Determine which nav items to show based on role
@@ -89,10 +91,28 @@ export function AppSidebar() {
                       style={{ animationDelay: `${index * 50}ms` }}
                     >
                       {item.url === '/profil' && avatarUrl ? (
-                        <Avatar className="h-5 w-5 shrink-0 ring-2 ring-transparent group-hover:ring-primary/20 transition-all duration-200">
-                          <AvatarImage src={avatarUrl} alt="Profilbild" />
-                          <AvatarFallback className="text-xs bg-primary/10 text-primary">{getInitials()}</AvatarFallback>
-                        </Avatar>
+                        <div className="relative">
+                          <Avatar className="h-5 w-5 shrink-0 ring-2 ring-transparent group-hover:ring-primary/20 transition-all duration-200">
+                            <AvatarImage src={avatarUrl} alt="Profilbild" />
+                            <AvatarFallback className="text-xs bg-primary/10 text-primary">{getInitials()}</AvatarFallback>
+                          </Avatar>
+                          {hasPending && (
+                            <span className="absolute -top-1 -right-1 flex h-3 w-3">
+                              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-destructive opacity-75"></span>
+                              <span className="relative inline-flex rounded-full h-3 w-3 bg-destructive"></span>
+                            </span>
+                          )}
+                        </div>
+                      ) : item.url === '/profil' ? (
+                        <div className="relative">
+                          <item.icon className="h-5 w-5 shrink-0 transition-transform duration-200 group-hover:scale-110" />
+                          {hasPending && (
+                            <span className="absolute -top-1 -right-1 flex h-3 w-3">
+                              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-destructive opacity-75"></span>
+                              <span className="relative inline-flex rounded-full h-3 w-3 bg-destructive"></span>
+                            </span>
+                          )}
+                        </div>
                       ) : (
                         <div className="relative">
                           <item.icon className="h-5 w-5 shrink-0 transition-transform duration-200 group-hover:scale-110" />
