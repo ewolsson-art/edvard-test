@@ -21,6 +21,7 @@ import Onboarding from "./pages/Onboarding";
 import DoctorOnboarding from "./pages/DoctorOnboarding";
 import RelativeOnboarding from "./pages/RelativeOnboarding";
 import RelativeDashboard from "./pages/RelativeDashboard";
+import RelativeReports from "./pages/RelativeReports";
 import Profile from "./pages/Profile";
 import DoctorHome from "./pages/DoctorHome";
 import DoctorDashboard from "./pages/DoctorDashboard";
@@ -80,6 +81,11 @@ const App = () => (
             <Route path="/anhorig" element={
               <ProtectedRoute>
                 <AppLayout><RelativeDashboard /></AppLayout>
+              </ProtectedRoute>
+            } />
+            <Route path="/anhorig-rapporter" element={
+              <ProtectedRoute>
+                <AppLayout><RelativeReports /></AppLayout>
               </ProtectedRoute>
             } />
             <Route path="/" element={
