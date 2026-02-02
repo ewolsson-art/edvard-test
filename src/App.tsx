@@ -35,10 +35,12 @@ const AppLayout = ({ children }: { children: React.ReactNode }) => (
     <div className="min-h-screen flex w-full">
       <AppSidebar />
       <main className="flex-1 relative">
-        <header className="absolute top-4 left-4 z-10">
-          <SidebarTrigger className="h-10 w-10 rounded-lg bg-card border border-border shadow-sm hover:bg-muted" />
+        <header className="sticky top-0 z-10 h-14 flex items-center px-4 bg-background/80 backdrop-blur-sm border-b border-border/50 md:hidden">
+          <SidebarTrigger className="h-9 w-9 rounded-lg bg-card border border-border shadow-sm hover:bg-muted" />
         </header>
-        {children}
+        <div className="md:pt-0">
+          {children}
+        </div>
       </main>
     </div>
   </SidebarProvider>
