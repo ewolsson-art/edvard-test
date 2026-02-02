@@ -78,7 +78,7 @@ const Auth = () => {
         </div>
 
         {/* Hero Section */}
-        <section className="relative z-10 min-h-[60vh] flex items-center justify-center px-4 md:px-8">
+        <section className="relative z-10 py-16 md:py-24 flex items-center justify-center px-4 md:px-8">
           <div className="max-w-4xl mx-auto text-center space-y-8 animate-fade-in">
             <div className="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-10">
               
