@@ -5,6 +5,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { useCharacteristics } from '@/hooks/useCharacteristics';
+import { useMoodData } from '@/hooks/useMoodData';
+import { cn } from '@/lib/utils';
 
 const Characteristics = () => {
   const {
@@ -14,6 +16,13 @@ const Characteristics = () => {
     addCharacteristic,
     deleteCharacteristic,
   } = useCharacteristics();
+
+  const { entries, isLoaded: moodLoaded } = useMoodData();
+  
+  // Get the latest mood from today's or most recent check-in
+  const latestMood = entries.length > 0 
+    ? entries.sort((a, b) => b.timestamp - a.timestamp)[0]?.mood 
+    : null;
 
   const [newElevated, setNewElevated] = useState('');
   const [newDepressed, setNewDepressed] = useState('');
@@ -36,7 +45,7 @@ const Characteristics = () => {
     setIsAddingDepressed(false);
   };
 
-  if (isLoading) {
+  if (isLoading || !moodLoaded) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
@@ -56,8 +65,18 @@ const Characteristics = () => {
 
       <div className="grid md:grid-cols-2 gap-6">
         {/* Elevated/Uppvarvad */}
-        <Card className="border-amber-200 dark:border-amber-900/50">
+        <Card className={cn(
+          "border-amber-200 dark:border-amber-900/50 transition-all duration-300",
+          latestMood === 'elevated' && "ring-2 ring-amber-400 dark:ring-amber-500 shadow-lg shadow-amber-100 dark:shadow-amber-900/20"
+        )}>
           <CardHeader className="pb-4">
+            {latestMood === 'elevated' && (
+              <div className="mb-2">
+                <Badge className="bg-amber-500 text-white text-xs">
+                  Senaste incheckning: Uppvarvad
+                </Badge>
+              </div>
+            )}
             <div className="flex items-center gap-2">
               <div className="p-2 rounded-lg bg-amber-100 dark:bg-amber-900/30">
                 <Zap className="h-5 w-5 text-amber-600 dark:text-amber-400" />
@@ -130,8 +149,18 @@ const Characteristics = () => {
         </Card>
 
         {/* Depressed/Nedstämd */}
-        <Card className="border-blue-200 dark:border-blue-900/50">
+        <Card className={cn(
+          "border-blue-200 dark:border-blue-900/50 transition-all duration-300",
+          latestMood === 'depressed' && "ring-2 ring-blue-400 dark:ring-blue-500 shadow-lg shadow-blue-100 dark:shadow-blue-900/20"
+        )}>
           <CardHeader className="pb-4">
+            {latestMood === 'depressed' && (
+              <div className="mb-2">
+                <Badge className="bg-blue-500 text-white text-xs">
+                  Senaste incheckning: Nedstämd
+                </Badge>
+              </div>
+            )}
             <div className="flex items-center gap-2">
               <div className="p-2 rounded-lg bg-blue-100 dark:bg-blue-900/30">
                 <Cloud className="h-5 w-5 text-blue-600 dark:text-blue-400" />
