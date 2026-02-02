@@ -15,6 +15,7 @@ export interface RelativeConnection {
   share_exercise: boolean;
   share_medication: boolean;
   share_comments: boolean;
+  share_characteristics: boolean;
   created_at: string;
   relative_profile?: {
     first_name: string | null;
@@ -84,6 +85,7 @@ export function usePatientRelativeConnections() {
       share_exercise: boolean;
       share_medication: boolean;
       share_comments: boolean;
+      share_characteristics: boolean;
     }
   ) => {
     if (!user) return { success: false, error: 'Inte inloggad' };
@@ -126,6 +128,7 @@ export function usePatientRelativeConnections() {
       share_exercise: boolean;
       share_medication: boolean;
       share_comments: boolean;
+      share_characteristics: boolean;
     }>
   ) => {
     const { error } = await supabase
@@ -177,6 +180,7 @@ export function usePatientRelativeConnections() {
       share_exercise: boolean;
       share_medication: boolean;
       share_comments: boolean;
+      share_characteristics: boolean;
     }
   ) => {
     const updateData = approved && shareSettings

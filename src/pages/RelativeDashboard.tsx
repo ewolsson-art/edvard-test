@@ -245,6 +245,9 @@ const RelativeDashboard = () => {
                     {connection.share_medication && (
                       <span className="text-xs bg-primary/10 text-primary px-2 py-0.5 rounded">Medicin</span>
                     )}
+                    {connection.share_characteristics && (
+                      <span className="text-xs bg-primary/10 text-primary px-2 py-0.5 rounded">Kännetecken</span>
+                    )}
                   </div>
                 </div>
               ))}
