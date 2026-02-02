@@ -6,6 +6,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { useMoodData } from '@/hooks/useMoodData';
 import { usePatientConnections, DoctorConnection } from '@/hooks/usePatientConnections';
 import { DoctorPatientChat } from '@/components/DoctorPatientChat';
+import { useAuth } from '@/hooks/useAuth';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 import ReactMarkdown from 'react-markdown';
@@ -27,6 +28,7 @@ const Chat = () => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
+  const { session } = useAuth();
   const { isLoaded: moodLoaded, getStatsForYear } = useMoodData();
   const { connections, isLoading: connectionsLoading } = usePatientConnections();
 
@@ -80,11 +82,16 @@ const Chat = () => {
     };
 
     try {
+      const accessToken = session?.access_token;
+      if (!accessToken) {
+        throw new Error('Du måste vara inloggad för att använda chatten');
+      }
+
       const response = await fetch(CHAT_URL, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+          Authorization: `Bearer ${accessToken}`,
         },
         body: JSON.stringify({
           messages: [...messages, userMessage],
