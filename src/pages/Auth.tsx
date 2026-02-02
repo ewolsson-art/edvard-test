@@ -91,19 +91,7 @@ const Auth = () => {
               </p>
             </div>
 
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Link to="/skapa-konto">
-                <Button size="lg" className="rounded-full px-8 h-12 text-base font-semibold shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 transition-all">
-                  <Sparkles className="w-5 h-5 mr-2" />
-                  Kom igång gratis
-                </Button>
-              </Link>
-              <Link to="/logga-in">
-                <Button variant="outline" size="lg" className="rounded-full px-8 h-12 text-base font-semibold">
-                  Logga in
-                </Button>
-              </Link>
-            </div>
+            
 
             <div className="flex items-center justify-center gap-3 text-sm text-muted-foreground">
               <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-muted/50 backdrop-blur-sm">
