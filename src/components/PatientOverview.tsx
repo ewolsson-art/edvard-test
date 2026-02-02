@@ -391,8 +391,8 @@ export function PatientOverview({ connection, onBack, onToggleChatEnabled }: Pat
         </div>
       </div>
 
-      {/* Diagnoses section */}
-      {diagnoses.length > 0 && (
+      {/* Diagnoses section - only for doctors */}
+      {onToggleChatEnabled && diagnoses.length > 0 && (
         <div className="glass-card p-4">
           <div className="flex items-center gap-3 mb-3">
             <Stethoscope className="w-5 h-5 text-primary" />
