@@ -114,18 +114,18 @@ export const PatientCharacteristics = ({
 
         {/* Depressed/Nedstämd */}
         <Card className={cn(
-          "border-blue-200 dark:border-blue-900/50 transition-all duration-300",
-          latestMood === 'depressed' && "ring-2 ring-blue-400 dark:ring-blue-500"
+          "border-red-200 dark:border-red-900/50 transition-all duration-300",
+          latestMood === 'depressed' && "ring-2 ring-red-400 dark:ring-red-500"
         )}>
           <CardHeader className="pb-3">
             {latestMood === 'depressed' && (
-              <Badge className="bg-blue-500 text-white text-xs w-fit mb-2">
+              <Badge className="bg-red-500 text-white text-xs w-fit mb-2">
                 Aktuellt läge
               </Badge>
             )}
             <div className="flex items-center gap-2">
-              <div className="p-2 rounded-lg bg-blue-100 dark:bg-blue-900/30">
-                <Cloud className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+              <div className="p-2 rounded-lg bg-red-100 dark:bg-red-900/30">
+                <Cloud className="h-4 w-4 text-red-600 dark:text-red-400" />
               </div>
               <div>
                 <CardTitle className="text-base">Nedstämd period</CardTitle>
@@ -141,7 +141,7 @@ export const PatientCharacteristics = ({
                   <Badge
                     key={char.id}
                     variant="secondary"
-                    className="bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300 py-1.5 px-3"
+                    className="bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300 py-1.5 px-3"
                   >
                     {char.name}
                   </Badge>

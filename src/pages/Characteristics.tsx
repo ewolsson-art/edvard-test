@@ -192,29 +192,29 @@ const Characteristics = () => {
 
         {/* Depressed/Nedstämd */}
         <Card className={cn(
-          "border-blue-200 dark:border-blue-900/50 transition-all duration-300 min-h-[400px]",
-          latestMood === 'depressed' && "ring-2 ring-blue-400 dark:ring-blue-500 shadow-lg shadow-blue-100 dark:shadow-blue-900/20"
+          "border-red-200 dark:border-red-900/50 transition-all duration-300 min-h-[400px]",
+          latestMood === 'depressed' && "ring-2 ring-red-400 dark:ring-red-500 shadow-lg shadow-red-100 dark:shadow-red-900/20"
         )}>
           <CardHeader className="pb-4 relative">
             {/* Plus button in top right */}
             <Button
               size="icon"
               onClick={() => setShowDepressedInput(true)}
-              className="absolute top-4 right-4 h-10 w-10 rounded-full bg-blue-500 hover:bg-blue-600 text-white shadow-md hover:shadow-lg transition-all"
+              className="absolute top-4 right-4 h-10 w-10 rounded-full bg-red-500 hover:bg-red-600 text-white shadow-md hover:shadow-lg transition-all"
             >
               <Plus className="h-5 w-5" />
             </Button>
 
             {latestMood === 'depressed' && (
               <div className="mb-3">
-                <Badge className="bg-blue-500 text-white text-xs">
+                <Badge className="bg-red-500 text-white text-xs">
                   Senaste incheckning: Nedstämd
                 </Badge>
               </div>
             )}
             <div className="flex items-center gap-3">
-              <div className="p-3 rounded-xl bg-blue-100 dark:bg-blue-900/30">
-                <Cloud className="h-6 w-6 text-blue-600 dark:text-blue-400" />
+              <div className="p-3 rounded-xl bg-red-100 dark:bg-red-900/30">
+                <Cloud className="h-6 w-6 text-red-600 dark:text-red-400" />
               </div>
               <div>
                 <CardTitle className="text-xl">Nedstämd period</CardTitle>
@@ -254,7 +254,7 @@ const Characteristics = () => {
                 <Button
                   onClick={handleAddDepressed}
                   disabled={!newDepressed.trim() || isAddingDepressed}
-                  className="bg-blue-500 hover:bg-blue-600 text-white shrink-0"
+                  className="bg-red-500 hover:bg-red-600 text-white shrink-0"
                 >
                   Lägg till
                 </Button>
@@ -272,7 +272,7 @@ const Characteristics = () => {
                   <Badge
                     key={char.id}
                     variant="secondary"
-                    className="bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300 hover:bg-blue-200 dark:hover:bg-blue-900/50 gap-1.5 py-2 px-4 text-sm"
+                    className="bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300 hover:bg-red-200 dark:hover:bg-red-900/50 gap-1.5 py-2 px-4 text-sm"
                   >
                     {char.name}
                     <button
@@ -288,7 +288,7 @@ const Characteristics = () => {
             </div>
 
             {/* Suggestions */}
-            <div className="pt-4 border-t border-blue-100 dark:border-blue-900/30">
+            <div className="pt-4 border-t border-red-100 dark:border-red-900/30">
               <p className="text-xs text-muted-foreground font-medium mb-3">Vanliga exempel:</p>
               <div className="flex flex-wrap gap-2">
                 {['Drar mig undan', 'Sover mer', 'Mindre energi', 'Svårt att koncentrera', 'Tappar aptiten', 'Gråter lättare'].map((suggestion) => (
@@ -298,7 +298,7 @@ const Characteristics = () => {
                       setNewDepressed(suggestion);
                       setShowDepressedInput(true);
                     }}
-                    className="text-xs px-3 py-1.5 rounded-full bg-blue-50 dark:bg-blue-900/20 hover:bg-blue-100 dark:hover:bg-blue-900/40 text-blue-700 dark:text-blue-300 transition-colors"
+                    className="text-xs px-3 py-1.5 rounded-full bg-red-50 dark:bg-red-900/20 hover:bg-red-100 dark:hover:bg-red-900/40 text-red-700 dark:text-red-300 transition-colors"
                   >
                     {suggestion}
                   </button>
