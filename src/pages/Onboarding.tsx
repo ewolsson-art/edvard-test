@@ -155,10 +155,8 @@ const Onboarding = () => {
       description: 'Din dagbok är nu redo att använda.',
     });
     
-    // Refetch preferences to update needsOnboarding state before navigating
-    await refetch();
-    
-    // Use React Router navigate for proper state management
+    // createPreferences already updates the preferences state with onboarding_completed: true
+    // Navigate immediately - the state is already updated
     navigate('/', { replace: true });
   };
 
