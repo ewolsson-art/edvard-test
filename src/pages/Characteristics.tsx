@@ -7,6 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { useCharacteristics } from '@/hooks/useCharacteristics';
 import { useMoodData } from '@/hooks/useMoodData';
 import { cn } from '@/lib/utils';
+import { CharacteristicsSharingSection } from '@/components/CharacteristicsSharingSection';
 
 const Characteristics = () => {
   const {
@@ -307,6 +308,11 @@ const Characteristics = () => {
             </div>
           </CardContent>
         </Card>
+      </div>
+
+      {/* Sharing section */}
+      <div className="mt-8">
+        <CharacteristicsSharingSection />
       </div>
     </div>
   );
