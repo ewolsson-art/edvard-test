@@ -27,6 +27,7 @@ import { ExerciseYearHeatmap } from '@/components/ExerciseYearHeatmap';
 import { MedicationYearHeatmap } from '@/components/MedicationYearHeatmap';
 import { DayDetailDialog } from '@/components/DayDetailDialog';
 import { ExerciseTypeDialog } from '@/components/ExerciseTypeDialog';
+import { AIInsights } from '@/components/AIInsights';
 import { MoodStats as MoodStatsType, ExerciseType } from '@/types/mood';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Dumbbell, Moon, Utensils, Pill } from 'lucide-react';
@@ -754,6 +755,14 @@ const Overview = () => {
           </div>
         </section>
         )}
+
+        {/* AI Insights Section */}
+        <AIInsights
+          entries={entries}
+          stats={stats}
+          periodLabel={label}
+          view={view}
+        />
 
         <DayDetailDialog
           open={dialogOpen}
