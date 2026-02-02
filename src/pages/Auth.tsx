@@ -7,53 +7,57 @@ import { AuthNavbar } from "@/components/AuthNavbar";
 import { cn } from "@/lib/utils";
 
 // Animated Cloud Component
-const Cloud = ({ className, delay = 0, duration = 20 }: { className?: string; delay?: number; duration?: number }) => (
-  <div
-    className={cn("absolute opacity-20", className)}
-    style={{
-      animation: `cloud-float ${duration}s ease-in-out infinite`,
-      animationDelay: `${delay}s`,
-    }}
-  >
+const Cloud = ({
+  className,
+  delay = 0,
+  duration = 20
+}: {
+  className?: string;
+  delay?: number;
+  duration?: number;
+}) => <div className={cn("absolute opacity-20", className)} style={{
+  animation: `cloud-float ${duration}s ease-in-out infinite`,
+  animationDelay: `${delay}s`
+}}>
     <svg viewBox="0 0 100 50" className="w-full h-full fill-primary/30">
       <ellipse cx="30" cy="35" rx="20" ry="15" />
       <ellipse cx="50" cy="30" rx="25" ry="18" />
       <ellipse cx="70" cy="35" rx="18" ry="13" />
       <ellipse cx="45" cy="38" rx="22" ry="12" />
     </svg>
-  </div>
-);
-
-const FeatureCard = ({ icon: Icon, title, description }: { icon: React.ElementType; title: string; description: string }) => (
-  <div className="bg-card/60 backdrop-blur-sm border border-border/40 rounded-2xl p-6 hover:bg-card/80 transition-all duration-300 hover:shadow-lg hover:shadow-primary/5">
+  </div>;
+const FeatureCard = ({
+  icon: Icon,
+  title,
+  description
+}: {
+  icon: React.ElementType;
+  title: string;
+  description: string;
+}) => <div className="bg-card/60 backdrop-blur-sm border border-border/40 rounded-2xl p-6 hover:bg-card/80 transition-all duration-300 hover:shadow-lg hover:shadow-primary/5">
     <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4">
       <Icon className="w-6 h-6 text-primary" />
     </div>
     <h3 className="font-semibold text-foreground mb-2">{title}</h3>
     <p className="text-sm text-muted-foreground">{description}</p>
-  </div>
-);
-
+  </div>;
 const Auth = () => {
-  const { user, loading } = useAuth();
+  const {
+    user,
+    loading
+  } = useAuth();
   const navigate = useNavigate();
-
   useEffect(() => {
     if (!loading && user) {
       navigate("/");
     }
   }, [user, loading, navigate]);
-
   if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
+    return <div className="min-h-screen flex items-center justify-center">
         <Loader2 className="w-8 h-8 animate-spin text-primary" />
-      </div>
-    );
+      </div>;
   }
-
-  return (
-    <>
+  return <>
       <AuthNavbar />
       <div className="min-h-screen relative overflow-hidden bg-gradient-to-br from-background via-primary/5 to-background">
         {/* Animated clouds */}
@@ -67,10 +71,9 @@ const Auth = () => {
 
           {/* Gradient orbs */}
           <div className="absolute -top-40 -right-40 w-96 h-96 bg-primary/10 rounded-full blur-3xl animate-pulse" />
-          <div
-            className="absolute -bottom-40 -left-40 w-96 h-96 bg-primary/5 rounded-full blur-3xl animate-pulse"
-            style={{ animationDelay: "1s" }}
-          />
+          <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-primary/5 rounded-full blur-3xl animate-pulse" style={{
+          animationDelay: "1s"
+        }} />
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/3 rounded-full blur-3xl" />
         </div>
 
@@ -113,49 +116,7 @@ const Auth = () => {
 
         {/* Features Section */}
         <section className="relative z-10 py-16 px-4 md:px-8">
-          <div className="max-w-6xl mx-auto">
-            <div className="text-center mb-12">
-              <h2 className="text-2xl md:text-3xl font-display font-bold text-foreground mb-4">
-                Allt du behöver för att förstå ditt mående
-              </h2>
-              <p className="text-muted-foreground max-w-xl mx-auto">
-                Friendly hjälper dig att logga, analysera och dela din hälsodata på ett enkelt och säkert sätt
-              </p>
-            </div>
-
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              <FeatureCard
-                icon={Calendar}
-                title="Daglig incheckning"
-                description="Logga ditt mående, sömn, träning och medicinering med några enkla klick varje dag"
-              />
-              <FeatureCard
-                icon={HeartPulse}
-                title="Insikter & statistik"
-                description="Se mönster och trender i ditt mående över tid med visuella grafer och rapporter"
-              />
-              <FeatureCard
-                icon={Share2}
-                title="Dela med vårdgivare"
-                description="Välj själv vilken data du vill dela med din läkare för bättre uppföljning"
-              />
-              <FeatureCard
-                icon={MessageCircle}
-                title="Chatt med AI"
-                description="Få stöd och insikter genom vår AI-drivna chattfunktion som förstår ditt mående"
-              />
-              <FeatureCard
-                icon={Shield}
-                title="Säker & privat"
-                description="Din data är krypterad och du har full kontroll över vem som ser vad"
-              />
-              <FeatureCard
-                icon={Sparkles}
-                title="Personlig upplevelse"
-                description="Anpassa appen efter dina behov - välj vilka områden du vill fokusera på"
-              />
-            </div>
-          </div>
+          
         </section>
 
         {/* CTA Section */}
@@ -175,8 +136,6 @@ const Auth = () => {
           </div>
         </section>
       </div>
-    </>
-  );
+    </>;
 };
-
 export default Auth;
