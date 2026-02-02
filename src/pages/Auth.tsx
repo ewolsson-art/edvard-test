@@ -110,19 +110,7 @@ const Auth = () => {
 
         {/* CTA Section */}
         <section className="relative z-10 py-16 px-4 md:px-8">
-          <div className="max-w-2xl mx-auto text-center bg-card/60 backdrop-blur-sm border border-border/40 rounded-3xl p-8 md:p-12">
-            <h2 className="text-2xl md:text-3xl font-display font-bold text-foreground mb-4">
-              Börja din resa mot bättre hälsa
-            </h2>
-            <p className="text-muted-foreground mb-8">
-              Skapa ett konto idag och ta kontroll över ditt mående. Det är helt gratis att komma igång.
-            </p>
-            <Link to="/skapa-konto">
-              <Button size="lg" className="rounded-full px-8 h-12 text-base font-semibold shadow-lg shadow-primary/25">
-                Skapa konto
-              </Button>
-            </Link>
-          </div>
+          
         </section>
       </div>
     </>;
