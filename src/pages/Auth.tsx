@@ -6,11 +6,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, Mail, Lock, User, CheckCircle, Stethoscope, HeartPulse, Sparkles } from "lucide-react";
+import { Loader2, Mail, Lock, User, CheckCircle, Stethoscope, HeartPulse, Sparkles, Users } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Logo } from "@/components/Logo";
 import { cn } from "@/lib/utils";
-type UserRole = "patient" | "doctor";
+type UserRole = "patient" | "doctor" | "relative";
 const authSchema = z.object({
   email: z
     .string()
@@ -167,9 +167,8 @@ const Auth = () => {
           }
         }
       } else {
-        // SECURITY: Never pass role from client - all new users start as patients
-        // Doctor roles must be granted through a separate admin/invitation process
-        const { error, data } = await signUp(email, password);
+        // Pass selected role as metadata for the database trigger
+        const { error, data } = await signUp(email, password, { role: selectedRole });
         if (error) {
           if (error.message.includes("User already registered")) {
             toast({
@@ -389,13 +388,13 @@ const Auth = () => {
                     {!isLogin && (
                       <div className="space-y-3">
                         <Label className="text-sm font-medium">Jag är</Label>
-                        <div className="grid grid-cols-2 gap-3">
+                        <div className="grid grid-cols-3 gap-2">
                           <button
                             type="button"
                             onClick={() => setSelectedRole("patient")}
                             disabled={isSubmitting}
                             className={cn(
-                              "flex flex-col items-center gap-2 p-4 rounded-xl border-2 transition-all duration-200",
+                              "flex flex-col items-center gap-2 p-3 rounded-xl border-2 transition-all duration-200",
                               selectedRole === "patient"
                                 ? "border-primary bg-primary/10 shadow-sm"
                                 : "border-border/60 hover:border-primary/40 hover:bg-muted/30",
@@ -403,13 +402,13 @@ const Auth = () => {
                           >
                             <HeartPulse
                               className={cn(
-                                "w-6 h-6 transition-colors",
+                                "w-5 h-5 transition-colors",
                                 selectedRole === "patient" ? "text-primary" : "text-muted-foreground",
                               )}
                             />
                             <span
                               className={cn(
-                                "font-medium text-sm transition-colors",
+                                "font-medium text-xs transition-colors",
                                 selectedRole === "patient" ? "text-primary" : "text-foreground",
                               )}
                             >
@@ -418,10 +417,36 @@ const Auth = () => {
                           </button>
                           <button
                             type="button"
+                            onClick={() => setSelectedRole("relative")}
+                            disabled={isSubmitting}
+                            className={cn(
+                              "flex flex-col items-center gap-2 p-3 rounded-xl border-2 transition-all duration-200",
+                              selectedRole === "relative"
+                                ? "border-primary bg-primary/10 shadow-sm"
+                                : "border-border/60 hover:border-primary/40 hover:bg-muted/30",
+                            )}
+                          >
+                            <Users
+                              className={cn(
+                                "w-5 h-5 transition-colors",
+                                selectedRole === "relative" ? "text-primary" : "text-muted-foreground",
+                              )}
+                            />
+                            <span
+                              className={cn(
+                                "font-medium text-xs transition-colors",
+                                selectedRole === "relative" ? "text-primary" : "text-foreground",
+                              )}
+                            >
+                              Anhörig
+                            </span>
+                          </button>
+                          <button
+                            type="button"
                             onClick={() => setSelectedRole("doctor")}
                             disabled={isSubmitting}
                             className={cn(
-                              "flex flex-col items-center gap-2 p-4 rounded-xl border-2 transition-all duration-200",
+                              "flex flex-col items-center gap-2 p-3 rounded-xl border-2 transition-all duration-200",
                               selectedRole === "doctor"
                                 ? "border-primary bg-primary/10 shadow-sm"
                                 : "border-border/60 hover:border-primary/40 hover:bg-muted/30",
@@ -429,13 +454,13 @@ const Auth = () => {
                           >
                             <Stethoscope
                               className={cn(
-                                "w-6 h-6 transition-colors",
+                                "w-5 h-5 transition-colors",
                                 selectedRole === "doctor" ? "text-primary" : "text-muted-foreground",
                               )}
                             />
                             <span
                               className={cn(
-                                "font-medium text-sm transition-colors",
+                                "font-medium text-xs transition-colors",
                                 selectedRole === "doctor" ? "text-primary" : "text-foreground",
                               )}
                             >
