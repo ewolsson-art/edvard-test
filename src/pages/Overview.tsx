@@ -5,8 +5,6 @@ import { sv } from 'date-fns/locale';
 import { useMoodData } from '@/hooks/useMoodData';
 import { useMedications } from '@/hooks/useMedications';
 import { useUserPreferences } from '@/hooks/useUserPreferences';
-import { useStreak } from '@/hooks/useStreak';
-import { StreakBadge } from '@/components/StreakBadge';
 import { MoodStats } from '@/components/MoodStats';
 import { ExerciseStats, ExerciseStatsType } from '@/components/ExerciseStats';
 import { SleepStats, SleepStatsType } from '@/components/SleepStats';
@@ -79,7 +77,6 @@ const Overview = () => {
   const { entries, isLoaded, getEntryForDate, getEntriesForMonth, getEntriesForYear, getStatsForYear, updateExerciseTypes } = useMoodData();
   const { isLoaded: medsLoaded, getMedicationsTakenOnDate, logs, activeMedications } = useMedications();
   const { preferences, loading: prefsLoading } = useUserPreferences();
-  const streakData = useStreak(entries);
 
   // Week data
   const weekDays = useMemo(() => {
@@ -501,18 +498,9 @@ const Overview = () => {
     <div className="py-8 px-4 md:px-8">
       <div className="max-w-6xl mx-auto space-y-12">
         <header className="mb-8">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
-            <h1 className="font-display text-3xl md:text-4xl font-bold">
-              Översikt
-            </h1>
-            {streakData.currentStreak > 0 && (
-              <StreakBadge 
-                currentStreak={streakData.currentStreak}
-                longestStreak={streakData.longestStreak}
-                hasCheckedInToday={streakData.hasCheckedInToday}
-              />
-            )}
-          </div>
+          <h1 className="font-display text-3xl md:text-4xl font-bold mb-4">
+            Översikt
+          </h1>
           
           <Tabs value={view} onValueChange={handleViewChange} className="w-full">
             <TabsList className="grid w-full max-w-md grid-cols-3">
