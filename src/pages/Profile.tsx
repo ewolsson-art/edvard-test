@@ -30,6 +30,7 @@ import { DoctorConnectionsSection } from '@/components/DoctorConnectionsSection'
 import { DelegatesSection } from '@/components/DelegatesSection';
 import { AvatarUpload } from '@/components/AvatarUpload';
 import { NotificationSettings } from '@/components/NotificationSettings';
+import { ChangePasswordSection } from '@/components/ChangePasswordSection';
 
 const CHECKIN_OPTIONS = [
   {
@@ -531,6 +532,9 @@ const Profile = () => {
         {!isDoctor && (
           <NotificationSettings />
         )}
+
+        {/* Change Password Section */}
+        <ChangePasswordSection />
 
         {/* Delete Account */}
         <div className="glass-card p-4 border-destructive/30">
