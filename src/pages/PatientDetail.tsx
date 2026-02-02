@@ -1,14 +1,42 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { useDoctorConnections } from '@/hooks/useDoctorConnections';
+import { useRelativeConnections } from '@/hooks/useRelativeConnections';
+import { useUserRole } from '@/hooks/useUserRole';
 import { PatientOverview } from '@/components/PatientOverview';
 import { Loader2 } from 'lucide-react';
 
 const PatientDetail = () => {
   const { patientId } = useParams<{ patientId: string }>();
   const navigate = useNavigate();
-  const { approvedConnections, isLoading, toggleChatEnabled } = useDoctorConnections();
+  const { isDoctor, isRelative, isLoading: roleLoading } = useUserRole();
+  
+  const { 
+    approvedConnections: doctorConnections, 
+    isLoading: doctorLoading, 
+    toggleChatEnabled 
+  } = useDoctorConnections();
+  
+  const { 
+    approvedConnections: relativeConnections, 
+    isLoading: relativeLoading 
+  } = useRelativeConnections();
 
-  const connection = approvedConnections.find(c => c.patient_id === patientId);
+  const isLoading = roleLoading || (isDoctor && doctorLoading) || (isRelative && relativeLoading);
+
+  // Find connection based on role
+  const connection = isDoctor 
+    ? doctorConnections.find(c => c.patient_id === patientId)
+    : isRelative 
+      ? relativeConnections.find(c => c.patient_id === patientId)
+      : null;
+
+  // Convert relative connection to match doctor connection format for PatientOverview
+  const normalizedConnection = connection ? {
+    ...connection,
+    chat_enabled: 'chat_enabled' in connection ? connection.chat_enabled : false,
+    patient_profile: connection.patient_profile,
+    patient_email: connection.patient_email,
+  } : null;
 
   if (isLoading) {
     return (
@@ -18,7 +46,7 @@ const PatientDetail = () => {
     );
   }
 
-  if (!connection) {
+  if (!normalizedConnection) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
@@ -29,14 +57,24 @@ const PatientDetail = () => {
     );
   }
 
+  const handleBack = () => {
+    if (isDoctor) {
+      navigate('/lakare');
+    } else if (isRelative) {
+      navigate('/anhorig');
+    } else {
+      navigate('/');
+    }
+  };
+
   return (
     <div className="py-8 px-4 md:px-8">
       <div className="max-w-4xl mx-auto">
         <div className="glass-card p-6">
           <PatientOverview 
-            connection={connection} 
-            onBack={() => navigate('/lakare')}
-            onToggleChatEnabled={toggleChatEnabled}
+            connection={normalizedConnection as any} 
+            onBack={handleBack}
+            onToggleChatEnabled={isDoctor ? toggleChatEnabled : undefined}
           />
         </div>
       </div>
