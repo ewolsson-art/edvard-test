@@ -24,6 +24,7 @@ import { EatingWeekCalendar } from '@/components/EatingWeekCalendar';
 import { EatingYearHeatmap } from '@/components/EatingYearHeatmap';
 import { YearHeatmap } from '@/components/YearHeatmap';
 import { RelativeCommentDialog } from '@/components/RelativeCommentDialog';
+import { PatientAIInsights } from '@/components/PatientAIInsights';
 import { MoodStats as MoodStatsType, ExerciseType } from '@/types/mood';
 import { Loader2, ChevronLeft, Radio, Pill, Check, X, MessageSquare, Moon, Utensils, Dumbbell, Stethoscope } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -756,6 +757,18 @@ export function PatientOverview({ connection, onBack, onToggleChatEnabled }: Pat
               </div>
             )}
           </section>
+        )}
+
+        {/* AI Insights Section - only for doctors */}
+        {!isRelativeViewing && (
+          <PatientAIInsights
+            entries={entries}
+            stats={stats}
+            periodLabel={label}
+            view={view}
+            patientName={patientName}
+            isShared={'share_ai_insights' in connection && connection.share_ai_insights === true}
+          />
         )}
 
         {/* No data shared message */}
