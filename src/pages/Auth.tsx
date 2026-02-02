@@ -213,7 +213,80 @@ const Auth = () => {
     );
   }
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 md:p-8 relative overflow-hidden bg-gradient-to-br from-background via-primary/5 to-background">
+    <div className="min-h-screen relative overflow-hidden bg-gradient-to-br from-background via-primary/5 to-background">
+      {/* Modern Topbar */}
+      <nav className="fixed top-0 left-0 right-0 z-50 px-4 py-3">
+        <div className="max-w-6xl mx-auto">
+          <div className="flex items-center justify-between bg-card/80 backdrop-blur-xl border border-border/40 rounded-2xl px-4 py-2.5 shadow-lg">
+            {/* Logo */}
+            <div className="flex items-center gap-2">
+              <Logo size="sm" showText={true} />
+            </div>
+            
+            {/* Navigation Links */}
+            <div className="hidden md:flex items-center gap-1">
+              <a 
+                href="#hur-funkar-det" 
+                className="px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-xl transition-all duration-200"
+              >
+                Så funkar det
+              </a>
+              <a 
+                href="#om-oss" 
+                className="px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-xl transition-all duration-200"
+              >
+                Om oss
+              </a>
+              <a 
+                href="#samarbetspartners" 
+                className="px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-xl transition-all duration-200"
+              >
+                Samarbetspartners
+              </a>
+            </div>
+
+            {/* Mobile menu button */}
+            <button 
+              className="md:hidden p-2 text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-xl transition-colors"
+              onClick={() => {
+                const mobileMenu = document.getElementById('mobile-menu');
+                if (mobileMenu) {
+                  mobileMenu.classList.toggle('hidden');
+                }
+              }}
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            </button>
+          </div>
+
+          {/* Mobile menu */}
+          <div id="mobile-menu" className="hidden md:hidden mt-2 bg-card/95 backdrop-blur-xl border border-border/40 rounded-2xl p-2 shadow-lg">
+            <a 
+              href="#hur-funkar-det" 
+              className="block px-4 py-2.5 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-xl transition-all duration-200"
+            >
+              Så funkar det
+            </a>
+            <a 
+              href="#om-oss" 
+              className="block px-4 py-2.5 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-xl transition-all duration-200"
+            >
+              Om oss
+            </a>
+            <a 
+              href="#samarbetspartners" 
+              className="block px-4 py-2.5 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-xl transition-all duration-200"
+            >
+              Samarbetspartners
+            </a>
+          </div>
+        </div>
+      </nav>
+
+      {/* Main content with top padding for navbar */}
+      <div className="min-h-screen flex items-center justify-center p-4 md:p-8 pt-24">
       {/* Animated clouds */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <Cloud className="w-48 h-24 top-[10%] left-[5%]" delay={0} duration={25} />
@@ -605,6 +678,7 @@ const Auth = () => {
             </div>
           </div>
         </div>
+      </div>
       </div>
     </div>
   );
