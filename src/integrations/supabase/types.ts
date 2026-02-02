@@ -327,6 +327,54 @@ export type Database = {
         }
         Relationships: []
       }
+      patient_relative_connections: {
+        Row: {
+          created_at: string
+          id: string
+          initiated_by: string
+          patient_id: string
+          relative_id: string
+          share_comments: boolean
+          share_eating: boolean
+          share_exercise: boolean
+          share_medication: boolean
+          share_mood: boolean
+          share_sleep: boolean
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          initiated_by?: string
+          patient_id: string
+          relative_id: string
+          share_comments?: boolean
+          share_eating?: boolean
+          share_exercise?: boolean
+          share_medication?: boolean
+          share_mood?: boolean
+          share_sleep?: boolean
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          initiated_by?: string
+          patient_id?: string
+          relative_id?: string
+          share_comments?: boolean
+          share_eating?: boolean
+          share_exercise?: boolean
+          share_medication?: boolean
+          share_mood?: boolean
+          share_sleep?: boolean
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -485,9 +533,28 @@ export type Database = {
         Args: { p_doctor_id: string; p_patient_id: string }
         Returns: string
       }
+      get_patient_email_for_relative: {
+        Args: { p_patient_id: string; p_relative_id: string }
+        Returns: string
+      }
       get_patient_id_by_email: {
         Args: { patient_email: string }
         Returns: string
+      }
+      get_relative_email_for_patient: {
+        Args: { p_patient_id: string; p_relative_id: string }
+        Returns: string
+      }
+      get_relative_id_by_email: {
+        Args: { relative_email: string }
+        Returns: string
+      }
+      get_relative_profile_for_patient: {
+        Args: { p_patient_id: string; p_relative_id: string }
+        Returns: {
+          first_name: string
+          last_name: string
+        }[]
       }
       get_user_role: {
         Args: { _user_id: string }
