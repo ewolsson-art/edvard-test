@@ -508,11 +508,6 @@ export function PatientOverview({ connection, onBack, onToggleChatEnabled }: Pat
             <div className="flex items-center justify-between mb-6">
               <h3 className="font-display text-2xl font-semibold">Mående</h3>
               <div className="flex items-center gap-4">
-                {isRelativeViewing && view === 'month' && (
-                  <p className="text-sm text-muted-foreground">
-                    Dubbelklicka på ett datum för att lägga till egen anteckning
-                  </p>
-                )}
                 <Button
                   variant="outline"
                   size="sm"
@@ -525,6 +520,11 @@ export function PatientOverview({ connection, onBack, onToggleChatEnabled }: Pat
                 >
                   Idag
                 </Button>
+                {isRelativeViewing && view === 'month' && (
+                  <p className="text-sm text-muted-foreground">
+                    Dubbelklicka på ett datum för att lägga till egen anteckning
+                  </p>
+                )}
               </div>
             </div>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
