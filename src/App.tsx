@@ -16,6 +16,11 @@ import Overview from "./pages/Overview";
 import Reports from "./pages/Reports";
 import Chat from "./pages/Chat";
 import Medications from "./pages/Medications";
+import AboutUs from "./pages/AboutUs";
+import ForPatients from "./pages/ForPatients";
+import ForCaregivers from "./pages/ForCaregivers";
+import ForRelatives from "./pages/ForRelatives";
+import Partners from "./pages/Partners";
 
 import Onboarding from "./pages/Onboarding";
 import DoctorOnboarding from "./pages/DoctorOnboarding";
@@ -60,6 +65,11 @@ const App = () => (
           <BrowserRouter>
             <Routes>
             <Route path="/auth" element={<Auth />} />
+            <Route path="/om-oss" element={<AboutUs />} />
+            <Route path="/for-patienter" element={<ForPatients />} />
+            <Route path="/for-vardgivare" element={<ForCaregivers />} />
+            <Route path="/for-anhoriga" element={<ForRelatives />} />
+            <Route path="/samarbetspartners" element={<Partners />} />
             <Route path="/logga-in" element={<Login />} />
             <Route path="/skapa-konto" element={<Signup />} />
             <Route path="/aterstall-losenord" element={<ResetPassword />} />
