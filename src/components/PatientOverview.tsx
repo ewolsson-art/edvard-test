@@ -499,18 +499,6 @@ export function PatientOverview({ connection, onBack, onToggleChatEnabled }: Pat
             <TabsTrigger value="year">År</TabsTrigger>
           </TabsList>
         </Tabs>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => {
-            const today = new Date();
-            setCurrentWeek(today);
-            setCurrentMonth(today);
-            setCurrentYear(today.getFullYear());
-          }}
-        >
-          Idag
-        </Button>
       </div>
 
       {/* Stats and calendars based on what's shared */}
@@ -519,11 +507,25 @@ export function PatientOverview({ connection, onBack, onToggleChatEnabled }: Pat
           <section>
             <div className="flex items-center justify-between mb-6">
               <h3 className="font-display text-2xl font-semibold">Mående</h3>
-              {isRelativeViewing && view === 'month' && (
-                <p className="text-sm text-muted-foreground">
-                  Dubbelklicka på ett datum för att lägga till egen anteckning
-                </p>
-              )}
+              <div className="flex items-center gap-4">
+                {isRelativeViewing && view === 'month' && (
+                  <p className="text-sm text-muted-foreground">
+                    Dubbelklicka på ett datum för att lägga till egen anteckning
+                  </p>
+                )}
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    const today = new Date();
+                    setCurrentWeek(today);
+                    setCurrentMonth(today);
+                    setCurrentYear(today.getFullYear());
+                  }}
+                >
+                  Idag
+                </Button>
+              </div>
             </div>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {view === 'week' && (
