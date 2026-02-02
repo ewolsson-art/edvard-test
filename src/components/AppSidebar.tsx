@@ -56,14 +56,6 @@ export function AppSidebar() {
           </Link>
         </div>
 
-        {/* Role indicator */}
-        {!isCollapsed && !roleLoading && (
-          <div className="px-4 mb-4">
-            <span className="text-xs font-medium px-2 py-1 rounded-full bg-primary/10 text-primary">
-              {isDoctor ? 'Läkare' : 'Patient'}
-            </span>
-          </div>
-        )}
 
         <SidebarGroup>
           <SidebarGroupContent>
