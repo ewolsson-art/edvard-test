@@ -11,6 +11,7 @@ import { NotificationSchedulerProvider } from "@/components/NotificationSchedule
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import Overview from "./pages/Overview";
+import Reports from "./pages/Reports";
 import Chat from "./pages/Chat";
 import Medications from "./pages/Medications";
 
@@ -85,6 +86,11 @@ const App = () => (
             <Route path="/oversikt" element={
               <ProtectedRoute>
                 <AppLayout><Overview /></AppLayout>
+              </ProtectedRoute>
+            } />
+            <Route path="/rapporter" element={
+              <ProtectedRoute>
+                <AppLayout><Reports /></AppLayout>
               </ProtectedRoute>
             } />
             <Route path="/chatt" element={
