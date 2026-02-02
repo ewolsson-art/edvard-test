@@ -29,6 +29,7 @@ import { MedicationsSection } from '@/components/MedicationsSection';
 import { DoctorConnectionsSection } from '@/components/DoctorConnectionsSection';
 import { RelativeConnectionsSection } from '@/components/RelativeConnectionsSection';
 import { DelegatesSection } from '@/components/DelegatesSection';
+import { RelativePatientConnectionsSection } from '@/components/RelativePatientConnectionsSection';
 import { AvatarUpload } from '@/components/AvatarUpload';
 import { NotificationSettings } from '@/components/NotificationSettings';
 import { ChangePasswordSection } from '@/components/ChangePasswordSection';
@@ -432,6 +433,13 @@ const Profile = () => {
         {isDoctor && (
           <div className="glass-card p-6">
             <DelegatesSection />
+          </div>
+        )}
+
+        {/* Patient Connections Section - Only for relatives */}
+        {isRelative && (
+          <div className="glass-card p-6">
+            <RelativePatientConnectionsSection />
           </div>
         )}
 
