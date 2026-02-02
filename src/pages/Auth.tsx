@@ -81,11 +81,7 @@ const Auth = () => {
         <section className="relative z-10 min-h-[60vh] flex items-center justify-center px-4 md:px-8">
           <div className="max-w-4xl mx-auto text-center space-y-8 animate-fade-in">
             <div className="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-10">
-              <img 
-                src={friendlyDog} 
-                alt="Friendly maskot" 
-                className="w-32 h-32 md:w-40 md:h-40 object-contain drop-shadow-lg"
-              />
+              
               <div className="space-y-4 text-center md:text-left">
                 <h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold text-foreground leading-[1.1] tracking-tight">
                   Följ ditt mående med{" "}
