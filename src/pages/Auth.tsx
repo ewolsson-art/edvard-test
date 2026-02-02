@@ -115,9 +115,7 @@ const Auth = () => {
         </section>
 
         {/* Features Section */}
-        <section className="relative z-10 py-16 px-4 md:px-8">
-          
-        </section>
+        
 
         {/* CTA Section */}
         <section className="relative z-10 py-16 px-4 md:px-8">
