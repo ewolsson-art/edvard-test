@@ -59,7 +59,7 @@ const Auth = () => {
   }
   return <>
       <AuthNavbar />
-      <div className="min-h-screen relative overflow-hidden bg-gradient-to-br from-background via-primary/5 to-background">
+      <div className="min-h-[calc(100vh-4rem)] relative overflow-hidden bg-gradient-to-br from-background via-primary/5 to-background flex flex-col">
         {/* Animated clouds */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <Cloud className="w-48 h-24 top-[10%] left-[5%]" delay={0} duration={25} />
@@ -78,7 +78,7 @@ const Auth = () => {
         </div>
 
         {/* Hero Section */}
-        <section className="relative z-10 min-h-[calc(100vh-4rem)] flex items-center justify-center px-4 md:px-8">
+        <section className="relative z-10 flex-1 flex items-center justify-center px-4 md:px-8">
           <div className="max-w-6xl mx-auto w-full">
             <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
               {/* Left side - Text */}
