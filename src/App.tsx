@@ -24,6 +24,7 @@ import PatientDetail from "./pages/PatientDetail";
 import ManageConnections from "./pages/ManageConnections";
 import NotFound from "./pages/NotFound";
 import SharedReport from "./pages/SharedReport";
+import ResetPassword from "./pages/ResetPassword";
 
 const queryClient = new QueryClient();
 
@@ -51,6 +52,7 @@ const App = () => (
           <BrowserRouter>
             <Routes>
             <Route path="/auth" element={<Auth />} />
+            <Route path="/aterstall-losenord" element={<ResetPassword />} />
             <Route path="/onboarding" element={
               <ProtectedRoute skipOnboardingCheck>
                 <Onboarding />

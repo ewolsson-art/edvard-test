@@ -55,6 +55,8 @@ const Auth = () => {
   const [selectedRole, setSelectedRole] = useState<UserRole>("patient");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showEmailConfirmation, setShowEmailConfirmation] = useState(false);
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
+  const [resetEmailSent, setResetEmailSent] = useState(false);
   const [errors, setErrors] = useState<{
     email?: string;
     password?: string;
@@ -101,6 +103,41 @@ const Auth = () => {
     setErrors({});
     return true;
   };
+  const handleForgotPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!email.trim()) {
+      setErrors({ email: "Ange din e-postadress" });
+      return;
+    }
+
+    const emailResult = z.string().email().safeParse(email);
+    if (!emailResult.success) {
+      setErrors({ email: "Ogiltig e-postadress" });
+      return;
+    }
+    setErrors({});
+
+    setIsSubmitting(true);
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/aterstall-losenord`,
+      });
+
+      if (error) {
+        toast({
+          title: "Kunde inte skicka återställningslänk",
+          description: error.message,
+          variant: "destructive",
+        });
+      } else {
+        setResetEmailSent(true);
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validateForm()) return;
@@ -264,6 +301,87 @@ const Auth = () => {
                     Tillbaka till inloggning
                   </Button>
                 </div>
+              ) : showForgotPassword ? (
+                resetEmailSent ? (
+                  <div className="text-center space-y-6 py-4">
+                    <div className="flex justify-center">
+                      <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
+                        <Mail className="w-8 h-8 text-primary" />
+                      </div>
+                    </div>
+                    <div className="space-y-2">
+                      <h2 className="text-xl font-semibold">Kolla din e-post</h2>
+                      <p className="text-muted-foreground">Vi har skickat en återställningslänk till:</p>
+                      <p className="font-medium text-foreground">{email}</p>
+                    </div>
+                    <p className="text-sm text-muted-foreground">
+                      Klicka på länken i mailet för att välja ett nytt lösenord. Kolla även skräpposten.
+                    </p>
+                    <Button
+                      variant="outline"
+                      className="w-full"
+                      onClick={() => {
+                        setShowForgotPassword(false);
+                        setResetEmailSent(false);
+                        setPassword("");
+                      }}
+                    >
+                      Tillbaka till inloggning
+                    </Button>
+                  </div>
+                ) : (
+                  <>
+                    <div className="text-center mb-6">
+                      <h2 className="text-xl font-semibold mb-2">Glömt lösenord?</h2>
+                      <p className="text-sm text-muted-foreground">
+                        Ange din e-postadress så skickar vi en återställningslänk
+                      </p>
+                    </div>
+
+                    <form onSubmit={handleForgotPassword} className="space-y-5">
+                      <div className="space-y-2">
+                        <Label htmlFor="email" className="text-sm font-medium">
+                          E-post
+                        </Label>
+                        <div className="relative">
+                          <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                          <Input
+                            id="email"
+                            type="email"
+                            placeholder="din@epost.se"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            className="pl-10 h-11 rounded-xl border-border/60 focus:border-primary"
+                            disabled={isSubmitting}
+                          />
+                        </div>
+                        {errors.email && <p className="text-sm text-destructive">{errors.email}</p>}
+                      </div>
+
+                      <Button
+                        type="submit"
+                        className="w-full h-11 rounded-xl font-medium"
+                        disabled={isSubmitting}
+                      >
+                        {isSubmitting && <Loader2 className="w-4 h-4 animate-spin mr-2" />}
+                        Skicka återställningslänk
+                      </Button>
+                    </form>
+
+                    <div className="mt-6 text-center">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setShowForgotPassword(false);
+                          setErrors({});
+                        }}
+                        className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                      >
+                        Tillbaka till inloggning
+                      </button>
+                    </div>
+                  </>
+                )
               ) : (
                 <>
                   <form onSubmit={handleSubmit} className="space-y-5">
@@ -415,6 +533,19 @@ const Auth = () => {
                       {isSubmitting ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
                       {isLogin ? "Logga in" : "Skapa konto"}
                     </Button>
+
+                    {isLogin && (
+                      <div className="text-center">
+                        <button
+                          type="button"
+                          onClick={() => setShowForgotPassword(true)}
+                          className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                          disabled={isSubmitting}
+                        >
+                          Glömt lösenord?
+                        </button>
+                      </div>
+                    )}
                   </form>
 
                   <div className="mt-6 text-center">
