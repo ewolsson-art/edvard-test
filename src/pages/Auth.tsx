@@ -51,9 +51,9 @@ const Auth = () => {
   }
 
   return (
-    <>
+    <div className="min-h-screen flex flex-col">
       <AuthNavbar />
-      <div className="min-h-[calc(100vh-4rem)] relative overflow-hidden bg-gradient-to-br from-background via-primary/5 to-background flex flex-col">
+      <div className="flex-1 relative overflow-hidden bg-gradient-to-br from-background via-primary/5 to-background flex flex-col">
         {/* Animated clouds */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <Cloud className="w-48 h-24 top-[10%] left-[5%]" delay={0} duration={25} />
@@ -105,23 +105,23 @@ const Auth = () => {
             </div>
           </div>
         </section>
-
-        {/* Footer */}
-        <footer className="relative z-10 py-3 px-4 border-t border-border/40">
-          <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-muted-foreground">
-            <span>© 2025 Friendly. Alla rättigheter förbehållna.</span>
-            <div className="flex items-center gap-4">
-              <Link to="/integritet" className="hover:text-foreground transition-colors">
-                Integritetspolicy
-              </Link>
-              <Link to="/villkor" className="hover:text-foreground transition-colors">
-                Användarvillkor
-              </Link>
-            </div>
-          </div>
-        </footer>
       </div>
-    </>
+
+      {/* Footer */}
+      <footer className="relative z-10 py-3 px-4 border-t border-border/40 bg-background">
+        <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-muted-foreground">
+          <span>© 2025 Friendly. Alla rättigheter förbehållna.</span>
+          <div className="flex items-center gap-4">
+            <Link to="/integritet" className="hover:text-foreground transition-colors">
+              Integritetspolicy
+            </Link>
+            <Link to="/villkor" className="hover:text-foreground transition-colors">
+              Användarvillkor
+            </Link>
+          </div>
+        </div>
+      </footer>
+    </div>
   );
 };
 
