@@ -137,35 +137,35 @@ const Signup = () => {
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/30">
       <AuthNavbar />
       
-      <div className="flex min-h-screen items-center justify-center px-4 pt-20 pb-12">
+      <div className="flex min-h-screen items-start justify-center px-4 pt-20 pb-8">
         <div className="w-full max-w-md">
-          <div className="auth-card bg-card/80 backdrop-blur-xl rounded-3xl shadow-2xl border border-border/50 p-8 md:p-10">
-            <div className="flex flex-col items-center mb-8">
-              <Logo size="md" />
-              <h1 className="mt-6 text-2xl md:text-3xl font-bold text-foreground font-display">
+          <div className="auth-card bg-card/80 backdrop-blur-xl rounded-2xl shadow-2xl border border-border/50 p-6 md:p-8">
+            <div className="flex flex-col items-center mb-5">
+              <Logo size="sm" />
+              <h1 className="mt-4 text-xl md:text-2xl font-bold text-foreground font-display">
                 Skapa konto
               </h1>
-              <p className="mt-2 text-muted-foreground text-center">
+              <p className="mt-1 text-sm text-muted-foreground text-center">
                 Kom igång med din hälsoresa
               </p>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-5">
+            <form onSubmit={handleSubmit} className="space-y-4">
               {/* Role Selection */}
-              <div className="space-y-3">
+              <div className="space-y-2">
                 <Label className="text-sm font-medium text-foreground">Jag är</Label>
                 <RadioGroup
                   value={role}
                   onValueChange={(value: "patient" | "doctor" | "relative") => setRole(value)}
-                  className="grid grid-cols-3 gap-3"
+                  className="grid grid-cols-3 gap-2"
                 >
                   <div>
                     <RadioGroupItem value="patient" id="patient" className="peer sr-only" />
                     <Label
                       htmlFor="patient"
-                      className="flex flex-col items-center justify-center rounded-xl border-2 border-border/50 bg-background/50 p-3 hover:bg-muted/50 peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary/5 cursor-pointer transition-all"
+                      className="flex flex-col items-center justify-center rounded-lg border-2 border-border/50 bg-background/50 p-2 hover:bg-muted/50 peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary/5 cursor-pointer transition-all"
                     >
-                      <User className="h-5 w-5 mb-1 text-muted-foreground peer-data-[state=checked]:text-primary" />
+                      <User className="h-4 w-4 mb-0.5 text-muted-foreground peer-data-[state=checked]:text-primary" />
                       <span className="text-xs font-medium">Patient</span>
                     </Label>
                   </div>
@@ -173,9 +173,9 @@ const Signup = () => {
                     <RadioGroupItem value="doctor" id="doctor" className="peer sr-only" />
                     <Label
                       htmlFor="doctor"
-                      className="flex flex-col items-center justify-center rounded-xl border-2 border-border/50 bg-background/50 p-3 hover:bg-muted/50 peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary/5 cursor-pointer transition-all"
+                      className="flex flex-col items-center justify-center rounded-lg border-2 border-border/50 bg-background/50 p-2 hover:bg-muted/50 peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary/5 cursor-pointer transition-all"
                     >
-                      <Stethoscope className="h-5 w-5 mb-1 text-muted-foreground peer-data-[state=checked]:text-primary" />
+                      <Stethoscope className="h-4 w-4 mb-0.5 text-muted-foreground peer-data-[state=checked]:text-primary" />
                       <span className="text-xs font-medium">Läkare</span>
                     </Label>
                   </div>
@@ -183,9 +183,9 @@ const Signup = () => {
                     <RadioGroupItem value="relative" id="relative" className="peer sr-only" />
                     <Label
                       htmlFor="relative"
-                      className="flex flex-col items-center justify-center rounded-xl border-2 border-border/50 bg-background/50 p-3 hover:bg-muted/50 peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary/5 cursor-pointer transition-all"
+                      className="flex flex-col items-center justify-center rounded-lg border-2 border-border/50 bg-background/50 p-2 hover:bg-muted/50 peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary/5 cursor-pointer transition-all"
                     >
-                      <Users className="h-5 w-5 mb-1 text-muted-foreground peer-data-[state=checked]:text-primary" />
+                      <Users className="h-4 w-4 mb-0.5 text-muted-foreground peer-data-[state=checked]:text-primary" />
                       <span className="text-xs font-medium">Anhörig</span>
                     </Label>
                   </div>
@@ -193,8 +193,8 @@ const Signup = () => {
               </div>
 
               {/* Name Fields */}
-              <div className="grid grid-cols-2 gap-3">
-                <div className="space-y-2">
+              <div className="grid grid-cols-2 gap-2">
+                <div className="space-y-1">
                   <Label htmlFor="firstName" className="text-sm font-medium text-foreground">
                     Förnamn
                   </Label>
@@ -204,14 +204,14 @@ const Signup = () => {
                     placeholder="Anna"
                     value={firstName}
                     onChange={(e) => setFirstName(e.target.value)}
-                    className={`h-12 bg-background/50 border-border/50 rounded-xl focus:ring-2 focus:ring-primary/20 transition-all ${validationErrors.firstName ? 'border-destructive' : ''}`}
+                    className={`h-10 bg-background/50 border-border/50 rounded-lg focus:ring-2 focus:ring-primary/20 transition-all ${validationErrors.firstName ? 'border-destructive' : ''}`}
                     disabled={isSubmitting}
                   />
                   {validationErrors.firstName && (
                     <p className="text-xs text-destructive">{validationErrors.firstName}</p>
                   )}
                 </div>
-                <div className="space-y-2">
+                <div className="space-y-1">
                   <Label htmlFor="lastName" className="text-sm font-medium text-foreground">
                     Efternamn
                   </Label>
@@ -221,7 +221,7 @@ const Signup = () => {
                     placeholder="Andersson"
                     value={lastName}
                     onChange={(e) => setLastName(e.target.value)}
-                    className={`h-12 bg-background/50 border-border/50 rounded-xl focus:ring-2 focus:ring-primary/20 transition-all ${validationErrors.lastName ? 'border-destructive' : ''}`}
+                    className={`h-10 bg-background/50 border-border/50 rounded-lg focus:ring-2 focus:ring-primary/20 transition-all ${validationErrors.lastName ? 'border-destructive' : ''}`}
                     disabled={isSubmitting}
                   />
                   {validationErrors.lastName && (
@@ -231,7 +231,7 @@ const Signup = () => {
               </div>
 
               {/* Email */}
-              <div className="space-y-2">
+              <div className="space-y-1">
                 <Label htmlFor="email" className="text-sm font-medium text-foreground">
                   E-postadress
                 </Label>
@@ -243,17 +243,17 @@ const Signup = () => {
                     placeholder="din@email.se"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className={`pl-10 h-12 bg-background/50 border-border/50 rounded-xl focus:ring-2 focus:ring-primary/20 transition-all ${validationErrors.email ? 'border-destructive' : ''}`}
+                    className={`pl-10 h-10 bg-background/50 border-border/50 rounded-lg focus:ring-2 focus:ring-primary/20 transition-all ${validationErrors.email ? 'border-destructive' : ''}`}
                     disabled={isSubmitting}
                   />
                 </div>
                 {validationErrors.email && (
-                  <p className="text-sm text-destructive">{validationErrors.email}</p>
+                  <p className="text-xs text-destructive">{validationErrors.email}</p>
                 )}
               </div>
 
               {/* Password */}
-              <div className="space-y-2">
+              <div className="space-y-1">
                 <Label htmlFor="password" className="text-sm font-medium text-foreground">
                   Lösenord
                 </Label>
@@ -264,7 +264,7 @@ const Signup = () => {
                     placeholder="••••••••"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className={`h-12 bg-background/50 border-border/50 rounded-xl pr-10 focus:ring-2 focus:ring-primary/20 transition-all ${validationErrors.password ? 'border-destructive' : ''}`}
+                    className={`h-10 bg-background/50 border-border/50 rounded-lg pr-10 focus:ring-2 focus:ring-primary/20 transition-all ${validationErrors.password ? 'border-destructive' : ''}`}
                     disabled={isSubmitting}
                   />
                   <button
@@ -276,17 +276,17 @@ const Signup = () => {
                   </button>
                 </div>
                 {validationErrors.password && (
-                  <p className="text-sm text-destructive">{validationErrors.password}</p>
+                  <p className="text-xs text-destructive">{validationErrors.password}</p>
                 )}
               </div>
 
               <Button
                 type="submit"
-                className="w-full h-12 rounded-xl text-base font-semibold shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 transition-all duration-300 group"
+                className="w-full h-10 rounded-lg text-sm font-semibold shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 transition-all duration-300 group"
                 disabled={isSubmitting}
               >
                 {isSubmitting ? (
-                  <Loader2 className="h-5 w-5 animate-spin" />
+                  <Loader2 className="h-4 w-4 animate-spin" />
                 ) : (
                   <>
                     Skapa konto
@@ -296,7 +296,7 @@ const Signup = () => {
               </Button>
             </form>
 
-            <div className="mt-6 text-center">
+            <div className="mt-4 text-center">
               <Link
                 to="/logga-in"
                 className="text-sm text-muted-foreground hover:text-primary transition-colors font-semibold"
