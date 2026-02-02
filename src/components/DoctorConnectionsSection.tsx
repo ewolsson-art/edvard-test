@@ -44,6 +44,7 @@ export const DoctorConnectionsSection = () => {
     share_exercise: true,
     share_medication: true,
     share_comments: false,
+    share_ai_insights: false,
   });
 
   const handleInvite = async () => {
@@ -98,6 +99,7 @@ export const DoctorConnectionsSection = () => {
       share_exercise: true,
       share_medication: true,
       share_comments: false,
+      share_ai_insights: false,
     });
     setRespondDialogOpen(true);
   };
@@ -197,6 +199,7 @@ export const DoctorConnectionsSection = () => {
                     { key: 'share_exercise', label: 'Träning' },
                     { key: 'share_medication', label: 'Mediciner' },
                     { key: 'share_comments', label: 'Kommentarer' },
+                    { key: 'share_ai_insights', label: 'AI-insikter' },
                   ].map(({ key, label }) => (
                     <div key={key} className="flex items-center justify-between">
                       <span className="text-sm">{label}</span>
@@ -291,6 +294,7 @@ export const DoctorConnectionsSection = () => {
                   { key: 'share_exercise', label: 'Träning' },
                   { key: 'share_medication', label: 'Mediciner' },
                   { key: 'share_comments', label: 'Kommentarer' },
+                  { key: 'share_ai_insights', label: 'AI-insikter' },
                 ].map(({ key, label }) => (
                   <div key={key} className="flex items-center justify-between">
                     <span className="text-sm">{label}</span>
@@ -387,6 +391,7 @@ export const DoctorConnectionsSection = () => {
                       { key: 'share_exercise', label: 'Träning' },
                       { key: 'share_medication', label: 'Mediciner' },
                       { key: 'share_comments', label: 'Kommentarer' },
+                      { key: 'share_ai_insights', label: 'AI-insikter' },
                     ].map(({ key, label }) => (
                       <div key={key} className="flex items-center justify-between bg-background rounded-lg px-2 py-1.5">
                         <span className="text-xs">{label}</span>
