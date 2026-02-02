@@ -55,37 +55,44 @@ export function AppSidebar() {
   const navItems = isDoctor ? doctorNavItems : patientNavItems;
 
   return (
-    <Sidebar collapsible="icon">
-      <SidebarContent className="pt-4">
+    <Sidebar collapsible="icon" className="border-r-0">
+      <SidebarContent className="pt-6 bg-gradient-to-b from-sidebar-background to-sidebar-background/80 backdrop-blur-xl">
         {/* Logo/Brand */}
-        <div className="px-4 mb-6">
-          <Link to={isDoctor ? "/lakare" : "/"} className="block hover:opacity-80 transition-opacity">
+        <div className={`px-4 mb-8 ${isCollapsed ? 'flex justify-center' : ''}`}>
+          <Link 
+            to={isDoctor ? "/lakare" : "/"} 
+            className="block hover:opacity-80 transition-all duration-300 hover:scale-[1.02]"
+          >
             <Logo size={isCollapsed ? "sm" : "md"} showText={!isCollapsed} />
           </Link>
         </div>
 
-
         <SidebarGroup>
           <SidebarGroupContent>
-            <SidebarMenu>
-              {navItems.map((item) => (
+            <SidebarMenu className="space-y-1 px-2">
+              {navItems.map((item, index) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild tooltip={item.title}>
                     <NavLink 
                       to={item.url} 
                       end={item.url === '/' || item.url === '/lakare'}
-                      className="flex items-center gap-3 px-3 py-2 rounded-lg transition-colors hover:bg-muted/50" 
-                      activeClassName="bg-muted text-primary font-medium"
+                      className="group relative flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 hover:bg-primary/5 hover:shadow-sm" 
+                      activeClassName="bg-primary/10 text-primary font-medium shadow-sm before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2 before:w-1 before:h-6 before:bg-primary before:rounded-full"
+                      style={{ animationDelay: `${index * 50}ms` }}
                     >
                       {item.url === '/profil' && avatarUrl ? (
-                        <Avatar className="h-5 w-5 shrink-0">
+                        <Avatar className="h-5 w-5 shrink-0 ring-2 ring-transparent group-hover:ring-primary/20 transition-all duration-200">
                           <AvatarImage src={avatarUrl} alt="Profilbild" />
-                          <AvatarFallback className="text-xs">{getInitials()}</AvatarFallback>
+                          <AvatarFallback className="text-xs bg-primary/10 text-primary">{getInitials()}</AvatarFallback>
                         </Avatar>
                       ) : (
-                        <item.icon className="h-5 w-5 shrink-0" />
+                        <div className="relative">
+                          <item.icon className="h-5 w-5 shrink-0 transition-transform duration-200 group-hover:scale-110" />
+                        </div>
                       )}
-                      {!isCollapsed && <span>{item.title}</span>}
+                      {!isCollapsed && (
+                        <span className="text-sm tracking-wide">{item.title}</span>
+                      )}
                     </NavLink>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -95,28 +102,27 @@ export function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
 
-      <SidebarFooter className="p-4 space-y-3">
-
+      <SidebarFooter className="p-4 bg-gradient-to-t from-sidebar-background via-sidebar-background to-transparent">
         {/* Logout button */}
         {!isCollapsed ? (
           <Button
-            variant="outline"
+            variant="ghost"
             size="sm"
             onClick={handleSignOut}
-            className="w-full gap-2"
+            className="w-full gap-2 justify-start px-3 py-2.5 rounded-xl text-muted-foreground hover:text-foreground hover:bg-destructive/10 transition-all duration-200 group"
           >
-            <LogOut className="h-4 w-4" />
-            Logga ut
+            <LogOut className="h-4 w-4 transition-transform duration-200 group-hover:scale-110 group-hover:text-destructive" />
+            <span className="text-sm">Logga ut</span>
           </Button>
         ) : (
           <Button
             variant="ghost"
             size="icon"
             onClick={handleSignOut}
-            className="w-full"
+            className="w-full rounded-xl text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-all duration-200 group"
             title="Logga ut"
           >
-            <LogOut className="h-4 w-4" />
+            <LogOut className="h-4 w-4 transition-transform duration-200 group-hover:scale-110" />
           </Button>
         )}
       </SidebarFooter>
