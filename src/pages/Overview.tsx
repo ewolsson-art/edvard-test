@@ -33,7 +33,7 @@ import { MoodStats as MoodStatsType, ExerciseType } from '@/types/mood';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Dumbbell, Moon, Utensils, Pill } from 'lucide-react';
 
-type ViewType = 'week' | 'month' | 'year';
+type ViewType = 'week' | 'month' | 'year' | '30days';
 
 const Overview = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -505,7 +505,8 @@ const Overview = () => {
           </h1>
           
           <Tabs value={view} onValueChange={handleViewChange} className="w-full">
-            <TabsList className="grid w-full max-w-md grid-cols-3">
+            <TabsList className="grid w-full max-w-lg grid-cols-4">
+              <TabsTrigger value="30days">30 dagar</TabsTrigger>
               <TabsTrigger value="week">Vecka</TabsTrigger>
               <TabsTrigger value="month">Månad</TabsTrigger>
               <TabsTrigger value="year">År</TabsTrigger>
@@ -513,18 +514,20 @@ const Overview = () => {
           </Tabs>
         </header>
 
-        {/* Last 30 Days Overview */}
-        <Last30DaysOverview
-          entries={entries}
-          getEntryForDate={getEntryForDate}
-          getMedicationsTakenOnDate={getMedicationsTakenOnDate}
-          activeMedicationsCount={activeMedications.length}
-          preferences={preferences}
-          onDayClick={handleDayClick}
-        />
+        {/* Last 30 Days View */}
+        {view === '30days' && (
+          <Last30DaysOverview
+            entries={entries}
+            getEntryForDate={getEntryForDate}
+            getMedicationsTakenOnDate={getMedicationsTakenOnDate}
+            activeMedicationsCount={activeMedications.length}
+            preferences={preferences}
+            onDayClick={handleDayClick}
+          />
+        )}
 
-        {/* Mående Section */}
-        {showMood && (
+        {/* Mående Section - only show for week/month/year views */}
+        {showMood && view !== '30days' && (
           <section>
             <h2 className="font-display text-2xl font-semibold mb-6">Mående</h2>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -572,7 +575,7 @@ const Overview = () => {
         )}
 
         {/* Sömn Section */}
-        {showSleep && (
+        {showSleep && view !== '30days' && (
         <section>
           <div className="flex items-center gap-3 mb-6">
             <Moon className="w-6 h-6 text-primary" />
@@ -618,7 +621,7 @@ const Overview = () => {
         )}
 
         {/* Kost Section */}
-        {showEating && (
+        {showEating && view !== '30days' && (
         <section>
           <div className="flex items-center gap-3 mb-6">
             <Utensils className="w-6 h-6 text-primary" />
@@ -664,7 +667,7 @@ const Overview = () => {
         )}
 
         {/* Träning Section */}
-        {showExercise && (
+        {showExercise && view !== '30days' && (
         <section>
           <div className="flex items-center gap-3 mb-6">
             <Dumbbell className="w-6 h-6 text-primary" />
@@ -714,7 +717,7 @@ const Overview = () => {
         )}
 
         {/* Medicin Section */}
-        {showMedication && (
+        {showMedication && view !== '30days' && (
         <section>
           <div className="flex items-center gap-3 mb-6">
             <Pill className="w-6 h-6 text-primary" />
@@ -768,12 +771,14 @@ const Overview = () => {
         )}
 
         {/* AI Insights Section */}
-        <AIInsights
-          entries={entries}
-          stats={stats}
-          periodLabel={label}
-          view={view}
-        />
+        {view !== '30days' && (
+          <AIInsights
+            entries={entries}
+            stats={stats}
+            periodLabel={label}
+            view={view}
+          />
+        )}
 
         <DayDetailDialog
           open={dialogOpen}
