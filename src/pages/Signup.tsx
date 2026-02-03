@@ -9,7 +9,16 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useToast } from "@/hooks/use-toast";
 import { AuthNavbar } from "@/components/AuthNavbar";
 import { Logo } from "@/components/Logo";
-import { Eye, EyeOff, ArrowRight, Loader2, Mail, User, Stethoscope, Users, CheckCircle2 } from "lucide-react";
+import { Eye, EyeOff, ArrowRight, Loader2, Mail, User, Stethoscope, Users, CheckCircle2, AlertCircle } from "lucide-react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 const signupSchema = z.object({
   email: z.string().email("Ogiltig e-postadress"),
@@ -27,6 +36,7 @@ const Signup = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
+  const [showAlreadyRegistered, setShowAlreadyRegistered] = useState(false);
   const [validationErrors, setValidationErrors] = useState<{ 
     email?: string; 
     password?: string; 
@@ -70,7 +80,7 @@ const Signup = () => {
     
     setIsSubmitting(true);
 
-    const { error } = await signUp(email, password, { 
+    const { error, data } = await signUp(email, password, { 
       role,
       first_name: firstName,
       last_name: lastName
@@ -79,7 +89,9 @@ const Signup = () => {
     if (error) {
       let errorMessage = "Ett fel uppstod vid registrering";
       if (error.message.includes("User already registered")) {
-        errorMessage = "Det finns redan ett konto med denna e-postadress";
+        setShowAlreadyRegistered(true);
+        setIsSubmitting(false);
+        return;
       }
       toast({
         title: "Registrering misslyckades",
@@ -87,6 +99,13 @@ const Signup = () => {
         variant: "destructive",
       });
     } else {
+      // Check if this is a repeated signup (user already exists but unconfirmed)
+      // Supabase returns user data but with identities being empty for repeated signups
+      if (data?.user && data.user.identities && data.user.identities.length === 0) {
+        setShowAlreadyRegistered(true);
+        setIsSubmitting(false);
+        return;
+      }
       setShowConfirmation(true);
     }
 
@@ -307,6 +326,41 @@ const Signup = () => {
           </div>
         </div>
       </div>
+
+      {/* Already Registered Dialog */}
+      <AlertDialog open={showAlreadyRegistered} onOpenChange={setShowAlreadyRegistered}>
+        <AlertDialogContent className="max-w-md">
+          <AlertDialogHeader>
+            <div className="flex justify-center mb-4">
+              <div className="h-14 w-14 rounded-full bg-destructive/10 flex items-center justify-center">
+                <AlertCircle className="h-7 w-7 text-destructive" />
+              </div>
+            </div>
+            <AlertDialogTitle className="text-center text-xl">
+              Kontot finns redan
+            </AlertDialogTitle>
+            <AlertDialogDescription className="text-center">
+              Det finns redan ett konto registrerat med e-postadressen <strong className="text-foreground">{email}</strong>. 
+              Vänligen logga in istället eller använd en annan e-postadress.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter className="flex-col sm:flex-row gap-2">
+            <Button
+              variant="outline"
+              className="w-full sm:w-auto"
+              onClick={() => setShowAlreadyRegistered(false)}
+            >
+              Försök med annan e-post
+            </Button>
+            <Button
+              className="w-full sm:w-auto"
+              onClick={() => navigate('/logga-in')}
+            >
+              Gå till inloggning
+            </Button>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };
