@@ -38,6 +38,7 @@ import ManageConnections from "./pages/ManageConnections";
 import NotFound from "./pages/NotFound";
 import SharedReport from "./pages/SharedReport";
 import ResetPassword from "./pages/ResetPassword";
+import ForgotPassword from "./pages/ForgotPassword";
 import Characteristics from "./pages/Characteristics";
 
 const queryClient = new QueryClient();
@@ -77,6 +78,7 @@ const App = () => (
             <Route path="/villkor" element={<TermsOfService />} />
             <Route path="/logga-in" element={<Login />} />
             <Route path="/skapa-konto" element={<Signup />} />
+            <Route path="/glomt-losenord" element={<ForgotPassword />} />
             <Route path="/aterstall-losenord" element={<ResetPassword />} />
             <Route path="/onboarding" element={
               <ProtectedRoute skipOnboardingCheck>
