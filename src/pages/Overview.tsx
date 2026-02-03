@@ -459,6 +459,16 @@ const Overview = () => {
   }
 
   const getStatsForView = () => {
+    // Default empty stats for 30days view (handled separately)
+    const emptyStats = {
+      stats: { elevated: 0, stable: 0, depressed: 0, unregistered: 0, total: 0, totalDays: 0 },
+      exerciseStats: { exercised: 0, notExercised: 0, unregistered: 0, total: 0, totalDays: 0 },
+      sleepStats: { good: 0, bad: 0, unregistered: 0, total: 0, totalDays: 0 },
+      eatingStats: { good: 0, bad: 0, unregistered: 0, total: 0, totalDays: 0 },
+      medicationStats: { taken: 0, notTaken: 0, unregistered: 0, total: 0, totalDays: 0 },
+      label: 'Senaste 30 dagarna'
+    };
+    
     switch (view) {
       case 'week': return { 
         stats: weekStats, 
@@ -484,6 +494,9 @@ const Overview = () => {
         medicationStats: yearMedicationStats,
         label: `${currentYear}` 
       };
+      case '30days':
+      default:
+        return emptyStats;
     }
   };
 
