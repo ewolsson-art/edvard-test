@@ -139,7 +139,7 @@ const Login = () => {
                     Lösenord
                   </Label>
                   <Link
-                    to="/aterstall-losenord"
+                    to="/glomt-losenord"
                     className="text-xs text-primary hover:text-primary/80 transition-colors"
                   >
                     Glömt lösenord?
