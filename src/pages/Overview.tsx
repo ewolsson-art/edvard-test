@@ -28,6 +28,7 @@ import { MedicationYearHeatmap } from '@/components/MedicationYearHeatmap';
 import { DayDetailDialog } from '@/components/DayDetailDialog';
 import { ExerciseTypeDialog } from '@/components/ExerciseTypeDialog';
 import { AIInsights } from '@/components/AIInsights';
+import { Last30DaysOverview } from '@/components/Last30DaysOverview';
 import { MoodStats as MoodStatsType, ExerciseType } from '@/types/mood';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Dumbbell, Moon, Utensils, Pill } from 'lucide-react';
@@ -511,6 +512,16 @@ const Overview = () => {
             </TabsList>
           </Tabs>
         </header>
+
+        {/* Last 30 Days Overview */}
+        <Last30DaysOverview
+          entries={entries}
+          getEntryForDate={getEntryForDate}
+          getMedicationsTakenOnDate={getMedicationsTakenOnDate}
+          activeMedicationsCount={activeMedications.length}
+          preferences={preferences}
+          onDayClick={handleDayClick}
+        />
 
         {/* Mående Section */}
         {showMood && (
