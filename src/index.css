@@ -399,6 +399,122 @@
     animation: checkDraw 0.4s ease-out 0.3s forwards;
     opacity: 0;
   }
+
+  /* Celebration Animation */
+  @keyframes confetti-fall {
+    0% {
+      transform: translateY(0) rotate(0deg);
+      opacity: 1;
+    }
+    25% {
+      transform: translateY(25vh) rotate(180deg) translateX(20px);
+    }
+    50% {
+      transform: translateY(50vh) rotate(360deg) translateX(-20px);
+    }
+    75% {
+      transform: translateY(75vh) rotate(540deg) translateX(10px);
+    }
+    100% {
+      transform: translateY(100vh) rotate(720deg);
+      opacity: 0;
+    }
+  }
+
+  @keyframes burst-ring {
+    0% {
+      transform: scale(0);
+      opacity: 0.8;
+    }
+    100% {
+      transform: scale(2);
+      opacity: 0;
+    }
+  }
+
+  @keyframes celebration-pop {
+    0% {
+      transform: scale(0);
+    }
+    50% {
+      transform: scale(1.2);
+    }
+    70% {
+      transform: scale(0.9);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+
+  @keyframes sparkle {
+    0%, 100% {
+      opacity: 0;
+      transform: scale(0) rotate(0deg);
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1.2) rotate(180deg);
+    }
+  }
+
+  @keyframes text-glow {
+    0%, 100% {
+      text-shadow: 0 0 10px hsl(var(--mood-stable) / 0.3);
+    }
+    50% {
+      text-shadow: 0 0 20px hsl(var(--mood-stable) / 0.6), 0 0 30px hsl(var(--mood-stable) / 0.4);
+    }
+  }
+
+  @keyframes bounce-slow {
+    0%, 100% {
+      transform: translateX(-50%) translateY(0);
+    }
+    50% {
+      transform: translateX(-50%) translateY(-8px);
+    }
+  }
+
+  @keyframes check-draw {
+    0% {
+      stroke-dashoffset: 100;
+      opacity: 0;
+    }
+    100% {
+      stroke-dashoffset: 0;
+      opacity: 1;
+    }
+  }
+
+  .animate-confetti-fall {
+    animation: confetti-fall 2.5s ease-in-out forwards;
+  }
+
+  .animate-burst-ring {
+    animation: burst-ring 0.8s ease-out forwards;
+  }
+
+  .animate-celebration-pop {
+    animation: celebration-pop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  }
+
+  .animate-sparkle {
+    animation: sparkle 1s ease-in-out infinite;
+  }
+
+  .animate-text-glow {
+    animation: text-glow 2s ease-in-out infinite;
+  }
+
+  .animate-bounce-slow {
+    animation: bounce-slow 1s ease-in-out infinite;
+  }
+
+  .animate-check-draw {
+    animation: check-draw 0.5s ease-out 0.3s forwards;
+    opacity: 0;
+  }
 }
 
 @layer utilities {
