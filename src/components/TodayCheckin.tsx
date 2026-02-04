@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Progress } from '@/components/ui/progress';
 import { StreakBadge } from '@/components/StreakBadge';
+import { CelebrationAnimation } from '@/components/CelebrationAnimation';
 
 interface StreakData {
   currentStreak: number;
@@ -792,11 +793,7 @@ export function TodayCheckin({
 
       {/* Success Animation */}
       {currentStep === 'success-animation' && (
-        <div className="flex flex-col items-center justify-center py-16 fade-in">
-          <div className="success-circle">
-            <Check className="w-16 h-16 md:w-20 md:h-20 text-white success-check" />
-          </div>
-        </div>
+        <CelebrationAnimation />
       )}
 
     </div>
