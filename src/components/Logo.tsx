@@ -42,6 +42,6 @@ export function Logo({
         </svg>
       </div>
       
-      {showText && <span className={cn("font-logo font-semibold tracking-tight bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent", sizes[size].text)}>Friendly</span>}
+      {showText && <span className={cn("font-logo font-semibold tracking-tight bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent", sizes[size].text)}>​Mindmaster </span>}
     </div>;
 }
