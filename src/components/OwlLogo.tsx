@@ -161,26 +161,13 @@ export function OwlLogo({ size = 'md', animated = true, className }: OwlLogoProp
           {/* Bookmark ribbon */}
           <path d="M145 168 L145 160 L149 164 L153 160 L153 168" fill="hsl(0 60% 45%)" opacity="0.7" />
 
-          {/* === Hands/wings gripping the book === */}
-          {/* Left hand gripping book edge */}
-          <g>
-            {/* Wing/arm coming down to book */}
-            <path d="M54 155 Q42 162 36 172 Q34 178 38 180" fill="url(#owlWingGrad)" stroke="hsl(20 48% 24%)" strokeWidth="0.5" />
-            {/* Left hand - three round fingers curling over book edge */}
-            <ellipse cx="36" cy="178" rx="4" ry="3.5" fill="hsl(25 55% 38%)" />
-            <ellipse cx="34" cy="182" rx="3.5" ry="3" fill="hsl(25 55% 38%)" />
-            <ellipse cx="36" cy="186" rx="4" ry="3.5" fill="hsl(25 55% 38%)" />
-            {/* Thumb on top */}
-            <ellipse cx="40" cy="175" rx="3" ry="2.5" fill="hsl(25 50% 42%)" />
-          </g>
-          {/* Right hand gripping book edge */}
-          <g>
-            <path d="M146 155 Q158 162 164 172 Q166 178 162 180" fill="url(#owlWingGrad)" stroke="hsl(20 48% 24%)" strokeWidth="0.5" />
-            <ellipse cx="164" cy="178" rx="4" ry="3.5" fill="hsl(25 55% 38%)" />
-            <ellipse cx="166" cy="182" rx="3.5" ry="3" fill="hsl(25 55% 38%)" />
-            <ellipse cx="164" cy="186" rx="4" ry="3.5" fill="hsl(25 55% 38%)" />
-            <ellipse cx="160" cy="175" rx="3" ry="2.5" fill="hsl(25 50% 42%)" />
-          </g>
+          {/* === Cute little wing-hands holding the book === */}
+          {/* Left wing-hand */}
+          <path d="M54 158 Q48 164 44 170 Q42 174 44 176 Q46 178 50 176 Q48 172 52 168 Q54 165 56 162"
+            fill="url(#owlBodyGrad)" stroke="hsl(22 50% 28%)" strokeWidth="0.8" />
+          {/* Right wing-hand */}
+          <path d="M146 158 Q152 164 156 170 Q158 174 156 176 Q154 178 150 176 Q152 172 148 168 Q146 165 144 162"
+            fill="url(#owlBodyGrad)" stroke="hsl(22 50% 28%)" strokeWidth="0.8" />
         </g>
 
         {/* Feet peeking behind book */}
