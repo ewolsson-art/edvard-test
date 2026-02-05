@@ -3,7 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { Loader2, HeartPulse } from "lucide-react";
 import { AuthNavbar } from "@/components/AuthNavbar";
-import { OwlLogo } from "@/components/OwlLogo";
+
 import { cn } from "@/lib/utils";
 
 const Auth = () => {
@@ -108,6 +108,7 @@ const Auth = () => {
               <ellipse cx="835" cy="252" rx="32" ry="44" />
             </g>
             <rect x="0" y="290" width="1200" height="20" fill="hsl(150 20% 8%)" />
+            {/* === Existing tree === */}
             <rect x="585" y="140" width="30" height="160" rx="4" fill="hsl(25 35% 20%)" />
             <path d="M600 180 Q560 160 530 170" stroke="hsl(25 35% 20%)" strokeWidth="8" strokeLinecap="round" fill="none" />
             <path d="M600 180 Q640 155 670 165" stroke="hsl(25 35% 20%)" strokeWidth="8" strokeLinecap="round" fill="none" />
@@ -117,37 +118,88 @@ const Auth = () => {
             <ellipse cx="570" cy="155" rx="40" ry="35" fill="hsl(150 25% 11%)" />
             <ellipse cx="635" cy="150" rx="38" ry="35" fill="hsl(150 28% 12%)" />
             <ellipse cx="600" cy="120" rx="50" ry="40" fill="hsl(150 32% 16%)" />
+
+            {/* === Owl's tree (to the right of existing tree) === */}
+            {/* Trunk */}
+            <rect x="720" y="120" width="22" height="175" rx="3" fill="hsl(25 35% 20%)" />
+            {/* Roots */}
+            <path d="M720 290 Q705 282 695 295" stroke="hsl(25 35% 18%)" strokeWidth="4" strokeLinecap="round" fill="none" />
+            <path d="M742 290 Q755 280 765 293" stroke="hsl(25 35% 18%)" strokeWidth="4" strokeLinecap="round" fill="none" />
+            {/* Branches */}
+            <path d="M722 200 Q690 190 665 195" stroke="hsl(25 35% 20%)" strokeWidth="6" strokeLinecap="round" fill="none" />
+            <path d="M740 170 Q770 158 795 162" stroke="hsl(25 35% 20%)" strokeWidth="5" strokeLinecap="round" fill="none" />
+            {/* Branch where owl sits */}
+            <path d="M722 230 Q685 222 660 226" stroke="hsl(25 35% 20%)" strokeWidth="5.5" strokeLinecap="round" fill="none" />
+            {/* Foliage back */}
+            <ellipse cx="730" cy="105" rx="60" ry="48" fill="hsl(148 28% 12%)" />
+            <ellipse cx="690" cy="118" rx="35" ry="28" fill="hsl(148 28% 12%)" />
+            <ellipse cx="775" cy="112" rx="35" ry="30" fill="hsl(148 28% 12%)" />
+            {/* Foliage front */}
+            <ellipse cx="730" cy="90" rx="52" ry="40" fill="hsl(150 30% 14%)" />
+            <ellipse cx="685" cy="108" rx="30" ry="25" fill="hsl(150 30% 14%)" />
+            <ellipse cx="778" cy="100" rx="32" ry="26" fill="hsl(150 30% 14%)" />
+            <ellipse cx="730" cy="70" rx="38" ry="28" fill="hsl(150 32% 16%)" />
+
+            {/* === Small owl on branch === */}
+            <g transform="translate(680, 200)">
+              {/* Body */}
+              <ellipse cx="0" cy="8" rx="8" ry="10" fill="hsl(25 55% 38%)" />
+              {/* Belly */}
+              <ellipse cx="0" cy="10" rx="5" ry="7" fill="hsl(38 50% 78%)" />
+              {/* Head */}
+              <circle cx="0" cy="-4" r="8" fill="hsl(25 55% 38%)" />
+              {/* Ear tufts */}
+              <ellipse cx="-5" cy="-10" rx="2.5" ry="4" fill="hsl(22 50% 33%)" transform="rotate(-10 -5 -10)" />
+              <ellipse cx="5" cy="-10" rx="2.5" ry="4" fill="hsl(22 50% 33%)" transform="rotate(10 5 -10)" />
+              {/* Face disc */}
+              <ellipse cx="0" cy="-2" rx="6" ry="5.5" fill="hsl(32 40% 62%)" opacity="0.4" />
+              {/* Eyes - blink */}
+              <g className="owl-blink">
+                <circle cx="-3" cy="-4" r="3" fill="white" />
+                <circle cx="-3" cy="-3.8" r="2" fill="hsl(45 90% 50%)" />
+                <circle cx="-3" cy="-3.5" r="1" fill="hsl(20 18% 12%)" />
+                <circle cx="-1.8" cy="-5.2" r="0.8" fill="white" opacity="0.9" />
+                <circle cx="3" cy="-4" r="3" fill="white" />
+                <circle cx="3" cy="-3.8" r="2" fill="hsl(45 90% 50%)" />
+                <circle cx="3" cy="-3.5" r="1" fill="hsl(20 18% 12%)" />
+                <circle cx="4.2" cy="-5.2" r="0.8" fill="white" opacity="0.9" />
+              </g>
+              {/* Beak */}
+              <path d="M-1 0 L0 2.5 L1 0 Z" fill="hsl(38 90% 55%)" />
+              {/* Smile */}
+              <path d="M-2 3 Q0 4.5 2 3" stroke="hsl(25 35% 35%)" strokeWidth="0.5" strokeLinecap="round" fill="none" />
+              {/* Cheeks */}
+              <ellipse cx="-6.5" cy="-1" rx="1.5" ry="1" fill="hsl(350 55% 72%)" opacity="0.3" />
+              <ellipse cx="6.5" cy="-1" rx="1.5" ry="1" fill="hsl(350 55% 72%)" opacity="0.3" />
+              {/* Feet */}
+              <path d="M-3 17 L-5 20 M-3 17 L-3 20.5 M-3 17 L-1 20" stroke="hsl(38 80% 50%)" strokeWidth="1" strokeLinecap="round" />
+              <path d="M3 17 L1 20 M3 17 L3 20.5 M3 17 L5 20" stroke="hsl(38 80% 50%)" strokeWidth="1" strokeLinecap="round" />
+              {/* Book */}
+              <rect x="-7" y="10" width="14" height="6" rx="1" fill="hsl(215 50% 32%)" />
+              <rect x="-5.5" y="11" width="4.5" height="4" rx="0.5" fill="hsl(42 50% 90%)" />
+              <rect x="1.5" y="11" width="4.5" height="4" rx="0.5" fill="hsl(42 45% 88%)" />
+            </g>
           </svg>
         </div>
 
         {/* Hero Section */}
-        <section className="relative z-10 flex-1 flex items-center justify-center px-4 md:px-8 pt-20">
-          <div className="max-w-6xl mx-auto w-full">
-            <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
-              <div className="space-y-6 animate-fade-in">
-                <h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold leading-[1.1] tracking-tight"
-                  style={{ color: 'hsl(40 30% 92%)' }}>
-                  Följ ditt mående med{" "}
-                  <span style={{ color: 'hsl(45 85% 70%)' }}>bättre insikt</span>
-                </h1>
-                <p className="text-lg md:text-xl max-w-xl leading-relaxed" style={{ color: 'hsl(220 15% 70%)' }}>
-                  Din interaktiva och personliga stämningsdagbok ger dig bättre koll på ditt mående
-                  och delar valfri data med din läkare
-                </p>
-                <div className="flex items-center gap-3 text-sm">
-                  <div className="flex items-center gap-2 px-4 py-2 rounded-full"
-                    style={{ backgroundColor: 'hsl(220 20% 18%)', color: 'hsl(220 15% 65%)' }}>
-                    <HeartPulse className="w-4 h-4" style={{ color: 'hsl(45 85% 70%)' }} />
-                    <span>Skapad av och för människor med bipolär sjukdom</span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex justify-center md:justify-end animate-fade-in">
-                <div className="relative">
-                  <div className="absolute inset-0 rounded-full blur-3xl scale-125"
-                    style={{ backgroundColor: 'hsl(45 60% 50% / 0.08)' }} />
-                  <OwlLogo size="hero" animated={true} />
+        <section className="relative z-10 flex-1 flex items-center justify-center px-4 md:px-8 pt-20 pb-40">
+          <div className="max-w-3xl mx-auto w-full text-center">
+            <div className="space-y-6 animate-fade-in">
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold leading-[1.1] tracking-tight"
+                style={{ color: 'hsl(40 30% 92%)' }}>
+                Följ ditt mående med{" "}
+                <span style={{ color: 'hsl(45 85% 70%)' }}>bättre insikt</span>
+              </h1>
+              <p className="text-lg md:text-xl max-w-xl mx-auto leading-relaxed" style={{ color: 'hsl(220 15% 70%)' }}>
+                Din interaktiva och personliga stämningsdagbok ger dig bättre koll på ditt mående
+                och delar valfri data med din läkare
+              </p>
+              <div className="flex items-center justify-center gap-3 text-sm">
+                <div className="flex items-center gap-2 px-4 py-2 rounded-full"
+                  style={{ backgroundColor: 'hsl(220 20% 18%)', color: 'hsl(220 15% 65%)' }}>
+                  <HeartPulse className="w-4 h-4" style={{ color: 'hsl(45 85% 70%)' }} />
+                  <span>Skapad av och för människor med bipolär sjukdom</span>
                 </div>
               </div>
             </div>
