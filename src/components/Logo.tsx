@@ -1,5 +1,5 @@
 import { cn } from '@/lib/utils';
-import { TurtleLogo } from './TurtleLogo';
+import { OwlLogo } from './OwlLogo';
 
 interface LogoProps {
   size?: 'sm' | 'md' | 'lg';
@@ -13,14 +13,14 @@ export function Logo({
   className
 }: LogoProps) {
   const sizes = {
-    sm: { text: 'text-lg', subtext: 'text-sm' },
-    md: { text: 'text-xl', subtext: 'text-base' },
-    lg: { text: 'text-2xl', subtext: 'text-lg' },
+    sm: { text: 'text-lg' },
+    md: { text: 'text-xl' },
+    lg: { text: 'text-2xl' },
   };
 
   return (
     <div className={cn("flex items-center gap-2", className)}>
-      <TurtleLogo size={size} animated={false} />
+      <OwlLogo size={size} animated={false} />
       {showText && (
         <span className={cn(
           "font-logo font-semibold tracking-tight bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent",
