@@ -5,21 +5,19 @@ import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useToast } from "@/hooks/use-toast";
 import { AuthNavbar } from "@/components/AuthNavbar";
 import { Logo } from "@/components/Logo";
-import { Eye, EyeOff, ArrowRight, Loader2, Mail, User, Stethoscope, Users, CheckCircle2, AlertCircle } from "lucide-react";
-import { Sparkles, Heart } from "lucide-react";
+import { Eye, EyeOff, ArrowRight, ArrowLeft, Loader2, Mail, User, Stethoscope, Users, CheckCircle2, AlertCircle, Sparkles, Heart, Lock } from "lucide-react";
 import {
   AlertDialog,
-  AlertDialogAction,
   AlertDialogContent,
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { cn } from "@/lib/utils";
 
 const signupSchema = z.object({
   email: z.string().email("Ogiltig e-postadress"),
@@ -28,12 +26,37 @@ const signupSchema = z.object({
   lastName: z.string().min(1, "Efternamn krävs"),
 });
 
+type AccountRole = "patient" | "doctor" | "relative";
+type Step = "role" | "details" | "submitting";
+
+const roleInfo = {
+  patient: {
+    icon: User,
+    title: "Patient",
+    description: "Följ ditt mående och dela med din vårdgivare",
+    benefits: ["Dagliga incheckningar", "AI-insikter", "Dela med läkare"],
+  },
+  doctor: {
+    icon: Stethoscope,
+    title: "Vårdgivare",
+    description: "Följ dina patienters mående och välbefinnande",
+    benefits: ["Patientöversikt", "Meddelandefunktion", "Trendanalyser"],
+  },
+  relative: {
+    icon: Users,
+    title: "Anhörig",
+    description: "Stötta dina nära genom att följa deras resa",
+    benefits: ["Följ patienters mående", "Lämna kommentarer", "Få notiser"],
+  },
+};
+
 const Signup = () => {
+  const [step, setStep] = useState<Step>("role");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  const [role, setRole] = useState<"patient" | "doctor" | "relative">("patient");
+  const [role, setRole] = useState<AccountRole | null>(null);
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
@@ -75,11 +98,12 @@ const Signup = () => {
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
     if (!validateForm()) return;
+    if (!role) return;
     
     setIsSubmitting(true);
+    setStep("submitting");
 
     const { error, data } = await signUp(email, password, { 
       role,
@@ -91,6 +115,7 @@ const Signup = () => {
       let errorMessage = "Ett fel uppstod vid registrering";
       if (error.message.includes("User already registered")) {
         setShowAlreadyRegistered(true);
+        setStep("details");
         setIsSubmitting(false);
         return;
       }
@@ -99,11 +124,11 @@ const Signup = () => {
         description: errorMessage,
         variant: "destructive",
       });
+      setStep("details");
     } else {
-      // Check if this is a repeated signup (user already exists but unconfirmed)
-      // Supabase returns user data but with identities being empty for repeated signups
       if (data?.user && data.user.identities && data.user.identities.length === 0) {
         setShowAlreadyRegistered(true);
+        setStep("details");
         setIsSubmitting(false);
         return;
       }
@@ -111,6 +136,24 @@ const Signup = () => {
     }
 
     setIsSubmitting(false);
+  };
+
+  const handleRoleSelect = (selectedRole: AccountRole) => {
+    setRole(selectedRole);
+  };
+
+  const handleContinue = () => {
+    if (step === "role" && role) {
+      setStep("details");
+    } else if (step === "details") {
+      handleSubmit();
+    }
+  };
+
+  const handleBack = () => {
+    if (step === "details") {
+      setStep("role");
+    }
   };
 
   if (loading) {
@@ -124,7 +167,6 @@ const Signup = () => {
   if (showConfirmation) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5 relative overflow-hidden">
-        {/* Background decorations */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <div className="absolute top-20 left-10 w-72 h-72 bg-primary/10 rounded-full blur-3xl animate-pulse" />
           <div className="absolute bottom-20 right-10 w-96 h-96 bg-primary/5 rounded-full blur-3xl" />
@@ -161,14 +203,14 @@ const Signup = () => {
     );
   }
 
+  const currentStepIndex = step === "role" ? 0 : 1;
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5 relative overflow-hidden">
-      {/* Animated background decorations */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-10 left-[10%] w-64 h-64 bg-primary/8 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '4s' }} />
         <div className="absolute top-1/3 right-[5%] w-48 h-48 bg-primary/6 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '6s', animationDelay: '1s' }} />
         <div className="absolute bottom-20 left-[20%] w-72 h-72 bg-primary/5 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '5s', animationDelay: '2s' }} />
-        {/* Floating decorative elements */}
         <Sparkles className="absolute top-32 right-[15%] w-6 h-6 text-primary/20 animate-pulse" style={{ animationDuration: '3s' }} />
         <Heart className="absolute bottom-40 right-[25%] w-5 h-5 text-primary/15 animate-pulse" style={{ animationDuration: '4s', animationDelay: '1s' }} />
         <Sparkles className="absolute top-1/2 left-[8%] w-4 h-4 text-primary/15 animate-pulse" style={{ animationDuration: '3.5s', animationDelay: '0.5s' }} />
@@ -177,185 +219,284 @@ const Signup = () => {
       <AuthNavbar />
       
       <div className="flex min-h-screen items-start justify-center px-4 pt-20 pb-8 relative z-10">
-        <div className="w-full max-w-md">
-          {/* Welcome badge */}
-          <div className="flex justify-center mb-4 animate-fade-in">
+        <div className="w-full max-w-lg">
+          {/* Progress indicator */}
+          <div className="flex justify-center mb-6 animate-fade-in">
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-sm font-medium">
               <Sparkles className="w-4 h-4" />
-              <span>Börja din resa idag</span>
+              <span>Steg {currentStepIndex + 1} av 2</span>
+            </div>
+          </div>
+
+          {/* Progress bar */}
+          <div className="flex justify-center mb-6">
+            <div className="flex items-center gap-3">
+              <div className={cn(
+                "w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold transition-all duration-300",
+                step === "role" ? "bg-primary text-primary-foreground shadow-lg shadow-primary/30" : "bg-primary/20 text-primary"
+              )}>
+                1
+              </div>
+              <div className={cn(
+                "w-16 h-1 rounded-full transition-all duration-500",
+                step === "details" || step === "submitting" ? "bg-primary" : "bg-primary/20"
+              )} />
+              <div className={cn(
+                "w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold transition-all duration-300",
+                step === "details" || step === "submitting" ? "bg-primary text-primary-foreground shadow-lg shadow-primary/30" : "bg-primary/20 text-primary/50"
+              )}>
+                2
+              </div>
             </div>
           </div>
           
           <div className="auth-card bg-card/80 backdrop-blur-xl rounded-3xl shadow-2xl border border-border/50 p-6 md:p-8 animate-fade-in" style={{ animationDelay: '0.1s' }}>
-            <div className="flex flex-col items-center mb-6">
-              <Logo size="sm" />
-              <h1 className="mt-5 text-2xl md:text-3xl font-bold text-foreground font-display bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text">
-                Skapa konto
-              </h1>
-              <p className="mt-2 text-sm text-muted-foreground text-center max-w-xs">
-                Välkommen! Skapa ditt konto för att börja följa ditt mående
-              </p>
-            </div>
+            {/* Step 1: Role Selection */}
+            {step === "role" && (
+              <div className="animate-fade-in">
+                <div className="flex flex-col items-center mb-8">
+                  <Logo size="sm" />
+                  <h1 className="mt-5 text-2xl md:text-3xl font-bold text-foreground font-display">
+                    Välkommen! 👋
+                  </h1>
+                  <p className="mt-2 text-sm text-muted-foreground text-center max-w-xs">
+                    Vilket typ av konto vill du skapa?
+                  </p>
+                </div>
 
-            <form onSubmit={handleSubmit} className="space-y-4">
-              {/* Role Selection */}
-              <div className="space-y-3">
-                <Label className="text-sm font-medium text-foreground flex items-center gap-2">
-                  <span>Jag är</span>
-                </Label>
-                <RadioGroup
-                  value={role}
-                  onValueChange={(value: "patient" | "doctor" | "relative") => setRole(value)}
-                  className="grid grid-cols-3 gap-3"
+                <div className="space-y-3">
+                  {(Object.keys(roleInfo) as AccountRole[]).map((roleKey) => {
+                    const info = roleInfo[roleKey];
+                    const Icon = info.icon;
+                    const isSelected = role === roleKey;
+                    
+                    return (
+                      <button
+                        key={roleKey}
+                        type="button"
+                        onClick={() => handleRoleSelect(roleKey)}
+                        className={cn(
+                          "w-full p-4 rounded-2xl border-2 text-left transition-all duration-300 group",
+                          isSelected 
+                            ? "border-primary bg-primary/10 shadow-lg shadow-primary/10" 
+                            : "border-border/50 bg-background/50 hover:border-primary/30 hover:bg-primary/5"
+                        )}
+                      >
+                        <div className="flex items-start gap-4">
+                          <div className={cn(
+                            "w-12 h-12 rounded-xl flex items-center justify-center transition-all duration-300",
+                            isSelected ? "bg-primary text-primary-foreground" : "bg-muted/50 text-muted-foreground group-hover:bg-primary/10 group-hover:text-primary"
+                          )}>
+                            <Icon className="h-6 w-6" />
+                          </div>
+                          <div className="flex-1">
+                            <div className="flex items-center justify-between">
+                              <h3 className={cn(
+                                "font-semibold text-base transition-colors",
+                                isSelected ? "text-primary" : "text-foreground"
+                              )}>
+                                {info.title}
+                              </h3>
+                              {isSelected && (
+                                <CheckCircle2 className="h-5 w-5 text-primary animate-scale-in" />
+                              )}
+                            </div>
+                            <p className="text-sm text-muted-foreground mt-0.5">
+                              {info.description}
+                            </p>
+                            <div className="flex flex-wrap gap-2 mt-2">
+                              {info.benefits.map((benefit, i) => (
+                                <span 
+                                  key={i}
+                                  className={cn(
+                                    "text-xs px-2 py-0.5 rounded-full transition-colors",
+                                    isSelected ? "bg-primary/20 text-primary" : "bg-muted text-muted-foreground"
+                                  )}
+                                >
+                                  {benefit}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+
+                <Button
+                  onClick={handleContinue}
+                  disabled={!role}
+                  className="w-full h-12 rounded-xl text-sm font-semibold shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 group bg-gradient-to-r from-primary to-primary/90 mt-6"
                 >
-                  <div>
-                    <RadioGroupItem value="patient" id="patient" className="peer sr-only" />
-                    <Label
-                      htmlFor="patient"
-                      className="flex flex-col items-center justify-center rounded-xl border-2 border-border/50 bg-background/50 p-3 hover:bg-primary/5 hover:border-primary/30 peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary/10 peer-data-[state=checked]:shadow-lg peer-data-[state=checked]:shadow-primary/10 cursor-pointer transition-all duration-300 group"
-                    >
-                      <div className="w-10 h-10 rounded-full bg-muted/50 group-hover:bg-primary/10 flex items-center justify-center mb-2 transition-all duration-300">
-                        <User className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors" />
-                      </div>
-                      <span className="text-xs font-semibold text-muted-foreground group-hover:text-foreground transition-colors">Patient</span>
-                    </Label>
-                  </div>
-                  <div>
-                    <RadioGroupItem value="doctor" id="doctor" className="peer sr-only" />
-                    <Label
-                      htmlFor="doctor"
-                      className="flex flex-col items-center justify-center rounded-xl border-2 border-border/50 bg-background/50 p-3 hover:bg-primary/5 hover:border-primary/30 peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary/10 peer-data-[state=checked]:shadow-lg peer-data-[state=checked]:shadow-primary/10 cursor-pointer transition-all duration-300 group"
-                    >
-                      <div className="w-10 h-10 rounded-full bg-muted/50 group-hover:bg-primary/10 flex items-center justify-center mb-2 transition-all duration-300">
-                        <Stethoscope className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors" />
-                      </div>
-                      <span className="text-xs font-semibold text-muted-foreground group-hover:text-foreground transition-colors">Läkare</span>
-                    </Label>
-                  </div>
-                  <div>
-                    <RadioGroupItem value="relative" id="relative" className="peer sr-only" />
-                    <Label
-                      htmlFor="relative"
-                      className="flex flex-col items-center justify-center rounded-xl border-2 border-border/50 bg-background/50 p-3 hover:bg-primary/5 hover:border-primary/30 peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary/10 peer-data-[state=checked]:shadow-lg peer-data-[state=checked]:shadow-primary/10 cursor-pointer transition-all duration-300 group"
-                    >
-                      <div className="w-10 h-10 rounded-full bg-muted/50 group-hover:bg-primary/10 flex items-center justify-center mb-2 transition-all duration-300">
-                        <Users className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors" />
-                      </div>
-                      <span className="text-xs font-semibold text-muted-foreground group-hover:text-foreground transition-colors">Anhörig</span>
-                    </Label>
-                  </div>
-                </RadioGroup>
+                  Fortsätt
+                  <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                </Button>
               </div>
+            )}
 
-              {/* Name Fields */}
-              <div className="grid grid-cols-2 gap-3">
-                <div className="space-y-1.5">
-                  <Label htmlFor="firstName" className="text-sm font-medium text-foreground">
-                    Förnamn
-                  </Label>
-                  <Input
-                    id="firstName"
-                    type="text"
-                    placeholder="Anna"
-                    value={firstName}
-                    onChange={(e) => setFirstName(e.target.value)}
-                    className={`h-11 bg-background/50 border-border/50 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-all duration-300 ${validationErrors.firstName ? 'border-destructive' : ''}`}
-                    disabled={isSubmitting}
-                  />
-                  {validationErrors.firstName && (
-                    <p className="text-xs text-destructive">{validationErrors.firstName}</p>
+            {/* Step 2: Account Details */}
+            {(step === "details" || step === "submitting") && (
+              <div className="animate-fade-in">
+                <div className="flex flex-col items-center mb-6">
+                  {role && (
+                    <div className={cn(
+                      "w-14 h-14 rounded-2xl flex items-center justify-center mb-4 bg-primary text-primary-foreground"
+                    )}>
+                      {(() => {
+                        const Icon = roleInfo[role].icon;
+                        return <Icon className="h-7 w-7" />;
+                      })()}
+                    </div>
                   )}
+                  <h1 className="text-2xl md:text-3xl font-bold text-foreground font-display">
+                    Skapa ditt konto
+                  </h1>
+                  <p className="mt-2 text-sm text-muted-foreground text-center">
+                    {role && `Du registrerar dig som ${roleInfo[role].title.toLowerCase()}`}
+                  </p>
                 </div>
-                <div className="space-y-1.5">
-                  <Label htmlFor="lastName" className="text-sm font-medium text-foreground">
-                    Efternamn
-                  </Label>
-                  <Input
-                    id="lastName"
-                    type="text"
-                    placeholder="Andersson"
-                    value={lastName}
-                    onChange={(e) => setLastName(e.target.value)}
-                    className={`h-11 bg-background/50 border-border/50 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-all duration-300 ${validationErrors.lastName ? 'border-destructive' : ''}`}
-                    disabled={isSubmitting}
-                  />
-                  {validationErrors.lastName && (
-                    <p className="text-xs text-destructive">{validationErrors.lastName}</p>
-                  )}
-                </div>
-              </div>
 
-              {/* Email */}
-              <div className="space-y-1.5">
-                <Label htmlFor="email" className="text-sm font-medium text-foreground">
-                  E-postadress
-                </Label>
-                <div className="relative">
-                  <div className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-muted/50 flex items-center justify-center">
-                    <Mail className="h-3 w-3 text-muted-foreground" />
+                <form onSubmit={(e) => { e.preventDefault(); handleSubmit(); }} className="space-y-4">
+                  {/* Name Fields */}
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="space-y-1.5">
+                      <Label htmlFor="firstName" className="text-sm font-medium text-foreground">
+                        Förnamn
+                      </Label>
+                      <Input
+                        id="firstName"
+                        type="text"
+                        placeholder="Anna"
+                        value={firstName}
+                        onChange={(e) => setFirstName(e.target.value)}
+                        className={cn(
+                          "h-11 bg-background/50 border-border/50 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-all duration-300",
+                          validationErrors.firstName && "border-destructive"
+                        )}
+                        disabled={isSubmitting}
+                      />
+                      {validationErrors.firstName && (
+                        <p className="text-xs text-destructive">{validationErrors.firstName}</p>
+                      )}
+                    </div>
+                    <div className="space-y-1.5">
+                      <Label htmlFor="lastName" className="text-sm font-medium text-foreground">
+                        Efternamn
+                      </Label>
+                      <Input
+                        id="lastName"
+                        type="text"
+                        placeholder="Andersson"
+                        value={lastName}
+                        onChange={(e) => setLastName(e.target.value)}
+                        className={cn(
+                          "h-11 bg-background/50 border-border/50 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-all duration-300",
+                          validationErrors.lastName && "border-destructive"
+                        )}
+                        disabled={isSubmitting}
+                      />
+                      {validationErrors.lastName && (
+                        <p className="text-xs text-destructive">{validationErrors.lastName}</p>
+                      )}
+                    </div>
                   </div>
-                  <Input
-                    id="email"
-                    type="email"
-                    placeholder="din@email.se"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className={`pl-11 h-11 bg-background/50 border-border/50 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-all duration-300 ${validationErrors.email ? 'border-destructive' : ''}`}
-                    disabled={isSubmitting}
-                  />
-                </div>
-                {validationErrors.email && (
-                  <p className="text-xs text-destructive">{validationErrors.email}</p>
-                )}
+
+                  {/* Email */}
+                  <div className="space-y-1.5">
+                    <Label htmlFor="email" className="text-sm font-medium text-foreground">
+                      E-postadress
+                    </Label>
+                    <div className="relative">
+                      <div className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-muted/50 flex items-center justify-center">
+                        <Mail className="h-3 w-3 text-muted-foreground" />
+                      </div>
+                      <Input
+                        id="email"
+                        type="email"
+                        placeholder="din@email.se"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        className={cn(
+                          "pl-11 h-11 bg-background/50 border-border/50 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-all duration-300",
+                          validationErrors.email && "border-destructive"
+                        )}
+                        disabled={isSubmitting}
+                      />
+                    </div>
+                    {validationErrors.email && (
+                      <p className="text-xs text-destructive">{validationErrors.email}</p>
+                    )}
+                  </div>
+
+                  {/* Password */}
+                  <div className="space-y-1.5">
+                    <Label htmlFor="password" className="text-sm font-medium text-foreground">
+                      Lösenord
+                    </Label>
+                    <div className="relative">
+                      <div className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-muted/50 flex items-center justify-center">
+                        <Lock className="h-3 w-3 text-muted-foreground" />
+                      </div>
+                      <Input
+                        id="password"
+                        type={showPassword ? "text" : "password"}
+                        placeholder="••••••••"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        className={cn(
+                          "pl-11 h-11 bg-background/50 border-border/50 rounded-xl pr-11 focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-all duration-300",
+                          validationErrors.password && "border-destructive"
+                        )}
+                        disabled={isSubmitting}
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-muted/50 hover:bg-muted flex items-center justify-center text-muted-foreground hover:text-foreground transition-all duration-200"
+                      >
+                        {showPassword ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
+                      </button>
+                    </div>
+                    {validationErrors.password && (
+                      <p className="text-xs text-destructive">{validationErrors.password}</p>
+                    )}
+                    <p className="text-xs text-muted-foreground mt-1">Minst 6 tecken</p>
+                  </div>
+
+                  {/* Buttons */}
+                  <div className="flex gap-3 pt-2">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={handleBack}
+                      disabled={isSubmitting}
+                      className="h-12 rounded-xl px-4"
+                    >
+                      <ArrowLeft className="h-4 w-4 mr-2" />
+                      Tillbaka
+                    </Button>
+                    <Button
+                      type="submit"
+                      className="flex-1 h-12 rounded-xl text-sm font-semibold shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 group bg-gradient-to-r from-primary to-primary/90"
+                      disabled={isSubmitting}
+                    >
+                      {isSubmitting ? (
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                      ) : (
+                        <>
+                          <Sparkles className="mr-2 h-4 w-4 opacity-70" />
+                          Skapa konto
+                          <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                        </>
+                      )}
+                    </Button>
+                  </div>
+                </form>
               </div>
+            )}
 
-              {/* Password */}
-              <div className="space-y-1.5">
-                <Label htmlFor="password" className="text-sm font-medium text-foreground">
-                  Lösenord
-                </Label>
-                <div className="relative">
-                  <Input
-                    id="password"
-                    type={showPassword ? "text" : "password"}
-                    placeholder="••••••••"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className={`h-11 bg-background/50 border-border/50 rounded-xl pr-11 focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-all duration-300 ${validationErrors.password ? 'border-destructive' : ''}`}
-                    disabled={isSubmitting}
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-muted/50 hover:bg-muted flex items-center justify-center text-muted-foreground hover:text-foreground transition-all duration-200"
-                  >
-                    {showPassword ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
-                  </button>
-                </div>
-                {validationErrors.password && (
-                  <p className="text-xs text-destructive">{validationErrors.password}</p>
-                )}
-                <p className="text-xs text-muted-foreground mt-1">Minst 6 tecken</p>
-              </div>
-
-              <Button
-                type="submit"
-                className="w-full h-12 rounded-xl text-sm font-semibold shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 group bg-gradient-to-r from-primary to-primary/90"
-                disabled={isSubmitting}
-              >
-                {isSubmitting ? (
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                ) : (
-                  <>
-                    <Sparkles className="mr-2 h-4 w-4 opacity-70" />
-                    Skapa konto
-                    <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
-                  </>
-                )}
-              </Button>
-            </form>
-
-            {/* Divider */}
+            {/* Login link */}
             <div className="relative my-6">
               <div className="absolute inset-0 flex items-center">
                 <div className="w-full border-t border-border/50"></div>
