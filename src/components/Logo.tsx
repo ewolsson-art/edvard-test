@@ -1,5 +1,5 @@
 import { cn } from '@/lib/utils';
-import { TurtleHammock } from './TurtleHammock';
+import { OwlLogo } from './OwlLogo';
 
 interface LogoProps {
   size?: 'sm' | 'md' | 'lg';
@@ -20,7 +20,7 @@ export function Logo({
 
   return (
     <div className={cn("flex items-center gap-2", className)}>
-      <TurtleHammock size={size} animated={false} />
+      <OwlLogo size={size} animated={false} />
       {showText && (
         <span className={cn(
           "font-logo font-semibold tracking-tight bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent",

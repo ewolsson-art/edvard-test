@@ -3,7 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { Loader2, HeartPulse } from "lucide-react";
 import { AuthNavbar } from "@/components/AuthNavbar";
-import { TurtleHammock } from "@/components/TurtleHammock";
+import { OwlLogo } from "@/components/OwlLogo";
 import { cn } from "@/lib/utils";
 
 const Auth = () => {
@@ -28,12 +28,12 @@ const Auth = () => {
     <div className="min-h-screen flex flex-col">
       <AuthNavbar />
       <div className="flex-1 relative overflow-hidden flex flex-col" style={{
-        background: 'linear-gradient(to bottom, hsl(210 35% 14%), hsl(220 28% 20%), hsl(200 25% 16%))'
+        background: 'linear-gradient(to bottom, hsl(220 30% 10%), hsl(230 25% 18%), hsl(220 20% 12%))'
       }}>
 
         {/* Stars */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          {Array.from({ length: 50 }).map((_, i) => (
+          {Array.from({ length: 45 }).map((_, i) => (
             <div
               key={i}
               className="absolute rounded-full bg-white star-twinkle"
@@ -41,9 +41,9 @@ const Auth = () => {
                 width: `${1 + Math.random() * 2.5}px`,
                 height: `${1 + Math.random() * 2.5}px`,
                 left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 50}%`,
-                opacity: 0.2 + Math.random() * 0.6,
-                animationDelay: `${Math.random() * 5}s`,
+                top: `${Math.random() * 55}%`,
+                opacity: 0.3 + Math.random() * 0.7,
+                animationDelay: `${Math.random() * 4}s`,
                 animationDuration: `${2 + Math.random() * 3}s`,
               }}
             />
@@ -51,89 +51,110 @@ const Auth = () => {
         </div>
 
         {/* Moon */}
-        <div className="absolute top-[10%] right-[12%] pointer-events-none">
-          <div className="relative w-14 h-14 md:w-20 md:h-20">
-            <div className="absolute inset-0 rounded-full shadow-[0_0_40px_15px_rgba(253,224,71,0.12)]" style={{
-              background: 'radial-gradient(circle at 35% 40%, hsl(48 90% 92%), hsl(45 80% 78%))'
+        <div className="absolute top-[12%] right-[15%] pointer-events-none">
+          <div className="relative w-16 h-16 md:w-24 md:h-24">
+            <div className="absolute inset-0 rounded-full shadow-[0_0_40px_15px_rgba(253,224,71,0.15)]" style={{
+              background: 'radial-gradient(circle at 35% 40%, hsl(48 90% 90%), hsl(45 80% 80%))'
             }} />
-            <div className="absolute w-2 h-2 md:w-3 md:h-3 rounded-full top-[28%] left-[55%]" style={{ backgroundColor: 'hsl(45 60% 75%)' }} />
-            <div className="absolute w-1.5 h-1.5 md:w-2 md:h-2 rounded-full top-[55%] left-[32%]" style={{ backgroundColor: 'hsl(45 50% 78%)' }} />
+            <div className="absolute w-3 h-3 md:w-4 md:h-4 rounded-full top-[25%] left-[55%]" style={{ backgroundColor: 'hsl(45 60% 78%)' }} />
+            <div className="absolute w-2 h-2 md:w-3 md:h-3 rounded-full top-[55%] left-[30%]" style={{ backgroundColor: 'hsl(45 50% 80%)' }} />
           </div>
         </div>
 
-        {/* Distant city silhouette */}
+        {/* City silhouette */}
         <div className="absolute bottom-0 left-0 right-0 pointer-events-none">
-          <svg viewBox="0 0 1200 160" className="w-full h-auto" preserveAspectRatio="xMidYMax meet">
-            <g fill="hsl(220 25% 10%)" opacity="0.5">
-              <rect x="30" y="90" width="22" height="70" />
-              <rect x="55" y="70" width="18" height="90" />
-              <rect x="78" y="95" width="28" height="65" />
-              <rect x="115" y="60" width="20" height="100" />
-              <rect x="140" y="80" width="16" height="80" />
-              <rect x="160" y="65" width="24" height="95" />
-              {/* Windows */}
-              <rect x="120" y="72" width="3" height="3" fill="hsl(45 75% 60%)" opacity="0.5" />
-              <rect x="128" y="88" width="3" height="3" fill="hsl(45 75% 60%)" opacity="0.3" />
-              <rect x="62" y="82" width="2" height="2" fill="hsl(45 75% 60%)" opacity="0.4" />
-
-              <rect x="1000" y="85" width="22" height="75" />
-              <rect x="1025" y="65" width="18" height="95" />
-              <rect x="1048" y="90" width="30" height="70" />
-              <rect x="1085" y="55" width="20" height="105" />
-              <rect x="1110" y="75" width="20" height="85" />
-              <rect x="1135" y="60" width="25" height="100" />
-              <rect x="1090" y="65" width="3" height="3" fill="hsl(45 75% 60%)" opacity="0.5" />
-              <rect x="1032" y="78" width="2" height="2" fill="hsl(45 75% 60%)" opacity="0.4" />
+          <svg viewBox="0 0 1200 300" className="w-full h-auto" preserveAspectRatio="xMidYMax meet">
+            <g fill="hsl(220 25% 8%)" opacity="0.7">
+              <rect x="50" y="160" width="30" height="140" />
+              <rect x="85" y="130" width="25" height="170" />
+              <rect x="115" y="170" width="35" height="130" />
+              <rect x="160" y="100" width="28" height="200" />
+              <rect x="195" y="140" width="22" height="160" />
+              <rect x="222" y="120" width="32" height="180" />
+              <rect x="260" y="155" width="26" height="145" />
+              <rect x="165" y="115" width="4" height="4" fill="hsl(45 80% 65%)" opacity="0.6" />
+              <rect x="175" y="130" width="4" height="4" fill="hsl(45 80% 65%)" opacity="0.4" />
+              <rect x="165" y="145" width="4" height="4" fill="hsl(45 80% 65%)" opacity="0.5" />
+              <rect x="230" y="135" width="4" height="4" fill="hsl(45 80% 65%)" opacity="0.5" />
+              <rect x="93" y="145" width="3" height="3" fill="hsl(45 80% 65%)" opacity="0.4" />
             </g>
-            {/* Ground/horizon */}
-            <rect x="0" y="150" width="1200" height="10" fill="hsl(150 20% 8%)" />
-            {/* Distant trees */}
-            <g fill="hsl(150 25% 10%)" opacity="0.6">
-              <ellipse cx="300" cy="140" rx="50" ry="30" />
-              <ellipse cx="370" cy="138" rx="40" ry="28" />
-              <ellipse cx="500" cy="142" rx="55" ry="25" />
-              <ellipse cx="600" cy="140" rx="45" ry="28" />
-              <ellipse cx="700" cy="138" rx="50" ry="30" />
-              <ellipse cx="800" cy="142" rx="40" ry="25" />
-              <ellipse cx="900" cy="140" rx="48" ry="28" />
+            <g fill="hsl(220 25% 8%)" opacity="0.7">
+              <rect x="900" y="140" width="30" height="160" />
+              <rect x="935" y="110" width="25" height="190" />
+              <rect x="965" y="150" width="40" height="150" />
+              <rect x="1010" y="90" width="28" height="210" />
+              <rect x="1045" y="130" width="22" height="170" />
+              <rect x="1072" y="160" width="35" height="140" />
+              <rect x="1115" y="120" width="30" height="180" />
+              <rect x="1016" y="105" width="4" height="4" fill="hsl(45 80% 65%)" opacity="0.5" />
+              <rect x="1025" y="115" width="4" height="4" fill="hsl(45 80% 65%)" opacity="0.6" />
+              <rect x="940" y="125" width="3" height="3" fill="hsl(45 80% 65%)" opacity="0.5" />
+              <rect x="1120" y="135" width="4" height="4" fill="hsl(45 80% 65%)" opacity="0.4" />
             </g>
+            <g fill="hsl(150 30% 12%)">
+              <ellipse cx="350" cy="240" rx="40" ry="55" />
+              <ellipse cx="390" cy="245" rx="35" ry="50" />
+              <ellipse cx="430" cy="238" rx="45" ry="58" />
+              <ellipse cx="310" cy="248" rx="30" ry="45" />
+              <ellipse cx="770" cy="242" rx="38" ry="52" />
+              <ellipse cx="810" cy="238" rx="42" ry="56" />
+              <ellipse cx="850" cy="245" rx="35" ry="48" />
+              <ellipse cx="880" cy="250" rx="30" ry="42" />
+            </g>
+            <g fill="hsl(150 25% 8%)">
+              <ellipse cx="370" cy="250" rx="35" ry="48" />
+              <ellipse cx="415" cy="248" rx="40" ry="50" />
+              <ellipse cx="790" cy="250" rx="38" ry="48" />
+              <ellipse cx="835" cy="252" rx="32" ry="44" />
+            </g>
+            <rect x="0" y="290" width="1200" height="20" fill="hsl(150 20% 8%)" />
+            <rect x="585" y="140" width="30" height="160" rx="4" fill="hsl(25 35% 20%)" />
+            <path d="M600 180 Q560 160 530 170" stroke="hsl(25 35% 20%)" strokeWidth="8" strokeLinecap="round" fill="none" />
+            <path d="M600 180 Q640 155 670 165" stroke="hsl(25 35% 20%)" strokeWidth="8" strokeLinecap="round" fill="none" />
+            <path d="M600 220 Q555 205 535 215" stroke="hsl(25 35% 20%)" strokeWidth="6" strokeLinecap="round" fill="none" />
+            <path d="M600 220 Q645 210 665 218" stroke="hsl(25 35% 20%)" strokeWidth="6" strokeLinecap="round" fill="none" />
+            <ellipse cx="600" cy="140" rx="70" ry="60" fill="hsl(150 30% 14%)" />
+            <ellipse cx="570" cy="155" rx="40" ry="35" fill="hsl(150 25% 11%)" />
+            <ellipse cx="635" cy="150" rx="38" ry="35" fill="hsl(150 28% 12%)" />
+            <ellipse cx="600" cy="120" rx="50" ry="40" fill="hsl(150 32% 16%)" />
           </svg>
         </div>
 
         {/* Hero Section */}
         <section className="relative z-10 flex-1 flex items-center justify-center px-4 md:px-8 pt-20">
-          <div className="max-w-5xl mx-auto w-full">
-            <div className="flex flex-col items-center gap-6 md:gap-8">
-              {/* Text - centered above */}
-              <div className="text-center space-y-4 animate-fade-in max-w-2xl">
-                <h1 className="text-3xl md:text-5xl lg:text-6xl font-display font-bold leading-[1.1] tracking-tight"
+          <div className="max-w-6xl mx-auto w-full">
+            <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
+              <div className="space-y-6 animate-fade-in">
+                <h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold leading-[1.1] tracking-tight"
                   style={{ color: 'hsl(40 30% 92%)' }}>
                   Följ ditt mående med{" "}
                   <span style={{ color: 'hsl(45 85% 70%)' }}>bättre insikt</span>
                 </h1>
-                <p className="text-base md:text-lg max-w-xl mx-auto leading-relaxed" style={{ color: 'hsl(220 15% 65%)' }}>
+                <p className="text-lg md:text-xl max-w-xl leading-relaxed" style={{ color: 'hsl(220 15% 70%)' }}>
                   Din interaktiva och personliga stämningsdagbok ger dig bättre koll på ditt mående
                   och delar valfri data med din läkare
                 </p>
-                <div className="flex justify-center">
-                  <div className="flex items-center gap-2 px-4 py-2 rounded-full text-sm"
-                    style={{ backgroundColor: 'hsl(220 20% 16%)', color: 'hsl(220 15% 60%)' }}>
+                <div className="flex items-center gap-3 text-sm">
+                  <div className="flex items-center gap-2 px-4 py-2 rounded-full"
+                    style={{ backgroundColor: 'hsl(220 20% 18%)', color: 'hsl(220 15% 65%)' }}>
                     <HeartPulse className="w-4 h-4" style={{ color: 'hsl(45 85% 70%)' }} />
                     <span>Skapad av och för människor med bipolär sjukdom</span>
                   </div>
                 </div>
               </div>
 
-              {/* Turtle in hammock scene */}
-              <div className="w-full animate-fade-in" style={{ animationDelay: '0.2s' }}>
-                <TurtleHammock size="hero" animated={true} className="mx-auto" />
+              <div className="flex justify-center md:justify-end animate-fade-in">
+                <div className="relative">
+                  <div className="absolute inset-0 rounded-full blur-3xl scale-125"
+                    style={{ backgroundColor: 'hsl(45 60% 50% / 0.08)' }} />
+                  <OwlLogo size="hero" animated={true} />
+                </div>
               </div>
             </div>
           </div>
         </section>
       </div>
 
-      {/* Footer */}
       <footer className="relative z-10 py-3 px-4 border-t border-border/40 bg-background">
         <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-muted-foreground">
           <span>© 2025 Friendly. Alla rättigheter förbehållna.</span>

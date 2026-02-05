@@ -572,74 +572,56 @@
     opacity: 0;
   }
 
-  /* Turtle hammock animations */
-  @keyframes hammock-swing {
+  /* Owl animations */
+  @keyframes owl-idle {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-4px); }
+  }
+
+  @keyframes owl-head-tilt {
     0%, 100% { transform: rotate(0deg); }
-    25% { transform: rotate(1.5deg); }
-    75% { transform: rotate(-1.5deg); }
+    25% { transform: rotate(4deg); }
+    75% { transform: rotate(-3deg); }
   }
 
-  @keyframes turtle-head-rest {
+  @keyframes owl-blink {
+    0%, 42%, 44%, 94%, 96%, 100% { transform: scaleY(1); }
+    43%, 95% { transform: scaleY(0.05); }
+  }
+
+  @keyframes owl-wing-flap {
     0%, 100% { transform: rotate(0deg); }
-    50% { transform: rotate(2deg); }
-  }
-
-  @keyframes turtle-sleepy-blink {
-    0%, 85%, 88%, 100% { transform: scaleY(1); }
-    86%, 87% { transform: scaleY(0.2); }
-  }
-
-  @keyframes turtle-lazy-wave {
-    0%, 70%, 100% { transform: rotate(0deg); }
-    75% { transform: rotate(-12deg); }
-    80% { transform: rotate(-5deg); }
-    85% { transform: rotate(-12deg); }
-    90% { transform: rotate(0deg); }
-  }
-
-  @keyframes turtle-zzz {
-    0% { opacity: 0; transform: translateY(0); }
-    30% { opacity: 0.7; }
-    100% { opacity: 0; transform: translateY(-15px) translateX(8px); }
-  }
-
-  @keyframes falling-leaf {
-    0% { opacity: 0.5; transform: translateY(0) rotate(0deg); }
-    50% { opacity: 0.4; transform: translateY(80px) rotate(180deg) translateX(15px); }
-    100% { opacity: 0; transform: translateY(160px) rotate(360deg) translateX(-10px); }
+    12% { transform: rotate(-6deg); }
+    24% { transform: rotate(0deg); }
   }
 
   @keyframes star-twinkle {
-    0%, 100% { opacity: 0.2; }
+    0%, 100% { opacity: 0.3; }
     50% { opacity: 1; }
   }
 
-  .hammock-swing {
-    transform-origin: 250px 168px;
-    animation: hammock-swing 4s ease-in-out infinite;
+  .owl-idle {
+    animation: owl-idle 3s ease-in-out infinite;
   }
 
-  .turtle-head-rest {
-    transform-origin: 205px 168px;
-    animation: turtle-head-rest 5s ease-in-out infinite;
+  .owl-head-tilt {
+    transform-origin: 100px 88px;
+    animation: owl-head-tilt 5s ease-in-out infinite;
   }
 
-  .turtle-sleepy-blink {
-    transform-origin: 192px 150px;
-    animation: turtle-sleepy-blink 6s ease-in-out infinite;
+  .owl-blink {
+    transform-origin: 100px 80px;
+    animation: owl-blink 4.5s ease-in-out infinite;
   }
 
-  .turtle-lazy-wave {
-    transform-origin: 230px 160px;
-    animation: turtle-lazy-wave 5s ease-in-out infinite;
+  .owl-wing-left {
+    transform-origin: 55px 140px;
+    animation: owl-wing-flap 5s ease-in-out infinite;
   }
 
-  .turtle-zzz {
-    animation: turtle-zzz 3s ease-in-out infinite;
-  }
-
-  .falling-leaf {
-    animation: falling-leaf 6s ease-in-out infinite;
+  .owl-wing-right {
+    transform-origin: 145px 140px;
+    animation: owl-wing-flap 5s ease-in-out infinite 2.5s;
   }
 
   .star-twinkle {
