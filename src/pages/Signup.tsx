@@ -22,8 +22,12 @@ import { cn } from "@/lib/utils";
 const signupSchema = z.object({
   email: z.string().email("Ogiltig e-postadress"),
   password: z.string().min(6, "Lösenordet måste vara minst 6 tecken"),
+  confirmPassword: z.string(),
   firstName: z.string().min(1, "Förnamn krävs"),
   lastName: z.string().min(1, "Efternamn krävs"),
+}).refine((data) => data.password === data.confirmPassword, {
+  message: "Lösenorden matchar inte",
+  path: ["confirmPassword"],
 });
 
 type AccountRole = "patient" | "doctor" | "relative";
@@ -54,16 +58,19 @@ const Signup = () => {
   const [step, setStep] = useState<Step>("role");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [role, setRole] = useState<AccountRole | null>(null);
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [showAlreadyRegistered, setShowAlreadyRegistered] = useState(false);
   const [validationErrors, setValidationErrors] = useState<{ 
     email?: string; 
     password?: string; 
+    confirmPassword?: string;
     firstName?: string; 
     lastName?: string;
   }>({});
@@ -80,15 +87,16 @@ const Signup = () => {
 
   const validateForm = () => {
     try {
-      signupSchema.parse({ email, password, firstName, lastName });
+      signupSchema.parse({ email, password, confirmPassword, firstName, lastName });
       setValidationErrors({});
       return true;
     } catch (error) {
       if (error instanceof z.ZodError) {
-        const errors: { email?: string; password?: string; firstName?: string; lastName?: string } = {};
+        const errors: { email?: string; password?: string; confirmPassword?: string; firstName?: string; lastName?: string } = {};
         error.errors.forEach((err) => {
           if (err.path[0] === "email") errors.email = err.message;
           if (err.path[0] === "password") errors.password = err.message;
+          if (err.path[0] === "confirmPassword") errors.confirmPassword = err.message;
           if (err.path[0] === "firstName") errors.firstName = err.message;
           if (err.path[0] === "lastName") errors.lastName = err.message;
         });
@@ -452,6 +460,42 @@ const Signup = () => {
                     </div>
                     {validationErrors.password && (
                       <p id="password-error" className="text-xs text-destructive" role="alert">{validationErrors.password}</p>
+                    )}
+                  </div>
+
+                  {/* Confirm Password */}
+                  <div className="space-y-1.5">
+                    <Label htmlFor="confirmPassword" className="text-xs font-medium text-foreground">
+                      Bekräfta lösenord
+                    </Label>
+                    <div className="relative">
+                      <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" aria-hidden="true" />
+                      <Input
+                        id="confirmPassword"
+                        type={showConfirmPassword ? "text" : "password"}
+                        placeholder="••••••••"
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                        className={cn(
+                          "pl-10 h-10 bg-background/50 border-border/50 rounded-lg pr-10 focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-all duration-300",
+                          validationErrors.confirmPassword && "border-destructive"
+                        )}
+                        disabled={isSubmitting}
+                        aria-invalid={!!validationErrors.confirmPassword}
+                        aria-describedby={validationErrors.confirmPassword ? "confirmPassword-error" : undefined}
+                        autoComplete="new-password"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                        aria-label={showConfirmPassword ? "Dölj lösenord" : "Visa lösenord"}
+                      >
+                        {showConfirmPassword ? <EyeOff className="h-3.5 w-3.5" aria-hidden="true" /> : <Eye className="h-3.5 w-3.5" aria-hidden="true" />}
+                      </button>
+                    </div>
+                    {validationErrors.confirmPassword && (
+                      <p id="confirmPassword-error" className="text-xs text-destructive" role="alert">{validationErrors.confirmPassword}</p>
                     )}
                   </div>
 
