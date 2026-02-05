@@ -1,5 +1,5 @@
 import { cn } from '@/lib/utils';
-import { OwlLogo } from './OwlLogo';
+import { Heart } from 'lucide-react';
 
 interface LogoProps {
   size?: 'sm' | 'md' | 'lg';
@@ -13,14 +13,14 @@ export function Logo({
   className
 }: LogoProps) {
   const sizes = {
-    sm: { text: 'text-lg' },
-    md: { text: 'text-xl' },
-    lg: { text: 'text-2xl' },
+    sm: { icon: 'w-5 h-5', text: 'text-lg' },
+    md: { icon: 'w-6 h-6', text: 'text-xl' },
+    lg: { icon: 'w-7 h-7', text: 'text-2xl' },
   };
 
   return (
     <div className={cn("flex items-center gap-2", className)}>
-      <OwlLogo size={size} animated={false} />
+      <Heart className={cn(sizes[size].icon, "text-primary fill-primary")} />
       {showText && (
         <span className={cn(
           "font-logo font-semibold tracking-tight bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent",
