@@ -17,7 +17,7 @@ export function OwlLogo({ size = 'md', animated = true, className }: OwlLogoProp
   return (
     <div className={cn("relative", sizes[size], className)}>
       <svg
-        viewBox="0 0 200 230"
+        viewBox="0 0 200 235"
         className={cn("w-full h-full", animated && "owl-idle")}
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
@@ -127,35 +127,63 @@ export function OwlLogo({ size = 'md', animated = true, className }: OwlLogoProp
           <ellipse cx="66" cy="94" rx="8" ry="5" fill="hsl(350 55% 75%)" opacity="0.5" />
           <ellipse cx="134" cy="94" rx="8" ry="5" fill="hsl(350 55% 75%)" opacity="0.5" />
 
-          {/* Small round glasses - wise but friendly */}
-          <circle cx="80" cy="80" r="17" stroke="hsl(220 15% 50%)" strokeWidth="1.5" fill="none" opacity="0.35" />
-          <circle cx="120" cy="80" r="17" stroke="hsl(220 15% 50%)" strokeWidth="1.5" fill="none" opacity="0.35" />
-          <line x1="97" y1="80" x2="103" y2="80" stroke="hsl(220 15% 50%)" strokeWidth="1.5" opacity="0.35" />
-          {/* Glasses arms */}
-          <line x1="63" y1="78" x2="58" y2="72" stroke="hsl(220 15% 50%)" strokeWidth="1.3" opacity="0.3" />
-          <line x1="137" y1="78" x2="142" y2="72" stroke="hsl(220 15% 50%)" strokeWidth="1.3" opacity="0.3" />
-
-          {/* Tiny book in wing (smart detail) - only in hero */}
-          <rect x="52" y="155" width="12" height="16" rx="1.5" fill="hsl(var(--primary))" opacity="0.7" transform="rotate(-15 58 163)" />
-          <line x1="55" y1="158" x2="62" y2="156" stroke="hsl(var(--primary) / 0.4)" strokeWidth="0.8" />
-          <line x1="54" y1="162" x2="61" y2="160" stroke="hsl(var(--primary) / 0.4)" strokeWidth="0.8" />
+          {/* Wise round glasses - prominent */}
+          <circle cx="80" cy="80" r="17.5" stroke="hsl(30 20% 35%)" strokeWidth="2.2" fill="none" opacity="0.7" />
+          <circle cx="120" cy="80" r="17.5" stroke="hsl(30 20% 35%)" strokeWidth="2.2" fill="none" opacity="0.7" />
+          {/* Bridge */}
+          <path d="M97 79 Q100 76 103 79" stroke="hsl(30 20% 35%)" strokeWidth="2" fill="none" opacity="0.7" />
+          {/* Arms curling around ears */}
+          <path d="M63 78 Q56 72 58 64" stroke="hsl(30 20% 35%)" strokeWidth="1.8" fill="none" opacity="0.6" strokeLinecap="round" />
+          <path d="M137 78 Q144 72 142 64" stroke="hsl(30 20% 35%)" strokeWidth="1.8" fill="none" opacity="0.6" strokeLinecap="round" />
+          {/* Tiny glint on glasses */}
+          <path d="M68 72 Q70 70 72 72" stroke="white" strokeWidth="1" fill="none" opacity="0.3" />
+          <path d="M128 72 Q130 70 132 72" stroke="white" strokeWidth="1" fill="none" opacity="0.3" />
         </g>
 
-        {/* Feet */}
+        {/* === Big old book the owl is reading === */}
+        <g className={animated ? 'owl-book-read' : ''}>
+          {/* Book body - thick leather-bound tome */}
+          <rect x="62" y="178" width="76" height="28" rx="3" fill="hsl(15 45% 28%)" />
+          {/* Book spine */}
+          <rect x="97" y="176" width="6" height="32" rx="1" fill="hsl(15 50% 22%)" />
+          {/* Left page */}
+          <rect x="65" y="180" width="30" height="24" rx="1.5" fill="hsl(42 50% 90%)" />
+          {/* Right page */}
+          <rect x="105" y="180" width="30" height="24" rx="1.5" fill="hsl(42 45% 88%)" />
+          {/* Text lines on left page */}
+          <line x1="69" y1="186" x2="91" y2="186" stroke="hsl(25 20% 60%)" strokeWidth="0.8" opacity="0.5" />
+          <line x1="69" y1="190" x2="89" y2="190" stroke="hsl(25 20% 60%)" strokeWidth="0.8" opacity="0.5" />
+          <line x1="69" y1="194" x2="92" y2="194" stroke="hsl(25 20% 60%)" strokeWidth="0.8" opacity="0.5" />
+          <line x1="69" y1="198" x2="87" y2="198" stroke="hsl(25 20% 60%)" strokeWidth="0.8" opacity="0.4" />
+          {/* Text lines on right page */}
+          <line x1="109" y1="186" x2="131" y2="186" stroke="hsl(25 20% 60%)" strokeWidth="0.8" opacity="0.5" />
+          <line x1="109" y1="190" x2="129" y2="190" stroke="hsl(25 20% 60%)" strokeWidth="0.8" opacity="0.5" />
+          <line x1="109" y1="194" x2="132" y2="194" stroke="hsl(25 20% 60%)" strokeWidth="0.8" opacity="0.5" />
+          <line x1="109" y1="198" x2="127" y2="198" stroke="hsl(25 20% 60%)" strokeWidth="0.8" opacity="0.4" />
+          {/* Book corner decorations - gold embossing */}
+          <rect x="63" y="179" width="5" height="5" rx="0.5" fill="none" stroke="hsl(42 65% 55%)" strokeWidth="0.6" opacity="0.5" />
+          <rect x="132" y="179" width="5" height="5" rx="0.5" fill="none" stroke="hsl(42 65% 55%)" strokeWidth="0.6" opacity="0.5" />
+          <rect x="63" y="200" width="5" height="5" rx="0.5" fill="none" stroke="hsl(42 65% 55%)" strokeWidth="0.6" opacity="0.5" />
+          <rect x="132" y="200" width="5" height="5" rx="0.5" fill="none" stroke="hsl(42 65% 55%)" strokeWidth="0.6" opacity="0.5" />
+          {/* Bookmark ribbon */}
+          <path d="M125 178 L125 172 L128 175 L131 172 L131 178" fill="hsl(0 60% 45%)" opacity="0.7" />
+        </g>
+
+        {/* Feet peeking behind book */}
         <g>
-          <path d="M80 200 L72 210 M80 200 L80 212 M80 200 L88 210"
-            stroke="hsl(38 55% 50%)" strokeWidth="3" strokeLinecap="round" />
-          <path d="M120 200 L112 210 M120 200 L120 212 M120 200 L128 210"
-            stroke="hsl(38 55% 50%)" strokeWidth="3" strokeLinecap="round" />
+          <path d="M80 204 L74 212 M80 204 L80 214 M80 204 L86 212"
+            stroke="hsl(38 55% 50%)" strokeWidth="2.5" strokeLinecap="round" />
+          <path d="M120 204 L114 212 M120 204 L120 214 M120 204 L126 212"
+            stroke="hsl(38 55% 50%)" strokeWidth="2.5" strokeLinecap="round" />
         </g>
 
         {/* Branch */}
-        <path d="M15 214 Q60 206 100 212 Q140 218 185 210"
+        <path d="M15 218 Q60 210 100 216 Q140 222 185 214"
           stroke="hsl(25 40% 28%)" strokeWidth="7" strokeLinecap="round" fill="none" />
-        <path d="M160 212 Q172 202 178 196" stroke="hsl(25 40% 28%)" strokeWidth="3.5" strokeLinecap="round" fill="none" />
-        <ellipse cx="180" cy="193" rx="5" ry="8" fill="hsl(140 40% 35%)" transform="rotate(-25 180 193)" />
-        <path d="M30 212 Q20 204 16 198" stroke="hsl(25 40% 28%)" strokeWidth="3" strokeLinecap="round" fill="none" />
-        <ellipse cx="14" cy="195" rx="4" ry="7" fill="hsl(140 40% 35%)" transform="rotate(20 14 195)" />
+        <path d="M160 216 Q172 206 178 200" stroke="hsl(25 40% 28%)" strokeWidth="3.5" strokeLinecap="round" fill="none" />
+        <ellipse cx="180" cy="197" rx="5" ry="8" fill="hsl(140 40% 35%)" transform="rotate(-25 180 197)" />
+        <path d="M30 216 Q20 208 16 202" stroke="hsl(25 40% 28%)" strokeWidth="3" strokeLinecap="round" fill="none" />
+        <ellipse cx="14" cy="199" rx="4" ry="7" fill="hsl(140 40% 35%)" transform="rotate(20 14 199)" />
       </svg>
     </div>
   );

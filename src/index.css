@@ -624,6 +624,15 @@
     animation: owl-wing-flap 5s ease-in-out infinite 2.5s;
   }
 
+  @keyframes owl-book-read {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-1.5px); }
+  }
+
+  .owl-book-read {
+    animation: owl-book-read 3s ease-in-out infinite;
+  }
+
   .star-twinkle {
     animation: star-twinkle 3s ease-in-out infinite;
   }
