@@ -28,8 +28,8 @@ import { MedicationYearHeatmap } from '@/components/MedicationYearHeatmap';
 import { DayDetailDialog } from '@/components/DayDetailDialog';
 import { ExerciseTypeDialog } from '@/components/ExerciseTypeDialog';
 import { AIInsights } from '@/components/AIInsights';
+import { MoodStats as MoodStatsType, ExerciseType, QualityType } from '@/types/mood';
 import { Last30DaysOverview } from '@/components/Last30DaysOverview';
-import { MoodStats as MoodStatsType, ExerciseType } from '@/types/mood';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Dumbbell, Moon, Utensils, Pill } from 'lucide-react';
 
@@ -286,7 +286,7 @@ const Overview = () => {
   }, [currentMonth, getEntryForDate]);
 
   const monthSleepData = useMemo(() => {
-    const result: Record<number, 'good' | 'bad'> = {};
+    const result: Record<number, QualityType> = {};
     const start = startOfMonth(currentMonth);
     const end = endOfMonth(currentMonth);
     const days = eachDayOfInterval({ start, end });
@@ -302,7 +302,7 @@ const Overview = () => {
   }, [currentMonth, getEntryForDate]);
 
   const monthEatingData = useMemo(() => {
-    const result: Record<number, 'good' | 'bad'> = {};
+    const result: Record<number, QualityType> = {};
     const start = startOfMonth(currentMonth);
     const end = endOfMonth(currentMonth);
     const days = eachDayOfInterval({ start, end });

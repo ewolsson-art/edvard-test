@@ -1,5 +1,5 @@
 export type MoodType = 'elevated' | 'stable' | 'depressed';
-export type QualityType = 'good' | 'bad';
+export type QualityType = 'good' | 'okay' | 'bad';
 export type ExerciseType = 'chest' | 'shoulders' | 'back' | 'legs';
 
 export interface MoodEntry {
@@ -55,6 +55,7 @@ export const MOOD_ICONS: Record<MoodType, string> = {
 
 export const QUALITY_LABELS: Record<QualityType, string> = {
   good: 'Bra',
+  okay: 'Helt ok',
   bad: 'Dåligt',
 };
 
