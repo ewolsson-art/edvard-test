@@ -43,7 +43,7 @@ export function AuthNavbar() {
   const currentMode = searchParams.get('mode');
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border/40">
+    <nav className="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl border-b border-white/5" style={{ backgroundColor: 'hsl(220 30% 10% / 0.9)' }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
@@ -107,9 +107,10 @@ export function AuthNavbar() {
       {/* Mobile menu */}
       <div
         className={cn(
-          "lg:hidden absolute top-16 left-0 right-0 bg-background/95 backdrop-blur-xl border-b border-border/40 transition-all duration-300 ease-in-out overflow-hidden",
+          "lg:hidden absolute top-16 left-0 right-0 backdrop-blur-xl border-b border-white/5 transition-all duration-300 ease-in-out overflow-hidden",
           isMobileMenuOpen ? "max-h-[400px] opacity-100" : "max-h-0 opacity-0"
         )}
+        style={{ backgroundColor: 'hsl(220 30% 10% / 0.95)' }}
       >
         <div className="px-4 py-4 space-y-1">
           {navItems.map((item) => (
