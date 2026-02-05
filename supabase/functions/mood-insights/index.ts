@@ -702,10 +702,10 @@ function buildStructuredInsights(
     recommendations.push({
       priority: badSleepStreak >= 4 ? 'high' : 'medium',
       icon: 'sleep',
-      title: 'Prioritera sömn',
+      title: 'Sömn att bevaka',
       description: badSleepStreak >= 4 
-        ? 'Dålig sömn 4+ dagar. Strikt läggdags närmaste kvällarna, även utan trötthet.'
-        : 'Försök etablera en regelbunden sömnrutin de närmaste dagarna.'
+        ? `Du har angett dålig sömn ${badSleepStreak} dagar i rad. Sömnen brukar påverka ditt mående.`
+        : `${badSleepStreak} dagar med sämre sömn. Värt att hålla koll på.`
     });
   }
   
@@ -713,26 +713,46 @@ function buildStructuredInsights(
     recommendations.push({
       priority: noExerciseStreak >= 5 ? 'high' : 'medium',
       icon: 'exercise',
-      title: 'Aktivera kroppen',
-      description: 'Fysisk aktivitet påverkar humöret positivt. Börja med en kort promenad.'
+      title: 'Träning',
+      description: `Ingen träning loggad på ${noExerciseStreak} dagar. Fysisk aktivitet brukar hjälpa ditt mående.`
     });
   }
   
   if (dominantMood === 'elevated' && dominantPercentage > 50) {
     recommendations.push({
-      priority: 'high',
+      priority: dominantPercentage > 70 ? 'high' : 'medium',
       icon: 'warning',
-      title: 'Bromsa nya projekt',
-      description: 'Vänta 48h innan du agerar på nya idéer. Utvärdera när måendet är stabilt.'
+      title: 'Förhöjt mående',
+      description: `Du har angett förhöjt mående ${dominantPercentage}% av dagarna. Håll lite koll på det.`
     });
   }
   
   if (dominantMood === 'depressed' && dominantPercentage > 50) {
     recommendations.push({
-      priority: 'high',
+      priority: dominantPercentage > 70 ? 'high' : 'medium',
       icon: 'heart',
-      title: 'Kontakta vårdgivare',
-      description: 'Flera dagar med sänkt mående. Överväg att ta kontakt med din behandlare.'
+      title: 'Sänkt mående',
+      description: `Du har angett sänkt mående ${dominantPercentage}% av dagarna. Det kan vara värt att prata med någon.`
+    });
+  }
+  
+  // Add eating recommendation if streak
+  if (badEatingStreak >= 2) {
+    recommendations.push({
+      priority: 'low',
+      icon: 'food',
+      title: 'Matvanor',
+      description: `${badEatingStreak} dagar med sämre matvanor loggade.`
+    });
+  }
+  
+  // Add mood stability observation
+  if (moodChanges >= 3) {
+    recommendations.push({
+      priority: 'medium',
+      icon: 'warning',
+      title: 'Humörvariation',
+      description: 'Ditt mående har varierat en del senaste veckan. Fortsätt logga för att se mönster.'
     });
   }
   
@@ -741,7 +761,7 @@ function buildStructuredInsights(
       priority: 'low',
       icon: 'calendar',
       title: 'Fortsätt logga',
-      description: 'Dina mönster ser stabila ut. Fortsätt med dagliga incheckningar.'
+      description: 'Inga tydliga varningssignaler just nu. Bra jobbat med loggningen!'
     });
   }
   
