@@ -575,13 +575,13 @@
   /* Turtle logo animations */
   @keyframes turtle-idle {
     0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-4px); }
+    50% { transform: translateY(-5px); }
   }
 
   @keyframes turtle-head-bob {
-    0%, 100% { transform: translateX(0) rotate(0deg); }
-    30% { transform: translateX(2px) rotate(2deg); }
-    70% { transform: translateX(-1px) rotate(-1deg); }
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(3deg); }
+    75% { transform: rotate(-3deg); }
   }
 
   @keyframes turtle-blink {
@@ -591,14 +591,16 @@
 
   @keyframes turtle-tail-wag {
     0%, 100% { transform: rotate(0deg); }
-    25% { transform: rotate(8deg); }
-    75% { transform: rotate(-8deg); }
-  }
-
-  @keyframes turtle-leg-walk {
-    0%, 100% { transform: rotate(0deg); }
     25% { transform: rotate(10deg); }
     75% { transform: rotate(-10deg); }
+  }
+
+  @keyframes turtle-wave {
+    0%, 100% { transform: rotate(0deg); }
+    20% { transform: rotate(-15deg); }
+    40% { transform: rotate(-5deg); }
+    60% { transform: rotate(-15deg); }
+    80% { transform: rotate(-5deg); }
   }
 
   .turtle-idle {
@@ -606,38 +608,23 @@
   }
 
   .turtle-head-bob {
-    transform-origin: 152px 95px;
+    transform-origin: 100px 95px;
     animation: turtle-head-bob 4s ease-in-out infinite;
   }
 
   .turtle-blink {
-    transform-origin: 167px 80px;
+    transform-origin: 100px 60px;
     animation: turtle-blink 5s ease-in-out infinite;
   }
 
   .turtle-tail-wag {
-    transform-origin: 42px 125px;
+    transform-origin: 100px 210px;
     animation: turtle-tail-wag 2s ease-in-out infinite;
   }
 
-  .turtle-leg-front-left {
-    transform-origin: 58px 105px;
-    animation: turtle-leg-walk 2s ease-in-out infinite;
-  }
-
-  .turtle-leg-front-right {
-    transform-origin: 142px 105px;
-    animation: turtle-leg-walk 2s ease-in-out infinite 1s;
-  }
-
-  .turtle-leg-back-left {
-    transform-origin: 62px 140px;
-    animation: turtle-leg-walk 2s ease-in-out infinite 0.5s;
-  }
-
-  .turtle-leg-back-right {
-    transform-origin: 138px 140px;
-    animation: turtle-leg-walk 2s ease-in-out infinite 1.5s;
+  .turtle-wave {
+    transform-origin: 70px 150px;
+    animation: turtle-wave 3s ease-in-out infinite;
   }
 }
 
