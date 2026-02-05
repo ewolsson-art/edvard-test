@@ -206,14 +206,14 @@ const Signup = () => {
   const currentStepIndex = step === "role" ? 0 : 1;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5 relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5 relative overflow-hidden" role="main" aria-label="Skapa konto">
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-10 left-[10%] w-64 h-64 bg-primary/8 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '4s' }} />
-        <div className="absolute top-1/3 right-[5%] w-48 h-48 bg-primary/6 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '6s', animationDelay: '1s' }} />
-        <div className="absolute bottom-20 left-[20%] w-72 h-72 bg-primary/5 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '5s', animationDelay: '2s' }} />
-        <Sparkles className="absolute top-32 right-[15%] w-6 h-6 text-primary/20 animate-pulse" style={{ animationDuration: '3s' }} />
-        <Heart className="absolute bottom-40 right-[25%] w-5 h-5 text-primary/15 animate-pulse" style={{ animationDuration: '4s', animationDelay: '1s' }} />
-        <Sparkles className="absolute top-1/2 left-[8%] w-4 h-4 text-primary/15 animate-pulse" style={{ animationDuration: '3.5s', animationDelay: '0.5s' }} />
+        <div className="absolute top-10 left-[10%] w-64 h-64 bg-primary/8 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '4s' }} aria-hidden="true" />
+        <div className="absolute top-1/3 right-[5%] w-48 h-48 bg-primary/6 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '6s', animationDelay: '1s' }} aria-hidden="true" />
+        <div className="absolute bottom-20 left-[20%] w-72 h-72 bg-primary/5 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '5s', animationDelay: '2s' }} aria-hidden="true" />
+        <Sparkles className="absolute top-32 right-[15%] w-6 h-6 text-primary/20 animate-pulse" style={{ animationDuration: '3s' }} aria-hidden="true" />
+        <Heart className="absolute bottom-40 right-[25%] w-5 h-5 text-primary/15 animate-pulse" style={{ animationDuration: '4s', animationDelay: '1s' }} aria-hidden="true" />
+        <Sparkles className="absolute top-1/2 left-[8%] w-4 h-4 text-primary/15 animate-pulse" style={{ animationDuration: '3.5s', animationDelay: '0.5s' }} aria-hidden="true" />
       </div>
       
       <AuthNavbar />
@@ -221,23 +221,23 @@ const Signup = () => {
       <div className="flex min-h-screen items-start justify-center px-4 pt-20 pb-8 relative z-10">
         <div className="w-full max-w-lg">
           {/* Progress bar */}
-          <div className="flex justify-center mb-4 animate-fade-in">
+          <div className="flex justify-center mb-4 animate-fade-in" role="progressbar" aria-valuenow={currentStepIndex + 1} aria-valuemin={1} aria-valuemax={2} aria-label={`Steg ${currentStepIndex + 1} av 2`}>
             <div className="flex items-center gap-3">
               <div className="text-xs text-muted-foreground font-medium mr-2">Steg {currentStepIndex + 1}/2</div>
               <div className={cn(
                 "w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold transition-all duration-300",
                 step === "role" ? "bg-primary text-primary-foreground shadow-md shadow-primary/30" : "bg-primary/20 text-primary"
-              )}>
+              )} aria-hidden="true">
                 1
               </div>
               <div className={cn(
                 "w-12 h-1 rounded-full transition-all duration-500",
                 step === "details" || step === "submitting" ? "bg-primary" : "bg-primary/20"
-              )} />
+              )} aria-hidden="true" />
               <div className={cn(
                 "w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold transition-all duration-300",
                 step === "details" || step === "submitting" ? "bg-primary text-primary-foreground shadow-md shadow-primary/30" : "bg-primary/20 text-primary/50"
-              )}>
+              )} aria-hidden="true">
                 2
               </div>
             </div>
@@ -246,10 +246,10 @@ const Signup = () => {
           <div className="auth-card bg-card/80 backdrop-blur-xl rounded-2xl shadow-2xl border border-border/50 p-5 md:p-6 animate-fade-in" style={{ animationDelay: '0.1s' }}>
             {/* Step 1: Role Selection */}
             {step === "role" && (
-              <div className="animate-fade-in">
+              <div className="animate-fade-in" role="group" aria-labelledby="role-heading">
                 <div className="flex flex-col items-center mb-5">
                   <Logo size="sm" />
-                  <h1 className="mt-3 text-xl md:text-2xl font-bold text-foreground font-display">
+                  <h1 id="role-heading" className="mt-3 text-xl md:text-2xl font-bold text-foreground font-display">
                     Välkommen! 👋
                   </h1>
                   <p className="mt-1 text-sm text-muted-foreground text-center">
@@ -257,7 +257,7 @@ const Signup = () => {
                   </p>
                 </div>
 
-                <div className="space-y-2">
+                <div className="space-y-2" role="radiogroup" aria-label="Välj kontotyp">
                   {(Object.keys(roleInfo) as AccountRole[]).map((roleKey) => {
                     const info = roleInfo[roleKey];
                     const Icon = info.icon;
@@ -268,6 +268,9 @@ const Signup = () => {
                         key={roleKey}
                         type="button"
                         onClick={() => handleRoleSelect(roleKey)}
+                        role="radio"
+                        aria-checked={isSelected}
+                        aria-label={`${info.title}: ${info.description}`}
                         className={cn(
                           "w-full p-3 rounded-xl border-2 text-left transition-all duration-300 group",
                           isSelected 
@@ -279,8 +282,8 @@ const Signup = () => {
                           <div className={cn(
                             "w-10 h-10 rounded-lg flex-shrink-0 flex items-center justify-center transition-all duration-300",
                             isSelected ? "bg-primary text-primary-foreground" : "bg-muted/50 text-muted-foreground group-hover:bg-primary/10"
-                          )}>
-                            <Icon className="h-5 w-5" />
+                          )} aria-hidden="true">
+                            <Icon className="h-5 w-5" aria-hidden="true" />
                           </div>
                           <div className="flex-1">
                             <div className="flex items-center justify-between">
@@ -291,7 +294,7 @@ const Signup = () => {
                                 {info.title}
                               </h3>
                               {isSelected && (
-                                <CheckCircle2 className="h-4 w-4 text-primary animate-scale-in" />
+                                <CheckCircle2 className="h-4 w-4 text-primary animate-scale-in" aria-hidden="true" />
                               )}
                             </div>
                             <p className="text-xs text-muted-foreground">
@@ -317,19 +320,19 @@ const Signup = () => {
 
             {/* Step 2: Account Details */}
             {(step === "details" || step === "submitting") && (
-              <div className="animate-fade-in">
+              <div className="animate-fade-in" role="group" aria-labelledby="details-heading">
                 <div className="flex flex-col items-center mb-4">
                   {role && (
                     <div className={cn(
                       "w-11 h-11 rounded-xl flex items-center justify-center mb-3 bg-primary text-primary-foreground"
-                    )}>
+                    )} aria-hidden="true">
                       {(() => {
                         const Icon = roleInfo[role].icon;
-                        return <Icon className="h-5 w-5" />;
+                        return <Icon className="h-5 w-5" aria-hidden="true" />;
                       })()}
                     </div>
                   )}
-                  <h1 className="text-xl md:text-2xl font-bold text-foreground font-display">
+                  <h1 id="details-heading" className="text-xl md:text-2xl font-bold text-foreground font-display">
                     Skapa ditt konto
                   </h1>
                   <p className="mt-1 text-xs text-muted-foreground text-center">
@@ -337,7 +340,7 @@ const Signup = () => {
                   </p>
                 </div>
 
-                <form onSubmit={(e) => { e.preventDefault(); handleSubmit(); }} className="space-y-3">
+                <form onSubmit={(e) => { e.preventDefault(); handleSubmit(); }} className="space-y-3" aria-label="Registreringsformulär">
                   {/* Name Fields */}
                   <div className="grid grid-cols-2 gap-2">
                     <div className="space-y-1.5">
@@ -355,9 +358,12 @@ const Signup = () => {
                           validationErrors.firstName && "border-destructive"
                         )}
                         disabled={isSubmitting}
+                        aria-invalid={!!validationErrors.firstName}
+                        aria-describedby={validationErrors.firstName ? "firstName-error" : undefined}
+                        autoComplete="given-name"
                       />
                       {validationErrors.firstName && (
-                        <p className="text-xs text-destructive">{validationErrors.firstName}</p>
+                        <p id="firstName-error" className="text-xs text-destructive" role="alert">{validationErrors.firstName}</p>
                       )}
                     </div>
                     <div className="space-y-1.5">
@@ -375,9 +381,12 @@ const Signup = () => {
                           validationErrors.lastName && "border-destructive"
                         )}
                         disabled={isSubmitting}
+                        aria-invalid={!!validationErrors.lastName}
+                        aria-describedby={validationErrors.lastName ? "lastName-error" : undefined}
+                        autoComplete="family-name"
                       />
                       {validationErrors.lastName && (
-                        <p className="text-xs text-destructive">{validationErrors.lastName}</p>
+                        <p id="lastName-error" className="text-xs text-destructive" role="alert">{validationErrors.lastName}</p>
                       )}
                     </div>
                   </div>
@@ -388,7 +397,7 @@ const Signup = () => {
                       E-postadress
                     </Label>
                     <div className="relative">
-                      <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                      <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" aria-hidden="true" />
                       <Input
                         id="email"
                         type="email"
@@ -400,20 +409,23 @@ const Signup = () => {
                           validationErrors.email && "border-destructive"
                         )}
                         disabled={isSubmitting}
+                        aria-invalid={!!validationErrors.email}
+                        aria-describedby={validationErrors.email ? "email-error" : undefined}
+                        autoComplete="email"
                       />
                     </div>
                     {validationErrors.email && (
-                      <p className="text-xs text-destructive">{validationErrors.email}</p>
+                      <p id="email-error" className="text-xs text-destructive" role="alert">{validationErrors.email}</p>
                     )}
                   </div>
 
                   {/* Password */}
                   <div className="space-y-1.5">
-                    <Label htmlFor="password" className="text-xs font-medium text-foreground">
+                    <Label htmlFor="password" className="text-xs font-medium text-foreground" id="password-label">
                       Lösenord (minst 6 tecken)
                     </Label>
                     <div className="relative">
-                      <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                      <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" aria-hidden="true" />
                       <Input
                         id="password"
                         type={showPassword ? "text" : "password"}
@@ -425,17 +437,21 @@ const Signup = () => {
                           validationErrors.password && "border-destructive"
                         )}
                         disabled={isSubmitting}
+                        aria-invalid={!!validationErrors.password}
+                        aria-describedby={validationErrors.password ? "password-error" : "password-label"}
+                        autoComplete="new-password"
                       />
                       <button
                         type="button"
                         onClick={() => setShowPassword(!showPassword)}
                         className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                        aria-label={showPassword ? "Dölj lösenord" : "Visa lösenord"}
                       >
-                        {showPassword ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
+                        {showPassword ? <EyeOff className="h-3.5 w-3.5" aria-hidden="true" /> : <Eye className="h-3.5 w-3.5" aria-hidden="true" />}
                       </button>
                     </div>
                     {validationErrors.password && (
-                      <p className="text-xs text-destructive">{validationErrors.password}</p>
+                      <p id="password-error" className="text-xs text-destructive" role="alert">{validationErrors.password}</p>
                     )}
                   </div>
 
@@ -447,8 +463,9 @@ const Signup = () => {
                       onClick={handleBack}
                       disabled={isSubmitting}
                       className="h-10 rounded-lg px-3"
+                      aria-label="Gå tillbaka till steg 1"
                     >
-                      <ArrowLeft className="h-4 w-4" />
+                      <ArrowLeft className="h-4 w-4" aria-hidden="true" />
                     </Button>
                     <Button
                       type="submit"
@@ -490,9 +507,9 @@ const Signup = () => {
           </div>
           
           {/* Trust indicators */}
-          <div className="mt-4 flex items-center justify-center gap-4 text-[10px] text-muted-foreground animate-fade-in" style={{ animationDelay: '0.2s' }}>
-            <span className="flex items-center gap-1"><CheckCircle2 className="h-3 w-3 text-primary/60" /> Säker data</span>
-            <span className="flex items-center gap-1"><Heart className="h-3 w-3 text-primary/60" /> Gratis att börja</span>
+          <div className="mt-4 flex items-center justify-center gap-4 text-[10px] text-muted-foreground animate-fade-in" style={{ animationDelay: '0.2s' }} aria-label="Förtroendeindikatorer">
+            <span className="flex items-center gap-1"><CheckCircle2 className="h-3 w-3 text-primary/60" aria-hidden="true" /> Säker data</span>
+            <span className="flex items-center gap-1"><Heart className="h-3 w-3 text-primary/60" aria-hidden="true" /> Gratis att börja</span>
           </div>
         </div>
       </div>
