@@ -3,8 +3,8 @@ import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { Loader2, HeartPulse } from "lucide-react";
 import { AuthNavbar } from "@/components/AuthNavbar";
+import { TurtleLogo } from "@/components/TurtleLogo";
 import { cn } from "@/lib/utils";
-import platformIllustration from "@/assets/platform-illustration.png";
 
 // Animated Cloud Component
 const Cloud = ({
@@ -94,13 +94,12 @@ const Auth = () => {
                 </div>
               </div>
 
-              {/* Right side - Illustration */}
+              {/* Right side - Turtle mascot */}
               <div className="flex justify-center md:justify-end animate-fade-in">
-                <img
-                  src={platformIllustration}
-                  alt="Friendly plattformsillustration"
-                  className="w-full max-w-md rounded-2xl shadow-2xl shadow-primary/10"
-                />
+                <div className="relative">
+                  <div className="absolute inset-0 bg-primary/10 rounded-full blur-3xl scale-110" />
+                  <TurtleLogo size="hero" animated={true} />
+                </div>
               </div>
             </div>
           </div>
