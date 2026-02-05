@@ -1,10 +1,11 @@
 import { useState, useEffect, useMemo } from 'react';
 import { format, differenceInDays, parseISO } from 'date-fns';
 import { sv } from 'date-fns/locale';
-import { Zap, Sun, CloudRain, MessageSquare, CheckCircle2, Pill, Pencil, Moon, Utensils, Dumbbell, ThumbsUp, ThumbsDown, Check, X, ChevronRight, ChevronLeft, Heart, AlertTriangle } from 'lucide-react';
+import { Zap, Sun, CloudRain, MessageSquare, CheckCircle2, Pill, Pencil, Moon, Utensils, Dumbbell, ThumbsUp, ThumbsDown, Check, X, ChevronRight, ChevronLeft, Heart, AlertTriangle, HelpCircle } from 'lucide-react';
 import { MoodType, MoodEntry, MOOD_LABELS, QualityType, QUALITY_LABELS, CheckinData } from '@/types/mood';
 import { Medication } from '@/types/medication';
 import { UserPreferences } from '@/hooks/useUserPreferences';
+import { CustomQuestion } from '@/hooks/useCustomCheckinQuestions';
 import { cn } from '@/lib/utils';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
@@ -30,6 +31,9 @@ interface TodayCheckinProps {
   onToggleMedication: (medicationId: string, taken: boolean) => void;
   preferences: UserPreferences | null;
   streakData: StreakData;
+  customQuestions?: CustomQuestion[];
+  customAnswers?: Record<string, string>;
+  onSaveCustomAnswers?: (answers: Record<string, string>) => Promise<boolean>;
 }
 
 const moodButtons: { mood: MoodType; icon: typeof Zap; label: string; cssClass: string }[] = [
@@ -38,10 +42,10 @@ const moodButtons: { mood: MoodType; icon: typeof Zap; label: string; cssClass: 
   { mood: 'depressed', icon: CloudRain, label: MOOD_LABELS.depressed, cssClass: 'mood-btn-depressed' },
 ];
 
-type Step = 'mood' | 'sleep' | 'eating' | 'exercise' | 'medication' | 'success-animation' | 'complete';
+type Step = 'mood' | 'sleep' | 'eating' | 'exercise' | 'medication' | 'custom_questions' | 'success-animation' | 'complete';
 
 // Default steps - will be filtered based on preferences
-const ALL_STEPS: Step[] = ['mood', 'sleep', 'eating', 'exercise', 'medication'];
+const ALL_STEPS: Step[] = ['mood', 'sleep', 'eating', 'exercise', 'medication', 'custom_questions'];
 
 export function TodayCheckin({ 
   todayEntry, 
@@ -53,6 +57,9 @@ export function TodayCheckin({
   onToggleMedication,
   preferences,
   streakData,
+  customQuestions = [],
+  customAnswers: initialCustomAnswers = {},
+  onSaveCustomAnswers,
 }: TodayCheckinProps) {
   const today = new Date();
   const formattedDate = format(today, "EEEE d MMMM", { locale: sv });
@@ -65,9 +72,10 @@ export function TodayCheckin({
     if (preferences?.include_eating) steps.push('eating');
     if (preferences?.include_exercise) steps.push('exercise');
     if (preferences?.include_medication) steps.push('medication');
+    if (customQuestions.length > 0) steps.push('custom_questions');
     
     return steps;
-  }, [preferences]);
+  }, [preferences, customQuestions.length]);
 
   // Calculate encouragement data for depressed mood
   const encouragementData = useMemo(() => {
@@ -93,6 +101,7 @@ export function TodayCheckin({
   
   // Form data
   const [checkinData, setCheckinData] = useState<CheckinData>({});
+  const [customAnswersState, setCustomAnswersState] = useState<Record<string, string>>(initialCustomAnswers);
 
   // Load existing entry data
   useEffect(() => {
@@ -307,6 +316,16 @@ export function TodayCheckin({
                 <span>Träning: <strong>{todayEntry.exercised ? 'Ja' : 'Nej'}</strong></span>
               </div>
             )}
+            {customQuestions.map((q) => {
+              const answer = customAnswersState[q.id];
+              if (!answer) return null;
+              return (
+                <div key={q.id} className="flex items-center gap-3 p-3 rounded-lg bg-muted/30">
+                  <HelpCircle className="w-5 h-5 text-primary" />
+                  <span>{q.question_text}: <strong>{answer === 'yes' ? 'Ja' : 'Nej'}</strong></span>
+                </div>
+              );
+            })}
           </div>
 
           <Button variant="ghost" size="sm" onClick={handleEdit} className="mt-6 gap-2">
@@ -796,7 +815,75 @@ export function TodayCheckin({
               )}
             </div>
 
-            <Button onClick={handleComplete} className="w-full mt-4 gap-2">
+            {isLastStep('medication') ? (
+              <Button onClick={handleComplete} className="w-full mt-4 gap-2">
+                <ChevronRight className="w-4 h-4" />
+                Slutför incheckning
+              </Button>
+            ) : (
+              <Button onClick={() => setCurrentStep(getNextStep('medication') as Step)} className="w-full mt-4 gap-2">
+                <ChevronRight className="w-4 h-4" />
+                Nästa
+              </Button>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Step: Custom Questions */}
+      {currentStep === 'custom_questions' && (
+        <div className="space-y-6 fade-in">
+          <Button variant="ghost" size="sm" onClick={goBack} className="mb-4 gap-1">
+            <ChevronLeft className="w-4 h-4" />
+            Tillbaka
+          </Button>
+          <div className="text-center mb-6">
+            <HelpCircle className="w-12 h-12 mx-auto mb-4 text-primary" />
+            <h1 className="font-display text-2xl md:text-3xl font-bold mb-2">
+              Egna frågor
+            </h1>
+          </div>
+
+          <div className="max-w-lg mx-auto space-y-3">
+            {customQuestions.map((q) => {
+              const answered = customAnswersState[q.id];
+              return (
+                <div key={q.id} className="space-y-2">
+                  <p className="text-sm font-medium text-center">{q.question_text}</p>
+                  <div className="grid grid-cols-2 gap-3">
+                    <button
+                      onClick={() => setCustomAnswersState(prev => ({ ...prev, [q.id]: 'yes' }))}
+                      className={cn(
+                        "checkin-option-card positive py-4",
+                        answered === 'yes' && "selected"
+                      )}
+                    >
+                      <Check className="w-6 h-6 text-mood-stable" />
+                      <span className="font-semibold">Ja</span>
+                    </button>
+                    <button
+                      onClick={() => setCustomAnswersState(prev => ({ ...prev, [q.id]: 'no' }))}
+                      className={cn(
+                        "checkin-option-card neutral py-4",
+                        answered === 'no' && "selected"
+                      )}
+                    >
+                      <X className="w-6 h-6 text-muted-foreground" />
+                      <span className="font-semibold">Nej</span>
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          <div className="max-w-md mx-auto">
+            <Button onClick={async () => {
+              if (onSaveCustomAnswers) {
+                await onSaveCustomAnswers(customAnswersState);
+              }
+              handleComplete();
+            }} className="w-full mt-4 gap-2">
               <ChevronRight className="w-4 h-4" />
               Slutför incheckning
             </Button>

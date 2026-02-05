@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { format } from 'date-fns';
 import { TodayCheckin } from '@/components/TodayCheckin';
 import { useMoodData } from '@/hooks/useMoodData';
@@ -5,6 +6,7 @@ import { useMedications } from '@/hooks/useMedications';
 import { useProfile } from '@/hooks/useProfile';
 import { useUserPreferences } from '@/hooks/useUserPreferences';
 import { useStreak } from '@/hooks/useStreak';
+import { useCustomCheckinQuestions } from '@/hooks/useCustomCheckinQuestions';
 import { StreakBadge } from '@/components/StreakBadge';
 import { CheckinData } from '@/types/mood';
 
@@ -26,9 +28,24 @@ const Index = () => {
 
   const { firstName, isLoading: profileLoading } = useProfile();
   const { preferences, loading: prefsLoading } = useUserPreferences();
+  const { questions: customQuestions, isLoaded: customQLoaded, getAnswersForDate, saveAnswers } = useCustomCheckinQuestions();
   const streakData = useStreak(entries);
 
+  const [customAnswers, setCustomAnswers] = useState<Record<string, string>>({});
+
   const todayStr = format(new Date(), 'yyyy-MM-dd');
+
+  // Load custom answers for today
+  useEffect(() => {
+    if (customQLoaded && customQuestions.length > 0) {
+      getAnswersForDate(todayStr).then(answers => {
+        const map: Record<string, string> = {};
+        answers.forEach(a => { map[a.question_id] = a.answer_value; });
+        setCustomAnswers(map);
+      });
+    }
+  }, [customQLoaded, customQuestions.length, todayStr, getAnswersForDate]);
+
   const todayEntry = getEntryForDate(todayStr);
   const currentYear = new Date().getFullYear();
   const yearEntries = getEntriesForYear(currentYear);
@@ -46,7 +63,7 @@ const Index = () => {
     logMedication(medicationId, todayStr, taken);
   };
 
-  if (!isLoaded || !medsLoaded || profileLoading || prefsLoading) {
+  if (!isLoaded || !medsLoaded || profileLoading || prefsLoading || !customQLoaded) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
@@ -78,6 +95,9 @@ const Index = () => {
           onToggleMedication={handleToggleMedication}
           preferences={preferences}
           streakData={streakData}
+          customQuestions={customQuestions}
+          customAnswers={customAnswers}
+          onSaveCustomAnswers={async (answers) => saveAnswers(todayStr, answers)}
         />
       </div>
     </div>
