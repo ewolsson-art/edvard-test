@@ -220,51 +220,44 @@ const Signup = () => {
       
       <div className="flex min-h-screen items-start justify-center px-4 pt-20 pb-8 relative z-10">
         <div className="w-full max-w-lg">
-          {/* Progress indicator */}
-          <div className="flex justify-center mb-6 animate-fade-in">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-sm font-medium">
-              <Sparkles className="w-4 h-4" />
-              <span>Steg {currentStepIndex + 1} av 2</span>
-            </div>
-          </div>
-
           {/* Progress bar */}
-          <div className="flex justify-center mb-6">
+          <div className="flex justify-center mb-4 animate-fade-in">
             <div className="flex items-center gap-3">
+              <div className="text-xs text-muted-foreground font-medium mr-2">Steg {currentStepIndex + 1}/2</div>
               <div className={cn(
-                "w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold transition-all duration-300",
-                step === "role" ? "bg-primary text-primary-foreground shadow-lg shadow-primary/30" : "bg-primary/20 text-primary"
+                "w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold transition-all duration-300",
+                step === "role" ? "bg-primary text-primary-foreground shadow-md shadow-primary/30" : "bg-primary/20 text-primary"
               )}>
                 1
               </div>
               <div className={cn(
-                "w-16 h-1 rounded-full transition-all duration-500",
+                "w-12 h-1 rounded-full transition-all duration-500",
                 step === "details" || step === "submitting" ? "bg-primary" : "bg-primary/20"
               )} />
               <div className={cn(
-                "w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold transition-all duration-300",
-                step === "details" || step === "submitting" ? "bg-primary text-primary-foreground shadow-lg shadow-primary/30" : "bg-primary/20 text-primary/50"
+                "w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold transition-all duration-300",
+                step === "details" || step === "submitting" ? "bg-primary text-primary-foreground shadow-md shadow-primary/30" : "bg-primary/20 text-primary/50"
               )}>
                 2
               </div>
             </div>
           </div>
           
-          <div className="auth-card bg-card/80 backdrop-blur-xl rounded-3xl shadow-2xl border border-border/50 p-6 md:p-8 animate-fade-in" style={{ animationDelay: '0.1s' }}>
+          <div className="auth-card bg-card/80 backdrop-blur-xl rounded-2xl shadow-2xl border border-border/50 p-5 md:p-6 animate-fade-in" style={{ animationDelay: '0.1s' }}>
             {/* Step 1: Role Selection */}
             {step === "role" && (
               <div className="animate-fade-in">
-                <div className="flex flex-col items-center mb-8">
+                <div className="flex flex-col items-center mb-5">
                   <Logo size="sm" />
-                  <h1 className="mt-5 text-2xl md:text-3xl font-bold text-foreground font-display">
+                  <h1 className="mt-3 text-xl md:text-2xl font-bold text-foreground font-display">
                     Välkommen! 👋
                   </h1>
-                  <p className="mt-2 text-sm text-muted-foreground text-center max-w-xs">
+                  <p className="mt-1 text-sm text-muted-foreground text-center">
                     Vilket typ av konto vill du skapa?
                   </p>
                 </div>
 
-                <div className="space-y-3">
+                <div className="space-y-2">
                   {(Object.keys(roleInfo) as AccountRole[]).map((roleKey) => {
                     const info = roleInfo[roleKey];
                     const Icon = info.icon;
@@ -276,47 +269,34 @@ const Signup = () => {
                         type="button"
                         onClick={() => handleRoleSelect(roleKey)}
                         className={cn(
-                          "w-full p-4 rounded-2xl border-2 text-left transition-all duration-300 group",
+                          "w-full p-3 rounded-xl border-2 text-left transition-all duration-300 group",
                           isSelected 
-                            ? "border-primary bg-primary/10 shadow-lg shadow-primary/10" 
+                            ? "border-primary bg-primary/10 shadow-md shadow-primary/10" 
                             : "border-border/50 bg-background/50 hover:border-primary/30 hover:bg-primary/5"
                         )}
                       >
-                        <div className="flex items-start gap-4">
+                        <div className="flex items-center gap-3">
                           <div className={cn(
-                            "w-12 h-12 rounded-xl flex items-center justify-center transition-all duration-300",
-                            isSelected ? "bg-primary text-primary-foreground" : "bg-muted/50 text-muted-foreground group-hover:bg-primary/10 group-hover:text-primary"
+                            "w-10 h-10 rounded-lg flex-shrink-0 flex items-center justify-center transition-all duration-300",
+                            isSelected ? "bg-primary text-primary-foreground" : "bg-muted/50 text-muted-foreground group-hover:bg-primary/10"
                           )}>
-                            <Icon className="h-6 w-6" />
+                            <Icon className="h-5 w-5" />
                           </div>
                           <div className="flex-1">
                             <div className="flex items-center justify-between">
                               <h3 className={cn(
-                                "font-semibold text-base transition-colors",
+                                "font-semibold text-sm transition-colors",
                                 isSelected ? "text-primary" : "text-foreground"
                               )}>
                                 {info.title}
                               </h3>
                               {isSelected && (
-                                <CheckCircle2 className="h-5 w-5 text-primary animate-scale-in" />
+                                <CheckCircle2 className="h-4 w-4 text-primary animate-scale-in" />
                               )}
                             </div>
-                            <p className="text-sm text-muted-foreground mt-0.5">
+                            <p className="text-xs text-muted-foreground">
                               {info.description}
                             </p>
-                            <div className="flex flex-wrap gap-2 mt-2">
-                              {info.benefits.map((benefit, i) => (
-                                <span 
-                                  key={i}
-                                  className={cn(
-                                    "text-xs px-2 py-0.5 rounded-full transition-colors",
-                                    isSelected ? "bg-primary/20 text-primary" : "bg-muted text-muted-foreground"
-                                  )}
-                                >
-                                  {benefit}
-                                </span>
-                              ))}
-                            </div>
                           </div>
                         </div>
                       </button>
@@ -327,7 +307,7 @@ const Signup = () => {
                 <Button
                   onClick={handleContinue}
                   disabled={!role}
-                  className="w-full h-12 rounded-xl text-sm font-semibold shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 group bg-gradient-to-r from-primary to-primary/90 mt-6"
+                  className="w-full h-11 rounded-xl text-sm font-semibold shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 group bg-gradient-to-r from-primary to-primary/90 mt-5"
                 >
                   Fortsätt
                   <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
@@ -338,30 +318,30 @@ const Signup = () => {
             {/* Step 2: Account Details */}
             {(step === "details" || step === "submitting") && (
               <div className="animate-fade-in">
-                <div className="flex flex-col items-center mb-6">
+                <div className="flex flex-col items-center mb-4">
                   {role && (
                     <div className={cn(
-                      "w-14 h-14 rounded-2xl flex items-center justify-center mb-4 bg-primary text-primary-foreground"
+                      "w-11 h-11 rounded-xl flex items-center justify-center mb-3 bg-primary text-primary-foreground"
                     )}>
                       {(() => {
                         const Icon = roleInfo[role].icon;
-                        return <Icon className="h-7 w-7" />;
+                        return <Icon className="h-5 w-5" />;
                       })()}
                     </div>
                   )}
-                  <h1 className="text-2xl md:text-3xl font-bold text-foreground font-display">
+                  <h1 className="text-xl md:text-2xl font-bold text-foreground font-display">
                     Skapa ditt konto
                   </h1>
-                  <p className="mt-2 text-sm text-muted-foreground text-center">
+                  <p className="mt-1 text-xs text-muted-foreground text-center">
                     {role && `Du registrerar dig som ${roleInfo[role].title.toLowerCase()}`}
                   </p>
                 </div>
 
-                <form onSubmit={(e) => { e.preventDefault(); handleSubmit(); }} className="space-y-4">
+                <form onSubmit={(e) => { e.preventDefault(); handleSubmit(); }} className="space-y-3">
                   {/* Name Fields */}
-                  <div className="grid grid-cols-2 gap-3">
+                  <div className="grid grid-cols-2 gap-2">
                     <div className="space-y-1.5">
-                      <Label htmlFor="firstName" className="text-sm font-medium text-foreground">
+                      <Label htmlFor="firstName" className="text-xs font-medium text-foreground">
                         Förnamn
                       </Label>
                       <Input
@@ -371,7 +351,7 @@ const Signup = () => {
                         value={firstName}
                         onChange={(e) => setFirstName(e.target.value)}
                         className={cn(
-                          "h-11 bg-background/50 border-border/50 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-all duration-300",
+                          "h-10 bg-background/50 border-border/50 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-all duration-300",
                           validationErrors.firstName && "border-destructive"
                         )}
                         disabled={isSubmitting}
@@ -381,7 +361,7 @@ const Signup = () => {
                       )}
                     </div>
                     <div className="space-y-1.5">
-                      <Label htmlFor="lastName" className="text-sm font-medium text-foreground">
+                      <Label htmlFor="lastName" className="text-xs font-medium text-foreground">
                         Efternamn
                       </Label>
                       <Input
@@ -391,7 +371,7 @@ const Signup = () => {
                         value={lastName}
                         onChange={(e) => setLastName(e.target.value)}
                         className={cn(
-                          "h-11 bg-background/50 border-border/50 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-all duration-300",
+                          "h-10 bg-background/50 border-border/50 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-all duration-300",
                           validationErrors.lastName && "border-destructive"
                         )}
                         disabled={isSubmitting}
@@ -404,13 +384,11 @@ const Signup = () => {
 
                   {/* Email */}
                   <div className="space-y-1.5">
-                    <Label htmlFor="email" className="text-sm font-medium text-foreground">
+                    <Label htmlFor="email" className="text-xs font-medium text-foreground">
                       E-postadress
                     </Label>
                     <div className="relative">
-                      <div className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-muted/50 flex items-center justify-center">
-                        <Mail className="h-3 w-3 text-muted-foreground" />
-                      </div>
+                      <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                       <Input
                         id="email"
                         type="email"
@@ -418,7 +396,7 @@ const Signup = () => {
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         className={cn(
-                          "pl-11 h-11 bg-background/50 border-border/50 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-all duration-300",
+                          "pl-10 h-10 bg-background/50 border-border/50 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-all duration-300",
                           validationErrors.email && "border-destructive"
                         )}
                         disabled={isSubmitting}
@@ -431,13 +409,11 @@ const Signup = () => {
 
                   {/* Password */}
                   <div className="space-y-1.5">
-                    <Label htmlFor="password" className="text-sm font-medium text-foreground">
-                      Lösenord
+                    <Label htmlFor="password" className="text-xs font-medium text-foreground">
+                      Lösenord (minst 6 tecken)
                     </Label>
                     <div className="relative">
-                      <div className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-muted/50 flex items-center justify-center">
-                        <Lock className="h-3 w-3 text-muted-foreground" />
-                      </div>
+                      <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                       <Input
                         id="password"
                         type={showPassword ? "text" : "password"}
@@ -445,7 +421,7 @@ const Signup = () => {
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         className={cn(
-                          "pl-11 h-11 bg-background/50 border-border/50 rounded-xl pr-11 focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-all duration-300",
+                          "pl-10 h-10 bg-background/50 border-border/50 rounded-lg pr-10 focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-all duration-300",
                           validationErrors.password && "border-destructive"
                         )}
                         disabled={isSubmitting}
@@ -453,7 +429,7 @@ const Signup = () => {
                       <button
                         type="button"
                         onClick={() => setShowPassword(!showPassword)}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-muted/50 hover:bg-muted flex items-center justify-center text-muted-foreground hover:text-foreground transition-all duration-200"
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
                       >
                         {showPassword ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
                       </button>
@@ -461,31 +437,28 @@ const Signup = () => {
                     {validationErrors.password && (
                       <p className="text-xs text-destructive">{validationErrors.password}</p>
                     )}
-                    <p className="text-xs text-muted-foreground mt-1">Minst 6 tecken</p>
                   </div>
 
                   {/* Buttons */}
-                  <div className="flex gap-3 pt-2">
+                  <div className="flex gap-2 pt-1">
                     <Button
                       type="button"
                       variant="outline"
                       onClick={handleBack}
                       disabled={isSubmitting}
-                      className="h-12 rounded-xl px-4"
+                      className="h-10 rounded-lg px-3"
                     >
-                      <ArrowLeft className="h-4 w-4 mr-2" />
-                      Tillbaka
+                      <ArrowLeft className="h-4 w-4" />
                     </Button>
                     <Button
                       type="submit"
-                      className="flex-1 h-12 rounded-xl text-sm font-semibold shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 group bg-gradient-to-r from-primary to-primary/90"
+                      className="flex-1 h-10 rounded-lg text-sm font-semibold shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 group bg-gradient-to-r from-primary to-primary/90"
                       disabled={isSubmitting}
                     >
                       {isSubmitting ? (
                         <Loader2 className="h-4 w-4 animate-spin" />
                       ) : (
                         <>
-                          <Sparkles className="mr-2 h-4 w-4 opacity-70" />
                           Skapa konto
                           <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
                         </>
@@ -497,7 +470,7 @@ const Signup = () => {
             )}
 
             {/* Login link */}
-            <div className="relative my-6">
+            <div className="relative my-4">
               <div className="absolute inset-0 flex items-center">
                 <div className="w-full border-t border-border/50"></div>
               </div>
@@ -509,28 +482,17 @@ const Signup = () => {
             <div className="text-center">
               <Link
                 to="/logga-in"
-                className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-primary transition-colors duration-200"
+                className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-primary transition-colors duration-200"
               >
                 Har du redan ett konto? <span className="text-primary font-semibold">Logga in</span>
-                <ArrowRight className="h-3 w-3 text-primary" />
               </Link>
             </div>
           </div>
           
           {/* Trust indicators */}
-          <div className="mt-6 flex items-center justify-center gap-6 text-xs text-muted-foreground animate-fade-in" style={{ animationDelay: '0.2s' }}>
-            <div className="flex items-center gap-1.5">
-              <div className="w-4 h-4 rounded-full bg-primary/10 flex items-center justify-center">
-                <CheckCircle2 className="h-2.5 w-2.5 text-primary" />
-              </div>
-              <span>Säker data</span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <div className="w-4 h-4 rounded-full bg-primary/10 flex items-center justify-center">
-                <Heart className="h-2.5 w-2.5 text-primary" />
-              </div>
-              <span>Gratis att börja</span>
-            </div>
+          <div className="mt-4 flex items-center justify-center gap-4 text-[10px] text-muted-foreground animate-fade-in" style={{ animationDelay: '0.2s' }}>
+            <span className="flex items-center gap-1"><CheckCircle2 className="h-3 w-3 text-primary/60" /> Säker data</span>
+            <span className="flex items-center gap-1"><Heart className="h-3 w-3 text-primary/60" /> Gratis att börja</span>
           </div>
         </div>
       </div>
