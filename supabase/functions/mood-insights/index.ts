@@ -43,6 +43,38 @@
    historicalContext: string | null;
  }
  
+interface StructuredInsight {
+  summary: {
+    status: 'good' | 'warning' | 'alert';
+    title: string;
+    description: string;
+  };
+  moodTrend: {
+    direction: 'up' | 'down' | 'stable';
+    percentage: number;
+    dominantMood: 'elevated' | 'stable' | 'depressed';
+  };
+  riskIndicators: {
+    type: 'sleep' | 'exercise' | 'eating' | 'mood';
+    label: string;
+    currentStreak: number;
+    riskLevel: number; // 0-100
+    historicalImpact: string | null;
+  }[];
+  recommendations: {
+    priority: 'high' | 'medium' | 'low';
+    icon: 'sleep' | 'exercise' | 'food' | 'warning' | 'calendar' | 'heart';
+    title: string;
+    description: string;
+  }[];
+  weeklyComparison: {
+    metric: string;
+    current: number;
+    previous: number;
+    change: number;
+  }[];
+}
+
  serve(async (req) => {
    if (req.method === "OPTIONS") {
      return new Response(null, { headers: corsHeaders });
@@ -112,8 +144,14 @@
  
      if (!LOVABLE_API_KEY) {
        const localInsights = generateLocalInsights(summaryData, historicalPatterns, currentWarnings);
+        const structuredData = buildStructuredInsights(summaryData, historicalPatterns, currentWarnings, historicalEntries);
        return new Response(
-         JSON.stringify({ insights: localInsights, warnings: currentWarnings, patternsDetected: historicalPatterns.length }),
+          JSON.stringify({ 
+            insights: localInsights, 
+            warnings: currentWarnings, 
+            patternsDetected: historicalPatterns.length,
+            structured: structuredData
+          }),
          { headers: { ...corsHeaders, "Content-Type": "application/json" } }
        );
      }
@@ -173,9 +211,15 @@
  
      const data = await response.json();
      const insights = data.choices?.[0]?.message?.content || generateLocalInsights(summaryData, historicalPatterns, currentWarnings);
+      const structuredData = buildStructuredInsights(summaryData, historicalPatterns, currentWarnings, historicalEntries);
  
      return new Response(
-       JSON.stringify({ insights, warnings: currentWarnings, patternsDetected: historicalPatterns.length }),
+        JSON.stringify({ 
+          insights, 
+          warnings: currentWarnings, 
+          patternsDetected: historicalPatterns.length,
+          structured: structuredData
+        }),
        { headers: { ...corsHeaders, "Content-Type": "application/json" } }
      );
    } catch (error) {
@@ -542,3 +586,219 @@
    
    return insights.join("\n");
  }
+
+function buildStructuredInsights(
+  data: SummaryData, 
+  patterns: HistoricalPattern[], 
+  warnings: CurrentWarning[],
+  entries: MoodEntry[]
+): StructuredInsight {
+  const recentEntries = entries.slice(-7);
+  const previousEntries = entries.slice(-14, -7);
+  
+  // Calculate mood trend
+  const totalMood = data.moodCounts.elevated + data.moodCounts.stable + data.moodCounts.depressed;
+  let dominantMood: 'elevated' | 'stable' | 'depressed' = 'stable';
+  let dominantPercentage = 0;
+  
+  if (totalMood > 0) {
+    if (data.moodCounts.elevated >= data.moodCounts.stable && data.moodCounts.elevated >= data.moodCounts.depressed) {
+      dominantMood = 'elevated';
+      dominantPercentage = Math.round((data.moodCounts.elevated / totalMood) * 100);
+    } else if (data.moodCounts.depressed > data.moodCounts.stable) {
+      dominantMood = 'depressed';
+      dominantPercentage = Math.round((data.moodCounts.depressed / totalMood) * 100);
+    } else {
+      dominantMood = 'stable';
+      dominantPercentage = Math.round((data.moodCounts.stable / totalMood) * 100);
+    }
+  }
+  
+  // Determine mood direction
+  const recentElevated = recentEntries.filter(e => e.mood === 'elevated').length;
+  const previousElevated = previousEntries.filter(e => e.mood === 'elevated').length;
+  const recentDepressed = recentEntries.filter(e => e.mood === 'depressed').length;
+  const previousDepressed = previousEntries.filter(e => e.mood === 'depressed').length;
+  
+  let direction: 'up' | 'down' | 'stable' = 'stable';
+  if (recentElevated > previousElevated + 1) direction = 'up';
+  else if (recentDepressed > previousDepressed + 1) direction = 'down';
+  
+  // Build risk indicators
+  const riskIndicators: StructuredInsight['riskIndicators'] = [];
+  
+  // Sleep risk
+  let badSleepStreak = 0;
+  for (let i = recentEntries.length - 1; i >= 0; i--) {
+    if (recentEntries[i].sleep_quality === 'bad') badSleepStreak++;
+    else break;
+  }
+  
+  const sleepPattern = patterns.find(p => p.trigger.includes('sömn'));
+  riskIndicators.push({
+    type: 'sleep',
+    label: 'Sömnkvalitet',
+    currentStreak: badSleepStreak,
+    riskLevel: Math.min(100, badSleepStreak * 20),
+    historicalImpact: sleepPattern 
+      ? `Historiskt har ${sleepPattern.occurrences} perioder med dålig sömn lett till ${sleepPattern.consequence.toLowerCase()}`
+      : null
+  });
+  
+  // Exercise risk
+  let noExerciseStreak = 0;
+  for (let i = recentEntries.length - 1; i >= 0; i--) {
+    if (!recentEntries[i].exercised) noExerciseStreak++;
+    else break;
+  }
+  
+  const exercisePattern = patterns.find(p => p.trigger.includes('träning'));
+  riskIndicators.push({
+    type: 'exercise',
+    label: 'Fysisk aktivitet',
+    currentStreak: noExerciseStreak,
+    riskLevel: Math.min(100, noExerciseStreak * 15),
+    historicalImpact: exercisePattern
+      ? `Brist på träning har tidigare lett till ${exercisePattern.consequence.toLowerCase()}`
+      : null
+  });
+  
+  // Eating risk
+  let badEatingStreak = 0;
+  for (let i = recentEntries.length - 1; i >= 0; i--) {
+    if (recentEntries[i].eating_quality === 'bad') badEatingStreak++;
+    else break;
+  }
+  
+  riskIndicators.push({
+    type: 'eating',
+    label: 'Matvanor',
+    currentStreak: badEatingStreak,
+    riskLevel: Math.min(100, badEatingStreak * 15),
+    historicalImpact: null
+  });
+  
+  // Mood stability risk
+  const moodChanges = recentEntries.reduce((acc, entry, i) => {
+    if (i > 0 && entry.mood !== recentEntries[i-1].mood) acc++;
+    return acc;
+  }, 0);
+  
+  riskIndicators.push({
+    type: 'mood',
+    label: 'Humörstabilitet',
+    currentStreak: moodChanges,
+    riskLevel: Math.min(100, moodChanges * 25),
+    historicalImpact: moodChanges >= 3 ? 'Frekventa humörsvängningar kan indikera instabilitet' : null
+  });
+  
+  // Build recommendations
+  const recommendations: StructuredInsight['recommendations'] = [];
+  
+  const highWarnings = warnings.filter(w => w.severity === 'high');
+  const mediumWarnings = warnings.filter(w => w.severity === 'medium');
+  
+  if (badSleepStreak >= 2) {
+    recommendations.push({
+      priority: badSleepStreak >= 4 ? 'high' : 'medium',
+      icon: 'sleep',
+      title: 'Prioritera sömn',
+      description: badSleepStreak >= 4 
+        ? 'Dålig sömn 4+ dagar. Strikt läggdags närmaste kvällarna, även utan trötthet.'
+        : 'Försök etablera en regelbunden sömnrutin de närmaste dagarna.'
+    });
+  }
+  
+  if (noExerciseStreak >= 3) {
+    recommendations.push({
+      priority: noExerciseStreak >= 5 ? 'high' : 'medium',
+      icon: 'exercise',
+      title: 'Aktivera kroppen',
+      description: 'Fysisk aktivitet påverkar humöret positivt. Börja med en kort promenad.'
+    });
+  }
+  
+  if (dominantMood === 'elevated' && dominantPercentage > 50) {
+    recommendations.push({
+      priority: 'high',
+      icon: 'warning',
+      title: 'Bromsa nya projekt',
+      description: 'Vänta 48h innan du agerar på nya idéer. Utvärdera när måendet är stabilt.'
+    });
+  }
+  
+  if (dominantMood === 'depressed' && dominantPercentage > 50) {
+    recommendations.push({
+      priority: 'high',
+      icon: 'heart',
+      title: 'Kontakta vårdgivare',
+      description: 'Flera dagar med sänkt mående. Överväg att ta kontakt med din behandlare.'
+    });
+  }
+  
+  if (recommendations.length === 0) {
+    recommendations.push({
+      priority: 'low',
+      icon: 'calendar',
+      title: 'Fortsätt logga',
+      description: 'Dina mönster ser stabila ut. Fortsätt med dagliga incheckningar.'
+    });
+  }
+  
+  // Weekly comparison
+  const weeklyComparison: StructuredInsight['weeklyComparison'] = [];
+  
+  const currentSleep = recentEntries.filter(e => e.sleep_quality === 'good').length;
+  const previousSleep = previousEntries.filter(e => e.sleep_quality === 'good').length;
+  weeklyComparison.push({
+    metric: 'Bra sömn',
+    current: currentSleep,
+    previous: previousSleep,
+    change: previousSleep > 0 ? Math.round(((currentSleep - previousSleep) / previousSleep) * 100) : 0
+  });
+  
+  const currentExercise = recentEntries.filter(e => e.exercised).length;
+  const previousExercise = previousEntries.filter(e => e.exercised).length;
+  weeklyComparison.push({
+    metric: 'Träning',
+    current: currentExercise,
+    previous: previousExercise,
+    change: previousExercise > 0 ? Math.round(((currentExercise - previousExercise) / previousExercise) * 100) : 0
+  });
+  
+  const currentStable = recentEntries.filter(e => e.mood === 'stable').length;
+  const previousStable = previousEntries.filter(e => e.mood === 'stable').length;
+  weeklyComparison.push({
+    metric: 'Stabila dagar',
+    current: currentStable,
+    previous: previousStable,
+    change: previousStable > 0 ? Math.round(((currentStable - previousStable) / previousStable) * 100) : 0
+  });
+  
+  // Build summary
+  let status: 'good' | 'warning' | 'alert' = 'good';
+  let title = 'Stabilt läge';
+  let description = 'Inga varningssignaler just nu. Fortsätt med dina rutiner.';
+  
+  if (highWarnings.length > 0) {
+    status = 'alert';
+    title = 'Var uppmärksam';
+    description = highWarnings[0].message + (highWarnings[0].historicalContext ? '. ' + highWarnings[0].historicalContext : '');
+  } else if (mediumWarnings.length > 0) {
+    status = 'warning';
+    title = 'Observation';
+    description = mediumWarnings[0].message;
+  } else if (dominantMood === 'stable' && dominantPercentage > 60) {
+    status = 'good';
+    title = 'Bra period';
+    description = `${dominantPercentage}% stabila dagar. Dina rutiner fungerar.`;
+  }
+  
+  return {
+    summary: { status, title, description },
+    moodTrend: { direction, percentage: dominantPercentage, dominantMood },
+    riskIndicators,
+    recommendations,
+    weeklyComparison
+  };
+}
