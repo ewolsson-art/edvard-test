@@ -64,102 +64,89 @@ const Auth = () => {
         {/* City silhouette */}
         <div className="absolute bottom-0 left-0 right-0 pointer-events-none">
           <svg viewBox="0 0 1200 300" className="w-full h-auto" preserveAspectRatio="xMidYMax meet">
+            {/* Left buildings - taller */}
             <g fill="hsl(220 25% 8%)" opacity="0.7">
-              <rect x="50" y="160" width="30" height="140" />
-              <rect x="85" y="130" width="25" height="170" />
-              <rect x="115" y="170" width="35" height="130" />
-              <rect x="160" y="100" width="28" height="200" />
-              <rect x="195" y="140" width="22" height="160" />
-              <rect x="222" y="120" width="32" height="180" />
-              <rect x="260" y="155" width="26" height="145" />
-              <rect x="165" y="115" width="4" height="4" fill="hsl(45 80% 65%)" opacity="0.6" />
-              <rect x="175" y="130" width="4" height="4" fill="hsl(45 80% 65%)" opacity="0.4" />
-              <rect x="165" y="145" width="4" height="4" fill="hsl(45 80% 65%)" opacity="0.5" />
-              <rect x="230" y="135" width="4" height="4" fill="hsl(45 80% 65%)" opacity="0.5" />
-              <rect x="93" y="145" width="3" height="3" fill="hsl(45 80% 65%)" opacity="0.4" />
+              <rect x="50" y="80" width="30" height="220" />
+              <rect x="85" y="50" width="25" height="250" />
+              <rect x="115" y="100" width="35" height="200" />
+              <rect x="160" y="30" width="28" height="270" />
+              <rect x="195" y="70" width="22" height="230" />
+              <rect x="222" y="40" width="32" height="260" />
+              <rect x="260" y="85" width="26" height="215" />
+              <rect x="165" y="45" width="4" height="4" fill="hsl(45 80% 65%)" opacity="0.6" />
+              <rect x="175" y="60" width="4" height="4" fill="hsl(45 80% 65%)" opacity="0.4" />
+              <rect x="165" y="80" width="4" height="4" fill="hsl(45 80% 65%)" opacity="0.5" />
+              <rect x="230" y="55" width="4" height="4" fill="hsl(45 80% 65%)" opacity="0.5" />
+              <rect x="93" y="70" width="3" height="3" fill="hsl(45 80% 65%)" opacity="0.4" />
+              <rect x="175" y="100" width="4" height="4" fill="hsl(45 80% 65%)" opacity="0.3" />
+              <rect x="230" y="90" width="4" height="4" fill="hsl(45 80% 65%)" opacity="0.4" />
+              <rect x="60" y="110" width="3" height="3" fill="hsl(45 80% 65%)" opacity="0.3" />
             </g>
+            {/* Right buildings - taller */}
             <g fill="hsl(220 25% 8%)" opacity="0.7">
-              <rect x="900" y="140" width="30" height="160" />
-              <rect x="935" y="110" width="25" height="190" />
-              <rect x="965" y="150" width="40" height="150" />
-              <rect x="1010" y="90" width="28" height="210" />
-              <rect x="1045" y="130" width="22" height="170" />
-              <rect x="1072" y="160" width="35" height="140" />
-              <rect x="1115" y="120" width="30" height="180" />
-              <rect x="1016" y="105" width="4" height="4" fill="hsl(45 80% 65%)" opacity="0.5" />
-              <rect x="1025" y="115" width="4" height="4" fill="hsl(45 80% 65%)" opacity="0.6" />
-              <rect x="940" y="125" width="3" height="3" fill="hsl(45 80% 65%)" opacity="0.5" />
-              <rect x="1120" y="135" width="4" height="4" fill="hsl(45 80% 65%)" opacity="0.4" />
+              <rect x="300" y="100" width="25" height="200" />
+              <rect x="330" y="70" width="20" height="230" />
+              <rect x="355" y="110" width="28" height="190" />
             </g>
+            {/* Bush/shrub groups */}
             <g fill="hsl(150 30% 12%)">
               <ellipse cx="350" cy="240" rx="40" ry="55" />
               <ellipse cx="390" cy="245" rx="35" ry="50" />
               <ellipse cx="430" cy="238" rx="45" ry="58" />
               <ellipse cx="310" cy="248" rx="30" ry="45" />
               <ellipse cx="770" cy="242" rx="38" ry="52" />
-              <ellipse cx="810" cy="238" rx="42" ry="56" />
-              <ellipse cx="850" cy="245" rx="35" ry="48" />
-              <ellipse cx="880" cy="250" rx="30" ry="42" />
             </g>
             <g fill="hsl(150 25% 8%)">
               <ellipse cx="370" cy="250" rx="35" ry="48" />
               <ellipse cx="415" cy="248" rx="40" ry="50" />
-              <ellipse cx="790" cy="250" rx="38" ry="48" />
-              <ellipse cx="835" cy="252" rx="32" ry="44" />
             </g>
             <rect x="0" y="290" width="1200" height="20" fill="hsl(150 20% 8%)" />
-            {/* === Existing tree (moved right) === */}
-            <rect x="850" y="140" width="30" height="160" rx="4" fill="hsl(25 35% 20%)" />
-            <path d="M865 180 Q825 160 795 170" stroke="hsl(25 35% 20%)" strokeWidth="8" strokeLinecap="round" fill="none" />
-            <path d="M865 180 Q905 155 935 165" stroke="hsl(25 35% 20%)" strokeWidth="8" strokeLinecap="round" fill="none" />
-            <path d="M865 220 Q820 205 800 215" stroke="hsl(25 35% 20%)" strokeWidth="6" strokeLinecap="round" fill="none" />
-            <path d="M865 220 Q910 210 930 218" stroke="hsl(25 35% 20%)" strokeWidth="6" strokeLinecap="round" fill="none" />
-            <ellipse cx="865" cy="140" rx="70" ry="60" fill="hsl(150 30% 14%)" />
-            <ellipse cx="835" cy="155" rx="40" ry="35" fill="hsl(150 25% 11%)" />
-            <ellipse cx="900" cy="150" rx="38" ry="35" fill="hsl(150 28% 12%)" />
-            <ellipse cx="865" cy="120" rx="50" ry="40" fill="hsl(150 32% 16%)" />
 
-            {/* === Owl's tree (to the right) === */}
-            <rect x="990" y="120" width="22" height="175" rx="3" fill="hsl(25 35% 20%)" />
-            {/* Roots */}
+            {/* === First tree (taller) === */}
+            <rect x="850" y="60" width="30" height="240" rx="4" fill="hsl(25 35% 20%)" />
+            <path d="M865 100 Q825 80 795 90" stroke="hsl(25 35% 20%)" strokeWidth="8" strokeLinecap="round" fill="none" />
+            <path d="M865 100 Q905 75 935 85" stroke="hsl(25 35% 20%)" strokeWidth="8" strokeLinecap="round" fill="none" />
+            <path d="M865 150 Q820 135 800 145" stroke="hsl(25 35% 20%)" strokeWidth="6" strokeLinecap="round" fill="none" />
+            <path d="M865 150 Q910 140 930 148" stroke="hsl(25 35% 20%)" strokeWidth="6" strokeLinecap="round" fill="none" />
+            <ellipse cx="865" cy="60" rx="70" ry="55" fill="hsl(150 30% 14%)" />
+            <ellipse cx="835" cy="75" rx="40" ry="32" fill="hsl(150 25% 11%)" />
+            <ellipse cx="900" cy="70" rx="38" ry="32" fill="hsl(150 28% 12%)" />
+            <ellipse cx="865" cy="40" rx="50" ry="38" fill="hsl(150 32% 16%)" />
+
+            {/* === Owl's tree (taller) === */}
+            <rect x="990" y="40" width="22" height="255" rx="3" fill="hsl(25 35% 20%)" />
             <path d="M990 290 Q975 282 965 295" stroke="hsl(25 35% 18%)" strokeWidth="4" strokeLinecap="round" fill="none" />
             <path d="M1012 290 Q1025 280 1035 293" stroke="hsl(25 35% 18%)" strokeWidth="4" strokeLinecap="round" fill="none" />
-            {/* Branches */}
-            <path d="M992 200 Q960 190 935 195" stroke="hsl(25 35% 20%)" strokeWidth="6" strokeLinecap="round" fill="none" />
-            <path d="M1010 170 Q1040 158 1065 162" stroke="hsl(25 35% 20%)" strokeWidth="5" strokeLinecap="round" fill="none" />
+            <path d="M992 130 Q960 120 935 125" stroke="hsl(25 35% 20%)" strokeWidth="6" strokeLinecap="round" fill="none" />
+            <path d="M1010 100 Q1040 88 1065 92" stroke="hsl(25 35% 20%)" strokeWidth="5" strokeLinecap="round" fill="none" />
             {/* Branch where owl sits */}
-            <path d="M992 230 Q955 222 930 226" stroke="hsl(25 35% 20%)" strokeWidth="5.5" strokeLinecap="round" fill="none" />
-            {/* Foliage back */}
-            <ellipse cx="1000" cy="105" rx="60" ry="48" fill="hsl(148 28% 12%)" />
-            <ellipse cx="960" cy="118" rx="35" ry="28" fill="hsl(148 28% 12%)" />
-            <ellipse cx="1045" cy="112" rx="35" ry="30" fill="hsl(148 28% 12%)" />
-            {/* Foliage front */}
-            <ellipse cx="1000" cy="90" rx="52" ry="40" fill="hsl(150 30% 14%)" />
-            <ellipse cx="955" cy="108" rx="30" ry="25" fill="hsl(150 30% 14%)" />
-            <ellipse cx="1048" cy="100" rx="32" ry="26" fill="hsl(150 30% 14%)" />
-            <ellipse cx="1000" cy="70" rx="38" ry="28" fill="hsl(150 32% 16%)" />
+            <path d="M992 170 Q955 162 930 166" stroke="hsl(25 35% 20%)" strokeWidth="5.5" strokeLinecap="round" fill="none" />
+            {/* Foliage */}
+            <ellipse cx="1000" cy="30" rx="60" ry="45" fill="hsl(148 28% 12%)" />
+            <ellipse cx="960" cy="45" rx="35" ry="26" fill="hsl(148 28% 12%)" />
+            <ellipse cx="1045" cy="38" rx="35" ry="28" fill="hsl(148 28% 12%)" />
+            <ellipse cx="1000" cy="15" rx="52" ry="38" fill="hsl(150 30% 14%)" />
+            <ellipse cx="955" cy="35" rx="30" ry="22" fill="hsl(150 30% 14%)" />
+            <ellipse cx="1048" cy="25" rx="32" ry="24" fill="hsl(150 30% 14%)" />
+            <ellipse cx="1000" cy="-5" rx="38" ry="26" fill="hsl(150 32% 16%)" />
 
-            {/* === Small owl on branch === */}
-            <g transform="translate(950, 200)">
-              {/* Body */}
+            {/* === Small owl on branch (no blink) === */}
+            <g transform="translate(950, 140)">
               <ellipse cx="0" cy="8" rx="8" ry="10" fill="hsl(25 55% 38%)" />
               <ellipse cx="0" cy="10" rx="5" ry="7" fill="hsl(38 50% 78%)" />
-              {/* Head */}
               <circle cx="0" cy="-4" r="8" fill="hsl(25 55% 38%)" />
               <ellipse cx="-5" cy="-10" rx="2.5" ry="4" fill="hsl(22 50% 33%)" transform="rotate(-10 -5 -10)" />
               <ellipse cx="5" cy="-10" rx="2.5" ry="4" fill="hsl(22 50% 33%)" transform="rotate(10 5 -10)" />
               <ellipse cx="0" cy="-2" rx="6" ry="5.5" fill="hsl(32 40% 62%)" opacity="0.4" />
-              {/* Eyes - blink */}
-              <g className="owl-blink">
-                <circle cx="-3" cy="-4" r="3" fill="white" />
-                <circle cx="-3" cy="-3.8" r="2" fill="hsl(45 90% 50%)" />
-                <circle cx="-3" cy="-3.5" r="1" fill="hsl(20 18% 12%)" />
-                <circle cx="-1.8" cy="-5.2" r="0.8" fill="white" opacity="0.9" />
-                <circle cx="3" cy="-4" r="3" fill="white" />
-                <circle cx="3" cy="-3.8" r="2" fill="hsl(45 90% 50%)" />
-                <circle cx="3" cy="-3.5" r="1" fill="hsl(20 18% 12%)" />
-                <circle cx="4.2" cy="-5.2" r="0.8" fill="white" opacity="0.9" />
-              </g>
+              {/* Eyes - no blink */}
+              <circle cx="-3" cy="-4" r="3" fill="white" />
+              <circle cx="-3" cy="-3.8" r="2" fill="hsl(45 90% 50%)" />
+              <circle cx="-3" cy="-3.5" r="1" fill="hsl(20 18% 12%)" />
+              <circle cx="-1.8" cy="-5.2" r="0.8" fill="white" opacity="0.9" />
+              <circle cx="3" cy="-4" r="3" fill="white" />
+              <circle cx="3" cy="-3.8" r="2" fill="hsl(45 90% 50%)" />
+              <circle cx="3" cy="-3.5" r="1" fill="hsl(20 18% 12%)" />
+              <circle cx="4.2" cy="-5.2" r="0.8" fill="white" opacity="0.9" />
               <path d="M-1 0 L0 2.5 L1 0 Z" fill="hsl(38 90% 55%)" />
               <path d="M-2 3 Q0 4.5 2 3" stroke="hsl(25 35% 35%)" strokeWidth="0.5" strokeLinecap="round" fill="none" />
               <ellipse cx="-6.5" cy="-1" rx="1.5" ry="1" fill="hsl(350 55% 72%)" opacity="0.3" />
