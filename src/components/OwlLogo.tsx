@@ -24,20 +24,20 @@ export function OwlLogo({ size = 'md', animated = true, className }: OwlLogoProp
       >
         <defs>
           <linearGradient id="owlBodyGrad" x1="50%" y1="0%" x2="50%" y2="100%">
-            <stop offset="0%" stopColor="hsl(30 40% 55%)" />
-            <stop offset="100%" stopColor="hsl(28 38% 42%)" />
+            <stop offset="0%" stopColor="hsl(25 55% 38%)" />
+            <stop offset="100%" stopColor="hsl(22 50% 28%)" />
           </linearGradient>
           <linearGradient id="owlBellyGrad" x1="50%" y1="0%" x2="50%" y2="100%">
-            <stop offset="0%" stopColor="hsl(42 60% 88%)" />
-            <stop offset="100%" stopColor="hsl(38 50% 78%)" />
+            <stop offset="0%" stopColor="hsl(35 45% 78%)" />
+            <stop offset="100%" stopColor="hsl(30 40% 68%)" />
           </linearGradient>
           <linearGradient id="owlWingGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="hsl(28 38% 48%)" />
-            <stop offset="100%" stopColor="hsl(25 35% 36%)" />
+            <stop offset="0%" stopColor="hsl(22 50% 35%)" />
+            <stop offset="100%" stopColor="hsl(20 48% 24%)" />
           </linearGradient>
           <radialGradient id="eyeGlow" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="hsl(30 70% 50%)" />
-            <stop offset="100%" stopColor="hsl(25 60% 35%)" />
+            <stop offset="0%" stopColor="hsl(45 95% 55%)" />
+            <stop offset="100%" stopColor="hsl(40 85% 42%)" />
           </radialGradient>
         </defs>
 
@@ -45,48 +45,53 @@ export function OwlLogo({ size = 'md', animated = true, className }: OwlLogoProp
         <g className={animated ? 'owl-wing-left' : ''}>
           <path d="M42 120 Q32 142 38 168 Q44 176 58 170 Q62 154 58 125 Z"
             fill="url(#owlWingGrad)" />
-          <path d="M45 138 Q51 142 57 137" stroke="hsl(25 30% 30%)" strokeWidth="1" opacity="0.3" fill="none" />
-          <path d="M43 150 Q50 155 57 150" stroke="hsl(25 30% 30%)" strokeWidth="1" opacity="0.3" fill="none" />
+          {/* Feather scallops */}
+          <path d="M42 135 Q48 140 56 134" stroke="hsl(20 45% 22%)" strokeWidth="1.2" opacity="0.4" fill="none" />
+          <path d="M40 148 Q48 154 56 148" stroke="hsl(20 45% 22%)" strokeWidth="1.2" opacity="0.4" fill="none" />
+          <path d="M39 160 Q47 166 55 160" stroke="hsl(20 45% 22%)" strokeWidth="1.2" opacity="0.3" fill="none" />
         </g>
 
         {/* === Right wing tucked in */}
         <g className={animated ? 'owl-wing-right' : ''}>
           <path d="M158 120 Q168 142 162 168 Q156 176 142 170 Q138 154 142 125 Z"
             fill="url(#owlWingGrad)" />
-          <path d="M155 138 Q149 142 143 137" stroke="hsl(25 30% 30%)" strokeWidth="1" opacity="0.3" fill="none" />
-          <path d="M157 150 Q150 155 143 150" stroke="hsl(25 30% 30%)" strokeWidth="1" opacity="0.3" fill="none" />
+          <path d="M158 135 Q152 140 144 134" stroke="hsl(20 45% 22%)" strokeWidth="1.2" opacity="0.4" fill="none" />
+          <path d="M160 148 Q152 154 144 148" stroke="hsl(20 45% 22%)" strokeWidth="1.2" opacity="0.4" fill="none" />
+          <path d="M161 160 Q153 166 145 160" stroke="hsl(20 45% 22%)" strokeWidth="1.2" opacity="0.3" fill="none" />
         </g>
 
         {/* === Chubby round body */}
         <ellipse cx="100" cy="148" rx="46" ry="55" fill="url(#owlBodyGrad)" />
 
-        {/* Soft fluffy belly */}
+        {/* Soft fluffy belly with scalloped feathers */}
         <ellipse cx="100" cy="162" rx="32" ry="40" fill="url(#owlBellyGrad)" />
-        {/* Belly feather pattern - soft V shapes */}
-        <path d="M90 148 L100 153 L110 148" stroke="hsl(35 40% 70%)" strokeWidth="1" fill="none" opacity="0.5" />
-        <path d="M88 158 L100 163 L112 158" stroke="hsl(35 40% 70%)" strokeWidth="1" fill="none" opacity="0.5" />
-        <path d="M89 168 L100 173 L111 168" stroke="hsl(35 40% 70%)" strokeWidth="1" fill="none" opacity="0.5" />
-        <path d="M90 178 L100 183 L110 178" stroke="hsl(35 40% 70%)" strokeWidth="1" fill="none" opacity="0.4" />
+        <path d="M82 145 Q88 150 94 145 Q100 150 106 145 Q112 150 118 145" stroke="hsl(25 40% 35%)" strokeWidth="1.2" fill="none" opacity="0.3" />
+        <path d="M80 155 Q87 160 94 155 Q100 160 106 155 Q113 160 120 155" stroke="hsl(25 40% 35%)" strokeWidth="1.2" fill="none" opacity="0.3" />
+        <path d="M81 165 Q88 170 95 165 Q100 170 105 165 Q112 170 119 165" stroke="hsl(25 40% 35%)" strokeWidth="1.2" fill="none" opacity="0.25" />
+        <path d="M83 175 Q90 180 97 175 Q100 178 103 175 Q110 180 117 175" stroke="hsl(25 40% 35%)" strokeWidth="1" fill="none" opacity="0.2" />
 
         {/* === Big round head */}
         <g className={animated ? 'owl-head-tilt' : ''}>
           <ellipse cx="100" cy="82" rx="42" ry="38" fill="url(#owlBodyGrad)" />
 
-          {/* Soft ear tufts - rounder, cuter */}
-          <ellipse cx="66" cy="52" rx="10" ry="16" fill="hsl(28 38% 48%)" transform="rotate(-15 66 52)" />
-          <ellipse cx="134" cy="52" rx="10" ry="16" fill="hsl(28 38% 48%)" transform="rotate(15 134 52)" />
-          {/* Inner ear tuft highlight */}
-          <ellipse cx="67" cy="53" rx="6" ry="10" fill="hsl(30 42% 58%)" transform="rotate(-15 67 53)" />
-          <ellipse cx="133" cy="53" rx="6" ry="10" fill="hsl(30 42% 58%)" transform="rotate(15 133 53)" />
+          {/* Fluffy hair / head tufts - like reference image */}
+          {/* Main fluffy top feathers */}
+          <path d="M72 55 Q78 30 88 42 Q90 28 100 38 Q110 28 112 42 Q122 30 128 55"
+            fill="hsl(22 50% 32%)" />
+          <path d="M76 58 Q82 38 90 48 Q95 36 100 44 Q105 36 110 48 Q118 38 124 58"
+            fill="hsl(25 52% 36%)" />
+          {/* Pointed ear tufts sticking up */}
+          <path d="M68 56 Q62 32 72 48" fill="hsl(22 48% 30%)" />
+          <path d="M132 56 Q138 32 128 48" fill="hsl(22 48% 30%)" />
 
-          {/* Facial disc - heart shaped / soft */}
+          {/* Facial disc - heart shaped / warm */}
           <path d="M100 60 Q70 62 62 85 Q66 108 100 112 Q134 108 138 85 Q130 62 100 60 Z"
-            fill="hsl(38 45% 72%)" opacity="0.5" />
+            fill="hsl(30 40% 62%)" opacity="0.5" />
 
           {/* === BIG kind eyes === */}
           {/* Eye backgrounds - large and round */}
-          <circle cx="80" cy="80" r="18" fill="hsl(35 35% 55%)" />
-          <circle cx="120" cy="80" r="18" fill="hsl(35 35% 55%)" />
+          <circle cx="80" cy="80" r="18" fill="hsl(25 30% 40%)" />
+          <circle cx="120" cy="80" r="18" fill="hsl(25 30% 40%)" />
 
           <g className={animated ? 'owl-blink' : ''}>
             {/* Left eye */}
@@ -110,9 +115,9 @@ export function OwlLogo({ size = 'md', animated = true, className }: OwlLogoProp
               fill="url(#owlBodyGrad)" opacity="0.15" />
           </g>
 
-        {/* Big yellow beak */}
-          <path d="M93 94 L100 106 L107 94 Z" fill="hsl(45 90% 50%)" />
-          <path d="M95 94 L100 103 L105 94 Z" fill="hsl(48 95% 60%)" />
+          {/* Big yellow-orange beak */}
+          <path d="M93 94 L100 108 L107 94 Z" fill="hsl(38 90% 50%)" />
+          <path d="M95 94 L100 104 L105 94 Z" fill="hsl(42 95% 58%)" />
 
           {/* Big warm smile */}
           <path
@@ -124,18 +129,15 @@ export function OwlLogo({ size = 'md', animated = true, className }: OwlLogoProp
           />
 
           {/* Rosy cheeks - bigger and warmer */}
-          <ellipse cx="66" cy="94" rx="8" ry="5" fill="hsl(350 55% 75%)" opacity="0.5" />
-          <ellipse cx="134" cy="94" rx="8" ry="5" fill="hsl(350 55% 75%)" opacity="0.5" />
+          <ellipse cx="66" cy="96" rx="8" ry="5" fill="hsl(350 55% 72%)" opacity="0.45" />
+          <ellipse cx="134" cy="96" rx="8" ry="5" fill="hsl(350 55% 72%)" opacity="0.45" />
 
-          {/* Wise round glasses - prominent */}
-          <circle cx="80" cy="80" r="17.5" stroke="hsl(30 20% 35%)" strokeWidth="2.2" fill="none" opacity="0.7" />
-          <circle cx="120" cy="80" r="17.5" stroke="hsl(30 20% 35%)" strokeWidth="2.2" fill="none" opacity="0.7" />
-          {/* Bridge */}
-          <path d="M97 79 Q100 76 103 79" stroke="hsl(30 20% 35%)" strokeWidth="2" fill="none" opacity="0.7" />
-          {/* Arms curling around ears */}
-          <path d="M63 78 Q56 72 58 64" stroke="hsl(30 20% 35%)" strokeWidth="1.8" fill="none" opacity="0.6" strokeLinecap="round" />
-          <path d="M137 78 Q144 72 142 64" stroke="hsl(30 20% 35%)" strokeWidth="1.8" fill="none" opacity="0.6" strokeLinecap="round" />
-          {/* Tiny glint on glasses */}
+          {/* Wise round glasses */}
+          <circle cx="80" cy="80" r="17.5" stroke="hsl(25 18% 28%)" strokeWidth="2.2" fill="none" opacity="0.7" />
+          <circle cx="120" cy="80" r="17.5" stroke="hsl(25 18% 28%)" strokeWidth="2.2" fill="none" opacity="0.7" />
+          <path d="M97 79 Q100 76 103 79" stroke="hsl(25 18% 28%)" strokeWidth="2" fill="none" opacity="0.7" />
+          <path d="M63 78 Q56 72 58 64" stroke="hsl(25 18% 28%)" strokeWidth="1.8" fill="none" opacity="0.6" strokeLinecap="round" />
+          <path d="M137 78 Q144 72 142 64" stroke="hsl(25 18% 28%)" strokeWidth="1.8" fill="none" opacity="0.6" strokeLinecap="round" />
           <path d="M68 72 Q70 70 72 72" stroke="white" strokeWidth="1" fill="none" opacity="0.3" />
           <path d="M128 72 Q130 70 132 72" stroke="white" strokeWidth="1" fill="none" opacity="0.3" />
         </g>
@@ -173,19 +175,19 @@ export function OwlLogo({ size = 'md', animated = true, className }: OwlLogoProp
 
         {/* Feet peeking behind book */}
         <g>
-          <path d="M80 204 L74 212 M80 204 L80 214 M80 204 L86 212"
-            stroke="hsl(38 55% 50%)" strokeWidth="2.5" strokeLinecap="round" />
-          <path d="M120 204 L114 212 M120 204 L120 214 M120 204 L126 212"
-            stroke="hsl(38 55% 50%)" strokeWidth="2.5" strokeLinecap="round" />
+          <path d="M80 208 L74 216 M80 208 L80 218 M80 208 L86 216"
+            stroke="hsl(38 80% 50%)" strokeWidth="2.5" strokeLinecap="round" />
+          <path d="M120 208 L114 216 M120 208 L120 218 M120 208 L126 216"
+            stroke="hsl(38 80% 50%)" strokeWidth="2.5" strokeLinecap="round" />
         </g>
 
         {/* Branch */}
-        <path d="M15 218 Q60 210 100 216 Q140 222 185 214"
-          stroke="hsl(25 40% 28%)" strokeWidth="7" strokeLinecap="round" fill="none" />
-        <path d="M160 216 Q172 206 178 200" stroke="hsl(25 40% 28%)" strokeWidth="3.5" strokeLinecap="round" fill="none" />
-        <ellipse cx="180" cy="197" rx="5" ry="8" fill="hsl(140 40% 35%)" transform="rotate(-25 180 197)" />
-        <path d="M30 216 Q20 208 16 202" stroke="hsl(25 40% 28%)" strokeWidth="3" strokeLinecap="round" fill="none" />
-        <ellipse cx="14" cy="199" rx="4" ry="7" fill="hsl(140 40% 35%)" transform="rotate(20 14 199)" />
+        <path d="M15 222 Q60 214 100 220 Q140 226 185 218"
+          stroke="hsl(20 45% 22%)" strokeWidth="7" strokeLinecap="round" fill="none" />
+        <path d="M160 220 Q172 210 178 204" stroke="hsl(20 45% 22%)" strokeWidth="3.5" strokeLinecap="round" fill="none" />
+        <ellipse cx="180" cy="201" rx="5" ry="8" fill="hsl(140 40% 35%)" transform="rotate(-25 180 201)" />
+        <path d="M30 220 Q20 212 16 206" stroke="hsl(20 45% 22%)" strokeWidth="3" strokeLinecap="round" fill="none" />
+        <ellipse cx="14" cy="203" rx="4" ry="7" fill="hsl(140 40% 35%)" transform="rotate(20 14 203)" />
       </svg>
     </div>
   );
