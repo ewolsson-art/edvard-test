@@ -3,7 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { Loader2, HeartPulse } from "lucide-react";
 import { AuthNavbar } from "@/components/AuthNavbar";
-
+import { OwlLogo } from "@/components/OwlLogo";
 import { cn } from "@/lib/utils";
 
 const Auth = () => {
@@ -123,21 +123,31 @@ const Auth = () => {
         {/* Hero Section */}
         <section className="relative z-10 flex-1 flex items-center justify-center px-4 md:px-8 pt-20">
           <div className="max-w-6xl mx-auto w-full">
-            <div className="max-w-2xl mx-auto text-center space-y-6 animate-fade-in">
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold leading-[1.1] tracking-tight"
-                style={{ color: 'hsl(40 30% 92%)' }}>
-                Följ ditt mående med{" "}
-                <span style={{ color: 'hsl(45 85% 70%)' }}>bättre insikt</span>
-              </h1>
-              <p className="text-lg md:text-xl max-w-xl mx-auto leading-relaxed" style={{ color: 'hsl(220 15% 70%)' }}>
-                Din interaktiva och personliga stämningsdagbok ger dig bättre koll på ditt mående
-                och delar valfri data med din läkare
-              </p>
-              <div className="flex justify-center text-sm">
-                <div className="flex items-center gap-2 px-4 py-2 rounded-full"
-                  style={{ backgroundColor: 'hsl(220 20% 18%)', color: 'hsl(220 15% 65%)' }}>
-                  <HeartPulse className="w-4 h-4" style={{ color: 'hsl(45 85% 70%)' }} />
-                  <span>Skapad av och för människor med bipolär sjukdom</span>
+            <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
+              <div className="space-y-6 animate-fade-in">
+                <h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold leading-[1.1] tracking-tight"
+                  style={{ color: 'hsl(40 30% 92%)' }}>
+                  Följ ditt mående med{" "}
+                  <span style={{ color: 'hsl(45 85% 70%)' }}>bättre insikt</span>
+                </h1>
+                <p className="text-lg md:text-xl max-w-xl leading-relaxed" style={{ color: 'hsl(220 15% 70%)' }}>
+                  Din interaktiva och personliga stämningsdagbok ger dig bättre koll på ditt mående
+                  och delar valfri data med din läkare
+                </p>
+                <div className="flex items-center gap-3 text-sm">
+                  <div className="flex items-center gap-2 px-4 py-2 rounded-full"
+                    style={{ backgroundColor: 'hsl(220 20% 18%)', color: 'hsl(220 15% 65%)' }}>
+                    <HeartPulse className="w-4 h-4" style={{ color: 'hsl(45 85% 70%)' }} />
+                    <span>Skapad av och för människor med bipolär sjukdom</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex justify-center md:justify-end animate-fade-in">
+                <div className="relative">
+                  <div className="absolute inset-0 rounded-full blur-3xl scale-125"
+                    style={{ backgroundColor: 'hsl(45 60% 50% / 0.08)' }} />
+                  <OwlLogo size="hero" animated={true} />
                 </div>
               </div>
             </div>
