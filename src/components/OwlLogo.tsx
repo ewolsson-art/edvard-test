@@ -74,15 +74,11 @@ export function OwlLogo({ size = 'md', animated = true, className }: OwlLogoProp
         <g className={animated ? 'owl-head-tilt' : ''}>
           <ellipse cx="100" cy="82" rx="42" ry="38" fill="url(#owlBodyGrad)" />
 
-          {/* Fluffy hair / head tufts - like reference image */}
-          {/* Main fluffy top feathers */}
+          {/* Fluffy hair / head tufts */}
           <path d="M72 55 Q78 30 88 42 Q90 28 100 38 Q110 28 112 42 Q122 30 128 55"
             fill="hsl(22 50% 32%)" />
           <path d="M76 58 Q82 38 90 48 Q95 36 100 44 Q105 36 110 48 Q118 38 124 58"
             fill="hsl(25 52% 36%)" />
-          {/* Pointed ear tufts sticking up */}
-          <path d="M68 56 Q62 32 72 48" fill="hsl(22 48% 30%)" />
-          <path d="M132 56 Q138 32 128 48" fill="hsl(22 48% 30%)" />
 
           {/* Facial disc - heart shaped / warm */}
           <path d="M100 60 Q70 62 62 85 Q66 108 100 112 Q134 108 138 85 Q130 62 100 60 Z"
@@ -132,14 +128,7 @@ export function OwlLogo({ size = 'md', animated = true, className }: OwlLogoProp
           <ellipse cx="66" cy="96" rx="8" ry="5" fill="hsl(350 55% 72%)" opacity="0.45" />
           <ellipse cx="134" cy="96" rx="8" ry="5" fill="hsl(350 55% 72%)" opacity="0.45" />
 
-          {/* Wise round glasses */}
-          <circle cx="80" cy="80" r="17.5" stroke="hsl(25 18% 28%)" strokeWidth="2.2" fill="none" opacity="0.7" />
-          <circle cx="120" cy="80" r="17.5" stroke="hsl(25 18% 28%)" strokeWidth="2.2" fill="none" opacity="0.7" />
-          <path d="M97 79 Q100 76 103 79" stroke="hsl(25 18% 28%)" strokeWidth="2" fill="none" opacity="0.7" />
-          <path d="M63 78 Q56 72 58 64" stroke="hsl(25 18% 28%)" strokeWidth="1.8" fill="none" opacity="0.6" strokeLinecap="round" />
-          <path d="M137 78 Q144 72 142 64" stroke="hsl(25 18% 28%)" strokeWidth="1.8" fill="none" opacity="0.6" strokeLinecap="round" />
-          <path d="M68 72 Q70 70 72 72" stroke="white" strokeWidth="1" fill="none" opacity="0.3" />
-          <path d="M128 72 Q130 70 132 72" stroke="white" strokeWidth="1" fill="none" opacity="0.3" />
+        
         </g>
 
         {/* === Big old book the owl is reading === */}
