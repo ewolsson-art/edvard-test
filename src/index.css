@@ -571,6 +571,74 @@
     animation: check-draw 0.5s ease-out 0.3s forwards;
     opacity: 0;
   }
+
+  /* Turtle logo animations */
+  @keyframes turtle-idle {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-4px); }
+  }
+
+  @keyframes turtle-head-bob {
+    0%, 100% { transform: translateX(0) rotate(0deg); }
+    30% { transform: translateX(2px) rotate(2deg); }
+    70% { transform: translateX(-1px) rotate(-1deg); }
+  }
+
+  @keyframes turtle-blink {
+    0%, 42%, 44%, 96%, 98%, 100% { transform: scaleY(1); }
+    43%, 97% { transform: scaleY(0.1); }
+  }
+
+  @keyframes turtle-tail-wag {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(8deg); }
+    75% { transform: rotate(-8deg); }
+  }
+
+  @keyframes turtle-leg-walk {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(10deg); }
+    75% { transform: rotate(-10deg); }
+  }
+
+  .turtle-idle {
+    animation: turtle-idle 3s ease-in-out infinite;
+  }
+
+  .turtle-head-bob {
+    transform-origin: 152px 95px;
+    animation: turtle-head-bob 4s ease-in-out infinite;
+  }
+
+  .turtle-blink {
+    transform-origin: 167px 80px;
+    animation: turtle-blink 5s ease-in-out infinite;
+  }
+
+  .turtle-tail-wag {
+    transform-origin: 42px 125px;
+    animation: turtle-tail-wag 2s ease-in-out infinite;
+  }
+
+  .turtle-leg-front-left {
+    transform-origin: 58px 105px;
+    animation: turtle-leg-walk 2s ease-in-out infinite;
+  }
+
+  .turtle-leg-front-right {
+    transform-origin: 142px 105px;
+    animation: turtle-leg-walk 2s ease-in-out infinite 1s;
+  }
+
+  .turtle-leg-back-left {
+    transform-origin: 62px 140px;
+    animation: turtle-leg-walk 2s ease-in-out infinite 0.5s;
+  }
+
+  .turtle-leg-back-right {
+    transform-origin: 138px 140px;
+    animation: turtle-leg-walk 2s ease-in-out infinite 1.5s;
+  }
 }
 
 @layer utilities {
