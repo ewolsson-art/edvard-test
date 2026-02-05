@@ -33,6 +33,8 @@ import { RelativePatientConnectionsSection } from '@/components/RelativePatientC
 import { AvatarUpload } from '@/components/AvatarUpload';
 import { NotificationSettings } from '@/components/NotificationSettings';
 import { ChangePasswordSection } from '@/components/ChangePasswordSection';
+import { CustomQuestionsSection } from '@/components/CustomQuestionsSection';
+import { useCustomCheckinQuestions } from '@/hooks/useCustomCheckinQuestions';
 
 const CHECKIN_OPTIONS = [
   {
@@ -78,6 +80,7 @@ const Profile = () => {
   const { profile, isLoading: profileLoading, avatarUrl, updateAvatarUrl } = useProfile();
   const { isDoctor, isRelative, isPatient, isLoading: roleLoading } = useUserRole();
   const { preferences, loading: preferencesLoading, updatePreferences } = useUserPreferences();
+  const { questions: customQuestions, addQuestion, removeQuestion } = useCustomCheckinQuestions();
   const { toast } = useToast();
   const navigate = useNavigate();
   
@@ -545,6 +548,17 @@ const Profile = () => {
               )}
               {hasCheckinChanges ? 'Spara ändringar' : 'Inga ändringar'}
             </Button>
+          </div>
+        )}
+
+        {/* Custom Questions Section - Only for patients */}
+        {isPatient && (
+          <div className="glass-card p-6">
+            <CustomQuestionsSection
+              questions={customQuestions}
+              onAdd={addQuestion}
+              onRemove={removeQuestion}
+            />
           </div>
         )}
 

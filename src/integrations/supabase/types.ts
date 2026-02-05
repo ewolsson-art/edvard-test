@@ -73,6 +73,74 @@ export type Database = {
           },
         ]
       }
+      custom_checkin_answers: {
+        Row: {
+          answer_value: string | null
+          created_at: string
+          date: string
+          id: string
+          question_id: string
+          user_id: string
+        }
+        Insert: {
+          answer_value?: string | null
+          created_at?: string
+          date: string
+          id?: string
+          question_id: string
+          user_id: string
+        }
+        Update: {
+          answer_value?: string | null
+          created_at?: string
+          date?: string
+          id?: string
+          question_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "custom_checkin_answers_question_id_fkey"
+            columns: ["question_id"]
+            isOneToOne: false
+            referencedRelation: "custom_checkin_questions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      custom_checkin_questions: {
+        Row: {
+          active: boolean
+          answer_type: string
+          created_at: string
+          id: string
+          question_text: string
+          sort_order: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          active?: boolean
+          answer_type?: string
+          created_at?: string
+          id?: string
+          question_text: string
+          sort_order?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          active?: boolean
+          answer_type?: string
+          created_at?: string
+          id?: string
+          question_text?: string
+          sort_order?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       diagnoses: {
         Row: {
           created_at: string
