@@ -605,22 +605,22 @@
   }
 
   .owl-head-tilt {
-    transform-origin: 100px 88px;
+    transform-origin: 100px 75px;
     animation: owl-head-tilt 5s ease-in-out infinite;
   }
 
   .owl-blink {
-    transform-origin: 100px 80px;
+    transform-origin: 100px 78px;
     animation: owl-blink 4.5s ease-in-out infinite;
   }
 
   .owl-wing-left {
-    transform-origin: 55px 140px;
+    transform-origin: 46px 115px;
     animation: owl-wing-flap 5s ease-in-out infinite;
   }
 
   .owl-wing-right {
-    transform-origin: 145px 140px;
+    transform-origin: 154px 115px;
     animation: owl-wing-flap 5s ease-in-out infinite 2.5s;
   }
 
