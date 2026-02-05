@@ -17,174 +17,134 @@ export function OwlLogo({ size = 'md', animated = true, className }: OwlLogoProp
   return (
     <div className={cn("relative", sizes[size], className)}>
       <svg
-        viewBox="0 0 200 235"
+        viewBox="0 0 200 220"
         className={cn("w-full h-full", animated && "owl-idle")}
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
       >
         <defs>
           <linearGradient id="owlBodyGrad" x1="50%" y1="0%" x2="50%" y2="100%">
-            <stop offset="0%" stopColor="hsl(25 55% 38%)" />
-            <stop offset="100%" stopColor="hsl(22 50% 28%)" />
+            <stop offset="0%" stopColor="hsl(25 55% 42%)" />
+            <stop offset="100%" stopColor="hsl(22 50% 32%)" />
           </linearGradient>
           <linearGradient id="owlBellyGrad" x1="50%" y1="0%" x2="50%" y2="100%">
-            <stop offset="0%" stopColor="hsl(35 45% 78%)" />
-            <stop offset="100%" stopColor="hsl(30 40% 68%)" />
-          </linearGradient>
-          <linearGradient id="owlWingGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="hsl(22 50% 35%)" />
-            <stop offset="100%" stopColor="hsl(20 48% 24%)" />
+            <stop offset="0%" stopColor="hsl(38 50% 82%)" />
+            <stop offset="100%" stopColor="hsl(32 42% 72%)" />
           </linearGradient>
           <radialGradient id="eyeGlow" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="hsl(45 95% 55%)" />
-            <stop offset="100%" stopColor="hsl(40 85% 42%)" />
+            <stop offset="0%" stopColor="hsl(45 95% 58%)" />
+            <stop offset="100%" stopColor="hsl(38 85% 42%)" />
           </radialGradient>
         </defs>
 
-        {/* === Left wing tucked in */}
-        <g className={animated ? 'owl-wing-left' : ''}>
-          <path d="M42 120 Q32 142 38 168 Q44 176 58 170 Q62 154 58 125 Z"
-            fill="url(#owlWingGrad)" />
-          {/* Feather scallops */}
-          <path d="M42 135 Q48 140 56 134" stroke="hsl(20 45% 22%)" strokeWidth="1.2" opacity="0.4" fill="none" />
-          <path d="M40 148 Q48 154 56 148" stroke="hsl(20 45% 22%)" strokeWidth="1.2" opacity="0.4" fill="none" />
-          <path d="M39 160 Q47 166 55 160" stroke="hsl(20 45% 22%)" strokeWidth="1.2" opacity="0.3" fill="none" />
-        </g>
+        {/* === Big round body === */}
+        <ellipse cx="100" cy="120" rx="52" ry="58" fill="url(#owlBodyGrad)" />
 
-        {/* === Right wing tucked in */}
-        <g className={animated ? 'owl-wing-right' : ''}>
-          <path d="M158 120 Q168 142 162 168 Q156 176 142 170 Q138 154 142 125 Z"
-            fill="url(#owlWingGrad)" />
-          <path d="M158 135 Q152 140 144 134" stroke="hsl(20 45% 22%)" strokeWidth="1.2" opacity="0.4" fill="none" />
-          <path d="M160 148 Q152 154 144 148" stroke="hsl(20 45% 22%)" strokeWidth="1.2" opacity="0.4" fill="none" />
-          <path d="M161 160 Q153 166 145 160" stroke="hsl(20 45% 22%)" strokeWidth="1.2" opacity="0.3" fill="none" />
-        </g>
+        {/* Soft belly */}
+        <ellipse cx="100" cy="132" rx="36" ry="42" fill="url(#owlBellyGrad)" />
+        {/* Belly feather scallops */}
+        <path d="M76 118 Q83 123 90 118 Q97 123 104 118 Q111 123 118 118" stroke="hsl(25 35% 40%)" strokeWidth="1" fill="none" opacity="0.25" />
+        <path d="M74 128 Q82 133 90 128 Q98 133 106 128 Q114 133 122 128" stroke="hsl(25 35% 40%)" strokeWidth="1" fill="none" opacity="0.25" />
+        <path d="M76 138 Q84 143 92 138 Q100 143 108 138 Q116 143 124 138" stroke="hsl(25 35% 40%)" strokeWidth="1" fill="none" opacity="0.2" />
 
-        {/* === Chubby round body */}
-        <ellipse cx="100" cy="148" rx="46" ry="55" fill="url(#owlBodyGrad)" />
-
-        {/* Soft fluffy belly with scalloped feathers */}
-        <ellipse cx="100" cy="162" rx="32" ry="40" fill="url(#owlBellyGrad)" />
-        <path d="M82 145 Q88 150 94 145 Q100 150 106 145 Q112 150 118 145" stroke="hsl(25 40% 35%)" strokeWidth="1.2" fill="none" opacity="0.3" />
-        <path d="M80 155 Q87 160 94 155 Q100 160 106 155 Q113 160 120 155" stroke="hsl(25 40% 35%)" strokeWidth="1.2" fill="none" opacity="0.3" />
-        <path d="M81 165 Q88 170 95 165 Q100 170 105 165 Q112 170 119 165" stroke="hsl(25 40% 35%)" strokeWidth="1.2" fill="none" opacity="0.25" />
-        <path d="M83 175 Q90 180 97 175 Q100 178 103 175 Q110 180 117 175" stroke="hsl(25 40% 35%)" strokeWidth="1" fill="none" opacity="0.2" />
-
-        {/* === Big round head */}
+        {/* === Big round head === */}
         <g className={animated ? 'owl-head-tilt' : ''}>
-          <ellipse cx="100" cy="82" rx="42" ry="38" fill="url(#owlBodyGrad)" />
+          <circle cx="100" cy="68" r="44" fill="url(#owlBodyGrad)" />
 
-          {/* Fluffy hair / head tufts */}
-          <path d="M72 55 Q78 30 88 42 Q90 28 100 38 Q110 28 112 42 Q122 30 128 55"
-            fill="hsl(22 50% 32%)" />
-          <path d="M76 58 Q82 38 90 48 Q95 36 100 44 Q105 36 110 48 Q118 38 124 58"
-            fill="hsl(25 52% 36%)" />
+          {/* Ear tufts - soft and rounded */}
+          <ellipse cx="68" cy="36" rx="10" ry="18" fill="hsl(22 50% 35%)" transform="rotate(-15 68 36)" />
+          <ellipse cx="132" cy="36" rx="10" ry="18" fill="hsl(22 50% 35%)" transform="rotate(15 132 36)" />
+          {/* Inner ear tuft highlights */}
+          <ellipse cx="70" cy="38" rx="6" ry="12" fill="hsl(25 52% 40%)" transform="rotate(-15 70 38)" />
+          <ellipse cx="130" cy="38" rx="6" ry="12" fill="hsl(25 52% 40%)" transform="rotate(15 130 38)" />
 
-          {/* Facial disc - heart shaped / warm */}
-          <path d="M100 60 Q70 62 62 85 Q66 108 100 112 Q134 108 138 85 Q130 62 100 60 Z"
-            fill="hsl(30 40% 62%)" opacity="0.5" />
+          {/* Facial disc - warm heart shape */}
+          <path d="M100 48 Q66 50 58 72 Q62 98 100 105 Q138 98 142 72 Q134 50 100 48 Z"
+            fill="hsl(32 40% 65%)" opacity="0.5" />
 
-          {/* === BIG kind eyes === */}
-          {/* Eye backgrounds - large and round */}
-          <circle cx="80" cy="80" r="18" fill="hsl(25 30% 40%)" />
-          <circle cx="120" cy="80" r="18" fill="hsl(25 30% 40%)" />
-
+          {/* === Big friendly eyes === */}
           <g className={animated ? 'owl-blink' : ''}>
-            {/* Left eye */}
-            <circle cx="80" cy="80" r="15" fill="white" />
-            <circle cx="80" cy="80" r="11" fill="url(#eyeGlow)" />
-            <circle cx="80" cy="81" r="6" fill="hsl(20 18% 15%)" />
-            {/* Big sparkly highlights - makes eyes look kind */}
-            <circle cx="85" cy="75" r="4" fill="white" opacity="0.95" />
-            <circle cx="76" cy="84" r="2" fill="white" opacity="0.6" />
-            {/* Slight upward curve on lower eyelid for smiling eyes */}
-            <path d="M67 86 Q74 90 80 90 Q86 90 93 86"
-              fill="url(#owlBodyGrad)" opacity="0.15" />
+            {/* Left eye white */}
+            <circle cx="80" cy="68" r="16" fill="white" />
+            {/* Left iris */}
+            <circle cx="80" cy="69" r="11" fill="url(#eyeGlow)" />
+            {/* Left pupil */}
+            <circle cx="80" cy="70" r="6" fill="hsl(20 18% 12%)" />
+            {/* Sparkle highlights */}
+            <circle cx="86" cy="63" r="4.5" fill="white" opacity="0.95" />
+            <circle cx="76" cy="73" r="2.5" fill="white" opacity="0.6" />
 
-            {/* Right eye */}
-            <circle cx="120" cy="80" r="15" fill="white" />
-            <circle cx="120" cy="80" r="11" fill="url(#eyeGlow)" />
-            <circle cx="120" cy="81" r="6" fill="hsl(20 18% 15%)" />
-            <circle cx="125" cy="75" r="4" fill="white" opacity="0.95" />
-            <circle cx="116" cy="84" r="2" fill="white" opacity="0.6" />
-            <path d="M107 86 Q114 90 120 90 Q126 90 133 86"
-              fill="url(#owlBodyGrad)" opacity="0.15" />
+            {/* Right eye white */}
+            <circle cx="120" cy="68" r="16" fill="white" />
+            {/* Right iris */}
+            <circle cx="120" cy="69" r="11" fill="url(#eyeGlow)" />
+            {/* Right pupil */}
+            <circle cx="120" cy="70" r="6" fill="hsl(20 18% 12%)" />
+            {/* Sparkle highlights */}
+            <circle cx="126" cy="63" r="4.5" fill="white" opacity="0.95" />
+            <circle cx="116" cy="73" r="2.5" fill="white" opacity="0.6" />
           </g>
 
-          {/* Big yellow-orange beak */}
-          <path d="M93 94 L100 108 L107 94 Z" fill="hsl(38 90% 50%)" />
-          <path d="M95 94 L100 104 L105 94 Z" fill="hsl(42 95% 58%)" />
+          {/* Eye rings */}
+          <circle cx="80" cy="68" r="17" stroke="hsl(25 30% 35%)" strokeWidth="2" fill="none" />
+          <circle cx="120" cy="68" r="17" stroke="hsl(25 30% 35%)" strokeWidth="2" fill="none" />
 
-          {/* Big warm smile */}
-          <path
-            d="M88 106 Q94 114 100 114 Q106 114 112 106"
-            stroke="hsl(25 35% 35%)"
-            strokeWidth="2"
-            strokeLinecap="round"
-            fill="none"
-          />
+          {/* Small cute beak */}
+          <path d="M95 82 L100 92 L105 82 Z" fill="hsl(38 90% 55%)" />
+          <path d="M97 82 L100 89 L103 82 Z" fill="hsl(42 95% 62%)" />
 
-          {/* Rosy cheeks - bigger and warmer */}
-          <ellipse cx="66" cy="96" rx="8" ry="5" fill="hsl(350 55% 72%)" opacity="0.45" />
-          <ellipse cx="134" cy="96" rx="8" ry="5" fill="hsl(350 55% 72%)" opacity="0.45" />
+          {/* Warm smile */}
+          <path d="M90 93 Q95 99 100 99 Q105 99 110 93"
+            stroke="hsl(25 35% 35%)" strokeWidth="1.8" strokeLinecap="round" fill="none" />
 
-        
+          {/* Rosy cheeks */}
+          <ellipse cx="64" cy="82" rx="8" ry="5" fill="hsl(350 55% 72%)" opacity="0.4" />
+          <ellipse cx="136" cy="82" rx="8" ry="5" fill="hsl(350 55% 72%)" opacity="0.4" />
         </g>
 
-        {/* === Big old book the owl is reading === */}
+        {/* === Book the owl is holding === */}
         <g className={animated ? 'owl-book-read' : ''}>
-          {/* Book body - blue leather-bound tome */}
-          <rect x="38" y="168" width="124" height="42" rx="4" fill="hsl(215 50% 32%)" />
-          {/* Book spine */}
-          <rect x="96" y="165" width="8" height="48" rx="2" fill="hsl(215 55% 24%)" />
+          {/* Book body */}
+          <rect x="52" y="148" width="96" height="34" rx="3" fill="hsl(215 50% 32%)" />
+          {/* Spine */}
+          <rect x="96" y="146" width="8" height="38" rx="2" fill="hsl(215 55% 24%)" />
           {/* Left page */}
-          <rect x="42" y="171" width="52" height="36" rx="2" fill="hsl(42 50% 90%)" />
+          <rect x="56" y="151" width="38" height="28" rx="2" fill="hsl(42 50% 92%)" />
           {/* Right page */}
-          <rect x="106" y="171" width="52" height="36" rx="2" fill="hsl(42 45% 88%)" />
-          {/* Text lines on left page */}
-          <line x1="48" y1="179" x2="88" y2="179" stroke="hsl(25 20% 60%)" strokeWidth="0.8" opacity="0.5" />
-          <line x1="48" y1="184" x2="86" y2="184" stroke="hsl(25 20% 60%)" strokeWidth="0.5" opacity="0.5" />
-          <line x1="48" y1="189" x2="89" y2="189" stroke="hsl(25 20% 60%)" strokeWidth="0.8" opacity="0.5" />
-          <line x1="48" y1="194" x2="84" y2="194" stroke="hsl(25 20% 60%)" strokeWidth="0.5" opacity="0.4" />
-          <line x1="48" y1="199" x2="87" y2="199" stroke="hsl(25 20% 60%)" strokeWidth="0.8" opacity="0.4" />
-          {/* Text lines on right page */}
-          <line x1="112" y1="179" x2="152" y2="179" stroke="hsl(25 20% 60%)" strokeWidth="0.8" opacity="0.5" />
-          <line x1="112" y1="184" x2="150" y2="184" stroke="hsl(25 20% 60%)" strokeWidth="0.5" opacity="0.5" />
-          <line x1="112" y1="189" x2="153" y2="189" stroke="hsl(25 20% 60%)" strokeWidth="0.8" opacity="0.5" />
-          <line x1="112" y1="194" x2="148" y2="194" stroke="hsl(25 20% 60%)" strokeWidth="0.5" opacity="0.4" />
-          <line x1="112" y1="199" x2="151" y2="199" stroke="hsl(25 20% 60%)" strokeWidth="0.8" opacity="0.4" />
-          {/* Book corner decorations - gold embossing */}
-          <rect x="40" y="169" width="6" height="6" rx="0.5" fill="none" stroke="hsl(42 65% 55%)" strokeWidth="0.8" opacity="0.5" />
-          <rect x="154" y="169" width="6" height="6" rx="0.5" fill="none" stroke="hsl(42 65% 55%)" strokeWidth="0.8" opacity="0.5" />
-          <rect x="40" y="201" width="6" height="6" rx="0.5" fill="none" stroke="hsl(42 65% 55%)" strokeWidth="0.8" opacity="0.5" />
-          <rect x="154" y="201" width="6" height="6" rx="0.5" fill="none" stroke="hsl(42 65% 55%)" strokeWidth="0.8" opacity="0.5" />
-          {/* Bookmark ribbon */}
-          <path d="M145 168 L145 160 L149 164 L153 160 L153 168" fill="hsl(0 60% 45%)" opacity="0.7" />
+          <rect x="106" y="151" width="38" height="28" rx="2" fill="hsl(42 45% 90%)" />
+          {/* Text lines left */}
+          <line x1="60" y1="158" x2="88" y2="158" stroke="hsl(25 20% 65%)" strokeWidth="0.7" opacity="0.5" />
+          <line x1="60" y1="163" x2="86" y2="163" stroke="hsl(25 20% 65%)" strokeWidth="0.5" opacity="0.4" />
+          <line x1="60" y1="168" x2="89" y2="168" stroke="hsl(25 20% 65%)" strokeWidth="0.7" opacity="0.5" />
+          <line x1="60" y1="173" x2="84" y2="173" stroke="hsl(25 20% 65%)" strokeWidth="0.5" opacity="0.4" />
+          {/* Text lines right */}
+          <line x1="110" y1="158" x2="138" y2="158" stroke="hsl(25 20% 65%)" strokeWidth="0.7" opacity="0.5" />
+          <line x1="110" y1="163" x2="136" y2="163" stroke="hsl(25 20% 65%)" strokeWidth="0.5" opacity="0.4" />
+          <line x1="110" y1="168" x2="139" y2="168" stroke="hsl(25 20% 65%)" strokeWidth="0.7" opacity="0.5" />
+          <line x1="110" y1="173" x2="134" y2="173" stroke="hsl(25 20% 65%)" strokeWidth="0.5" opacity="0.4" />
+          {/* Bookmark */}
+          <path d="M130 148 L130 141 L133 144 L136 141 L136 148" fill="hsl(0 60% 50%)" opacity="0.7" />
 
-          {/* === Cute little wing-hands holding the book === */}
-          {/* Left wing-hand */}
-          <path d="M54 158 Q48 164 44 170 Q42 174 44 176 Q46 178 50 176 Q48 172 52 168 Q54 165 56 162"
-            fill="url(#owlBodyGrad)" stroke="hsl(22 50% 28%)" strokeWidth="0.8" />
-          {/* Right wing-hand */}
-          <path d="M146 158 Q152 164 156 170 Q158 174 156 176 Q154 178 150 176 Q152 172 148 168 Q146 165 144 162"
-            fill="url(#owlBodyGrad)" stroke="hsl(22 50% 28%)" strokeWidth="0.8" />
+          {/* Wing-arms resting on book sides */}
+          <path d="M58 138 Q50 144 48 152 Q47 156 50 158 Q53 156 52 150 Q54 144 60 140"
+            fill="url(#owlBodyGrad)" stroke="hsl(22 48% 28%)" strokeWidth="0.6" />
+          <path d="M142 138 Q150 144 152 152 Q153 156 150 158 Q147 156 148 150 Q146 144 140 140"
+            fill="url(#owlBodyGrad)" stroke="hsl(22 48% 28%)" strokeWidth="0.6" />
         </g>
 
-        {/* Feet peeking behind book */}
-        <g>
-          <path d="M80 208 L74 216 M80 208 L80 218 M80 208 L86 216"
-            stroke="hsl(38 80% 50%)" strokeWidth="2.5" strokeLinecap="round" />
-          <path d="M120 208 L114 216 M120 208 L120 218 M120 208 L126 216"
-            stroke="hsl(38 80% 50%)" strokeWidth="2.5" strokeLinecap="round" />
-        </g>
+        {/* Feet peeking below book */}
+        <path d="M82 182 L77 190 M82 182 L82 192 M82 182 L87 190"
+          stroke="hsl(38 80% 52%)" strokeWidth="2.5" strokeLinecap="round" />
+        <path d="M118 182 L113 190 M118 182 L118 192 M118 182 L123 190"
+          stroke="hsl(38 80% 52%)" strokeWidth="2.5" strokeLinecap="round" />
 
         {/* Branch */}
-        <path d="M15 222 Q60 214 100 220 Q140 226 185 218"
-          stroke="hsl(20 45% 22%)" strokeWidth="7" strokeLinecap="round" fill="none" />
-        <path d="M160 220 Q172 210 178 204" stroke="hsl(20 45% 22%)" strokeWidth="3.5" strokeLinecap="round" fill="none" />
-        <ellipse cx="180" cy="201" rx="5" ry="8" fill="hsl(140 40% 35%)" transform="rotate(-25 180 201)" />
-        <path d="M30 220 Q20 212 16 206" stroke="hsl(20 45% 22%)" strokeWidth="3" strokeLinecap="round" fill="none" />
-        <ellipse cx="14" cy="203" rx="4" ry="7" fill="hsl(140 40% 35%)" transform="rotate(20 14 203)" />
+        <path d="M20 198 Q60 190 100 195 Q140 200 180 192"
+          stroke="hsl(20 45% 22%)" strokeWidth="6" strokeLinecap="round" fill="none" />
+        <path d="M155 194 Q165 185 170 180" stroke="hsl(20 45% 22%)" strokeWidth="3" strokeLinecap="round" fill="none" />
+        <ellipse cx="172" cy="177" rx="5" ry="8" fill="hsl(140 40% 35%)" transform="rotate(-25 172 177)" />
+        <path d="M35 196 Q25 188 22 183" stroke="hsl(20 45% 22%)" strokeWidth="2.5" strokeLinecap="round" fill="none" />
+        <ellipse cx="20" cy="180" rx="4" ry="7" fill="hsl(140 40% 35%)" transform="rotate(20 20 180)" />
       </svg>
     </div>
   );
