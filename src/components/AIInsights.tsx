@@ -1,7 +1,8 @@
 import { useState, useMemo } from 'react';
-import { Sparkles, Loader2, RefreshCw, TrendingUp, AlertTriangle, Lightbulb } from 'lucide-react';
+import { Sparkles, Loader2, RefreshCw, AlertTriangle, Lightbulb, TrendingUp, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { MoodEntry, MoodStats as MoodStatsType } from '@/types/mood';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
@@ -14,9 +15,18 @@ interface AIInsightsProps {
   view: 'week' | 'month' | 'year';
 }
 
+interface Warning {
+  type: 'sleep' | 'mood' | 'exercise' | 'eating';
+  message: string;
+  severity: 'low' | 'medium' | 'high';
+  historicalContext: string | null;
+}
+
 export function AIInsights({ entries, stats, periodLabel, view }: AIInsightsProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [insights, setInsights] = useState<string | null>(null);
+  const [warnings, setWarnings] = useState<Warning[]>([]);
+  const [patternsDetected, setPatternsDetected] = useState<number>(0);
   const { toast } = useToast();
 
   // Prepare summary data for the AI
@@ -103,6 +113,8 @@ export function AIInsights({ entries, stats, periodLabel, view }: AIInsightsProp
       if (error) throw error;
       
       setInsights(data.insights);
+      setWarnings(data.warnings || []);
+      setPatternsDetected(data.patternsDetected || 0);
     } catch (error) {
       console.error('Error generating insights:', error);
       toast({
@@ -121,17 +133,54 @@ export function AIInsights({ entries, stats, periodLabel, view }: AIInsightsProp
     <section>
       <div className="flex items-center gap-3 mb-6">
         <Sparkles className="w-6 h-6 text-primary" />
-        <h2 className="font-display text-2xl font-semibold">AI-insikter</h2>
+        <div>
+          <h2 className="font-display text-2xl font-semibold">AI-insikter</h2>
+          {patternsDetected > 0 && (
+            <p className="text-xs text-muted-foreground">
+              {patternsDetected} historiska mönster identifierade
+            </p>
+          )}
+        </div>
       </div>
+
+      {/* Warning alerts */}
+      {warnings.length > 0 && (
+        <div className="space-y-3 mb-6">
+          {warnings.filter(w => w.severity === 'high').map((warning, i) => (
+            <Alert key={`high-${i}`} variant="destructive">
+              <AlertCircle className="h-4 w-4" />
+              <AlertTitle>Varning</AlertTitle>
+              <AlertDescription>
+                {warning.message}
+                {warning.historicalContext && (
+                  <p className="mt-1 text-sm opacity-90">{warning.historicalContext}</p>
+                )}
+              </AlertDescription>
+            </Alert>
+          ))}
+          {warnings.filter(w => w.severity === 'medium').map((warning, i) => (
+            <Alert key={`medium-${i}`} className="border-accent/50 bg-accent/10">
+              <AlertTriangle className="h-4 w-4 text-accent-foreground" />
+              <AlertTitle>Observation</AlertTitle>
+              <AlertDescription>
+                {warning.message}
+                {warning.historicalContext && (
+                  <p className="mt-1 text-sm text-muted-foreground">{warning.historicalContext}</p>
+                )}
+              </AlertDescription>
+            </Alert>
+          ))}
+        </div>
+      )}
 
       <Card className="glass-card">
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-lg">
             <Lightbulb className="w-5 h-5" />
-            Personliga insikter
+            Prediktiva insikter
           </CardTitle>
           <CardDescription>
-            AI-analys av dina mönster för {periodLabel.toLowerCase()}
+            AI-analys baserad på dina historiska mönster för {periodLabel.toLowerCase()}
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -140,18 +189,18 @@ export function AIInsights({ entries, stats, periodLabel, view }: AIInsightsProp
               {hasEnoughData ? (
                 <>
                   <p className="text-muted-foreground mb-4">
-                    Låt AI analysera dina incheckningar och upptäcka mönster och trender.
+                    Låt AI analysera dina incheckningar, identifiera varningssignaler och förutse mönster baserat på din historik.
                   </p>
                   <Button onClick={generateInsights} className="gap-2">
                     <Sparkles className="w-4 h-4" />
-                    Generera insikter
+                    Analysera mönster
                   </Button>
                 </>
               ) : (
                 <div className="flex flex-col items-center gap-2">
                   <AlertTriangle className="w-8 h-8 text-muted-foreground" />
                   <p className="text-muted-foreground">
-                    Du behöver minst 3 dagars incheckningar för att generera insikter.
+                    Du behöver minst 3 dagars incheckningar för att analysera mönster.
                   </p>
                   <p className="text-sm text-muted-foreground">
                     Just nu har du {summaryData.totalDaysWithData} dagar med data.
@@ -164,7 +213,7 @@ export function AIInsights({ entries, stats, periodLabel, view }: AIInsightsProp
           {isLoading && (
             <div className="flex flex-col items-center justify-center py-8 gap-3">
               <Loader2 className="w-8 h-8 animate-spin text-primary" />
-              <p className="text-muted-foreground">Analyserar dina mönster...</p>
+              <p className="text-muted-foreground">Analyserar historiska mönster och varningssignaler...</p>
             </div>
           )}
 
@@ -182,7 +231,7 @@ export function AIInsights({ entries, stats, periodLabel, view }: AIInsightsProp
                   className="gap-2"
                 >
                   <RefreshCw className="w-4 h-4" />
-                  Generera nya insikter
+                  Uppdatera analys
                 </Button>
               </div>
             </div>
@@ -196,15 +245,15 @@ export function AIInsights({ entries, stats, periodLabel, view }: AIInsightsProp
                 <div className="text-xs text-muted-foreground">Dagar loggade</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-green-500">{stats.stable}</div>
+                <div className="text-2xl font-bold text-primary">{stats.stable}</div>
                 <div className="text-xs text-muted-foreground">Stabila dagar</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-blue-500">{summaryData.sleepCounts.good}</div>
+                <div className="text-2xl font-bold text-primary/80">{summaryData.sleepCounts.good}</div>
                 <div className="text-xs text-muted-foreground">Bra sömn</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-orange-500">{summaryData.exerciseDays}</div>
+                <div className="text-2xl font-bold text-primary/60">{summaryData.exerciseDays}</div>
                 <div className="text-xs text-muted-foreground">Träningsdagar</div>
               </div>
             </div>
