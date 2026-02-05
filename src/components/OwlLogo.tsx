@@ -133,10 +133,10 @@ export function OwlLogo({ size = 'md', animated = true, className }: OwlLogoProp
 
         {/* === Big old book the owl is reading === */}
         <g className={animated ? 'owl-book-read' : ''}>
-          {/* Book body - massive leather-bound tome */}
-          <rect x="38" y="168" width="124" height="42" rx="4" fill="hsl(15 45% 28%)" />
+          {/* Book body - blue leather-bound tome */}
+          <rect x="38" y="168" width="124" height="42" rx="4" fill="hsl(215 50% 32%)" />
           {/* Book spine */}
-          <rect x="96" y="165" width="8" height="48" rx="2" fill="hsl(15 50% 22%)" />
+          <rect x="96" y="165" width="8" height="48" rx="2" fill="hsl(215 55% 24%)" />
           {/* Left page */}
           <rect x="42" y="171" width="52" height="36" rx="2" fill="hsl(42 50% 90%)" />
           {/* Right page */}
@@ -160,6 +160,27 @@ export function OwlLogo({ size = 'md', animated = true, className }: OwlLogoProp
           <rect x="154" y="201" width="6" height="6" rx="0.5" fill="none" stroke="hsl(42 65% 55%)" strokeWidth="0.8" opacity="0.5" />
           {/* Bookmark ribbon */}
           <path d="M145 168 L145 160 L149 164 L153 160 L153 168" fill="hsl(0 60% 45%)" opacity="0.7" />
+
+          {/* === Hands/wings gripping the book === */}
+          {/* Left hand gripping book edge */}
+          <g>
+            {/* Wing/arm coming down to book */}
+            <path d="M54 155 Q42 162 36 172 Q34 178 38 180" fill="url(#owlWingGrad)" stroke="hsl(20 48% 24%)" strokeWidth="0.5" />
+            {/* Left hand - three round fingers curling over book edge */}
+            <ellipse cx="36" cy="178" rx="4" ry="3.5" fill="hsl(25 55% 38%)" />
+            <ellipse cx="34" cy="182" rx="3.5" ry="3" fill="hsl(25 55% 38%)" />
+            <ellipse cx="36" cy="186" rx="4" ry="3.5" fill="hsl(25 55% 38%)" />
+            {/* Thumb on top */}
+            <ellipse cx="40" cy="175" rx="3" ry="2.5" fill="hsl(25 50% 42%)" />
+          </g>
+          {/* Right hand gripping book edge */}
+          <g>
+            <path d="M146 155 Q158 162 164 172 Q166 178 162 180" fill="url(#owlWingGrad)" stroke="hsl(20 48% 24%)" strokeWidth="0.5" />
+            <ellipse cx="164" cy="178" rx="4" ry="3.5" fill="hsl(25 55% 38%)" />
+            <ellipse cx="166" cy="182" rx="3.5" ry="3" fill="hsl(25 55% 38%)" />
+            <ellipse cx="164" cy="186" rx="4" ry="3.5" fill="hsl(25 55% 38%)" />
+            <ellipse cx="160" cy="175" rx="3" ry="2.5" fill="hsl(25 50% 42%)" />
+          </g>
         </g>
 
         {/* Feet peeking behind book */}
