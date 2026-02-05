@@ -121,14 +121,11 @@ const Auth = () => {
             <path d="M1010 100 Q1040 88 1065 92" stroke="hsl(25 35% 20%)" strokeWidth="5" strokeLinecap="round" fill="none" />
             {/* Branch where owl sits */}
             <path d="M992 170 Q955 162 930 166" stroke="hsl(25 35% 20%)" strokeWidth="5.5" strokeLinecap="round" fill="none" />
-            {/* Foliage */}
-            <ellipse cx="1000" cy="30" rx="60" ry="45" fill="hsl(148 28% 12%)" />
-            <ellipse cx="960" cy="45" rx="35" ry="26" fill="hsl(148 28% 12%)" />
-            <ellipse cx="1045" cy="38" rx="35" ry="28" fill="hsl(148 28% 12%)" />
-            <ellipse cx="1000" cy="15" rx="52" ry="38" fill="hsl(150 30% 14%)" />
-            <ellipse cx="955" cy="35" rx="30" ry="22" fill="hsl(150 30% 14%)" />
-            <ellipse cx="1048" cy="25" rx="32" ry="24" fill="hsl(150 30% 14%)" />
-            <ellipse cx="1000" cy="-5" rx="38" ry="26" fill="hsl(150 32% 16%)" />
+            {/* Foliage - round like the other tree */}
+            <ellipse cx="1001" cy="40" rx="70" ry="55" fill="hsl(150 30% 14%)" />
+            <ellipse cx="971" cy="55" rx="40" ry="32" fill="hsl(150 25% 11%)" />
+            <ellipse cx="1036" cy="50" rx="38" ry="32" fill="hsl(150 28% 12%)" />
+            <ellipse cx="1001" cy="20" rx="50" ry="38" fill="hsl(150 32% 16%)" />
 
             {/* === Small owl on branch (no blink) === */}
             <g transform="translate(950, 140)">
