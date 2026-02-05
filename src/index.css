@@ -636,6 +636,50 @@
   .star-twinkle {
     animation: star-twinkle 3s ease-in-out infinite;
   }
+
+  /* Animated mood background */
+  @keyframes mood-float-1 {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    33% { transform: translate(30px, -20px) scale(1.05); }
+    66% { transform: translate(-15px, 15px) scale(0.95); }
+  }
+  @keyframes mood-float-2 {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    33% { transform: translate(-25px, 20px) scale(1.08); }
+    66% { transform: translate(20px, -10px) scale(0.92); }
+  }
+  @keyframes mood-float-3 {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(15px, -25px) scale(1.06); }
+  }
+  @keyframes mood-element {
+    0%, 100% { transform: translateY(0) rotate(0deg); opacity: 1; }
+    25% { transform: translateY(-12px) rotate(2deg); }
+    50% { transform: translateY(-6px) rotate(-1deg); opacity: 0.7; }
+    75% { transform: translateY(-15px) rotate(1.5deg); }
+  }
+  @keyframes mood-pulse-line {
+    0%, 100% { opacity: 0.08; stroke-dashoffset: 0; }
+    50% { opacity: 0.14; stroke-dashoffset: 40; }
+  }
+  @keyframes mood-bob {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+
+  .animate-mood-float-1 { animation: mood-float-1 20s ease-in-out infinite; }
+  .animate-mood-float-2 { animation: mood-float-2 25s ease-in-out infinite; }
+  .animate-mood-float-3 { animation: mood-float-3 18s ease-in-out infinite; }
+  .animate-mood-element { animation: mood-element 15s ease-in-out infinite; }
+  .animate-mood-pulse-line {
+    stroke-dasharray: 800;
+    animation: mood-pulse-line 6s ease-in-out infinite;
+  }
+  .animate-mood-pulse-line-2 {
+    stroke-dasharray: 800;
+    animation: mood-pulse-line 8s ease-in-out infinite 2s;
+  }
+  .animate-mood-bob { animation: mood-bob 3s ease-in-out infinite; }
 }
 
 @layer utilities {
