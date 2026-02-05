@@ -26,7 +26,7 @@ import { YearHeatmap } from '@/components/YearHeatmap';
 import { RelativeCommentDialog } from '@/components/RelativeCommentDialog';
 import { PatientAIInsights } from '@/components/PatientAIInsights';
 import { PatientCharacteristics } from '@/components/PatientCharacteristics';
-import { MoodStats as MoodStatsType, ExerciseType } from '@/types/mood';
+import { MoodStats as MoodStatsType, ExerciseType, QualityType } from '@/types/mood';
 import { Loader2, ChevronLeft, Radio, Pill, Check, X, MessageSquare, Moon, Utensils, Dumbbell, Stethoscope } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -249,7 +249,7 @@ export function PatientOverview({ connection, onBack, onToggleChatEnabled }: Pat
   }, [currentMonth, getEntryForDate]);
 
   const monthSleepData = useMemo(() => {
-    const result: Record<number, 'good' | 'bad'> = {};
+    const result: Record<number, QualityType> = {};
     const start = startOfMonth(currentMonth);
     const end = endOfMonth(currentMonth);
     const days = eachDayOfInterval({ start, end });
@@ -265,7 +265,7 @@ export function PatientOverview({ connection, onBack, onToggleChatEnabled }: Pat
   }, [currentMonth, getEntryForDate]);
 
   const monthEatingData = useMemo(() => {
-    const result: Record<number, 'good' | 'bad'> = {};
+    const result: Record<number, QualityType> = {};
     const start = startOfMonth(currentMonth);
     const end = endOfMonth(currentMonth);
     const days = eachDayOfInterval({ start, end });

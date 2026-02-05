@@ -470,7 +470,7 @@ export function TodayCheckin({
             </h1>
           </div>
 
-          <div className="grid grid-cols-2 gap-5 max-w-lg mx-auto">
+          <div className="grid grid-cols-3 gap-4 max-w-2xl mx-auto">
             <button
               onClick={() => handleEatingSelect('good')}
               className={cn(
@@ -483,6 +483,19 @@ export function TodayCheckin({
               </div>
               <span className="font-semibold text-lg">Bra</span>
               <span className="text-xs text-muted-foreground">Ätit regelbundet</span>
+            </button>
+            <button
+              onClick={() => handleEatingSelect('okay')}
+              className={cn(
+                "checkin-option-card neutral",
+                checkinData.eatingQuality === 'okay' && "selected"
+              )}
+            >
+              <div className="icon-wrapper">
+                <Utensils className="w-8 h-8 text-primary" />
+              </div>
+              <span className="font-semibold text-lg">Helt ok</span>
+              <span className="text-xs text-muted-foreground">Lagom</span>
             </button>
             <button
               onClick={() => handleEatingSelect('bad')}

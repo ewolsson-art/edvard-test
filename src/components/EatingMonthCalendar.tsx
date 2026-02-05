@@ -65,6 +65,7 @@ export function EatingMonthCalendar({
                 !isCurrentMonth && "opacity-30 cursor-not-allowed",
                 isCurrentMonth && !hasData && "calendar-day-empty cursor-pointer",
                 quality === 'good' && "calendar-day-stable cursor-pointer",
+                quality === 'okay' && "calendar-day-neutral cursor-pointer",
                 quality === 'bad' && "calendar-day-depressed cursor-pointer",
                 isTodayDate && "calendar-day-today"
               )}
@@ -74,6 +75,8 @@ export function EatingMonthCalendar({
                 <span className="absolute -bottom-0.5 left-1/2 -translate-x-1/2">
                   {quality === 'good' ? (
                     <Utensils className="h-2.5 w-2.5 text-mood-stable" />
+                  ) : quality === 'okay' ? (
+                    <Utensils className="h-2.5 w-2.5 text-primary" />
                   ) : (
                     <UtensilsCrossed className="h-2.5 w-2.5 text-mood-depressed" />
                   )}
