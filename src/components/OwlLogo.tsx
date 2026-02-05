@@ -110,9 +110,9 @@ export function OwlLogo({ size = 'md', animated = true, className }: OwlLogoProp
               fill="url(#owlBodyGrad)" opacity="0.15" />
           </g>
 
-          {/* Small cute beak */}
-          <path d="M96 95 L100 103 L104 95 Z" fill="hsl(42 70% 58%)" />
-          <path d="M97 95 L100 100 L103 95 Z" fill="hsl(45 75% 68%)" />
+        {/* Big yellow beak */}
+          <path d="M93 94 L100 106 L107 94 Z" fill="hsl(45 90% 50%)" />
+          <path d="M95 94 L100 103 L105 94 Z" fill="hsl(48 95% 60%)" />
 
           {/* Big warm smile */}
           <path
@@ -142,31 +142,33 @@ export function OwlLogo({ size = 'md', animated = true, className }: OwlLogoProp
 
         {/* === Big old book the owl is reading === */}
         <g className={animated ? 'owl-book-read' : ''}>
-          {/* Book body - thick leather-bound tome */}
-          <rect x="62" y="178" width="76" height="28" rx="3" fill="hsl(15 45% 28%)" />
+          {/* Book body - massive leather-bound tome */}
+          <rect x="38" y="168" width="124" height="42" rx="4" fill="hsl(15 45% 28%)" />
           {/* Book spine */}
-          <rect x="97" y="176" width="6" height="32" rx="1" fill="hsl(15 50% 22%)" />
+          <rect x="96" y="165" width="8" height="48" rx="2" fill="hsl(15 50% 22%)" />
           {/* Left page */}
-          <rect x="65" y="180" width="30" height="24" rx="1.5" fill="hsl(42 50% 90%)" />
+          <rect x="42" y="171" width="52" height="36" rx="2" fill="hsl(42 50% 90%)" />
           {/* Right page */}
-          <rect x="105" y="180" width="30" height="24" rx="1.5" fill="hsl(42 45% 88%)" />
+          <rect x="106" y="171" width="52" height="36" rx="2" fill="hsl(42 45% 88%)" />
           {/* Text lines on left page */}
-          <line x1="69" y1="186" x2="91" y2="186" stroke="hsl(25 20% 60%)" strokeWidth="0.8" opacity="0.5" />
-          <line x1="69" y1="190" x2="89" y2="190" stroke="hsl(25 20% 60%)" strokeWidth="0.8" opacity="0.5" />
-          <line x1="69" y1="194" x2="92" y2="194" stroke="hsl(25 20% 60%)" strokeWidth="0.8" opacity="0.5" />
-          <line x1="69" y1="198" x2="87" y2="198" stroke="hsl(25 20% 60%)" strokeWidth="0.8" opacity="0.4" />
+          <line x1="48" y1="179" x2="88" y2="179" stroke="hsl(25 20% 60%)" strokeWidth="0.8" opacity="0.5" />
+          <line x1="48" y1="184" x2="86" y2="184" stroke="hsl(25 20% 60%)" strokeWidth="0.5" opacity="0.5" />
+          <line x1="48" y1="189" x2="89" y2="189" stroke="hsl(25 20% 60%)" strokeWidth="0.8" opacity="0.5" />
+          <line x1="48" y1="194" x2="84" y2="194" stroke="hsl(25 20% 60%)" strokeWidth="0.5" opacity="0.4" />
+          <line x1="48" y1="199" x2="87" y2="199" stroke="hsl(25 20% 60%)" strokeWidth="0.8" opacity="0.4" />
           {/* Text lines on right page */}
-          <line x1="109" y1="186" x2="131" y2="186" stroke="hsl(25 20% 60%)" strokeWidth="0.8" opacity="0.5" />
-          <line x1="109" y1="190" x2="129" y2="190" stroke="hsl(25 20% 60%)" strokeWidth="0.8" opacity="0.5" />
-          <line x1="109" y1="194" x2="132" y2="194" stroke="hsl(25 20% 60%)" strokeWidth="0.8" opacity="0.5" />
-          <line x1="109" y1="198" x2="127" y2="198" stroke="hsl(25 20% 60%)" strokeWidth="0.8" opacity="0.4" />
+          <line x1="112" y1="179" x2="152" y2="179" stroke="hsl(25 20% 60%)" strokeWidth="0.8" opacity="0.5" />
+          <line x1="112" y1="184" x2="150" y2="184" stroke="hsl(25 20% 60%)" strokeWidth="0.5" opacity="0.5" />
+          <line x1="112" y1="189" x2="153" y2="189" stroke="hsl(25 20% 60%)" strokeWidth="0.8" opacity="0.5" />
+          <line x1="112" y1="194" x2="148" y2="194" stroke="hsl(25 20% 60%)" strokeWidth="0.5" opacity="0.4" />
+          <line x1="112" y1="199" x2="151" y2="199" stroke="hsl(25 20% 60%)" strokeWidth="0.8" opacity="0.4" />
           {/* Book corner decorations - gold embossing */}
-          <rect x="63" y="179" width="5" height="5" rx="0.5" fill="none" stroke="hsl(42 65% 55%)" strokeWidth="0.6" opacity="0.5" />
-          <rect x="132" y="179" width="5" height="5" rx="0.5" fill="none" stroke="hsl(42 65% 55%)" strokeWidth="0.6" opacity="0.5" />
-          <rect x="63" y="200" width="5" height="5" rx="0.5" fill="none" stroke="hsl(42 65% 55%)" strokeWidth="0.6" opacity="0.5" />
-          <rect x="132" y="200" width="5" height="5" rx="0.5" fill="none" stroke="hsl(42 65% 55%)" strokeWidth="0.6" opacity="0.5" />
+          <rect x="40" y="169" width="6" height="6" rx="0.5" fill="none" stroke="hsl(42 65% 55%)" strokeWidth="0.8" opacity="0.5" />
+          <rect x="154" y="169" width="6" height="6" rx="0.5" fill="none" stroke="hsl(42 65% 55%)" strokeWidth="0.8" opacity="0.5" />
+          <rect x="40" y="201" width="6" height="6" rx="0.5" fill="none" stroke="hsl(42 65% 55%)" strokeWidth="0.8" opacity="0.5" />
+          <rect x="154" y="201" width="6" height="6" rx="0.5" fill="none" stroke="hsl(42 65% 55%)" strokeWidth="0.8" opacity="0.5" />
           {/* Bookmark ribbon */}
-          <path d="M125 178 L125 172 L128 175 L131 172 L131 178" fill="hsl(0 60% 45%)" opacity="0.7" />
+          <path d="M145 168 L145 160 L149 164 L153 160 L153 168" fill="hsl(0 60% 45%)" opacity="0.7" />
         </g>
 
         {/* Feet peeking behind book */}
