@@ -32,12 +32,12 @@ export function TurtleLogo({ size = 'md', animated = true, className }: TurtleLo
             <stop offset="100%" stopColor="hsl(var(--primary) / 0.2)" />
           </linearGradient>
           <linearGradient id="bodyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="hsl(160 55% 60%)" />
-            <stop offset="100%" stopColor="hsl(160 45% 45%)" />
+            <stop offset="0%" stopColor="hsl(160 40% 38%)" />
+            <stop offset="100%" stopColor="hsl(160 35% 28%)" />
           </linearGradient>
           <linearGradient id="bellyGrad" x1="50%" y1="0%" x2="50%" y2="100%">
-            <stop offset="0%" stopColor="hsl(50 60% 85%)" />
-            <stop offset="100%" stopColor="hsl(45 50% 75%)" />
+            <stop offset="0%" stopColor="hsl(50 35% 65%)" />
+            <stop offset="100%" stopColor="hsl(45 30% 50%)" />
           </linearGradient>
         </defs>
 
