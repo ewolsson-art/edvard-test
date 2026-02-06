@@ -69,10 +69,10 @@ export function AppSidebar() {
 
   return (
     <Sidebar collapsible="icon" className="border-r-0" aria-label="Huvudnavigering">
-      <SidebarContent className="pt-8 bg-gradient-to-b from-card/95 via-card/90 to-card/80 backdrop-blur-2xl relative overflow-hidden" role="navigation">
+      <SidebarContent className="pt-8 bg-gradient-to-b from-[hsl(230_30%_5%)] via-[hsl(225_35%_8%)] to-[hsl(220_30%_10%)] relative overflow-hidden" role="navigation">
         {/* Subtle decorative gradient orb */}
-        <div className="absolute -top-20 -left-20 w-40 h-40 bg-primary/5 rounded-full blur-3xl pointer-events-none" aria-hidden="true" />
-        <div className="absolute top-1/2 -right-10 w-32 h-32 bg-accent/10 rounded-full blur-2xl pointer-events-none" aria-hidden="true" />
+        <div className="absolute -top-20 -left-20 w-40 h-40 bg-[hsl(45_85%_55%/0.05)] rounded-full blur-3xl pointer-events-none" aria-hidden="true" />
+        <div className="absolute top-1/2 -right-10 w-32 h-32 bg-[hsl(45_85%_55%/0.03)] rounded-full blur-2xl pointer-events-none" aria-hidden="true" />
         
         {/* Logo/Brand */}
         <div className={`px-5 mb-10 relative z-10 ${isCollapsed ? 'flex justify-center px-3' : ''}`}>
@@ -142,9 +142,9 @@ export function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
 
-      <SidebarFooter className="p-4 bg-gradient-to-t from-card via-card/95 to-transparent relative">
+      <SidebarFooter className="p-4 bg-[hsl(230_30%_5%)] relative">
         {/* Subtle separator line */}
-        <div className="absolute top-0 left-4 right-4 h-px bg-gradient-to-r from-transparent via-border/50 to-transparent" />
+        <div className="absolute top-0 left-4 right-4 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
         
         {/* Logout button */}
         {!isCollapsed ? (
