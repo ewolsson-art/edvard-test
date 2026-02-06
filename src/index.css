@@ -400,6 +400,18 @@
     }
   }
 
+  @keyframes butterfly-flutter {
+    0%, 100% { transform: translate(0, 0); }
+    25% { transform: translate(30px, -20px); }
+    50% { transform: translate(-10px, -35px); }
+    75% { transform: translate(20px, -10px); }
+  }
+
+  @keyframes wing-flap {
+    0% { transform: scaleX(1); }
+    100% { transform: scaleX(0.3); }
+  }
+
   /* Success animation */
   @keyframes circleGrow {
     0% {
