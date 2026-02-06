@@ -121,7 +121,7 @@
     --sidebar-primary-foreground: 0 0% 100%;
     --sidebar-accent: 40 20% 92%;
     --sidebar-accent-foreground: 220 20% 30%;
-    --sidebar-border: 40 20% 88%;
+    --sidebar-border: 0 0% 0% / 0;
     --sidebar-ring: 210 25% 45%;
   }
 
@@ -169,7 +169,7 @@
     --sidebar-primary-foreground: 230 30% 5%;
     --sidebar-accent: 225 20% 14%;
     --sidebar-accent-foreground: 0 0% 90%;
-    --sidebar-border: 225 20% 14%;
+    --sidebar-border: 0 0% 0% / 0;
     --sidebar-ring: 45 85% 55%;
   }
 }
