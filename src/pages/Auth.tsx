@@ -280,7 +280,7 @@ const Auth = () => {
 
         {/* Standing turtle - large */}
         <div className="absolute bottom-[15%] md:bottom-[10%] right-[3%] md:right-[8%] z-20 animate-fade-in">
-          <TurtleLogo size="hero" animated={false} className="w-72 h-72 md:w-[28rem] md:h-[28rem] lg:w-[34rem] lg:h-[34rem]" />
+          <TurtleLogo size="hero" animated={false} className="w-60 h-60 md:w-96 md:h-96 lg:w-[29rem] lg:h-[29rem]" />
         </div>
       </section>
 
