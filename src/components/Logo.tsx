@@ -13,9 +13,9 @@ export function Logo({
   className
 }: LogoProps) {
   const sizes = {
-    sm: { text: 'text-lg' },
-    md: { text: 'text-xl' },
-    lg: { text: 'text-2xl' },
+    sm: { text: 'text-lg', subtext: 'text-sm' },
+    md: { text: 'text-xl', subtext: 'text-base' },
+    lg: { text: 'text-2xl', subtext: 'text-lg' },
   };
 
   return (
