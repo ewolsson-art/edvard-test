@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2, Lock, CheckCircle, ArrowLeft } from "lucide-react";
 import { Logo } from "@/components/Logo";
+import { DarkNightBackground } from "@/components/DarkNightBackground";
 
 const passwordSchema = z.object({
   password: z
@@ -29,7 +30,6 @@ const ResetPassword = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
 
-  // Check if we have a valid session from the reset link
   useEffect(() => {
     const checkSession = async () => {
       const { data: { session } } = await supabase.auth.getSession();
@@ -84,33 +84,31 @@ const ResetPassword = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-background via-primary/5 to-background">
-      <div className="w-full max-w-md">
-        <div className="relative">
-          <div className="absolute -inset-1 bg-gradient-to-r from-primary/20 via-primary/10 to-primary/20 rounded-[28px] blur-xl opacity-50" />
-          
-          <div className="relative bg-card/90 backdrop-blur-xl border border-border/40 rounded-[24px] p-8 shadow-2xl">
+    <DarkNightBackground>
+      <div className="flex flex-1 items-center justify-center p-4">
+        <div className="w-full max-w-md">
+          <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-8 shadow-2xl">
             <div className="text-center mb-8">
               <div className="flex justify-center mb-4">
-                <Logo size="lg" />
+                <Logo size="lg" className="[&_span]:!bg-none [&_span]:!text-white" />
               </div>
             </div>
 
             {isSuccess ? (
               <div className="text-center space-y-6 py-4">
                 <div className="flex justify-center">
-                  <div className="w-16 h-16 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
-                    <CheckCircle className="w-8 h-8 text-green-600 dark:text-green-400" />
+                  <div className="w-16 h-16 rounded-full bg-[hsl(45_85%_55%/0.15)] flex items-center justify-center">
+                    <CheckCircle className="w-8 h-8 text-[hsl(45_85%_55%)]" />
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <h2 className="text-xl font-semibold">Lösenord uppdaterat!</h2>
-                  <p className="text-muted-foreground">
+                  <h2 className="text-xl font-semibold text-white">Lösenord uppdaterat!</h2>
+                  <p className="text-white/60">
                     Ditt lösenord har ändrats. Du kan nu logga in med ditt nya lösenord.
                   </p>
                 </div>
                 <Button
-                  className="w-full"
+                  className="w-full bg-[hsl(45_85%_55%)] text-[hsl(230_30%_5%)] hover:bg-[hsl(45_85%_65%)]"
                   onClick={() => navigate("/auth")}
                 >
                   Gå till inloggning
@@ -119,54 +117,54 @@ const ResetPassword = () => {
             ) : (
               <>
                 <div className="text-center mb-6">
-                  <h2 className="text-xl font-semibold mb-2">Välj nytt lösenord</h2>
-                  <p className="text-sm text-muted-foreground">
+                  <h2 className="text-xl font-semibold mb-2 text-white">Välj nytt lösenord</h2>
+                  <p className="text-sm text-white/60">
                     Ange ditt nya lösenord nedan
                   </p>
                 </div>
 
                 <form onSubmit={handleSubmit} className="space-y-5">
                   <div className="space-y-2">
-                    <Label htmlFor="password" className="text-sm font-medium">
+                    <Label htmlFor="password" className="text-sm font-medium text-white/80">
                       Nytt lösenord
                     </Label>
                     <div className="relative">
-                      <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                      <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40" />
                       <Input
                         id="password"
                         type="password"
                         placeholder="••••••••"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
-                        className="pl-10 h-11 rounded-xl border-border/60 focus:border-primary"
+                        className="pl-10 h-11 rounded-xl bg-white/5 border-white/15 text-white placeholder:text-white/30 focus:border-[hsl(45_85%_55%/0.5)]"
                         disabled={isSubmitting}
                       />
                     </div>
-                    {errors.password && <p className="text-sm text-destructive">{errors.password}</p>}
+                    {errors.password && <p className="text-sm text-red-400">{errors.password}</p>}
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="confirmPassword" className="text-sm font-medium">
+                    <Label htmlFor="confirmPassword" className="text-sm font-medium text-white/80">
                       Bekräfta lösenord
                     </Label>
                     <div className="relative">
-                      <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                      <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40" />
                       <Input
                         id="confirmPassword"
                         type="password"
                         placeholder="••••••••"
                         value={confirmPassword}
                         onChange={(e) => setConfirmPassword(e.target.value)}
-                        className="pl-10 h-11 rounded-xl border-border/60 focus:border-primary"
+                        className="pl-10 h-11 rounded-xl bg-white/5 border-white/15 text-white placeholder:text-white/30 focus:border-[hsl(45_85%_55%/0.5)]"
                         disabled={isSubmitting}
                       />
                     </div>
-                    {errors.confirmPassword && <p className="text-sm text-destructive">{errors.confirmPassword}</p>}
+                    {errors.confirmPassword && <p className="text-sm text-red-400">{errors.confirmPassword}</p>}
                   </div>
 
                   <Button
                     type="submit"
-                    className="w-full h-11 rounded-xl font-medium"
+                    className="w-full h-11 rounded-xl font-medium bg-[hsl(45_85%_55%)] text-[hsl(230_30%_5%)] hover:bg-[hsl(45_85%_65%)]"
                     disabled={isSubmitting}
                   >
                     {isSubmitting && <Loader2 className="w-4 h-4 animate-spin mr-2" />}
@@ -178,7 +176,7 @@ const ResetPassword = () => {
                   <button
                     type="button"
                     onClick={() => navigate("/auth")}
-                    className="text-sm text-muted-foreground hover:text-primary transition-colors inline-flex items-center gap-1"
+                    className="text-sm text-white/60 hover:text-white transition-colors inline-flex items-center gap-1"
                   >
                     <ArrowLeft className="w-3 h-3" />
                     Tillbaka till inloggning
@@ -189,7 +187,7 @@ const ResetPassword = () => {
           </div>
         </div>
       </div>
-    </div>
+    </DarkNightBackground>
   );
 };
 

@@ -14,6 +14,7 @@ import {
   Heart, Bell, UserPlus
 } from 'lucide-react';
 import { Logo } from '@/components/Logo';
+import { DarkNightBackground } from '@/components/DarkNightBackground';
 import { DiagnosisStep } from '@/components/onboarding/DiagnosisStep';
 import { MedicationStep, MedicationInput } from '@/components/onboarding/MedicationStep';
 import { CharacteristicsStep, CharacteristicsInput } from '@/components/onboarding/CharacteristicsStep';
@@ -255,19 +256,19 @@ const Onboarding = () => {
   const totalChars = characteristics.elevated.length + characteristics.stable.length + characteristics.depressed.length;
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-background via-primary/5 to-background">
+    <DarkNightBackground>
       {/* Header with progress */}
       <header className="p-3">
         <div className="max-w-lg mx-auto">
           <div className="flex items-center justify-between mb-2">
-            <Logo />
-            <span className="text-xs text-muted-foreground font-medium">
+            <Logo className="[&_span]:!bg-none [&_span]:!text-white" />
+            <span className="text-xs text-white/50 font-medium">
               Steg {step} av {TOTAL_STEPS}
             </span>
           </div>
-          <div className="h-1 bg-muted rounded-full overflow-hidden">
+          <div className="h-1 bg-white/10 rounded-full overflow-hidden">
             <div 
-              className="h-full bg-primary rounded-full transition-all duration-500 ease-out"
+              className="h-full bg-[hsl(45_85%_55%)] rounded-full transition-all duration-500 ease-out"
               style={{ width: `${(step / TOTAL_STEPS) * 100}%` }}
             />
           </div>
@@ -737,7 +738,7 @@ const Onboarding = () => {
           )}
         </div>
       </main>
-    </div>
+    </DarkNightBackground>
   );
 };
 
