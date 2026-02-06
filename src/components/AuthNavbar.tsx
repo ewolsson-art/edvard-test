@@ -77,8 +77,8 @@ export function AuthNavbar() {
             <Button 
               size="sm" 
               className={cn(
-                "text-sm rounded-full px-5",
-                currentMode === 'signup' && "ring-2 ring-primary/50"
+                "text-sm rounded-full px-5 bg-[hsl(45_85%_55%)] text-[hsl(230_30%_5%)] hover:bg-[hsl(45_85%_65%)]",
+                currentMode === 'signup' && "ring-2 ring-[hsl(45_85%_55%)/0.5]"
               )}
               onClick={handleSignupClick}
             >
@@ -125,7 +125,7 @@ export function AuthNavbar() {
             <Button variant="outline" className="w-full text-white border-white/20 hover:bg-white/10" onClick={handleLoginClick}>
               Logga in
             </Button>
-            <Button className="w-full" onClick={handleSignupClick}>
+            <Button className="w-full bg-[hsl(45_85%_55%)] text-[hsl(230_30%_5%)] hover:bg-[hsl(45_85%_65%)]" onClick={handleSignupClick}>
               Kom igång
             </Button>
           </div>
