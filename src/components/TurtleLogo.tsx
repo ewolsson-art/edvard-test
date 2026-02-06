@@ -139,17 +139,17 @@ export function TurtleLogo({ size = 'md', animated = true, className }: TurtleLo
             fill="none"
           />
 
-          {/* Skalman-style hat/cap */}
+          {/* Yellow hat/cap */}
           <path
             d="M68 52 Q72 28 100 22 Q128 28 132 52"
-            fill="hsl(var(--primary) / 0.85)"
-            stroke="hsl(var(--primary))"
+            fill="hsl(45 85% 55%)"
+            stroke="hsl(40 80% 45%)"
             strokeWidth="1"
           />
           {/* Hat brim */}
-          <ellipse cx="100" cy="52" rx="35" ry="5" fill="hsl(var(--primary))" />
+          <ellipse cx="100" cy="52" rx="35" ry="5" fill="hsl(40 80% 48%)" />
           {/* Hat shine */}
-          <ellipse cx="92" cy="38" rx="10" ry="4" fill="white" opacity="0.15" transform="rotate(-10 92 38)" />
+          <ellipse cx="92" cy="38" rx="10" ry="4" fill="white" opacity="0.25" transform="rotate(-10 92 38)" />
         </g>
       </svg>
     </div>
