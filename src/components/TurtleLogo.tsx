@@ -47,6 +47,14 @@ export function TurtleLogo({ size = 'md', animated = true, className }: TurtleLo
             <stop offset="0%" stopColor="hsl(45 30% 90%)" />
             <stop offset="100%" stopColor="hsl(40 25% 82%)" />
           </linearGradient>
+          <linearGradient id="coatGrad" x1="50%" y1="0%" x2="50%" y2="100%">
+            <stop offset="0%" stopColor="hsl(0 0% 97%)" />
+            <stop offset="100%" stopColor="hsl(0 0% 90%)" />
+          </linearGradient>
+          <linearGradient id="stethGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="hsl(0 0% 35%)" />
+            <stop offset="100%" stopColor="hsl(0 0% 20%)" />
+          </linearGradient>
         </defs>
 
         {/* === STANDING TURTLE WITH BOOK & GLASSES === */}
@@ -71,6 +79,26 @@ export function TurtleLogo({ size = 'md', animated = true, className }: TurtleLo
         {/* Right leg */}
         <rect x="112" y="225" width="16" height="28" rx="8" fill="url(#bodyGrad)" />
 
+        {/* White doctor coat - behind shell */}
+        <path
+          d="M58 155 L55 250 L72 255 L72 230 L128 230 L128 255 L145 250 L142 155"
+          fill="url(#coatGrad)"
+          stroke="hsl(0 0% 82%)"
+          strokeWidth="1"
+        />
+        {/* Coat lapels */}
+        <path d="M75 130 L85 155 L75 180" fill="none" stroke="hsl(0 0% 82%)" strokeWidth="1.5" />
+        <path d="M125 130 L115 155 L125 180" fill="none" stroke="hsl(0 0% 82%)" strokeWidth="1.5" />
+        {/* Coat collar left */}
+        <path d="M75 120 L85 140 L75 135 Z" fill="hsl(0 0% 95%)" stroke="hsl(0 0% 82%)" strokeWidth="0.8" />
+        {/* Coat collar right */}
+        <path d="M125 120 L115 140 L125 135 Z" fill="hsl(0 0% 95%)" stroke="hsl(0 0% 82%)" strokeWidth="0.8" />
+        {/* Coat pocket */}
+        <rect x="110" y="195" width="18" height="14" rx="2" fill="none" stroke="hsl(0 0% 78%)" strokeWidth="1" />
+        {/* Pocket pen detail */}
+        <rect x="120" y="190" width="2" height="8" rx="1" fill="hsl(210 80% 45%)" />
+        <circle cx="121" cy="190" r="1.5" fill="hsl(210 80% 45%)" />
+
         {/* Shell */}
         <ellipse cx="100" cy="165" rx="48" ry="55" fill="url(#shellGrad)" />
 
@@ -89,6 +117,21 @@ export function TurtleLogo({ size = 'md', animated = true, className }: TurtleLo
 
         {/* Belly */}
         <ellipse cx="100" cy="185" rx="30" ry="42" fill="url(#bellyGrad)" />
+
+        {/* Stethoscope */}
+        <path
+          d="M82 110 C78 125, 70 140, 68 165 C66 180, 72 195, 85 200 C95 204, 105 200, 108 190"
+          stroke="url(#stethGrad)"
+          strokeWidth="3.5"
+          strokeLinecap="round"
+          fill="none"
+        />
+        {/* Stethoscope chest piece */}
+        <circle cx="108" cy="192" r="7" fill="hsl(0 0% 30%)" stroke="hsl(0 0% 50%)" strokeWidth="1.5" />
+        <circle cx="108" cy="192" r="3.5" fill="hsl(0 0% 45%)" />
+        {/* Stethoscope earpieces */}
+        <circle cx="78" cy="108" r="3" fill="hsl(0 0% 35%)" />
+        <circle cx="86" cy="106" r="3" fill="hsl(0 0% 35%)" />
 
         {/* Tail */}
         <path
@@ -182,6 +225,14 @@ export function TurtleLogo({ size = 'md', animated = true, className }: TurtleLo
           />
           <ellipse cx="100" cy="55" rx="35" ry="5" fill="hsl(40 80% 48%)" />
           <ellipse cx="92" cy="40" rx="10" ry="4" fill="white" opacity="0.25" transform="rotate(-10 92 40)" />
+
+          {/* Head mirror on hat */}
+          <circle cx="100" cy="26" r="8" fill="hsl(0 0% 85%)" stroke="hsl(0 0% 60%)" strokeWidth="1.5" />
+          <circle cx="100" cy="26" r="5" fill="hsl(0 0% 92%)" />
+          <ellipse cx="98" cy="24" rx="2.5" ry="2" fill="white" opacity="0.5" transform="rotate(-15 98 24)" />
+          {/* Mirror band */}
+          <path d="M92 26 Q88 20 90 15" stroke="hsl(0 0% 60%)" strokeWidth="1.5" fill="none" />
+          <path d="M108 26 Q112 20 110 15" stroke="hsl(0 0% 60%)" strokeWidth="1.5" fill="none" />
         </g>
       </svg>
     </div>
