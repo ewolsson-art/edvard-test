@@ -32,40 +32,29 @@ const Cloud = ({
   </div>
 );
 
-// Small flower
-const Flower = ({ cx, cy, color }: { cx: number; cy: number; color: string }) => (
-  <g>
-    {[0, 72, 144, 216, 288].map((angle) => (
-      <ellipse
-        key={angle}
-        cx={cx}
-        cy={cy}
-        rx="3"
-        ry="6"
-        fill={color}
-        opacity="0.8"
-        transform={`rotate(${angle} ${cx} ${cy})`}
-      />
-    ))}
-    <circle cx={cx} cy={cy} r="2.5" fill="hsl(45 90% 65%)" />
-  </g>
-);
-
-// Butterfly
-const Butterfly = ({ className, delay = 0 }: { className?: string; delay?: number }) => (
+// Bubble
+const Bubble = ({ className, delay = 0, duration = 6 }: { className?: string; delay?: number; duration?: number }) => (
   <div
-    className={cn("absolute", className)}
+    className={cn("absolute rounded-full border border-white/20 bg-white/5", className)}
     style={{
-      animation: `butterfly-flutter 8s ease-in-out infinite`,
+      animation: `bubble-rise ${duration}s ease-in infinite`,
       animationDelay: `${delay}s`,
     }}
+  />
+);
+
+// Jellyfish
+const Jellyfish = ({ className, delay = 0 }: { className?: string; delay?: number }) => (
+  <div
+    className={cn("absolute opacity-30", className)}
+    style={{ animation: `jellyfish-drift 12s ease-in-out infinite`, animationDelay: `${delay}s` }}
   >
-    <svg viewBox="0 0 30 20" className="w-full h-full">
-      <ellipse cx="11" cy="10" rx="7" ry="5" fill="hsl(280 60% 70%)" opacity="0.7"
-        style={{ animation: "wing-flap 0.4s ease-in-out infinite alternate" }} />
-      <ellipse cx="19" cy="10" rx="7" ry="5" fill="hsl(320 60% 70%)" opacity="0.7"
-        style={{ animation: "wing-flap 0.4s ease-in-out infinite alternate-reverse" }} />
-      <rect x="14.5" y="7" width="1" height="7" rx="0.5" fill="hsl(220 20% 30%)" />
+    <svg viewBox="0 0 40 50" className="w-full h-full">
+      <ellipse cx="20" cy="15" rx="14" ry="12" fill="hsl(280 50% 65%)" opacity="0.6" />
+      <ellipse cx="20" cy="15" rx="10" ry="8" fill="hsl(280 40% 75%)" opacity="0.4" />
+      {[12, 16, 20, 24, 28].map((x, i) => (
+        <path key={i} d={`M${x} 25 Q${x + (i % 2 === 0 ? 3 : -3)} 38 ${x} 48`} stroke="hsl(280 45% 60%)" strokeWidth="1" fill="none" opacity="0.5" />
+      ))}
     </svg>
   </div>
 );
@@ -90,63 +79,78 @@ const Auth = () => {
 
   return (
     <div className="min-h-screen flex flex-col relative overflow-hidden">
-      {/* === SKY background === */}
-      <div className="absolute inset-0 bg-gradient-to-b from-[hsl(200_70%_72%)] via-[hsl(200_60%_80%)] to-[hsl(160_40%_55%)]" />
+      {/* === DEEP OCEAN background === */}
+      <div className="absolute inset-0 bg-gradient-to-b from-[hsl(220_40%_12%)] via-[hsl(210_50%_18%)] to-[hsl(195_45%_22%)]" />
 
-      {/* Sun */}
-      <div className="absolute top-[8%] right-[12%] w-20 h-20 md:w-28 md:h-28 rounded-full bg-[hsl(45_95%_70%)] shadow-[0_0_60px_20px_hsl(45_95%_70%/0.4)] animate-pulse" />
+      {/* Moon */}
+      <div className="absolute top-[8%] right-[12%] w-16 h-16 md:w-24 md:h-24 rounded-full bg-[hsl(45_30%_85%)] shadow-[0_0_50px_15px_hsl(45_30%_85%/0.2)]" />
+      {/* Moon crater hint */}
+      <div className="absolute top-[10%] right-[13%] w-4 h-4 md:w-5 md:h-5 rounded-full bg-[hsl(45_20%_75%)] opacity-30" />
 
-      {/* Clouds */}
-      <Cloud className="w-36 h-16 top-[6%] left-[3%]" delay={0} duration={25} />
-      <Cloud className="w-48 h-20 top-[12%] left-[30%]" delay={4} duration={30} />
-      <Cloud className="w-40 h-18 top-[4%] right-[25%]" delay={2} duration={22} />
-      <Cloud className="w-32 h-14 top-[18%] right-[8%]" delay={7} duration={28} />
-      <Cloud className="w-28 h-12 top-[22%] left-[60%]" delay={5} duration={20} />
+      {/* Stars / light particles */}
+      <div className="absolute inset-0 pointer-events-none">
+        {[
+          "top-[5%] left-[10%] w-1 h-1", "top-[15%] left-[45%] w-1.5 h-1.5",
+          "top-[8%] right-[20%] w-1 h-1", "top-[25%] left-[70%] w-1 h-1",
+          "top-[12%] left-[25%] w-0.5 h-0.5", "top-[20%] right-[40%] w-1 h-1",
+        ].map((pos, i) => (
+          <div key={i} className={`absolute rounded-full bg-white/40 ${pos}`} style={{ animation: `twinkle 3s ease-in-out infinite`, animationDelay: `${i * 0.5}s` }} />
+        ))}
+      </div>
 
-      {/* Butterflies */}
-      <Butterfly className="w-8 h-6 top-[30%] left-[20%]" delay={0} />
-      <Butterfly className="w-6 h-4 top-[25%] right-[30%]" delay={3} />
+      {/* Bubbles */}
+      <Bubble className="w-3 h-3 bottom-[20%] left-[15%]" delay={0} duration={7} />
+      <Bubble className="w-2 h-2 bottom-[25%] left-[35%]" delay={2} duration={5} />
+      <Bubble className="w-4 h-4 bottom-[15%] right-[25%]" delay={4} duration={8} />
+      <Bubble className="w-2 h-2 bottom-[30%] right-[40%]" delay={1} duration={6} />
+      <Bubble className="w-3 h-3 bottom-[10%] left-[55%]" delay={3} duration={7} />
 
-      {/* === GRASS / GROUND === */}
-      <div className="absolute bottom-0 left-0 right-0 h-[35%] md:h-[30%]">
-        {/* Rolling hills */}
-        <svg className="absolute bottom-0 w-full h-full" viewBox="0 0 1440 400" preserveAspectRatio="none">
-          {/* Far hill */}
-          <ellipse cx="400" cy="420" rx="600" ry="180" fill="hsl(130 35% 50%)" opacity="0.6" />
-          <ellipse cx="1100" cy="430" rx="500" ry="160" fill="hsl(135 35% 48%)" opacity="0.5" />
-          {/* Main ground */}
-          <rect x="0" y="200" width="1440" height="200" fill="hsl(120 40% 42%)" />
-          <ellipse cx="720" cy="200" rx="900" ry="80" fill="hsl(125 45% 48%)" />
-          {/* Front grass tufts */}
-          <ellipse cx="200" cy="190" rx="250" ry="40" fill="hsl(120 42% 52%)" />
-          <ellipse cx="800" cy="195" rx="300" ry="35" fill="hsl(130 40% 50%)" />
-          <ellipse cx="1300" cy="188" rx="200" ry="38" fill="hsl(125 38% 48%)" />
+      {/* Jellyfish */}
+      <Jellyfish className="w-10 h-12 top-[40%] left-[8%]" delay={0} />
+      <Jellyfish className="w-8 h-10 top-[50%] right-[15%]" delay={4} />
 
-          {/* Pond */}
-          <ellipse cx="1050" cy="300" rx="160" ry="50" fill="hsl(200 55% 60%)" opacity="0.7" />
-          <ellipse cx="1050" cy="295" rx="140" ry="40" fill="hsl(200 60% 70%)" opacity="0.5" />
-          <ellipse cx="1030" cy="290" rx="50" ry="15" fill="white" opacity="0.15" />
+      {/* === OCEAN FLOOR === */}
+      <div className="absolute bottom-0 left-0 right-0 h-[30%] md:h-[25%]">
+        <svg className="absolute bottom-0 w-full h-full" viewBox="0 0 1440 350" preserveAspectRatio="none">
+          {/* Sandy bottom */}
+          <ellipse cx="720" cy="280" rx="900" ry="100" fill="hsl(35 30% 25%)" />
+          <rect x="0" y="280" width="1440" height="70" fill="hsl(35 25% 20%)" />
 
-          {/* Flowers scattered */}
-          <Flower cx={120} cy={210} color="hsl(340 70% 65%)" />
-          <Flower cx={300} cy={230} color="hsl(45 80% 60%)" />
-          <Flower cx={500} cy={215} color="hsl(280 60% 70%)" />
-          <Flower cx={680} cy={225} color="hsl(340 65% 60%)" />
-          <Flower cx={880} cy={210} color="hsl(200 60% 65%)" />
-          <Flower cx={1280} cy={220} color="hsl(45 75% 60%)" />
-          <Flower cx={1380} cy={235} color="hsl(340 70% 70%)" />
-
-          {/* Grass blades */}
-          {[50, 150, 260, 380, 470, 560, 650, 750, 850, 950, 1100, 1200, 1350].map((x, i) => (
-            <path
-              key={i}
-              d={`M${x} 200 Q${x + (i % 2 === 0 ? 5 : -5)} ${175 - (i % 3) * 5} ${x + (i % 2 === 0 ? 3 : -3)} ${165 - (i % 4) * 3}`}
-              stroke="hsl(120 50% 38%)"
-              strokeWidth="2"
-              fill="none"
-              opacity="0.6"
-            />
+          {/* Seaweed */}
+          {[80, 200, 400, 650, 900, 1100, 1300].map((x, i) => (
+            <g key={i}>
+              <path
+                d={`M${x} 280 Q${x + 10} 230 ${x - 5} 180 Q${x + 8} 150 ${x} ${130 - (i % 3) * 15}`}
+                stroke={i % 2 === 0 ? "hsl(140 45% 30%)" : "hsl(160 40% 25%)"}
+                strokeWidth="5"
+                fill="none"
+                opacity="0.7"
+                style={{ animation: `seaweed-sway 4s ease-in-out infinite`, animationDelay: `${i * 0.3}s` }}
+              />
+              <path
+                d={`M${x + 12} 280 Q${x + 20} 240 ${x + 8} 200 Q${x + 18} 175 ${x + 14} ${155 - (i % 2) * 10}`}
+                stroke={i % 2 === 0 ? "hsl(150 40% 28%)" : "hsl(145 35% 22%)"}
+                strokeWidth="4"
+                fill="none"
+                opacity="0.5"
+                style={{ animation: `seaweed-sway 3.5s ease-in-out infinite`, animationDelay: `${i * 0.5 + 0.2}s` }}
+              />
+            </g>
           ))}
+
+          {/* Coral */}
+          <ellipse cx="350" cy="275" rx="30" ry="15" fill="hsl(350 50% 40%)" opacity="0.6" />
+          <ellipse cx="340" cy="260" rx="12" ry="18" fill="hsl(350 45% 45%)" opacity="0.5" />
+          <ellipse cx="360" cy="258" rx="10" ry="16" fill="hsl(15 50% 45%)" opacity="0.5" />
+
+          <ellipse cx="1000" cy="278" rx="25" ry="12" fill="hsl(30 50% 40%)" opacity="0.5" />
+          <ellipse cx="990" cy="265" rx="10" ry="15" fill="hsl(340 45% 42%)" opacity="0.5" />
+          <ellipse cx="1010" cy="262" rx="8" ry="14" fill="hsl(20 55% 48%)" opacity="0.4" />
+
+          {/* Small rocks */}
+          <ellipse cx="550" cy="290" rx="20" ry="10" fill="hsl(220 10% 30%)" opacity="0.4" />
+          <ellipse cx="780" cy="295" rx="15" ry="8" fill="hsl(220 10% 25%)" opacity="0.35" />
+          <ellipse cx="1200" cy="288" rx="18" ry="9" fill="hsl(220 8% 28%)" opacity="0.4" />
         </svg>
       </div>
 
@@ -160,7 +164,7 @@ const Auth = () => {
             <div className="space-y-6 animate-fade-in">
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold text-white leading-[1.1] tracking-tight drop-shadow-lg">
                 Följ ditt mående med{" "}
-                <span className="text-[hsl(45_95%_75%)]">bättre insikt</span>
+                <span className="text-[hsl(180_60%_70%)]">bättre insikt</span>
               </h1>
               <p className="text-lg md:text-xl text-white/90 max-w-xl leading-relaxed drop-shadow-sm">
                 Din interaktiva och personliga stämningsdagbok ger dig bättre koll på ditt mående
@@ -185,7 +189,7 @@ const Auth = () => {
       </section>
 
       {/* Footer */}
-      <footer className="relative z-10 py-3 px-4 bg-[hsl(120_30%_25%/0.6)] backdrop-blur-sm border-t border-white/10">
+      <footer className="relative z-10 py-3 px-4 bg-[hsl(220_35%_8%/0.8)] backdrop-blur-sm border-t border-white/10">
         <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-white/70">
           <span>© 2025 Friendly. Alla rättigheter förbehållna.</span>
           <div className="flex items-center gap-4">
