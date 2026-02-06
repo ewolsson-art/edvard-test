@@ -26,6 +26,6 @@ export function Logo({
   };
   return <div className={cn("flex items-center gap-2", className)}>
       <TurtleLogo size={size} animated={false} />
-      {showText && <span className={cn("font-logo font-semibold tracking-tight bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent", sizes[size].text)}>Tordas</span>}
+      {showText && <span className={cn("font-logo font-semibold tracking-tight bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent", sizes[size].text)}>Toddy</span>}
     </div>;
 }
