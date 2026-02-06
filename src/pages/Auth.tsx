@@ -80,7 +80,7 @@ const Auth = () => {
   return (
     <div className="min-h-screen flex flex-col relative overflow-hidden">
       {/* === DEEP OCEAN background === */}
-      <div className="absolute inset-0 bg-gradient-to-b from-[hsl(220_40%_12%)] via-[hsl(210_50%_18%)] to-[hsl(195_45%_22%)]" />
+      <div className="absolute inset-0 bg-gradient-to-b from-[hsl(220_45%_6%)] via-[hsl(215_50%_10%)] to-[hsl(200_45%_14%)]" />
 
       {/* Moon */}
       <div className="absolute top-[8%] right-[12%] w-16 h-16 md:w-24 md:h-24 rounded-full bg-[hsl(45_30%_85%)] shadow-[0_0_50px_15px_hsl(45_30%_85%/0.2)]" />
@@ -181,7 +181,7 @@ const Auth = () => {
             {/* Right side - Turtle on a little hill */}
             <div className="flex justify-center md:justify-end animate-fade-in">
               <div className="relative">
-                <TurtleLogo size="hero" animated={true} />
+                <TurtleLogo size="hero" animated={false} className="w-64 h-64 md:w-80 md:h-80 lg:w-96 lg:h-96" />
               </div>
             </div>
           </div>
