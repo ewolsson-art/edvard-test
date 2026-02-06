@@ -159,34 +159,30 @@ const Auth = () => {
       <AuthNavbar />
 
       {/* Hero Section */}
-      <section className="relative z-10 flex-1 flex items-center justify-center px-4 md:px-8 pb-[15%] md:pb-[10%]">
+      <section className="relative z-10 flex-1 flex flex-col justify-center px-4 md:px-8">
         <div className="max-w-6xl mx-auto w-full">
-          <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
-            {/* Left side - Text */}
-            <div className="space-y-6 animate-fade-in">
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold text-white leading-[1.1] tracking-tight drop-shadow-lg">
-                Följ ditt mående med{" "}
-                <span className="text-[hsl(180_60%_70%)]">bättre insikt</span>
-              </h1>
-              <p className="text-lg md:text-xl text-white/90 max-w-xl leading-relaxed drop-shadow-sm">
-                Din interaktiva och personliga stämningsdagbok ger dig bättre koll på ditt mående
-                och delar valfri data med din läkare
-              </p>
-              <div className="flex items-center gap-3 text-sm">
-                <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/20 backdrop-blur-sm text-white">
-                  <HeartPulse className="w-4 h-4" />
-                  <span>Skapad av och för människor med bipolär sjukdom</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Right side - Turtle on a little hill */}
-            <div className="flex justify-center md:justify-end animate-fade-in">
-              <div className="relative">
-                <TurtleLogo size="hero" animated={false} className="w-64 h-64 md:w-80 md:h-80 lg:w-96 lg:h-96" />
+          {/* Text content */}
+          <div className="space-y-6 animate-fade-in max-w-xl">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold text-white leading-[1.1] tracking-tight drop-shadow-lg">
+              Följ ditt mående med{" "}
+              <span className="text-[hsl(180_60%_70%)]">bättre insikt</span>
+            </h1>
+            <p className="text-lg md:text-xl text-white/90 leading-relaxed drop-shadow-sm">
+              Din interaktiva och personliga stämningsdagbok ger dig bättre koll på ditt mående
+              och delar valfri data med din läkare
+            </p>
+            <div className="flex items-center gap-3 text-sm">
+              <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/20 backdrop-blur-sm text-white">
+                <HeartPulse className="w-4 h-4" />
+                <span>Skapad av och för människor med bipolär sjukdom</span>
               </div>
             </div>
           </div>
+        </div>
+
+        {/* Turtle lying down near the bottom/street level */}
+        <div className="absolute bottom-[18%] md:bottom-[15%] right-[5%] md:right-[10%] z-20 animate-fade-in">
+          <TurtleLogo size="hero" animated={false} className="w-48 h-48 md:w-64 md:h-64 lg:w-80 lg:h-80" />
         </div>
       </section>
 
