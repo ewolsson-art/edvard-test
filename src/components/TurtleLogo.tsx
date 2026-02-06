@@ -79,25 +79,56 @@ export function TurtleLogo({ size = 'md', animated = true, className }: TurtleLo
         {/* Right leg */}
         <rect x="112" y="225" width="16" height="28" rx="8" fill="url(#bodyGrad)" />
 
-        {/* White doctor coat - behind shell */}
+        {/* === WHITE DOCTOR COAT === */}
+        {/* Coat body - visible below and around the shell */}
         <path
-          d="M58 155 L55 250 L72 255 L72 230 L128 230 L128 255 L145 250 L142 155"
+          d="M55 120 L48 248 L70 258 L70 230 L130 230 L130 258 L152 248 L145 120"
           fill="url(#coatGrad)"
-          stroke="hsl(0 0% 82%)"
-          strokeWidth="1"
+          stroke="hsl(0 0% 80%)"
+          strokeWidth="1.5"
         />
-        {/* Coat lapels */}
-        <path d="M75 130 L85 155 L75 180" fill="none" stroke="hsl(0 0% 82%)" strokeWidth="1.5" />
-        <path d="M125 130 L115 155 L125 180" fill="none" stroke="hsl(0 0% 82%)" strokeWidth="1.5" />
-        {/* Coat collar left */}
-        <path d="M75 120 L85 140 L75 135 Z" fill="hsl(0 0% 95%)" stroke="hsl(0 0% 82%)" strokeWidth="0.8" />
-        {/* Coat collar right */}
-        <path d="M125 120 L115 140 L125 135 Z" fill="hsl(0 0% 95%)" stroke="hsl(0 0% 82%)" strokeWidth="0.8" />
-        {/* Coat pocket */}
-        <rect x="110" y="195" width="18" height="14" rx="2" fill="none" stroke="hsl(0 0% 78%)" strokeWidth="1" />
-        {/* Pocket pen detail */}
-        <rect x="120" y="190" width="2" height="8" rx="1" fill="hsl(210 80% 45%)" />
-        <circle cx="121" cy="190" r="1.5" fill="hsl(210 80% 45%)" />
+        {/* Coat shadow for depth */}
+        <path
+          d="M55 120 L48 248 L70 258 L70 230"
+          fill="hsl(0 0% 88%)"
+          stroke="none"
+        />
+        {/* Coat right side shadow */}
+        <path
+          d="M145 120 L152 248 L130 258 L130 230"
+          fill="hsl(0 0% 88%)"
+          stroke="none"
+        />
+        {/* Coat front opening line */}
+        <line x1="100" y1="125" x2="100" y2="245" stroke="hsl(0 0% 78%)" strokeWidth="1" />
+        {/* Coat collar - prominent V-shape */}
+        <path d="M72 115 L88 145 L100 130 L112 145 L128 115" fill="hsl(0 0% 96%)" stroke="hsl(0 0% 78%)" strokeWidth="1.5" />
+        {/* Collar fold shadow */}
+        <path d="M78 118 L90 140 L100 130" fill="hsl(0 0% 90%)" stroke="none" />
+        <path d="M122 118 L110 140 L100 130" fill="hsl(0 0% 90%)" stroke="none" />
+        {/* Left breast pocket */}
+        <path d="M68 170 L68 185 L82 185 L82 170" fill="none" stroke="hsl(0 0% 75%)" strokeWidth="1.2" />
+        {/* Pocket flap */}
+        <path d="M66 170 L84 170" stroke="hsl(0 0% 72%)" strokeWidth="1.5" />
+        {/* Right breast pocket */}
+        <path d="M118 170 L118 185 L132 185 L132 170" fill="none" stroke="hsl(0 0% 75%)" strokeWidth="1.2" />
+        <path d="M116 170 L134 170" stroke="hsl(0 0% 72%)" strokeWidth="1.5" />
+        {/* Pens in right pocket */}
+        <rect x="122" y="162" width="2.5" height="12" rx="1" fill="hsl(210 80% 45%)" />
+        <circle cx="123.25" cy="162" r="1.8" fill="hsl(210 80% 55%)" />
+        <rect x="126" y="164" width="2.5" height="10" rx="1" fill="hsl(0 70% 45%)" />
+        <circle cx="127.25" cy="164" r="1.8" fill="hsl(0 70% 55%)" />
+        {/* Coat buttons */}
+        <circle cx="100" cy="155" r="2.5" fill="hsl(0 0% 82%)" stroke="hsl(0 0% 70%)" strokeWidth="0.8" />
+        <circle cx="100" cy="175" r="2.5" fill="hsl(0 0% 82%)" stroke="hsl(0 0% 70%)" strokeWidth="0.8" />
+        <circle cx="100" cy="195" r="2.5" fill="hsl(0 0% 82%)" stroke="hsl(0 0% 70%)" strokeWidth="0.8" />
+        {/* Name badge on left side */}
+        <rect x="64" y="148" width="22" height="12" rx="2" fill="white" stroke="hsl(0 0% 70%)" strokeWidth="0.8" />
+        <rect x="66" y="151" width="12" height="1.5" rx="0.5" fill="hsl(210 60% 50%)" />
+        <rect x="66" y="154" width="8" height="1.5" rx="0.5" fill="hsl(0 0% 65%)" />
+        {/* Red cross on badge */}
+        <rect x="80" y="151" width="4" height="1.5" rx="0.5" fill="hsl(0 70% 50%)" />
+        <rect x="81" y="150" width="1.5" height="4" rx="0.5" fill="hsl(0 70% 50%)" />
 
         {/* Shell */}
         <ellipse cx="100" cy="165" rx="48" ry="55" fill="url(#shellGrad)" />
@@ -118,20 +149,35 @@ export function TurtleLogo({ size = 'md', animated = true, className }: TurtleLo
         {/* Belly */}
         <ellipse cx="100" cy="185" rx="30" ry="42" fill="url(#bellyGrad)" />
 
-        {/* Stethoscope */}
+        {/* === STETHOSCOPE - more prominent === */}
+        {/* Stethoscope tubing - right side draping */}
         <path
-          d="M82 110 C78 125, 70 140, 68 165 C66 180, 72 195, 85 200 C95 204, 105 200, 108 190"
-          stroke="url(#stethGrad)"
-          strokeWidth="3.5"
+          d="M118 108 C125 120, 135 140, 138 160 C140 175, 135 190, 125 200 C118 206, 108 208, 100 202"
+          stroke="hsl(0 0% 25%)"
+          strokeWidth="4"
+          strokeLinecap="round"
+          fill="none"
+        />
+        {/* Stethoscope tubing - left side */}
+        <path
+          d="M82 108 C75 120, 65 140, 62 160 C60 175, 65 190, 75 200 C82 206, 92 208, 100 202"
+          stroke="hsl(0 0% 25%)"
+          strokeWidth="4"
           strokeLinecap="round"
           fill="none"
         />
         {/* Stethoscope chest piece */}
-        <circle cx="108" cy="192" r="7" fill="hsl(0 0% 30%)" stroke="hsl(0 0% 50%)" strokeWidth="1.5" />
-        <circle cx="108" cy="192" r="3.5" fill="hsl(0 0% 45%)" />
+        <circle cx="100" cy="205" r="10" fill="hsl(0 0% 30%)" stroke="hsl(0 0% 55%)" strokeWidth="2" />
+        <circle cx="100" cy="205" r="5.5" fill="hsl(0 0% 50%)" />
+        <circle cx="100" cy="205" r="2.5" fill="hsl(0 0% 60%)" />
+        {/* Chest piece shine */}
+        <ellipse cx="96" cy="202" rx="2.5" ry="1.5" fill="white" opacity="0.3" transform="rotate(-20 96 202)" />
         {/* Stethoscope earpieces */}
-        <circle cx="78" cy="108" r="3" fill="hsl(0 0% 35%)" />
-        <circle cx="86" cy="106" r="3" fill="hsl(0 0% 35%)" />
+        <circle cx="78" cy="105" r="4" fill="hsl(0 0% 30%)" stroke="hsl(0 0% 50%)" strokeWidth="1" />
+        <circle cx="86" cy="103" r="4" fill="hsl(0 0% 30%)" stroke="hsl(0 0% 50%)" strokeWidth="1" />
+        {/* Y-connector */}
+        <path d="M82 108 L86 103" stroke="hsl(0 0% 25%)" strokeWidth="3" />
+        <path d="M82 108 L78 105" stroke="hsl(0 0% 25%)" strokeWidth="3" />
 
         {/* Tail */}
         <path
