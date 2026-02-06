@@ -79,56 +79,7 @@ export function TurtleLogo({ size = 'md', animated = true, className }: TurtleLo
         {/* Right leg */}
         <rect x="112" y="225" width="16" height="28" rx="8" fill="url(#bodyGrad)" />
 
-        {/* === WHITE DOCTOR COAT === */}
-        {/* Coat body - visible below and around the shell */}
-        <path
-          d="M55 120 L48 248 L70 258 L70 230 L130 230 L130 258 L152 248 L145 120"
-          fill="url(#coatGrad)"
-          stroke="hsl(0 0% 80%)"
-          strokeWidth="1.5"
-        />
-        {/* Coat shadow for depth */}
-        <path
-          d="M55 120 L48 248 L70 258 L70 230"
-          fill="hsl(0 0% 88%)"
-          stroke="none"
-        />
-        {/* Coat right side shadow */}
-        <path
-          d="M145 120 L152 248 L130 258 L130 230"
-          fill="hsl(0 0% 88%)"
-          stroke="none"
-        />
-        {/* Coat front opening line */}
-        <line x1="100" y1="125" x2="100" y2="245" stroke="hsl(0 0% 78%)" strokeWidth="1" />
-        {/* Coat collar - prominent V-shape */}
-        <path d="M72 115 L88 145 L100 130 L112 145 L128 115" fill="hsl(0 0% 96%)" stroke="hsl(0 0% 78%)" strokeWidth="1.5" />
-        {/* Collar fold shadow */}
-        <path d="M78 118 L90 140 L100 130" fill="hsl(0 0% 90%)" stroke="none" />
-        <path d="M122 118 L110 140 L100 130" fill="hsl(0 0% 90%)" stroke="none" />
-        {/* Left breast pocket */}
-        <path d="M68 170 L68 185 L82 185 L82 170" fill="none" stroke="hsl(0 0% 75%)" strokeWidth="1.2" />
-        {/* Pocket flap */}
-        <path d="M66 170 L84 170" stroke="hsl(0 0% 72%)" strokeWidth="1.5" />
-        {/* Right breast pocket */}
-        <path d="M118 170 L118 185 L132 185 L132 170" fill="none" stroke="hsl(0 0% 75%)" strokeWidth="1.2" />
-        <path d="M116 170 L134 170" stroke="hsl(0 0% 72%)" strokeWidth="1.5" />
-        {/* Pens in right pocket */}
-        <rect x="122" y="162" width="2.5" height="12" rx="1" fill="hsl(210 80% 45%)" />
-        <circle cx="123.25" cy="162" r="1.8" fill="hsl(210 80% 55%)" />
-        <rect x="126" y="164" width="2.5" height="10" rx="1" fill="hsl(0 70% 45%)" />
-        <circle cx="127.25" cy="164" r="1.8" fill="hsl(0 70% 55%)" />
-        {/* Coat buttons */}
-        <circle cx="100" cy="155" r="2.5" fill="hsl(0 0% 82%)" stroke="hsl(0 0% 70%)" strokeWidth="0.8" />
-        <circle cx="100" cy="175" r="2.5" fill="hsl(0 0% 82%)" stroke="hsl(0 0% 70%)" strokeWidth="0.8" />
-        <circle cx="100" cy="195" r="2.5" fill="hsl(0 0% 82%)" stroke="hsl(0 0% 70%)" strokeWidth="0.8" />
-        {/* Name badge on left side */}
-        <rect x="64" y="148" width="22" height="12" rx="2" fill="white" stroke="hsl(0 0% 70%)" strokeWidth="0.8" />
-        <rect x="66" y="151" width="12" height="1.5" rx="0.5" fill="hsl(210 60% 50%)" />
-        <rect x="66" y="154" width="8" height="1.5" rx="0.5" fill="hsl(0 0% 65%)" />
-        {/* Red cross on badge */}
-        <rect x="80" y="151" width="4" height="1.5" rx="0.5" fill="hsl(0 70% 50%)" />
-        <rect x="81" y="150" width="1.5" height="4" rx="0.5" fill="hsl(0 70% 50%)" />
+        {/* (coat removed) */}
 
         {/* Shell */}
         <ellipse cx="100" cy="165" rx="48" ry="55" fill="url(#shellGrad)" />
