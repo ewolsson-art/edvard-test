@@ -127,11 +127,11 @@
 
   .dark {
     /* Dark night sky palette matching landing page */
-    --background: 230 30% 7%;
+    --background: 230 30% 5%;
     --foreground: 0 0% 95%;
-    --card: 225 30% 10%;
+    --card: 225 25% 14%;
     --card-foreground: 0 0% 93%;
-    --popover: 225 30% 10%;
+    --popover: 225 25% 14%;
     --popover-foreground: 0 0% 93%;
     --primary: 45 85% 55%;
     --primary-foreground: 230 30% 5%;
