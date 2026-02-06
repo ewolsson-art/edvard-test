@@ -32,29 +32,18 @@ const Cloud = ({
   </div>
 );
 
-// Bubble
-const Bubble = ({ className, delay = 0, duration = 6 }: { className?: string; delay?: number; duration?: number }) => (
-  <div
-    className={cn("absolute rounded-full border border-white/20 bg-white/5", className)}
-    style={{
-      animation: `bubble-rise ${duration}s ease-in infinite`,
-      animationDelay: `${delay}s`,
-    }}
-  />
-);
-
-// Jellyfish
-const Jellyfish = ({ className, delay = 0 }: { className?: string; delay?: number }) => (
-  <div
-    className={cn("absolute opacity-30", className)}
-    style={{ animation: `jellyfish-drift 12s ease-in-out infinite`, animationDelay: `${delay}s` }}
-  >
-    <svg viewBox="0 0 40 50" className="w-full h-full">
-      <ellipse cx="20" cy="15" rx="14" ry="12" fill="hsl(280 50% 65%)" opacity="0.6" />
-      <ellipse cx="20" cy="15" rx="10" ry="8" fill="hsl(280 40% 75%)" opacity="0.4" />
-      {[12, 16, 20, 24, 28].map((x, i) => (
-        <path key={i} d={`M${x} 25 Q${x + (i % 2 === 0 ? 3 : -3)} 38 ${x} 48`} stroke="hsl(280 45% 60%)" strokeWidth="1" fill="none" opacity="0.5" />
-      ))}
+// Lamppost
+const Lamppost = ({ x, glowDelay = 0 }: { x: string; glowDelay?: number }) => (
+  <div className={`absolute bottom-[22%] md:bottom-[18%] ${x}`}>
+    <svg viewBox="0 0 20 80" className="w-4 h-16 md:w-5 md:h-20">
+      {/* Pole */}
+      <rect x="8" y="20" width="4" height="60" fill="hsl(220 15% 20%)" />
+      {/* Lamp head */}
+      <rect x="3" y="15" width="14" height="8" rx="2" fill="hsl(220 15% 25%)" />
+      {/* Light glow */}
+      <ellipse cx="10" cy="23" rx="12" ry="15" fill="hsl(45 80% 70%)" opacity="0.15"
+        style={{ animation: `twinkle 4s ease-in-out infinite`, animationDelay: `${glowDelay}s` }} />
+      <rect x="5" y="22" width="10" height="2" fill="hsl(45 70% 65%)" opacity="0.6" />
     </svg>
   </div>
 );
@@ -79,80 +68,93 @@ const Auth = () => {
 
   return (
     <div className="min-h-screen flex flex-col relative overflow-hidden">
-      {/* === DEEP OCEAN background === */}
-      <div className="absolute inset-0 bg-gradient-to-b from-[hsl(220_45%_6%)] via-[hsl(215_50%_10%)] to-[hsl(200_45%_14%)]" />
+      {/* === DARK NIGHT SKY === */}
+      <div className="absolute inset-0 bg-gradient-to-b from-[hsl(230_30%_5%)] via-[hsl(225_35%_8%)] to-[hsl(220_30%_12%)]" />
 
       {/* Moon */}
-      <div className="absolute top-[8%] right-[12%] w-16 h-16 md:w-24 md:h-24 rounded-full bg-[hsl(45_30%_85%)] shadow-[0_0_50px_15px_hsl(45_30%_85%/0.2)]" />
-      {/* Moon crater hint */}
-      <div className="absolute top-[10%] right-[13%] w-4 h-4 md:w-5 md:h-5 rounded-full bg-[hsl(45_20%_75%)] opacity-30" />
+      <div className="absolute top-[6%] right-[10%] w-14 h-14 md:w-20 md:h-20 rounded-full bg-[hsl(45_25%_82%)] shadow-[0_0_40px_12px_hsl(45_25%_82%/0.15)]" />
+      <div className="absolute top-[7.5%] right-[10.5%] w-3 h-3 md:w-4 md:h-4 rounded-full bg-[hsl(45_15%_72%)] opacity-25" />
 
-      {/* Stars / light particles */}
+      {/* Stars */}
       <div className="absolute inset-0 pointer-events-none">
         {[
-          "top-[5%] left-[10%] w-1 h-1", "top-[15%] left-[45%] w-1.5 h-1.5",
-          "top-[8%] right-[20%] w-1 h-1", "top-[25%] left-[70%] w-1 h-1",
-          "top-[12%] left-[25%] w-0.5 h-0.5", "top-[20%] right-[40%] w-1 h-1",
+          "top-[3%] left-[8%] w-1 h-1", "top-[10%] left-[30%] w-1.5 h-1.5",
+          "top-[5%] right-[25%] w-1 h-1", "top-[18%] left-[55%] w-1 h-1",
+          "top-[7%] left-[70%] w-0.5 h-0.5", "top-[14%] right-[35%] w-1 h-1",
+          "top-[2%] left-[50%] w-0.5 h-0.5", "top-[12%] left-[15%] w-1 h-1",
+          "top-[20%] right-[15%] w-0.5 h-0.5", "top-[9%] right-[50%] w-1 h-1",
         ].map((pos, i) => (
-          <div key={i} className={`absolute rounded-full bg-white/40 ${pos}`} style={{ animation: `twinkle 3s ease-in-out infinite`, animationDelay: `${i * 0.5}s` }} />
+          <div key={i} className={`absolute rounded-full bg-white/50 ${pos}`} style={{ animation: `twinkle 3s ease-in-out infinite`, animationDelay: `${i * 0.4}s` }} />
         ))}
       </div>
 
-      {/* Bubbles */}
-      <Bubble className="w-3 h-3 bottom-[20%] left-[15%]" delay={0} duration={7} />
-      <Bubble className="w-2 h-2 bottom-[25%] left-[35%]" delay={2} duration={5} />
-      <Bubble className="w-4 h-4 bottom-[15%] right-[25%]" delay={4} duration={8} />
-      <Bubble className="w-2 h-2 bottom-[30%] right-[40%]" delay={1} duration={6} />
-      <Bubble className="w-3 h-3 bottom-[10%] left-[55%]" delay={3} duration={7} />
+      {/* === CITY SKYLINE === */}
+      <div className="absolute bottom-0 left-0 right-0 h-[45%] md:h-[40%] pointer-events-none">
+        <svg className="absolute bottom-0 w-full h-full" viewBox="0 0 1440 500" preserveAspectRatio="none">
+          {/* Far buildings (darker, background layer) */}
+          <rect x="50" y="180" width="80" height="320" fill="hsl(225 25% 10%)" />
+          <rect x="140" y="220" width="60" height="280" fill="hsl(225 20% 11%)" />
+          <rect x="220" y="150" width="90" height="350" fill="hsl(228 25% 9%)" />
+          <rect x="330" y="200" width="70" height="300" fill="hsl(225 22% 10%)" />
+          <rect x="420" y="170" width="100" height="330" fill="hsl(230 25% 8%)" />
+          <rect x="540" y="240" width="60" height="260" fill="hsl(225 20% 11%)" />
+          <rect x="620" y="160" width="85" height="340" fill="hsl(228 22% 9%)" />
+          <rect x="730" y="210" width="70" height="290" fill="hsl(225 25% 10%)" />
+          <rect x="820" y="140" width="110" height="360" fill="hsl(230 28% 8%)" />
+          <rect x="950" y="190" width="75" height="310" fill="hsl(225 22% 10%)" />
+          <rect x="1040" y="230" width="60" height="270" fill="hsl(228 20% 11%)" />
+          <rect x="1120" y="165" width="95" height="335" fill="hsl(225 25% 9%)" />
+          <rect x="1240" y="200" width="70" height="300" fill="hsl(230 22% 10%)" />
+          <rect x="1330" y="250" width="80" height="250" fill="hsl(225 20% 11%)" />
 
-      {/* Jellyfish */}
-      <Jellyfish className="w-10 h-12 top-[40%] left-[8%]" delay={0} />
-      <Jellyfish className="w-8 h-10 top-[50%] right-[15%]" delay={4} />
-
-      {/* === OCEAN FLOOR === */}
-      <div className="absolute bottom-0 left-0 right-0 h-[30%] md:h-[25%]">
-        <svg className="absolute bottom-0 w-full h-full" viewBox="0 0 1440 350" preserveAspectRatio="none">
-          {/* Sandy bottom */}
-          <ellipse cx="720" cy="280" rx="900" ry="100" fill="hsl(35 30% 25%)" />
-          <rect x="0" y="280" width="1440" height="70" fill="hsl(35 25% 20%)" />
-
-          {/* Seaweed */}
-          {[80, 200, 400, 650, 900, 1100, 1300].map((x, i) => (
-            <g key={i}>
-              <path
-                d={`M${x} 280 Q${x + 10} 230 ${x - 5} 180 Q${x + 8} 150 ${x} ${130 - (i % 3) * 15}`}
-                stroke={i % 2 === 0 ? "hsl(140 45% 30%)" : "hsl(160 40% 25%)"}
-                strokeWidth="5"
-                fill="none"
-                opacity="0.7"
-                style={{ animation: `seaweed-sway 4s ease-in-out infinite`, animationDelay: `${i * 0.3}s` }}
-              />
-              <path
-                d={`M${x + 12} 280 Q${x + 20} 240 ${x + 8} 200 Q${x + 18} 175 ${x + 14} ${155 - (i % 2) * 10}`}
-                stroke={i % 2 === 0 ? "hsl(150 40% 28%)" : "hsl(145 35% 22%)"}
-                strokeWidth="4"
-                fill="none"
-                opacity="0.5"
-                style={{ animation: `seaweed-sway 3.5s ease-in-out infinite`, animationDelay: `${i * 0.5 + 0.2}s` }}
-              />
-            </g>
+          {/* Building windows (tiny yellow/warm dots) */}
+          {[
+            [70, 200], [85, 220], [100, 250], [70, 270], [100, 290],
+            [240, 170], [270, 190], [240, 220], [270, 250], [280, 280],
+            [445, 190], [475, 210], [445, 240], [490, 260], [460, 300],
+            [640, 180], [665, 200], [640, 230], [680, 260], [650, 290],
+            [845, 160], [875, 180], [845, 210], [900, 230], [860, 260], [890, 300],
+            [970, 210], [985, 240], [970, 270],
+            [1140, 185], [1170, 205], [1140, 235], [1185, 260], [1155, 290],
+            [1260, 220], [1275, 250], [1260, 280],
+          ].map(([wx, wy], i) => (
+            <rect key={i} x={wx} y={wy} width="5" height="6" rx="1"
+              fill={i % 3 === 0 ? "hsl(45 70% 65%)" : i % 3 === 1 ? "hsl(35 60% 55%)" : "hsl(200 30% 40%)"}
+              opacity={i % 4 === 0 ? 0.7 : 0.4}
+              style={i % 5 === 0 ? { animation: `twinkle 5s ease-in-out infinite`, animationDelay: `${i * 0.3}s` } : undefined}
+            />
           ))}
 
-          {/* Coral */}
-          <ellipse cx="350" cy="275" rx="30" ry="15" fill="hsl(350 50% 40%)" opacity="0.6" />
-          <ellipse cx="340" cy="260" rx="12" ry="18" fill="hsl(350 45% 45%)" opacity="0.5" />
-          <ellipse cx="360" cy="258" rx="10" ry="16" fill="hsl(15 50% 45%)" opacity="0.5" />
+          {/* Rooftop details */}
+          <polygon points="220,150 265,120 310,150" fill="hsl(225 25% 11%)" />
+          <polygon points="820,140 875,105 930,140" fill="hsl(228 28% 10%)" />
+          <rect x="860" y="110" width="8" height="30" fill="hsl(225 20% 12%)" /> {/* Antenna */}
+          <rect x="460" y="155" width="6" height="15" fill="hsl(225 18% 12%)" /> {/* Antenna */}
 
-          <ellipse cx="1000" cy="278" rx="25" ry="12" fill="hsl(30 50% 40%)" opacity="0.5" />
-          <ellipse cx="990" cy="265" rx="10" ry="15" fill="hsl(340 45% 42%)" opacity="0.5" />
-          <ellipse cx="1010" cy="262" rx="8" ry="14" fill="hsl(20 55% 48%)" opacity="0.4" />
+          {/* Ground / street level */}
+          <rect x="0" y="460" width="1440" height="40" fill="hsl(220 20% 8%)" />
+          {/* Sidewalk */}
+          <rect x="0" y="455" width="1440" height="8" fill="hsl(220 12% 18%)" />
 
-          {/* Small rocks */}
-          <ellipse cx="550" cy="290" rx="20" ry="10" fill="hsl(220 10% 30%)" opacity="0.4" />
-          <ellipse cx="780" cy="295" rx="15" ry="8" fill="hsl(220 10% 25%)" opacity="0.35" />
-          <ellipse cx="1200" cy="288" rx="18" ry="9" fill="hsl(220 8% 28%)" opacity="0.4" />
+          {/* Road markings */}
+          {[100, 300, 500, 700, 900, 1100, 1300].map((rx, i) => (
+            <rect key={i} x={rx} y="478" width="40" height="3" rx="1" fill="hsl(45 20% 40%)" opacity="0.3" />
+          ))}
+
+          {/* Trees (dark silhouettes) */}
+          {[160, 580, 770, 1080, 1380].map((tx, i) => (
+            <g key={i}>
+              <rect x={tx - 3} y="430" width="6" height="25" fill="hsl(220 15% 10%)" />
+              <ellipse cx={tx} cy="420" rx="18" ry="22" fill="hsl(150 25% 10%)" />
+            </g>
+          ))}
         </svg>
       </div>
+
+      {/* Lampposts */}
+      <Lamppost x="left-[10%]" glowDelay={0} />
+      <Lamppost x="left-[40%]" glowDelay={1.5} />
+      <Lamppost x="right-[20%]" glowDelay={3} />
 
       <AuthNavbar />
 
