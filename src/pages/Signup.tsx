@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { AuthNavbar } from "@/components/AuthNavbar";
 import { Logo } from "@/components/Logo";
+import { DarkNightBackground } from "@/components/DarkNightBackground";
 import { Eye, EyeOff, ArrowRight, ArrowLeft, Loader2, Mail, User, Stethoscope, Users, CheckCircle2, AlertCircle, Sparkles, Heart, Lock } from "lucide-react";
 import {
   AlertDialog,
@@ -166,101 +167,88 @@ const Signup = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      <div className="min-h-screen flex items-center justify-center bg-[hsl(230_30%_5%)]">
+        <Loader2 className="h-8 w-8 animate-spin text-[hsl(45_85%_55%)]" />
       </div>
     );
   }
 
   if (showConfirmation) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5 relative overflow-hidden">
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-20 left-10 w-72 h-72 bg-primary/10 rounded-full blur-3xl animate-pulse" />
-          <div className="absolute bottom-20 right-10 w-96 h-96 bg-primary/5 rounded-full blur-3xl" />
-        </div>
+      <DarkNightBackground>
         <AuthNavbar />
-        <div className="flex min-h-screen items-center justify-center px-4 pt-20 pb-12 relative z-10">
+        <div className="flex flex-1 items-center justify-center px-4 pt-20 pb-12">
           <div className="w-full max-w-md">
-            <div className="bg-card/80 backdrop-blur-xl rounded-3xl shadow-2xl border border-border/50 p-8 md:p-10 text-center animate-fade-in">
+            <div className="bg-white/5 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/10 p-8 md:p-10 text-center animate-fade-in">
               <div className="flex justify-center mb-6 relative">
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="w-20 h-20 bg-primary/20 rounded-full blur-xl animate-pulse" />
+                  <div className="w-20 h-20 bg-[hsl(45_85%_55%/0.15)] rounded-full blur-xl animate-pulse" />
                 </div>
-                <div className="h-16 w-16 rounded-full bg-gradient-to-br from-primary/20 to-primary/10 flex items-center justify-center relative">
-                  <CheckCircle2 className="h-8 w-8 text-primary animate-scale-in" />
+                <div className="h-16 w-16 rounded-full bg-[hsl(45_85%_55%/0.15)] flex items-center justify-center relative">
+                  <CheckCircle2 className="h-8 w-8 text-[hsl(45_85%_55%)] animate-scale-in" />
                 </div>
               </div>
-              <h2 className="text-2xl font-bold text-foreground mb-4 font-display">Bekräfta din e-post</h2>
-              <p className="text-muted-foreground mb-6">
-                Vi har skickat ett bekräftelsemail till <strong className="text-foreground">{email}</strong>. 
+              <h2 className="text-2xl font-bold text-white mb-4 font-display">Bekräfta din e-post</h2>
+              <p className="text-white/60 mb-6">
+                Vi har skickat ett bekräftelsemail till <strong className="text-white">{email}</strong>. 
                 Klicka på länken i mailet för att aktivera ditt konto.
               </p>
-              <p className="text-sm text-muted-foreground mb-6">
+              <p className="text-sm text-white/50 mb-6">
                 Det kan ta någon minut innan mailet kommer fram. Kolla även din skräppost.
               </p>
               <Link to="/logga-in">
-                <Button variant="outline" className="w-full h-12 rounded-xl hover:bg-primary/5 transition-all duration-300">
+                <Button variant="outline" className="w-full h-12 rounded-xl border-white/20 text-white hover:bg-white/10 transition-all duration-300">
                   Tillbaka till inloggning
                 </Button>
               </Link>
             </div>
           </div>
         </div>
-      </div>
+      </DarkNightBackground>
     );
   }
 
   const currentStepIndex = step === "role" ? 0 : 1;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5 relative overflow-hidden" role="main" aria-label="Skapa konto">
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-10 left-[10%] w-64 h-64 bg-primary/8 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '4s' }} aria-hidden="true" />
-        <div className="absolute top-1/3 right-[5%] w-48 h-48 bg-primary/6 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '6s', animationDelay: '1s' }} aria-hidden="true" />
-        <div className="absolute bottom-20 left-[20%] w-72 h-72 bg-primary/5 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '5s', animationDelay: '2s' }} aria-hidden="true" />
-        <Sparkles className="absolute top-32 right-[15%] w-6 h-6 text-primary/20 animate-pulse" style={{ animationDuration: '3s' }} aria-hidden="true" />
-        <Heart className="absolute bottom-40 right-[25%] w-5 h-5 text-primary/15 animate-pulse" style={{ animationDuration: '4s', animationDelay: '1s' }} aria-hidden="true" />
-        <Sparkles className="absolute top-1/2 left-[8%] w-4 h-4 text-primary/15 animate-pulse" style={{ animationDuration: '3.5s', animationDelay: '0.5s' }} aria-hidden="true" />
-      </div>
-      
+    <DarkNightBackground>
       <AuthNavbar />
       
-      <div className="flex min-h-screen items-start justify-center px-4 pt-20 pb-8 relative z-10">
+      <div className="flex flex-1 items-start justify-center px-4 pt-20 pb-8" role="main" aria-label="Skapa konto">
         <div className="w-full max-w-lg">
           {/* Progress bar */}
           <div className="flex justify-center mb-4 animate-fade-in" role="progressbar" aria-valuenow={currentStepIndex + 1} aria-valuemin={1} aria-valuemax={2} aria-label={`Steg ${currentStepIndex + 1} av 2`}>
             <div className="flex items-center gap-3">
-              <div className="text-xs text-muted-foreground font-medium mr-2">Steg {currentStepIndex + 1}/2</div>
+              <div className="text-xs text-white/50 font-medium mr-2">Steg {currentStepIndex + 1}/2</div>
               <div className={cn(
                 "w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold transition-all duration-300",
-                step === "role" ? "bg-primary text-primary-foreground shadow-md shadow-primary/30" : "bg-primary/20 text-primary"
+                step === "role" ? "bg-[hsl(45_85%_55%)] text-[hsl(230_30%_5%)] shadow-md shadow-[hsl(45_85%_55%/0.3)]" : "bg-white/10 text-white/60"
               )} aria-hidden="true">
                 1
               </div>
               <div className={cn(
                 "w-12 h-1 rounded-full transition-all duration-500",
-                step === "details" || step === "submitting" ? "bg-primary" : "bg-primary/20"
+                step === "details" || step === "submitting" ? "bg-[hsl(45_85%_55%)]" : "bg-white/15"
               )} aria-hidden="true" />
               <div className={cn(
                 "w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold transition-all duration-300",
-                step === "details" || step === "submitting" ? "bg-primary text-primary-foreground shadow-md shadow-primary/30" : "bg-primary/20 text-primary/50"
+                step === "details" || step === "submitting" ? "bg-[hsl(45_85%_55%)] text-[hsl(230_30%_5%)] shadow-md shadow-[hsl(45_85%_55%/0.3)]" : "bg-white/10 text-white/30"
               )} aria-hidden="true">
                 2
               </div>
             </div>
           </div>
           
-          <div className="auth-card bg-card/80 backdrop-blur-xl rounded-2xl shadow-2xl border border-border/50 p-5 md:p-6 animate-fade-in" style={{ animationDelay: '0.1s' }}>
+          <div className="bg-white/5 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/10 p-5 md:p-6 animate-fade-in" style={{ animationDelay: '0.1s' }}>
             {/* Step 1: Role Selection */}
             {step === "role" && (
               <div className="animate-fade-in" role="group" aria-labelledby="role-heading">
                 <div className="flex flex-col items-center mb-5">
-                  <Logo size="sm" />
-                  <h1 id="role-heading" className="mt-3 text-xl md:text-2xl font-bold text-foreground font-display">
+                  <Logo size="sm" className="[&_span]:!bg-none [&_span]:!text-white" />
+                  <h1 id="role-heading" className="mt-3 text-xl md:text-2xl font-bold text-white font-display">
                     Välkommen! 👋
                   </h1>
-                  <p className="mt-1 text-sm text-muted-foreground text-center">
+                  <p className="mt-1 text-sm text-white/60 text-center">
                     Vilket typ av konto vill du skapa?
                   </p>
                 </div>
@@ -282,14 +270,14 @@ const Signup = () => {
                         className={cn(
                           "w-full p-3 rounded-xl border-2 text-left transition-all duration-300 group",
                           isSelected 
-                            ? "border-primary bg-primary/10 shadow-md shadow-primary/10" 
-                            : "border-border/50 bg-background/50 hover:border-primary/30 hover:bg-primary/5"
+                            ? "border-[hsl(45_85%_55%)] bg-[hsl(45_85%_55%/0.1)] shadow-md shadow-[hsl(45_85%_55%/0.1)]" 
+                            : "border-white/15 bg-white/5 hover:border-white/30 hover:bg-white/10"
                         )}
                       >
                         <div className="flex items-center gap-3">
                           <div className={cn(
                             "w-10 h-10 rounded-lg flex-shrink-0 flex items-center justify-center transition-all duration-300",
-                            isSelected ? "bg-primary text-primary-foreground" : "bg-muted/50 text-muted-foreground group-hover:bg-primary/10"
+                            isSelected ? "bg-[hsl(45_85%_55%)] text-[hsl(230_30%_5%)]" : "bg-white/10 text-white/60 group-hover:bg-white/15"
                           )} aria-hidden="true">
                             <Icon className="h-5 w-5" aria-hidden="true" />
                           </div>
@@ -297,15 +285,15 @@ const Signup = () => {
                             <div className="flex items-center justify-between">
                               <h3 className={cn(
                                 "font-semibold text-sm transition-colors",
-                                isSelected ? "text-primary" : "text-foreground"
+                                isSelected ? "text-[hsl(45_85%_55%)]" : "text-white"
                               )}>
                                 {info.title}
                               </h3>
                               {isSelected && (
-                                <CheckCircle2 className="h-4 w-4 text-primary animate-scale-in" aria-hidden="true" />
+                                <CheckCircle2 className="h-4 w-4 text-[hsl(45_85%_55%)] animate-scale-in" aria-hidden="true" />
                               )}
                             </div>
-                            <p className="text-xs text-muted-foreground">
+                            <p className="text-xs text-white/50">
                               {info.description}
                             </p>
                           </div>
@@ -318,7 +306,7 @@ const Signup = () => {
                 <Button
                   onClick={handleContinue}
                   disabled={!role}
-                  className="w-full h-11 rounded-xl text-sm font-semibold shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 group bg-gradient-to-r from-primary to-primary/90 mt-5"
+                  className="w-full h-11 rounded-xl text-sm font-semibold bg-[hsl(45_85%_55%)] text-[hsl(230_30%_5%)] hover:bg-[hsl(45_85%_65%)] shadow-lg shadow-[hsl(45_85%_55%/0.2)] hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 group mt-5"
                 >
                   Fortsätt
                   <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
@@ -332,7 +320,7 @@ const Signup = () => {
                 <div className="flex flex-col items-center mb-4">
                   {role && (
                     <div className={cn(
-                      "w-11 h-11 rounded-xl flex items-center justify-center mb-3 bg-primary text-primary-foreground"
+                      "w-11 h-11 rounded-xl flex items-center justify-center mb-3 bg-[hsl(45_85%_55%)] text-[hsl(230_30%_5%)]"
                     )} aria-hidden="true">
                       {(() => {
                         const Icon = roleInfo[role].icon;
@@ -340,10 +328,10 @@ const Signup = () => {
                       })()}
                     </div>
                   )}
-                  <h1 id="details-heading" className="text-xl md:text-2xl font-bold text-foreground font-display">
+                  <h1 id="details-heading" className="text-xl md:text-2xl font-bold text-white font-display">
                     Skapa ditt konto
                   </h1>
-                  <p className="mt-1 text-xs text-muted-foreground text-center">
+                  <p className="mt-1 text-xs text-white/50 text-center">
                     {role && `Du registrerar dig som ${roleInfo[role].title.toLowerCase()}`}
                   </p>
                 </div>
@@ -352,7 +340,7 @@ const Signup = () => {
                   {/* Name Fields */}
                   <div className="grid grid-cols-2 gap-2">
                     <div className="space-y-1.5">
-                      <Label htmlFor="firstName" className="text-xs font-medium text-foreground">
+                      <Label htmlFor="firstName" className="text-xs font-medium text-white/80">
                         Förnamn
                       </Label>
                       <Input
@@ -362,8 +350,8 @@ const Signup = () => {
                         value={firstName}
                         onChange={(e) => setFirstName(e.target.value)}
                         className={cn(
-                          "h-10 bg-background/50 border-border/50 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-all duration-300",
-                          validationErrors.firstName && "border-destructive"
+                          "h-10 bg-white/5 border-white/15 rounded-lg text-white placeholder:text-white/30 focus:ring-2 focus:ring-[hsl(45_85%_55%/0.3)] transition-all duration-300",
+                          validationErrors.firstName && "border-red-400/60"
                         )}
                         disabled={isSubmitting}
                         aria-invalid={!!validationErrors.firstName}
@@ -371,11 +359,11 @@ const Signup = () => {
                         autoComplete="given-name"
                       />
                       {validationErrors.firstName && (
-                        <p id="firstName-error" className="text-xs text-destructive" role="alert">{validationErrors.firstName}</p>
+                        <p id="firstName-error" className="text-xs text-red-400" role="alert">{validationErrors.firstName}</p>
                       )}
                     </div>
                     <div className="space-y-1.5">
-                      <Label htmlFor="lastName" className="text-xs font-medium text-foreground">
+                      <Label htmlFor="lastName" className="text-xs font-medium text-white/80">
                         Efternamn
                       </Label>
                       <Input
@@ -385,8 +373,8 @@ const Signup = () => {
                         value={lastName}
                         onChange={(e) => setLastName(e.target.value)}
                         className={cn(
-                          "h-10 bg-background/50 border-border/50 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-all duration-300",
-                          validationErrors.lastName && "border-destructive"
+                          "h-10 bg-white/5 border-white/15 rounded-lg text-white placeholder:text-white/30 focus:ring-2 focus:ring-[hsl(45_85%_55%/0.3)] transition-all duration-300",
+                          validationErrors.lastName && "border-red-400/60"
                         )}
                         disabled={isSubmitting}
                         aria-invalid={!!validationErrors.lastName}
@@ -394,18 +382,18 @@ const Signup = () => {
                         autoComplete="family-name"
                       />
                       {validationErrors.lastName && (
-                        <p id="lastName-error" className="text-xs text-destructive" role="alert">{validationErrors.lastName}</p>
+                        <p id="lastName-error" className="text-xs text-red-400" role="alert">{validationErrors.lastName}</p>
                       )}
                     </div>
                   </div>
 
                   {/* Email */}
                   <div className="space-y-1.5">
-                    <Label htmlFor="email" className="text-xs font-medium text-foreground">
+                    <Label htmlFor="email" className="text-xs font-medium text-white/80">
                       E-postadress
                     </Label>
                     <div className="relative">
-                      <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" aria-hidden="true" />
+                      <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/40" aria-hidden="true" />
                       <Input
                         id="email"
                         type="email"
@@ -413,8 +401,8 @@ const Signup = () => {
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         className={cn(
-                          "pl-10 h-10 bg-background/50 border-border/50 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-all duration-300",
-                          validationErrors.email && "border-destructive"
+                          "pl-10 h-10 bg-white/5 border-white/15 rounded-lg text-white placeholder:text-white/30 focus:ring-2 focus:ring-[hsl(45_85%_55%/0.3)] transition-all duration-300",
+                          validationErrors.email && "border-red-400/60"
                         )}
                         disabled={isSubmitting}
                         aria-invalid={!!validationErrors.email}
@@ -423,17 +411,17 @@ const Signup = () => {
                       />
                     </div>
                     {validationErrors.email && (
-                      <p id="email-error" className="text-xs text-destructive" role="alert">{validationErrors.email}</p>
+                      <p id="email-error" className="text-xs text-red-400" role="alert">{validationErrors.email}</p>
                     )}
                   </div>
 
                   {/* Password */}
                   <div className="space-y-1.5">
-                    <Label htmlFor="password" className="text-xs font-medium text-foreground" id="password-label">
+                    <Label htmlFor="password" className="text-xs font-medium text-white/80" id="password-label">
                       Lösenord (minst 6 tecken)
                     </Label>
                     <div className="relative">
-                      <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" aria-hidden="true" />
+                      <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/40" aria-hidden="true" />
                       <Input
                         id="password"
                         type={showPassword ? "text" : "password"}
@@ -441,8 +429,8 @@ const Signup = () => {
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         className={cn(
-                          "pl-10 h-10 bg-background/50 border-border/50 rounded-lg pr-10 focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-all duration-300",
-                          validationErrors.password && "border-destructive"
+                          "pl-10 h-10 bg-white/5 border-white/15 rounded-lg pr-10 text-white placeholder:text-white/30 focus:ring-2 focus:ring-[hsl(45_85%_55%/0.3)] transition-all duration-300",
+                          validationErrors.password && "border-red-400/60"
                         )}
                         disabled={isSubmitting}
                         aria-invalid={!!validationErrors.password}
@@ -452,24 +440,24 @@ const Signup = () => {
                       <button
                         type="button"
                         onClick={() => setShowPassword(!showPassword)}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-white/40 hover:text-white/70 transition-colors"
                         aria-label={showPassword ? "Dölj lösenord" : "Visa lösenord"}
                       >
                         {showPassword ? <EyeOff className="h-3.5 w-3.5" aria-hidden="true" /> : <Eye className="h-3.5 w-3.5" aria-hidden="true" />}
                       </button>
                     </div>
                     {validationErrors.password && (
-                      <p id="password-error" className="text-xs text-destructive" role="alert">{validationErrors.password}</p>
+                      <p id="password-error" className="text-xs text-red-400" role="alert">{validationErrors.password}</p>
                     )}
                   </div>
 
                   {/* Confirm Password */}
                   <div className="space-y-1.5">
-                    <Label htmlFor="confirmPassword" className="text-xs font-medium text-foreground">
+                    <Label htmlFor="confirmPassword" className="text-xs font-medium text-white/80">
                       Bekräfta lösenord
                     </Label>
                     <div className="relative">
-                      <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" aria-hidden="true" />
+                      <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/40" aria-hidden="true" />
                       <Input
                         id="confirmPassword"
                         type={showConfirmPassword ? "text" : "password"}
@@ -477,8 +465,8 @@ const Signup = () => {
                         value={confirmPassword}
                         onChange={(e) => setConfirmPassword(e.target.value)}
                         className={cn(
-                          "pl-10 h-10 bg-background/50 border-border/50 rounded-lg pr-10 focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-all duration-300",
-                          validationErrors.confirmPassword && "border-destructive"
+                          "pl-10 h-10 bg-white/5 border-white/15 rounded-lg pr-10 text-white placeholder:text-white/30 focus:ring-2 focus:ring-[hsl(45_85%_55%/0.3)] transition-all duration-300",
+                          validationErrors.confirmPassword && "border-red-400/60"
                         )}
                         disabled={isSubmitting}
                         aria-invalid={!!validationErrors.confirmPassword}
@@ -488,14 +476,14 @@ const Signup = () => {
                       <button
                         type="button"
                         onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-white/40 hover:text-white/70 transition-colors"
                         aria-label={showConfirmPassword ? "Dölj lösenord" : "Visa lösenord"}
                       >
                         {showConfirmPassword ? <EyeOff className="h-3.5 w-3.5" aria-hidden="true" /> : <Eye className="h-3.5 w-3.5" aria-hidden="true" />}
                       </button>
                     </div>
                     {validationErrors.confirmPassword && (
-                      <p id="confirmPassword-error" className="text-xs text-destructive" role="alert">{validationErrors.confirmPassword}</p>
+                      <p id="confirmPassword-error" className="text-xs text-red-400" role="alert">{validationErrors.confirmPassword}</p>
                     )}
                   </div>
 
@@ -506,14 +494,14 @@ const Signup = () => {
                       variant="outline"
                       onClick={handleBack}
                       disabled={isSubmitting}
-                      className="h-10 rounded-lg px-3"
+                      className="h-10 rounded-lg px-3 border-white/20 text-white hover:bg-white/10"
                       aria-label="Gå tillbaka till steg 1"
                     >
                       <ArrowLeft className="h-4 w-4" aria-hidden="true" />
                     </Button>
                     <Button
                       type="submit"
-                      className="flex-1 h-10 rounded-lg text-sm font-semibold shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 group bg-gradient-to-r from-primary to-primary/90"
+                      className="flex-1 h-10 rounded-lg text-sm font-semibold bg-[hsl(45_85%_55%)] text-[hsl(230_30%_5%)] hover:bg-[hsl(45_85%_65%)] shadow-lg shadow-[hsl(45_85%_55%/0.2)] hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 group"
                       disabled={isSubmitting}
                     >
                       {isSubmitting ? (
@@ -533,27 +521,27 @@ const Signup = () => {
             {/* Login link */}
             <div className="relative my-4">
               <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-border/50"></div>
+                <div className="w-full border-t border-white/10"></div>
               </div>
               <div className="relative flex justify-center text-xs">
-                <span className="bg-card px-3 text-muted-foreground">eller</span>
+                <span className="px-3 text-white/40 bg-transparent">eller</span>
               </div>
             </div>
 
             <div className="text-center">
               <Link
                 to="/logga-in"
-                className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-primary transition-colors duration-200"
+                className="inline-flex items-center gap-1 text-xs text-white/50 hover:text-white transition-colors duration-200"
               >
-                Har du redan ett konto? <span className="text-primary font-semibold">Logga in</span>
+                Har du redan ett konto? <span className="text-[hsl(45_85%_55%)] font-semibold">Logga in</span>
               </Link>
             </div>
           </div>
           
           {/* Trust indicators */}
-          <div className="mt-4 flex items-center justify-center gap-4 text-[10px] text-muted-foreground animate-fade-in" style={{ animationDelay: '0.2s' }} aria-label="Förtroendeindikatorer">
-            <span className="flex items-center gap-1"><CheckCircle2 className="h-3 w-3 text-primary/60" aria-hidden="true" /> Säker data</span>
-            <span className="flex items-center gap-1"><Heart className="h-3 w-3 text-primary/60" aria-hidden="true" /> Gratis att börja</span>
+          <div className="mt-4 flex items-center justify-center gap-4 text-[10px] text-white/40 animate-fade-in" style={{ animationDelay: '0.2s' }} aria-label="Förtroendeindikatorer">
+            <span className="flex items-center gap-1"><CheckCircle2 className="h-3 w-3 text-[hsl(45_85%_55%/0.5)]" aria-hidden="true" /> Säker data</span>
+            <span className="flex items-center gap-1"><Heart className="h-3 w-3 text-[hsl(45_85%_55%/0.5)]" aria-hidden="true" /> Gratis att börja</span>
           </div>
         </div>
       </div>
@@ -592,7 +580,7 @@ const Signup = () => {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-    </div>
+    </DarkNightBackground>
   );
 };
 
