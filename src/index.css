@@ -62,60 +62,107 @@
 
 @layer base {
   :root {
-    /* Dark night sky palette matching landing page */
-    --background: 230 30% 7%;
-    --foreground: 0 0% 95%;
+    /* Light theme - warm, calming palette */
+    --background: 40 30% 97%;
+    --foreground: 220 20% 20%;
 
-    --card: 225 30% 10%;
-    --card-foreground: 0 0% 93%;
+    --card: 40 25% 99%;
+    --card-foreground: 220 20% 20%;
 
-    --popover: 225 30% 10%;
-    --popover-foreground: 0 0% 93%;
+    --popover: 40 25% 99%;
+    --popover-foreground: 220 20% 20%;
 
-    /* Golden yellow primary matching landing page accent */
-    --primary: 45 85% 55%;
-    --primary-foreground: 230 30% 5%;
+    --primary: 210 25% 45%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 225 25% 14%;
-    --secondary-foreground: 0 0% 90%;
+    --secondary: 40 20% 94%;
+    --secondary-foreground: 220 20% 30%;
 
-    --muted: 225 20% 15%;
-    --muted-foreground: 220 15% 60%;
+    --muted: 40 15% 92%;
+    --muted-foreground: 220 10% 50%;
 
-    --accent: 225 20% 16%;
-    --accent-foreground: 0 0% 90%;
+    --accent: 210 20% 90%;
+    --accent-foreground: 210 25% 35%;
 
     --destructive: 0 70% 55%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 225 20% 16%;
-    --input: 225 20% 16%;
-    --ring: 45 85% 55%;
+    --border: 40 20% 88%;
+    --input: 40 20% 88%;
+    --ring: 210 25% 45%;
 
     --radius: 0.75rem;
 
     /* Mood colors */
+    --mood-elevated: 38 92% 50%;
+    --mood-elevated-light: 38 92% 95%;
+    --mood-elevated-foreground: 38 92% 25%;
+
+    --mood-somewhat-elevated: 45 80% 55%;
+    --mood-somewhat-elevated-light: 45 80% 95%;
+    --mood-somewhat-elevated-foreground: 45 80% 28%;
+
+    --mood-stable: 160 84% 39%;
+    --mood-stable-light: 160 60% 94%;
+    --mood-stable-foreground: 160 84% 20%;
+
+    --mood-somewhat-depressed: 220 60% 55%;
+    --mood-somewhat-depressed-light: 220 60% 95%;
+    --mood-somewhat-depressed-foreground: 220 60% 28%;
+
+    --mood-depressed: 0 84% 60%;
+    --mood-depressed-light: 0 60% 95%;
+    --mood-depressed-foreground: 0 84% 30%;
+
+    /* Sidebar - light */
+    --sidebar-background: 40 25% 96%;
+    --sidebar-foreground: 220 20% 30%;
+    --sidebar-primary: 210 25% 45%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 40 20% 92%;
+    --sidebar-accent-foreground: 220 20% 30%;
+    --sidebar-border: 40 20% 88%;
+    --sidebar-ring: 210 25% 45%;
+  }
+
+  .dark {
+    /* Dark night sky palette matching landing page */
+    --background: 230 30% 7%;
+    --foreground: 0 0% 95%;
+    --card: 225 30% 10%;
+    --card-foreground: 0 0% 93%;
+    --popover: 225 30% 10%;
+    --popover-foreground: 0 0% 93%;
+    --primary: 45 85% 55%;
+    --primary-foreground: 230 30% 5%;
+    --secondary: 225 25% 14%;
+    --secondary-foreground: 0 0% 90%;
+    --muted: 225 20% 15%;
+    --muted-foreground: 220 15% 60%;
+    --accent: 225 20% 16%;
+    --accent-foreground: 0 0% 90%;
+    --destructive: 0 70% 55%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 225 20% 16%;
+    --input: 225 20% 16%;
+    --ring: 45 85% 55%;
+
     --mood-elevated: 38 85% 55%;
     --mood-elevated-light: 38 40% 18%;
     --mood-elevated-foreground: 38 85% 85%;
-
     --mood-somewhat-elevated: 45 75% 50%;
     --mood-somewhat-elevated-light: 45 40% 18%;
     --mood-somewhat-elevated-foreground: 45 75% 85%;
-    
     --mood-stable: 160 70% 45%;
     --mood-stable-light: 160 30% 16%;
     --mood-stable-foreground: 160 70% 85%;
-
     --mood-somewhat-depressed: 220 55% 50%;
     --mood-somewhat-depressed-light: 220 30% 18%;
     --mood-somewhat-depressed-foreground: 220 55% 85%;
-    
     --mood-depressed: 0 70% 55%;
     --mood-depressed-light: 0 30% 18%;
     --mood-depressed-foreground: 0 70% 85%;
 
-    /* Sidebar - deep navy */
     --sidebar-background: 230 30% 5%;
     --sidebar-foreground: 0 0% 90%;
     --sidebar-primary: 45 85% 55%;
@@ -123,54 +170,6 @@
     --sidebar-accent: 225 20% 14%;
     --sidebar-accent-foreground: 0 0% 90%;
     --sidebar-border: 225 20% 14%;
-    --sidebar-ring: 45 85% 55%;
-  }
-
-  /* Dark mode inherits same theme since base is already dark */
-  .dark {
-    --background: 230 30% 5%;
-    --foreground: 0 0% 95%;
-    --card: 225 30% 8%;
-    --card-foreground: 0 0% 93%;
-    --popover: 225 30% 8%;
-    --popover-foreground: 0 0% 93%;
-    --primary: 45 85% 55%;
-    --primary-foreground: 230 30% 5%;
-    --secondary: 225 25% 12%;
-    --secondary-foreground: 0 0% 90%;
-    --muted: 225 20% 13%;
-    --muted-foreground: 220 15% 58%;
-    --accent: 225 20% 14%;
-    --accent-foreground: 0 0% 90%;
-    --destructive: 0 62% 50%;
-    --destructive-foreground: 0 0% 100%;
-    --border: 225 20% 14%;
-    --input: 225 20% 14%;
-    --ring: 45 85% 55%;
-
-    --mood-elevated: 38 85% 55%;
-    --mood-elevated-light: 38 40% 18%;
-    --mood-elevated-foreground: 38 85% 85%;
-    --mood-somewhat-elevated: 45 75% 50%;
-    --mood-somewhat-elevated-light: 45 40% 18%;
-    --mood-somewhat-elevated-foreground: 45 75% 85%;
-    --mood-stable: 160 70% 45%;
-    --mood-stable-light: 160 30% 16%;
-    --mood-stable-foreground: 160 70% 85%;
-    --mood-somewhat-depressed: 220 55% 50%;
-    --mood-somewhat-depressed-light: 220 30% 18%;
-    --mood-somewhat-depressed-foreground: 220 55% 85%;
-    --mood-depressed: 0 70% 55%;
-    --mood-depressed-light: 0 30% 18%;
-    --mood-depressed-foreground: 0 70% 85%;
-
-    --sidebar-background: 230 30% 4%;
-    --sidebar-foreground: 0 0% 90%;
-    --sidebar-primary: 45 85% 55%;
-    --sidebar-primary-foreground: 230 30% 5%;
-    --sidebar-accent: 225 20% 12%;
-    --sidebar-accent-foreground: 0 0% 90%;
-    --sidebar-border: 225 20% 12%;
     --sidebar-ring: 45 85% 55%;
   }
 }
