@@ -257,13 +257,13 @@ const Auth = () => {
       <AuthNavbar />
 
       {/* Hero Section */}
-      <section className="relative z-10 flex-1 flex flex-col justify-center px-4 md:px-8">
+      <section className="relative z-10 flex-1 flex flex-col justify-end px-4 md:px-8 pb-[20%] md:pb-[12%]">
         <div className="max-w-6xl mx-auto w-full">
           {/* Text content */}
           <div className="space-y-6 animate-fade-in max-w-xl">
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold text-white leading-[1.1] tracking-tight drop-shadow-lg">
               Följ ditt mående med{" "}
-              <span className="text-[hsl(180_60%_70%)]">bättre insikt</span>
+              <span className="text-[hsl(45_85%_55%)]">bättre insikt</span>
             </h1>
             <p className="text-lg md:text-xl text-white/90 leading-relaxed drop-shadow-sm">
               Din interaktiva och personliga stämningsdagbok ger dig bättre koll på ditt mående
@@ -278,9 +278,9 @@ const Auth = () => {
           </div>
         </div>
 
-        {/* Turtle lying down near the bottom/street level */}
-        <div className="absolute bottom-[18%] md:bottom-[15%] right-[5%] md:right-[10%] z-20 animate-fade-in">
-          <TurtleLogo size="hero" animated={false} className="w-48 h-48 md:w-64 md:h-64 lg:w-80 lg:h-80" />
+        {/* Standing turtle - large */}
+        <div className="absolute bottom-[15%] md:bottom-[10%] right-[3%] md:right-[8%] z-20 animate-fade-in">
+          <TurtleLogo size="hero" animated={false} className="w-72 h-72 md:w-[28rem] md:h-[28rem] lg:w-[34rem] lg:h-[34rem]" />
         </div>
       </section>
 
