@@ -17,7 +17,7 @@ export function TurtleLogo({ size = 'md', animated = true, className }: TurtleLo
   return (
     <div className={cn("relative", sizes[size], className)}>
       <svg
-        viewBox="0 0 200 260"
+        viewBox="0 0 260 280"
         className={cn("w-full h-full", animated && "turtle-idle")}
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
@@ -39,52 +39,60 @@ export function TurtleLogo({ size = 'md', animated = true, className }: TurtleLo
             <stop offset="0%" stopColor="hsl(50 35% 65%)" />
             <stop offset="100%" stopColor="hsl(45 30% 50%)" />
           </linearGradient>
+          <linearGradient id="bookCover" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="hsl(220 55% 35%)" />
+            <stop offset="100%" stopColor="hsl(225 50% 25%)" />
+          </linearGradient>
+          <linearGradient id="bookPages" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="hsl(45 30% 90%)" />
+            <stop offset="100%" stopColor="hsl(40 25% 82%)" />
+          </linearGradient>
         </defs>
 
-        {/* === STANDING TURTLE === */}
+        {/* === STANDING TURTLE WITH BOOK & GLASSES === */}
 
-        {/* Left arm waving */}
+        {/* Left arm holding book */}
         <g className={animated ? 'turtle-wave' : ''}>
-          <ellipse cx="58" cy="145" rx="14" ry="10" fill="url(#bodyGrad)" transform="rotate(-30 58 145)" />
-          <circle cx="47" cy="137" r="5" fill="url(#bodyGrad)" />
+          <ellipse cx="68" cy="150" rx="14" ry="10" fill="url(#bodyGrad)" transform="rotate(-15 68 150)" />
+          <circle cx="57" cy="145" r="5" fill="url(#bodyGrad)" />
         </g>
 
-        {/* Right arm */}
-        <ellipse cx="142" cy="148" rx="14" ry="10" fill="url(#bodyGrad)" transform="rotate(20 142 148)" />
-        <circle cx="153" cy="143" r="5" fill="url(#bodyGrad)" />
+        {/* Right arm holding book */}
+        <ellipse cx="132" cy="150" rx="14" ry="10" fill="url(#bodyGrad)" transform="rotate(15 132 150)" />
+        <circle cx="143" cy="145" r="5" fill="url(#bodyGrad)" />
 
         {/* Left foot */}
-        <ellipse cx="80" cy="240" rx="16" ry="8" fill="url(#bodyGrad)" />
+        <ellipse cx="80" cy="250" rx="16" ry="8" fill="url(#bodyGrad)" />
         {/* Right foot */}
-        <ellipse cx="120" cy="240" rx="16" ry="8" fill="url(#bodyGrad)" />
+        <ellipse cx="120" cy="250" rx="16" ry="8" fill="url(#bodyGrad)" />
 
         {/* Left leg */}
-        <rect x="72" y="215" width="16" height="28" rx="8" fill="url(#bodyGrad)" />
+        <rect x="72" y="225" width="16" height="28" rx="8" fill="url(#bodyGrad)" />
         {/* Right leg */}
-        <rect x="112" y="215" width="16" height="28" rx="8" fill="url(#bodyGrad)" />
+        <rect x="112" y="225" width="16" height="28" rx="8" fill="url(#bodyGrad)" />
 
         {/* Shell */}
-        <ellipse cx="100" cy="155" rx="48" ry="55" fill="url(#shellGrad)" />
+        <ellipse cx="100" cy="165" rx="48" ry="55" fill="url(#shellGrad)" />
 
         {/* Shell pattern */}
-        <path d="M100 108 L118 120 L118 140 L100 152 L82 140 L82 120 Z"
+        <path d="M100 118 L118 130 L118 150 L100 162 L82 150 L82 130 Z"
           fill="url(#shellPatternGrad)" stroke="hsl(var(--primary) / 0.3)" strokeWidth="1.5" />
-        <path d="M82 120 L65 130 L65 148 L82 156 L82 140 Z"
+        <path d="M82 130 L65 140 L65 158 L82 166 L82 150 Z"
           fill="url(#shellPatternGrad)" stroke="hsl(var(--primary) / 0.3)" strokeWidth="1" />
-        <path d="M118 120 L135 130 L135 148 L118 156 L118 140 Z"
+        <path d="M118 130 L135 140 L135 158 L118 166 L118 150 Z"
           fill="url(#shellPatternGrad)" stroke="hsl(var(--primary) / 0.3)" strokeWidth="1" />
-        <path d="M100 152 L118 160 L118 178 L100 188 L82 178 L82 160 Z"
+        <path d="M100 162 L118 170 L118 188 L100 198 L82 188 L82 170 Z"
           fill="url(#shellPatternGrad)" stroke="hsl(var(--primary) / 0.3)" strokeWidth="1" />
 
         {/* Shell shine */}
-        <ellipse cx="90" cy="125" rx="12" ry="8" fill="white" opacity="0.12" transform="rotate(-20 90 125)" />
+        <ellipse cx="90" cy="135" rx="12" ry="8" fill="white" opacity="0.12" transform="rotate(-20 90 135)" />
 
         {/* Belly */}
-        <ellipse cx="100" cy="175" rx="30" ry="42" fill="url(#bellyGrad)" />
+        <ellipse cx="100" cy="185" rx="30" ry="42" fill="url(#bellyGrad)" />
 
         {/* Tail */}
         <path
-          d="M100 210 C95 218, 88 220, 85 215"
+          d="M100 220 C95 228, 88 230, 85 225"
           stroke="hsl(160 35% 28%)"
           strokeWidth="5"
           strokeLinecap="round"
@@ -92,37 +100,73 @@ export function TurtleLogo({ size = 'md', animated = true, className }: TurtleLo
           className={animated ? 'turtle-tail-wag' : ''}
         />
 
+        {/* === THICK BOOK held in front === */}
+        <g>
+          {/* Book back cover */}
+          <rect x="48" y="128" width="60" height="42" rx="3" fill="url(#bookCover)" transform="rotate(-5 78 149)" />
+          {/* Book pages (thick) */}
+          <rect x="50" y="130" width="56" height="38" rx="2" fill="url(#bookPages)" transform="rotate(-5 78 149)" />
+          {/* Page lines */}
+          <line x1="58" y1="140" x2="98" y2="138" stroke="hsl(220 15% 65%)" strokeWidth="0.8" />
+          <line x1="58" y1="146" x2="98" y2="144" stroke="hsl(220 15% 65%)" strokeWidth="0.8" />
+          <line x1="58" y1="152" x2="98" y2="150" stroke="hsl(220 15% 65%)" strokeWidth="0.8" />
+          <line x1="58" y1="158" x2="90" y2="156" stroke="hsl(220 15% 65%)" strokeWidth="0.8" />
+          {/* Book spine (thick) */}
+          <rect x="46" y="128" width="6" height="42" rx="2" fill="hsl(225 50% 22%)" transform="rotate(-5 49 149)" />
+          {/* Book front cover edge */}
+          <rect x="48" y="128" width="60" height="3" rx="1" fill="hsl(220 55% 30%)" transform="rotate(-5 78 129)" />
+          <rect x="48" y="167" width="60" height="3" rx="1" fill="hsl(220 55% 30%)" transform="rotate(-5 78 168)" />
+          {/* Book title decoration */}
+          <rect x="62" y="131" width="28" height="2" rx="1" fill="hsl(45 70% 55%)" transform="rotate(-5 76 132)" opacity="0.8" />
+        </g>
+
         {/* Head */}
         <g className={animated ? 'turtle-head-bob' : ''}>
           {/* Neck */}
-          <rect x="88" y="90" width="24" height="22" rx="12" fill="url(#bodyGrad)" />
+          <rect x="88" y="95" width="24" height="22" rx="12" fill="url(#bodyGrad)" />
           
           {/* Head shape */}
-          <ellipse cx="100" cy="65" rx="32" ry="30" fill="url(#bodyGrad)" />
+          <ellipse cx="100" cy="70" rx="32" ry="30" fill="url(#bodyGrad)" />
           
           {/* Cheek blush */}
-          <ellipse cx="75" cy="72" rx="7" ry="5" fill="hsl(0 65% 80%)" opacity="0.45" />
-          <ellipse cx="125" cy="72" rx="7" ry="5" fill="hsl(0 65% 80%)" opacity="0.45" />
+          <ellipse cx="75" cy="77" rx="7" ry="5" fill="hsl(0 65% 80%)" opacity="0.45" />
+          <ellipse cx="125" cy="77" rx="7" ry="5" fill="hsl(0 65% 80%)" opacity="0.45" />
 
-          {/* Eyes */}
+          {/* === OLD-FASHIONED ROUND GLASSES === */}
+          {/* Left lens frame */}
+          <circle cx="86" cy="63" r="15" fill="none" stroke="hsl(30 35% 30%)" strokeWidth="2.5" />
+          {/* Right lens frame */}
+          <circle cx="114" cy="63" r="15" fill="none" stroke="hsl(30 35% 30%)" strokeWidth="2.5" />
+          {/* Bridge */}
+          <path d="M101 63 Q100 58 99 63" stroke="hsl(30 35% 30%)" strokeWidth="2.5" fill="none" />
+          <line x1="97" y1="61" x2="101" y2="61" stroke="hsl(30 35% 30%)" strokeWidth="2" />
+          {/* Left temple (arm of glasses) */}
+          <path d="M71 60 Q64 58 62 62 Q60 66 58 68" stroke="hsl(30 35% 30%)" strokeWidth="2" fill="none" />
+          {/* Right temple */}
+          <path d="M129 60 Q136 58 138 62 Q140 66 142 68" stroke="hsl(30 35% 30%)" strokeWidth="2" fill="none" />
+          {/* Lens glare */}
+          <ellipse cx="80" cy="58" rx="4" ry="3" fill="white" opacity="0.15" transform="rotate(-20 80 58)" />
+          <ellipse cx="108" cy="58" rx="4" ry="3" fill="white" opacity="0.15" transform="rotate(-20 108 58)" />
+
+          {/* Eyes (behind glasses) */}
           <g className={animated ? 'turtle-blink' : ''}>
-            <ellipse cx="86" cy="58" rx="11" ry="12" fill="white" />
-            <ellipse cx="89" cy="59" rx="6" ry="7" fill="hsl(220 35% 25%)" />
-            <ellipse cx="90" cy="58" rx="3" ry="3.5" fill="hsl(220 30% 10%)" />
-            <circle cx="92" cy="55" r="2.5" fill="white" />
+            <ellipse cx="86" cy="63" rx="9" ry="10" fill="white" />
+            <ellipse cx="89" cy="64" rx="5" ry="6" fill="hsl(220 35% 25%)" />
+            <ellipse cx="90" cy="63" rx="2.5" ry="3" fill="hsl(220 30% 10%)" />
+            <circle cx="91" cy="60" r="2" fill="white" />
             
-            <ellipse cx="114" cy="58" rx="11" ry="12" fill="white" />
-            <ellipse cx="111" cy="59" rx="6" ry="7" fill="hsl(220 35% 25%)" />
-            <ellipse cx="110" cy="58" rx="3" ry="3.5" fill="hsl(220 30% 10%)" />
-            <circle cx="108" cy="55" r="2.5" fill="white" />
+            <ellipse cx="114" cy="63" rx="9" ry="10" fill="white" />
+            <ellipse cx="111" cy="64" rx="5" ry="6" fill="hsl(220 35% 25%)" />
+            <ellipse cx="110" cy="63" rx="2.5" ry="3" fill="hsl(220 30% 10%)" />
+            <circle cx="109" cy="60" r="2" fill="white" />
           </g>
 
           {/* Nose */}
-          <ellipse cx="100" cy="68" rx="3" ry="2.5" fill="hsl(160 40% 30%)" />
+          <ellipse cx="100" cy="73" rx="3" ry="2.5" fill="hsl(160 40% 30%)" />
 
-          {/* Smile */}
+          {/* Smile - content reading smile */}
           <path
-            d="M85 76 Q92 86 100 86 Q108 86 115 76"
+            d="M88 80 Q94 88 100 88 Q106 88 112 80"
             stroke="hsl(220 20% 25%)"
             strokeWidth="2.5"
             strokeLinecap="round"
@@ -131,13 +175,13 @@ export function TurtleLogo({ size = 'md', animated = true, className }: TurtleLo
 
           {/* Yellow hat */}
           <path
-            d="M68 52 Q72 28 100 22 Q128 28 132 52"
+            d="M68 55 Q72 30 100 24 Q128 30 132 55"
             fill="hsl(45 85% 55%)"
             stroke="hsl(40 80% 45%)"
             strokeWidth="1"
           />
-          <ellipse cx="100" cy="52" rx="35" ry="5" fill="hsl(40 80% 48%)" />
-          <ellipse cx="92" cy="38" rx="10" ry="4" fill="white" opacity="0.25" transform="rotate(-10 92 38)" />
+          <ellipse cx="100" cy="55" rx="35" ry="5" fill="hsl(40 80% 48%)" />
+          <ellipse cx="92" cy="40" rx="10" ry="4" fill="white" opacity="0.25" transform="rotate(-10 92 40)" />
         </g>
       </svg>
     </div>
