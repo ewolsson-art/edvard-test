@@ -209,7 +209,7 @@ export function Last30DaysOverview({
               >
                 {format(day, 'd')}
                 {!isTodayDate && !entry?.mood && (
-                  <X className="absolute top-0 right-0 h-2.5 w-2.5 text-destructive opacity-70" />
+                  <X className="absolute inset-0 m-auto h-full w-full p-1 text-destructive opacity-40" strokeWidth={2.5} />
                 )}
               </button>
             );
