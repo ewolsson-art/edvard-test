@@ -3,7 +3,7 @@ import { format, subDays, eachDayOfInterval, isToday, startOfDay } from 'date-fn
 import { sv } from 'date-fns/locale';
 import { MoodEntry, MoodType, QualityType, MOOD_ICONS } from '@/types/mood';
 import { cn } from '@/lib/utils';
-import { TrendingUp, TrendingDown, Minus, Moon, Utensils, Dumbbell, Pill, Calendar } from 'lucide-react';
+import { TrendingUp, TrendingDown, Minus, Moon, Utensils, Dumbbell, Pill, Calendar, X } from 'lucide-react';
 
 interface Last30DaysOverviewProps {
   entries: MoodEntry[];
@@ -200,7 +200,7 @@ export function Last30DaysOverview({
                 key={dateStr}
                 onClick={() => onDayClick?.(day)}
                 className={cn(
-                  "w-7 h-7 rounded-md text-xs font-medium transition-all hover:scale-110",
+                  "w-7 h-7 rounded-md text-xs font-medium transition-all hover:scale-110 relative",
                   "flex items-center justify-center",
                   entry?.mood ? getMoodColor(entry.mood) : 'bg-muted',
                   isTodayDate && "ring-2 ring-primary ring-offset-2 ring-offset-background"
@@ -208,6 +208,9 @@ export function Last30DaysOverview({
                 title={`${format(day, 'EEEE d MMMM', { locale: sv })}${entry?.mood ? ` - ${MOOD_ICONS[entry.mood]}` : ''}`}
               >
                 {format(day, 'd')}
+                {!isTodayDate && !entry?.mood && (
+                  <X className="absolute top-0 right-0 h-2.5 w-2.5 text-destructive opacity-70" />
+                )}
               </button>
             );
           })}
