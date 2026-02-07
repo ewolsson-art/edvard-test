@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
-import { format, startOfMonth, endOfMonth, startOfWeek, endOfWeek, eachDayOfInterval, isSameMonth, isToday, isSameDay } from 'date-fns';
+import { format, startOfMonth, endOfMonth, startOfWeek, endOfWeek, eachDayOfInterval, isSameMonth, isToday, isBefore, startOfDay } from 'date-fns';
 import { sv } from 'date-fns/locale';
-import { ChevronLeft, ChevronRight, Pill, MessageCircle } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Pill, MessageCircle, X } from 'lucide-react';
 import { MoodType } from '@/types/mood';
 import { cn } from '@/lib/utils';
 
@@ -76,6 +76,8 @@ export function MonthCalendar({
           const hasRelativeComment = isSameMonth(day, currentDate) && relativeCommentsData[dayOfMonth];
           const isCurrentMonth = isSameMonth(day, currentDate);
           const isTodayDate = isToday(day);
+          const isPastDay = isCurrentMonth && !isTodayDate && isBefore(day, startOfDay(new Date()));
+          const showMissed = isPastDay && !mood;
 
           return (
             <button
@@ -95,6 +97,9 @@ export function MonthCalendar({
               )}
             >
               {dayOfMonth}
+              {showMissed && (
+                <X className="absolute top-0.5 right-0.5 h-3 w-3 text-destructive opacity-70" />
+              )}
               <div className="absolute -bottom-0.5 left-1/2 -translate-x-1/2 flex gap-0.5">
                 {medCount && medCount > 0 && (
                   <Pill className="h-2.5 w-2.5 text-primary" />

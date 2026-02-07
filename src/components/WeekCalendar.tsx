@@ -1,6 +1,6 @@
-import { format, isToday } from 'date-fns';
+import { format, isToday, isBefore, startOfDay } from 'date-fns';
 import { sv } from 'date-fns/locale';
-import { ChevronLeft, ChevronRight, Pill } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Pill, X } from 'lucide-react';
 import { MoodEntry, MOOD_ICONS } from '@/types/mood';
 import { cn } from '@/lib/utils';
 
@@ -67,6 +67,8 @@ export function WeekCalendar({
           const medicationsTaken = getMedicationsTakenOnDate(dateStr);
           const isTodayDate = isToday(day);
           const hasMeds = medicationsTaken.length > 0;
+          const isPastDay = !isTodayDate && isBefore(day, startOfDay(new Date()));
+          const showMissed = isPastDay && !entry;
 
           return (
             <button
@@ -82,6 +84,9 @@ export function WeekCalendar({
               )}
             >
               {format(day, 'd')}
+              {showMissed && (
+                <X className="absolute top-0.5 right-0.5 h-3 w-3 text-destructive opacity-70" />
+              )}
               {hasMeds && (
                 <span className="absolute -bottom-0.5 left-1/2 -translate-x-1/2">
                   <Pill className="h-2.5 w-2.5 text-primary" />
