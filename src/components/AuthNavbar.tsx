@@ -38,17 +38,16 @@ export function AuthNavbar() {
     navigate('/skapa-konto');
   };
 
-  // Check current mode from URL
   const searchParams = new URLSearchParams(location.search);
   const currentMode = searchParams.get('mode');
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-[hsl(230_30%_5%/0.9)] backdrop-blur-xl border-b border-white/10">
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-[hsl(200_60%_97%/0.85)] backdrop-blur-xl border-b border-[hsl(210_20%_80%/0.4)]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <div className="flex-shrink-0 cursor-pointer" onClick={() => navigate('/auth')}>
-            <Logo size="sm" className="[&_span]:!bg-none [&_span]:!text-white" />
+            <Logo size="sm" />
           </div>
 
           {/* Desktop navigation */}
@@ -57,7 +56,7 @@ export function AuthNavbar() {
               <button
                 key={item.href}
                 onClick={() => handleNavClick(item.href)}
-                className="px-4 py-2 text-sm font-medium text-white/70 hover:text-white hover:bg-white/10 rounded-lg transition-all duration-200"
+                className="px-4 py-2 text-sm font-medium text-[hsl(220_20%_35%)] hover:text-[hsl(220_25%_18%)] hover:bg-[hsl(220_20%_90%/0.6)] rounded-lg transition-all duration-200"
               >
                 {item.label}
               </button>
@@ -69,7 +68,7 @@ export function AuthNavbar() {
             <Button 
               variant={currentMode === 'login' ? 'secondary' : 'ghost'} 
               size="sm" 
-              className="text-sm text-white/90 hover:text-white hover:bg-white/10" 
+              className="text-sm text-[hsl(220_20%_35%)] hover:text-[hsl(220_25%_18%)] hover:bg-[hsl(220_20%_90%/0.6)]" 
               onClick={handleLoginClick}
             >
               Logga in
@@ -77,8 +76,8 @@ export function AuthNavbar() {
             <Button 
               size="sm" 
               className={cn(
-                "text-sm rounded-full px-5 bg-[hsl(45_85%_55%)] text-[hsl(230_30%_5%)] hover:bg-[hsl(45_85%_65%)]",
-                currentMode === 'signup' && "ring-2 ring-[hsl(45_85%_55%)/0.5]"
+                "text-sm rounded-full px-5 bg-[hsl(45_85%_50%)] text-[hsl(230_30%_5%)] hover:bg-[hsl(45_85%_55%)]",
+                currentMode === 'signup' && "ring-2 ring-[hsl(45_85%_50%)/0.5]"
               )}
               onClick={handleSignupClick}
             >
@@ -92,7 +91,7 @@ export function AuthNavbar() {
               variant="ghost"
               size="icon"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="h-10 w-10 text-white hover:bg-white/10"
+              className="h-10 w-10 text-[hsl(220_20%_30%)] hover:bg-[hsl(220_20%_90%/0.6)]"
             >
               {isMobileMenuOpen ? (
                 <X className="h-5 w-5" />
@@ -107,7 +106,7 @@ export function AuthNavbar() {
       {/* Mobile menu */}
       <div
         className={cn(
-          "lg:hidden absolute top-16 left-0 right-0 bg-[hsl(230_30%_5%/0.95)] backdrop-blur-xl border-b border-white/10 transition-all duration-300 ease-in-out overflow-hidden",
+          "lg:hidden absolute top-16 left-0 right-0 bg-[hsl(200_60%_97%/0.95)] backdrop-blur-xl border-b border-[hsl(210_20%_80%/0.4)] transition-all duration-300 ease-in-out overflow-hidden",
           isMobileMenuOpen ? "max-h-[400px] opacity-100" : "max-h-0 opacity-0"
         )}
       >
@@ -116,16 +115,16 @@ export function AuthNavbar() {
             <button
               key={item.href}
               onClick={() => handleNavClick(item.href)}
-              className="w-full text-left px-4 py-3 text-sm font-medium text-white/70 hover:text-white hover:bg-white/10 rounded-lg transition-all duration-200"
+              className="w-full text-left px-4 py-3 text-sm font-medium text-[hsl(220_20%_35%)] hover:text-[hsl(220_25%_18%)] hover:bg-[hsl(220_20%_90%/0.5)] rounded-lg transition-all duration-200"
             >
               {item.label}
             </button>
           ))}
           <div className="pt-4 pb-2 space-y-2">
-            <Button variant="outline" className="w-full text-white border-white/20 hover:bg-white/10" onClick={handleLoginClick}>
+            <Button variant="outline" className="w-full text-[hsl(220_20%_30%)] border-[hsl(210_20%_80%)]" onClick={handleLoginClick}>
               Logga in
             </Button>
-            <Button className="w-full bg-[hsl(45_85%_55%)] text-[hsl(230_30%_5%)] hover:bg-[hsl(45_85%_65%)]" onClick={handleSignupClick}>
+            <Button className="w-full bg-[hsl(45_85%_50%)] text-[hsl(230_30%_5%)] hover:bg-[hsl(45_85%_55%)]" onClick={handleSignupClick}>
               Kom igång
             </Button>
           </div>
