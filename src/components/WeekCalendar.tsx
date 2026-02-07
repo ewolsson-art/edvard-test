@@ -85,7 +85,7 @@ export function WeekCalendar({
             >
               {format(day, 'd')}
               {showMissed && (
-                <X className="absolute top-0.5 right-0.5 h-3 w-3 text-destructive opacity-70" />
+                <X className="absolute inset-0 m-auto h-full w-full p-1.5 text-destructive opacity-40" strokeWidth={2.5} />
               )}
               {hasMeds && (
                 <span className="absolute -bottom-0.5 left-1/2 -translate-x-1/2">
