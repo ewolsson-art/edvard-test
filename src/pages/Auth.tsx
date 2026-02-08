@@ -5,6 +5,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { Loader2, HeartPulse } from "lucide-react";
 import { AuthNavbar } from "@/components/AuthNavbar";
 import { TurtleLogo } from "@/components/TurtleLogo";
+import { HowItWorksSection } from "@/components/landing/HowItWorksSection";
 import { cn } from "@/lib/utils";
 
 // Fluffy cloud SVG
@@ -68,7 +69,9 @@ const Auth = () => {
   }
 
   return (
-    <div className="min-h-screen flex flex-col relative overflow-hidden">
+    <div className="flex flex-col">
+      {/* === HERO WITH NIGHT SKY === */}
+      <div className="min-h-screen flex flex-col relative overflow-hidden">
       {/* === DARK NIGHT SKY === */}
       <div className="absolute inset-0 bg-gradient-to-b from-[hsl(230_30%_5%)] via-[hsl(225_35%_8%)] to-[hsl(220_30%_12%)]" />
 
@@ -287,22 +290,18 @@ const Auth = () => {
                 <span className="text-xs text-white/60">Tar mindre än 2 minuter</span>
               </div>
             </div>
-          </div>
-
-          {/* Turtle: stacked on mobile, absolute on desktop */}
-          <div className="flex justify-center mt-6 md:hidden animate-fade-in opacity-50">
-            <TurtleLogo size="hero" animated={false} className="w-32 h-32 sm:w-40 sm:h-40" />
-          </div>
         </div>
-
-        {/* Desktop turtle - absolute positioned like original */}
-        <div className="hidden md:block absolute bottom-[10%] right-[3%] lg:right-[8%] z-20 animate-fade-in opacity-55">
-          <TurtleLogo size="hero" animated={false} className="w-72 h-72 lg:w-80 lg:h-80" />
         </div>
       </section>
+      </div>
+
+
+
+      {/* === HOW IT WORKS === */}
+      <HowItWorksSection />
 
       {/* Footer */}
-      <footer className="relative z-10 py-3 px-4 bg-[hsl(220_35%_8%/0.8)] backdrop-blur-sm border-t border-white/10">
+      <footer className="relative z-10 py-3 px-4 bg-[hsl(220_35%_8%)] border-t border-white/10">
         <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-white/70">
           <span>© 2025 Friendly. Alla rättigheter förbehållna.</span>
           <div className="flex items-center gap-4">
