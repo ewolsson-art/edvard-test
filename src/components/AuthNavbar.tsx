@@ -82,7 +82,7 @@ export function AuthNavbar() {
               )}
               onClick={handleSignupClick}
             >
-              Kom igång
+              Utforska
             </Button>
           </div>
 
@@ -126,7 +126,7 @@ export function AuthNavbar() {
               Logga in
             </Button>
             <Button className="w-full bg-[hsl(45_85%_55%)] text-[hsl(230_30%_5%)] hover:bg-[hsl(45_85%_65%)]" onClick={handleSignupClick}>
-              Kom igång
+              Utforska
             </Button>
           </div>
         </div>

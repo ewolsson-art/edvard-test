@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
 import { Loader2, HeartPulse } from "lucide-react";
 import { AuthNavbar } from "@/components/AuthNavbar";
@@ -269,23 +270,34 @@ const Auth = () => {
               Din interaktiva och personliga stämningsdagbok ger dig bättre koll på ditt mående
               och delar valfri data med din läkare
             </p>
-            <div className="flex items-center gap-3 text-sm">
-              <div className="flex items-center gap-2 px-3 sm:px-4 py-2 rounded-full bg-white/20 backdrop-blur-sm text-white">
+            <div className="flex flex-col gap-3">
+              <div className="flex items-center gap-2 px-3 sm:px-4 py-2 rounded-full bg-white/20 backdrop-blur-sm text-white w-fit">
                 <HeartPulse className="w-4 h-4 flex-shrink-0" />
                 <span className="text-xs sm:text-sm">Skapad av och för människor med bipolär sjukdom</span>
+              </div>
+              <p className="text-xs text-white/50 italic">Ett komplement till vård – inte en ersättning</p>
+              <div className="flex items-center gap-4 pt-1">
+                <Button
+                  size="lg"
+                  className="rounded-full px-6 bg-[hsl(45_85%_55%)] text-[hsl(230_30%_5%)] hover:bg-[hsl(45_85%_65%)] font-semibold"
+                  onClick={() => navigate('/skapa-konto')}
+                >
+                  Prova i lugn takt
+                </Button>
+                <span className="text-xs text-white/60">Tar mindre än 2 minuter</span>
               </div>
             </div>
           </div>
 
           {/* Turtle: stacked on mobile, absolute on desktop */}
-          <div className="flex justify-center mt-6 md:hidden animate-fade-in">
-            <TurtleLogo size="hero" animated={false} className="w-40 h-40 sm:w-56 sm:h-56" />
+          <div className="flex justify-center mt-6 md:hidden animate-fade-in opacity-50">
+            <TurtleLogo size="hero" animated={false} className="w-32 h-32 sm:w-40 sm:h-40" />
           </div>
         </div>
 
         {/* Desktop turtle - absolute positioned like original */}
-        <div className="hidden md:block absolute bottom-[10%] right-[3%] lg:right-[8%] z-20 animate-fade-in">
-          <TurtleLogo size="hero" animated={false} className="w-96 h-96 lg:w-[29rem] lg:h-[29rem]" />
+        <div className="hidden md:block absolute bottom-[10%] right-[3%] lg:right-[8%] z-20 animate-fade-in opacity-55">
+          <TurtleLogo size="hero" animated={false} className="w-72 h-72 lg:w-80 lg:h-80" />
         </div>
       </section>
 
