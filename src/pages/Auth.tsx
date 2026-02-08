@@ -12,64 +12,61 @@ import { cn } from "@/lib/utils";
 const Cloud = ({
   className,
   delay = 0,
-  duration = 20,
+  duration = 20
 }: {
   className?: string;
   delay?: number;
   duration?: number;
-}) => (
-  <div
-    className={cn("absolute", className)}
-    style={{
-      animation: `cloud-float ${duration}s ease-in-out infinite`,
-      animationDelay: `${delay}s`,
-    }}
-  >
+}) => <div className={cn("absolute", className)} style={{
+  animation: `cloud-float ${duration}s ease-in-out infinite`,
+  animationDelay: `${delay}s`
+}}>
     <svg viewBox="0 0 120 50" className="w-full h-full">
       <ellipse cx="35" cy="35" rx="22" ry="15" fill="white" opacity="0.9" />
       <ellipse cx="55" cy="28" rx="28" ry="20" fill="white" opacity="0.95" />
       <ellipse cx="80" cy="34" rx="20" ry="14" fill="white" opacity="0.9" />
       <ellipse cx="55" cy="38" rx="26" ry="12" fill="white" opacity="0.85" />
     </svg>
-  </div>
-);
+  </div>;
 
 // Lamppost
-const Lamppost = ({ x, glowDelay = 0 }: { x: string; glowDelay?: number }) => (
-  <div className={`absolute bottom-[22%] md:bottom-[18%] ${x}`}>
+const Lamppost = ({
+  x,
+  glowDelay = 0
+}: {
+  x: string;
+  glowDelay?: number;
+}) => <div className={`absolute bottom-[22%] md:bottom-[18%] ${x}`}>
     <svg viewBox="0 0 20 80" className="w-4 h-16 md:w-5 md:h-20">
       {/* Pole */}
       <rect x="8" y="20" width="4" height="60" fill="hsl(220 15% 20%)" />
       {/* Lamp head */}
       <rect x="3" y="15" width="14" height="8" rx="2" fill="hsl(220 15% 25%)" />
       {/* Light glow */}
-      <ellipse cx="10" cy="23" rx="12" ry="15" fill="hsl(45 80% 70%)" opacity="0.15"
-        style={{ animation: `twinkle 4s ease-in-out infinite`, animationDelay: `${glowDelay}s` }} />
+      <ellipse cx="10" cy="23" rx="12" ry="15" fill="hsl(45 80% 70%)" opacity="0.15" style={{
+      animation: `twinkle 4s ease-in-out infinite`,
+      animationDelay: `${glowDelay}s`
+    }} />
       <rect x="5" y="22" width="10" height="2" fill="hsl(45 70% 65%)" opacity="0.6" />
     </svg>
-  </div>
-);
-
+  </div>;
 const Auth = () => {
-  const { user, loading } = useAuth();
+  const {
+    user,
+    loading
+  } = useAuth();
   const navigate = useNavigate();
-
   useEffect(() => {
     if (!loading && user) {
       navigate("/");
     }
   }, [user, loading, navigate]);
-
   if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
+    return <div className="min-h-screen flex items-center justify-center">
         <Loader2 className="w-8 h-8 animate-spin text-primary" />
-      </div>
-    );
+      </div>;
   }
-
-  return (
-    <div className="flex flex-col">
+  return <div className="flex flex-col">
       {/* === HERO WITH NIGHT SKY === */}
       <div className="min-h-screen flex flex-col relative overflow-hidden">
       {/* === DARK NIGHT SKY === */}
@@ -81,15 +78,10 @@ const Auth = () => {
 
       {/* Stars */}
       <div className="absolute inset-0 pointer-events-none">
-        {[
-          "top-[3%] left-[8%] w-1 h-1", "top-[10%] left-[30%] w-1.5 h-1.5",
-          "top-[5%] right-[25%] w-1 h-1", "top-[18%] left-[55%] w-1 h-1",
-          "top-[7%] left-[70%] w-0.5 h-0.5", "top-[14%] right-[35%] w-1 h-1",
-          "top-[2%] left-[50%] w-0.5 h-0.5", "top-[12%] left-[15%] w-1 h-1",
-          "top-[20%] right-[15%] w-0.5 h-0.5", "top-[9%] right-[50%] w-1 h-1",
-        ].map((pos, i) => (
-          <div key={i} className={`absolute rounded-full bg-white/50 ${pos}`} style={{ animation: `twinkle 3s ease-in-out infinite`, animationDelay: `${i * 0.4}s` }} />
-        ))}
+        {["top-[3%] left-[8%] w-1 h-1", "top-[10%] left-[30%] w-1.5 h-1.5", "top-[5%] right-[25%] w-1 h-1", "top-[18%] left-[55%] w-1 h-1", "top-[7%] left-[70%] w-0.5 h-0.5", "top-[14%] right-[35%] w-1 h-1", "top-[2%] left-[50%] w-0.5 h-0.5", "top-[12%] left-[15%] w-1 h-1", "top-[20%] right-[15%] w-0.5 h-0.5", "top-[9%] right-[50%] w-1 h-1"].map((pos, i) => <div key={i} className={`absolute rounded-full bg-white/50 ${pos}`} style={{
+          animation: `twinkle 3s ease-in-out infinite`,
+          animationDelay: `${i * 0.4}s`
+        }} />)}
       </div>
 
       {/* === CITY SKYLINE === */}
@@ -121,36 +113,22 @@ const Auth = () => {
           
           {/* Antennas & water towers */}
           <rect x="310" y="35" width="5" height="25" fill="hsl(225 18% 12%)" />
-          <circle cx="312" cy="35" r="3" fill="hsl(0 60% 45%)" opacity="0.7" style={{ animation: `twinkle 2s ease-in-out infinite` }} />
+          <circle cx="312" cy="35" r="3" fill="hsl(0 60% 45%)" opacity="0.7" style={{
+            animation: `twinkle 2s ease-in-out infinite`
+          }} />
           <rect x="880" y="0" width="6" height="50" fill="hsl(225 20% 10%)" />
-          <circle cx="883" cy="0" r="3" fill="hsl(0 60% 45%)" opacity="0.7" style={{ animation: `twinkle 2s ease-in-out infinite`, animationDelay: '1s' }} />
+          <circle cx="883" cy="0" r="3" fill="hsl(0 60% 45%)" opacity="0.7" style={{
+            animation: `twinkle 2s ease-in-out infinite`,
+            animationDelay: '1s'
+          }} />
           <rect x="500" y="70" width="15" height="20" rx="2" fill="hsl(225 18% 10%)" />
           <ellipse cx="507" cy="70" rx="9" ry="6" fill="hsl(225 15% 11%)" />
 
           {/* === BUILDING WINDOWS === */}
-          {[
-            [45,140],[55,165],[45,190],[55,215],[45,240],[55,265],[45,300],[55,330],
-            [120,100],[132,125],[120,150],[132,175],[120,200],[132,230],
-            [200,160],[220,185],[240,160],[200,210],[220,235],[240,210],[200,260],[220,285],
-            [295,80],[310,105],[295,130],[310,155],[295,180],[310,210],[295,240],
-            [380,150],[400,175],[415,150],[380,200],[400,225],[415,200],[380,260],
-            [480,110],[500,135],[520,110],[480,160],[500,185],[520,160],[480,215],[500,240],[520,215],
-            [590,170],[605,195],[590,220],[605,250],
-            [660,90],[680,115],[700,90],[660,140],[680,165],[700,140],[660,195],[680,220],
-            [760,130],[775,155],[760,180],[775,210],[760,240],
-            [850,70],[870,95],[895,70],[910,95],[850,125],[870,150],[895,125],[910,150],[850,180],[870,210],
-            [970,120],[985,145],[970,175],[985,205],[970,235],
-            [1060,160],[1075,185],[1060,215],[1075,245],
-            [1140,95],[1160,120],[1180,95],[1140,150],[1160,175],[1180,150],[1140,210],[1160,235],
-            [1245,150],[1260,175],[1245,200],[1260,230],[1245,260],
-            [1330,110],[1350,135],[1370,110],[1330,165],[1350,190],[1370,165],[1330,220],
-          ].map(([wx, wy], i) => (
-            <rect key={`w${i}`} x={wx} y={wy} width="6" height="7" rx="1"
-              fill={i % 5 === 0 ? "hsl(45 75% 65%)" : i % 5 === 1 ? "hsl(35 55% 50%)" : i % 5 === 2 ? "hsl(200 35% 35%)" : i % 5 === 3 ? "hsl(45 60% 55%)" : "hsl(210 25% 30%)"}
-              opacity={i % 3 === 0 ? 0.8 : i % 3 === 1 ? 0.5 : 0.3}
-              style={i % 7 === 0 ? { animation: `twinkle 4s ease-in-out infinite`, animationDelay: `${i * 0.2}s` } : undefined}
-            />
-          ))}
+          {[[45, 140], [55, 165], [45, 190], [55, 215], [45, 240], [55, 265], [45, 300], [55, 330], [120, 100], [132, 125], [120, 150], [132, 175], [120, 200], [132, 230], [200, 160], [220, 185], [240, 160], [200, 210], [220, 235], [240, 210], [200, 260], [220, 285], [295, 80], [310, 105], [295, 130], [310, 155], [295, 180], [310, 210], [295, 240], [380, 150], [400, 175], [415, 150], [380, 200], [400, 225], [415, 200], [380, 260], [480, 110], [500, 135], [520, 110], [480, 160], [500, 185], [520, 160], [480, 215], [500, 240], [520, 215], [590, 170], [605, 195], [590, 220], [605, 250], [660, 90], [680, 115], [700, 90], [660, 140], [680, 165], [700, 140], [660, 195], [680, 220], [760, 130], [775, 155], [760, 180], [775, 210], [760, 240], [850, 70], [870, 95], [895, 70], [910, 95], [850, 125], [870, 150], [895, 125], [910, 150], [850, 180], [870, 210], [970, 120], [985, 145], [970, 175], [985, 205], [970, 235], [1060, 160], [1075, 185], [1060, 215], [1075, 245], [1140, 95], [1160, 120], [1180, 95], [1140, 150], [1160, 175], [1180, 150], [1140, 210], [1160, 235], [1245, 150], [1260, 175], [1245, 200], [1260, 230], [1245, 260], [1330, 110], [1350, 135], [1370, 110], [1330, 165], [1350, 190], [1370, 165], [1330, 220]].map(([wx, wy], i) => <rect key={`w${i}`} x={wx} y={wy} width="6" height="7" rx="1" fill={i % 5 === 0 ? "hsl(45 75% 65%)" : i % 5 === 1 ? "hsl(35 55% 50%)" : i % 5 === 2 ? "hsl(200 35% 35%)" : i % 5 === 3 ? "hsl(45 60% 55%)" : "hsl(210 25% 30%)"} opacity={i % 3 === 0 ? 0.8 : i % 3 === 1 ? 0.5 : 0.3} style={i % 7 === 0 ? {
+            animation: `twinkle 4s ease-in-out infinite`,
+            animationDelay: `${i * 0.2}s`
+          } : undefined} />)}
 
           {/* === FRONT ROW - smaller houses with peaked roofs === */}
           <rect x="0" y="400" width="100" height="200" fill="hsl(225 20% 12%)" />
@@ -163,16 +141,7 @@ const Auth = () => {
           <polygon points="1050,405 1088,370 1125,405" fill="hsl(230 20% 15%)" />
 
           {/* Front house windows */}
-          {[
-            [20,420],[50,420],[20,455],[50,455],
-            [370,425],[400,425],[370,455],[400,455],
-            [720,415],[750,415],[720,445],[750,445],
-            [1068,420],[1095,420],[1068,452],[1095,452],
-          ].map(([wx, wy], i) => (
-            <rect key={`fw${i}`} x={wx} y={wy} width="8" height="10" rx="1"
-              fill="hsl(45 70% 60%)" opacity={0.6 + (i % 3) * 0.1}
-            />
-          ))}
+          {[[20, 420], [50, 420], [20, 455], [50, 455], [370, 425], [400, 425], [370, 455], [400, 455], [720, 415], [750, 415], [720, 445], [750, 445], [1068, 420], [1095, 420], [1068, 452], [1095, 452]].map(([wx, wy], i) => <rect key={`fw${i}`} x={wx} y={wy} width="8" height="10" rx="1" fill="hsl(45 70% 60%)" opacity={0.6 + i % 3 * 0.1} />)}
 
           {/* Front house doors */}
           <rect x="38" y="470" width="16" height="24" rx="3" fill="hsl(25 40% 20%)" />
@@ -186,46 +155,28 @@ const Auth = () => {
           {/* Road */}
           <rect x="0" y="542" width="1440" height="58" fill="hsl(220 15% 10%)" />
           {/* Road center line */}
-          {[40, 160, 280, 400, 520, 640, 760, 880, 1000, 1120, 1240, 1360].map((rx, i) => (
-            <rect key={`r${i}`} x={rx} y="568" width="50" height="4" rx="2" fill="hsl(45 25% 40%)" opacity="0.35" />
-          ))}
+          {[40, 160, 280, 400, 520, 640, 760, 880, 1000, 1120, 1240, 1360].map((rx, i) => <rect key={`r${i}`} x={rx} y="568" width="50" height="4" rx="2" fill="hsl(45 25% 40%)" opacity="0.35" />)}
           {/* Curb */}
           <rect x="0" y="528" width="1440" height="3" fill="hsl(220 8% 25%)" />
 
           {/* === TREES (various sizes, lush) === */}
-          {[
-            [60, 510, 22, 28], [150, 505, 28, 35], [280, 512, 20, 25], [430, 508, 25, 30],
-            [530, 515, 18, 22], [660, 505, 30, 38], [800, 510, 24, 30], [920, 512, 20, 26],
-            [1000, 507, 26, 32], [1150, 510, 22, 28], [1280, 505, 28, 35], [1400, 512, 20, 25],
-          ].map(([tx, ty, rx, ry], i) => (
-            <g key={`t${i}`}>
+          {[[60, 510, 22, 28], [150, 505, 28, 35], [280, 512, 20, 25], [430, 508, 25, 30], [530, 515, 18, 22], [660, 505, 30, 38], [800, 510, 24, 30], [920, 512, 20, 26], [1000, 507, 26, 32], [1150, 510, 22, 28], [1280, 505, 28, 35], [1400, 512, 20, 25]].map(([tx, ty, rx, ry], i) => <g key={`t${i}`}>
               <rect x={tx - 3} y={ty} width="6" height={530 - ty} fill="hsl(25 20% 12%)" />
               {/* Main canopy */}
               <ellipse cx={tx} cy={ty - 5} rx={rx} ry={ry} fill={i % 3 === 0 ? "hsl(140 30% 12%)" : i % 3 === 1 ? "hsl(150 25% 10%)" : "hsl(135 28% 11%)"} />
               {/* Highlight layer */}
               <ellipse cx={tx - 4} cy={ty - 10} rx={rx * 0.7} ry={ry * 0.6} fill={i % 2 === 0 ? "hsl(140 35% 15%)" : "hsl(150 30% 13%)"} />
-            </g>
-          ))}
+            </g>)}
 
           {/* === BUSHES (low, round, scattered) === */}
-          {[
-            [25, 528, 18, 10], [110, 526, 22, 12], [200, 528, 16, 9], [320, 526, 20, 11],
-            [470, 528, 15, 8], [580, 526, 24, 13], [730, 528, 18, 10], [850, 526, 20, 11],
-            [960, 528, 16, 9], [1100, 526, 22, 12], [1220, 528, 18, 10], [1350, 526, 20, 11],
-          ].map(([bx, by, rx, ry], i) => (
-            <ellipse key={`b${i}`} cx={bx} cy={by} rx={rx} ry={ry}
-              fill={i % 3 === 0 ? "hsl(145 28% 13%)" : i % 3 === 1 ? "hsl(135 25% 11%)" : "hsl(155 30% 12%)"}
-            />
-          ))}
+          {[[25, 528, 18, 10], [110, 526, 22, 12], [200, 528, 16, 9], [320, 526, 20, 11], [470, 528, 15, 8], [580, 526, 24, 13], [730, 528, 18, 10], [850, 526, 20, 11], [960, 528, 16, 9], [1100, 526, 22, 12], [1220, 528, 18, 10], [1350, 526, 20, 11]].map(([bx, by, rx, ry], i) => <ellipse key={`b${i}`} cx={bx} cy={by} rx={rx} ry={ry} fill={i % 3 === 0 ? "hsl(145 28% 13%)" : i % 3 === 1 ? "hsl(135 25% 11%)" : "hsl(155 30% 12%)"} />)}
 
           {/* === IVY / climbing plants on buildings === */}
-          {[110, 465, 835, 1230].map((ix, i) => (
-            <g key={`ivy${i}`}>
+          {[110, 465, 835, 1230].map((ix, i) => <g key={`ivy${i}`}>
               <ellipse cx={ix + 5} cy={280 + i * 15} rx="12" ry="18" fill="hsl(140 30% 12%)" opacity="0.6" />
               <ellipse cx={ix - 3} cy={310 + i * 10} rx="10" ry="15" fill="hsl(150 25% 10%)" opacity="0.5" />
               <ellipse cx={ix + 8} cy={340 + i * 8} rx="14" ry="20" fill="hsl(145 28% 11%)" opacity="0.55" />
-            </g>
-          ))}
+            </g>)}
 
           {/* Park bench silhouettes */}
           <rect x="240" y="520" width="30" height="3" rx="1" fill="hsl(25 20% 15%)" />
@@ -241,13 +192,11 @@ const Auth = () => {
           <rect x="1207" y="515" width="3" height="8" fill="hsl(25 18% 12%)" />
 
           {/* Flower boxes on front houses */}
-          {[15, 45, 365, 395, 715, 745, 1063, 1090].map((fx, i) => (
-            <g key={`fb${i}`}>
-              <rect x={fx} y={435 + (i % 4) * 2} width="12" height="4" rx="1" fill="hsl(25 30% 18%)" />
-              <circle cx={fx + 3} cy={433 + (i % 4) * 2} r="2.5" fill={i % 3 === 0 ? "hsl(340 50% 35%)" : i % 3 === 1 ? "hsl(50 50% 40%)" : "hsl(280 40% 35%)"} opacity="0.6" />
-              <circle cx={fx + 9} cy={433 + (i % 4) * 2} r="2" fill={i % 2 === 0 ? "hsl(350 45% 38%)" : "hsl(45 55% 42%)"} opacity="0.5" />
-            </g>
-          ))}
+          {[15, 45, 365, 395, 715, 745, 1063, 1090].map((fx, i) => <g key={`fb${i}`}>
+              <rect x={fx} y={435 + i % 4 * 2} width="12" height="4" rx="1" fill="hsl(25 30% 18%)" />
+              <circle cx={fx + 3} cy={433 + i % 4 * 2} r="2.5" fill={i % 3 === 0 ? "hsl(340 50% 35%)" : i % 3 === 1 ? "hsl(50 50% 40%)" : "hsl(280 40% 35%)"} opacity="0.6" />
+              <circle cx={fx + 9} cy={433 + i % 4 * 2} r="2" fill={i % 2 === 0 ? "hsl(350 45% 38%)" : "hsl(45 55% 42%)"} opacity="0.5" />
+            </g>)}
         </svg>
       </div>
 
@@ -278,16 +227,13 @@ const Auth = () => {
                 <HeartPulse className="w-4 h-4 flex-shrink-0" />
                 <span className="text-xs sm:text-sm">Skapad av och för människor med bipolär sjukdom</span>
               </div>
-              <p className="text-xs text-white/50 italic">Ett komplement till vård – inte en ersättning</p>
+              
               <div className="flex items-center gap-4 pt-1">
-                <Button
-                  size="lg"
-                  className="rounded-full px-6 bg-[hsl(45_85%_55%)] text-[hsl(230_30%_5%)] hover:bg-[hsl(45_85%_65%)] font-semibold"
-                  onClick={() => navigate('/skapa-konto')}
-                >
+                <Button size="lg" className="rounded-full px-6 bg-[hsl(45_85%_55%)] text-[hsl(230_30%_5%)] hover:bg-[hsl(45_85%_65%)] font-semibold" onClick={() => navigate('/skapa-konto')}>
                   Prova i lugn takt
                 </Button>
-                <span className="text-xs text-white/60">Tar mindre än 2 minuter</span>
+                <span className="text-xs text-white/60">
+                </span>
               </div>
             </div>
         </div>
@@ -314,8 +260,6 @@ const Auth = () => {
           </div>
         </div>
       </footer>
-    </div>
-  );
+    </div>;
 };
-
 export default Auth;
