@@ -276,7 +276,7 @@ const Onboarding = () => {
       </header>
 
       {/* Main content */}
-      <main className="flex-1 flex items-center justify-center p-3 overflow-y-auto">
+      <main className="flex-1 flex flex-col items-center p-3 pt-4 overflow-y-auto">
         <div className="w-full max-w-lg">
           {/* Step 1: Welcome */}
           {step === 1 && (
@@ -499,7 +499,7 @@ const Onboarding = () => {
                 </p>
               </div>
 
-              <div className="glass-card p-4 mb-4 max-h-[50vh] overflow-y-auto">
+              <div className="glass-card p-4 mb-4">
                 <CharacteristicsStep 
                   characteristics={characteristics}
                   onCharacteristicsChange={setCharacteristics}
@@ -605,7 +605,7 @@ const Onboarding = () => {
                 </p>
               </div>
 
-              <div className="space-y-3 mb-4 max-h-[45vh] overflow-y-auto">
+              <div className="space-y-3 mb-4">
                 {/* Checkin categories */}
                 <div className="glass-card p-3">
                   <h2 className="font-semibold text-xs mb-2 text-muted-foreground uppercase tracking-wide">Din incheckning</h2>
