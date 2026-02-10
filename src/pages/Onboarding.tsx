@@ -464,7 +464,7 @@ const Onboarding = () => {
                 </p>
               </div>
 
-              <div className="glass-card p-4 mb-4">
+              <div className="glass-card p-4 mb-4 max-h-[50vh] overflow-y-auto">
                 <MedicationStep 
                   selectedMedications={selectedMedications}
                   onMedicationsChange={setSelectedMedications}
