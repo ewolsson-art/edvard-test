@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useRef, useCallback } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { format, startOfWeek, endOfWeek, addWeeks, subWeeks, eachDayOfInterval, addMonths, subMonths, startOfMonth, endOfMonth, isBefore, startOfDay, isToday } from 'date-fns';
 import { sv } from 'date-fns/locale';
@@ -412,21 +412,31 @@ const Overview = () => {
       .map(log => log.date);
   }, [logs, currentYear]);
 
-  const handleDayClick = (date: Date) => {
-    setSelectedDate(date);
-    setDialogOpen(true);
-  };
+  const clickTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const handleDayDoubleClick = (date: Date) => {
+  const handleDayClick = useCallback((date: Date) => {
+    // Delay single-click to allow double-click to cancel it
+    if (clickTimeout.current) clearTimeout(clickTimeout.current);
+    clickTimeout.current = setTimeout(() => {
+      setSelectedDate(date);
+      setDialogOpen(true);
+    }, 250);
+  }, []);
+
+  const handleDayDoubleClick = useCallback((date: Date) => {
+    // Cancel the pending single-click
+    if (clickTimeout.current) {
+      clearTimeout(clickTimeout.current);
+      clickTimeout.current = null;
+    }
     const dateStr = format(date, 'yyyy-MM-dd');
     const entry = getEntryForDate(dateStr);
     const isPast = isBefore(date, startOfDay(new Date()));
     const isTodayDate = isToday(date);
-    // Navigate to check-in for missed days or today
     if (!entry && (isPast || isTodayDate)) {
       navigate(`/?date=${dateStr}`);
     }
-  };
+  }, [getEntryForDate, navigate]);
 
   const handleExerciseDayClick = (date: Date) => {
     const entry = getEntryForDate(format(date, 'yyyy-MM-dd'));
