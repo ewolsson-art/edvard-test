@@ -1,4 +1,4 @@
-import { useState, useMemo, useRef, useCallback } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { format, startOfWeek, endOfWeek, addWeeks, subWeeks, eachDayOfInterval, addMonths, subMonths, startOfMonth, endOfMonth, isBefore, startOfDay, isToday } from 'date-fns';
 import { sv } from 'date-fns/locale';
@@ -412,30 +412,19 @@ const Overview = () => {
       .map(log => log.date);
   }, [logs, currentYear]);
 
-  const clickTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
-
   const handleDayClick = useCallback((date: Date) => {
-    // Delay single-click to allow double-click to cancel it
-    if (clickTimeout.current) clearTimeout(clickTimeout.current);
-    clickTimeout.current = setTimeout(() => {
-      setSelectedDate(date);
-      setDialogOpen(true);
-    }, 250);
-  }, []);
-
-  const handleDayDoubleClick = useCallback((date: Date) => {
-    // Cancel the pending single-click
-    if (clickTimeout.current) {
-      clearTimeout(clickTimeout.current);
-      clickTimeout.current = null;
-    }
     const dateStr = format(date, 'yyyy-MM-dd');
     const entry = getEntryForDate(dateStr);
     const isPast = isBefore(date, startOfDay(new Date()));
     const isTodayDate = isToday(date);
+    // Missed day → navigate to retroactive check-in
     if (!entry && (isPast || isTodayDate)) {
       navigate(`/?date=${dateStr}`);
+      return;
     }
+    // Otherwise open detail dialog
+    setSelectedDate(date);
+    setDialogOpen(true);
   }, [getEntryForDate, navigate]);
 
   const handleExerciseDayClick = (date: Date) => {
@@ -557,7 +546,6 @@ const Overview = () => {
             activeMedicationsCount={activeMedications.length}
             preferences={preferences}
             onDayClick={handleDayClick}
-            onDayDoubleClick={handleDayDoubleClick}
           />
         )}
 
@@ -576,7 +564,6 @@ const Overview = () => {
                   onPrevWeek={() => setCurrentWeek(prev => subWeeks(prev, 1))}
                   onNextWeek={() => setCurrentWeek(prev => addWeeks(prev, 1))}
                   onDayClick={handleDayClick}
-                  onDayDoubleClick={handleDayDoubleClick}
                 />
               )}
 
@@ -588,7 +575,7 @@ const Overview = () => {
                   onPrevMonth={() => setCurrentMonth(prev => subMonths(prev, 1))}
                   onNextMonth={() => setCurrentMonth(prev => addMonths(prev, 1))}
                   onDayClick={handleDayClick}
-                  onDayDoubleClick={handleDayDoubleClick}
+                  
                 />
               )}
 
