@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
-import { format } from 'date-fns';
+import { format, startOfDay, isToday } from 'date-fns';
+import { sv } from 'date-fns/locale';
+import { CalendarIcon, ChevronLeft } from 'lucide-react';
 import { TodayCheckin } from '@/components/TodayCheckin';
 import { useMoodData } from '@/hooks/useMoodData';
 import { useMedications } from '@/hooks/useMedications';
@@ -9,6 +11,10 @@ import { useStreak } from '@/hooks/useStreak';
 import { useCustomCheckinQuestions } from '@/hooks/useCustomCheckinQuestions';
 import { StreakBadge } from '@/components/StreakBadge';
 import { CheckinData } from '@/types/mood';
+import { Button } from '@/components/ui/button';
+import { Calendar } from '@/components/ui/calendar';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { cn } from '@/lib/utils';
 
 const Index = () => {
   const {
@@ -32,35 +38,38 @@ const Index = () => {
   const streakData = useStreak(entries);
 
   const [customAnswers, setCustomAnswers] = useState<Record<string, string>>({});
+  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
 
+  const selectedDateStr = format(selectedDate, 'yyyy-MM-dd');
   const todayStr = format(new Date(), 'yyyy-MM-dd');
+  const isSelectedToday = isToday(selectedDate);
 
   // Load custom answers for today
   useEffect(() => {
     if (customQLoaded && customQuestions.length > 0) {
-      getAnswersForDate(todayStr).then(answers => {
+      getAnswersForDate(selectedDateStr).then(answers => {
         const map: Record<string, string> = {};
         answers.forEach(a => { map[a.question_id] = a.answer_value; });
         setCustomAnswers(map);
       });
     }
-  }, [customQLoaded, customQuestions.length, todayStr, getAnswersForDate]);
+  }, [customQLoaded, customQuestions.length, selectedDateStr, getAnswersForDate]);
 
-  const todayEntry = getEntryForDate(todayStr);
+  const selectedEntry = getEntryForDate(selectedDateStr);
   const currentYear = new Date().getFullYear();
   const yearEntries = getEntriesForYear(currentYear);
 
-  const medicationsTakenToday = activeMedications
-    .filter(med => isMedicationTakenOnDate(med.id, todayStr))
+  const medicationsTakenForDate = activeMedications
+    .filter(med => isMedicationTakenOnDate(med.id, selectedDateStr))
     .map(med => med.id);
 
   const handleSaveCheckin = async (data: CheckinData): Promise<boolean> => {
-    const result = await saveCheckin(todayStr, data);
+    const result = await saveCheckin(selectedDateStr, data);
     return result ?? false;
   };
 
   const handleToggleMedication = (medicationId: string, taken: boolean) => {
-    logMedication(medicationId, todayStr, taken);
+    logMedication(medicationId, selectedDateStr, taken);
   };
 
   if (!isLoaded || !medsLoaded || profileLoading || prefsLoading || !customQLoaded) {
@@ -74,6 +83,16 @@ const Index = () => {
   return (
     <div className="min-h-screen flex items-center justify-center py-8 px-4">
       <div className="w-full max-w-2xl relative">
+        {/* Date picker for retroactive check-in */}
+        {!isSelectedToday && (
+          <div className="mb-4 flex items-center justify-center">
+            <Button variant="ghost" size="sm" onClick={() => setSelectedDate(new Date())} className="gap-1 text-muted-foreground">
+              <ChevronLeft className="w-4 h-4" />
+              Tillbaka till idag
+            </Button>
+          </div>
+        )}
+
         {/* Subtle streak badge in top right */}
         {streakData.currentStreak > 0 && (
           <div className="absolute -top-2 right-0 z-10">
@@ -86,9 +105,9 @@ const Index = () => {
           </div>
         )}
         <TodayCheckin 
-          todayEntry={todayEntry} 
+          todayEntry={selectedEntry} 
           activeMedications={activeMedications}
-          medicationsTakenToday={medicationsTakenToday}
+          medicationsTakenToday={medicationsTakenForDate}
           yearEntries={yearEntries}
           firstName={firstName}
           onSaveCheckin={handleSaveCheckin}
@@ -97,7 +116,9 @@ const Index = () => {
           streakData={streakData}
           customQuestions={customQuestions}
           customAnswers={customAnswers}
-          onSaveCustomAnswers={async (answers) => saveAnswers(todayStr, answers)}
+          onSaveCustomAnswers={async (answers) => saveAnswers(selectedDateStr, answers)}
+          selectedDate={selectedDate}
+          onSelectDate={(date) => setSelectedDate(date)}
         />
       </div>
     </div>

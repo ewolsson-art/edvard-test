@@ -1,7 +1,9 @@
 import { useState, useEffect, useMemo } from 'react';
-import { format, differenceInDays, parseISO } from 'date-fns';
+import { format, differenceInDays, parseISO, isToday } from 'date-fns';
 import { sv } from 'date-fns/locale';
-import { Zap, Sun, CloudRain, MessageSquare, CheckCircle2, Pill, Pencil, Moon, Utensils, Dumbbell, ThumbsUp, ThumbsDown, Check, X, ChevronRight, ChevronLeft, Heart, AlertTriangle, HelpCircle } from 'lucide-react';
+import { Zap, Sun, CloudRain, MessageSquare, CheckCircle2, Pill, Pencil, Moon, Utensils, Dumbbell, ThumbsUp, ThumbsDown, Check, X, ChevronRight, ChevronLeft, Heart, AlertTriangle, HelpCircle, CalendarIcon } from 'lucide-react';
+import { Calendar } from '@/components/ui/calendar';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { MoodType, MoodEntry, MOOD_LABELS, QualityType, QUALITY_LABELS, CheckinData } from '@/types/mood';
 import { Medication } from '@/types/medication';
 import { UserPreferences } from '@/hooks/useUserPreferences';
@@ -34,6 +36,8 @@ interface TodayCheckinProps {
   customQuestions?: CustomQuestion[];
   customAnswers?: Record<string, string>;
   onSaveCustomAnswers?: (answers: Record<string, string>) => Promise<boolean>;
+  selectedDate?: Date;
+  onSelectDate?: (date: Date) => void;
 }
 
 const moodButtons: { mood: MoodType; icon: typeof Zap; label: string; cssClass: string }[] = [
@@ -60,9 +64,12 @@ export function TodayCheckin({
   customQuestions = [],
   customAnswers: initialCustomAnswers = {},
   onSaveCustomAnswers,
+  selectedDate: selectedDateProp,
+  onSelectDate,
 }: TodayCheckinProps) {
-  const today = new Date();
-  const formattedDate = format(today, "EEEE d MMMM", { locale: sv });
+  const displayDate = selectedDateProp || new Date();
+  const isDisplayToday = isToday(displayDate);
+  const formattedDate = format(displayDate, "EEEE d MMMM", { locale: sv });
 
   // Build dynamic steps based on preferences
   const STEPS = useMemo(() => {
@@ -89,11 +96,11 @@ export function TodayCheckin({
     
     const lastGoodDay = sortedGoodDays[0];
     const daysSinceGood = lastGoodDay 
-      ? differenceInDays(today, lastGoodDay.dateObj)
+      ? differenceInDays(displayDate, lastGoodDay.dateObj)
       : null;
     
     return { goodDaysCount, daysSinceGood };
-  }, [yearEntries, today]);
+  }, [yearEntries, displayDate]);
   
   const [currentStep, setCurrentStep] = useState<Step>('mood');
   const [isEditing, setIsEditing] = useState(false);
@@ -102,6 +109,13 @@ export function TodayCheckin({
   // Form data
   const [checkinData, setCheckinData] = useState<CheckinData>({});
   const [customAnswersState, setCustomAnswersState] = useState<Record<string, string>>(initialCustomAnswers);
+
+  // Reset state when date changes
+  useEffect(() => {
+    setCurrentStep('mood');
+    setIsEditing(false);
+    setShowComment(null);
+  }, [displayDate.toDateString()]);
 
   // Load existing entry data
   useEffect(() => {
@@ -116,8 +130,10 @@ export function TodayCheckin({
         exercised: todayEntry.exercised,
         exerciseComment: todayEntry.exerciseComment,
       });
+    } else {
+      setCheckinData({});
     }
-  }, [todayEntry]);
+  }, [todayEntry, displayDate.toDateString()]);
 
   // Check if checkin is complete based on active preferences
   const isCheckinComplete = useMemo(() => {
@@ -249,6 +265,9 @@ export function TodayCheckin({
       <div className="glass-card p-8 md:p-12 fade-in">
         <div className="text-center mb-8">
           <p className="text-muted-foreground text-lg capitalize">{formattedDate}</p>
+          {!isDisplayToday && (
+            <p className="text-xs text-primary mt-1">Retroaktiv incheckning</p>
+          )}
         </div>
 
         <div className="text-center fade-in">
@@ -341,6 +360,29 @@ export function TodayCheckin({
     <div className="glass-card p-8 md:p-12 fade-in">
       <div className="text-center mb-4">
         <p className="text-muted-foreground text-lg capitalize">{formattedDate}</p>
+        {!isDisplayToday && (
+          <p className="text-xs text-primary mt-1">Retroaktiv incheckning</p>
+        )}
+        {isDisplayToday && onSelectDate && (
+          <Popover>
+            <PopoverTrigger asChild>
+              <button className="mt-2 inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors">
+                <CalendarIcon className="w-3.5 h-3.5" />
+                Checka in för annat datum
+              </button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0" align="center">
+              <Calendar
+                mode="single"
+                selected={displayDate}
+                onSelect={(date) => date && onSelectDate(date)}
+                disabled={(date) => date > new Date()}
+                initialFocus
+                className="p-3 pointer-events-auto"
+              />
+            </PopoverContent>
+          </Popover>
+        )}
       </div>
 
       {/* Progress bar - hide during success animation */}
@@ -364,7 +406,10 @@ export function TodayCheckin({
           )}
           <div className="text-center mb-6">
             <h1 className="font-display text-2xl md:text-3xl font-bold mb-2">
-              {firstName ? `Hej ${firstName}! Hur har du mått idag?` : 'Hej! Hur har du mått idag?'}
+              {isDisplayToday 
+                ? (firstName ? `Hej ${firstName}! Hur har du mått idag?` : 'Hej! Hur har du mått idag?')
+                : (firstName ? `Hej ${firstName}! Hur mådde du den här dagen?` : 'Hur mådde du den här dagen?')
+              }
             </h1>
           </div>
 
