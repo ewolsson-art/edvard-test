@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { format, startOfDay, isToday } from 'date-fns';
+import { format, startOfDay, isToday, parseISO } from 'date-fns';
+import { useSearchParams } from 'react-router-dom';
 import { sv } from 'date-fns/locale';
 import { CalendarIcon, ChevronLeft } from 'lucide-react';
 import { TodayCheckin } from '@/components/TodayCheckin';
@@ -17,6 +18,9 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { cn } from '@/lib/utils';
 
 const Index = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const dateParam = searchParams.get('date');
+
   const {
     entries,
     isLoaded,
@@ -38,7 +42,12 @@ const Index = () => {
   const streakData = useStreak(entries);
 
   const [customAnswers, setCustomAnswers] = useState<Record<string, string>>({});
-  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
+  const [selectedDate, setSelectedDate] = useState<Date>(() => {
+    if (dateParam) {
+      try { return parseISO(dateParam); } catch { return new Date(); }
+    }
+    return new Date();
+  });
 
   const selectedDateStr = format(selectedDate, 'yyyy-MM-dd');
   const todayStr = format(new Date(), 'yyyy-MM-dd');
@@ -86,7 +95,7 @@ const Index = () => {
         {/* Date picker for retroactive check-in */}
         {!isSelectedToday && (
           <div className="mb-4 flex items-center justify-center">
-            <Button variant="ghost" size="sm" onClick={() => setSelectedDate(new Date())} className="gap-1 text-muted-foreground">
+            <Button variant="ghost" size="sm" onClick={() => { setSelectedDate(new Date()); setSearchParams({}); }} className="gap-1 text-muted-foreground">
               <ChevronLeft className="w-4 h-4" />
               Tillbaka till idag
             </Button>
@@ -118,7 +127,7 @@ const Index = () => {
           customAnswers={customAnswers}
           onSaveCustomAnswers={async (answers) => saveAnswers(selectedDateStr, answers)}
           selectedDate={selectedDate}
-          onSelectDate={(date) => setSelectedDate(date)}
+          onSelectDate={(date) => { setSelectedDate(date); setSearchParams(isToday(date) ? {} : { date: format(date, 'yyyy-MM-dd') }); }}
         />
       </div>
     </div>

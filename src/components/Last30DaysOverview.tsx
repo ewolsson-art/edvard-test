@@ -18,6 +18,7 @@ interface Last30DaysOverviewProps {
     include_medication?: boolean;
   };
   onDayClick?: (date: Date) => void;
+  onDayDoubleClick?: (date: Date) => void;
 }
 
 interface CategoryStats {
@@ -35,6 +36,7 @@ export function Last30DaysOverview({
   activeMedicationsCount,
   preferences,
   onDayClick,
+  onDayDoubleClick,
 }: Last30DaysOverviewProps) {
   const last30Days = useMemo(() => {
     const today = startOfDay(new Date());
@@ -199,6 +201,7 @@ export function Last30DaysOverview({
               <button
                 key={dateStr}
                 onClick={() => onDayClick?.(day)}
+                onDoubleClick={() => onDayDoubleClick?.(day)}
                 className={cn(
                   "w-7 h-7 rounded-md text-xs font-medium transition-all hover:scale-110 relative",
                   "flex items-center justify-center",

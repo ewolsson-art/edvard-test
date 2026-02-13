@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { format, startOfWeek, endOfWeek, addWeeks, subWeeks, eachDayOfInterval, addMonths, subMonths, startOfMonth, endOfMonth } from 'date-fns';
+import { format, startOfWeek, endOfWeek, addWeeks, subWeeks, eachDayOfInterval, addMonths, subMonths, startOfMonth, endOfMonth, isBefore, startOfDay, isToday } from 'date-fns';
 import { sv } from 'date-fns/locale';
 import { useMoodData } from '@/hooks/useMoodData';
 import { useMedications } from '@/hooks/useMedications';
@@ -417,6 +417,17 @@ const Overview = () => {
     setDialogOpen(true);
   };
 
+  const handleDayDoubleClick = (date: Date) => {
+    const dateStr = format(date, 'yyyy-MM-dd');
+    const entry = getEntryForDate(dateStr);
+    const isPast = isBefore(date, startOfDay(new Date()));
+    const isTodayDate = isToday(date);
+    // Navigate to check-in for missed days or today
+    if (!entry && (isPast || isTodayDate)) {
+      navigate(`/?date=${dateStr}`);
+    }
+  };
+
   const handleExerciseDayClick = (date: Date) => {
     const entry = getEntryForDate(format(date, 'yyyy-MM-dd'));
     // Only allow editing if the day has been marked as exercised
@@ -536,6 +547,7 @@ const Overview = () => {
             activeMedicationsCount={activeMedications.length}
             preferences={preferences}
             onDayClick={handleDayClick}
+            onDayDoubleClick={handleDayDoubleClick}
           />
         )}
 
@@ -554,6 +566,7 @@ const Overview = () => {
                   onPrevWeek={() => setCurrentWeek(prev => subWeeks(prev, 1))}
                   onNextWeek={() => setCurrentWeek(prev => addWeeks(prev, 1))}
                   onDayClick={handleDayClick}
+                  onDayDoubleClick={handleDayDoubleClick}
                 />
               )}
 
@@ -565,6 +578,7 @@ const Overview = () => {
                   onPrevMonth={() => setCurrentMonth(prev => subMonths(prev, 1))}
                   onNextMonth={() => setCurrentMonth(prev => addMonths(prev, 1))}
                   onDayClick={handleDayClick}
+                  onDayDoubleClick={handleDayDoubleClick}
                 />
               )}
 

@@ -12,6 +12,7 @@ interface WeekCalendarProps {
   onPrevWeek: () => void;
   onNextWeek: () => void;
   onDayClick?: (date: Date) => void;
+  onDayDoubleClick?: (date: Date) => void;
 }
 
 export function WeekCalendar({
@@ -22,6 +23,7 @@ export function WeekCalendar({
   onPrevWeek,
   onNextWeek,
   onDayClick,
+  onDayDoubleClick,
 }: WeekCalendarProps) {
   return (
     <div className="glass-card p-6 fade-in">
@@ -74,6 +76,7 @@ export function WeekCalendar({
             <button
               key={day.toISOString()}
               onClick={() => onDayClick?.(day)}
+              onDoubleClick={() => onDayDoubleClick?.(day)}
               className={cn(
                 "calendar-day relative cursor-pointer",
                 !entry && "calendar-day-empty",
