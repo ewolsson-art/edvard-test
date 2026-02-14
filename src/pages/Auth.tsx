@@ -228,13 +228,6 @@ const Auth = () => {
                 <span className="text-xs sm:text-sm">Skapad av och för människor med bipolär sjukdom</span>
               </div>
               
-              <div className="flex items-center gap-4 pt-1">
-                <Button size="lg" className="rounded-full px-6 bg-[hsl(45_85%_55%)] text-[hsl(230_30%_5%)] hover:bg-[hsl(45_85%_65%)] font-semibold" onClick={() => navigate('/skapa-konto')}>
-                  Prova i lugn takt
-                </Button>
-                <span className="text-xs text-white/60">
-                </span>
-              </div>
             </div>
         </div>
         </div>
