@@ -90,7 +90,7 @@ const Index = () => {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center py-8 px-4">
+    <div className="h-[calc(100vh-3.5rem)] md:h-screen flex items-center justify-center py-4 px-4 overflow-hidden">
       <div className="w-full max-w-2xl relative">
         {/* Date picker for retroactive check-in */}
         {!isSelectedToday && (

@@ -262,7 +262,7 @@ export function TodayCheckin({
   // Show complete state
   if (isCheckinComplete && !isEditing) {
     return (
-      <div className="glass-card p-6 md:p-8 fade-in">
+      <div className="glass-card p-6 md:p-8 fade-in max-h-[calc(100vh-6rem)] md:max-h-[calc(100vh-4rem)] overflow-y-auto">
         <div className="text-center mb-4">
           <p className="text-muted-foreground text-base capitalize">{formattedDate}</p>
           {!isDisplayToday && (
@@ -357,7 +357,7 @@ export function TodayCheckin({
   }
 
   return (
-    <div className="glass-card p-8 md:p-12 fade-in">
+    <div className="glass-card p-8 md:p-12 fade-in max-h-[calc(100vh-6rem)] md:max-h-[calc(100vh-4rem)] overflow-y-auto">
       <div className="text-center mb-4">
         <p className="text-muted-foreground text-lg capitalize">{formattedDate}</p>
         {!isDisplayToday && (
