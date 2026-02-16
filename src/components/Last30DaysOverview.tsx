@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { format, subDays, eachDayOfInterval, isToday, startOfDay } from 'date-fns';
+import { format, subDays, eachDayOfInterval, isToday, startOfDay, differenceInDays } from 'date-fns';
 import { sv } from 'date-fns/locale';
 import { MoodEntry, MoodType, QualityType, MOOD_ICONS } from '@/types/mood';
 import { cn } from '@/lib/utils';
@@ -38,6 +38,12 @@ export function Last30DaysOverview({
   onDayClick,
   onDayDoubleClick,
 }: Last30DaysOverviewProps) {
+  const firstCheckinDate = useMemo(() => {
+    if (entries.length === 0) return null;
+    const sorted = [...entries].sort((a, b) => a.date.localeCompare(b.date));
+    return startOfDay(new Date(sorted[0].date));
+  }, [entries]);
+
   const last30Days = useMemo(() => {
     const today = startOfDay(new Date());
     const start = subDays(today, 29);
@@ -181,6 +187,23 @@ export function Last30DaysOverview({
       </div>
     </div>
   );
+
+  // Don't show 30-day stats if user hasn't been using the service for 30 days
+  const hasEnoughHistory = firstCheckinDate && differenceInDays(startOfDay(new Date()), firstCheckinDate) >= 29;
+
+  if (!hasEnoughHistory) {
+    return (
+      <div className="glass-card p-6 space-y-4 fade-in">
+        <div className="flex items-center gap-3">
+          <Calendar className="w-6 h-6 text-primary" />
+          <h2 className="font-display text-xl font-semibold">Senaste 30 dagarna</h2>
+        </div>
+        <p className="text-muted-foreground text-sm">
+          Det finns inte tillräckligt med data ännu. Statistiken visas när du har använt tjänsten i minst 30 dagar.
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className="glass-card p-6 space-y-6 fade-in">
