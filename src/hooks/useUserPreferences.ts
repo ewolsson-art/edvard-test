@@ -17,7 +17,7 @@ export interface UserPreferences {
 }
 
 export const useUserPreferences = () => {
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const { isDoctor, isLoading: roleLoading } = useUserRole();
   const [preferences, setPreferences] = useState<UserPreferences | null>(null);
   const [loading, setLoading] = useState(true);
@@ -25,11 +25,12 @@ export const useUserPreferences = () => {
   useEffect(() => {
     if (user) {
       fetchPreferences();
-    } else {
+    } else if (!authLoading) {
+      // Only clear loading once auth is definitively done with no user
       setPreferences(null);
       setLoading(false);
     }
-  }, [user]);
+  }, [user, authLoading]);
 
   const fetchPreferences = async () => {
     if (!user) return;
