@@ -3,6 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { useTheme } from "next-themes";
 import { NavLink } from "@/components/NavLink";
 import { useSidebar } from "@/components/ui/sidebar";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { useAuth } from "@/hooks/useAuth";
 import { useProfile } from "@/hooks/useProfile";
 import { useUserRole } from "@/hooks/useUserRole";
@@ -44,13 +45,14 @@ const relativeNavItems = [
 ];
 
 export function AppSidebar() {
-  const { state } = useSidebar();
+  const { state, setOpenMobile } = useSidebar();
   const location = useLocation();
   const { user, signOut } = useAuth();
   const { firstName, fullName, avatarUrl } = useProfile();
   const { isDoctor, isPatient, isRelative, isLoading: roleLoading } = useUserRole();
   const { hasPending } = usePendingNotifications();
   const { theme, setTheme } = useTheme();
+  const isMobile = useIsMobile();
   const isCollapsed = state === "collapsed";
 
   // Determine which nav items to show based on role
@@ -101,6 +103,7 @@ export function AppSidebar() {
                       style={{ animationDelay: `${index * 50}ms` }}
                       aria-label={item.url === '/profil' && hasPending ? `${item.title} - Du har nya notifikationer` : item.title}
                       aria-current={location.pathname === item.url ? "page" : undefined}
+                      onClick={() => { if (isMobile) setOpenMobile(false); }}
                     >
                       {item.url === '/profil' && avatarUrl ? (
                         <div className="relative">
