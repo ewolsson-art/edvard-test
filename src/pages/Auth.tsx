@@ -73,8 +73,8 @@ const Auth = () => {
       <div className="absolute inset-0 bg-gradient-to-b from-[hsl(230_30%_5%)] via-[hsl(225_35%_8%)] to-[hsl(220_30%_12%)]" />
 
       {/* Moon */}
-      <div className="absolute top-[6%] right-[10%] w-14 h-14 md:w-20 md:h-20 rounded-full bg-[hsl(45_25%_82%)] shadow-[0_0_40px_12px_hsl(45_25%_82%/0.15)]" />
-      <div className="absolute top-[7.5%] right-[10.5%] w-3 h-3 md:w-4 md:h-4 rounded-full bg-[hsl(45_15%_72%)] opacity-25" />
+      <div className="absolute top-[14%] right-[10%] w-14 h-14 md:w-20 md:h-20 rounded-full bg-[hsl(45_25%_82%)] shadow-[0_0_40px_12px_hsl(45_25%_82%/0.15)]" />
+      <div className="absolute top-[15.5%] right-[10.5%] w-3 h-3 md:w-4 md:h-4 rounded-full bg-[hsl(45_15%_72%)] opacity-25" />
 
       {/* Stars */}
       <div className="absolute inset-0 pointer-events-none">
