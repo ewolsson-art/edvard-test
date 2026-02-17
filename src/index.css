@@ -640,6 +640,14 @@
     animation: turtle-blink 5s ease-in-out infinite;
   }
 
+  /* Keep blink but stop idle bob, wave, and tail wag */
+  .turtle-still .turtle-idle,
+  .turtle-still .turtle-wave,
+  .turtle-still .turtle-head-bob,
+  .turtle-still .turtle-tail-wag {
+    animation: none !important;
+  }
+
   .turtle-tail-wag {
     transform-origin: 100px 210px;
     animation: turtle-tail-wag 2s ease-in-out infinite;
