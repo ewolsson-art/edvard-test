@@ -220,11 +220,22 @@ const Auth = () => {
                 Följ ditt mående med{" "}
                 <span className="text-[hsl(45_85%_55%)]">bättre insikt</span>
               </h1>
-              <div className="flex flex-col gap-3">
-                <div className="flex items-center gap-2 px-3 sm:px-4 py-2 rounded-full bg-white/20 backdrop-blur-sm text-white w-fit">
-                  <HeartPulse className="w-4 h-4 flex-shrink-0" />
-                  <span className="text-xs sm:text-sm">Skapad av och för människor med bipolär sjukdom</span>
-                </div>
+              <div className="flex flex-wrap gap-3">
+                <Button
+                  size="lg"
+                  className="bg-[hsl(45_85%_55%)] text-[hsl(225_30%_7%)] hover:bg-[hsl(45_85%_60%)] font-semibold px-6"
+                  onClick={() => navigate("/login")}
+                >
+                  Logga in
+                </Button>
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="border-white/20 text-white hover:bg-white/10 font-semibold px-6"
+                  onClick={() => navigate("/signup")}
+                >
+                  Prova på
+                </Button>
               </div>
             </div>
             {/* Turtle mascot */}
