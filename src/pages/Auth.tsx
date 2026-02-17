@@ -222,16 +222,10 @@ const Auth = () => {
               </h1>
               <div className="flex flex-wrap gap-4 pt-2">
                 <button
-                  className="px-8 py-3 rounded-full bg-[hsl(45_85%_55%)] text-[hsl(225_30%_7%)] font-semibold text-sm tracking-wide shadow-[0_4px_20px_hsl(45_85%_55%/0.3)] hover:shadow-[0_6px_28px_hsl(45_85%_55%/0.45)] hover:scale-105 active:scale-[0.98] transition-all duration-200"
-                  onClick={() => navigate("/login")}
-                >
-                  Logga in
-                </button>
-                <button
-                  className="px-8 py-3 rounded-full border border-white/20 text-white font-semibold text-sm tracking-wide backdrop-blur-sm hover:bg-white/10 hover:border-white/30 hover:scale-105 active:scale-[0.98] transition-all duration-200"
+                  className="px-10 py-3.5 rounded-full bg-[hsl(45_85%_55%)] text-[hsl(225_30%_7%)] font-semibold text-base tracking-wide shadow-[0_4px_20px_hsl(45_85%_55%/0.3)] hover:shadow-[0_6px_28px_hsl(45_85%_55%/0.45)] hover:scale-105 active:scale-[0.98] transition-all duration-200"
                   onClick={() => navigate("/signup")}
                 >
-                  Prova på
+                  Prova på – det är gratis
                 </button>
               </div>
             </div>
