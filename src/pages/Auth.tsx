@@ -6,6 +6,7 @@ import { Loader2, HeartPulse } from "lucide-react";
 import { AuthNavbar } from "@/components/AuthNavbar";
 import { TurtleLogo } from "@/components/TurtleLogo";
 import { HowItWorksSection } from "@/components/landing/HowItWorksSection";
+import { LandingFooter } from "@/components/landing/LandingFooter";
 import { cn } from "@/lib/utils";
 
 // Fluffy cloud SVG
@@ -241,19 +242,7 @@ const Auth = () => {
       <HowItWorksSection />
 
       {/* Footer */}
-      <footer className="relative z-10 py-3 px-4 bg-[hsl(220_35%_8%)] border-t border-white/10">
-        <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-white/70">
-          <span>© 2025 Friendly. Alla rättigheter förbehållna.</span>
-          <div className="flex items-center gap-4">
-            <Link to="/integritet" className="hover:text-white transition-colors">
-              Integritetspolicy
-            </Link>
-            <Link to="/villkor" className="hover:text-white transition-colors">
-              Användarvillkor
-            </Link>
-          </div>
-        </div>
-      </footer>
+      <LandingFooter />
     </div>;
 };
 export default Auth;

@@ -1,0 +1,142 @@
+import { Link } from "react-router-dom";
+import { TurtleLogo } from "@/components/TurtleLogo";
+
+function FooterSkyline() {
+  return (
+    <div className="absolute bottom-0 left-0 right-0 pointer-events-none overflow-hidden">
+      <svg
+        viewBox="0 0 1440 180"
+        className="w-full h-auto"
+        preserveAspectRatio="none"
+        fill="none"
+      >
+        {/* Distant hills */}
+        <path
+          d="M0 180 L0 120 Q120 70 240 100 Q360 60 480 90 Q600 50 720 80 Q840 55 960 85 Q1080 60 1200 95 Q1320 70 1440 110 L1440 180 Z"
+          fill="hsl(225 30% 6%)"
+        />
+        {/* Near hills */}
+        <path
+          d="M0 180 L0 140 Q180 110 360 130 Q540 100 720 125 Q900 105 1080 128 Q1260 108 1440 135 L1440 180 Z"
+          fill="hsl(225 28% 5%)"
+        />
+        {/* Ground */}
+        <rect x="0" y="155" width="1440" height="25" fill="hsl(225 25% 4%)" />
+
+        {/* Trees silhouettes */}
+        {[80, 220, 400, 580, 750, 950, 1100, 1300].map((x, i) => {
+          const h = 18 + (i % 3) * 8;
+          const w = 12 + (i % 2) * 6;
+          return (
+            <g key={`ft${i}`}>
+              <rect x={x - 1.5} y={155 - h * 0.4} width="3" height={h * 0.4} fill="hsl(225 20% 8%)" />
+              <ellipse
+                cx={x}
+                cy={155 - h * 0.5}
+                rx={w}
+                ry={h * 0.6}
+                fill={i % 3 === 0 ? "hsl(150 20% 7%)" : i % 3 === 1 ? "hsl(140 18% 6%)" : "hsl(145 22% 8%)"}
+              />
+            </g>
+          );
+        })}
+
+        {/* Stars */}
+        {[
+          [100, 30], [300, 15], [500, 40], [700, 20], [900, 35],
+          [1100, 10], [1300, 45], [200, 55], [600, 60], [1000, 50],
+        ].map(([cx, cy], i) => (
+          <circle
+            key={`fs${i}`}
+            cx={cx}
+            cy={cy}
+            r={i % 3 === 0 ? 1.2 : 0.8}
+            fill="white"
+            opacity={0.15 + (i % 4) * 0.08}
+            style={{
+              animation: `twinkle ${3 + i % 2}s ease-in-out infinite`,
+              animationDelay: `${i * 0.5}s`,
+            }}
+          />
+        ))}
+
+        {/* Moon */}
+        <circle cx="1350" cy="25" r="12" fill="hsl(45 25% 82%)" opacity="0.2" />
+      </svg>
+    </div>
+  );
+}
+
+export function LandingFooter() {
+  return (
+    <footer className="relative z-10 bg-[hsl(225_30%_5%)] pt-20 pb-6 overflow-hidden">
+      {/* Illustration backdrop */}
+      <FooterSkyline />
+
+      <div className="relative z-10 max-w-5xl mx-auto px-4 md:px-8">
+        {/* Top section */}
+        <div className="flex flex-col md:flex-row items-center md:items-start justify-between gap-10 mb-12">
+          {/* Brand */}
+          <div className="flex flex-col items-center md:items-start gap-4 max-w-xs">
+            <div className="flex items-center gap-3">
+              <TurtleLogo size="sm" className="w-10 h-10" />
+              <span className="text-xl font-display font-bold text-white">Toddy</span>
+            </div>
+            <p className="text-sm text-white/50 leading-relaxed text-center md:text-left">
+              Din personliga stämningsdagbok – skapad av och för människor med bipolär sjukdom.
+            </p>
+          </div>
+
+          {/* Links columns */}
+          <div className="flex gap-16">
+            <div className="flex flex-col gap-3">
+              <span className="text-xs font-semibold uppercase tracking-widest text-[hsl(45_85%_55%/0.6)] mb-1">
+                Juridiskt
+              </span>
+              <Link
+                to="/integritet"
+                className="text-sm text-white/50 hover:text-white transition-colors"
+              >
+                Integritetspolicy
+              </Link>
+              <Link
+                to="/villkor"
+                className="text-sm text-white/50 hover:text-white transition-colors"
+              >
+                Användarvillkor
+              </Link>
+            </div>
+            <div className="flex flex-col gap-3">
+              <span className="text-xs font-semibold uppercase tracking-widest text-[hsl(45_85%_55%/0.6)] mb-1">
+                Information
+              </span>
+              <Link
+                to="/om-oss"
+                className="text-sm text-white/50 hover:text-white transition-colors"
+              >
+                Om oss
+              </Link>
+              <Link
+                to="/for-patienter"
+                className="text-sm text-white/50 hover:text-white transition-colors"
+              >
+                För patienter
+              </Link>
+            </div>
+          </div>
+        </div>
+
+        {/* Divider */}
+        <div className="h-px bg-white/[0.06] mb-5" />
+
+        {/* Bottom */}
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-white/30">
+          <span>© {new Date().getFullYear()} Toddy. Alla rättigheter förbehållna.</span>
+          <span className="flex items-center gap-1.5">
+            Gjord med <span className="text-[hsl(45_85%_55%/0.5)]">♥</span> i Sverige
+          </span>
+        </div>
+      </div>
+    </footer>
+  );
+}
