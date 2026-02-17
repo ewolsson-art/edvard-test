@@ -5,17 +5,14 @@ const steps = [
   {
     icon: CalendarCheck,
     title: "Checka in dagligen",
-    description: "Svara på några enkla frågor om ditt mående, sömn och aktivitet. Det tar under en minut.",
   },
   {
     icon: BarChart3,
-    title: "Se dina mönster",
-    description: "Få visuella trender och AI-insikter som hjälper dig förstå ditt mående över tid.",
+    title: "Upptäck dina mönster",
   },
   {
     icon: Share2,
-    title: "Dela med din läkare",
-    description: "Du bestämmer vilken data som delas – automatiskt och säkert inför nästa besök.",
+    title: "Dela valfri data med läkare och anhöriga",
   },
 ];
 
@@ -105,10 +102,9 @@ function StepCard({ step, index, visible }: { step: typeof steps[number]; index:
         </span>
       </div>
 
-      <h3 className="text-lg md:text-xl font-semibold text-white mb-1.5">
+      <h3 className="text-lg md:text-xl font-semibold text-white">
         {step.title}
       </h3>
-      <p className="text-sm md:text-base text-white/60 leading-relaxed">{step.description}</p>
     </div>
   );
 }
