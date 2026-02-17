@@ -4,15 +4,15 @@ import { useEffect, useRef, useState } from "react";
 const steps = [
   {
     icon: CalendarCheck,
-    title: "Checka in",
+    title: "Checka in snabbt och smidigt",
   },
   {
     icon: BarChart3,
-    title: "Upptäck mönster",
+    title: "Upptäck just dina mönster",
   },
   {
     icon: Share2,
-    title: "Dela med läkare och anhöriga",
+    title: "Dela med läkare och anhöriga – om du vill",
   },
 ];
 
