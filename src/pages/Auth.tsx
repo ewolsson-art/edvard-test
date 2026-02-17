@@ -219,10 +219,6 @@ const Auth = () => {
                 Följ ditt mående med{" "}
                 <span className="text-[hsl(45_85%_55%)]">bättre insikt</span>
               </h1>
-              <p className="text-base sm:text-lg md:text-xl text-white/90 leading-relaxed drop-shadow-sm">
-                Din interaktiva och personliga stämningsdagbok ger dig bättre koll på ditt mående
-                och delar valfri data med din läkare
-              </p>
               <div className="flex flex-col gap-3">
                 <div className="flex items-center gap-2 px-3 sm:px-4 py-2 rounded-full bg-white/20 backdrop-blur-sm text-white w-fit">
                   <HeartPulse className="w-4 h-4 flex-shrink-0" />
