@@ -35,66 +35,6 @@ function useInView(threshold = 0.15) {
   return { ref, visible };
 }
 
-function FlowConnector({ visible, delay }: { visible: boolean; delay: number }) {
-  return (
-    <div className="hidden md:flex items-center justify-center -mx-4 relative self-center">
-      <svg viewBox="0 0 80 40" className="w-16 h-10" fill="none">
-        <path d="M0 20 L80 20" stroke="hsl(45 85% 55% / 0.15)" strokeWidth="2" strokeDasharray="4 4" />
-        <path
-          d="M0 20 L80 20"
-          stroke="hsl(45 85% 55% / 0.6)"
-          strokeWidth="2"
-          strokeDasharray="12 28"
-          className={`transition-opacity duration-700 ${visible ? "opacity-100" : "opacity-0"}`}
-          style={{ transitionDelay: `${delay}ms` }}
-        >
-          <animate attributeName="stroke-dashoffset" from="40" to="0" dur="1.5s" repeatCount="indefinite" />
-        </path>
-        <path
-          d="M68 14 L80 20 L68 26"
-          stroke="hsl(45 85% 55% / 0.5)"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          fill="none"
-          className={`transition-opacity duration-500 ${visible ? "opacity-100" : "opacity-0"}`}
-          style={{ transitionDelay: `${delay + 200}ms` }}
-        />
-      </svg>
-    </div>
-  );
-}
-
-function MobileFlowConnector({ visible, delay }: { visible: boolean; delay: number }) {
-  return (
-    <div className="flex md:hidden items-center justify-center py-2">
-      <svg viewBox="0 0 40 50" className="w-8 h-10" fill="none">
-        <path d="M20 0 L20 50" stroke="hsl(45 85% 55% / 0.15)" strokeWidth="2" strokeDasharray="4 4" />
-        <path
-          d="M20 0 L20 50"
-          stroke="hsl(45 85% 55% / 0.6)"
-          strokeWidth="2"
-          strokeDasharray="12 28"
-          className={`transition-opacity duration-700 ${visible ? "opacity-100" : "opacity-0"}`}
-          style={{ transitionDelay: `${delay}ms` }}
-        >
-          <animate attributeName="stroke-dashoffset" from="40" to="0" dur="1.5s" repeatCount="indefinite" />
-        </path>
-        <path
-          d="M14 38 L20 48 L26 38"
-          stroke="hsl(45 85% 55% / 0.5)"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          fill="none"
-          className={`transition-opacity duration-500 ${visible ? "opacity-100" : "opacity-0"}`}
-          style={{ transitionDelay: `${delay + 200}ms` }}
-        />
-      </svg>
-    </div>
-  );
-}
-
 export function HowItWorksSection() {
   const { ref, visible } = useInView(0.1);
 
@@ -104,30 +44,21 @@ export function HowItWorksSection() {
         <IntroBlock />
 
         <div ref={ref} className="mt-14 md:mt-20">
-          {/* Desktop: horizontal with flow arrows */}
-          <div className="hidden md:flex items-start justify-center">
+          {/* Desktop: horizontal */}
+          <div className="hidden md:flex items-start justify-center gap-8">
             {steps.map((step, i) => (
-              <div key={step.title} className="contents">
-                <StepCard step={step} index={i} visible={visible} />
-                {i < steps.length - 1 && (
-                  <FlowConnector visible={visible} delay={300 + i * 250} />
-                )}
-              </div>
+              <StepCard key={step.title} step={step} index={i} visible={visible} />
             ))}
           </div>
 
-          {/* Mobile: vertical with flow arrows */}
-          <div className="flex md:hidden flex-col items-center">
+          {/* Mobile: vertical */}
+          <div className="flex md:hidden flex-col items-center gap-6">
             {steps.map((step, i) => (
               <div key={step.title} className="w-full">
                 <StepCard step={step} index={i} visible={visible} />
-                {i < steps.length - 1 && (
-                  <MobileFlowConnector visible={visible} delay={300 + i * 250} />
-                )}
               </div>
             ))}
           </div>
-
         </div>
       </div>
     </section>
