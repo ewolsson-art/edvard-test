@@ -1,4 +1,3 @@
-import { TurtleLogo } from "@/components/TurtleLogo";
 import { CalendarCheck, BarChart3, Share2 } from "lucide-react";
 
 const steps = [
@@ -23,11 +22,7 @@ export function HowItWorksSection() {
   return (
     <section className="relative z-10 bg-[hsl(225_30%_7%)] py-16 md:py-24 px-4 md:px-8">
       <div className="max-w-5xl mx-auto">
-        <div className="flex flex-col md:flex-row items-center gap-12 md:gap-16">
-          {/* Turtle mascot */}
-          <div className="flex-shrink-0 -mt-12 md:-mt-16">
-            <TurtleLogo size="hero" animated={false} className="w-48 h-48 md:w-64 md:h-64" />
-          </div>
+        <div className="max-w-2xl mx-auto md:mx-0">
 
           {/* Steps */}
           <div className="flex-1">
