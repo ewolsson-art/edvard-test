@@ -51,8 +51,8 @@ export function AuthNavbar() {
             <Logo size="sm" className="[&_span]:!bg-none [&_span]:!text-white" />
           </div>
 
-          {/* Desktop navigation */}
-          <div className="hidden lg:flex items-center gap-1">
+          {/* Desktop navigation - right aligned */}
+          <div className="hidden lg:flex items-center gap-1 ml-auto">
             {navItems.map((item) => (
               <button
                 key={item.href}
@@ -62,28 +62,6 @@ export function AuthNavbar() {
                 {item.label}
               </button>
             ))}
-          </div>
-
-          {/* CTA buttons - desktop */}
-          <div className="hidden lg:flex items-center gap-3">
-            <Button 
-              variant={currentMode === 'login' ? 'secondary' : 'ghost'} 
-              size="sm" 
-              className="text-sm text-white/90 hover:text-white hover:bg-white/10" 
-              onClick={handleLoginClick}
-            >
-              Logga in
-            </Button>
-            <Button 
-              size="sm" 
-              className={cn(
-                "text-sm rounded-full px-5 bg-[hsl(45_85%_55%)] text-[hsl(230_30%_5%)] hover:bg-[hsl(45_85%_65%)]",
-                currentMode === 'signup' && "ring-2 ring-[hsl(45_85%_55%)/0.5]"
-              )}
-              onClick={handleSignupClick}
-            >
-              Utforska
-            </Button>
           </div>
 
           {/* Mobile menu button */}
@@ -121,14 +99,6 @@ export function AuthNavbar() {
               {item.label}
             </button>
           ))}
-          <div className="pt-4 pb-2 space-y-2">
-            <Button variant="outline" className="w-full text-white border-white/20 hover:bg-white/10" onClick={handleLoginClick}>
-              Logga in
-            </Button>
-            <Button className="w-full bg-[hsl(45_85%_55%)] text-[hsl(230_30%_5%)] hover:bg-[hsl(45_85%_65%)]" onClick={handleSignupClick}>
-              Utforska
-            </Button>
-          </div>
         </div>
       </div>
     </nav>
