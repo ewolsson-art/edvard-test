@@ -25,7 +25,7 @@ export function HowItWorksSection() {
       <div className="max-w-5xl mx-auto">
         <div className="flex flex-col md:flex-row items-center gap-12 md:gap-16">
           {/* Turtle mascot */}
-          <div className="flex-shrink-0">
+          <div className="flex-shrink-0 -mt-12 md:-mt-16">
             <TurtleLogo size="hero" animated={false} className="w-48 h-48 md:w-64 md:h-64" />
           </div>
 
