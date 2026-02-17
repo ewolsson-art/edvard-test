@@ -12,7 +12,7 @@ const steps = [
   },
   {
     icon: Share2,
-    title: "Dela med läkare och anhöriga – om du vill",
+    title: "Dela valfri data med läkare och anhöriga",
   },
 ];
 
