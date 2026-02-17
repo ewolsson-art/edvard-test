@@ -73,8 +73,8 @@ function IntroBlock() {
         Skapad av och för människor med bipolär sjukdom
       </h2>
       <p className="text-base sm:text-lg md:text-xl text-white/80 leading-relaxed">
-        Din interaktiva och personliga stämningsdagbok ger dig bättre koll på ditt mående
-        och delar valfri data med din läkare
+        Toddy är din interaktiva och personliga stämningsdagbok som ger dig bättre koll på ditt mående
+        och delar valfri data med läkare och anhöriga
       </p>
     </div>
   );
