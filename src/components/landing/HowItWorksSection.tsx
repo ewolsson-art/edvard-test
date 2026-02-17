@@ -70,7 +70,7 @@ function IntroBlock() {
       className={`text-center max-w-2xl mx-auto transition-all duration-700 ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}
     >
       <h2 className="text-2xl sm:text-3xl md:text-4xl font-display font-bold text-white mb-4">
-        Så här funkar det
+        Skapad av och för människor med bipolär sjukdom
       </h2>
       <p className="text-base sm:text-lg md:text-xl text-white/80 leading-relaxed">
         Din interaktiva och personliga stämningsdagbok ger dig bättre koll på ditt mående
