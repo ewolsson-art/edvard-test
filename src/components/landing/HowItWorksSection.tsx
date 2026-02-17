@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 const steps = [
   {
     icon: CalendarCheck,
-    title: "Checka in snabbt och smidigt",
+    title: "Gör dagliga in-checkningar",
   },
   {
     icon: BarChart3,
