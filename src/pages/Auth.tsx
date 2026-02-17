@@ -212,24 +212,29 @@ const Auth = () => {
       {/* Hero Section */}
       <section className="relative z-10 flex-1 flex flex-col justify-end px-4 md:px-8 pb-6 md:pb-[12%]">
         <div className="max-w-6xl mx-auto w-full">
-          {/* Text content */}
-          <div className="space-y-4 md:space-y-6 animate-fade-in max-w-xl">
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-display font-bold text-white leading-[1.1] tracking-tight drop-shadow-lg">
-              Följ ditt mående med{" "}
-              <span className="text-[hsl(45_85%_55%)]">bättre insikt</span>
-            </h1>
-            <p className="text-base sm:text-lg md:text-xl text-white/90 leading-relaxed drop-shadow-sm">
-              Din interaktiva och personliga stämningsdagbok ger dig bättre koll på ditt mående
-              och delar valfri data med din läkare
-            </p>
-            <div className="flex flex-col gap-3">
-              <div className="flex items-center gap-2 px-3 sm:px-4 py-2 rounded-full bg-white/20 backdrop-blur-sm text-white w-fit">
-                <HeartPulse className="w-4 h-4 flex-shrink-0" />
-                <span className="text-xs sm:text-sm">Skapad av och för människor med bipolär sjukdom</span>
+          <div className="flex items-end gap-6 md:gap-10 animate-fade-in">
+            {/* Text content */}
+            <div className="space-y-4 md:space-y-6 max-w-xl">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-display font-bold text-white leading-[1.1] tracking-tight drop-shadow-lg">
+                Följ ditt mående med{" "}
+                <span className="text-[hsl(45_85%_55%)]">bättre insikt</span>
+              </h1>
+              <p className="text-base sm:text-lg md:text-xl text-white/90 leading-relaxed drop-shadow-sm">
+                Din interaktiva och personliga stämningsdagbok ger dig bättre koll på ditt mående
+                och delar valfri data med din läkare
+              </p>
+              <div className="flex flex-col gap-3">
+                <div className="flex items-center gap-2 px-3 sm:px-4 py-2 rounded-full bg-white/20 backdrop-blur-sm text-white w-fit">
+                  <HeartPulse className="w-4 h-4 flex-shrink-0" />
+                  <span className="text-xs sm:text-sm">Skapad av och för människor med bipolär sjukdom</span>
+                </div>
               </div>
-              
             </div>
-        </div>
+            {/* Turtle mascot */}
+            <div className="hidden md:block flex-shrink-0">
+              <TurtleLogo size="hero" animated className="w-48 h-48 lg:w-64 lg:h-64" />
+            </div>
+          </div>
         </div>
       </section>
       </div>
