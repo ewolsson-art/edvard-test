@@ -221,7 +221,7 @@ const Auth = () => {
                 <span className="text-[hsl(45_85%_55%)]">bättre insikt</span>
               </h1>
               <p className="text-base sm:text-lg md:text-xl text-white/80 leading-relaxed">
-                Din personliga stämningsdagbok
+                Din interaktiva och personliga stämningsdagbok
               </p>
               <div className="flex flex-wrap gap-4 pt-2">
                 <button
