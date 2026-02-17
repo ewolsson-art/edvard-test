@@ -36,20 +36,20 @@ export function HowItWorksSection() {
   const { ref, visible } = useInView(0.1);
 
   return (
-    <section className="relative z-10 bg-[hsl(225_30%_7%)] py-16 md:py-24 px-4 md:px-8 overflow-hidden">
+    <section className="relative z-10 bg-[hsl(225_30%_7%)] py-20 md:py-32 px-4 md:px-8 overflow-hidden">
       <div className="max-w-5xl mx-auto">
         <IntroBlock />
 
-        <div ref={ref} className="mt-14 md:mt-20">
+        <div ref={ref} className="mt-16 md:mt-24">
           {/* Desktop: horizontal */}
-          <div className="hidden md:flex items-start justify-center gap-8">
+          <div className="hidden md:flex items-start justify-center gap-16">
             {steps.map((step, i) => (
               <StepCard key={step.title} step={step} index={i} visible={visible} />
             ))}
           </div>
 
           {/* Mobile: vertical */}
-          <div className="flex md:hidden flex-col items-center gap-6">
+          <div className="flex md:hidden flex-col items-center gap-10">
             {steps.map((step, i) => (
               <div key={step.title} className="w-full">
                 <StepCard step={step} index={i} visible={visible} />
@@ -69,10 +69,10 @@ function IntroBlock() {
       ref={ref}
       className={`text-center max-w-2xl mx-auto transition-all duration-700 ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}
     >
-      <h2 className="text-2xl sm:text-3xl md:text-4xl font-display font-bold text-white mb-4">
+      <h2 className="text-2xl sm:text-3xl md:text-4xl font-display font-bold text-white mb-6">
         Skapad av och för människor med bipolär sjukdom
       </h2>
-      <p className="text-base sm:text-lg md:text-xl text-white/80 leading-relaxed">
+      <p className="text-base sm:text-lg md:text-xl text-white/70 leading-relaxed max-w-xl mx-auto">
         Toddy är din interaktiva och personliga stämningsdagbok som ger dig bättre koll på ditt mående
         och delar valfri data med läkare och anhöriga
       </p>
@@ -95,9 +95,9 @@ function StepCard({ step, index, visible }: { step: typeof steps[number]; index:
       />
 
       {/* Icon with number */}
-      <div className="flex-shrink-0 w-14 h-14 rounded-2xl bg-[hsl(45_85%_55%/0.12)] border border-[hsl(45_85%_55%/0.2)] flex items-center justify-center relative mb-4 z-10">
-        <step.icon className="w-6 h-6 text-[hsl(45_85%_55%)]" />
-        <span className="absolute -top-2 -left-2 w-6 h-6 rounded-full bg-[hsl(45_85%_55%)] text-[hsl(225_30%_7%)] text-xs font-bold flex items-center justify-center">
+      <div className="flex-shrink-0 w-16 h-16 rounded-2xl bg-[hsl(45_85%_55%/0.10)] border border-[hsl(45_85%_55%/0.18)] flex items-center justify-center relative mb-5 z-10">
+        <step.icon className="w-7 h-7 text-[hsl(45_85%_55%)]" />
+        <span className="absolute -top-2.5 -left-2.5 w-7 h-7 rounded-full bg-[hsl(45_85%_55%)] text-[hsl(225_30%_7%)] text-xs font-bold flex items-center justify-center shadow-lg">
           {index + 1}
         </span>
       </div>
