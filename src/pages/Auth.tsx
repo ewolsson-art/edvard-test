@@ -220,6 +220,9 @@ const Auth = () => {
                 Följ ditt mående med{" "}
                 <span className="text-[hsl(45_85%_55%)]">bättre insikt</span>
               </h1>
+              <p className="text-base sm:text-lg md:text-xl text-white/80 leading-relaxed">
+                Din personliga stämningsdagbok
+              </p>
               <div className="flex flex-wrap gap-4 pt-2">
                 <button
                   className="px-10 py-3.5 rounded-full bg-[hsl(45_85%_55%)] text-[hsl(225_30%_7%)] font-semibold text-base tracking-wide shadow-[0_4px_20px_hsl(45_85%_55%/0.3)] hover:shadow-[0_6px_28px_hsl(45_85%_55%/0.45)] hover:scale-105 active:scale-[0.98] transition-all duration-200"
