@@ -35,18 +35,132 @@ function useInView(threshold = 0.15) {
   return { ref, visible };
 }
 
+function FlowConnector({ visible, delay }: { visible: boolean; delay: number }) {
+  return (
+    <div className="hidden md:flex items-center justify-center -mx-4 relative self-center">
+      <svg viewBox="0 0 80 40" className="w-16 h-10" fill="none">
+        <path d="M0 20 L80 20" stroke="hsl(45 85% 55% / 0.15)" strokeWidth="2" strokeDasharray="4 4" />
+        <path
+          d="M0 20 L80 20"
+          stroke="hsl(45 85% 55% / 0.6)"
+          strokeWidth="2"
+          strokeDasharray="12 28"
+          className={`transition-opacity duration-700 ${visible ? "opacity-100" : "opacity-0"}`}
+          style={{ transitionDelay: `${delay}ms` }}
+        >
+          <animate attributeName="stroke-dashoffset" from="40" to="0" dur="1.5s" repeatCount="indefinite" />
+        </path>
+        <path
+          d="M68 14 L80 20 L68 26"
+          stroke="hsl(45 85% 55% / 0.5)"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          fill="none"
+          className={`transition-opacity duration-500 ${visible ? "opacity-100" : "opacity-0"}`}
+          style={{ transitionDelay: `${delay + 200}ms` }}
+        />
+      </svg>
+    </div>
+  );
+}
+
+function MobileFlowConnector({ visible, delay }: { visible: boolean; delay: number }) {
+  return (
+    <div className="flex md:hidden items-center justify-center py-2">
+      <svg viewBox="0 0 40 50" className="w-8 h-10" fill="none">
+        <path d="M20 0 L20 50" stroke="hsl(45 85% 55% / 0.15)" strokeWidth="2" strokeDasharray="4 4" />
+        <path
+          d="M20 0 L20 50"
+          stroke="hsl(45 85% 55% / 0.6)"
+          strokeWidth="2"
+          strokeDasharray="12 28"
+          className={`transition-opacity duration-700 ${visible ? "opacity-100" : "opacity-0"}`}
+          style={{ transitionDelay: `${delay}ms` }}
+        >
+          <animate attributeName="stroke-dashoffset" from="40" to="0" dur="1.5s" repeatCount="indefinite" />
+        </path>
+        <path
+          d="M14 38 L20 48 L26 38"
+          stroke="hsl(45 85% 55% / 0.5)"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          fill="none"
+          className={`transition-opacity duration-500 ${visible ? "opacity-100" : "opacity-0"}`}
+          style={{ transitionDelay: `${delay + 200}ms` }}
+        />
+      </svg>
+    </div>
+  );
+}
+
 export function HowItWorksSection() {
+  const { ref, visible } = useInView(0.1);
+
   return (
     <section className="relative z-10 bg-[hsl(225_30%_7%)] py-16 md:py-24 px-4 md:px-8 overflow-hidden">
       <div className="max-w-5xl mx-auto">
-        {/* Intro text moved from hero */}
         <IntroBlock />
 
-        {/* Steps - horizontal grid */}
-        <div className="mt-14 md:mt-20 grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
-          {steps.map((step, i) => (
-            <StepCard key={step.title} step={step} index={i} />
-          ))}
+        <div ref={ref} className="mt-14 md:mt-20">
+          {/* Desktop: horizontal with flow arrows */}
+          <div className="hidden md:flex items-start justify-center">
+            {steps.map((step, i) => (
+              <div key={step.title} className="contents">
+                <StepCard step={step} index={i} visible={visible} />
+                {i < steps.length - 1 && (
+                  <FlowConnector visible={visible} delay={300 + i * 250} />
+                )}
+              </div>
+            ))}
+          </div>
+
+          {/* Mobile: vertical with flow arrows */}
+          <div className="flex md:hidden flex-col items-center">
+            {steps.map((step, i) => (
+              <div key={step.title} className="w-full">
+                <StepCard step={step} index={i} visible={visible} />
+                {i < steps.length - 1 && (
+                  <MobileFlowConnector visible={visible} delay={300 + i * 250} />
+                )}
+              </div>
+            ))}
+          </div>
+
+          {/* Cycle-back curve (desktop) */}
+          <div
+            className={`hidden md:block mt-8 transition-all duration-1000 ${visible ? "opacity-100" : "opacity-0"}`}
+            style={{ transitionDelay: "1200ms" }}
+          >
+            <svg viewBox="0 0 800 50" className="w-full h-10 mx-auto max-w-3xl" fill="none">
+              <path
+                d="M700 5 Q750 5 750 25 Q750 45 700 45 L100 45 Q50 45 50 25 Q50 5 100 5"
+                stroke="hsl(45 85% 55% / 0.1)"
+                strokeWidth="1.5"
+                strokeDasharray="6 6"
+                fill="none"
+              />
+              <path
+                d="M700 5 Q750 5 750 25 Q750 45 700 45 L100 45 Q50 45 50 25 Q50 5 100 5"
+                stroke="hsl(45 85% 55% / 0.35)"
+                strokeWidth="1.5"
+                strokeDasharray="16 40"
+                fill="none"
+              >
+                <animate attributeName="stroke-dashoffset" from="56" to="0" dur="3s" repeatCount="indefinite" />
+              </path>
+              <path
+                d="M106 0 L96 5 L106 10"
+                stroke="hsl(45 85% 55% / 0.35)"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                fill="none"
+              />
+            </svg>
+            <p className="text-center text-xs text-white/30 -mt-1 tracking-wide">Dagligt kretslopp</p>
+          </div>
         </div>
       </div>
     </section>
@@ -71,18 +185,22 @@ function IntroBlock() {
   );
 }
 
-function StepCard({ step, index }: { step: typeof steps[number]; index: number }) {
-  const { ref, visible } = useInView(0.2);
-  const delay = index * 150;
+function StepCard({ step, index, visible }: { step: typeof steps[number]; index: number; visible: boolean }) {
+  const delay = index * 200;
 
   return (
     <div
-      ref={ref}
-      className={`relative flex flex-col items-center text-center transition-all duration-700 ease-out ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}
+      className={`relative flex flex-col items-center text-center flex-1 max-w-xs mx-auto transition-all duration-700 ease-out ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}
       style={{ transitionDelay: `${delay}ms` }}
     >
+      {/* Glow ring */}
+      <div
+        className={`absolute w-20 h-20 rounded-full bg-[hsl(45_85%_55%/0.06)] blur-xl transition-all duration-1000 ${visible ? "scale-100 opacity-100" : "scale-50 opacity-0"}`}
+        style={{ transitionDelay: `${delay + 100}ms` }}
+      />
+
       {/* Icon with number */}
-      <div className="flex-shrink-0 w-14 h-14 rounded-2xl bg-[hsl(45_85%_55%/0.12)] border border-[hsl(45_85%_55%/0.2)] flex items-center justify-center relative mb-4">
+      <div className="flex-shrink-0 w-14 h-14 rounded-2xl bg-[hsl(45_85%_55%/0.12)] border border-[hsl(45_85%_55%/0.2)] flex items-center justify-center relative mb-4 z-10">
         <step.icon className="w-6 h-6 text-[hsl(45_85%_55%)]" />
         <span className="absolute -top-2 -left-2 w-6 h-6 rounded-full bg-[hsl(45_85%_55%)] text-[hsl(225_30%_7%)] text-xs font-bold flex items-center justify-center">
           {index + 1}
@@ -92,8 +210,7 @@ function StepCard({ step, index }: { step: typeof steps[number]; index: number }
       <h3 className="text-lg md:text-xl font-semibold text-white mb-1.5">
         {step.title}
       </h3>
-      <p className="text-sm md:text-base text-white/60 leading-relaxed mb-3">{step.description}</p>
-
+      <p className="text-sm md:text-base text-white/60 leading-relaxed">{step.description}</p>
     </div>
   );
 }
