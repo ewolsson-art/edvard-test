@@ -128,39 +128,6 @@ export function HowItWorksSection() {
             ))}
           </div>
 
-          {/* Cycle-back curve (desktop) */}
-          <div
-            className={`hidden md:block mt-8 transition-all duration-1000 ${visible ? "opacity-100" : "opacity-0"}`}
-            style={{ transitionDelay: "1200ms" }}
-          >
-            <svg viewBox="0 0 800 50" className="w-full h-10 mx-auto max-w-3xl" fill="none">
-              <path
-                d="M700 5 Q750 5 750 25 Q750 45 700 45 L100 45 Q50 45 50 25 Q50 5 100 5"
-                stroke="hsl(45 85% 55% / 0.1)"
-                strokeWidth="1.5"
-                strokeDasharray="6 6"
-                fill="none"
-              />
-              <path
-                d="M700 5 Q750 5 750 25 Q750 45 700 45 L100 45 Q50 45 50 25 Q50 5 100 5"
-                stroke="hsl(45 85% 55% / 0.35)"
-                strokeWidth="1.5"
-                strokeDasharray="16 40"
-                fill="none"
-              >
-                <animate attributeName="stroke-dashoffset" from="56" to="0" dur="3s" repeatCount="indefinite" />
-              </path>
-              <path
-                d="M106 0 L96 5 L106 10"
-                stroke="hsl(45 85% 55% / 0.35)"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                fill="none"
-              />
-            </svg>
-            <p className="text-center text-xs text-white/30 -mt-1 tracking-wide">Dagligt kretslopp</p>
-          </div>
         </div>
       </div>
     </section>
