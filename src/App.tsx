@@ -42,6 +42,7 @@ import SharedReport from "./pages/SharedReport";
 import ResetPassword from "./pages/ResetPassword";
 import ForgotPassword from "./pages/ForgotPassword";
 import Characteristics from "./pages/Characteristics";
+import CharacteristicDetail from "./pages/CharacteristicDetail";
 
 const queryClient = new QueryClient();
 
@@ -123,6 +124,11 @@ const App = () => (
             <Route path="/kannetecken" element={
               <ProtectedRoute>
                 <AppLayout><Characteristics /></AppLayout>
+              </ProtectedRoute>
+            } />
+            <Route path="/kannetecken/:moodType" element={
+              <ProtectedRoute>
+                <AppLayout><CharacteristicDetail /></AppLayout>
               </ProtectedRoute>
             } />
             <Route path="/rapporter" element={
