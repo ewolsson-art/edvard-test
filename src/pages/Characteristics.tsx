@@ -80,7 +80,7 @@ const Characteristics = () => {
   }
 
   return (
-    <div className="container max-w-2xl mx-auto py-8 px-4">
+    <div className="max-w-2xl py-8 px-4 md:px-8">
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-foreground mb-2">Mina kännetecken</h1>
         <p className="text-muted-foreground">
