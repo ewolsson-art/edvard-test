@@ -363,26 +363,6 @@ export function TodayCheckin({
         {!isDisplayToday && (
           <p className="text-xs text-primary mt-1">Retroaktiv incheckning</p>
         )}
-        {isDisplayToday && onSelectDate && (
-          <Popover>
-            <PopoverTrigger asChild>
-              <button className="mt-2 inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors">
-                <CalendarIcon className="w-3.5 h-3.5" />
-                Checka in för annat datum
-              </button>
-            </PopoverTrigger>
-            <PopoverContent className="w-auto p-0" align="center">
-              <Calendar
-                mode="single"
-                selected={displayDate}
-                onSelect={(date) => date && onSelectDate(date)}
-                disabled={(date) => date > new Date()}
-                initialFocus
-                className="p-3 pointer-events-auto"
-              />
-            </PopoverContent>
-          </Popover>
-        )}
       </div>
 
       {/* Progress bar - hide during success animation */}
