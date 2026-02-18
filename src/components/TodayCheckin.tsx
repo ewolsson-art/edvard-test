@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { format, differenceInDays, parseISO, isToday } from 'date-fns';
 import { sv } from 'date-fns/locale';
 import { Zap, Sun, CloudRain, MessageSquare, CheckCircle2, Pill, Pencil, Moon, Utensils, Dumbbell, ThumbsUp, ThumbsDown, Check, X, ChevronRight, ChevronLeft, Heart, AlertTriangle, HelpCircle, CalendarIcon } from 'lucide-react';
@@ -105,10 +105,20 @@ export function TodayCheckin({
   const [currentStep, setCurrentStep] = useState<Step>('mood');
   const [isEditing, setIsEditing] = useState(false);
   const [showComment, setShowComment] = useState<Step | null>(null);
+  const commentRef = useRef<HTMLDivElement>(null);
   
   // Form data
   const [checkinData, setCheckinData] = useState<CheckinData>({});
   const [customAnswersState, setCustomAnswersState] = useState<Record<string, string>>(initialCustomAnswers);
+
+  // Scroll comment area into view when shown
+  useEffect(() => {
+    if (showComment && commentRef.current) {
+      setTimeout(() => {
+        commentRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }, 50);
+    }
+  }, [showComment]);
 
   // Reset state when date changes
   useEffect(() => {
@@ -414,7 +424,7 @@ export function TodayCheckin({
           </div>
 
           {showComment === 'mood' ? (
-            <div className="max-w-md mx-auto space-y-3">
+            <div ref={commentRef} className="max-w-md mx-auto space-y-3">
               <Textarea
                 placeholder="Berätta mer om hur du mår..."
                 value={checkinData.moodComment || ''}
@@ -479,7 +489,7 @@ export function TodayCheckin({
           </div>
 
           {showComment === 'sleep' ? (
-            <div className="max-w-md mx-auto space-y-3">
+            <div ref={commentRef} className="max-w-md mx-auto space-y-3">
               <Textarea
                 placeholder="Berätta mer om din sömn..."
                 value={checkinData.sleepComment || ''}
@@ -557,7 +567,7 @@ export function TodayCheckin({
           </div>
 
           {showComment === 'eating' ? (
-            <div className="max-w-md mx-auto space-y-3">
+            <div ref={commentRef} className="max-w-md mx-auto space-y-3">
               <Textarea
                 placeholder="Berätta mer om din mat..."
                 value={checkinData.eatingComment || ''}
@@ -622,7 +632,7 @@ export function TodayCheckin({
           </div>
 
           {showComment === 'exercise' ? (
-            <div className="max-w-md mx-auto space-y-3">
+            <div ref={commentRef} className="max-w-md mx-auto space-y-3">
               <Textarea
                 placeholder="Berätta mer om din träning..."
                 value={checkinData.exerciseComment || ''}
@@ -822,13 +832,15 @@ export function TodayCheckin({
             {/* Comment section */}
             <div className="space-y-3">
               {showComment === 'medication' ? (
-                <Textarea
-                  placeholder="Skriv en kommentar om dina mediciner..."
-                  value={checkinData.medicationComment || ''}
-                  onChange={(e) => setCheckinData(prev => ({ ...prev, medicationComment: e.target.value }))}
-                  className="min-h-[80px] resize-none"
-                  maxLength={500}
-                />
+                <div ref={commentRef}>
+                  <Textarea
+                    placeholder="Skriv en kommentar om dina mediciner..."
+                    value={checkinData.medicationComment || ''}
+                    onChange={(e) => setCheckinData(prev => ({ ...prev, medicationComment: e.target.value }))}
+                    className="min-h-[80px] resize-none"
+                    maxLength={500}
+                  />
+                </div>
               ) : (
                 <button
                   onClick={() => setShowComment('medication')}
