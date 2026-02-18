@@ -63,7 +63,7 @@ export function AuthNavbar() {
               </button>
             ))}
             <button
-              onClick={() => navigate("/login")}
+              onClick={() => navigate("/logga-in")}
               className="ml-3 px-5 py-2 text-sm font-semibold text-[hsl(225_30%_7%)] bg-[hsl(45_85%_55%)] rounded-full hover:bg-[hsl(45_85%_60%)] hover:scale-105 active:scale-[0.98] transition-all duration-200 shadow-[0_2px_12px_hsl(45_85%_55%/0.25)]"
             >
               Logga in
@@ -106,7 +106,7 @@ export function AuthNavbar() {
             </button>
           ))}
           <button
-            onClick={() => { setIsMobileMenuOpen(false); navigate("/login"); }}
+            onClick={() => { setIsMobileMenuOpen(false); navigate("/logga-in"); }}
             className="w-full mt-3 px-5 py-3 text-sm font-semibold text-[hsl(225_30%_7%)] bg-[hsl(45_85%_55%)] rounded-full hover:bg-[hsl(45_85%_60%)] transition-all duration-200"
           >
             Logga in
