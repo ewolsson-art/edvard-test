@@ -99,44 +99,44 @@ const Characteristics = () => {
               key={card.type}
               onClick={() => navigate(`/kannetecken/${card.slug}`)}
               className={cn(
-                "w-full glass-card p-5 flex items-center gap-4 text-left transition-all duration-200 group",
+                "w-full glass-card p-6 md:p-8 flex items-center gap-5 text-left transition-all duration-300 group hover:scale-[1.01] hover:shadow-lg",
                 card.hoverBorder,
                 isActive && card.borderActive
               )}
             >
-              <div className={cn("p-3 rounded-xl shrink-0", card.iconBg)}>
-                <Icon className={cn("h-6 w-6", card.iconColor)} />
+              <div className={cn("p-4 rounded-2xl shrink-0", card.iconBg)}>
+                <Icon className={cn("h-8 w-8", card.iconColor)} />
               </div>
 
               <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2 mb-1">
-                  <h2 className="font-semibold text-lg text-foreground">{card.title}</h2>
+                <div className="flex items-center gap-2.5 mb-2">
+                  <h2 className="font-bold text-xl text-foreground">{card.title}</h2>
                   {isActive && (
-                    <Badge className={cn("text-[10px] px-2 py-0.5", card.activeBadge)}>
+                    <Badge className={cn("text-[10px] px-2.5 py-0.5", card.activeBadge)}>
                       {card.activeLabel}
                     </Badge>
                   )}
                 </div>
 
                 {chars.length > 0 ? (
-                  <div className="flex flex-wrap gap-1.5 mt-1">
-                    {chars.slice(0, 4).map((c) => (
-                      <Badge key={c.id} variant="secondary" className={cn("text-xs py-0.5 px-2.5", card.badgeItem)}>
+                  <div className="flex flex-wrap gap-2 mt-1.5">
+                    {chars.slice(0, 5).map((c) => (
+                      <Badge key={c.id} variant="secondary" className={cn("text-sm py-1 px-3", card.badgeItem)}>
                         {c.name}
                       </Badge>
                     ))}
-                    {chars.length > 4 && (
-                      <span className="text-xs text-muted-foreground self-center">
-                        +{chars.length - 4} till
+                    {chars.length > 5 && (
+                      <span className="text-sm text-muted-foreground self-center">
+                        +{chars.length - 5} till
                       </span>
                     )}
                   </div>
                 ) : (
-                  <p className="text-sm text-muted-foreground">{card.description}</p>
+                  <p className="text-muted-foreground">{card.description}</p>
                 )}
               </div>
 
-              <ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-foreground transition-colors shrink-0" />
+              <ChevronRight className="w-6 h-6 text-muted-foreground group-hover:text-foreground group-hover:translate-x-0.5 transition-all shrink-0" />
             </button>
           );
         })}
