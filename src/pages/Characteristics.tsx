@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { Zap, Cloud, Sun, ChevronRight } from 'lucide-react';
+import { Zap, Cloud, Sun, ChevronRight, Sparkles } from 'lucide-react';
 import { useCharacteristics } from '@/hooks/useCharacteristics';
 import { useMoodData } from '@/hooks/useMoodData';
 import { cn } from '@/lib/utils';
@@ -10,44 +10,50 @@ const moodCards = [
   {
     type: 'elevated' as const,
     slug: 'uppvarvad',
-    title: 'Uppvarvad period',
-    description: 'Kännetecken när du är uppvarvad',
+    title: 'Uppvarvad',
+    subtitle: 'Period med förhöjt stämningsläge',
     icon: Zap,
-    iconBg: 'bg-amber-100 dark:bg-amber-900/30',
-    iconColor: 'text-amber-600 dark:text-amber-400',
-    activeBadge: 'bg-amber-500 text-white',
-    activeLabel: 'Aktuellt mående',
-    badgeItem: 'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300',
-    borderActive: 'ring-2 ring-amber-400 dark:ring-amber-500 shadow-lg',
-    hoverBorder: 'hover:border-amber-300 dark:hover:border-amber-800',
+    gradient: 'from-amber-500/20 via-amber-400/5 to-transparent',
+    glowColor: 'shadow-amber-500/10',
+    iconBg: 'bg-gradient-to-br from-amber-400 to-amber-600',
+    iconColor: 'text-white',
+    activeDot: 'bg-amber-500',
+    badgeItem: 'bg-amber-500/10 text-amber-700 dark:text-amber-300 border border-amber-500/20',
+    borderActive: 'ring-2 ring-amber-400/60 dark:ring-amber-500/50',
+    hoverShadow: 'hover:shadow-xl hover:shadow-amber-500/10',
+    countColor: 'text-amber-600 dark:text-amber-400',
   },
   {
     type: 'stable' as const,
     slug: 'stabil',
-    title: 'Stabil period',
-    description: 'Kännetecken när du är i balans',
+    title: 'Stabil',
+    subtitle: 'Period i balans',
     icon: Sun,
-    iconBg: 'bg-emerald-100 dark:bg-emerald-900/30',
-    iconColor: 'text-emerald-600 dark:text-emerald-400',
-    activeBadge: 'bg-emerald-500 text-white',
-    activeLabel: 'Aktuellt mående',
-    badgeItem: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-300',
-    borderActive: 'ring-2 ring-emerald-400 dark:ring-emerald-500 shadow-lg',
-    hoverBorder: 'hover:border-emerald-300 dark:hover:border-emerald-800',
+    gradient: 'from-emerald-500/20 via-emerald-400/5 to-transparent',
+    glowColor: 'shadow-emerald-500/10',
+    iconBg: 'bg-gradient-to-br from-emerald-400 to-emerald-600',
+    iconColor: 'text-white',
+    activeDot: 'bg-emerald-500',
+    badgeItem: 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border border-emerald-500/20',
+    borderActive: 'ring-2 ring-emerald-400/60 dark:ring-emerald-500/50',
+    hoverShadow: 'hover:shadow-xl hover:shadow-emerald-500/10',
+    countColor: 'text-emerald-600 dark:text-emerald-400',
   },
   {
     type: 'depressed' as const,
     slug: 'nedstamd',
-    title: 'Nedstämd period',
-    description: 'Kännetecken när du är nedstämd',
+    title: 'Nedstämd',
+    subtitle: 'Period med sänkt stämningsläge',
     icon: Cloud,
-    iconBg: 'bg-red-100 dark:bg-red-900/30',
-    iconColor: 'text-red-600 dark:text-red-400',
-    activeBadge: 'bg-red-500 text-white',
-    activeLabel: 'Aktuellt mående',
-    badgeItem: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300',
-    borderActive: 'ring-2 ring-red-400 dark:ring-red-500 shadow-lg',
-    hoverBorder: 'hover:border-red-300 dark:hover:border-red-800',
+    gradient: 'from-rose-500/20 via-rose-400/5 to-transparent',
+    glowColor: 'shadow-rose-500/10',
+    iconBg: 'bg-gradient-to-br from-rose-400 to-rose-600',
+    iconColor: 'text-white',
+    activeDot: 'bg-rose-500',
+    badgeItem: 'bg-rose-500/10 text-rose-700 dark:text-rose-300 border border-rose-500/20',
+    borderActive: 'ring-2 ring-rose-400/60 dark:ring-rose-500/50',
+    hoverShadow: 'hover:shadow-xl hover:shadow-rose-500/10',
+    countColor: 'text-rose-600 dark:text-rose-400',
   },
 ];
 
@@ -81,15 +87,24 @@ const Characteristics = () => {
 
   return (
     <div className="max-w-2xl mx-auto py-8 px-4 md:px-8">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-foreground mb-2">Mina kännetecken</h1>
-        <p className="text-muted-foreground">
-          Identifiera hur du brukar känna dig i olika perioder. Det kan hjälpa dig och din vårdgivare att tidigt upptäcka förändringar.
+      {/* Header */}
+      <div className="mb-10">
+        <div className="flex items-center gap-3 mb-3">
+          <div className="p-2 rounded-xl bg-primary/10">
+            <Sparkles className="w-5 h-5 text-primary" />
+          </div>
+          <h1 className="font-display text-3xl md:text-4xl font-bold text-foreground">
+            Mina kännetecken
+          </h1>
+        </div>
+        <p className="text-muted-foreground leading-relaxed ml-[52px]">
+          Lär känna dina mönster – det hjälper dig och din vårdgivare att tidigt upptäcka förändringar.
         </p>
       </div>
 
+      {/* Cards */}
       <div className="space-y-4">
-        {moodCards.map((card) => {
+        {moodCards.map((card, index) => {
           const Icon = card.icon;
           const chars = getCharacteristics(card.type);
           const isActive = latestMood === card.type;
@@ -99,51 +114,69 @@ const Characteristics = () => {
               key={card.type}
               onClick={() => navigate(`/kannetecken/${card.slug}`)}
               className={cn(
-                "w-full glass-card p-6 md:p-8 flex items-center gap-5 text-left transition-all duration-300 group hover:scale-[1.01] hover:shadow-lg",
-                card.hoverBorder,
+                "w-full relative overflow-hidden rounded-2xl border border-border/60 bg-card p-6 md:p-7",
+                "flex items-center gap-5 text-left",
+                "transition-all duration-300 group",
+                "hover:scale-[1.015] hover:border-border",
+                card.hoverShadow,
                 isActive && card.borderActive
               )}
+              style={{ animationDelay: `${index * 80}ms` }}
             >
-              <div className={cn("p-4 rounded-2xl shrink-0", card.iconBg)}>
-                <Icon className={cn("h-8 w-8", card.iconColor)} />
+              {/* Subtle gradient overlay */}
+              <div className={cn("absolute inset-0 bg-gradient-to-r opacity-60 pointer-events-none", card.gradient)} />
+
+              {/* Icon */}
+              <div className={cn(
+                "relative z-10 p-3.5 rounded-2xl shrink-0 shadow-lg",
+                card.iconBg
+              )}>
+                <Icon className={cn("h-7 w-7", card.iconColor)} />
               </div>
 
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2.5 mb-2">
-                  <h2 className="font-bold text-xl text-foreground">{card.title}</h2>
+              {/* Content */}
+              <div className="relative z-10 flex-1 min-w-0">
+                <div className="flex items-center gap-2.5 mb-1">
+                  <h2 className="font-bold text-xl text-foreground tracking-tight">{card.title}</h2>
                   {isActive && (
-                    <Badge className={cn("text-[10px] px-2.5 py-0.5", card.activeBadge)}>
-                      {card.activeLabel}
-                    </Badge>
+                    <span className="flex items-center gap-1.5">
+                      <span className={cn("w-2 h-2 rounded-full animate-pulse", card.activeDot)} />
+                      <span className="text-xs font-medium text-muted-foreground">Nu</span>
+                    </span>
                   )}
                 </div>
 
                 {chars.length > 0 ? (
-                  <div className="flex flex-wrap gap-2 mt-1.5">
-                    {chars.slice(0, 5).map((c) => (
-                      <Badge key={c.id} variant="secondary" className={cn("text-sm py-1 px-3", card.badgeItem)}>
+                  <div className="flex flex-wrap gap-1.5 mt-2">
+                    {chars.slice(0, 4).map((c) => (
+                      <span key={c.id} className={cn("text-xs py-1 px-2.5 rounded-full font-medium", card.badgeItem)}>
                         {c.name}
-                      </Badge>
+                      </span>
                     ))}
-                    {chars.length > 5 && (
-                      <span className="text-sm text-muted-foreground self-center">
-                        +{chars.length - 5} till
+                    {chars.length > 4 && (
+                      <span className={cn("text-xs font-semibold self-center", card.countColor)}>
+                        +{chars.length - 4}
                       </span>
                     )}
                   </div>
                 ) : (
-                  <p className="text-muted-foreground">{card.description}</p>
+                  <p className="text-sm text-muted-foreground mt-0.5">{card.subtitle}</p>
                 )}
               </div>
 
-              <ChevronRight className="w-6 h-6 text-muted-foreground group-hover:text-foreground group-hover:translate-x-0.5 transition-all shrink-0" />
+              {/* Arrow */}
+              <div className="relative z-10 shrink-0">
+                <div className="w-10 h-10 rounded-xl bg-muted/50 group-hover:bg-muted flex items-center justify-center transition-all duration-300">
+                  <ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-foreground group-hover:translate-x-0.5 transition-all duration-300" />
+                </div>
+              </div>
             </button>
           );
         })}
       </div>
 
       {/* Sharing section */}
-      <div className="mt-8">
+      <div className="mt-10">
         <CharacteristicsSharingSection />
       </div>
     </div>
