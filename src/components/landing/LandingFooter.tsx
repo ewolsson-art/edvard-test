@@ -130,11 +130,8 @@ export function LandingFooter() {
         <div className="h-px bg-white/[0.06] mb-5" />
 
         {/* Bottom */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-white/30">
+        <div className="flex items-center justify-center text-xs text-white/30">
           <span>© {new Date().getFullYear()} Toddy. Alla rättigheter förbehållna.</span>
-          <span className="flex items-center gap-1.5">
-            Gjord med <span className="text-[hsl(45_85%_55%/0.5)]">♥</span> i Sverige
-          </span>
         </div>
       </div>
     </footer>
