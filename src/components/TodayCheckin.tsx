@@ -902,14 +902,14 @@ export function TodayCheckin({
 
       {/* Step: Custom Questions */}
       {currentStep === 'custom_questions' && (
-        <div className={`space-y-4 md:space-y-6 step-slide-in`} key={stepKey}>
-          <Button variant="ghost" size="sm" onClick={goBack} className="mb-2 gap-1">
+        <div className={`space-y-6 md:space-y-8 step-slide-in`} key={stepKey}>
+          <Button variant="ghost" size="sm" onClick={goBack} className="gap-1.5 text-muted-foreground/60">
             <ChevronLeft className="w-4 h-4" />
             Tillbaka
           </Button>
-          <div className="text-center mb-4 md:mb-6">
-            <HelpCircle className="w-10 h-10 md:w-12 md:h-12 mx-auto mb-3 text-primary" />
-            <h1 className="font-display text-xl sm:text-2xl md:text-3xl font-bold mb-1">
+          <div className="text-center">
+            <HelpCircle className="w-12 h-12 md:w-14 md:h-14 mx-auto mb-4 text-primary" />
+            <h1 className="font-display text-2xl sm:text-3xl font-bold">
               Egna frågor
             </h1>
           </div>
