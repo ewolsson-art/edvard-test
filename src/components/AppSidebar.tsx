@@ -21,23 +21,53 @@ import {
   SidebarFooter,
 } from "@/components/ui/sidebar";
 
-const patientNavItems = [
-  { title: "Idag", url: "/", icon: CalendarDays },
-  { title: "Översikt", url: "/oversikt", icon: BarChart3 },
-  { title: "Min profil", url: "/profil", icon: UserCircle },
-  { title: "Inställningar", url: "/installningar", icon: Settings },
+const patientNavGroups = [
+  {
+    label: "Dagligt",
+    items: [
+      { title: "Idag", url: "/", icon: CalendarDays },
+      { title: "Översikt", url: "/oversikt", icon: BarChart3 },
+    ],
+  },
+  {
+    label: "Konto",
+    items: [
+      { title: "Min profil", url: "/profil", icon: UserCircle },
+      { title: "Inställningar", url: "/installningar", icon: Settings },
+    ],
+  },
 ];
 
-const doctorNavItems = [
-  { title: "Hem", url: "/lakare", icon: Home },
-  { title: "Mina patienter", url: "/mina-patienter", icon: Users },
-  { title: "Min profil", url: "/profil", icon: UserCircle },
+const doctorNavGroups = [
+  {
+    label: "Översikt",
+    items: [
+      { title: "Hem", url: "/lakare", icon: Home },
+      { title: "Mina patienter", url: "/mina-patienter", icon: Users },
+    ],
+  },
+  {
+    label: "Konto",
+    items: [
+      { title: "Min profil", url: "/profil", icon: UserCircle },
+    ],
+  },
 ];
 
-const relativeNavItems = [
-  { title: "Hem", url: "/anhorig", icon: Home },
-  { title: "Rapporter", url: "/anhorig-rapporter", icon: FileText },
-  { title: "Min profil", url: "/profil", icon: UserCircle },
+const relativeNavGroups = [
+  {
+    label: "Översikt",
+    items: [
+      { title: "Hem", url: "/anhorig", icon: Home },
+      { title: "Rapporter", url: "/anhorig-rapporter", icon: FileText },
+    ],
+  },
+  {
+    label: "Konto",
+    items: [
+      { title: "Min profil", url: "/profil", icon: UserCircle },
+    ],
+  },
 ];
 
 export function AppSidebar() {
