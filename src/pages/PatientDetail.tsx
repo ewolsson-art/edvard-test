@@ -12,8 +12,7 @@ const PatientDetail = () => {
   
   const { 
     approvedConnections: doctorConnections, 
-    isLoading: doctorLoading, 
-    toggleChatEnabled 
+    isLoading: doctorLoading
   } = useDoctorConnections();
   
   const { 
@@ -33,7 +32,6 @@ const PatientDetail = () => {
   // Convert relative connection to match doctor connection format for PatientOverview
   const normalizedConnection = connection ? {
     ...connection,
-    chat_enabled: 'chat_enabled' in connection ? connection.chat_enabled : false,
     patient_profile: connection.patient_profile,
     patient_email: connection.patient_email,
   } : null;
@@ -74,7 +72,6 @@ const PatientDetail = () => {
           <PatientOverview 
             connection={normalizedConnection as any} 
             onBack={handleBack}
-            onToggleChatEnabled={isDoctor ? toggleChatEnabled : undefined}
           />
         </div>
       </div>
