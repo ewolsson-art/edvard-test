@@ -1,9 +1,6 @@
 import { useState, useEffect } from 'react';
-import { format, startOfDay, isToday, parseISO } from 'date-fns';
+import { format, isToday, parseISO } from 'date-fns';
 import { useSearchParams } from 'react-router-dom';
-import { sv } from 'date-fns/locale';
-import { CalendarIcon, ChevronLeft } from 'lucide-react';
-import { TodayCheckin } from '@/components/TodayCheckin';
 import { useMoodData } from '@/hooks/useMoodData';
 import { useMedications } from '@/hooks/useMedications';
 import { useProfile } from '@/hooks/useProfile';
@@ -12,10 +9,7 @@ import { useStreak } from '@/hooks/useStreak';
 import { useCustomCheckinQuestions } from '@/hooks/useCustomCheckinQuestions';
 import { StreakBadge } from '@/components/StreakBadge';
 import { CheckinData } from '@/types/mood';
-import { Button } from '@/components/ui/button';
-import { Calendar } from '@/components/ui/calendar';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { cn } from '@/lib/utils';
+import { TodayCheckin } from '@/components/TodayCheckin';
 
 const Index = () => {
   const [searchParams, setSearchParams] = useSearchParams();
