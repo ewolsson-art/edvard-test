@@ -107,6 +107,7 @@ export function TodayCheckin({
   const [slideDirection, setSlideDirection] = useState<'forward' | 'back'>('forward');
   const [stepKey, setStepKey] = useState(0);
   const [showComment, setShowComment] = useState<Step | null>(null);
+  const [showSideEffects, setShowSideEffects] = useState(false);
   const commentRef = useRef<HTMLDivElement>(null);
   
   // Form data
@@ -710,16 +711,28 @@ export function TodayCheckin({
               <ChevronLeft className="w-4 h-4" />
               Tillbaka
             </Button>
-            <button
-              onClick={() => setShowComment(showComment === 'medication' ? null : 'medication')}
-              className={cn(
-                "p-2.5 rounded-xl transition-colors",
-                showComment === 'medication' ? "bg-primary/10 text-primary" : "text-muted-foreground/40 hover:text-muted-foreground hover:bg-muted/50"
-              )}
-              aria-label="Lägg till kommentar"
-            >
-              <MessageSquare className="w-5 h-5" />
-            </button>
+            <div className="flex items-center gap-1">
+              <button
+                onClick={() => setShowSideEffects(!showSideEffects)}
+                className={cn(
+                  "p-2.5 rounded-xl transition-colors",
+                  (showSideEffects || checkinData.medicationSideEffects?.length) ? "bg-amber-500/10 text-amber-500" : "text-muted-foreground/40 hover:text-muted-foreground hover:bg-muted/50"
+                )}
+                aria-label="Rapportera biverkningar"
+              >
+                <AlertTriangle className="w-5 h-5" />
+              </button>
+              <button
+                onClick={() => setShowComment(showComment === 'medication' ? null : 'medication')}
+                className={cn(
+                  "p-2.5 rounded-xl transition-colors",
+                  showComment === 'medication' ? "bg-primary/10 text-primary" : "text-muted-foreground/40 hover:text-muted-foreground hover:bg-muted/50"
+                )}
+                aria-label="Lägg till kommentar"
+              >
+                <MessageSquare className="w-5 h-5" />
+              </button>
+            </div>
           </div>
           <div className="text-center">
             <Pill className="w-12 h-12 md:w-14 md:h-14 mx-auto mb-4 text-primary" />
@@ -813,41 +826,8 @@ export function TodayCheckin({
           {/* Side effects section */}
           <div className="max-w-md mx-auto space-y-4">
             <div className="border-t pt-4">
-              <button
-                onClick={() => setCheckinData(prev => ({
-                  ...prev,
-                  medicationSideEffects: prev.medicationSideEffects?.length ? [] : ['other']
-                }))}
-                className={cn(
-                  "w-full flex items-center gap-3 p-4 rounded-xl border-2 transition-all text-left",
-                  checkinData.medicationSideEffects?.length 
-                    ? "border-amber-500/50 bg-amber-500/10" 
-                    : "border-border hover:border-amber-500/30"
-                )}
-              >
-                <AlertTriangle className={cn(
-                  "w-5 h-5",
-                  checkinData.medicationSideEffects?.length ? "text-amber-500" : "text-muted-foreground"
-                )} />
-                <div className="flex-1">
-                  <p className={cn(
-                    "font-medium text-sm",
-                    checkinData.medicationSideEffects?.length && "text-amber-600 dark:text-amber-400"
-                  )}>
-                    Rapportera biverkningar
-                  </p>
-                  <p className="text-xs text-muted-foreground">
-                    Tryck här om du upplevt biverkningar
-                  </p>
-                </div>
-                <Checkbox 
-                  checked={!!checkinData.medicationSideEffects?.length}
-                  className="h-5 w-5"
-                />
-              </button>
-
-              {/* Side effects options */}
-              {checkinData.medicationSideEffects?.length ? (
+              {/* Side effects section */}
+              {showSideEffects && (
                 <div className="mt-3 space-y-2">
                   <p className="text-sm font-medium text-amber-600 dark:text-amber-400">
                     Vilka biverkningar har du upplevt?
@@ -887,7 +867,7 @@ export function TodayCheckin({
                     ))}
                   </div>
                 </div>
-              ) : null}
+              )}
             </div>
 
             {/* Comment section */}
