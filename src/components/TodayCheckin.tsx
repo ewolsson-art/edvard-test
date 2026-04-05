@@ -894,7 +894,7 @@ export function TodayCheckin({
                 Slutför incheckning
               </Button>
             ) : (
-              <Button onClick={() => setCurrentStep(getNextStep('medication') as Step)} className="w-full mt-4 gap-2">
+              <Button onClick={() => navigateStep(getNextStep('medication') as Step)} className="w-full mt-4 gap-2">
                 <ChevronRight className="w-4 h-4" />
                 Nästa
               </Button>
