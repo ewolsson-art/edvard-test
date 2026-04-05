@@ -212,7 +212,7 @@ export function TodayCheckin({
     if (nextStep === 'success-animation') {
       handleCompleteWithData({ ...checkinData, exercised });
     } else {
-      setCurrentStep(nextStep);
+      navigateStep(nextStep);
     }
   };
 
