@@ -367,9 +367,9 @@ export function TodayCheckin({
   }
 
   return (
-    <div className="glass-card p-8 md:p-12 fade-in max-h-[calc(100vh-6rem)] md:max-h-[calc(100vh-4rem)] overflow-y-auto">
-      <div className="text-center mb-4">
-        <p className="text-muted-foreground text-lg capitalize">{formattedDate}</p>
+    <div className="glass-card p-5 sm:p-6 md:p-12 fade-in max-h-[calc(100vh-6rem)] md:max-h-[calc(100vh-4rem)] overflow-y-auto">
+      <div className="text-center mb-3 md:mb-4">
+        <p className="text-muted-foreground text-sm sm:text-base md:text-lg capitalize">{formattedDate}</p>
         {!isDisplayToday && (
           <p className="text-xs text-primary mt-1">Retroaktiv incheckning</p>
         )}
@@ -377,9 +377,9 @@ export function TodayCheckin({
 
       {/* Progress bar - hide during success animation */}
       {currentStep !== 'success-animation' && (
-        <div className="max-w-md mx-auto mb-8">
-          <Progress value={getStepProgress()} className="h-2" />
-          <p className="text-xs text-muted-foreground text-center mt-2">
+        <div className="max-w-md mx-auto mb-5 md:mb-8">
+          <Progress value={getStepProgress()} className="h-1.5 md:h-2" />
+          <p className="text-xs text-muted-foreground text-center mt-1.5">
             Steg {STEPS.indexOf(currentStep) + 1} av {STEPS.length}
           </p>
         </div>
@@ -387,15 +387,15 @@ export function TodayCheckin({
 
       {/* Step: Mood */}
       {currentStep === 'mood' && (
-        <div className="space-y-6 fade-in">
+        <div className="space-y-4 md:space-y-6 fade-in">
           {isEditing && (
-            <Button variant="ghost" size="sm" onClick={() => setIsEditing(false)} className="mb-4 gap-1 text-destructive hover:text-destructive hover:bg-destructive/10">
+            <Button variant="ghost" size="sm" onClick={() => setIsEditing(false)} className="mb-2 gap-1 text-destructive hover:text-destructive hover:bg-destructive/10">
               <X className="w-4 h-4" />
               Avbryt
             </Button>
           )}
-          <div className="text-center mb-6">
-            <h1 className="font-display text-2xl md:text-3xl font-bold mb-2">
+          <div className="text-center mb-4 md:mb-6">
+            <h1 className="font-display text-xl sm:text-2xl md:text-3xl font-bold mb-1">
               {isDisplayToday 
                 ? (firstName ? `Hej ${firstName}! Hur har du mått idag?` : 'Hej! Hur har du mått idag?')
                 : (firstName ? `Hej ${firstName}! Hur mådde du den här dagen?` : 'Hur mådde du den här dagen?')
@@ -403,22 +403,22 @@ export function TodayCheckin({
             </h1>
           </div>
 
-          <div className="grid grid-cols-3 gap-4 md:gap-6 max-w-3xl mx-auto">
+          <div className="grid grid-cols-3 gap-3 md:gap-6 max-w-3xl mx-auto">
             {moodButtons.map(({ mood, icon: Icon, label, cssClass }) => (
               <button
                 key={mood}
                 onClick={() => handleMoodSelect(mood)}
                 className={cn(
-                  "mood-btn rounded-3xl p-6 md:p-8 flex flex-col items-center gap-4 group",
+                  "mood-btn rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8 flex flex-col items-center gap-2.5 sm:gap-4 group",
                   cssClass,
-                  checkinData.mood === mood && "ring-4 ring-offset-4 ring-offset-background scale-[1.02]"
+                  checkinData.mood === mood && "ring-3 sm:ring-4 ring-offset-2 sm:ring-offset-4 ring-offset-background scale-[1.02]"
                 )}
               >
                 <div className="relative">
                   <div className="absolute inset-0 bg-white/20 rounded-full blur-xl scale-150 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                  <Icon className="w-12 h-12 md:w-14 md:h-14 relative z-10 transition-transform duration-300 group-hover:scale-110" />
+                  <Icon className="w-9 h-9 sm:w-12 sm:h-12 md:w-14 md:h-14 relative z-10 transition-transform duration-300 group-hover:scale-110" />
                 </div>
-                <span className="font-semibold text-sm md:text-base text-center leading-tight tracking-wide">{label}</span>
+                <span className="font-semibold text-xs sm:text-sm md:text-base text-center leading-tight tracking-wide">{label}</span>
               </button>
             ))}
           </div>
