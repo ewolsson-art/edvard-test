@@ -447,19 +447,19 @@ export function TodayCheckin({
 
       {/* Step: Sleep */}
       {currentStep === 'sleep' && (
-        <div className="space-y-6 fade-in">
-          <Button variant="ghost" size="sm" onClick={goBack} className="mb-4 gap-1">
+        <div className="space-y-4 md:space-y-6 fade-in">
+          <Button variant="ghost" size="sm" onClick={goBack} className="mb-2 gap-1">
             <ChevronLeft className="w-4 h-4" />
             Tillbaka
           </Button>
-          <div className="text-center mb-6">
-            <Moon className="w-12 h-12 mx-auto mb-4 text-primary" />
-            <h1 className="font-display text-2xl md:text-3xl font-bold mb-2">
+          <div className="text-center mb-4 md:mb-6">
+            <Moon className="w-10 h-10 md:w-12 md:h-12 mx-auto mb-3 text-primary" />
+            <h1 className="font-display text-xl sm:text-2xl md:text-3xl font-bold mb-1">
               Hur har du sovit?
             </h1>
           </div>
 
-          <div className="grid grid-cols-2 gap-5 max-w-lg mx-auto">
+          <div className="grid grid-cols-2 gap-3 sm:gap-5 max-w-lg mx-auto">
             <button
               onClick={() => handleSleepSelect('good')}
               className={cn(
@@ -512,19 +512,19 @@ export function TodayCheckin({
 
       {/* Step: Eating */}
       {currentStep === 'eating' && (
-        <div className="space-y-6 fade-in">
-          <Button variant="ghost" size="sm" onClick={goBack} className="mb-4 gap-1">
+        <div className="space-y-4 md:space-y-6 fade-in">
+          <Button variant="ghost" size="sm" onClick={goBack} className="mb-2 gap-1">
             <ChevronLeft className="w-4 h-4" />
             Tillbaka
           </Button>
-          <div className="text-center mb-6">
-            <Utensils className="w-12 h-12 mx-auto mb-4 text-primary" />
-            <h1 className="font-display text-2xl md:text-3xl font-bold mb-2">
+          <div className="text-center mb-4 md:mb-6">
+            <Utensils className="w-10 h-10 md:w-12 md:h-12 mx-auto mb-3 text-primary" />
+            <h1 className="font-display text-xl sm:text-2xl md:text-3xl font-bold mb-1">
               Hur har du ätit?
             </h1>
           </div>
 
-          <div className="grid grid-cols-3 gap-4 max-w-2xl mx-auto">
+          <div className="grid grid-cols-3 gap-2.5 sm:gap-4 max-w-2xl mx-auto">
             <button
               onClick={() => handleEatingSelect('good')}
               className={cn(
@@ -590,19 +590,19 @@ export function TodayCheckin({
 
       {/* Step: Exercise */}
       {currentStep === 'exercise' && (
-        <div className="space-y-6 fade-in">
-          <Button variant="ghost" size="sm" onClick={goBack} className="mb-4 gap-1">
+        <div className="space-y-4 md:space-y-6 fade-in">
+          <Button variant="ghost" size="sm" onClick={goBack} className="mb-2 gap-1">
             <ChevronLeft className="w-4 h-4" />
             Tillbaka
           </Button>
-          <div className="text-center mb-6">
-            <Dumbbell className="w-12 h-12 mx-auto mb-4 text-primary" />
-            <h1 className="font-display text-2xl md:text-3xl font-bold mb-2">
+          <div className="text-center mb-4 md:mb-6">
+            <Dumbbell className="w-10 h-10 md:w-12 md:h-12 mx-auto mb-3 text-primary" />
+            <h1 className="font-display text-xl sm:text-2xl md:text-3xl font-bold mb-1">
               Har du tränat?
             </h1>
           </div>
 
-          <div className="grid grid-cols-2 gap-5 max-w-lg mx-auto">
+          <div className="grid grid-cols-2 gap-3 sm:gap-5 max-w-lg mx-auto">
             <button
               onClick={() => handleExerciseSelect(true)}
               className={cn(
@@ -655,19 +655,19 @@ export function TodayCheckin({
 
       {/* Step: Medication */}
       {currentStep === 'medication' && (
-        <div className="space-y-6 fade-in">
-          <Button variant="ghost" size="sm" onClick={goBack} className="mb-4 gap-1">
+        <div className="space-y-4 md:space-y-6 fade-in">
+          <Button variant="ghost" size="sm" onClick={goBack} className="mb-2 gap-1">
             <ChevronLeft className="w-4 h-4" />
             Tillbaka
           </Button>
-          <div className="text-center mb-6">
-            <Pill className="w-12 h-12 mx-auto mb-4 text-primary" />
-            <h1 className="font-display text-2xl md:text-3xl font-bold mb-2">
+          <div className="text-center mb-4 md:mb-6">
+            <Pill className="w-10 h-10 md:w-12 md:h-12 mx-auto mb-3 text-primary" />
+            <h1 className="font-display text-xl sm:text-2xl md:text-3xl font-bold mb-1">
               Har du tagit dina mediciner?
             </h1>
           </div>
 
-          <div className="grid grid-cols-2 gap-5 max-w-lg mx-auto">
+          <div className="grid grid-cols-2 gap-3 sm:gap-5 max-w-lg mx-auto">
             <button
               onClick={() => {
                 // Mark all medications as taken
@@ -869,14 +869,14 @@ export function TodayCheckin({
 
       {/* Step: Custom Questions */}
       {currentStep === 'custom_questions' && (
-        <div className="space-y-6 fade-in">
-          <Button variant="ghost" size="sm" onClick={goBack} className="mb-4 gap-1">
+        <div className="space-y-4 md:space-y-6 fade-in">
+          <Button variant="ghost" size="sm" onClick={goBack} className="mb-2 gap-1">
             <ChevronLeft className="w-4 h-4" />
             Tillbaka
           </Button>
-          <div className="text-center mb-6">
-            <HelpCircle className="w-12 h-12 mx-auto mb-4 text-primary" />
-            <h1 className="font-display text-2xl md:text-3xl font-bold mb-2">
+          <div className="text-center mb-4 md:mb-6">
+            <HelpCircle className="w-10 h-10 md:w-12 md:h-12 mx-auto mb-3 text-primary" />
+            <h1 className="font-display text-xl sm:text-2xl md:text-3xl font-bold mb-1">
               Egna frågor
             </h1>
           </div>
