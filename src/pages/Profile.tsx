@@ -8,7 +8,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Loader2, User, Mail, Save, Stethoscope, HeartPulse, Building2, Hospital, Users, ChevronRight, Pill, UserPlus, Heart, ClipboardList } from 'lucide-react';
+import { Loader2, User, Mail, Save, Stethoscope, HeartPulse, Building2, Hospital, Users, ChevronRight, Pill, UserPlus, Heart, ClipboardList, Sparkles } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { DiagnosesSection } from '@/components/DiagnosesSection';
 import { MedicationsSection } from '@/components/MedicationsSection';
@@ -17,13 +17,14 @@ import { RelativeConnectionsSection } from '@/components/RelativeConnectionsSect
 import { DelegatesSection } from '@/components/DelegatesSection';
 import { RelativePatientConnectionsSection } from '@/components/RelativePatientConnectionsSection';
 import { AvatarUpload } from '@/components/AvatarUpload';
+import { CharacteristicsSharingSection } from '@/components/CharacteristicsSharingSection';
 
 const profileSchema = z.object({
   firstName: z.string().trim().max(50, { message: "Max 50 tecken" }).optional(),
   lastName: z.string().trim().max(50, { message: "Max 50 tecken" }).optional(),
 });
 
-type ProfileView = 'main' | 'edit' | 'medications' | 'doctors' | 'relatives' | 'diagnoses' | 'delegates' | 'relative-patients';
+type ProfileView = 'main' | 'edit' | 'medications' | 'doctors' | 'relatives' | 'diagnoses' | 'delegates' | 'relative-patients' | 'characteristics';
 
 const Profile = () => {
   const { user } = useAuth();
@@ -161,6 +162,16 @@ const Profile = () => {
   if (view === 'relative-patients') {
     return <SubPage title="Mina närstående" onBack={() => setView('main')}><RelativePatientConnectionsSection /></SubPage>;
   }
+  if (view === 'characteristics') {
+    return (
+      <SubPage title="Kännetecken" onBack={() => setView('main')}>
+        <CharacteristicsInlineView />
+        <div className="mt-8">
+          <CharacteristicsSharingSection />
+        </div>
+      </SubPage>
+    );
+  }
 
   // Main profile view
   const displayName = [profile?.first_name, profile?.last_name].filter(Boolean).join(' ') || 'Användare';
@@ -196,6 +207,7 @@ const Profile = () => {
           <SettingsGroup label="Medicinsk information">
             <SettingsRow icon={Pill} label="Mediciner" description="Hantera dina mediciner" onClick={() => setView('medications')} />
             <SettingsRow icon={ClipboardList} label="Diagnoser" description="Dina registrerade diagnoser" onClick={() => setView('diagnoses')} />
+            <SettingsRow icon={Sparkles} label="Kännetecken" description="Mönster för olika perioder" onClick={() => setView('characteristics')} />
           </SettingsGroup>
         )}
 
