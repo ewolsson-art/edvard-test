@@ -21,7 +21,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
-import { Loader2, Save, Trash2, AlertTriangle, Brain, Moon, Utensils, Dumbbell, Pill, Settings as SettingsIcon } from 'lucide-react';
+import { Loader2, Save, Trash2, AlertTriangle, Brain, Moon, Utensils, Dumbbell, Pill, ChevronRight, Bell, Lock, MessageSquarePlus, Settings as SettingsIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { NotificationSettings } from '@/components/NotificationSettings';
 import { ChangePasswordSection } from '@/components/ChangePasswordSection';
@@ -35,6 +35,8 @@ const CHECKIN_OPTIONS = [
   { id: 'include_medication', label: 'Medicin', description: 'Om du tagit din medicin', icon: Pill },
 ];
 
+type SettingsView = 'main' | 'checkin' | 'custom-questions' | 'notifications' | 'password' | 'delete';
+
 const Settings = () => {
   const { user, signOut } = useAuth();
   const { isPatient, isLoading: roleLoading } = useUserRole();
@@ -43,6 +45,7 @@ const Settings = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
 
+  const [view, setView] = useState<SettingsView>('main');
   const [checkinSelections, setCheckinSelections] = useState({
     include_mood: true, include_sleep: true, include_eating: true,
     include_exercise: true, include_medication: true,
@@ -124,115 +127,170 @@ const Settings = () => {
     );
   }
 
-  return (
-    <div className="py-8 px-4 md:px-8">
-      <div className="max-w-2xl mx-auto space-y-8">
-        <header>
-          <h1 className="font-display text-3xl md:text-4xl font-bold mb-2">Inställningar</h1>
-          <p className="text-muted-foreground">Anpassa din upplevelse</p>
-        </header>
-
-        {/* Check-in Preferences */}
-        {isPatient && (
-          <div className="glass-card p-6">
-            <div className="flex items-center gap-3 mb-6">
-              <div className="p-2 rounded-lg bg-primary/10">
-                <SettingsIcon className="w-5 h-5 text-primary" />
+  // Sub-view: Check-in preferences
+  if (view === 'checkin') {
+    return (
+      <SubPage title="Anpassa check-in" onBack={() => setView('main')}>
+        <div className="space-y-3 mb-6">
+          {CHECKIN_OPTIONS.map((option) => {
+            const Icon = option.icon;
+            const isChecked = checkinSelections[option.id as keyof typeof checkinSelections];
+            const isDisabled = option.required;
+            return (
+              <div
+                key={option.id}
+                className={cn(
+                  "flex items-center gap-4 p-4 rounded-xl border-2 transition-all",
+                  isDisabled ? 'cursor-not-allowed opacity-75' : 'cursor-pointer',
+                  isChecked ? 'border-primary bg-primary/5' : 'border-border bg-muted/30 hover:border-muted-foreground/30'
+                )}
+                onClick={() => !isDisabled && handleCheckinToggle(option.id)}
+              >
+                <Checkbox id={option.id} checked={isChecked} onCheckedChange={() => !isDisabled && handleCheckinToggle(option.id)} disabled={isDisabled} className="pointer-events-none" />
+                <div className={cn("p-2 rounded-lg", isChecked ? 'bg-primary/10' : 'bg-muted')}>
+                  <Icon className={cn("w-5 h-5", isChecked ? 'text-primary' : 'text-muted-foreground')} />
+                </div>
+                <div className="flex-1">
+                  <Label htmlFor={option.id} className={cn("font-medium flex items-center gap-2", isDisabled ? 'cursor-not-allowed' : 'cursor-pointer')}>
+                    {option.label}
+                    {option.required && <span className="text-xs bg-muted text-muted-foreground px-2 py-0.5 rounded-full">Obligatorisk</span>}
+                  </Label>
+                  <p className="text-sm text-muted-foreground">{option.description}</p>
+                </div>
               </div>
-              <div>
-                <h2 className="font-display text-xl font-semibold">Anpassa din check-in</h2>
-                <p className="text-sm text-muted-foreground">Välj vilka kategorier du vill inkludera</p>
-              </div>
-            </div>
-
-            <div className="space-y-3 mb-6">
-              {CHECKIN_OPTIONS.map((option) => {
-                const Icon = option.icon;
-                const isChecked = checkinSelections[option.id as keyof typeof checkinSelections];
-                const isDisabled = option.required;
-                return (
-                  <div
-                    key={option.id}
-                    className={cn(
-                      "flex items-center gap-4 p-4 rounded-xl border-2 transition-all",
-                      isDisabled ? 'cursor-not-allowed opacity-75' : 'cursor-pointer',
-                      isChecked ? 'border-primary bg-primary/5' : 'border-border bg-muted/30 hover:border-muted-foreground/30'
-                    )}
-                    onClick={() => !isDisabled && handleCheckinToggle(option.id)}
-                  >
-                    <Checkbox id={option.id} checked={isChecked} onCheckedChange={() => !isDisabled && handleCheckinToggle(option.id)} disabled={isDisabled} className="pointer-events-none" />
-                    <div className={cn("p-2 rounded-lg", isChecked ? 'bg-primary/10' : 'bg-muted')}>
-                      <Icon className={cn("w-5 h-5", isChecked ? 'text-primary' : 'text-muted-foreground')} />
-                    </div>
-                    <div className="flex-1">
-                      <Label htmlFor={option.id} className={cn("font-medium flex items-center gap-2", isDisabled ? 'cursor-not-allowed' : 'cursor-pointer')}>
-                        {option.label}
-                        {option.required && <span className="text-xs bg-muted text-muted-foreground px-2 py-0.5 rounded-full">Obligatorisk</span>}
-                      </Label>
-                      <p className="text-sm text-muted-foreground">{option.description}</p>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-
-            <Button onClick={handleSaveCheckin} className="w-full gap-2" disabled={isSavingCheckin || !hasCheckinChanges}>
-              {isSavingCheckin ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
-              {hasCheckinChanges ? 'Spara ändringar' : 'Inga ändringar'}
-            </Button>
-          </div>
-        )}
-
-        {/* Custom Questions */}
-        {isPatient && (
-          <div className="glass-card p-6">
-            <CustomQuestionsSection questions={customQuestions} onAdd={addQuestion} onRemove={removeQuestion} />
-          </div>
-        )}
-
-        {/* Notifications */}
-        {isPatient && <NotificationSettings />}
-
-        {/* Change Password */}
-        <ChangePasswordSection />
-
-        {/* Delete Account */}
-        <div className="glass-card p-4 border-destructive/30">
-          <div className="flex items-center justify-between gap-4">
-            <p className="text-sm text-muted-foreground">Radera ditt konto och all data permanent.</p>
-            <AlertDialog>
-              <AlertDialogTrigger asChild>
-                <Button variant="destructive" size="sm" className="gap-2">
-                  <Trash2 className="w-4 h-4" />
-                  Radera konto
-                </Button>
-              </AlertDialogTrigger>
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle className="flex items-center gap-2">
-                    <AlertTriangle className="w-5 h-5 text-destructive" />
-                    Radera konto permanent
-                  </AlertDialogTitle>
-                  <AlertDialogDescription className="space-y-3">
-                    <p>Är du säker? All din data kommer att tas bort permanent.</p>
-                    <p className="font-medium">Skriv <span className="text-destructive font-bold">RADERA</span> för att bekräfta:</p>
-                    <Input value={deleteConfirmText} onChange={(e) => setDeleteConfirmText(e.target.value)} placeholder="RADERA" className="mt-2" />
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogCancel onClick={() => setDeleteConfirmText('')}>Avbryt</AlertDialogCancel>
-                  <AlertDialogAction onClick={handleDeleteAccount} disabled={deleteConfirmText !== 'RADERA' || isDeleting} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
-                    {isDeleting && <Loader2 className="w-4 h-4 animate-spin mr-2" />}
-                    Radera permanent
-                  </AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
-          </div>
+            );
+          })}
         </div>
+        <Button onClick={handleSaveCheckin} className="w-full gap-2" disabled={isSavingCheckin || !hasCheckinChanges}>
+          {isSavingCheckin ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+          {hasCheckinChanges ? 'Spara ändringar' : 'Inga ändringar'}
+        </Button>
+      </SubPage>
+    );
+  }
+
+  if (view === 'custom-questions') {
+    return (
+      <SubPage title="Egna frågor" onBack={() => setView('main')}>
+        <CustomQuestionsSection questions={customQuestions} onAdd={addQuestion} onRemove={removeQuestion} />
+      </SubPage>
+    );
+  }
+
+  if (view === 'notifications') {
+    return (
+      <SubPage title="Notiser" onBack={() => setView('main')}>
+        <NotificationSettings />
+      </SubPage>
+    );
+  }
+
+  if (view === 'password') {
+    return (
+      <SubPage title="Byt lösenord" onBack={() => setView('main')}>
+        <ChangePasswordSection />
+      </SubPage>
+    );
+  }
+
+  if (view === 'delete') {
+    return (
+      <SubPage title="Radera konto" onBack={() => setView('main')}>
+        <div className="space-y-4">
+          <div className="flex items-center gap-3 p-4 rounded-xl bg-destructive/10 border border-destructive/20">
+            <AlertTriangle className="w-5 h-5 text-destructive flex-shrink-0" />
+            <p className="text-sm text-destructive">All din data kommer att tas bort permanent och kan inte återställas.</p>
+          </div>
+          <div className="space-y-2">
+            <Label className="text-sm text-muted-foreground">
+              Skriv <span className="text-destructive font-bold">RADERA</span> för att bekräfta:
+            </Label>
+            <Input value={deleteConfirmText} onChange={(e) => setDeleteConfirmText(e.target.value)} placeholder="RADERA" />
+          </div>
+          <Button variant="destructive" onClick={handleDeleteAccount} disabled={deleteConfirmText !== 'RADERA' || isDeleting} className="w-full gap-2">
+            {isDeleting && <Loader2 className="w-4 h-4 animate-spin" />}
+            <Trash2 className="w-4 h-4" />
+            Radera konto permanent
+          </Button>
+        </div>
+      </SubPage>
+    );
+  }
+
+  // Main settings list
+  return (
+    <div className="py-6 px-4 md:px-8">
+      <div className="max-w-2xl mx-auto">
+        <h1 className="font-display text-2xl font-bold mb-6 text-center md:text-left">Inställningar</h1>
+
+        {/* Check-in section */}
+        {isPatient && (
+          <SettingsGroup label="Din check-in">
+            <SettingsRow icon={SettingsIcon} label="Anpassa check-in" description="Välj kategorier" onClick={() => setView('checkin')} />
+            <SettingsRow icon={MessageSquarePlus} label="Egna frågor" description="Lägg till egna frågor" onClick={() => setView('custom-questions')} />
+            <SettingsRow icon={Bell} label="Notiser" description="Påminnelser och push" onClick={() => setView('notifications')} />
+          </SettingsGroup>
+        )}
+
+        {/* Account section */}
+        <SettingsGroup label="Konto och säkerhet">
+          <SettingsRow icon={Lock} label="Byt lösenord" onClick={() => setView('password')} />
+          <SettingsRow icon={Trash2} label="Radera konto" destructive onClick={() => setView('delete')} />
+        </SettingsGroup>
       </div>
     </div>
   );
 };
+
+/* ── Reusable sub-components ── */
+
+function SubPage({ title, onBack, children }: { title: string; onBack: () => void; children: React.ReactNode }) {
+  return (
+    <div className="py-6 px-4 md:px-8 animate-fade-in">
+      <div className="max-w-2xl mx-auto">
+        <div className="flex items-center gap-3 mb-6">
+          <button onClick={onBack} className="p-2 -ml-2 rounded-lg hover:bg-muted transition-colors" aria-label="Tillbaka">
+            <ChevronRight className="w-5 h-5 rotate-180 text-foreground" />
+          </button>
+          <h1 className="font-display text-xl font-bold">{title}</h1>
+        </div>
+        {children}
+      </div>
+    </div>
+  );
+}
+
+function SettingsGroup({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <div className="mb-6">
+      <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2 px-1">{label}</p>
+      <div className="rounded-xl border border-border bg-card overflow-hidden divide-y divide-border">
+        {children}
+      </div>
+    </div>
+  );
+}
+
+function SettingsRow({ icon: Icon, label, description, destructive, onClick }: {
+  icon: React.ElementType;
+  label: string;
+  description?: string;
+  destructive?: boolean;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      onClick={onClick}
+      className="w-full flex items-center gap-4 px-4 py-3.5 text-left hover:bg-muted/50 active:bg-muted transition-colors"
+    >
+      <Icon className={cn("w-5 h-5 flex-shrink-0", destructive ? "text-destructive" : "text-muted-foreground")} />
+      <div className="flex-1 min-w-0">
+        <span className={cn("text-[15px] font-medium", destructive ? "text-destructive" : "text-foreground")}>{label}</span>
+        {description && <p className="text-xs text-muted-foreground truncate">{description}</p>}
+      </div>
+      <ChevronRight className="w-4 h-4 text-muted-foreground/50 flex-shrink-0" />
+    </button>
+  );
+}
 
 export default Settings;
