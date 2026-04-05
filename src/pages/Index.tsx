@@ -90,8 +90,8 @@ const Index = () => {
   }
 
   return (
-    <div className="h-[calc(100vh-3rem)] sm:h-[calc(100vh-3.5rem)] md:h-screen flex items-center justify-center py-3 sm:py-4 px-3 sm:px-4 overflow-hidden">
-      <div className="w-full max-w-2xl relative">
+    <div className="h-[calc(100vh-3rem)] sm:h-[calc(100vh-3.5rem)] md:h-screen flex items-center justify-center py-4 px-4 sm:px-5 overflow-hidden">
+      <div className="w-full max-w-xl relative">
         {/* Date picker for retroactive check-in */}
         {!isSelectedToday && (
           <div className="mb-4 flex items-center justify-center">
@@ -104,7 +104,7 @@ const Index = () => {
 
         {/* Subtle streak badge in top right */}
         {streakData.currentStreak > 0 && (
-          <div className="absolute -top-2 right-0 z-10">
+          <div className="absolute -top-1 right-0 z-10">
             <StreakBadge 
               currentStreak={streakData.currentStreak}
               longestStreak={streakData.longestStreak}

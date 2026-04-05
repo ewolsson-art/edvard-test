@@ -281,26 +281,26 @@ export function TodayCheckin({
   // Show complete state
   if (isCheckinComplete && !isEditing) {
     return (
-      <div className="glass-card p-4 sm:p-6 md:p-8 fade-in max-h-[calc(100vh-6rem)] md:max-h-[calc(100vh-4rem)] overflow-y-auto">
-        <div className="text-center mb-3">
-          <p className="text-muted-foreground text-sm sm:text-base capitalize">{formattedDate}</p>
+      <div className="glass-card p-5 sm:p-8 md:p-10 fade-in max-h-[calc(100vh-6rem)] md:max-h-[calc(100vh-4rem)] overflow-y-auto">
+        <div className="text-center mb-5">
+          <p className="text-muted-foreground text-sm capitalize">{formattedDate}</p>
           {!isDisplayToday && (
             <p className="text-xs text-primary mt-1">Retroaktiv incheckning</p>
           )}
         </div>
 
         <div className="text-center fade-in">
-          <div className="inline-flex items-center justify-center w-16 h-16 md:w-24 md:h-24 rounded-full bg-mood-stable/20 mb-3">
-            <CheckCircle2 className="w-8 h-8 md:w-12 md:h-12 text-mood-stable" />
+          <div className="inline-flex items-center justify-center w-14 h-14 md:w-20 md:h-20 rounded-full bg-mood-stable/15 mb-4">
+            <CheckCircle2 className="w-7 h-7 md:w-10 md:h-10 text-mood-stable" />
           </div>
           
-          <h1 className="font-display text-lg md:text-2xl font-bold mb-1 text-mood-stable">
+          <h1 className="font-display text-lg md:text-2xl font-bold text-mood-stable">
             Du har checkat in!
           </h1>
 
           {/* Streak badge */}
           {streakData.currentStreak > 0 && (
-            <div className="max-w-md mx-auto mt-3">
+            <div className="max-w-sm mx-auto mt-5">
               <StreakBadge 
                 currentStreak={streakData.currentStreak}
                 longestStreak={streakData.longestStreak}
@@ -311,7 +311,7 @@ export function TodayCheckin({
 
           {/* Encouragement message for depressed mood */}
           {todayEntry?.mood === 'depressed' && (
-            <div className="max-w-md mx-auto mt-6 p-4 rounded-xl bg-primary/10 border border-primary/20">
+            <div className="max-w-sm mx-auto mt-5 p-4 rounded-xl bg-primary/10 border border-primary/20">
               <div className="flex items-center justify-center gap-2 mb-2">
                 <Heart className="w-5 h-5 text-primary" />
               </div>
@@ -329,43 +329,43 @@ export function TodayCheckin({
           )}
 
           {/* Summary */}
-          <div className="max-w-md mx-auto mt-3 space-y-2 text-left">
+          <div className="max-w-sm mx-auto mt-5 space-y-2.5 text-left">
             <div className={cn(
-              "flex items-center gap-3 p-3 rounded-xl border",
+              "flex items-center gap-3 px-4 py-3 rounded-xl border",
               todayEntry?.mood === 'elevated' && "bg-mood-elevated/10 border-mood-elevated/20",
               todayEntry?.mood === 'stable' && "bg-mood-stable/10 border-mood-stable/20",
               todayEntry?.mood === 'depressed' && "bg-mood-depressed/10 border-mood-depressed/20",
             )}>
-              {todayEntry?.mood === 'elevated' && <Zap className="w-5 h-5 text-mood-elevated" />}
-              {todayEntry?.mood === 'stable' && <Sun className="w-5 h-5 text-mood-stable" />}
-              {todayEntry?.mood === 'depressed' && <CloudRain className="w-5 h-5 text-mood-depressed" />}
-              <span className="font-medium">Mående: <strong>{MOOD_LABELS[todayEntry!.mood]}</strong></span>
+              {todayEntry?.mood === 'elevated' && <Zap className="w-5 h-5 text-mood-elevated flex-shrink-0" />}
+              {todayEntry?.mood === 'stable' && <Sun className="w-5 h-5 text-mood-stable flex-shrink-0" />}
+              {todayEntry?.mood === 'depressed' && <CloudRain className="w-5 h-5 text-mood-depressed flex-shrink-0" />}
+              <span className="text-sm font-medium">Mående: <strong>{MOOD_LABELS[todayEntry!.mood]}</strong></span>
             </div>
             {preferences?.include_sleep && todayEntry?.sleepQuality && (
               <div className={cn(
-                "flex items-center gap-3 p-3 rounded-xl border",
+                "flex items-center gap-3 px-4 py-3 rounded-xl border",
                 todayEntry.sleepQuality === 'good' ? "bg-mood-stable/10 border-mood-stable/20" : "bg-mood-depressed/10 border-mood-depressed/20"
               )}>
-                <Moon className={cn("w-5 h-5", todayEntry.sleepQuality === 'good' ? "text-mood-stable" : "text-mood-depressed")} />
-                <span className="font-medium">Sömn: <strong>{QUALITY_LABELS[todayEntry.sleepQuality]}</strong></span>
+                <Moon className={cn("w-5 h-5 flex-shrink-0", todayEntry.sleepQuality === 'good' ? "text-mood-stable" : "text-mood-depressed")} />
+                <span className="text-sm font-medium">Sömn: <strong>{QUALITY_LABELS[todayEntry.sleepQuality]}</strong></span>
               </div>
             )}
             {preferences?.include_eating && todayEntry?.eatingQuality && (
               <div className={cn(
-                "flex items-center gap-3 p-3 rounded-xl border",
+                "flex items-center gap-3 px-4 py-3 rounded-xl border",
                 todayEntry.eatingQuality === 'good' ? "bg-mood-stable/10 border-mood-stable/20" : todayEntry.eatingQuality === 'bad' ? "bg-mood-depressed/10 border-mood-depressed/20" : "bg-primary/10 border-primary/20"
               )}>
-                <Utensils className={cn("w-5 h-5", todayEntry.eatingQuality === 'good' ? "text-mood-stable" : todayEntry.eatingQuality === 'bad' ? "text-mood-depressed" : "text-primary")} />
-                <span className="font-medium">Mat: <strong>{QUALITY_LABELS[todayEntry.eatingQuality]}</strong></span>
+                <Utensils className={cn("w-5 h-5 flex-shrink-0", todayEntry.eatingQuality === 'good' ? "text-mood-stable" : todayEntry.eatingQuality === 'bad' ? "text-mood-depressed" : "text-primary")} />
+                <span className="text-sm font-medium">Mat: <strong>{QUALITY_LABELS[todayEntry.eatingQuality]}</strong></span>
               </div>
             )}
             {preferences?.include_exercise && todayEntry?.exercised !== undefined && (
               <div className={cn(
-                "flex items-center gap-3 p-3 rounded-xl border",
+                "flex items-center gap-3 px-4 py-3 rounded-xl border",
                 todayEntry.exercised ? "bg-mood-stable/10 border-mood-stable/20" : "bg-muted/50 border-border"
               )}>
-                <Dumbbell className={cn("w-5 h-5", todayEntry.exercised ? "text-mood-stable" : "text-muted-foreground")} />
-                <span className="font-medium">Träning: <strong>{todayEntry.exercised ? 'Ja' : 'Nej'}</strong></span>
+                <Dumbbell className={cn("w-5 h-5 flex-shrink-0", todayEntry.exercised ? "text-mood-stable" : "text-muted-foreground")} />
+                <span className="text-sm font-medium">Träning: <strong>{todayEntry.exercised ? 'Ja' : 'Nej'}</strong></span>
               </div>
             )}
             {customQuestions.map((q) => {
@@ -373,17 +373,17 @@ export function TodayCheckin({
               if (!answer) return null;
               return (
                 <div key={q.id} className={cn(
-                  "flex items-center gap-3 p-3 rounded-xl border",
+                  "flex items-center gap-3 px-4 py-3 rounded-xl border",
                   answer === 'yes' ? "bg-mood-stable/10 border-mood-stable/20" : "bg-muted/50 border-border"
                 )}>
-                  <HelpCircle className={cn("w-5 h-5", answer === 'yes' ? "text-mood-stable" : "text-muted-foreground")} />
-                  <span className="font-medium">{q.question_text}: <strong>{answer === 'yes' ? 'Ja' : 'Nej'}</strong></span>
+                  <HelpCircle className={cn("w-5 h-5 flex-shrink-0", answer === 'yes' ? "text-mood-stable" : "text-muted-foreground")} />
+                  <span className="text-sm font-medium">{q.question_text}: <strong>{answer === 'yes' ? 'Ja' : 'Nej'}</strong></span>
                 </div>
               );
             })}
           </div>
 
-          <Button variant="ghost" size="sm" onClick={handleEdit} className="mt-4 gap-2">
+          <Button variant="ghost" size="sm" onClick={handleEdit} className="mt-6 gap-2 text-muted-foreground">
             <Pencil className="w-4 h-4" />
             Ändra incheckning
           </Button>
@@ -393,9 +393,9 @@ export function TodayCheckin({
   }
 
   return (
-    <div className="glass-card p-5 sm:p-6 md:p-12 fade-in max-h-[calc(100vh-6rem)] md:max-h-[calc(100vh-4rem)] overflow-y-auto">
-      <div className="text-center mb-3 md:mb-4">
-        <p className="text-muted-foreground text-sm sm:text-base md:text-lg capitalize">{formattedDate}</p>
+    <div className="glass-card p-5 sm:p-8 md:p-12 fade-in max-h-[calc(100vh-6rem)] md:max-h-[calc(100vh-4rem)] overflow-y-auto">
+      <div className="text-center mb-4 md:mb-5">
+        <p className="text-muted-foreground text-sm capitalize">{formattedDate}</p>
         {!isDisplayToday && (
           <p className="text-xs text-primary mt-1">Retroaktiv incheckning</p>
         )}
