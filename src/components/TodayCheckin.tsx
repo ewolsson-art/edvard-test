@@ -104,6 +104,7 @@ export function TodayCheckin({
     return { goodDaysCount, daysSinceGood };
   }, [yearEntries, displayDate]);
   
+  const isMobile = useIsMobile();
   const [currentStep, setCurrentStep] = useState<Step>('mood');
   const [isEditing, setIsEditing] = useState(false);
   const [slideDirection, setSlideDirection] = useState<'forward' | 'back'>('forward');
