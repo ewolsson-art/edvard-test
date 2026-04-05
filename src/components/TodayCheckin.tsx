@@ -15,6 +15,8 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Progress } from '@/components/ui/progress';
 import { StreakBadge } from '@/components/StreakBadge';
 import { CelebrationAnimation } from '@/components/CelebrationAnimation';
+import { FullscreenComment } from '@/components/FullscreenComment';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface StreakData {
   currentStreak: number;
