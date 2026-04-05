@@ -152,10 +152,10 @@ export function YearHeatmap({ year, entries, medicationDates = [], onPrevYear, o
                 const x = dayLabelWidth + colIdx * (cellSize + cellGap);
                 const y = headerHeight + rowIdx * (cellSize + cellGap);
 
-                let fill = 'var(--muted)';
-                if (mood === 'elevated') fill = 'var(--mood-elevated)';
-                else if (mood === 'stable') fill = 'var(--mood-stable)';
-                else if (mood === 'depressed') fill = 'var(--mood-depressed)';
+                let fill = 'hsl(var(--muted))';
+                if (mood === 'elevated') fill = 'hsl(var(--mood-elevated))';
+                else if (mood === 'stable') fill = 'hsl(var(--mood-stable))';
+                else if (mood === 'depressed') fill = 'hsl(var(--mood-depressed))';
 
                 return (
                   <g key={dateStr}>
