@@ -423,15 +423,15 @@ export function TodayCheckin({
 
       {/* Step: Mood */}
       {currentStep === 'mood' && (
-        <div className={`space-y-4 md:space-y-6 step-slide-in`} key={stepKey}>
+        <div className={`space-y-6 md:space-y-8 step-slide-in`} key={stepKey}>
           {isEditing && (
-            <Button variant="ghost" size="sm" onClick={() => setIsEditing(false)} className="mb-2 gap-1 text-destructive hover:text-destructive hover:bg-destructive/10">
+            <Button variant="ghost" size="sm" onClick={() => setIsEditing(false)} className="gap-1.5 text-destructive hover:text-destructive hover:bg-destructive/10">
               <X className="w-4 h-4" />
               Avbryt
             </Button>
           )}
-          <div className="text-center mb-4 md:mb-6">
-            <h1 className="font-display text-xl sm:text-2xl md:text-3xl font-bold mb-1">
+          <div className="text-center">
+            <h1 className="font-display text-2xl sm:text-3xl md:text-3xl font-bold leading-tight">
               {isDisplayToday 
                 ? (firstName ? `Hej ${firstName}! Hur har du mått idag?` : 'Hej! Hur har du mått idag?')
                 : (firstName ? `Hej ${firstName}! Hur mådde du den här dagen?` : 'Hur mådde du den här dagen?')
@@ -439,22 +439,22 @@ export function TodayCheckin({
             </h1>
           </div>
 
-          <div className="grid grid-cols-3 gap-3 md:gap-6 max-w-3xl mx-auto">
+          <div className="grid grid-cols-3 gap-3.5 md:gap-6 max-w-3xl mx-auto">
             {moodButtons.map(({ mood, icon: Icon, label, cssClass }) => (
               <button
                 key={mood}
                 onClick={() => handleMoodSelect(mood)}
                 className={cn(
-                  "mood-btn rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8 flex flex-col items-center gap-2.5 sm:gap-4 group",
+                  "mood-btn rounded-[1.25rem] aspect-square flex flex-col items-center justify-center gap-3 group",
                   cssClass,
-                  checkinData.mood === mood && "ring-3 sm:ring-4 ring-offset-2 sm:ring-offset-4 ring-offset-background scale-[1.02]"
+                  checkinData.mood === mood && "ring-3 ring-offset-2 ring-offset-background scale-[1.02]"
                 )}
               >
                 <div className="relative">
                   <div className="absolute inset-0 bg-white/20 rounded-full blur-xl scale-150 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                  <Icon className="w-9 h-9 sm:w-12 sm:h-12 md:w-14 md:h-14 relative z-10 transition-transform duration-300 group-hover:scale-110" />
+                  <Icon className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 relative z-10 transition-transform duration-300 group-hover:scale-110" />
                 </div>
-                <span className="font-semibold text-xs sm:text-sm md:text-base text-center leading-tight tracking-wide">{label}</span>
+                <span className="font-semibold text-sm sm:text-base text-center leading-tight tracking-wide">{label}</span>
               </button>
             ))}
           </div>
@@ -472,7 +472,7 @@ export function TodayCheckin({
           ) : (
             <button
               onClick={() => setShowComment('mood')}
-              className="flex items-center gap-2 mx-auto text-sm text-muted-foreground hover:text-foreground transition-colors"
+              className="flex items-center gap-2 mx-auto text-sm text-muted-foreground/60 hover:text-foreground transition-colors"
             >
               <MessageSquare className="w-4 h-4" />
               Lägg till kommentar
