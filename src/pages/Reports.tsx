@@ -351,19 +351,18 @@ const Reports = () => {
 
   if (!isLoaded || !medsLoaded || prefsLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="flex items-center justify-center py-12">
         <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
 
   return (
-    <div className="py-8 px-4 md:px-8">
-      <div className="max-w-4xl mx-auto space-y-8">
-        <header>
-          <h1 className="font-display text-3xl md:text-4xl font-bold mb-2">Rapporter</h1>
-          <p className="text-muted-foreground">Skapa insiktsfulla rapporter baserat på din insamlade data</p>
-        </header>
+    <div className="space-y-8">
+      <header>
+        <h2 className="font-display text-2xl md:text-3xl font-bold mb-2">Rapporter</h2>
+        <p className="text-muted-foreground text-sm">Skapa insiktsfulla rapporter baserat på din insamlade data</p>
+      </header>
 
         {/* Configuration Card */}
         <Card>
@@ -642,7 +641,6 @@ const Reports = () => {
           </Card>
         )}
       </div>
-    </div>
   );
 };
 

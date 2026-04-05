@@ -32,6 +32,7 @@ import { MoodStats as MoodStatsType, ExerciseType, QualityType } from '@/types/m
 import { Last30DaysOverview } from '@/components/Last30DaysOverview';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Dumbbell, Moon, Utensils, Pill } from 'lucide-react';
+import Reports from './Reports';
 
 type ViewType = 'week' | 'month' | 'year' | '30days';
 
