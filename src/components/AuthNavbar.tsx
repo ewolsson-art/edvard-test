@@ -88,26 +88,43 @@ export function AuthNavbar() {
         </div>
       </div>
 
-      {/* Mobile menu */}
+      {/* Mobile menu - fullscreen overlay */}
       <div
         className={cn(
-          "lg:hidden absolute top-16 left-0 right-0 bg-[hsl(230_30%_5%/0.95)] backdrop-blur-xl border-b border-white/10 transition-all duration-300 ease-in-out overflow-hidden",
-          isMobileMenuOpen ? "max-h-[400px] opacity-100" : "max-h-0 opacity-0"
+          "lg:hidden fixed inset-0 z-[60] bg-[hsl(230_30%_5%/0.98)] backdrop-blur-2xl transition-all duration-400 ease-in-out flex flex-col",
+          isMobileMenuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
         )}
       >
-        <div className="px-4 py-4 space-y-1">
-          {navItems.map((item) => (
+        {/* Close button */}
+        <div className="flex items-center justify-between h-16 px-4 sm:px-6">
+          <div className="cursor-pointer" onClick={() => { setIsMobileMenuOpen(false); navigate('/auth'); }}>
+            <Logo size="sm" className="[&_span]:!bg-none [&_span]:!text-white" />
+          </div>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setIsMobileMenuOpen(false)}
+            className="h-10 w-10 text-white hover:bg-white/10"
+          >
+            <X className="h-6 w-6" />
+          </Button>
+        </div>
+
+        {/* Nav links centered */}
+        <div className="flex-1 flex flex-col items-center justify-center gap-2 px-8">
+          {navItems.map((item, i) => (
             <button
               key={item.href}
               onClick={() => handleNavClick(item.href)}
-              className="w-full text-left px-4 py-3 text-sm font-medium text-white/70 hover:text-white hover:bg-white/10 rounded-lg transition-all duration-200"
+              className="w-full text-center py-4 text-lg font-medium text-white/70 hover:text-white hover:bg-white/5 rounded-2xl transition-all duration-200"
+              style={{ animationDelay: `${i * 50}ms` }}
             >
               {item.label}
             </button>
           ))}
           <button
             onClick={() => { setIsMobileMenuOpen(false); navigate("/logga-in"); }}
-            className="w-full mt-3 px-5 py-3 text-sm font-semibold text-[hsl(225_30%_7%)] bg-[hsl(45_85%_55%)] rounded-full hover:bg-[hsl(45_85%_60%)] transition-all duration-200"
+            className="w-full mt-6 px-5 py-4 text-base font-semibold text-[hsl(225_30%_7%)] bg-[hsl(45_85%_55%)] rounded-full hover:bg-[hsl(45_85%_60%)] transition-all duration-200 shadow-[0_2px_20px_hsl(45_85%_55%/0.3)]"
           >
             Logga in
           </button>
