@@ -94,7 +94,7 @@ export function AppSidebar() {
                     <NavLink 
                       to={item.url} 
                       end={item.url === '/' || item.url === '/lakare' || item.url === '/anhorig'}
-                      className="group relative flex items-center gap-3.5 px-4 py-3 rounded-2xl transition-all duration-300 ease-out hover:bg-gradient-to-r hover:from-primary/8 hover:to-primary/4 hover:shadow-lg hover:shadow-primary/5 hover:-translate-y-0.5" 
+                      className="group relative flex items-center gap-4 px-4 py-3.5 md:py-3 rounded-2xl transition-all duration-300 ease-out hover:bg-gradient-to-r hover:from-primary/8 hover:to-primary/4 hover:shadow-lg hover:shadow-primary/5 hover:-translate-y-0.5" 
                       activeClassName="bg-gradient-to-r from-primary/12 to-primary/6 text-primary font-semibold shadow-lg shadow-primary/10 before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2 before:w-1 before:h-8 before:bg-gradient-to-b before:from-primary before:to-primary/60 before:rounded-full before:shadow-lg before:shadow-primary/30"
                       style={{ animationDelay: `${index * 50}ms` }}
                       aria-label={item.url === '/profil' && hasPending ? `${item.title} - Du har nya notifikationer` : item.title}
@@ -103,7 +103,7 @@ export function AppSidebar() {
                     >
                       {item.url === '/profil' && avatarUrl ? (
                         <div className="relative">
-                          <Avatar className="h-6 w-6 shrink-0 ring-2 ring-background shadow-md group-hover:ring-primary/30 group-hover:shadow-lg transition-all duration-300">
+                          <Avatar className="h-8 w-8 md:h-6 md:w-6 shrink-0 ring-2 ring-background shadow-md group-hover:ring-primary/30 group-hover:shadow-lg transition-all duration-300">
                             <AvatarImage src={avatarUrl} alt="Profilbild" className="object-cover" />
                             <AvatarFallback className="text-xs bg-gradient-to-br from-primary/20 to-primary/10 text-primary font-medium">{getInitials()}</AvatarFallback>
                           </Avatar>
@@ -115,9 +115,9 @@ export function AppSidebar() {
                           )}
                         </div>
                       ) : item.url === '/profil' ? (
-                        <div className="relative flex items-center justify-center w-6 h-6">
+                        <div className="relative flex items-center justify-center w-8 h-8 md:w-6 md:h-6">
                           <div className="absolute inset-0 rounded-lg bg-gradient-to-br from-muted/50 to-muted/30 group-hover:from-primary/15 group-hover:to-primary/5 transition-all duration-300" aria-hidden="true" />
-                          <item.icon className="h-4 w-4 shrink-0 relative z-10 transition-all duration-300 group-hover:scale-110 group-hover:text-primary" />
+                          <item.icon className="h-5 w-5 md:h-4 md:w-4 shrink-0 relative z-10 transition-all duration-300 group-hover:scale-110 group-hover:text-primary" />
                           {hasPending && (
                             <span className="absolute -top-1 -right-1 flex h-3.5 w-3.5" aria-hidden="true">
                               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-destructive opacity-75" aria-hidden="true"></span>
@@ -126,13 +126,13 @@ export function AppSidebar() {
                           )}
                         </div>
                       ) : (
-                        <div className="relative flex items-center justify-center w-6 h-6">
+                        <div className="relative flex items-center justify-center w-8 h-8 md:w-6 md:h-6">
                           <div className="absolute inset-0 rounded-lg bg-gradient-to-br from-muted/50 to-muted/30 group-hover:from-primary/15 group-hover:to-primary/5 transition-all duration-300" aria-hidden="true" />
-                          <item.icon className="h-4 w-4 shrink-0 relative z-10 transition-all duration-300 group-hover:scale-110 group-hover:text-primary" aria-hidden="true" />
+                          <item.icon className="h-5 w-5 md:h-4 md:w-4 shrink-0 relative z-10 transition-all duration-300 group-hover:scale-110 group-hover:text-primary" aria-hidden="true" />
                         </div>
                       )}
                       {!isCollapsed && (
-                        <span className="text-sm font-medium tracking-wide transition-colors duration-300">{item.title}</span>
+                        <span className="text-base md:text-sm font-semibold md:font-medium tracking-wide transition-colors duration-300">{item.title}</span>
                       )}
                     </NavLink>
                   </SidebarMenuButton>
