@@ -272,20 +272,20 @@ export function TodayCheckin({
   // Show complete state
   if (isCheckinComplete && !isEditing) {
     return (
-      <div className="glass-card p-6 md:p-8 fade-in max-h-[calc(100vh-6rem)] md:max-h-[calc(100vh-4rem)] overflow-y-auto">
-        <div className="text-center mb-4">
-          <p className="text-muted-foreground text-base capitalize">{formattedDate}</p>
+      <div className="glass-card p-4 sm:p-6 md:p-8 fade-in max-h-[calc(100vh-6rem)] md:max-h-[calc(100vh-4rem)] overflow-y-auto">
+        <div className="text-center mb-3">
+          <p className="text-muted-foreground text-sm sm:text-base capitalize">{formattedDate}</p>
           {!isDisplayToday && (
             <p className="text-xs text-primary mt-1">Retroaktiv incheckning</p>
           )}
         </div>
 
         <div className="text-center fade-in">
-          <div className="inline-flex items-center justify-center w-20 h-20 md:w-24 md:h-24 rounded-full bg-mood-stable/20 mb-4">
-            <CheckCircle2 className="w-10 h-10 md:w-12 md:h-12 text-mood-stable" />
+          <div className="inline-flex items-center justify-center w-16 h-16 md:w-24 md:h-24 rounded-full bg-mood-stable/20 mb-3">
+            <CheckCircle2 className="w-8 h-8 md:w-12 md:h-12 text-mood-stable" />
           </div>
           
-          <h1 className="font-display text-xl md:text-2xl font-bold mb-1 text-mood-stable">
+          <h1 className="font-display text-lg md:text-2xl font-bold mb-1 text-mood-stable">
             Du har checkat in!
           </h1>
 
@@ -320,27 +320,27 @@ export function TodayCheckin({
           )}
 
           {/* Summary */}
-          <div className="max-w-md mx-auto mt-4 space-y-2 text-left">
-            <div className="flex items-center gap-3 p-2.5 rounded-lg bg-muted/30">
+          <div className="max-w-md mx-auto mt-3 space-y-1.5 text-left">
+            <div className="flex items-center gap-3 p-2 rounded-lg bg-muted/30">
               {todayEntry?.mood === 'elevated' && <Zap className="w-5 h-5 text-mood-elevated" />}
               {todayEntry?.mood === 'stable' && <Sun className="w-5 h-5 text-mood-stable" />}
               {todayEntry?.mood === 'depressed' && <CloudRain className="w-5 h-5 text-mood-depressed" />}
               <span>Mående: <strong>{MOOD_LABELS[todayEntry!.mood]}</strong></span>
             </div>
             {preferences?.include_sleep && todayEntry?.sleepQuality && (
-              <div className="flex items-center gap-3 p-2.5 rounded-lg bg-muted/30">
+              <div className="flex items-center gap-3 p-2 rounded-lg bg-muted/30">
                 <Moon className="w-5 h-5 text-primary" />
                 <span>Sömn: <strong>{QUALITY_LABELS[todayEntry.sleepQuality]}</strong></span>
               </div>
             )}
             {preferences?.include_eating && todayEntry?.eatingQuality && (
-              <div className="flex items-center gap-3 p-2.5 rounded-lg bg-muted/30">
+              <div className="flex items-center gap-3 p-2 rounded-lg bg-muted/30">
                 <Utensils className="w-5 h-5 text-primary" />
                 <span>Mat: <strong>{QUALITY_LABELS[todayEntry.eatingQuality]}</strong></span>
               </div>
             )}
             {preferences?.include_exercise && todayEntry?.exercised !== undefined && (
-              <div className="flex items-center gap-3 p-2.5 rounded-lg bg-muted/30">
+              <div className="flex items-center gap-3 p-2 rounded-lg bg-muted/30">
                 <Dumbbell className="w-5 h-5 text-primary" />
                 <span>Träning: <strong>{todayEntry.exercised ? 'Ja' : 'Nej'}</strong></span>
               </div>
@@ -349,7 +349,7 @@ export function TodayCheckin({
               const answer = customAnswersState[q.id];
               if (!answer) return null;
               return (
-                <div key={q.id} className="flex items-center gap-3 p-2.5 rounded-lg bg-muted/30">
+                <div key={q.id} className="flex items-center gap-3 p-2 rounded-lg bg-muted/30">
                   <HelpCircle className="w-5 h-5 text-primary" />
                   <span>{q.question_text}: <strong>{answer === 'yes' ? 'Ja' : 'Nej'}</strong></span>
                 </div>
@@ -367,9 +367,9 @@ export function TodayCheckin({
   }
 
   return (
-    <div className="glass-card p-8 md:p-12 fade-in max-h-[calc(100vh-6rem)] md:max-h-[calc(100vh-4rem)] overflow-y-auto">
-      <div className="text-center mb-4">
-        <p className="text-muted-foreground text-lg capitalize">{formattedDate}</p>
+    <div className="glass-card p-5 sm:p-6 md:p-12 fade-in max-h-[calc(100vh-6rem)] md:max-h-[calc(100vh-4rem)] overflow-y-auto">
+      <div className="text-center mb-3 md:mb-4">
+        <p className="text-muted-foreground text-sm sm:text-base md:text-lg capitalize">{formattedDate}</p>
         {!isDisplayToday && (
           <p className="text-xs text-primary mt-1">Retroaktiv incheckning</p>
         )}
@@ -377,9 +377,9 @@ export function TodayCheckin({
 
       {/* Progress bar - hide during success animation */}
       {currentStep !== 'success-animation' && (
-        <div className="max-w-md mx-auto mb-8">
-          <Progress value={getStepProgress()} className="h-2" />
-          <p className="text-xs text-muted-foreground text-center mt-2">
+        <div className="max-w-md mx-auto mb-5 md:mb-8">
+          <Progress value={getStepProgress()} className="h-1.5 md:h-2" />
+          <p className="text-xs text-muted-foreground text-center mt-1.5">
             Steg {STEPS.indexOf(currentStep) + 1} av {STEPS.length}
           </p>
         </div>
@@ -387,15 +387,15 @@ export function TodayCheckin({
 
       {/* Step: Mood */}
       {currentStep === 'mood' && (
-        <div className="space-y-6 fade-in">
+        <div className="space-y-4 md:space-y-6 fade-in">
           {isEditing && (
-            <Button variant="ghost" size="sm" onClick={() => setIsEditing(false)} className="mb-4 gap-1 text-destructive hover:text-destructive hover:bg-destructive/10">
+            <Button variant="ghost" size="sm" onClick={() => setIsEditing(false)} className="mb-2 gap-1 text-destructive hover:text-destructive hover:bg-destructive/10">
               <X className="w-4 h-4" />
               Avbryt
             </Button>
           )}
-          <div className="text-center mb-6">
-            <h1 className="font-display text-2xl md:text-3xl font-bold mb-2">
+          <div className="text-center mb-4 md:mb-6">
+            <h1 className="font-display text-xl sm:text-2xl md:text-3xl font-bold mb-1">
               {isDisplayToday 
                 ? (firstName ? `Hej ${firstName}! Hur har du mått idag?` : 'Hej! Hur har du mått idag?')
                 : (firstName ? `Hej ${firstName}! Hur mådde du den här dagen?` : 'Hur mådde du den här dagen?')
@@ -403,22 +403,22 @@ export function TodayCheckin({
             </h1>
           </div>
 
-          <div className="grid grid-cols-3 gap-4 md:gap-6 max-w-3xl mx-auto">
+          <div className="grid grid-cols-3 gap-3 md:gap-6 max-w-3xl mx-auto">
             {moodButtons.map(({ mood, icon: Icon, label, cssClass }) => (
               <button
                 key={mood}
                 onClick={() => handleMoodSelect(mood)}
                 className={cn(
-                  "mood-btn rounded-3xl p-6 md:p-8 flex flex-col items-center gap-4 group",
+                  "mood-btn rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8 flex flex-col items-center gap-2.5 sm:gap-4 group",
                   cssClass,
-                  checkinData.mood === mood && "ring-4 ring-offset-4 ring-offset-background scale-[1.02]"
+                  checkinData.mood === mood && "ring-3 sm:ring-4 ring-offset-2 sm:ring-offset-4 ring-offset-background scale-[1.02]"
                 )}
               >
                 <div className="relative">
                   <div className="absolute inset-0 bg-white/20 rounded-full blur-xl scale-150 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                  <Icon className="w-12 h-12 md:w-14 md:h-14 relative z-10 transition-transform duration-300 group-hover:scale-110" />
+                  <Icon className="w-9 h-9 sm:w-12 sm:h-12 md:w-14 md:h-14 relative z-10 transition-transform duration-300 group-hover:scale-110" />
                 </div>
-                <span className="font-semibold text-sm md:text-base text-center leading-tight tracking-wide">{label}</span>
+                <span className="font-semibold text-xs sm:text-sm md:text-base text-center leading-tight tracking-wide">{label}</span>
               </button>
             ))}
           </div>
@@ -447,19 +447,19 @@ export function TodayCheckin({
 
       {/* Step: Sleep */}
       {currentStep === 'sleep' && (
-        <div className="space-y-6 fade-in">
-          <Button variant="ghost" size="sm" onClick={goBack} className="mb-4 gap-1">
+        <div className="space-y-4 md:space-y-6 fade-in">
+          <Button variant="ghost" size="sm" onClick={goBack} className="mb-2 gap-1">
             <ChevronLeft className="w-4 h-4" />
             Tillbaka
           </Button>
-          <div className="text-center mb-6">
-            <Moon className="w-12 h-12 mx-auto mb-4 text-primary" />
-            <h1 className="font-display text-2xl md:text-3xl font-bold mb-2">
+          <div className="text-center mb-4 md:mb-6">
+            <Moon className="w-10 h-10 md:w-12 md:h-12 mx-auto mb-3 text-primary" />
+            <h1 className="font-display text-xl sm:text-2xl md:text-3xl font-bold mb-1">
               Hur har du sovit?
             </h1>
           </div>
 
-          <div className="grid grid-cols-2 gap-5 max-w-lg mx-auto">
+          <div className="grid grid-cols-2 gap-3 sm:gap-5 max-w-lg mx-auto">
             <button
               onClick={() => handleSleepSelect('good')}
               className={cn(
@@ -512,19 +512,19 @@ export function TodayCheckin({
 
       {/* Step: Eating */}
       {currentStep === 'eating' && (
-        <div className="space-y-6 fade-in">
-          <Button variant="ghost" size="sm" onClick={goBack} className="mb-4 gap-1">
+        <div className="space-y-4 md:space-y-6 fade-in">
+          <Button variant="ghost" size="sm" onClick={goBack} className="mb-2 gap-1">
             <ChevronLeft className="w-4 h-4" />
             Tillbaka
           </Button>
-          <div className="text-center mb-6">
-            <Utensils className="w-12 h-12 mx-auto mb-4 text-primary" />
-            <h1 className="font-display text-2xl md:text-3xl font-bold mb-2">
+          <div className="text-center mb-4 md:mb-6">
+            <Utensils className="w-10 h-10 md:w-12 md:h-12 mx-auto mb-3 text-primary" />
+            <h1 className="font-display text-xl sm:text-2xl md:text-3xl font-bold mb-1">
               Hur har du ätit?
             </h1>
           </div>
 
-          <div className="grid grid-cols-3 gap-4 max-w-2xl mx-auto">
+          <div className="grid grid-cols-3 gap-2.5 sm:gap-4 max-w-2xl mx-auto">
             <button
               onClick={() => handleEatingSelect('good')}
               className={cn(
@@ -590,19 +590,19 @@ export function TodayCheckin({
 
       {/* Step: Exercise */}
       {currentStep === 'exercise' && (
-        <div className="space-y-6 fade-in">
-          <Button variant="ghost" size="sm" onClick={goBack} className="mb-4 gap-1">
+        <div className="space-y-4 md:space-y-6 fade-in">
+          <Button variant="ghost" size="sm" onClick={goBack} className="mb-2 gap-1">
             <ChevronLeft className="w-4 h-4" />
             Tillbaka
           </Button>
-          <div className="text-center mb-6">
-            <Dumbbell className="w-12 h-12 mx-auto mb-4 text-primary" />
-            <h1 className="font-display text-2xl md:text-3xl font-bold mb-2">
+          <div className="text-center mb-4 md:mb-6">
+            <Dumbbell className="w-10 h-10 md:w-12 md:h-12 mx-auto mb-3 text-primary" />
+            <h1 className="font-display text-xl sm:text-2xl md:text-3xl font-bold mb-1">
               Har du tränat?
             </h1>
           </div>
 
-          <div className="grid grid-cols-2 gap-5 max-w-lg mx-auto">
+          <div className="grid grid-cols-2 gap-3 sm:gap-5 max-w-lg mx-auto">
             <button
               onClick={() => handleExerciseSelect(true)}
               className={cn(
@@ -655,19 +655,19 @@ export function TodayCheckin({
 
       {/* Step: Medication */}
       {currentStep === 'medication' && (
-        <div className="space-y-6 fade-in">
-          <Button variant="ghost" size="sm" onClick={goBack} className="mb-4 gap-1">
+        <div className="space-y-4 md:space-y-6 fade-in">
+          <Button variant="ghost" size="sm" onClick={goBack} className="mb-2 gap-1">
             <ChevronLeft className="w-4 h-4" />
             Tillbaka
           </Button>
-          <div className="text-center mb-6">
-            <Pill className="w-12 h-12 mx-auto mb-4 text-primary" />
-            <h1 className="font-display text-2xl md:text-3xl font-bold mb-2">
+          <div className="text-center mb-4 md:mb-6">
+            <Pill className="w-10 h-10 md:w-12 md:h-12 mx-auto mb-3 text-primary" />
+            <h1 className="font-display text-xl sm:text-2xl md:text-3xl font-bold mb-1">
               Har du tagit dina mediciner?
             </h1>
           </div>
 
-          <div className="grid grid-cols-2 gap-5 max-w-lg mx-auto">
+          <div className="grid grid-cols-2 gap-3 sm:gap-5 max-w-lg mx-auto">
             <button
               onClick={() => {
                 // Mark all medications as taken
@@ -869,14 +869,14 @@ export function TodayCheckin({
 
       {/* Step: Custom Questions */}
       {currentStep === 'custom_questions' && (
-        <div className="space-y-6 fade-in">
-          <Button variant="ghost" size="sm" onClick={goBack} className="mb-4 gap-1">
+        <div className="space-y-4 md:space-y-6 fade-in">
+          <Button variant="ghost" size="sm" onClick={goBack} className="mb-2 gap-1">
             <ChevronLeft className="w-4 h-4" />
             Tillbaka
           </Button>
-          <div className="text-center mb-6">
-            <HelpCircle className="w-12 h-12 mx-auto mb-4 text-primary" />
-            <h1 className="font-display text-2xl md:text-3xl font-bold mb-2">
+          <div className="text-center mb-4 md:mb-6">
+            <HelpCircle className="w-10 h-10 md:w-12 md:h-12 mx-auto mb-3 text-primary" />
+            <h1 className="font-display text-xl sm:text-2xl md:text-3xl font-bold mb-1">
               Egna frågor
             </h1>
           </div>

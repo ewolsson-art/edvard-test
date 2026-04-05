@@ -52,7 +52,7 @@ const AppLayout = ({ children }: { children: React.ReactNode }) => (
     <div className="min-h-screen flex w-full">
       <AppSidebar />
       <main id="main-content" className="flex-1 relative" role="main" aria-label="Huvudinnehåll">
-        <header className="sticky top-0 z-10 h-14 flex items-center px-4 bg-background/90 backdrop-blur-xl border-b border-border/50 md:hidden" role="banner">
+        <header className="sticky top-0 z-10 h-12 sm:h-14 flex items-center px-3 sm:px-4 bg-background/90 backdrop-blur-xl border-b border-border/50 md:hidden" role="banner">
           <SidebarTrigger className="h-9 w-9 rounded-lg bg-card border border-border shadow-sm hover:bg-muted" aria-label="Öppna navigeringsmeny" />
         </header>
         <div className="md:pt-0">

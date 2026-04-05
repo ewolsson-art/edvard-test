@@ -244,9 +244,9 @@
 
   /* Modern checkin card styles */
   .checkin-option-card {
-    @apply relative overflow-hidden rounded-3xl border-2 border-transparent;
+    @apply relative overflow-hidden rounded-2xl sm:rounded-3xl border-2 border-transparent;
     @apply bg-gradient-to-br from-card via-card to-muted/30;
-    @apply p-8 flex flex-col items-center gap-4 transition-all duration-300;
+    @apply p-5 sm:p-8 flex flex-col items-center gap-3 sm:gap-4 transition-all duration-300;
     @apply hover:border-primary/30 hover:shadow-xl hover:shadow-primary/10;
     @apply hover:-translate-y-1;
     @apply active:scale-[0.98];
@@ -267,7 +267,7 @@
   }
 
   .checkin-option-card .icon-wrapper {
-    @apply w-16 h-16 rounded-2xl flex items-center justify-center;
+    @apply w-12 h-12 sm:w-16 sm:h-16 rounded-xl sm:rounded-2xl flex items-center justify-center;
     @apply transition-all duration-300;
   }
 
