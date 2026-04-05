@@ -182,9 +182,9 @@ const Signup = () => {
             <div className="bg-white/5 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/10 p-8 md:p-10 text-center animate-fade-in">
               <div className="flex justify-center mb-6 relative">
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="w-20 h-20 bg-[hsl(45_85%_55%/0.15)] rounded-full blur-xl animate-pulse" />
+                  <div className="w-20 h-20 bg-[hsl(260_60%_72%/0.15)] rounded-full blur-xl animate-pulse" />
                 </div>
-                <div className="h-16 w-16 rounded-full bg-[hsl(45_85%_55%/0.15)] flex items-center justify-center relative">
+                <div className="h-16 w-16 rounded-full bg-[hsl(260_60%_72%/0.15)] flex items-center justify-center relative">
                   <CheckCircle2 className="h-8 w-8 text-[hsl(260 60% 72%)] animate-scale-in" />
                 </div>
               </div>
@@ -222,7 +222,7 @@ const Signup = () => {
               <div className="text-xs text-white/50 font-medium mr-2">Steg {currentStepIndex + 1}/2</div>
               <div className={cn(
                 "w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold transition-all duration-300",
-                step === "role" ? "bg-[hsl(260 60% 72%)] text-[hsl(230_30%_5%)] shadow-md shadow-[hsl(45_85%_55%/0.3)]" : "bg-white/10 text-white/60"
+                step === "role" ? "bg-[hsl(260 60% 72%)] text-[hsl(230_30%_5%)] shadow-md shadow-[hsl(260_60%_72%/0.3)]" : "bg-white/10 text-white/60"
               )} aria-hidden="true">
                 1
               </div>
@@ -232,7 +232,7 @@ const Signup = () => {
               )} aria-hidden="true" />
               <div className={cn(
                 "w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold transition-all duration-300",
-                step === "details" || step === "submitting" ? "bg-[hsl(260 60% 72%)] text-[hsl(230_30%_5%)] shadow-md shadow-[hsl(45_85%_55%/0.3)]" : "bg-white/10 text-white/30"
+                step === "details" || step === "submitting" ? "bg-[hsl(260 60% 72%)] text-[hsl(230_30%_5%)] shadow-md shadow-[hsl(260_60%_72%/0.3)]" : "bg-white/10 text-white/30"
               )} aria-hidden="true">
                 2
               </div>
@@ -270,7 +270,7 @@ const Signup = () => {
                         className={cn(
                           "w-full p-3 rounded-xl border-2 text-left transition-all duration-300 group",
                           isSelected 
-                            ? "border-[hsl(260 60% 72%)] bg-[hsl(45_85%_55%/0.1)] shadow-md shadow-[hsl(45_85%_55%/0.1)]" 
+                            ? "border-[hsl(260 60% 72%)] bg-[hsl(260_60%_72%/0.1)] shadow-md shadow-[hsl(260_60%_72%/0.1)]" 
                             : "border-white/15 bg-white/5 hover:border-white/30 hover:bg-white/10"
                         )}
                       >
@@ -306,7 +306,7 @@ const Signup = () => {
                 <Button
                   onClick={handleContinue}
                   disabled={!role}
-                  className="w-full h-11 rounded-xl text-sm font-semibold bg-[hsl(260 60% 72%)] text-[hsl(230_30%_5%)] hover:bg-[hsl(260_60%_80%)] shadow-lg shadow-[hsl(45_85%_55%/0.2)] hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 group mt-5"
+                  className="w-full h-11 rounded-xl text-sm font-semibold bg-[hsl(260 60% 72%)] text-[hsl(230_30%_5%)] hover:bg-[hsl(260_60%_80%)] shadow-lg shadow-[hsl(260_60%_72%/0.2)] hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 group mt-5"
                 >
                   Fortsätt
                   <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
@@ -350,7 +350,7 @@ const Signup = () => {
                         value={firstName}
                         onChange={(e) => setFirstName(e.target.value)}
                         className={cn(
-                          "h-10 bg-white/5 border-white/15 rounded-lg text-white placeholder:text-white/30 focus:ring-2 focus:ring-[hsl(45_85%_55%/0.3)] transition-all duration-300",
+                          "h-10 bg-white/5 border-white/15 rounded-lg text-white placeholder:text-white/30 focus:ring-2 focus:ring-[hsl(260_60%_72%/0.3)] transition-all duration-300",
                           validationErrors.firstName && "border-red-400/60"
                         )}
                         disabled={isSubmitting}
@@ -373,7 +373,7 @@ const Signup = () => {
                         value={lastName}
                         onChange={(e) => setLastName(e.target.value)}
                         className={cn(
-                          "h-10 bg-white/5 border-white/15 rounded-lg text-white placeholder:text-white/30 focus:ring-2 focus:ring-[hsl(45_85%_55%/0.3)] transition-all duration-300",
+                          "h-10 bg-white/5 border-white/15 rounded-lg text-white placeholder:text-white/30 focus:ring-2 focus:ring-[hsl(260_60%_72%/0.3)] transition-all duration-300",
                           validationErrors.lastName && "border-red-400/60"
                         )}
                         disabled={isSubmitting}
@@ -401,7 +401,7 @@ const Signup = () => {
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         className={cn(
-                          "pl-10 h-10 bg-white/5 border-white/15 rounded-lg text-white placeholder:text-white/30 focus:ring-2 focus:ring-[hsl(45_85%_55%/0.3)] transition-all duration-300",
+                          "pl-10 h-10 bg-white/5 border-white/15 rounded-lg text-white placeholder:text-white/30 focus:ring-2 focus:ring-[hsl(260_60%_72%/0.3)] transition-all duration-300",
                           validationErrors.email && "border-red-400/60"
                         )}
                         disabled={isSubmitting}
@@ -429,7 +429,7 @@ const Signup = () => {
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         className={cn(
-                          "pl-10 h-10 bg-white/5 border-white/15 rounded-lg pr-10 text-white placeholder:text-white/30 focus:ring-2 focus:ring-[hsl(45_85%_55%/0.3)] transition-all duration-300",
+                          "pl-10 h-10 bg-white/5 border-white/15 rounded-lg pr-10 text-white placeholder:text-white/30 focus:ring-2 focus:ring-[hsl(260_60%_72%/0.3)] transition-all duration-300",
                           validationErrors.password && "border-red-400/60"
                         )}
                         disabled={isSubmitting}
@@ -465,7 +465,7 @@ const Signup = () => {
                         value={confirmPassword}
                         onChange={(e) => setConfirmPassword(e.target.value)}
                         className={cn(
-                          "pl-10 h-10 bg-white/5 border-white/15 rounded-lg pr-10 text-white placeholder:text-white/30 focus:ring-2 focus:ring-[hsl(45_85%_55%/0.3)] transition-all duration-300",
+                          "pl-10 h-10 bg-white/5 border-white/15 rounded-lg pr-10 text-white placeholder:text-white/30 focus:ring-2 focus:ring-[hsl(260_60%_72%/0.3)] transition-all duration-300",
                           validationErrors.confirmPassword && "border-red-400/60"
                         )}
                         disabled={isSubmitting}
@@ -501,7 +501,7 @@ const Signup = () => {
                     </Button>
                     <Button
                       type="submit"
-                      className="flex-1 h-10 rounded-lg text-sm font-semibold bg-[hsl(260 60% 72%)] text-[hsl(230_30%_5%)] hover:bg-[hsl(260_60%_80%)] shadow-lg shadow-[hsl(45_85%_55%/0.2)] hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 group"
+                      className="flex-1 h-10 rounded-lg text-sm font-semibold bg-[hsl(260 60% 72%)] text-[hsl(230_30%_5%)] hover:bg-[hsl(260_60%_80%)] shadow-lg shadow-[hsl(260_60%_72%/0.2)] hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 group"
                       disabled={isSubmitting}
                     >
                       {isSubmitting ? (
@@ -540,8 +540,8 @@ const Signup = () => {
           
           {/* Trust indicators */}
           <div className="mt-4 flex items-center justify-center gap-4 text-[10px] text-white/40 animate-fade-in" style={{ animationDelay: '0.2s' }} aria-label="Förtroendeindikatorer">
-            <span className="flex items-center gap-1"><CheckCircle2 className="h-3 w-3 text-[hsl(45_85%_55%/0.5)]" aria-hidden="true" /> Säker data</span>
-            <span className="flex items-center gap-1"><Heart className="h-3 w-3 text-[hsl(45_85%_55%/0.5)]" aria-hidden="true" /> Gratis att börja</span>
+            <span className="flex items-center gap-1"><CheckCircle2 className="h-3 w-3 text-[hsl(260_60%_72%/0.5)]" aria-hidden="true" /> Säker data</span>
+            <span className="flex items-center gap-1"><Heart className="h-3 w-3 text-[hsl(260_60%_72%/0.5)]" aria-hidden="true" /> Gratis att börja</span>
           </div>
         </div>
       </div>

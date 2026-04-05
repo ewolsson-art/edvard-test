@@ -97,7 +97,7 @@ const ResetPassword = () => {
             {isSuccess ? (
               <div className="text-center space-y-6 py-4">
                 <div className="flex justify-center">
-                  <div className="w-16 h-16 rounded-full bg-[hsl(45_85%_55%/0.15)] flex items-center justify-center">
+                  <div className="w-16 h-16 rounded-full bg-[hsl(260_60%_72%/0.15)] flex items-center justify-center">
                     <CheckCircle className="w-8 h-8 text-[hsl(260 60% 72%)]" />
                   </div>
                 </div>
@@ -136,7 +136,7 @@ const ResetPassword = () => {
                         placeholder="••••••••"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
-                        className="pl-10 h-11 rounded-xl bg-white/5 border-white/15 text-white placeholder:text-white/30 focus:border-[hsl(45_85%_55%/0.5)]"
+                        className="pl-10 h-11 rounded-xl bg-white/5 border-white/15 text-white placeholder:text-white/30 focus:border-[hsl(260_60%_72%/0.5)]"
                         disabled={isSubmitting}
                       />
                     </div>
@@ -155,7 +155,7 @@ const ResetPassword = () => {
                         placeholder="••••••••"
                         value={confirmPassword}
                         onChange={(e) => setConfirmPassword(e.target.value)}
-                        className="pl-10 h-11 rounded-xl bg-white/5 border-white/15 text-white placeholder:text-white/30 focus:border-[hsl(45_85%_55%/0.5)]"
+                        className="pl-10 h-11 rounded-xl bg-white/5 border-white/15 text-white placeholder:text-white/30 focus:border-[hsl(260_60%_72%/0.5)]"
                         disabled={isSubmitting}
                       />
                     </div>
