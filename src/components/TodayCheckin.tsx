@@ -281,11 +281,11 @@ export function TodayCheckin({
   // Show complete state
   if (isCheckinComplete && !isEditing) {
     return (
-      <div className="glass-card p-5 sm:p-8 md:p-10 fade-in min-h-[calc(100svh-4rem)] md:min-h-0 md:max-h-[calc(100vh-4rem)] overflow-y-auto flex flex-col justify-center md:block border-0 md:border bg-transparent md:bg-card/80 rounded-none md:rounded-2xl shadow-none md:shadow-sm">
-        <div className="text-center mb-5">
-          <p className="text-muted-foreground text-sm capitalize">{formattedDate}</p>
+      <div className="fade-in h-full md:h-auto flex flex-col justify-center px-6 py-8 md:glass-card md:p-10 md:max-h-[calc(100vh-4rem)] md:overflow-y-auto md:border md:bg-card/80 md:rounded-2xl md:shadow-sm">
+        <div className="text-center mb-6">
+          <p className="text-muted-foreground/70 text-xs tracking-widest uppercase">{formattedDate}</p>
           {!isDisplayToday && (
-            <p className="text-xs text-primary mt-1">Retroaktiv incheckning</p>
+            <p className="text-xs text-primary mt-1.5 font-medium">Retroaktiv incheckning</p>
           )}
         </div>
 
@@ -393,11 +393,11 @@ export function TodayCheckin({
   }
 
   return (
-    <div className="glass-card p-5 sm:p-8 md:p-12 fade-in min-h-[calc(100svh-4rem)] md:min-h-0 md:max-h-[calc(100vh-4rem)] overflow-y-auto flex flex-col justify-center md:block border-0 md:border bg-transparent md:bg-card/80 rounded-none md:rounded-2xl shadow-none md:shadow-sm">
-      <div className="text-center mb-4 md:mb-5">
-        <p className="text-muted-foreground text-sm capitalize">{formattedDate}</p>
+    <div className="fade-in h-full md:h-auto flex flex-col justify-center px-6 py-8 md:glass-card md:p-12 md:max-h-[calc(100vh-4rem)] md:overflow-y-auto md:border md:bg-card/80 md:rounded-2xl md:shadow-sm">
+      <div className="text-center mb-5 md:mb-6">
+        <p className="text-muted-foreground/70 text-xs tracking-widest uppercase">{formattedDate}</p>
         {!isDisplayToday && (
-          <p className="text-xs text-primary mt-1">Retroaktiv incheckning</p>
+          <p className="text-xs text-primary mt-1.5 font-medium">Retroaktiv incheckning</p>
         )}
       </div>
 
