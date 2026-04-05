@@ -384,13 +384,23 @@ export function TodayCheckin({
         )}
       </div>
 
-      {/* Progress bar - hide during success animation */}
+      {/* Progress dots */}
       {currentStep !== 'success-animation' && (
-        <div className="max-w-md mx-auto mb-5 md:mb-8">
-          <Progress value={getStepProgress()} className="h-1.5 md:h-2" />
-          <p className="text-xs text-muted-foreground text-center mt-1.5">
-            Steg {STEPS.indexOf(currentStep) + 1} av {STEPS.length}
-          </p>
+        <div className="flex items-center justify-center gap-2 mb-5 md:mb-8">
+          {STEPS.map((step, i) => {
+            const currentIndex = STEPS.indexOf(currentStep);
+            const isActive = i === currentIndex;
+            const isCompleted = i < currentIndex;
+            return (
+              <div
+                key={step}
+                className={cn(
+                  "rounded-full transition-all duration-300",
+                  isActive ? "w-6 h-2 bg-primary" : isCompleted ? "w-2 h-2 bg-primary/60" : "w-2 h-2 bg-muted-foreground/20"
+                )}
+              />
+            );
+          })}
         </div>
       )}
 
