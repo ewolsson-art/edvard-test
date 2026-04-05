@@ -180,14 +180,15 @@ const Profile = () => {
   const roleLabel = isDoctor ? 'Läkare' : isRelative ? 'Anhörig' : 'Patient';
 
   return (
-    <div className="py-6 px-4 md:px-8">
+    <div className="p-5 md:p-8 pb-24">
       <div className="max-w-2xl mx-auto">
-        <h1 className="font-display text-2xl font-bold mb-6 text-center md:text-left">Min profil</h1>
+        <h1 className="font-display text-3xl font-bold mb-2">Min profil</h1>
+        <p className="text-sm text-muted-foreground mb-8">Hantera din profil och medicinsk information.</p>
 
         {/* Profile header card */}
         <button
           onClick={() => setView('edit')}
-          className="w-full flex items-center gap-4 p-4 rounded-xl border border-border bg-card mb-6 text-left hover:bg-muted/50 active:bg-muted transition-colors"
+          className="w-full flex items-center gap-4 p-4 rounded-xl border border-border/50 bg-card/50 mb-6 text-left hover:bg-muted/50 active:bg-muted transition-colors"
         >
           <div className="w-14 h-14 rounded-full bg-muted flex items-center justify-center overflow-hidden flex-shrink-0">
             {avatarUrl ? (
@@ -262,7 +263,7 @@ function CharacteristicsInlineView() {
           <button
             key={s.type}
             onClick={() => navigate(`/kannetecken/${s.slug}`)}
-            className="w-full flex items-center gap-4 p-4 rounded-xl border border-border bg-card text-left hover:bg-muted/50 active:bg-muted transition-colors"
+          className="w-full flex items-center gap-4 p-4 rounded-xl border border-border/50 bg-card/50 text-left hover:bg-muted/50 active:bg-muted transition-colors"
           >
             <div className={cn("p-2.5 rounded-xl", s.iconBg)}>
               <Icon className={cn("w-5 h-5", s.iconColor)} />
@@ -292,7 +293,7 @@ function CharacteristicsInlineView() {
 
 function SubPage({ title, onBack, children }: { title: string; onBack: () => void; children: React.ReactNode }) {
   return (
-    <div className="py-6 px-4 md:px-8 animate-fade-in">
+    <div className="p-5 md:p-8 pb-24 animate-fade-in">
       <div className="max-w-2xl mx-auto">
         <div className="flex items-center gap-3 mb-6">
           <button onClick={onBack} className="p-2 -ml-2 rounded-lg hover:bg-muted transition-colors" aria-label="Tillbaka">
@@ -310,7 +311,7 @@ function SettingsGroup({ label, children }: { label: string; children: React.Rea
   return (
     <div className="mb-6">
       <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2 px-1">{label}</p>
-      <div className="rounded-xl border border-border bg-card overflow-hidden divide-y divide-border">
+      <div className="rounded-xl border border-border/50 bg-card/50 overflow-hidden divide-y divide-border/50">
         {children}
       </div>
     </div>

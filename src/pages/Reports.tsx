@@ -358,10 +358,10 @@ const Reports = () => {
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       <header>
-        <h2 className="font-display text-2xl md:text-3xl font-bold mb-2">Rapporter</h2>
-        <p className="text-muted-foreground text-sm">Skapa insiktsfulla rapporter baserat på din insamlade data</p>
+        <h2 className="font-display text-3xl font-bold mb-2">Rapporter</h2>
+        <p className="text-sm text-muted-foreground mb-8">Skapa insiktsfulla rapporter baserat på din insamlade data.</p>
       </header>
 
         {/* Configuration Card */}

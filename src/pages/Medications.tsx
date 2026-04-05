@@ -129,14 +129,12 @@ const Medications = () => {
   }
 
   return (
-    <div className="py-8 px-4 md:px-8">
-      <div className="max-w-4xl mx-auto space-y-8">
+    <div className="p-5 md:p-8 pb-24">
+      <div className="max-w-2xl mx-auto space-y-6">
         <header>
-          <h1 className="font-display text-3xl md:text-4xl font-bold mb-2">
-            Mediciner
-          </h1>
-          <p className="text-muted-foreground">
-            Hantera dina mediciner och logga dagligt intag
+          <h1 className="font-display text-3xl font-bold mb-2">Mediciner</h1>
+          <p className="text-sm text-muted-foreground mb-8">
+            Hantera dina mediciner och logga dagligt intag.
           </p>
         </header>
 
