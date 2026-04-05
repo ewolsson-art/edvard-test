@@ -220,14 +220,14 @@ const Auth = () => {
             <div className="space-y-3 md:space-y-6 max-w-xl">
               <h1 className="text-[1.75rem] sm:text-4xl md:text-5xl lg:text-6xl font-display font-bold text-white leading-[1.15] tracking-tight drop-shadow-lg">
                 Följ ditt mående med{" "}
-                <span className="text-[hsl(45_85%_55%)]">bättre insikt</span>
+                <span className="text-[hsl(260 60% 72%)]">bättre insikt</span>
               </h1>
               <p className="text-[0.95rem] sm:text-lg md:text-xl text-white/80 leading-relaxed">
                 Din interaktiva och personliga stämningsdagbok
               </p>
               <div className="flex flex-wrap gap-4 pt-1 md:pt-2">
                 <button
-                  className="px-8 md:px-10 py-3 md:py-3.5 rounded-full bg-[hsl(45_85%_55%)] text-[hsl(225_30%_7%)] font-semibold text-[0.95rem] md:text-base tracking-wide shadow-[0_4px_20px_hsl(45_85%_55%/0.3)] hover:shadow-[0_6px_28px_hsl(45_85%_55%/0.45)] hover:scale-105 active:scale-[0.98] transition-all duration-200"
+                  className="px-8 md:px-10 py-3 md:py-3.5 rounded-full bg-[hsl(260 60% 72%)] text-[hsl(225_30%_7%)] font-semibold text-[0.95rem] md:text-base tracking-wide shadow-[0_4px_20px_hsl(45_85%_55%/0.3)] hover:shadow-[0_6px_28px_hsl(45_85%_55%/0.45)] hover:scale-105 active:scale-[0.98] transition-all duration-200"
                   onClick={() => navigate("/logga-in")}
                 >
                   Logga in
