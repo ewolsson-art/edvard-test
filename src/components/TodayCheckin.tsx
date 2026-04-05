@@ -280,6 +280,44 @@ export function TodayCheckin({
     }
   };
 
+  const commentConfig: Record<string, { title: string; placeholder: string; getValue: () => string; setValue: (v: string) => void }> = {
+    mood: { title: 'Kommentar – Mående', placeholder: 'Berätta mer om hur du mår...', getValue: () => checkinData.moodComment || '', setValue: (v) => updateComment('mood', v) },
+    sleep: { title: 'Kommentar – Sömn', placeholder: 'Berätta mer om din sömn...', getValue: () => checkinData.sleepComment || '', setValue: (v) => updateComment('sleep', v) },
+    eating: { title: 'Kommentar – Mat', placeholder: 'Berätta mer om din mat...', getValue: () => checkinData.eatingComment || '', setValue: (v) => updateComment('eating', v) },
+    exercise: { title: 'Kommentar – Träning', placeholder: 'Berätta mer om din träning...', getValue: () => checkinData.exerciseComment || '', setValue: (v) => updateComment('exercise', v) },
+    medication: { title: 'Kommentar – Medicin', placeholder: 'Skriv en kommentar om dina mediciner...', getValue: () => checkinData.medicationComment || '', setValue: (v) => setCheckinData(prev => ({ ...prev, medicationComment: v })) },
+  };
+
+  const renderCommentSection = (step: Step) => {
+    if (showComment !== step) return null;
+    const config = commentConfig[step];
+    if (!config) return null;
+
+    if (isMobile) {
+      return (
+        <FullscreenComment
+          title={config.title}
+          placeholder={config.placeholder}
+          value={config.getValue()}
+          onChange={config.setValue}
+          onClose={() => setShowComment(null)}
+        />
+      );
+    }
+
+    return (
+      <div ref={commentRef} className="max-w-md mx-auto space-y-3">
+        <Textarea
+          placeholder={config.placeholder}
+          value={config.getValue()}
+          onChange={(e) => config.setValue(e.target.value)}
+          className="min-h-[80px] resize-none"
+          maxLength={500}
+        />
+      </div>
+    );
+  };
+
   const hasMedications = activeMedications.length > 0;
 
   // Show complete state
