@@ -820,6 +820,10 @@ const Overview = () => {
           currentTypes={exerciseDialogDate ? (getEntryForDate(format(exerciseDialogDate, 'yyyy-MM-dd'))?.exerciseTypes || []) : []}
           onSave={handleSaveExerciseTypes}
         />
+        {/* Reports section */}
+        <div className="mt-12 pt-8 border-t border-border/50">
+          <Reports />
+        </div>
       </div>
     </div>
   );
