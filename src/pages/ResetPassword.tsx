@@ -98,7 +98,7 @@ const ResetPassword = () => {
               <div className="text-center space-y-6 py-4">
                 <div className="flex justify-center">
                   <div className="w-16 h-16 rounded-full bg-[hsl(260_60%_72%/0.15)] flex items-center justify-center">
-                    <CheckCircle className="w-8 h-8 text-[hsl(265_55%_58%)]" />
+                    <CheckCircle className="w-8 h-8 text-[hsl(45_85%_55%)]" />
                   </div>
                 </div>
                 <div className="space-y-2">
@@ -108,7 +108,7 @@ const ResetPassword = () => {
                   </p>
                 </div>
                 <Button
-                  className="w-full bg-[hsl(265_55%_58%)] text-[hsl(230_30%_5%)] hover:bg-[hsl(265_55%_68%)]"
+                  className="w-full bg-[hsl(45_85%_55%)] text-[hsl(230_30%_5%)] hover:bg-[hsl(45_85%_65%)]"
                   onClick={() => navigate("/auth")}
                 >
                   Gå till inloggning
@@ -164,7 +164,7 @@ const ResetPassword = () => {
 
                   <Button
                     type="submit"
-                    className="w-full h-11 rounded-xl font-medium bg-[hsl(265_55%_58%)] text-[hsl(230_30%_5%)] hover:bg-[hsl(265_55%_68%)]"
+                    className="w-full h-11 rounded-xl font-medium bg-[hsl(45_85%_55%)] text-[hsl(230_30%_5%)] hover:bg-[hsl(45_85%_65%)]"
                     disabled={isSubmitting}
                   >
                     {isSubmitting && <Loader2 className="w-4 h-4 animate-spin mr-2" />}
