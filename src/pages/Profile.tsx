@@ -19,40 +19,6 @@ import { DelegatesSection } from '@/components/DelegatesSection';
 import { RelativePatientConnectionsSection } from '@/components/RelativePatientConnectionsSection';
 import { AvatarUpload } from '@/components/AvatarUpload';
 
-const CHECKIN_OPTIONS = [
-  {
-    id: 'include_mood',
-    label: 'Mående',
-    description: 'Hur du mår idag',
-    icon: Brain,
-    required: true,
-  },
-  {
-    id: 'include_sleep',
-    label: 'Sömn',
-    description: 'Hur du har sovit',
-    icon: Moon,
-  },
-  {
-    id: 'include_eating',
-    label: 'Mat',
-    description: 'Hur du har ätit',
-    icon: Utensils,
-  },
-  {
-    id: 'include_exercise',
-    label: 'Träning',
-    description: 'Om du har tränat',
-    icon: Dumbbell,
-  },
-  {
-    id: 'include_medication',
-    label: 'Medicin',
-    description: 'Om du tagit din medicin',
-    icon: Pill,
-  },
-];
-
 const profileSchema = z.object({
   firstName: z.string().trim().max(50, { message: "Max 50 tecken" }).optional(),
   lastName: z.string().trim().max(50, { message: "Max 50 tecken" }).optional(),
