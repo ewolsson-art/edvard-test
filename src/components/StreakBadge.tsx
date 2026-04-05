@@ -63,51 +63,46 @@ export function StreakBadge({
 
   return (
     <div className={cn(
-      "flex items-center gap-3 p-3 rounded-xl",
+      "flex items-center gap-3 px-4 py-3 rounded-xl",
       isOnFire 
-        ? "bg-gradient-to-r from-orange-500/20 to-red-500/20 border border-orange-500/30" 
-        : "bg-primary/10 border border-primary/20",
+        ? "bg-gradient-to-r from-orange-500/15 to-red-500/15 border border-orange-500/25" 
+        : "bg-primary/10 border border-primary/15",
       className
     )}>
       <div className={cn(
-        "flex items-center justify-center w-10 h-10 rounded-full",
+        "flex items-center justify-center w-9 h-9 rounded-full",
         isOnFire 
-          ? "bg-orange-500/30" 
-          : "bg-primary/20"
+          ? "bg-orange-500/25" 
+          : "bg-primary/15"
       )}>
         <Flame className={cn(
-          "w-5 h-5",
+          "w-4.5 h-4.5",
           isOnFire 
             ? "text-orange-500 animate-pulse" 
             : "text-primary"
         )} />
       </div>
       
-      <div className="flex-1">
-        <div className="flex items-center gap-2">
+      <div className="flex-1 min-w-0">
+        <div className="flex items-center gap-2 flex-wrap">
           <span className={cn(
-            "text-lg font-bold",
+            "text-sm font-bold leading-tight",
             isOnFire 
               ? "text-orange-600 dark:text-orange-400" 
               : "text-primary"
           )}>
-            Du har checkat in {currentStreak} {currentStreak === 1 ? 'dag' : 'dagar'} i rad
+            {currentStreak} {currentStreak === 1 ? 'dag' : 'dagar'} i rad
           </span>
           {isNewRecord && currentStreak > 1 && (
-            <span className="flex items-center gap-1 text-xs font-medium text-yellow-600 dark:text-yellow-400 bg-yellow-500/20 px-2 py-0.5 rounded-full">
+            <span className="flex items-center gap-1 text-[10px] font-semibold text-yellow-600 dark:text-yellow-400 bg-yellow-500/15 px-2 py-0.5 rounded-full">
               <Trophy className="w-3 h-3" />
               Nytt rekord!
             </span>
           )}
         </div>
-        {longestStreak > currentStreak && (
-          <p className="text-xs text-muted-foreground">
-            Ditt bästa: {longestStreak} dagar
-          </p>
-        )}
         {isOnFire && (
-          <p className="text-xs text-orange-600 dark:text-orange-400">
-            🔥 Du är on fire! Fortsätt så!
+          <p className="text-xs text-orange-600/80 dark:text-orange-400/80 mt-0.5">
+            🔥 Du är on fire!
           </p>
         )}
       </div>
