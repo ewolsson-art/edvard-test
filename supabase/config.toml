@@ -1,7 +1,7 @@
 project_id = "phudximaihknfsmkizix"
 
-[functions.mood-chat]
-verify_jwt = false
+
+
 
 [functions.delete-account]
 verify_jwt = false

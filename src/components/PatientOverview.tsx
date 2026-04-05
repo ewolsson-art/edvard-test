@@ -27,7 +27,7 @@ import { RelativeCommentDialog } from '@/components/RelativeCommentDialog';
 import { PatientAIInsights } from '@/components/PatientAIInsights';
 import { PatientCharacteristics } from '@/components/PatientCharacteristics';
 import { MoodStats as MoodStatsType, ExerciseType, QualityType } from '@/types/mood';
-import { Loader2, ChevronLeft, Radio, Pill, Check, X, MessageSquare, Moon, Utensils, Dumbbell, Stethoscope } from 'lucide-react';
+import { Loader2, ChevronLeft, Radio, Pill, Check, X, Moon, Utensils, Dumbbell, Stethoscope } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
@@ -37,26 +37,25 @@ import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 interface PatientOverviewProps {
   connection: PatientConnection;
   onBack: () => void;
-  onToggleChatEnabled?: (connectionId: string, enabled: boolean) => Promise<boolean>;
 }
 
 type ViewType = 'week' | 'month' | 'year';
 
-export function PatientOverview({ connection, onBack, onToggleChatEnabled }: PatientOverviewProps) {
+export function PatientOverview({ connection, onBack }: PatientOverviewProps) {
   const navigate = useNavigate();
   const [view, setView] = useState<ViewType>('month');
   const [currentWeek, setCurrentWeek] = useState(new Date());
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
-  const [isChatToggling, setIsChatToggling] = useState(false);
+  
   
   // State for relative comment dialog
   const [commentDialogOpen, setCommentDialogOpen] = useState(false);
   const [selectedDateForComment, setSelectedDateForComment] = useState<Date | null>(null);
   
-  // Check if this is a relative viewing (no chat toggle means relative)
-  const isRelativeViewing = !onToggleChatEnabled;
-  
+  // Check if this is a relative viewing
+  const isRelativeViewing = true; // simplified after chat removal
+
   const { entries, isLoaded: moodLoaded, getEntryForDate, getEntriesForMonth, getEntriesForYear, getStatsForYear } = usePatientMoodData({
     patientId: connection.patient_id,
   });
@@ -387,16 +386,8 @@ export function PatientOverview({ connection, onBack, onToggleChatEnabled }: Pat
     return getCommentsMap();
   }, [isRelativeViewing, getCommentsMap]);
 
-  const handleChatToggle = async (enabled: boolean) => {
-    if (!onToggleChatEnabled) return;
-    setIsChatToggling(true);
-    await onToggleChatEnabled(connection.id, enabled);
-    setIsChatToggling(false);
-  };
 
-  const handleOpenChat = () => {
-    navigate(`/lakare-chatt?patient=${connection.patient_id}`);
-  };
+
 
   if (!isLoaded) {
     return (
@@ -438,22 +429,11 @@ export function PatientOverview({ connection, onBack, onToggleChatEnabled }: Pat
             <Radio className="w-4 h-4 animate-pulse" />
             <span>Live</span>
           </div>
-          {onToggleChatEnabled && (
-            <Button 
-              variant="outline" 
-              size="sm" 
-              onClick={handleOpenChat}
-              className="gap-2"
-            >
-              <MessageSquare className="w-4 h-4" />
-              Chatt
-            </Button>
-          )}
         </div>
       </div>
 
-      {/* Diagnoses section - only for doctors */}
-      {onToggleChatEnabled && diagnoses.length > 0 && (
+      {/* Diagnoses section */}
+      {diagnoses.length > 0 && (
         <div className="glass-card p-4">
           <div className="flex items-center gap-3 mb-3">
             <Stethoscope className="w-5 h-5 text-primary" />
@@ -465,29 +445,6 @@ export function PatientOverview({ connection, onBack, onToggleChatEnabled }: Pat
                 {diagnosis.name}
               </Badge>
             ))}
-          </div>
-        </div>
-      )}
-
-      {/* Chat toggle setting - only for doctors */}
-      {onToggleChatEnabled && (
-        <div className="glass-card p-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <MessageSquare className="w-5 h-5 text-primary" />
-              <div>
-                <Label htmlFor="chat-toggle" className="font-medium">Tillåt chatt med patient</Label>
-                <p className="text-sm text-muted-foreground">
-                  Patienten kan skicka meddelanden till dig när aktiverat
-                </p>
-              </div>
-            </div>
-            <Switch
-              id="chat-toggle"
-              checked={connection.chat_enabled}
-              onCheckedChange={handleChatToggle}
-              disabled={isChatToggling}
-            />
           </div>
         </div>
       )}
