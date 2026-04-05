@@ -90,7 +90,7 @@ export function LandingFooter() {
           {/* Links columns */}
           <div className="flex gap-16">
             <div className="flex flex-col gap-3">
-              <span className="text-xs font-semibold uppercase tracking-widest text-[hsl(45_85%_55%/0.6)] mb-1">
+              <span className="text-xs font-semibold uppercase tracking-widest text-[hsl(260_60%_72%/0.6)] mb-1">
                 Juridiskt
               </span>
               <Link
@@ -107,7 +107,7 @@ export function LandingFooter() {
               </Link>
             </div>
             <div className="flex flex-col gap-3">
-              <span className="text-xs font-semibold uppercase tracking-widest text-[hsl(45_85%_55%/0.6)] mb-1">
+              <span className="text-xs font-semibold uppercase tracking-widest text-[hsl(260_60%_72%/0.6)] mb-1">
                 Information
               </span>
               <Link

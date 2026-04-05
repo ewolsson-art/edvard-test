@@ -104,7 +104,7 @@ const Login = () => {
             </div>
 
             {isVerified && (
-              <div className="mb-6 p-4 rounded-xl bg-[hsl(45_85%_55%/0.15)] border border-[hsl(45_85%_55%/0.3)] flex items-center gap-3">
+              <div className="mb-6 p-4 rounded-xl bg-[hsl(260_60%_72%/0.15)] border border-[hsl(260_60%_72%/0.3)] flex items-center gap-3">
                 <CheckCircle2 className="h-5 w-5 text-[hsl(260 60% 72%)] flex-shrink-0" />
                 <p className="text-sm text-white">
                   Din e-post är nu verifierad! Logga in för att fortsätta.
@@ -125,7 +125,7 @@ const Login = () => {
                     placeholder="din@email.se"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className={`pl-10 h-12 bg-white/5 border-white/15 rounded-xl text-white placeholder:text-white/30 focus:ring-2 focus:ring-[hsl(45_85%_55%/0.3)] focus:border-[hsl(45_85%_55%/0.5)] transition-all ${validationErrors.email ? 'border-red-400/60' : ''}`}
+                    className={`pl-10 h-12 bg-white/5 border-white/15 rounded-xl text-white placeholder:text-white/30 focus:ring-2 focus:ring-[hsl(260_60%_72%/0.3)] focus:border-[hsl(260_60%_72%/0.5)] transition-all ${validationErrors.email ? 'border-red-400/60' : ''}`}
                     disabled={isSubmitting}
                   />
                 </div>
@@ -153,7 +153,7 @@ const Login = () => {
                     placeholder="••••••••"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className={`h-12 bg-white/5 border-white/15 rounded-xl pr-10 text-white placeholder:text-white/30 focus:ring-2 focus:ring-[hsl(45_85%_55%/0.3)] focus:border-[hsl(45_85%_55%/0.5)] transition-all ${validationErrors.password ? 'border-red-400/60' : ''}`}
+                    className={`h-12 bg-white/5 border-white/15 rounded-xl pr-10 text-white placeholder:text-white/30 focus:ring-2 focus:ring-[hsl(260_60%_72%/0.3)] focus:border-[hsl(260_60%_72%/0.5)] transition-all ${validationErrors.password ? 'border-red-400/60' : ''}`}
                     disabled={isSubmitting}
                   />
                   <button
@@ -171,7 +171,7 @@ const Login = () => {
 
               <Button
                 type="submit"
-                className="w-full h-12 rounded-xl text-base font-semibold bg-[hsl(260 60% 72%)] text-[hsl(230_30%_5%)] hover:bg-[hsl(260_60%_80%)] shadow-lg shadow-[hsl(45_85%_55%/0.2)] hover:shadow-xl transition-all duration-300 group"
+                className="w-full h-12 rounded-xl text-base font-semibold bg-[hsl(260 60% 72%)] text-[hsl(230_30%_5%)] hover:bg-[hsl(260_60%_80%)] shadow-lg shadow-[hsl(260_60%_72%/0.2)] hover:shadow-xl transition-all duration-300 group"
                 disabled={isSubmitting}
               >
                 {isSubmitting ? (

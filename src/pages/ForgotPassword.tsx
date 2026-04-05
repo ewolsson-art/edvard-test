@@ -69,7 +69,7 @@ const ForgotPassword = () => {
             {isSuccess ? (
               <div className="text-center space-y-6 py-4">
                 <div className="flex justify-center">
-                  <div className="w-16 h-16 rounded-full bg-[hsl(45_85%_55%/0.15)] flex items-center justify-center">
+                  <div className="w-16 h-16 rounded-full bg-[hsl(260_60%_72%/0.15)] flex items-center justify-center">
                     <CheckCircle className="w-8 h-8 text-[hsl(260 60% 72%)]" />
                   </div>
                 </div>
@@ -122,7 +122,7 @@ const ForgotPassword = () => {
                         placeholder="din@email.se"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        className={`pl-10 h-12 bg-white/5 border-white/15 rounded-xl text-white placeholder:text-white/30 focus:ring-2 focus:ring-[hsl(45_85%_55%/0.3)] transition-all ${error ? 'border-red-400/60' : ''}`}
+                        className={`pl-10 h-12 bg-white/5 border-white/15 rounded-xl text-white placeholder:text-white/30 focus:ring-2 focus:ring-[hsl(260_60%_72%/0.3)] transition-all ${error ? 'border-red-400/60' : ''}`}
                         disabled={isSubmitting}
                       />
                     </div>
@@ -131,7 +131,7 @@ const ForgotPassword = () => {
 
                   <Button
                     type="submit"
-                    className="w-full h-12 rounded-xl text-base font-semibold bg-[hsl(260 60% 72%)] text-[hsl(230_30%_5%)] hover:bg-[hsl(260_60%_80%)] shadow-lg shadow-[hsl(45_85%_55%/0.2)] transition-all duration-300"
+                    className="w-full h-12 rounded-xl text-base font-semibold bg-[hsl(260 60% 72%)] text-[hsl(230_30%_5%)] hover:bg-[hsl(260_60%_80%)] shadow-lg shadow-[hsl(260_60%_72%/0.2)] transition-all duration-300"
                     disabled={isSubmitting}
                   >
                     {isSubmitting ? (

@@ -61,7 +61,7 @@ export function HowItWorksSection() {
         <div className="mt-10 md:mt-20 flex justify-center">
           <a
             href="/signup"
-            className="px-10 py-3.5 rounded-full bg-[hsl(260 60% 72%)] text-[hsl(225_30%_7%)] font-semibold text-base tracking-wide shadow-[0_4px_20px_hsl(45_85%_55%/0.3)] hover:shadow-[0_6px_28px_hsl(45_85%_55%/0.45)] hover:scale-105 active:scale-[0.98] transition-all duration-200"
+            className="px-10 py-3.5 rounded-full bg-[hsl(260 60% 72%)] text-[hsl(225_30%_7%)] font-semibold text-base tracking-wide shadow-[0_4px_20px_hsl(260_60%_72%/0.3)] hover:shadow-[0_6px_28px_hsl(260_60%_72%/0.45)] hover:scale-105 active:scale-[0.98] transition-all duration-200"
           >
             Kom igång kostnadsfritt
           </a>
@@ -99,12 +99,12 @@ function StepCard({ step, index, visible }: { step: typeof steps[number]; index:
     >
       {/* Glow ring */}
       <div
-        className={`absolute w-20 h-20 rounded-full bg-[hsl(45_85%_55%/0.06)] blur-xl transition-all duration-1000 ${visible ? "scale-100 opacity-100" : "scale-50 opacity-0"}`}
+        className={`absolute w-20 h-20 rounded-full bg-[hsl(260_60%_72%/0.06)] blur-xl transition-all duration-1000 ${visible ? "scale-100 opacity-100" : "scale-50 opacity-0"}`}
         style={{ transitionDelay: `${delay + 100}ms` }}
       />
 
       {/* Icon with number */}
-      <div className="flex-shrink-0 w-16 h-16 rounded-2xl bg-[hsl(45_85%_55%/0.10)] border border-[hsl(45_85%_55%/0.18)] flex items-center justify-center relative mb-5 z-10">
+      <div className="flex-shrink-0 w-16 h-16 rounded-2xl bg-[hsl(260_60%_72%/0.10)] border border-[hsl(260_60%_72%/0.18)] flex items-center justify-center relative mb-5 z-10">
         <step.icon className="w-7 h-7 text-[hsl(260 60% 72%)]" />
         <span className="absolute -top-2.5 -left-2.5 w-7 h-7 rounded-full bg-[hsl(260 60% 72%)] text-[hsl(225_30%_7%)] text-xs font-bold flex items-center justify-center shadow-lg">
           {index + 1}
