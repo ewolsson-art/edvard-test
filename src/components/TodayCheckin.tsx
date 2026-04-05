@@ -406,7 +406,7 @@ export function TodayCheckin({
 
       {/* Step: Mood */}
       {currentStep === 'mood' && (
-        <div className="space-y-4 md:space-y-6 fade-in">
+        <div className={`space-y-4 md:space-y-6 step-slide-in`} key={stepKey}>
           {isEditing && (
             <Button variant="ghost" size="sm" onClick={() => setIsEditing(false)} className="mb-2 gap-1 text-destructive hover:text-destructive hover:bg-destructive/10">
               <X className="w-4 h-4" />
@@ -466,7 +466,7 @@ export function TodayCheckin({
 
       {/* Step: Sleep */}
       {currentStep === 'sleep' && (
-        <div className="space-y-4 md:space-y-6 fade-in">
+        <div className={`space-y-4 md:space-y-6 step-slide-in`} key={stepKey}>
           <Button variant="ghost" size="sm" onClick={goBack} className="mb-2 gap-1">
             <ChevronLeft className="w-4 h-4" />
             Tillbaka
@@ -531,7 +531,7 @@ export function TodayCheckin({
 
       {/* Step: Eating */}
       {currentStep === 'eating' && (
-        <div className="space-y-4 md:space-y-6 fade-in">
+        <div className={`space-y-4 md:space-y-6 step-slide-in`} key={stepKey}>
           <Button variant="ghost" size="sm" onClick={goBack} className="mb-2 gap-1">
             <ChevronLeft className="w-4 h-4" />
             Tillbaka
@@ -609,7 +609,7 @@ export function TodayCheckin({
 
       {/* Step: Exercise */}
       {currentStep === 'exercise' && (
-        <div className="space-y-4 md:space-y-6 fade-in">
+        <div className={`space-y-4 md:space-y-6 step-slide-in`} key={stepKey}>
           <Button variant="ghost" size="sm" onClick={goBack} className="mb-2 gap-1">
             <ChevronLeft className="w-4 h-4" />
             Tillbaka
@@ -674,7 +674,7 @@ export function TodayCheckin({
 
       {/* Step: Medication */}
       {currentStep === 'medication' && (
-        <div className="space-y-4 md:space-y-6 fade-in">
+        <div className={`space-y-4 md:space-y-6 step-slide-in`} key={stepKey}>
           <Button variant="ghost" size="sm" onClick={goBack} className="mb-2 gap-1">
             <ChevronLeft className="w-4 h-4" />
             Tillbaka
@@ -888,7 +888,7 @@ export function TodayCheckin({
 
       {/* Step: Custom Questions */}
       {currentStep === 'custom_questions' && (
-        <div className="space-y-4 md:space-y-6 fade-in">
+        <div className={`space-y-4 md:space-y-6 step-slide-in`} key={stepKey}>
           <Button variant="ghost" size="sm" onClick={goBack} className="mb-2 gap-1">
             <ChevronLeft className="w-4 h-4" />
             Tillbaka
