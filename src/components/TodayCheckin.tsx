@@ -192,7 +192,7 @@ export function TodayCheckin({
     if (nextStep === 'success-animation') {
       handleCompleteWithData({ ...checkinData, sleepQuality: quality });
     } else {
-      setCurrentStep(nextStep);
+      navigateStep(nextStep);
     }
   };
 
@@ -202,7 +202,7 @@ export function TodayCheckin({
     if (nextStep === 'success-animation') {
       handleCompleteWithData({ ...checkinData, eatingQuality: quality });
     } else {
-      setCurrentStep(nextStep);
+      navigateStep(nextStep);
     }
   };
 
@@ -253,6 +253,8 @@ export function TodayCheckin({
   const goBack = () => {
     const currentIndex = STEPS.indexOf(currentStep);
     if (currentIndex > 0) {
+      setSlideDirection('back');
+      setStepKey(k => k + 1);
       setCurrentStep(STEPS[currentIndex - 1]);
     }
   };
