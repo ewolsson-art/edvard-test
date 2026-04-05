@@ -65,7 +65,7 @@ export function AuthNavbar() {
               ))}
               <button
                 onClick={() => navigate("/logga-in")}
-                className="ml-3 px-5 py-2 text-sm font-semibold text-[hsl(225_30%_7%)] bg-[hsl(260 60% 72%)] rounded-full hover:bg-[hsl(260_60%_80%)] hover:scale-105 active:scale-[0.98] transition-all duration-200 shadow-[0_2px_12px_hsl(260_60%_72%/0.25)]"
+                className="ml-3 px-5 py-2 text-sm font-semibold text-[hsl(225_30%_7%)] bg-[hsl(260_60%_72%)] rounded-full hover:bg-[hsl(260_60%_80%)] hover:scale-105 active:scale-[0.98] transition-all duration-200 shadow-[0_2px_12px_hsl(260_60%_72%/0.25)]"
               >
                 Logga in
               </button>
