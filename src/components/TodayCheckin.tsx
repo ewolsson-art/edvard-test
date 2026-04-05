@@ -826,41 +826,8 @@ export function TodayCheckin({
           {/* Side effects section */}
           <div className="max-w-md mx-auto space-y-4">
             <div className="border-t pt-4">
-              <button
-                onClick={() => setCheckinData(prev => ({
-                  ...prev,
-                  medicationSideEffects: prev.medicationSideEffects?.length ? [] : ['other']
-                }))}
-                className={cn(
-                  "w-full flex items-center gap-3 p-4 rounded-xl border-2 transition-all text-left",
-                  checkinData.medicationSideEffects?.length 
-                    ? "border-amber-500/50 bg-amber-500/10" 
-                    : "border-border hover:border-amber-500/30"
-                )}
-              >
-                <AlertTriangle className={cn(
-                  "w-5 h-5",
-                  checkinData.medicationSideEffects?.length ? "text-amber-500" : "text-muted-foreground"
-                )} />
-                <div className="flex-1">
-                  <p className={cn(
-                    "font-medium text-sm",
-                    checkinData.medicationSideEffects?.length && "text-amber-600 dark:text-amber-400"
-                  )}>
-                    Rapportera biverkningar
-                  </p>
-                  <p className="text-xs text-muted-foreground">
-                    Tryck här om du upplevt biverkningar
-                  </p>
-                </div>
-                <Checkbox 
-                  checked={!!checkinData.medicationSideEffects?.length}
-                  className="h-5 w-5"
-                />
-              </button>
-
-              {/* Side effects options */}
-              {checkinData.medicationSideEffects?.length ? (
+              {/* Side effects section */}
+              {showSideEffects && (
                 <div className="mt-3 space-y-2">
                   <p className="text-sm font-medium text-amber-600 dark:text-amber-400">
                     Vilka biverkningar har du upplevt?
@@ -900,7 +867,7 @@ export function TodayCheckin({
                     ))}
                   </div>
                 </div>
-              ) : null}
+              )}
             </div>
 
             {/* Comment section */}
