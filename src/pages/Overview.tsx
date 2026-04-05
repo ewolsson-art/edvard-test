@@ -524,16 +524,18 @@ const Overview = () => {
     <div className="py-8 px-4 md:px-8">
       <div className="max-w-6xl mx-auto space-y-12">
         <header className="mb-8">
-          <h1 className="font-display text-3xl md:text-4xl font-bold mb-4">
-            Översikt
-          </h1>
+          <div className="flex items-center justify-between mb-4">
+            <h1 className="font-display text-3xl md:text-4xl font-bold">
+              Översikt
+            </h1>
+          </div>
           
           <Tabs value={view} onValueChange={handleViewChange} className="w-full">
-            <TabsList className="grid w-full max-w-lg grid-cols-4">
-              <TabsTrigger value="30days">30 dagar</TabsTrigger>
-              <TabsTrigger value="week">Vecka</TabsTrigger>
-              <TabsTrigger value="month">Månad</TabsTrigger>
-              <TabsTrigger value="year">År</TabsTrigger>
+            <TabsList className="inline-flex h-9 bg-muted/50 p-0.5 rounded-lg">
+              <TabsTrigger value="month" className="text-xs px-3 rounded-md">Månad</TabsTrigger>
+              <TabsTrigger value="week" className="text-xs px-3 rounded-md">Vecka</TabsTrigger>
+              <TabsTrigger value="year" className="text-xs px-3 rounded-md">År</TabsTrigger>
+              <TabsTrigger value="30days" className="text-xs px-3 rounded-md">30d</TabsTrigger>
             </TabsList>
           </Tabs>
         </header>
