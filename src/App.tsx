@@ -16,7 +16,7 @@ import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Overview from "./pages/Overview";
 import Reports from "./pages/Reports";
-import Chat from "./pages/Chat";
+
 import Medications from "./pages/Medications";
 import AboutUs from "./pages/AboutUs";
 import ForPatients from "./pages/ForPatients";
@@ -34,7 +34,7 @@ import RelativeReports from "./pages/RelativeReports";
 import Profile from "./pages/Profile";
 import DoctorHome from "./pages/DoctorHome";
 import DoctorDashboard from "./pages/DoctorDashboard";
-import DoctorChat from "./pages/DoctorChat";
+
 import PatientDetail from "./pages/PatientDetail";
 import ManageConnections from "./pages/ManageConnections";
 import NotFound from "./pages/NotFound";
@@ -136,11 +136,8 @@ const App = () => (
                 <AppLayout><Reports /></AppLayout>
               </ProtectedRoute>
             } />
-            <Route path="/chatt" element={
-              <ProtectedRoute>
-                <AppLayout><Chat /></AppLayout>
-              </ProtectedRoute>
-            } />
+
+
             <Route path="/mediciner" element={
               <ProtectedRoute>
                 <AppLayout><Medications /></AppLayout>
@@ -161,11 +158,8 @@ const App = () => (
                 <AppLayout><DoctorDashboard /></AppLayout>
               </ProtectedRoute>
             } />
-            <Route path="/lakare-chatt" element={
-              <ProtectedRoute>
-                <AppLayout><DoctorChat /></AppLayout>
-              </ProtectedRoute>
-            } />
+
+
             <Route path="/patient/:patientId" element={
               <ProtectedRoute>
                 <AppLayout><PatientDetail /></AppLayout>
