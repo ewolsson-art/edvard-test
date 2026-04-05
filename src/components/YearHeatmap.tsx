@@ -1,10 +1,10 @@
-import { useMemo, useState } from 'react';
-import { format, eachDayOfInterval, startOfMonth, endOfMonth, startOfWeek, endOfWeek, isSameMonth, isToday, getWeek } from 'date-fns';
+import { useMemo } from 'react';
+import { format, startOfYear, endOfYear, eachDayOfInterval, getDay, getWeek, isToday } from 'date-fns';
 import { sv } from 'date-fns/locale';
 import { ChevronLeft, ChevronRight, Pill } from 'lucide-react';
 import { MoodEntry, MoodType } from '@/types/mood';
 import { cn } from '@/lib/utils';
-import { Button } from '@/components/ui/button';
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 
 interface YearHeatmapProps {
   year: number;
@@ -15,15 +15,10 @@ interface YearHeatmapProps {
   onMonthClick?: (month: number) => void;
 }
 
-const months = [
-  'Januari', 'Februari', 'Mars', 'April', 'Maj', 'Juni',
-  'Juli', 'Augusti', 'September', 'Oktober', 'November', 'December'
-];
-
-const weekDays = ['M', 'T', 'O', 'T', 'F', 'L', 'S'];
+const dayLabels = ['M', 'T', 'O', 'T', 'F', 'L', 'S'];
+const monthLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'Maj', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dec'];
 
 export function YearHeatmap({ year, entries, medicationDates = [], onPrevYear, onNextYear, onMonthClick }: YearHeatmapProps) {
-  const [showSecondHalf, setShowSecondHalf] = useState(false);
   const moodMap = useMemo(() => {
     const map: Record<string, MoodType> = {};
     entries.forEach(entry => {
@@ -32,54 +27,65 @@ export function YearHeatmap({ year, entries, medicationDates = [], onPrevYear, o
     return map;
   }, [entries]);
 
-  const medicationSet = useMemo(() => {
-    return new Set(medicationDates);
-  }, [medicationDates]);
+  const medicationSet = useMemo(() => new Set(medicationDates), [medicationDates]);
 
-  // Generate calendar data for each month
-  const monthsData = useMemo(() => {
-    return months.map((monthName, monthIndex) => {
-      const monthDate = new Date(year, monthIndex, 1);
-      const start = startOfWeek(startOfMonth(monthDate), { weekStartsOn: 1 });
-      const end = endOfWeek(endOfMonth(monthDate), { weekStartsOn: 1 });
-      const days = eachDayOfInterval({ start, end });
+  // Build a grid: 7 rows (Mon–Sun) × 53 columns (weeks)
+  const { grid, monthPositions } = useMemo(() => {
+    const start = startOfYear(new Date(year, 0, 1));
+    const end = endOfYear(new Date(year, 0, 1));
+    const allDays = eachDayOfInterval({ start, end });
+
+    // Grid: weekIndex → dayOfWeek → date
+    const weekMap: Map<number, (Date | null)[]> = new Map();
+    const monthFirstWeek: Map<number, number> = new Map();
+
+    allDays.forEach(day => {
+      // getDay: 0=Sun, we want 0=Mon
+      let dow = getDay(day);
+      dow = dow === 0 ? 6 : dow - 1; // Mon=0, Sun=6
+
+      const weekNum = getWeek(day, { weekStartsOn: 1, firstWeekContainsDate: 4 });
+      // Use a sequential week index based on position in year
+      const weekIndex = Math.floor((day.getTime() - start.getTime()) / (7 * 24 * 60 * 60 * 1000));
       
-      // Group days by week with week numbers
-      const weeks: { weekNumber: number; days: Date[] }[] = [];
-      let currentWeek: Date[] = [];
-      let currentWeekNumber = -1;
-      
-      days.forEach((day, index) => {
-        const weekNum = getWeek(day, { weekStartsOn: 1, firstWeekContainsDate: 4 });
-        
-        if (currentWeekNumber !== weekNum) {
-          if (currentWeek.length > 0) {
-            weeks.push({ weekNumber: currentWeekNumber, days: currentWeek });
-          }
-          currentWeek = [day];
-          currentWeekNumber = weekNum;
-        } else {
-          currentWeek.push(day);
-        }
-        
-        if (index === days.length - 1) {
-          weeks.push({ weekNumber: currentWeekNumber, days: currentWeek });
-        }
-      });
-      
-      return { monthName, monthIndex, monthDate, weeks };
+      if (!weekMap.has(weekIndex)) {
+        weekMap.set(weekIndex, Array(7).fill(null));
+      }
+      weekMap.get(weekIndex)![dow] = day;
+
+      // Track first week of each month
+      const month = day.getMonth();
+      if (!monthFirstWeek.has(month)) {
+        monthFirstWeek.set(month, weekIndex);
+      }
     });
+
+    // Convert to sorted array
+    const sortedWeeks = Array.from(weekMap.entries()).sort((a, b) => a[0] - b[0]);
+    const gridData = sortedWeeks.map(([_, days]) => days);
+
+    // Month label positions (column index)
+    const positions: { month: number; col: number }[] = [];
+    monthFirstWeek.forEach((weekIdx, month) => {
+      const col = sortedWeeks.findIndex(([k]) => k === weekIdx);
+      if (col >= 0) positions.push({ month, col });
+    });
+    positions.sort((a, b) => a.col - b.col);
+
+    return { grid: gridData, monthPositions: positions };
   }, [year]);
 
-  // Filter months based on current half
-  const visibleMonths = showSecondHalf 
-    ? monthsData.slice(6, 12) 
-    : monthsData.slice(0, 6);
+  const cellSize = 11;
+  const cellGap = 2;
+  const dayLabelWidth = 20;
+  const headerHeight = 18;
+  const totalWidth = dayLabelWidth + grid.length * (cellSize + cellGap);
+  const totalHeight = headerHeight + 7 * (cellSize + cellGap);
 
   return (
-    <div className="glass-card p-6 fade-in">
-      {/* Header with navigation */}
-      <div className="flex items-center justify-between mb-6">
+    <div className="glass-card p-4 sm:p-6 fade-in">
+      {/* Header */}
+      <div className="flex items-center justify-between mb-4">
         <button
           onClick={onPrevYear}
           className="p-2 rounded-lg hover:bg-muted transition-colors"
@@ -87,11 +93,7 @@ export function YearHeatmap({ year, entries, medicationDates = [], onPrevYear, o
         >
           <ChevronLeft className="w-5 h-5" />
         </button>
-
-        <h3 className="font-display text-xl font-semibold">
-          {year}
-        </h3>
-
+        <h3 className="font-display text-xl font-semibold">{year}</h3>
         <button
           onClick={onNextYear}
           className="p-2 rounded-lg hover:bg-muted transition-colors"
@@ -101,105 +103,125 @@ export function YearHeatmap({ year, entries, medicationDates = [], onPrevYear, o
         </button>
       </div>
 
-      {/* Half-year toggle */}
-      <div className="flex items-center justify-center gap-2 mb-6">
-        <Button
-          variant={!showSecondHalf ? "default" : "outline"}
-          size="sm"
-          onClick={() => setShowSecondHalf(false)}
-        >
-          Jan – Jun
-        </Button>
-        <Button
-          variant={showSecondHalf ? "default" : "outline"}
-          size="sm"
-          onClick={() => setShowSecondHalf(true)}
-        >
-          Jul – Dec
-        </Button>
-      </div>
-
-      {/* Calendar grid - 2 cols on mobile, 3 cols on larger screens */}
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
-        {visibleMonths.map(({ monthName, monthIndex, monthDate, weeks }) => (
-          <button
-            key={monthIndex}
-            onClick={() => onMonthClick?.(monthIndex)}
-            className="p-4 rounded-xl bg-muted/30 border border-border hover:bg-muted/50 hover:border-primary/30 transition-colors text-left cursor-pointer"
+      {/* Heatmap */}
+      <ScrollArea className="w-full">
+        <div style={{ minWidth: totalWidth + 8 }} className="pb-2">
+          <svg
+            width={totalWidth + 8}
+            height={totalHeight + 4}
+            className="block"
           >
-            <h4 className="font-medium text-sm mb-3 text-center">{monthName}</h4>
-            
-            {/* Week day headers */}
-            <div className="grid grid-cols-7 gap-1 mb-2">
-              {weekDays.map((day, i) => (
-                <div key={i} className="text-[10px] text-muted-foreground text-center font-medium">
-                  {day}
-                </div>
-              ))}
-            </div>
-            
-            {/* Weeks */}
-            <div className="space-y-1">
-              {weeks.map(({ weekNumber, days }) => (
-                <div key={weekNumber} className="grid grid-cols-7 gap-1">
-                  {/* Days */}
-                  {days.map(day => {
-                    const dateStr = format(day, 'yyyy-MM-dd');
-                    const mood = moodMap[dateStr];
-                    const hasMedication = medicationSet.has(dateStr);
-                    const isTodayDate = isToday(day);
-                    const isCurrentMonth = isSameMonth(day, monthDate);
+            {/* Month labels */}
+            {monthPositions.map(({ month, col }) => (
+              <text
+                key={month}
+                x={dayLabelWidth + col * (cellSize + cellGap)}
+                y={12}
+                className="fill-muted-foreground"
+                fontSize={10}
+                fontWeight={500}
+                style={{ cursor: onMonthClick ? 'pointer' : 'default' }}
+                onClick={() => onMonthClick?.(month)}
+              >
+                {monthLabels[month]}
+              </text>
+            ))}
 
-                    return (
-                      <div
-                        key={dateStr}
-                        title={isCurrentMonth ? `${format(day, 'd MMMM', { locale: sv })}${mood ? ` - ${mood}` : ''}${hasMedication ? ' 💊' : ''}` : ''}
-                        className={cn(
-                          "w-full aspect-square rounded-sm relative",
-                          !isCurrentMonth && "opacity-0",
-                          isCurrentMonth && !mood && "bg-muted/80",
-                          isCurrentMonth && mood === 'elevated' && "bg-mood-elevated",
-                          isCurrentMonth && mood === 'stable' && "bg-mood-stable",
-                          isCurrentMonth && mood === 'depressed' && "bg-mood-depressed",
-                          isTodayDate && isCurrentMonth && "ring-2 ring-primary ring-offset-1 ring-offset-background"
-                        )}
-                      >
-                        {hasMedication && isCurrentMonth && (
-                          <span className="absolute -bottom-0.5 -right-0.5">
-                            <Pill className="h-2 w-2 text-primary" />
-                          </span>
-                        )}
-                      </div>
-                    );
-                  })}
-                </div>
-              ))}
-            </div>
-          </button>
-        ))}
-      </div>
+            {/* Day labels (Mon, Wed, Fri) */}
+            {[0, 2, 4].map(row => (
+              <text
+                key={row}
+                x={0}
+                y={headerHeight + row * (cellSize + cellGap) + cellSize - 1}
+                className="fill-muted-foreground"
+                fontSize={9}
+                fontWeight={500}
+              >
+                {dayLabels[row]}
+              </text>
+            ))}
+
+            {/* Grid cells */}
+            {grid.map((week, colIdx) =>
+              week.map((day, rowIdx) => {
+                if (!day) return null;
+                const dateStr = format(day, 'yyyy-MM-dd');
+                const mood = moodMap[dateStr];
+                const hasMed = medicationSet.has(dateStr);
+                const isT = isToday(day);
+                const x = dayLabelWidth + colIdx * (cellSize + cellGap);
+                const y = headerHeight + rowIdx * (cellSize + cellGap);
+
+                let fill = 'hsl(var(--muted))';
+                if (mood === 'elevated') fill = 'hsl(var(--mood-elevated))';
+                else if (mood === 'stable') fill = 'hsl(var(--mood-stable))';
+                else if (mood === 'depressed') fill = 'hsl(var(--mood-depressed))';
+
+                return (
+                  <g key={dateStr}>
+                    <rect
+                      x={x}
+                      y={y}
+                      width={cellSize}
+                      height={cellSize}
+                      rx={2}
+                      fill={fill}
+                      opacity={mood ? 1 : 0.4}
+                      style={{ cursor: onMonthClick ? 'pointer' : 'default' }}
+                      onClick={() => onMonthClick?.(day.getMonth())}
+                    >
+                      <title>{`${format(day, 'd MMMM', { locale: sv })}${mood ? ` – ${mood === 'elevated' ? 'Uppvarvad' : mood === 'stable' ? 'Stabil' : 'Nedstämd'}` : ''}${hasMed ? ' 💊' : ''}`}</title>
+                    </rect>
+                    {isT && (
+                      <rect
+                        x={x - 1}
+                        y={y - 1}
+                        width={cellSize + 2}
+                        height={cellSize + 2}
+                        rx={3}
+                        fill="none"
+                        stroke="hsl(var(--primary))"
+                        strokeWidth={1.5}
+                      />
+                    )}
+                    {hasMed && (
+                      <circle
+                        cx={x + cellSize - 1}
+                        cy={y + cellSize - 1}
+                        r={2}
+                        fill="hsl(var(--primary))"
+                      />
+                    )}
+                  </g>
+                );
+              })
+            )}
+          </svg>
+        </div>
+        <ScrollBar orientation="horizontal" />
+      </ScrollArea>
 
       {/* Legend */}
-      <div className="flex flex-wrap items-center gap-4 mt-6 pt-4 border-t border-border justify-center">
-        <div className="flex items-center gap-2">
-          <div className="w-3.5 h-3.5 rounded-sm bg-mood-elevated" />
-          <span className="text-xs text-muted-foreground">Uppvarvad</span>
+      <div className="flex flex-wrap items-center gap-3 mt-4 pt-3 border-t border-border justify-center">
+        <div className="flex items-center gap-1.5">
+          <div className="w-3 h-3 rounded-sm bg-mood-elevated" />
+          <span className="text-[11px] text-muted-foreground">Uppvarvad</span>
         </div>
-        <div className="flex items-center gap-2">
-          <div className="w-3.5 h-3.5 rounded-sm bg-mood-stable" />
-          <span className="text-xs text-muted-foreground">Stabil</span>
+        <div className="flex items-center gap-1.5">
+          <div className="w-3 h-3 rounded-sm bg-mood-stable" />
+          <span className="text-[11px] text-muted-foreground">Stabil</span>
         </div>
-        <div className="flex items-center gap-2">
-          <div className="w-3.5 h-3.5 rounded-sm bg-mood-depressed" />
-          <span className="text-xs text-muted-foreground">Nedstämd</span>
+        <div className="flex items-center gap-1.5">
+          <div className="w-3 h-3 rounded-sm bg-mood-depressed" />
+          <span className="text-[11px] text-muted-foreground">Nedstämd</span>
         </div>
-        <div className="flex items-center gap-2">
-          <div className="w-3.5 h-3.5 rounded-sm bg-muted/50" />
-          <span className="text-xs text-muted-foreground">Ej registrerat</span>
+        <div className="flex items-center gap-1.5">
+          <div className="w-3 h-3 rounded-sm bg-muted opacity-40" />
+          <span className="text-[11px] text-muted-foreground">Ej registrerat</span>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5">
           <Pill className="h-3 w-3 text-primary" />
-          <span className="text-xs text-muted-foreground">Medicin</span>
+          <span className="text-[11px] text-muted-foreground">Medicin</span>
         </div>
       </div>
     </div>
