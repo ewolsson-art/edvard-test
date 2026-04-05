@@ -88,7 +88,7 @@ export function AppSidebar() {
                     <NavLink 
                       to={item.url} 
                       end={item.url === '/' || item.url === '/lakare' || item.url === '/anhorig'}
-                      className="group relative flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors duration-200 hover:bg-muted/60 text-muted-foreground hover:text-foreground" 
+                      className="group relative flex items-center gap-3.5 px-3 py-3 rounded-lg transition-colors duration-200 hover:bg-muted/60 text-muted-foreground hover:text-foreground" 
                       activeClassName="bg-muted/80 text-foreground font-medium"
                       aria-label={item.url === '/profil' && hasPending ? `${item.title} - Du har nya notifikationer` : item.title}
                       aria-current={location.pathname === item.url ? "page" : undefined}
@@ -96,9 +96,9 @@ export function AppSidebar() {
                     >
                       {item.url === '/profil' && avatarUrl ? (
                         <div className="relative">
-                          <Avatar className="h-5 w-5 shrink-0">
+                          <Avatar className="h-6 w-6 shrink-0">
                             <AvatarImage src={avatarUrl} alt="Profilbild" className="object-cover" />
-                            <AvatarFallback className="text-[10px] bg-muted text-muted-foreground">{getInitials()}</AvatarFallback>
+                            <AvatarFallback className="text-xs bg-muted text-muted-foreground">{getInitials()}</AvatarFallback>
                           </Avatar>
                           {hasPending && (
                             <span className="absolute -top-0.5 -right-0.5 flex h-2.5 w-2.5" aria-hidden="true">
@@ -109,7 +109,7 @@ export function AppSidebar() {
                         </div>
                       ) : (
                         <div className="relative">
-                          <item.icon className="h-[18px] w-[18px] shrink-0 transition-colors duration-200" aria-hidden="true" />
+                          <item.icon className="h-5 w-5 shrink-0 transition-colors duration-200" aria-hidden="true" />
                           {item.url === '/profil' && hasPending && (
                             <span className="absolute -top-0.5 -right-0.5 flex h-2.5 w-2.5" aria-hidden="true">
                               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-destructive opacity-75"></span>
@@ -119,7 +119,7 @@ export function AppSidebar() {
                         </div>
                       )}
                       {!isCollapsed && (
-                        <span className="text-[13px] tracking-normal">{item.title}</span>
+                        <span className="text-[15px] tracking-normal">{item.title}</span>
                       )}
                     </NavLink>
                   </SidebarMenuButton>
@@ -139,8 +139,8 @@ export function AppSidebar() {
             className="w-full gap-3 justify-start px-3 py-2.5 rounded-lg text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors duration-200"
             aria-label="Logga ut från ditt konto"
           >
-            <LogOut className="h-[18px] w-[18px]" aria-hidden="true" />
-            <span className="text-[13px]">Logga ut</span>
+            <LogOut className="h-5 w-5" aria-hidden="true" />
+            <span className="text-[15px]">Logga ut</span>
           </Button>
         ) : (
           <Button
@@ -150,7 +150,7 @@ export function AppSidebar() {
             className="w-full h-10 rounded-lg text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors duration-200"
             aria-label="Logga ut från ditt konto"
           >
-            <LogOut className="h-[18px] w-[18px]" aria-hidden="true" />
+            <LogOut className="h-5 w-5" aria-hidden="true" />
           </Button>
         )}
       </SidebarFooter>
