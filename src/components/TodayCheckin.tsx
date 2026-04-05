@@ -548,57 +548,54 @@ export function TodayCheckin({
 
       {/* Step: Eating */}
       {currentStep === 'eating' && (
-        <div className={`space-y-4 md:space-y-6 step-slide-in`} key={stepKey}>
-          <Button variant="ghost" size="sm" onClick={goBack} className="mb-2 gap-1">
+        <div className={`space-y-6 md:space-y-8 step-slide-in`} key={stepKey}>
+          <Button variant="ghost" size="sm" onClick={goBack} className="gap-1.5 text-muted-foreground/60">
             <ChevronLeft className="w-4 h-4" />
             Tillbaka
           </Button>
-          <div className="text-center mb-4 md:mb-6">
-            <Utensils className="w-10 h-10 md:w-12 md:h-12 mx-auto mb-3 text-primary" />
-            <h1 className="font-display text-xl sm:text-2xl md:text-3xl font-bold mb-1">
+          <div className="text-center">
+            <Utensils className="w-12 h-12 md:w-14 md:h-14 mx-auto mb-4 text-primary" />
+            <h1 className="font-display text-2xl sm:text-3xl font-bold">
               Hur har du ätit?
             </h1>
           </div>
 
-          <div className="grid grid-cols-3 gap-2.5 sm:gap-4 max-w-2xl mx-auto">
+          <div className="grid grid-cols-3 gap-3 max-w-sm mx-auto">
             <button
               onClick={() => handleEatingSelect('good')}
               className={cn(
-                "checkin-option-card positive",
+                "checkin-option-card positive aspect-square",
                 checkinData.eatingQuality === 'good' && "selected"
               )}
             >
-              <div className="icon-wrapper">
-                <ThumbsUp className="w-8 h-8 text-mood-stable" />
+              <div className="icon-wrapper !w-12 !h-12">
+                <ThumbsUp className="w-7 h-7 text-mood-stable" />
               </div>
-              <span className="font-semibold text-lg">Bra</span>
-              <span className="text-xs text-muted-foreground">Ätit regelbundet</span>
+              <span className="font-semibold text-base">Bra</span>
             </button>
             <button
               onClick={() => handleEatingSelect('okay')}
               className={cn(
-                "checkin-option-card neutral",
+                "checkin-option-card neutral aspect-square",
                 checkinData.eatingQuality === 'okay' && "selected"
               )}
             >
-              <div className="icon-wrapper">
-                <Utensils className="w-8 h-8 text-primary" />
+              <div className="icon-wrapper !w-12 !h-12">
+                <Utensils className="w-7 h-7 text-primary" />
               </div>
-              <span className="font-semibold text-lg">Helt ok</span>
-              <span className="text-xs text-muted-foreground">Lagom</span>
+              <span className="font-semibold text-base">Ok</span>
             </button>
             <button
               onClick={() => handleEatingSelect('bad')}
               className={cn(
-                "checkin-option-card negative",
+                "checkin-option-card negative aspect-square",
                 checkinData.eatingQuality === 'bad' && "selected"
               )}
             >
-              <div className="icon-wrapper">
-                <ThumbsDown className="w-8 h-8 text-mood-depressed" />
+              <div className="icon-wrapper !w-12 !h-12">
+                <ThumbsDown className="w-7 h-7 text-mood-depressed" />
               </div>
-              <span className="font-semibold text-lg">Dåligt</span>
-              <span className="text-xs text-muted-foreground">Oregelbundet</span>
+              <span className="font-semibold text-base">Dåligt</span>
             </button>
           </div>
 
@@ -615,7 +612,7 @@ export function TodayCheckin({
           ) : (
             <button
               onClick={() => setShowComment('eating')}
-              className="flex items-center gap-2 mx-auto text-sm text-muted-foreground hover:text-foreground transition-colors"
+              className="flex items-center gap-2 mx-auto text-sm text-muted-foreground/60 hover:text-foreground transition-colors"
             >
               <MessageSquare className="w-4 h-4" />
               Lägg till kommentar
@@ -626,44 +623,44 @@ export function TodayCheckin({
 
       {/* Step: Exercise */}
       {currentStep === 'exercise' && (
-        <div className={`space-y-4 md:space-y-6 step-slide-in`} key={stepKey}>
-          <Button variant="ghost" size="sm" onClick={goBack} className="mb-2 gap-1">
+        <div className={`space-y-6 md:space-y-8 step-slide-in`} key={stepKey}>
+          <Button variant="ghost" size="sm" onClick={goBack} className="gap-1.5 text-muted-foreground/60">
             <ChevronLeft className="w-4 h-4" />
             Tillbaka
           </Button>
-          <div className="text-center mb-4 md:mb-6">
-            <Dumbbell className="w-10 h-10 md:w-12 md:h-12 mx-auto mb-3 text-primary" />
-            <h1 className="font-display text-xl sm:text-2xl md:text-3xl font-bold mb-1">
+          <div className="text-center">
+            <Dumbbell className="w-12 h-12 md:w-14 md:h-14 mx-auto mb-4 text-primary" />
+            <h1 className="font-display text-2xl sm:text-3xl font-bold">
               Har du tränat?
             </h1>
           </div>
 
-          <div className="grid grid-cols-2 gap-3 sm:gap-5 max-w-lg mx-auto">
+          <div className="grid grid-cols-2 gap-4 max-w-sm mx-auto">
             <button
               onClick={() => handleExerciseSelect(true)}
               className={cn(
-                "checkin-option-card positive",
+                "checkin-option-card positive aspect-square",
                 checkinData.exercised === true && "selected"
               )}
             >
-              <div className="icon-wrapper">
+              <div className="icon-wrapper !w-14 !h-14">
                 <Check className="w-8 h-8 text-mood-stable" />
               </div>
               <span className="font-semibold text-lg">Ja</span>
-              <span className="text-xs text-muted-foreground">Jag har tränat</span>
+              <span className="text-xs text-muted-foreground/60">Jag har tränat</span>
             </button>
             <button
               onClick={() => handleExerciseSelect(false)}
               className={cn(
-                "checkin-option-card neutral",
+                "checkin-option-card neutral aspect-square",
                 checkinData.exercised === false && "selected"
               )}
             >
-              <div className="icon-wrapper">
+              <div className="icon-wrapper !w-14 !h-14">
                 <X className="w-8 h-8 text-muted-foreground" />
               </div>
               <span className="font-semibold text-lg">Nej</span>
-              <span className="text-xs text-muted-foreground">Vilodag</span>
+              <span className="text-xs text-muted-foreground/60">Vilodag</span>
             </button>
           </div>
 
@@ -680,7 +677,7 @@ export function TodayCheckin({
           ) : (
             <button
               onClick={() => setShowComment('exercise')}
-              className="flex items-center gap-2 mx-auto text-sm text-muted-foreground hover:text-foreground transition-colors"
+              className="flex items-center gap-2 mx-auto text-sm text-muted-foreground/60 hover:text-foreground transition-colors"
             >
               <MessageSquare className="w-4 h-4" />
               Lägg till kommentar
