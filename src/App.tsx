@@ -146,6 +146,11 @@ const App = () => (
                 <AppLayout><Profile /></AppLayout>
               </ProtectedRoute>
             } />
+            <Route path="/installningar" element={
+              <ProtectedRoute>
+                <AppLayout><Settings /></AppLayout>
+              </ProtectedRoute>
+            } />
             <Route path="/lakare" element={
               <ProtectedRoute>
                 <AppLayout><DoctorHome /></AppLayout>
