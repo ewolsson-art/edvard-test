@@ -557,10 +557,22 @@ export function TodayCheckin({
       {/* Step: Eating */}
       {currentStep === 'eating' && (
         <div className={`space-y-6 md:space-y-8 step-slide-in`} key={stepKey}>
-          <Button variant="ghost" size="sm" onClick={goBack} className="gap-1.5 text-muted-foreground/60">
-            <ChevronLeft className="w-4 h-4" />
-            Tillbaka
-          </Button>
+          <div className="flex items-center justify-between">
+            <Button variant="ghost" size="sm" onClick={goBack} className="gap-1.5 text-muted-foreground/60">
+              <ChevronLeft className="w-4 h-4" />
+              Tillbaka
+            </Button>
+            <button
+              onClick={() => setShowComment(showComment === 'eating' ? null : 'eating')}
+              className={cn(
+                "p-2.5 rounded-xl transition-colors",
+                showComment === 'eating' ? "bg-primary/10 text-primary" : "text-muted-foreground/40 hover:text-muted-foreground hover:bg-muted/50"
+              )}
+              aria-label="Lägg till kommentar"
+            >
+              <MessageSquare className="w-5 h-5" />
+            </button>
+          </div>
           <div className="text-center">
             <Utensils className="w-12 h-12 md:w-14 md:h-14 mx-auto mb-4 text-primary" />
             <h1 className="font-display text-2xl sm:text-3xl font-bold">
@@ -607,7 +619,7 @@ export function TodayCheckin({
             </button>
           </div>
 
-          {showComment === 'eating' ? (
+          {showComment === 'eating' && (
             <div ref={commentRef} className="max-w-md mx-auto space-y-3">
               <Textarea
                 placeholder="Berätta mer om din mat..."
@@ -617,14 +629,6 @@ export function TodayCheckin({
                 maxLength={500}
               />
             </div>
-          ) : (
-            <button
-              onClick={() => setShowComment('eating')}
-              className="flex items-center gap-2 mx-auto text-sm text-muted-foreground/60 hover:text-foreground transition-colors"
-            >
-              <MessageSquare className="w-4 h-4" />
-              Lägg till kommentar
-            </button>
           )}
         </div>
       )}
@@ -632,10 +636,22 @@ export function TodayCheckin({
       {/* Step: Exercise */}
       {currentStep === 'exercise' && (
         <div className={`space-y-6 md:space-y-8 step-slide-in`} key={stepKey}>
-          <Button variant="ghost" size="sm" onClick={goBack} className="gap-1.5 text-muted-foreground/60">
-            <ChevronLeft className="w-4 h-4" />
-            Tillbaka
-          </Button>
+          <div className="flex items-center justify-between">
+            <Button variant="ghost" size="sm" onClick={goBack} className="gap-1.5 text-muted-foreground/60">
+              <ChevronLeft className="w-4 h-4" />
+              Tillbaka
+            </Button>
+            <button
+              onClick={() => setShowComment(showComment === 'exercise' ? null : 'exercise')}
+              className={cn(
+                "p-2.5 rounded-xl transition-colors",
+                showComment === 'exercise' ? "bg-primary/10 text-primary" : "text-muted-foreground/40 hover:text-muted-foreground hover:bg-muted/50"
+              )}
+              aria-label="Lägg till kommentar"
+            >
+              <MessageSquare className="w-5 h-5" />
+            </button>
+          </div>
           <div className="text-center">
             <Dumbbell className="w-12 h-12 md:w-14 md:h-14 mx-auto mb-4 text-primary" />
             <h1 className="font-display text-2xl sm:text-3xl font-bold">
@@ -672,7 +688,7 @@ export function TodayCheckin({
             </button>
           </div>
 
-          {showComment === 'exercise' ? (
+          {showComment === 'exercise' && (
             <div ref={commentRef} className="max-w-md mx-auto space-y-3">
               <Textarea
                 placeholder="Berätta mer om din träning..."
@@ -682,14 +698,6 @@ export function TodayCheckin({
                 maxLength={500}
               />
             </div>
-          ) : (
-            <button
-              onClick={() => setShowComment('exercise')}
-              className="flex items-center gap-2 mx-auto text-sm text-muted-foreground/60 hover:text-foreground transition-colors"
-            >
-              <MessageSquare className="w-4 h-4" />
-              Lägg till kommentar
-            </button>
           )}
         </div>
       )}
