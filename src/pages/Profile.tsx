@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { z } from 'zod';
 import { useAuth } from '@/hooks/useAuth';
 import { useProfile } from '@/hooks/useProfile';
@@ -8,7 +9,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Loader2, User, Mail, Save, Stethoscope, HeartPulse, Building2, Hospital, Users, ChevronRight, Pill, UserPlus, Heart, ClipboardList, Sparkles } from 'lucide-react';
+import { Loader2, User, Mail, Save, Stethoscope, HeartPulse, Building2, Hospital, Users, ChevronRight, Pill, UserPlus, Heart, ClipboardList, Sparkles, Zap, Sun, Cloud } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { DiagnosesSection } from '@/components/DiagnosesSection';
 import { MedicationsSection } from '@/components/MedicationsSection';
@@ -18,6 +19,7 @@ import { DelegatesSection } from '@/components/DelegatesSection';
 import { RelativePatientConnectionsSection } from '@/components/RelativePatientConnectionsSection';
 import { AvatarUpload } from '@/components/AvatarUpload';
 import { CharacteristicsSharingSection } from '@/components/CharacteristicsSharingSection';
+import { useCharacteristics } from '@/hooks/useCharacteristics';
 
 const profileSchema = z.object({
   firstName: z.string().trim().max(50, { message: "Max 50 tecken" }).optional(),
