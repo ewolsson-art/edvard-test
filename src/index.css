@@ -145,7 +145,7 @@
     --destructive-foreground: 0 0% 100%;
     --border: 225 20% 25%;
     --input: 225 20% 22%;
-    --ring: 45 85% 55%;
+    --ring: 260 60% 72%;
 
     --mood-elevated: 38 85% 55%;
     --mood-elevated-light: 38 40% 18%;
@@ -170,7 +170,7 @@
     --sidebar-accent: 225 20% 14%;
     --sidebar-accent-foreground: 0 0% 90%;
     --sidebar-border: 0 0% 0% / 0;
-    --sidebar-ring: 45 85% 55%;
+    --sidebar-ring: 260 60% 72%;
   }
 }
 
