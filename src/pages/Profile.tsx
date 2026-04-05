@@ -4,25 +4,12 @@ import { z } from 'zod';
 import { useAuth } from '@/hooks/useAuth';
 import { useProfile } from '@/hooks/useProfile';
 import { useUserRole } from '@/hooks/useUserRole';
-import { useUserPreferences } from '@/hooks/useUserPreferences';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Checkbox } from '@/components/ui/checkbox';
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from '@/components/ui/alert-dialog';
-import { Loader2, User, Mail, Save, Trash2, AlertTriangle, Stethoscope, HeartPulse, Building2, Hospital, Brain, Moon, Utensils, Dumbbell, Pill, Settings as SettingsIcon, Users } from 'lucide-react';
+import { Loader2, User, Mail, Save, Stethoscope, HeartPulse, Building2, Hospital, Users } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { DiagnosesSection } from '@/components/DiagnosesSection';
 import { MedicationsSection } from '@/components/MedicationsSection';
@@ -31,10 +18,6 @@ import { RelativeConnectionsSection } from '@/components/RelativeConnectionsSect
 import { DelegatesSection } from '@/components/DelegatesSection';
 import { RelativePatientConnectionsSection } from '@/components/RelativePatientConnectionsSection';
 import { AvatarUpload } from '@/components/AvatarUpload';
-import { NotificationSettings } from '@/components/NotificationSettings';
-import { ChangePasswordSection } from '@/components/ChangePasswordSection';
-import { CustomQuestionsSection } from '@/components/CustomQuestionsSection';
-import { useCustomCheckinQuestions } from '@/hooks/useCustomCheckinQuestions';
 
 const CHECKIN_OPTIONS = [
   {
