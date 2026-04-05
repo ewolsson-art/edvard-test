@@ -107,6 +107,7 @@ export function TodayCheckin({
   const [slideDirection, setSlideDirection] = useState<'forward' | 'back'>('forward');
   const [stepKey, setStepKey] = useState(0);
   const [showComment, setShowComment] = useState<Step | null>(null);
+  const [showSideEffects, setShowSideEffects] = useState(false);
   const commentRef = useRef<HTMLDivElement>(null);
   
   // Form data
@@ -710,16 +711,28 @@ export function TodayCheckin({
               <ChevronLeft className="w-4 h-4" />
               Tillbaka
             </Button>
-            <button
-              onClick={() => setShowComment(showComment === 'medication' ? null : 'medication')}
-              className={cn(
-                "p-2.5 rounded-xl transition-colors",
-                showComment === 'medication' ? "bg-primary/10 text-primary" : "text-muted-foreground/40 hover:text-muted-foreground hover:bg-muted/50"
-              )}
-              aria-label="Lägg till kommentar"
-            >
-              <MessageSquare className="w-5 h-5" />
-            </button>
+            <div className="flex items-center gap-1">
+              <button
+                onClick={() => setShowSideEffects(!showSideEffects)}
+                className={cn(
+                  "p-2.5 rounded-xl transition-colors",
+                  (showSideEffects || checkinData.medicationSideEffects?.length) ? "bg-amber-500/10 text-amber-500" : "text-muted-foreground/40 hover:text-muted-foreground hover:bg-muted/50"
+                )}
+                aria-label="Rapportera biverkningar"
+              >
+                <AlertTriangle className="w-5 h-5" />
+              </button>
+              <button
+                onClick={() => setShowComment(showComment === 'medication' ? null : 'medication')}
+                className={cn(
+                  "p-2.5 rounded-xl transition-colors",
+                  showComment === 'medication' ? "bg-primary/10 text-primary" : "text-muted-foreground/40 hover:text-muted-foreground hover:bg-muted/50"
+                )}
+                aria-label="Lägg till kommentar"
+              >
+                <MessageSquare className="w-5 h-5" />
+              </button>
+            </div>
           </div>
           <div className="text-center">
             <Pill className="w-12 h-12 md:w-14 md:h-14 mx-auto mb-4 text-primary" />
