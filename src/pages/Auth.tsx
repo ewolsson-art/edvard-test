@@ -232,6 +232,12 @@ const Auth = () => {
                 >
                   Logga in
                 </button>
+                <button
+                  className="px-8 md:px-10 py-3 md:py-3.5 rounded-full border border-white/30 text-white font-semibold text-[0.95rem] md:text-base tracking-wide hover:bg-white/10 hover:border-white/50 hover:scale-105 active:scale-[0.98] transition-all duration-200"
+                  onClick={() => navigate("/skapa-konto")}
+                >
+                  Kom igång
+                </button>
               </div>
             </div>
             {/* Turtle mascot */}
