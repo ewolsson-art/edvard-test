@@ -572,17 +572,7 @@ export function TodayCheckin({
             </button>
           </div>
 
-          {showComment === 'sleep' && (
-            <div ref={commentRef} className="max-w-md mx-auto space-y-3">
-              <Textarea
-                placeholder="Berätta mer om din sömn..."
-                value={checkinData.sleepComment || ''}
-                onChange={(e) => updateComment('sleep', e.target.value)}
-                className="min-h-[80px] resize-none"
-                maxLength={500}
-              />
-            </div>
-          )}
+          {renderCommentSection('sleep')}
         </div>
       )}
 
@@ -651,17 +641,7 @@ export function TodayCheckin({
             </button>
           </div>
 
-          {showComment === 'eating' && (
-            <div ref={commentRef} className="max-w-md mx-auto space-y-3">
-              <Textarea
-                placeholder="Berätta mer om din mat..."
-                value={checkinData.eatingComment || ''}
-                onChange={(e) => updateComment('eating', e.target.value)}
-                className="min-h-[80px] resize-none"
-                maxLength={500}
-              />
-            </div>
-          )}
+          {renderCommentSection('eating')}
         </div>
       )}
 
@@ -720,17 +700,7 @@ export function TodayCheckin({
             </button>
           </div>
 
-          {showComment === 'exercise' && (
-            <div ref={commentRef} className="max-w-md mx-auto space-y-3">
-              <Textarea
-                placeholder="Berätta mer om din träning..."
-                value={checkinData.exerciseComment || ''}
-                onChange={(e) => updateComment('exercise', e.target.value)}
-                className="min-h-[80px] resize-none"
-                maxLength={500}
-              />
-            </div>
-          )}
+          {renderCommentSection('exercise')}
         </div>
       )}
 
@@ -902,17 +872,7 @@ export function TodayCheckin({
             </div>
 
             {/* Comment section */}
-            {showComment === 'medication' && (
-              <div ref={commentRef}>
-                <Textarea
-                  placeholder="Skriv en kommentar om dina mediciner..."
-                  value={checkinData.medicationComment || ''}
-                  onChange={(e) => setCheckinData(prev => ({ ...prev, medicationComment: e.target.value }))}
-                  className="min-h-[80px] resize-none"
-                  maxLength={500}
-                />
-              </div>
-            )}
+            {renderCommentSection('medication')}
 
             {isLastStep('medication') ? (
               <Button onClick={handleComplete} className="w-full mt-4 gap-2">
