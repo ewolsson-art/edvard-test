@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { z } from 'zod';
 import { useAuth } from '@/hooks/useAuth';
 import { useProfile } from '@/hooks/useProfile';
@@ -8,7 +9,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Loader2, User, Mail, Save, Stethoscope, HeartPulse, Building2, Hospital, Users, ChevronRight, Pill, UserPlus, Heart, ClipboardList } from 'lucide-react';
+import { Loader2, User, Mail, Save, Stethoscope, HeartPulse, Building2, Hospital, Users, ChevronRight, Pill, UserPlus, Heart, ClipboardList, Sparkles, Zap, Sun, Cloud } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { DiagnosesSection } from '@/components/DiagnosesSection';
 import { MedicationsSection } from '@/components/MedicationsSection';
@@ -17,13 +18,15 @@ import { RelativeConnectionsSection } from '@/components/RelativeConnectionsSect
 import { DelegatesSection } from '@/components/DelegatesSection';
 import { RelativePatientConnectionsSection } from '@/components/RelativePatientConnectionsSection';
 import { AvatarUpload } from '@/components/AvatarUpload';
+import { CharacteristicsSharingSection } from '@/components/CharacteristicsSharingSection';
+import { useCharacteristics } from '@/hooks/useCharacteristics';
 
 const profileSchema = z.object({
   firstName: z.string().trim().max(50, { message: "Max 50 tecken" }).optional(),
   lastName: z.string().trim().max(50, { message: "Max 50 tecken" }).optional(),
 });
 
-type ProfileView = 'main' | 'edit' | 'medications' | 'doctors' | 'relatives' | 'diagnoses' | 'delegates' | 'relative-patients';
+type ProfileView = 'main' | 'edit' | 'medications' | 'doctors' | 'relatives' | 'diagnoses' | 'delegates' | 'relative-patients' | 'characteristics';
 
 const Profile = () => {
   const { user } = useAuth();
@@ -161,6 +164,16 @@ const Profile = () => {
   if (view === 'relative-patients') {
     return <SubPage title="Mina närstående" onBack={() => setView('main')}><RelativePatientConnectionsSection /></SubPage>;
   }
+  if (view === 'characteristics') {
+    return (
+      <SubPage title="Kännetecken" onBack={() => setView('main')}>
+        <CharacteristicsInlineView />
+        <div className="mt-8">
+          <CharacteristicsSharingSection />
+        </div>
+      </SubPage>
+    );
+  }
 
   // Main profile view
   const displayName = [profile?.first_name, profile?.last_name].filter(Boolean).join(' ') || 'Användare';
@@ -196,6 +209,7 @@ const Profile = () => {
           <SettingsGroup label="Medicinsk information">
             <SettingsRow icon={Pill} label="Mediciner" description="Hantera dina mediciner" onClick={() => setView('medications')} />
             <SettingsRow icon={ClipboardList} label="Diagnoser" description="Dina registrerade diagnoser" onClick={() => setView('diagnoses')} />
+            <SettingsRow icon={Sparkles} label="Kännetecken" description="Mönster för olika perioder" onClick={() => setView('characteristics')} />
           </SettingsGroup>
         )}
 
@@ -223,6 +237,56 @@ const Profile = () => {
     </div>
   );
 };
+
+/* ── Characteristics inline view ── */
+
+function CharacteristicsInlineView() {
+  const navigate = useNavigate();
+  const { elevatedCharacteristics, depressedCharacteristics, stableCharacteristics, isLoading } = useCharacteristics();
+
+  if (isLoading) {
+    return <div className="flex justify-center py-8"><Loader2 className="w-6 h-6 animate-spin text-primary" /></div>;
+  }
+
+  const sections = [
+    { type: 'elevated', title: 'Uppvarvad', chars: elevatedCharacteristics, icon: Zap, badgeClass: 'bg-amber-500/10 text-amber-700 dark:text-amber-300 border border-amber-500/20', iconBg: 'bg-amber-100 dark:bg-amber-900/30', iconColor: 'text-amber-600 dark:text-amber-400', slug: 'uppvarvad' },
+    { type: 'stable', title: 'Stabil', chars: stableCharacteristics, icon: Sun, badgeClass: 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border border-emerald-500/20', iconBg: 'bg-emerald-100 dark:bg-emerald-900/30', iconColor: 'text-emerald-600 dark:text-emerald-400', slug: 'stabil' },
+    { type: 'depressed', title: 'Nedstämd', chars: depressedCharacteristics, icon: Cloud, badgeClass: 'bg-rose-500/10 text-rose-700 dark:text-rose-300 border border-rose-500/20', iconBg: 'bg-rose-100 dark:bg-rose-900/30', iconColor: 'text-rose-600 dark:text-rose-400', slug: 'nedstamd' },
+  ];
+
+  return (
+    <div className="space-y-3">
+      {sections.map((s) => {
+        const Icon = s.icon;
+        return (
+          <button
+            key={s.type}
+            onClick={() => navigate(`/kannetecken/${s.slug}`)}
+            className="w-full flex items-center gap-4 p-4 rounded-xl border border-border bg-card text-left hover:bg-muted/50 active:bg-muted transition-colors"
+          >
+            <div className={cn("p-2.5 rounded-xl", s.iconBg)}>
+              <Icon className={cn("w-5 h-5", s.iconColor)} />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-[15px] font-semibold text-foreground">{s.title}</p>
+              {s.chars.length > 0 ? (
+                <div className="flex flex-wrap gap-1.5 mt-1.5">
+                  {s.chars.slice(0, 3).map((c) => (
+                    <span key={c.id} className={cn("text-xs py-0.5 px-2 rounded-full font-medium", s.badgeClass)}>{c.name}</span>
+                  ))}
+                  {s.chars.length > 3 && <span className="text-xs text-muted-foreground self-center">+{s.chars.length - 3}</span>}
+                </div>
+              ) : (
+                <p className="text-xs text-muted-foreground mt-0.5">Inga tillagda ännu</p>
+              )}
+            </div>
+            <ChevronRight className="w-4 h-4 text-muted-foreground/50 flex-shrink-0" />
+          </button>
+        );
+      })}
+    </div>
+  );
+}
 
 /* ── Reusable sub-components ── */
 
