@@ -688,19 +688,19 @@ export function TodayCheckin({
 
       {/* Step: Medication */}
       {currentStep === 'medication' && (
-        <div className={`space-y-4 md:space-y-6 step-slide-in`} key={stepKey}>
-          <Button variant="ghost" size="sm" onClick={goBack} className="mb-2 gap-1">
+        <div className={`space-y-6 md:space-y-8 step-slide-in`} key={stepKey}>
+          <Button variant="ghost" size="sm" onClick={goBack} className="gap-1.5 text-muted-foreground/60">
             <ChevronLeft className="w-4 h-4" />
             Tillbaka
           </Button>
-          <div className="text-center mb-4 md:mb-6">
-            <Pill className="w-10 h-10 md:w-12 md:h-12 mx-auto mb-3 text-primary" />
-            <h1 className="font-display text-xl sm:text-2xl md:text-3xl font-bold mb-1">
+          <div className="text-center">
+            <Pill className="w-12 h-12 md:w-14 md:h-14 mx-auto mb-4 text-primary" />
+            <h1 className="font-display text-2xl sm:text-3xl font-bold">
               Har du tagit dina mediciner?
             </h1>
           </div>
 
-          <div className="grid grid-cols-2 gap-3 sm:gap-5 max-w-lg mx-auto">
+          <div className="grid grid-cols-2 gap-4 max-w-sm mx-auto">
             <button
               onClick={() => {
                 // Mark all medications as taken
