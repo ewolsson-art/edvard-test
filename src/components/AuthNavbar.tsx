@@ -91,7 +91,7 @@ export function AuthNavbar() {
       {/* Mobile menu - fullscreen overlay */}
       <div
         className={cn(
-          "lg:hidden fixed inset-0 z-[60] bg-[hsl(230_30%_5%/0.98)] backdrop-blur-2xl transition-all duration-400 ease-in-out flex flex-col",
+          "lg:hidden fixed inset-0 z-[60] bg-[hsl(230_30%_5%)] transition-all duration-400 ease-in-out flex flex-col",
           isMobileMenuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
         )}
       >
