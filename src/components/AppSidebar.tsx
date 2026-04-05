@@ -81,15 +81,15 @@ export function AppSidebar() {
 
         <SidebarGroup>
           <SidebarGroupContent>
-            <SidebarMenu className="space-y-0.5 px-2" role="menubar" aria-label="Navigeringsmeny">
+            <SidebarMenu className="space-y-2 px-2" role="menubar" aria-label="Navigeringsmeny">
               {navItems.map((item) => (
                 <SidebarMenuItem key={item.title} role="none">
                   <SidebarMenuButton asChild tooltip={item.title} role="menuitem">
                     <NavLink 
                       to={item.url} 
                       end={item.url === '/' || item.url === '/lakare' || item.url === '/anhorig'}
-                      className="group relative flex items-center gap-3.5 px-3 py-3 rounded-lg transition-colors duration-200 hover:bg-muted/60 text-muted-foreground hover:text-foreground" 
-                      activeClassName="bg-muted/80 text-foreground font-medium"
+                      className="group relative flex items-center gap-4 px-3 py-3.5 rounded-lg transition-colors duration-200 hover:bg-muted/60 text-white/70 hover:text-white" 
+                      activeClassName="bg-muted/80 text-white font-medium"
                       aria-label={item.url === '/profil' && hasPending ? `${item.title} - Du har nya notifikationer` : item.title}
                       aria-current={location.pathname === item.url ? "page" : undefined}
                       onClick={() => { if (isMobile) setOpenMobile(false); }}
@@ -119,7 +119,7 @@ export function AppSidebar() {
                         </div>
                       )}
                       {!isCollapsed && (
-                        <span className="text-[15px] tracking-normal">{item.title}</span>
+                        <span className="text-[17px] font-medium tracking-normal">{item.title}</span>
                       )}
                     </NavLink>
                   </SidebarMenuButton>
