@@ -281,11 +281,11 @@ export function TodayCheckin({
   // Show complete state
   if (isCheckinComplete && !isEditing) {
     return (
-      <div className="glass-card p-5 sm:p-8 md:p-10 fade-in min-h-[calc(100svh-4rem)] md:min-h-0 md:max-h-[calc(100vh-4rem)] overflow-y-auto flex flex-col justify-center md:block border-0 md:border bg-transparent md:bg-card/80 rounded-none md:rounded-2xl shadow-none md:shadow-sm">
-        <div className="text-center mb-5">
-          <p className="text-muted-foreground text-sm capitalize">{formattedDate}</p>
+      <div className="fade-in h-full md:h-auto flex flex-col justify-center px-6 py-8 md:glass-card md:p-10 md:max-h-[calc(100vh-4rem)] md:overflow-y-auto md:border md:bg-card/80 md:rounded-2xl md:shadow-sm">
+        <div className="text-center mb-6">
+          <p className="text-muted-foreground/70 text-xs tracking-widest uppercase">{formattedDate}</p>
           {!isDisplayToday && (
-            <p className="text-xs text-primary mt-1">Retroaktiv incheckning</p>
+            <p className="text-xs text-primary mt-1.5 font-medium">Retroaktiv incheckning</p>
           )}
         </div>
 
@@ -393,17 +393,17 @@ export function TodayCheckin({
   }
 
   return (
-    <div className="glass-card p-5 sm:p-8 md:p-12 fade-in min-h-[calc(100svh-4rem)] md:min-h-0 md:max-h-[calc(100vh-4rem)] overflow-y-auto flex flex-col justify-center md:block border-0 md:border bg-transparent md:bg-card/80 rounded-none md:rounded-2xl shadow-none md:shadow-sm">
-      <div className="text-center mb-4 md:mb-5">
-        <p className="text-muted-foreground text-sm capitalize">{formattedDate}</p>
+    <div className="fade-in h-full md:h-auto flex flex-col justify-center px-6 py-8 md:glass-card md:p-12 md:max-h-[calc(100vh-4rem)] md:overflow-y-auto md:border md:bg-card/80 md:rounded-2xl md:shadow-sm">
+      <div className="text-center mb-5 md:mb-6">
+        <p className="text-muted-foreground/70 text-xs tracking-widest uppercase">{formattedDate}</p>
         {!isDisplayToday && (
-          <p className="text-xs text-primary mt-1">Retroaktiv incheckning</p>
+          <p className="text-xs text-primary mt-1.5 font-medium">Retroaktiv incheckning</p>
         )}
       </div>
 
       {/* Progress dots */}
       {currentStep !== 'success-animation' && (
-        <div className="flex items-center justify-center gap-2 mb-5 md:mb-8">
+        <div className="flex items-center justify-center gap-2.5 mb-8 md:mb-10">
           {STEPS.map((step, i) => {
             const currentIndex = STEPS.indexOf(currentStep);
             const isActive = i === currentIndex;
@@ -412,8 +412,8 @@ export function TodayCheckin({
               <div
                 key={step}
                 className={cn(
-                  "rounded-full transition-all duration-300",
-                  isActive ? "w-6 h-2 bg-primary" : isCompleted ? "w-2 h-2 bg-primary/60" : "w-2 h-2 bg-muted-foreground/20"
+                  "rounded-full transition-all duration-500",
+                  isActive ? "w-8 h-2.5 bg-primary" : isCompleted ? "w-2.5 h-2.5 bg-primary/50" : "w-2.5 h-2.5 bg-muted-foreground/15"
                 )}
               />
             );
@@ -423,15 +423,15 @@ export function TodayCheckin({
 
       {/* Step: Mood */}
       {currentStep === 'mood' && (
-        <div className={`space-y-4 md:space-y-6 step-slide-in`} key={stepKey}>
+        <div className={`space-y-6 md:space-y-8 step-slide-in`} key={stepKey}>
           {isEditing && (
-            <Button variant="ghost" size="sm" onClick={() => setIsEditing(false)} className="mb-2 gap-1 text-destructive hover:text-destructive hover:bg-destructive/10">
+            <Button variant="ghost" size="sm" onClick={() => setIsEditing(false)} className="gap-1.5 text-destructive hover:text-destructive hover:bg-destructive/10">
               <X className="w-4 h-4" />
               Avbryt
             </Button>
           )}
-          <div className="text-center mb-4 md:mb-6">
-            <h1 className="font-display text-xl sm:text-2xl md:text-3xl font-bold mb-1">
+          <div className="text-center">
+            <h1 className="font-display text-2xl sm:text-3xl md:text-3xl font-bold leading-tight">
               {isDisplayToday 
                 ? (firstName ? `Hej ${firstName}! Hur har du mått idag?` : 'Hej! Hur har du mått idag?')
                 : (firstName ? `Hej ${firstName}! Hur mådde du den här dagen?` : 'Hur mådde du den här dagen?')
@@ -439,22 +439,22 @@ export function TodayCheckin({
             </h1>
           </div>
 
-          <div className="grid grid-cols-3 gap-3 md:gap-6 max-w-3xl mx-auto">
+          <div className="grid grid-cols-3 gap-3.5 md:gap-6 max-w-3xl mx-auto">
             {moodButtons.map(({ mood, icon: Icon, label, cssClass }) => (
               <button
                 key={mood}
                 onClick={() => handleMoodSelect(mood)}
                 className={cn(
-                  "mood-btn rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8 flex flex-col items-center gap-2.5 sm:gap-4 group",
+                  "mood-btn rounded-[1.25rem] aspect-square flex flex-col items-center justify-center gap-3 group",
                   cssClass,
-                  checkinData.mood === mood && "ring-3 sm:ring-4 ring-offset-2 sm:ring-offset-4 ring-offset-background scale-[1.02]"
+                  checkinData.mood === mood && "ring-3 ring-offset-2 ring-offset-background scale-[1.02]"
                 )}
               >
                 <div className="relative">
                   <div className="absolute inset-0 bg-white/20 rounded-full blur-xl scale-150 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                  <Icon className="w-9 h-9 sm:w-12 sm:h-12 md:w-14 md:h-14 relative z-10 transition-transform duration-300 group-hover:scale-110" />
+                  <Icon className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 relative z-10 transition-transform duration-300 group-hover:scale-110" />
                 </div>
-                <span className="font-semibold text-xs sm:text-sm md:text-base text-center leading-tight tracking-wide">{label}</span>
+                <span className="font-semibold text-sm sm:text-base text-center leading-tight tracking-wide">{label}</span>
               </button>
             ))}
           </div>
@@ -472,7 +472,7 @@ export function TodayCheckin({
           ) : (
             <button
               onClick={() => setShowComment('mood')}
-              className="flex items-center gap-2 mx-auto text-sm text-muted-foreground hover:text-foreground transition-colors"
+              className="flex items-center gap-2 mx-auto text-sm text-muted-foreground/60 hover:text-foreground transition-colors"
             >
               <MessageSquare className="w-4 h-4" />
               Lägg till kommentar
@@ -483,44 +483,44 @@ export function TodayCheckin({
 
       {/* Step: Sleep */}
       {currentStep === 'sleep' && (
-        <div className={`space-y-4 md:space-y-6 step-slide-in`} key={stepKey}>
-          <Button variant="ghost" size="sm" onClick={goBack} className="mb-2 gap-1">
+        <div className={`space-y-6 md:space-y-8 step-slide-in`} key={stepKey}>
+          <Button variant="ghost" size="sm" onClick={goBack} className="gap-1.5 text-muted-foreground/60">
             <ChevronLeft className="w-4 h-4" />
             Tillbaka
           </Button>
-          <div className="text-center mb-4 md:mb-6">
-            <Moon className="w-10 h-10 md:w-12 md:h-12 mx-auto mb-3 text-primary" />
-            <h1 className="font-display text-xl sm:text-2xl md:text-3xl font-bold mb-1">
+          <div className="text-center">
+            <Moon className="w-12 h-12 md:w-14 md:h-14 mx-auto mb-4 text-primary" />
+            <h1 className="font-display text-2xl sm:text-3xl font-bold">
               Hur har du sovit?
             </h1>
           </div>
 
-          <div className="grid grid-cols-2 gap-3 sm:gap-5 max-w-lg mx-auto">
+          <div className="grid grid-cols-2 gap-4 max-w-sm mx-auto">
             <button
               onClick={() => handleSleepSelect('good')}
               className={cn(
-                "checkin-option-card positive",
+                "checkin-option-card positive aspect-square",
                 checkinData.sleepQuality === 'good' && "selected"
               )}
             >
-              <div className="icon-wrapper">
+              <div className="icon-wrapper !w-14 !h-14">
                 <ThumbsUp className="w-8 h-8 text-mood-stable" />
               </div>
               <span className="font-semibold text-lg">Bra</span>
-              <span className="text-xs text-muted-foreground">Jag sov gott</span>
+              <span className="text-xs text-muted-foreground/60">Jag sov gott</span>
             </button>
             <button
               onClick={() => handleSleepSelect('bad')}
               className={cn(
-                "checkin-option-card negative",
+                "checkin-option-card negative aspect-square",
                 checkinData.sleepQuality === 'bad' && "selected"
               )}
             >
-              <div className="icon-wrapper">
+              <div className="icon-wrapper !w-14 !h-14">
                 <ThumbsDown className="w-8 h-8 text-mood-depressed" />
               </div>
               <span className="font-semibold text-lg">Dåligt</span>
-              <span className="text-xs text-muted-foreground">Sov oroligt</span>
+              <span className="text-xs text-muted-foreground/60">Sov oroligt</span>
             </button>
           </div>
 
@@ -537,7 +537,7 @@ export function TodayCheckin({
           ) : (
             <button
               onClick={() => setShowComment('sleep')}
-              className="flex items-center gap-2 mx-auto text-sm text-muted-foreground hover:text-foreground transition-colors"
+              className="flex items-center gap-2 mx-auto text-sm text-muted-foreground/60 hover:text-foreground transition-colors"
             >
               <MessageSquare className="w-4 h-4" />
               Lägg till kommentar
@@ -548,57 +548,54 @@ export function TodayCheckin({
 
       {/* Step: Eating */}
       {currentStep === 'eating' && (
-        <div className={`space-y-4 md:space-y-6 step-slide-in`} key={stepKey}>
-          <Button variant="ghost" size="sm" onClick={goBack} className="mb-2 gap-1">
+        <div className={`space-y-6 md:space-y-8 step-slide-in`} key={stepKey}>
+          <Button variant="ghost" size="sm" onClick={goBack} className="gap-1.5 text-muted-foreground/60">
             <ChevronLeft className="w-4 h-4" />
             Tillbaka
           </Button>
-          <div className="text-center mb-4 md:mb-6">
-            <Utensils className="w-10 h-10 md:w-12 md:h-12 mx-auto mb-3 text-primary" />
-            <h1 className="font-display text-xl sm:text-2xl md:text-3xl font-bold mb-1">
+          <div className="text-center">
+            <Utensils className="w-12 h-12 md:w-14 md:h-14 mx-auto mb-4 text-primary" />
+            <h1 className="font-display text-2xl sm:text-3xl font-bold">
               Hur har du ätit?
             </h1>
           </div>
 
-          <div className="grid grid-cols-3 gap-2.5 sm:gap-4 max-w-2xl mx-auto">
+          <div className="grid grid-cols-3 gap-3 max-w-sm mx-auto">
             <button
               onClick={() => handleEatingSelect('good')}
               className={cn(
-                "checkin-option-card positive",
+                "checkin-option-card positive aspect-square",
                 checkinData.eatingQuality === 'good' && "selected"
               )}
             >
-              <div className="icon-wrapper">
-                <ThumbsUp className="w-8 h-8 text-mood-stable" />
+              <div className="icon-wrapper !w-12 !h-12">
+                <ThumbsUp className="w-7 h-7 text-mood-stable" />
               </div>
-              <span className="font-semibold text-lg">Bra</span>
-              <span className="text-xs text-muted-foreground">Ätit regelbundet</span>
+              <span className="font-semibold text-base">Bra</span>
             </button>
             <button
               onClick={() => handleEatingSelect('okay')}
               className={cn(
-                "checkin-option-card neutral",
+                "checkin-option-card neutral aspect-square",
                 checkinData.eatingQuality === 'okay' && "selected"
               )}
             >
-              <div className="icon-wrapper">
-                <Utensils className="w-8 h-8 text-primary" />
+              <div className="icon-wrapper !w-12 !h-12">
+                <Utensils className="w-7 h-7 text-primary" />
               </div>
-              <span className="font-semibold text-lg">Helt ok</span>
-              <span className="text-xs text-muted-foreground">Lagom</span>
+              <span className="font-semibold text-base">Ok</span>
             </button>
             <button
               onClick={() => handleEatingSelect('bad')}
               className={cn(
-                "checkin-option-card negative",
+                "checkin-option-card negative aspect-square",
                 checkinData.eatingQuality === 'bad' && "selected"
               )}
             >
-              <div className="icon-wrapper">
-                <ThumbsDown className="w-8 h-8 text-mood-depressed" />
+              <div className="icon-wrapper !w-12 !h-12">
+                <ThumbsDown className="w-7 h-7 text-mood-depressed" />
               </div>
-              <span className="font-semibold text-lg">Dåligt</span>
-              <span className="text-xs text-muted-foreground">Oregelbundet</span>
+              <span className="font-semibold text-base">Dåligt</span>
             </button>
           </div>
 
@@ -615,7 +612,7 @@ export function TodayCheckin({
           ) : (
             <button
               onClick={() => setShowComment('eating')}
-              className="flex items-center gap-2 mx-auto text-sm text-muted-foreground hover:text-foreground transition-colors"
+              className="flex items-center gap-2 mx-auto text-sm text-muted-foreground/60 hover:text-foreground transition-colors"
             >
               <MessageSquare className="w-4 h-4" />
               Lägg till kommentar
@@ -626,44 +623,44 @@ export function TodayCheckin({
 
       {/* Step: Exercise */}
       {currentStep === 'exercise' && (
-        <div className={`space-y-4 md:space-y-6 step-slide-in`} key={stepKey}>
-          <Button variant="ghost" size="sm" onClick={goBack} className="mb-2 gap-1">
+        <div className={`space-y-6 md:space-y-8 step-slide-in`} key={stepKey}>
+          <Button variant="ghost" size="sm" onClick={goBack} className="gap-1.5 text-muted-foreground/60">
             <ChevronLeft className="w-4 h-4" />
             Tillbaka
           </Button>
-          <div className="text-center mb-4 md:mb-6">
-            <Dumbbell className="w-10 h-10 md:w-12 md:h-12 mx-auto mb-3 text-primary" />
-            <h1 className="font-display text-xl sm:text-2xl md:text-3xl font-bold mb-1">
+          <div className="text-center">
+            <Dumbbell className="w-12 h-12 md:w-14 md:h-14 mx-auto mb-4 text-primary" />
+            <h1 className="font-display text-2xl sm:text-3xl font-bold">
               Har du tränat?
             </h1>
           </div>
 
-          <div className="grid grid-cols-2 gap-3 sm:gap-5 max-w-lg mx-auto">
+          <div className="grid grid-cols-2 gap-4 max-w-sm mx-auto">
             <button
               onClick={() => handleExerciseSelect(true)}
               className={cn(
-                "checkin-option-card positive",
+                "checkin-option-card positive aspect-square",
                 checkinData.exercised === true && "selected"
               )}
             >
-              <div className="icon-wrapper">
+              <div className="icon-wrapper !w-14 !h-14">
                 <Check className="w-8 h-8 text-mood-stable" />
               </div>
               <span className="font-semibold text-lg">Ja</span>
-              <span className="text-xs text-muted-foreground">Jag har tränat</span>
+              <span className="text-xs text-muted-foreground/60">Jag har tränat</span>
             </button>
             <button
               onClick={() => handleExerciseSelect(false)}
               className={cn(
-                "checkin-option-card neutral",
+                "checkin-option-card neutral aspect-square",
                 checkinData.exercised === false && "selected"
               )}
             >
-              <div className="icon-wrapper">
+              <div className="icon-wrapper !w-14 !h-14">
                 <X className="w-8 h-8 text-muted-foreground" />
               </div>
               <span className="font-semibold text-lg">Nej</span>
-              <span className="text-xs text-muted-foreground">Vilodag</span>
+              <span className="text-xs text-muted-foreground/60">Vilodag</span>
             </button>
           </div>
 
@@ -680,7 +677,7 @@ export function TodayCheckin({
           ) : (
             <button
               onClick={() => setShowComment('exercise')}
-              className="flex items-center gap-2 mx-auto text-sm text-muted-foreground hover:text-foreground transition-colors"
+              className="flex items-center gap-2 mx-auto text-sm text-muted-foreground/60 hover:text-foreground transition-colors"
             >
               <MessageSquare className="w-4 h-4" />
               Lägg till kommentar
@@ -691,19 +688,19 @@ export function TodayCheckin({
 
       {/* Step: Medication */}
       {currentStep === 'medication' && (
-        <div className={`space-y-4 md:space-y-6 step-slide-in`} key={stepKey}>
-          <Button variant="ghost" size="sm" onClick={goBack} className="mb-2 gap-1">
+        <div className={`space-y-6 md:space-y-8 step-slide-in`} key={stepKey}>
+          <Button variant="ghost" size="sm" onClick={goBack} className="gap-1.5 text-muted-foreground/60">
             <ChevronLeft className="w-4 h-4" />
             Tillbaka
           </Button>
-          <div className="text-center mb-4 md:mb-6">
-            <Pill className="w-10 h-10 md:w-12 md:h-12 mx-auto mb-3 text-primary" />
-            <h1 className="font-display text-xl sm:text-2xl md:text-3xl font-bold mb-1">
+          <div className="text-center">
+            <Pill className="w-12 h-12 md:w-14 md:h-14 mx-auto mb-4 text-primary" />
+            <h1 className="font-display text-2xl sm:text-3xl font-bold">
               Har du tagit dina mediciner?
             </h1>
           </div>
 
-          <div className="grid grid-cols-2 gap-3 sm:gap-5 max-w-lg mx-auto">
+          <div className="grid grid-cols-2 gap-4 max-w-sm mx-auto">
             <button
               onClick={() => {
                 // Mark all medications as taken
@@ -905,14 +902,14 @@ export function TodayCheckin({
 
       {/* Step: Custom Questions */}
       {currentStep === 'custom_questions' && (
-        <div className={`space-y-4 md:space-y-6 step-slide-in`} key={stepKey}>
-          <Button variant="ghost" size="sm" onClick={goBack} className="mb-2 gap-1">
+        <div className={`space-y-6 md:space-y-8 step-slide-in`} key={stepKey}>
+          <Button variant="ghost" size="sm" onClick={goBack} className="gap-1.5 text-muted-foreground/60">
             <ChevronLeft className="w-4 h-4" />
             Tillbaka
           </Button>
-          <div className="text-center mb-4 md:mb-6">
-            <HelpCircle className="w-10 h-10 md:w-12 md:h-12 mx-auto mb-3 text-primary" />
-            <h1 className="font-display text-xl sm:text-2xl md:text-3xl font-bold mb-1">
+          <div className="text-center">
+            <HelpCircle className="w-12 h-12 md:w-14 md:h-14 mx-auto mb-4 text-primary" />
+            <h1 className="font-display text-2xl sm:text-3xl font-bold">
               Egna frågor
             </h1>
           </div>

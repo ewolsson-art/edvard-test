@@ -1,9 +1,6 @@
 import { useState, useEffect } from 'react';
-import { format, startOfDay, isToday, parseISO } from 'date-fns';
+import { format, isToday, parseISO } from 'date-fns';
 import { useSearchParams } from 'react-router-dom';
-import { sv } from 'date-fns/locale';
-import { CalendarIcon, ChevronLeft } from 'lucide-react';
-import { TodayCheckin } from '@/components/TodayCheckin';
 import { useMoodData } from '@/hooks/useMoodData';
 import { useMedications } from '@/hooks/useMedications';
 import { useProfile } from '@/hooks/useProfile';
@@ -12,10 +9,7 @@ import { useStreak } from '@/hooks/useStreak';
 import { useCustomCheckinQuestions } from '@/hooks/useCustomCheckinQuestions';
 import { StreakBadge } from '@/components/StreakBadge';
 import { CheckinData } from '@/types/mood';
-import { Button } from '@/components/ui/button';
-import { Calendar } from '@/components/ui/calendar';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { cn } from '@/lib/utils';
+import { TodayCheckin } from '@/components/TodayCheckin';
 
 const Index = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -90,21 +84,11 @@ const Index = () => {
   }
 
   return (
-    <div className="h-[calc(100vh-3rem)] sm:h-[calc(100vh-3.5rem)] md:h-screen flex items-center justify-center py-4 px-4 sm:px-5 overflow-hidden">
-      <div className="w-full max-w-xl relative">
-        {/* Date picker for retroactive check-in */}
-        {!isSelectedToday && (
-          <div className="mb-4 flex items-center justify-center">
-            <Button variant="ghost" size="sm" onClick={() => { setSelectedDate(new Date()); setSearchParams({}); }} className="gap-1 text-muted-foreground">
-              <ChevronLeft className="w-4 h-4" />
-              Tillbaka till idag
-            </Button>
-          </div>
-        )}
-
+    <div className="fixed inset-0 md:relative md:h-screen flex items-center justify-center md:py-4 md:px-5 overflow-hidden">
+      <div className="w-full h-full md:h-auto md:max-w-xl relative">
         {/* Subtle streak badge in top right */}
         {streakData.currentStreak > 0 && (
-          <div className="absolute -top-1 right-0 z-10">
+          <div className="absolute top-4 right-4 md:-top-1 md:right-0 z-10">
             <StreakBadge 
               currentStreak={streakData.currentStreak}
               longestStreak={streakData.longestStreak}
@@ -113,7 +97,7 @@ const Index = () => {
             />
           </div>
         )}
-        <TodayCheckin 
+        <TodayCheckin
           todayEntry={selectedEntry} 
           activeMedications={activeMedications}
           medicationsTakenToday={medicationsTakenForDate}
