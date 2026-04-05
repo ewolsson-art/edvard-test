@@ -705,10 +705,22 @@ export function TodayCheckin({
       {/* Step: Medication */}
       {currentStep === 'medication' && (
         <div className={`space-y-6 md:space-y-8 step-slide-in`} key={stepKey}>
-          <Button variant="ghost" size="sm" onClick={goBack} className="gap-1.5 text-muted-foreground/60">
-            <ChevronLeft className="w-4 h-4" />
-            Tillbaka
-          </Button>
+          <div className="flex items-center justify-between">
+            <Button variant="ghost" size="sm" onClick={goBack} className="gap-1.5 text-muted-foreground/60">
+              <ChevronLeft className="w-4 h-4" />
+              Tillbaka
+            </Button>
+            <button
+              onClick={() => setShowComment(showComment === 'medication' ? null : 'medication')}
+              className={cn(
+                "p-2.5 rounded-xl transition-colors",
+                showComment === 'medication' ? "bg-primary/10 text-primary" : "text-muted-foreground/40 hover:text-muted-foreground hover:bg-muted/50"
+              )}
+              aria-label="Lägg till kommentar"
+            >
+              <MessageSquare className="w-5 h-5" />
+            </button>
+          </div>
           <div className="text-center">
             <Pill className="w-12 h-12 md:w-14 md:h-14 mx-auto mb-4 text-primary" />
             <h1 className="font-display text-2xl sm:text-3xl font-bold">
