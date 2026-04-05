@@ -891,27 +891,17 @@ export function TodayCheckin({
             </div>
 
             {/* Comment section */}
-            <div className="space-y-3">
-              {showComment === 'medication' ? (
-                <div ref={commentRef}>
-                  <Textarea
-                    placeholder="Skriv en kommentar om dina mediciner..."
-                    value={checkinData.medicationComment || ''}
-                    onChange={(e) => setCheckinData(prev => ({ ...prev, medicationComment: e.target.value }))}
-                    className="min-h-[80px] resize-none"
-                    maxLength={500}
-                  />
-                </div>
-              ) : (
-                <button
-                  onClick={() => setShowComment('medication')}
-                  className="flex items-center gap-2 mx-auto text-sm text-muted-foreground hover:text-foreground transition-colors"
-                >
-                  <MessageSquare className="w-4 h-4" />
-                  Lägg till kommentar
-                </button>
-              )}
-            </div>
+            {showComment === 'medication' && (
+              <div ref={commentRef}>
+                <Textarea
+                  placeholder="Skriv en kommentar om dina mediciner..."
+                  value={checkinData.medicationComment || ''}
+                  onChange={(e) => setCheckinData(prev => ({ ...prev, medicationComment: e.target.value }))}
+                  className="min-h-[80px] resize-none"
+                  maxLength={500}
+                />
+              </div>
+            )}
 
             {isLastStep('medication') ? (
               <Button onClick={handleComplete} className="w-full mt-4 gap-2">
