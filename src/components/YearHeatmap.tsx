@@ -180,7 +180,7 @@ export function YearHeatmap({ year, entries, medicationDates = [], onPrevYear, o
                         height={cellSize + 2}
                         rx={3}
                         fill="none"
-                        stroke="var(--primary)"
+                        stroke="hsl(var(--primary))"
                         strokeWidth={1.5}
                       />
                     )}
@@ -189,7 +189,7 @@ export function YearHeatmap({ year, entries, medicationDates = [], onPrevYear, o
                         cx={x + cellSize - 1}
                         cy={y + cellSize - 1}
                         r={2}
-                        fill="var(--primary)"
+                        fill="hsl(var(--primary))"
                       />
                     )}
                   </g>
