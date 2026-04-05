@@ -513,17 +513,7 @@ export function TodayCheckin({
             ))}
           </div>
 
-          {showComment === 'mood' && (
-            <div ref={commentRef} className="max-w-md mx-auto space-y-3">
-              <Textarea
-                placeholder="Berätta mer om hur du mår..."
-                value={checkinData.moodComment || ''}
-                onChange={(e) => updateComment('mood', e.target.value)}
-                className="min-h-[80px] resize-none"
-                maxLength={500}
-              />
-            </div>
-          )}
+          {renderCommentSection('mood')}
         </div>
       )}
 
