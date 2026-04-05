@@ -25,7 +25,6 @@ const patientNavItems = [
   { title: "Check-in", url: "/", icon: CalendarDays },
   { title: "Översikt", url: "/oversikt", icon: BarChart3 },
   { title: "Kännetecken", url: "/kannetecken", icon: Sparkles },
-  { title: "Rapporter", url: "/rapporter", icon: FileText },
   { title: "Min profil", url: "/profil", icon: UserCircle },
 ];
 
