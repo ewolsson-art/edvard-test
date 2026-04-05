@@ -104,6 +104,8 @@ export function TodayCheckin({
   
   const [currentStep, setCurrentStep] = useState<Step>('mood');
   const [isEditing, setIsEditing] = useState(false);
+  const [slideDirection, setSlideDirection] = useState<'forward' | 'back'>('forward');
+  const [stepKey, setStepKey] = useState(0);
   const [showComment, setShowComment] = useState<Step | null>(null);
   const commentRef = useRef<HTMLDivElement>(null);
   
