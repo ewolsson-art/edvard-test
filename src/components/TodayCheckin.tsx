@@ -15,6 +15,8 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Progress } from '@/components/ui/progress';
 import { StreakBadge } from '@/components/StreakBadge';
 import { CelebrationAnimation } from '@/components/CelebrationAnimation';
+import { FullscreenComment } from '@/components/FullscreenComment';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface StreakData {
   currentStreak: number;
@@ -102,6 +104,7 @@ export function TodayCheckin({
     return { goodDaysCount, daysSinceGood };
   }, [yearEntries, displayDate]);
   
+  const isMobile = useIsMobile();
   const [currentStep, setCurrentStep] = useState<Step>('mood');
   const [isEditing, setIsEditing] = useState(false);
   const [slideDirection, setSlideDirection] = useState<'forward' | 'back'>('forward');
@@ -275,6 +278,44 @@ export function TodayCheckin({
         setCheckinData(prev => ({ ...prev, exerciseComment: comment }));
         break;
     }
+  };
+
+  const commentConfig: Record<string, { title: string; placeholder: string; getValue: () => string; setValue: (v: string) => void }> = {
+    mood: { title: 'Kommentar – Mående', placeholder: 'Berätta mer om hur du mår...', getValue: () => checkinData.moodComment || '', setValue: (v) => updateComment('mood', v) },
+    sleep: { title: 'Kommentar – Sömn', placeholder: 'Berätta mer om din sömn...', getValue: () => checkinData.sleepComment || '', setValue: (v) => updateComment('sleep', v) },
+    eating: { title: 'Kommentar – Mat', placeholder: 'Berätta mer om din mat...', getValue: () => checkinData.eatingComment || '', setValue: (v) => updateComment('eating', v) },
+    exercise: { title: 'Kommentar – Träning', placeholder: 'Berätta mer om din träning...', getValue: () => checkinData.exerciseComment || '', setValue: (v) => updateComment('exercise', v) },
+    medication: { title: 'Kommentar – Medicin', placeholder: 'Skriv en kommentar om dina mediciner...', getValue: () => checkinData.medicationComment || '', setValue: (v) => setCheckinData(prev => ({ ...prev, medicationComment: v })) },
+  };
+
+  const renderCommentSection = (step: Step) => {
+    if (showComment !== step) return null;
+    const config = commentConfig[step];
+    if (!config) return null;
+
+    if (isMobile) {
+      return (
+        <FullscreenComment
+          title={config.title}
+          placeholder={config.placeholder}
+          value={config.getValue()}
+          onChange={config.setValue}
+          onClose={() => setShowComment(null)}
+        />
+      );
+    }
+
+    return (
+      <div ref={commentRef} className="max-w-md mx-auto space-y-3">
+        <Textarea
+          placeholder={config.placeholder}
+          value={config.getValue()}
+          onChange={(e) => config.setValue(e.target.value)}
+          className="min-h-[80px] resize-none"
+          maxLength={500}
+        />
+      </div>
+    );
   };
 
   const hasMedications = activeMedications.length > 0;
@@ -472,17 +513,7 @@ export function TodayCheckin({
             ))}
           </div>
 
-          {showComment === 'mood' && (
-            <div ref={commentRef} className="max-w-md mx-auto space-y-3">
-              <Textarea
-                placeholder="Berätta mer om hur du mår..."
-                value={checkinData.moodComment || ''}
-                onChange={(e) => updateComment('mood', e.target.value)}
-                className="min-h-[80px] resize-none"
-                maxLength={500}
-              />
-            </div>
-          )}
+          {renderCommentSection('mood')}
         </div>
       )}
 
@@ -541,17 +572,7 @@ export function TodayCheckin({
             </button>
           </div>
 
-          {showComment === 'sleep' && (
-            <div ref={commentRef} className="max-w-md mx-auto space-y-3">
-              <Textarea
-                placeholder="Berätta mer om din sömn..."
-                value={checkinData.sleepComment || ''}
-                onChange={(e) => updateComment('sleep', e.target.value)}
-                className="min-h-[80px] resize-none"
-                maxLength={500}
-              />
-            </div>
-          )}
+          {renderCommentSection('sleep')}
         </div>
       )}
 
@@ -620,17 +641,7 @@ export function TodayCheckin({
             </button>
           </div>
 
-          {showComment === 'eating' && (
-            <div ref={commentRef} className="max-w-md mx-auto space-y-3">
-              <Textarea
-                placeholder="Berätta mer om din mat..."
-                value={checkinData.eatingComment || ''}
-                onChange={(e) => updateComment('eating', e.target.value)}
-                className="min-h-[80px] resize-none"
-                maxLength={500}
-              />
-            </div>
-          )}
+          {renderCommentSection('eating')}
         </div>
       )}
 
@@ -689,17 +700,7 @@ export function TodayCheckin({
             </button>
           </div>
 
-          {showComment === 'exercise' && (
-            <div ref={commentRef} className="max-w-md mx-auto space-y-3">
-              <Textarea
-                placeholder="Berätta mer om din träning..."
-                value={checkinData.exerciseComment || ''}
-                onChange={(e) => updateComment('exercise', e.target.value)}
-                className="min-h-[80px] resize-none"
-                maxLength={500}
-              />
-            </div>
-          )}
+          {renderCommentSection('exercise')}
         </div>
       )}
 
@@ -871,17 +872,7 @@ export function TodayCheckin({
             </div>
 
             {/* Comment section */}
-            {showComment === 'medication' && (
-              <div ref={commentRef}>
-                <Textarea
-                  placeholder="Skriv en kommentar om dina mediciner..."
-                  value={checkinData.medicationComment || ''}
-                  onChange={(e) => setCheckinData(prev => ({ ...prev, medicationComment: e.target.value }))}
-                  className="min-h-[80px] resize-none"
-                  maxLength={500}
-                />
-              </div>
-            )}
+            {renderCommentSection('medication')}
 
             {isLastStep('medication') ? (
               <Button onClick={handleComplete} className="w-full mt-4 gap-2">
