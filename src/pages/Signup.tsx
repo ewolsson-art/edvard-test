@@ -245,8 +245,8 @@ const Signup = () => {
               <div className="animate-fade-in" role="group" aria-labelledby="role-heading">
                 <div className="flex flex-col items-center mb-5">
                   <Logo size="sm" className="[&_span]:!bg-none [&_span]:!text-white" />
-                  <h1 id="role-heading" className="mt-3 text-xl md:text-2xl font-bold text-white font-display">
-                    Välkommen! 👋
+                   <h1 id="role-heading" className="mt-3 text-xl md:text-2xl font-bold text-white font-display">
+                    Skapa konto
                   </h1>
                   <p className="mt-1 text-sm text-white/60 text-center">
                     Vilket typ av konto vill du skapa?
@@ -270,8 +270,8 @@ const Signup = () => {
                         className={cn(
                           "w-full p-3 rounded-xl border-2 text-left transition-all duration-300 group",
                           isSelected 
-                            ? "border-[hsl(45_85%_55%)] bg-[hsl(260_60%_72%/0.1)] shadow-md shadow-[hsl(260_60%_72%/0.1)]" 
-                            : "border-white/15 bg-white/5 hover:border-white/30 hover:bg-white/10"
+                            ? "border-[hsl(45_85%_55%)] bg-[hsl(45_85%_55%/0.08)] shadow-md shadow-[hsl(45_85%_55%/0.15)]" 
+                            : "border-white/20 bg-white/[0.06] hover:border-white/35 hover:bg-white/10"
                         )}
                       >
                         <div className="flex items-center gap-3">
@@ -349,8 +349,8 @@ const Signup = () => {
                         placeholder="Anna"
                         value={firstName}
                         onChange={(e) => setFirstName(e.target.value)}
-                        className={cn(
-                          "h-10 bg-white/5 border-white/15 rounded-lg text-white placeholder:text-white/30 focus:ring-2 focus:ring-[hsl(260_60%_72%/0.3)] transition-all duration-300",
+                         className={cn(
+                           "h-10 bg-white/[0.08] border-white/20 rounded-lg text-white placeholder:text-white/30 focus:ring-2 focus:ring-[hsl(260_60%_72%/0.3)] transition-all duration-300",
                           validationErrors.firstName && "border-red-400/60"
                         )}
                         disabled={isSubmitting}
@@ -372,8 +372,8 @@ const Signup = () => {
                         placeholder="Andersson"
                         value={lastName}
                         onChange={(e) => setLastName(e.target.value)}
-                        className={cn(
-                          "h-10 bg-white/5 border-white/15 rounded-lg text-white placeholder:text-white/30 focus:ring-2 focus:ring-[hsl(260_60%_72%/0.3)] transition-all duration-300",
+                         className={cn(
+                           "h-10 bg-white/[0.08] border-white/20 rounded-lg text-white placeholder:text-white/30 focus:ring-2 focus:ring-[hsl(260_60%_72%/0.3)] transition-all duration-300",
                           validationErrors.lastName && "border-red-400/60"
                         )}
                         disabled={isSubmitting}
@@ -401,7 +401,7 @@ const Signup = () => {
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         className={cn(
-                          "pl-10 h-10 bg-white/5 border-white/15 rounded-lg text-white placeholder:text-white/30 focus:ring-2 focus:ring-[hsl(260_60%_72%/0.3)] transition-all duration-300",
+                          "pl-10 h-10 bg-white/[0.08] border-white/20 rounded-lg text-white placeholder:text-white/30 focus:ring-2 focus:ring-[hsl(260_60%_72%/0.3)] transition-all duration-300",
                           validationErrors.email && "border-red-400/60"
                         )}
                         disabled={isSubmitting}
@@ -429,7 +429,7 @@ const Signup = () => {
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         className={cn(
-                          "pl-10 h-10 bg-white/5 border-white/15 rounded-lg pr-10 text-white placeholder:text-white/30 focus:ring-2 focus:ring-[hsl(260_60%_72%/0.3)] transition-all duration-300",
+                          "pl-10 h-10 bg-white/[0.08] border-white/20 rounded-lg pr-10 text-white placeholder:text-white/30 focus:ring-2 focus:ring-[hsl(260_60%_72%/0.3)] transition-all duration-300",
                           validationErrors.password && "border-red-400/60"
                         )}
                         disabled={isSubmitting}
@@ -465,7 +465,7 @@ const Signup = () => {
                         value={confirmPassword}
                         onChange={(e) => setConfirmPassword(e.target.value)}
                         className={cn(
-                          "pl-10 h-10 bg-white/5 border-white/15 rounded-lg pr-10 text-white placeholder:text-white/30 focus:ring-2 focus:ring-[hsl(260_60%_72%/0.3)] transition-all duration-300",
+                          "pl-10 h-10 bg-white/[0.08] border-white/20 rounded-lg pr-10 text-white placeholder:text-white/30 focus:ring-2 focus:ring-[hsl(260_60%_72%/0.3)] transition-all duration-300",
                           validationErrors.confirmPassword && "border-red-400/60"
                         )}
                         disabled={isSubmitting}
@@ -519,19 +519,10 @@ const Signup = () => {
             )}
 
             {/* Login link */}
-            <div className="relative my-4">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-white/10"></div>
-              </div>
-              <div className="relative flex justify-center text-xs">
-                <span className="px-3 text-white/40 bg-transparent">eller</span>
-              </div>
-            </div>
-
-            <div className="text-center">
+            <div className="mt-5 text-center">
               <Link
                 to="/logga-in"
-                className="inline-flex items-center gap-1 text-xs text-white/50 hover:text-white transition-colors duration-200"
+                className="inline-flex items-center gap-1 text-sm text-white/50 hover:text-white transition-colors duration-200"
               >
                 Har du redan ett konto? <span className="text-[hsl(45_85%_55%)] font-semibold">Logga in</span>
               </Link>

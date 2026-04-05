@@ -79,50 +79,28 @@ export function LandingFooter() {
           {/* Brand */}
           <div className="flex flex-col items-center md:items-start gap-4 max-w-xs">
             <div className="flex items-center gap-3">
-              <TurtleLogo size="sm" className="w-10 h-10" />
-              <span className="text-xl font-display font-bold text-white">Toddy</span>
+              <TurtleLogo size="sm" className="w-8 h-8" />
+              <span className="text-lg font-display font-bold text-white">Toddy</span>
             </div>
             <p className="text-sm text-white/50 leading-relaxed text-center md:text-left">
               Din personliga stämningsdagbok – skapad av och för människor med bipolär sjukdom.
             </p>
           </div>
 
-          {/* Links columns */}
-          <div className="flex gap-16">
-            <div className="flex flex-col gap-3">
-              <span className="text-xs font-semibold uppercase tracking-widest text-[hsl(260_60%_72%/0.6)] mb-1">
-                Juridiskt
-              </span>
-              <Link
-                to="/integritet"
-                className="text-sm text-white/50 hover:text-white transition-colors"
-              >
-                Integritetspolicy
-              </Link>
-              <Link
-                to="/villkor"
-                className="text-sm text-white/50 hover:text-white transition-colors"
-              >
-                Användarvillkor
-              </Link>
-            </div>
-            <div className="flex flex-col gap-3">
-              <span className="text-xs font-semibold uppercase tracking-widest text-[hsl(260_60%_72%/0.6)] mb-1">
-                Information
-              </span>
-              <Link
-                to="/om-oss"
-                className="text-sm text-white/50 hover:text-white transition-colors"
-              >
-                Om oss
-              </Link>
-              <Link
-                to="/for-patienter"
-                className="text-sm text-white/50 hover:text-white transition-colors"
-              >
-                För patienter
-              </Link>
-            </div>
+          {/* Links — flat list, no category headers */}
+          <div className="flex flex-wrap gap-x-8 gap-y-3">
+            <Link to="/integritet" className="text-sm text-white/50 hover:text-white transition-colors">
+              Integritetspolicy
+            </Link>
+            <Link to="/villkor" className="text-sm text-white/50 hover:text-white transition-colors">
+              Användarvillkor
+            </Link>
+            <Link to="/om-oss" className="text-sm text-white/50 hover:text-white transition-colors">
+              Om oss
+            </Link>
+            <Link to="/for-patienter" className="text-sm text-white/50 hover:text-white transition-colors">
+              För patienter
+            </Link>
           </div>
         </div>
 

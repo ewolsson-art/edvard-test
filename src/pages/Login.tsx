@@ -92,15 +92,12 @@ const Login = () => {
       
       <div className="flex flex-1 items-center justify-center px-4 pt-20 pb-12">
         <div className="w-full max-w-md">
-          <div className="bg-white/5 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/10 p-8 md:p-10">
+          <div className="bg-white/[0.08] backdrop-blur-xl rounded-3xl shadow-2xl border border-white/10 p-8 md:p-10">
             <div className="flex flex-col items-center mb-8">
               <Logo size="md" className="[&_span]:!bg-none [&_span]:!text-white" />
               <h1 className="mt-6 text-2xl md:text-3xl font-bold text-white font-display">
                 Välkommen tillbaka
               </h1>
-              <p className="mt-2 text-white/60 text-center">
-                Logga in på ditt konto
-              </p>
             </div>
 
             {isVerified && (
@@ -125,7 +122,7 @@ const Login = () => {
                     placeholder="din@email.se"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className={`pl-10 h-12 bg-white/5 border-white/15 rounded-xl text-white placeholder:text-white/30 focus:ring-2 focus:ring-[hsl(260_60%_72%/0.3)] focus:border-[hsl(260_60%_72%/0.5)] transition-all ${validationErrors.email ? 'border-red-400/60' : ''}`}
+                    className={`pl-10 h-12 bg-white/[0.08] border-white/20 rounded-xl text-white placeholder:text-white/30 focus:ring-2 focus:ring-[hsl(260_60%_72%/0.3)] focus:border-[hsl(260_60%_72%/0.5)] transition-all ${validationErrors.email ? 'border-red-400/60' : ''}`}
                     disabled={isSubmitting}
                   />
                 </div>
@@ -139,9 +136,9 @@ const Login = () => {
                   <Label htmlFor="password" className="text-sm font-medium text-white/80">
                     Lösenord
                   </Label>
-                  <Link
+                   <Link
                     to="/glomt-losenord"
-                    className="text-xs text-[hsl(45_85%_55%)] hover:text-[hsl(45_85%_65%)] transition-colors"
+                    className="text-sm py-1 px-1 text-[hsl(45_85%_55%)] hover:text-[hsl(45_85%_65%)] transition-colors"
                   >
                     Glömt lösenord?
                   </Link>
@@ -153,7 +150,7 @@ const Login = () => {
                     placeholder="••••••••"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className={`h-12 bg-white/5 border-white/15 rounded-xl pr-10 text-white placeholder:text-white/30 focus:ring-2 focus:ring-[hsl(260_60%_72%/0.3)] focus:border-[hsl(260_60%_72%/0.5)] transition-all ${validationErrors.password ? 'border-red-400/60' : ''}`}
+                    className={`h-12 bg-white/[0.08] border-white/20 rounded-xl pr-10 text-white placeholder:text-white/30 focus:ring-2 focus:ring-[hsl(260_60%_72%/0.3)] focus:border-[hsl(260_60%_72%/0.5)] transition-all ${validationErrors.password ? 'border-red-400/60' : ''}`}
                     disabled={isSubmitting}
                   />
                   <button
