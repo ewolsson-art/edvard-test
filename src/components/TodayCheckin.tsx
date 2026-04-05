@@ -170,14 +170,19 @@ export function TodayCheckin({
     return STEPS.indexOf(step) === STEPS.length - 1;
   };
 
+  const navigateStep = (step: Step) => {
+    setSlideDirection('forward');
+    setStepKey(k => k + 1);
+    setCurrentStep(step);
+  };
+
   const handleMoodSelect = (mood: MoodType) => {
     setCheckinData(prev => ({ ...prev, mood }));
     const nextStep = getNextStep('mood');
     if (nextStep === 'success-animation') {
-      // Only mood is enabled, complete right away
       handleCompleteWithData({ ...checkinData, mood });
     } else {
-      setCurrentStep(nextStep);
+      navigateStep(nextStep);
     }
   };
 
