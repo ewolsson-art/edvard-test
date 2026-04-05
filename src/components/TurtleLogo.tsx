@@ -216,7 +216,7 @@ export function TurtleLogo({ size = 'md', animated = true, className }: TurtleLo
           {/* Yellow hat */}
           <path
             d="M68 55 Q72 30 100 24 Q128 30 132 55"
-            fill="hsl(260 60% 72%)"
+            fill="hsl(265 55% 58%)"
             stroke="hsl(40 80% 45%)"
             strokeWidth="1"
           />

@@ -124,7 +124,7 @@ const DoctorOnboarding = () => {
           </div>
           <div className="h-1 bg-white/10 rounded-full overflow-hidden">
             <div 
-              className="h-full bg-[hsl(260_60%_72%)] rounded-full transition-all duration-500 ease-out"
+              className="h-full bg-[hsl(265_55%_58%)] rounded-full transition-all duration-500 ease-out"
               style={{ width: `${(step / TOTAL_STEPS) * 100}%` }}
             />
           </div>
