@@ -1,6 +1,5 @@
-import { CalendarDays, BarChart3, LogOut, MessageCircle, UserCircle, Users, Home, MessagesSquare, FileText, Sparkles, Sun, Moon } from "lucide-react";
+import { CalendarDays, BarChart3, LogOut, MessageCircle, UserCircle, Users, Home, MessagesSquare, FileText, Sparkles } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
-import { useTheme } from "next-themes";
 import { NavLink } from "@/components/NavLink";
 import { useSidebar } from "@/components/ui/sidebar";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -51,7 +50,7 @@ export function AppSidebar() {
   const { firstName, fullName, avatarUrl } = useProfile();
   const { isDoctor, isPatient, isRelative, isLoading: roleLoading } = useUserRole();
   const { hasPending } = usePendingNotifications();
-  const { theme, setTheme } = useTheme();
+  
   const isMobile = useIsMobile();
   const isCollapsed = state === "collapsed";
 
@@ -151,40 +150,7 @@ export function AppSidebar() {
         {/* Subtle separator line */}
         <div className="absolute top-0 left-4 right-4 h-px bg-gradient-to-r from-transparent via-sidebar-border to-transparent" />
         
-        {/* Theme toggle */}
-        {!isCollapsed ? (
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-            className="w-full gap-3 justify-start px-4 py-3 rounded-2xl text-sidebar-foreground/70 hover:text-sidebar-foreground hover:bg-sidebar-accent transition-all duration-300 group"
-            aria-label={theme === 'dark' ? 'Byt till ljust tema' : 'Byt till mörkt tema'}
-          >
-            <div className="relative flex items-center justify-center w-6 h-6" aria-hidden="true">
-              <div className="absolute inset-0 rounded-lg bg-sidebar-accent/50 group-hover:bg-sidebar-primary/15 transition-all duration-300" />
-              {theme === 'dark' ? (
-                <Sun className="h-4 w-4 relative z-10 transition-all duration-300 group-hover:scale-110" />
-              ) : (
-                <Moon className="h-4 w-4 relative z-10 transition-all duration-300 group-hover:scale-110" />
-              )}
-            </div>
-            <span className="text-sm font-medium">{theme === 'dark' ? 'Ljust tema' : 'Mörkt tema'}</span>
-          </Button>
-        ) : (
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-            className="w-full h-12 rounded-2xl text-sidebar-foreground/70 hover:text-sidebar-foreground hover:bg-sidebar-accent transition-all duration-300 group"
-            aria-label={theme === 'dark' ? 'Byt till ljust tema' : 'Byt till mörkt tema'}
-          >
-            {theme === 'dark' ? (
-              <Sun className="h-4 w-4 transition-all duration-300 group-hover:scale-110" />
-            ) : (
-              <Moon className="h-4 w-4 transition-all duration-300 group-hover:scale-110" />
-            )}
-          </Button>
-        )}
+        
 
         {/* Logout button */}
         {!isCollapsed ? (
