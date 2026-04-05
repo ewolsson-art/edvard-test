@@ -583,14 +583,16 @@ const Overview = () => {
               )}
 
               {view === 'year' && (
-                <YearHeatmap 
-                  year={currentYear} 
-                  entries={yearEntries} 
-                  medicationDates={yearMedicationDates}
-                  onPrevYear={() => setCurrentYear(prev => prev - 1)}
-                  onNextYear={() => setCurrentYear(prev => prev + 1)}
-                  onMonthClick={handleMonthClick}
-                />
+                <div className="lg:col-span-2">
+                  <YearHeatmap 
+                    year={currentYear} 
+                    entries={yearEntries} 
+                    medicationDates={yearMedicationDates}
+                    onPrevYear={() => setCurrentYear(prev => prev - 1)}
+                    onNextYear={() => setCurrentYear(prev => prev + 1)}
+                    onMonthClick={handleMonthClick}
+                  />
+                </div>
               )}
               
               {/* Mood Stats */}
