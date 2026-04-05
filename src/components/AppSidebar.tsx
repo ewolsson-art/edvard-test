@@ -81,7 +81,7 @@ export function AppSidebar() {
   const isMobile = useIsMobile();
   const isCollapsed = state === "collapsed";
 
-  const navItems = isDoctor ? doctorNavItems : isRelative ? relativeNavItems : patientNavItems;
+  const navGroups = isDoctor ? doctorNavGroups : isRelative ? relativeNavGroups : patientNavGroups;
   const homeUrl = isDoctor ? "/lakare" : isRelative ? "/anhorig" : "/";
 
   const getInitials = () => {
