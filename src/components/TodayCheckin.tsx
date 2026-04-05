@@ -423,13 +423,25 @@ export function TodayCheckin({
 
       {/* Step: Mood */}
       {currentStep === 'mood' && (
-        <div className={`space-y-6 md:space-y-8 step-slide-in`} key={stepKey}>
-          {isEditing && (
-            <Button variant="ghost" size="sm" onClick={() => setIsEditing(false)} className="gap-1.5 text-destructive hover:text-destructive hover:bg-destructive/10">
-              <X className="w-4 h-4" />
-              Avbryt
-            </Button>
-          )}
+        <div className={`space-y-6 md:space-y-8 step-slide-in relative`} key={stepKey}>
+          <div className="flex items-center justify-between">
+            {isEditing ? (
+              <Button variant="ghost" size="sm" onClick={() => setIsEditing(false)} className="gap-1.5 text-destructive hover:text-destructive hover:bg-destructive/10">
+                <X className="w-4 h-4" />
+                Avbryt
+              </Button>
+            ) : <div />}
+            <button
+              onClick={() => setShowComment(showComment === 'mood' ? null : 'mood')}
+              className={cn(
+                "p-2.5 rounded-xl transition-colors",
+                showComment === 'mood' ? "bg-primary/10 text-primary" : "text-muted-foreground/40 hover:text-muted-foreground hover:bg-muted/50"
+              )}
+              aria-label="Lägg till kommentar"
+            >
+              <MessageSquare className="w-5 h-5" />
+            </button>
+          </div>
           <div className="text-center">
             <h1 className="font-display text-2xl sm:text-3xl md:text-3xl font-bold leading-tight">
               {isDisplayToday 
@@ -459,7 +471,7 @@ export function TodayCheckin({
             ))}
           </div>
 
-          {showComment === 'mood' ? (
+          {showComment === 'mood' && (
             <div ref={commentRef} className="max-w-md mx-auto space-y-3">
               <Textarea
                 placeholder="Berätta mer om hur du mår..."
@@ -469,14 +481,6 @@ export function TodayCheckin({
                 maxLength={500}
               />
             </div>
-          ) : (
-            <button
-              onClick={() => setShowComment('mood')}
-              className="flex items-center gap-2 mx-auto text-sm text-muted-foreground/60 hover:text-foreground transition-colors"
-            >
-              <MessageSquare className="w-4 h-4" />
-              Lägg till kommentar
-            </button>
           )}
         </div>
       )}
@@ -484,10 +488,22 @@ export function TodayCheckin({
       {/* Step: Sleep */}
       {currentStep === 'sleep' && (
         <div className={`space-y-6 md:space-y-8 step-slide-in`} key={stepKey}>
-          <Button variant="ghost" size="sm" onClick={goBack} className="gap-1.5 text-muted-foreground/60">
-            <ChevronLeft className="w-4 h-4" />
-            Tillbaka
-          </Button>
+          <div className="flex items-center justify-between">
+            <Button variant="ghost" size="sm" onClick={goBack} className="gap-1.5 text-muted-foreground/60">
+              <ChevronLeft className="w-4 h-4" />
+              Tillbaka
+            </Button>
+            <button
+              onClick={() => setShowComment(showComment === 'sleep' ? null : 'sleep')}
+              className={cn(
+                "p-2.5 rounded-xl transition-colors",
+                showComment === 'sleep' ? "bg-primary/10 text-primary" : "text-muted-foreground/40 hover:text-muted-foreground hover:bg-muted/50"
+              )}
+              aria-label="Lägg till kommentar"
+            >
+              <MessageSquare className="w-5 h-5" />
+            </button>
+          </div>
           <div className="text-center">
             <Moon className="w-12 h-12 md:w-14 md:h-14 mx-auto mb-4 text-primary" />
             <h1 className="font-display text-2xl sm:text-3xl font-bold">
@@ -524,7 +540,7 @@ export function TodayCheckin({
             </button>
           </div>
 
-          {showComment === 'sleep' ? (
+          {showComment === 'sleep' && (
             <div ref={commentRef} className="max-w-md mx-auto space-y-3">
               <Textarea
                 placeholder="Berätta mer om din sömn..."
@@ -534,14 +550,6 @@ export function TodayCheckin({
                 maxLength={500}
               />
             </div>
-          ) : (
-            <button
-              onClick={() => setShowComment('sleep')}
-              className="flex items-center gap-2 mx-auto text-sm text-muted-foreground/60 hover:text-foreground transition-colors"
-            >
-              <MessageSquare className="w-4 h-4" />
-              Lägg till kommentar
-            </button>
           )}
         </div>
       )}
