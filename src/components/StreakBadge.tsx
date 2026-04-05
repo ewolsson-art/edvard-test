@@ -101,7 +101,7 @@ export function StreakBadge({
           )}
         </div>
         {isOnFire && (
-          <p className="text-xs text-orange-600/80 dark:text-orange-400/80 mt-0.5">
+          <p className="text-xs text-orange-600/80 dark:text-orange-400/80 mt-0.5 text-center">
             🔥 Du är on fire!
           </p>
         )}
