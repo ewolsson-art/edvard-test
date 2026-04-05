@@ -115,14 +115,18 @@ export function MonthCalendar({
                     disabled={!isCurrentMonth}
                     title={hasRelativeComment ? relativeCommentsData[dayOfMonth] : undefined}
                     className={cn(
-                      "relative flex flex-col items-center py-2 transition-colors",
+                      "relative flex flex-col items-center justify-center py-2 transition-colors rounded-lg",
                       !isCurrentMonth && "opacity-20",
-                      isCurrentMonth && "hover:bg-muted/30"
+                      isCurrentMonth && "hover:bg-muted/30",
+                      !isTodayDate && mood === 'elevated' && "bg-mood-elevated/15",
+                      !isTodayDate && mood === 'stable' && "bg-mood-stable/15",
+                      !isTodayDate && mood === 'depressed' && "bg-mood-depressed/15",
+                      isTodayDate && "bg-primary",
                     )}
                   >
                     <span className={cn(
-                      "flex items-center justify-center text-lg font-medium w-9 h-9 rounded-full leading-none",
-                      isTodayDate && "bg-primary text-primary-foreground font-bold",
+                      "flex items-center justify-center text-lg font-medium leading-none",
+                      isTodayDate && "text-primary-foreground font-bold",
                       !isTodayDate && mood === 'elevated' && "text-mood-elevated",
                       !isTodayDate && mood === 'stable' && "text-mood-stable",
                       !isTodayDate && mood === 'depressed' && "text-mood-depressed",
