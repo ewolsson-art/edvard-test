@@ -15,6 +15,7 @@ import Auth from "./pages/Auth";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Overview from "./pages/Overview";
+import Settings from "./pages/Settings";
 
 
 import Medications from "./pages/Medications";
@@ -143,6 +144,11 @@ const App = () => (
             <Route path="/profil" element={
               <ProtectedRoute>
                 <AppLayout><Profile /></AppLayout>
+              </ProtectedRoute>
+            } />
+            <Route path="/installningar" element={
+              <ProtectedRoute>
+                <AppLayout><Settings /></AppLayout>
               </ProtectedRoute>
             } />
             <Route path="/lakare" element={

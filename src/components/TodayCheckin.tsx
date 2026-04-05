@@ -104,6 +104,8 @@ export function TodayCheckin({
   
   const [currentStep, setCurrentStep] = useState<Step>('mood');
   const [isEditing, setIsEditing] = useState(false);
+  const [slideDirection, setSlideDirection] = useState<'forward' | 'back'>('forward');
+  const [stepKey, setStepKey] = useState(0);
   const [showComment, setShowComment] = useState<Step | null>(null);
   const commentRef = useRef<HTMLDivElement>(null);
   
@@ -168,14 +170,19 @@ export function TodayCheckin({
     return STEPS.indexOf(step) === STEPS.length - 1;
   };
 
+  const navigateStep = (step: Step) => {
+    setSlideDirection('forward');
+    setStepKey(k => k + 1);
+    setCurrentStep(step);
+  };
+
   const handleMoodSelect = (mood: MoodType) => {
     setCheckinData(prev => ({ ...prev, mood }));
     const nextStep = getNextStep('mood');
     if (nextStep === 'success-animation') {
-      // Only mood is enabled, complete right away
       handleCompleteWithData({ ...checkinData, mood });
     } else {
-      setCurrentStep(nextStep);
+      navigateStep(nextStep);
     }
   };
 
@@ -185,7 +192,7 @@ export function TodayCheckin({
     if (nextStep === 'success-animation') {
       handleCompleteWithData({ ...checkinData, sleepQuality: quality });
     } else {
-      setCurrentStep(nextStep);
+      navigateStep(nextStep);
     }
   };
 
@@ -195,7 +202,7 @@ export function TodayCheckin({
     if (nextStep === 'success-animation') {
       handleCompleteWithData({ ...checkinData, eatingQuality: quality });
     } else {
-      setCurrentStep(nextStep);
+      navigateStep(nextStep);
     }
   };
 
@@ -205,7 +212,7 @@ export function TodayCheckin({
     if (nextStep === 'success-animation') {
       handleCompleteWithData({ ...checkinData, exercised });
     } else {
-      setCurrentStep(nextStep);
+      navigateStep(nextStep);
     }
   };
 
@@ -246,6 +253,8 @@ export function TodayCheckin({
   const goBack = () => {
     const currentIndex = STEPS.indexOf(currentStep);
     if (currentIndex > 0) {
+      setSlideDirection('back');
+      setStepKey(k => k + 1);
       setCurrentStep(STEPS[currentIndex - 1]);
     }
   };
@@ -320,38 +329,55 @@ export function TodayCheckin({
           )}
 
           {/* Summary */}
-          <div className="max-w-md mx-auto mt-3 space-y-1.5 text-left">
-            <div className="flex items-center gap-3 p-2 rounded-lg bg-muted/30">
+          <div className="max-w-md mx-auto mt-3 space-y-2 text-left">
+            <div className={cn(
+              "flex items-center gap-3 p-3 rounded-xl border",
+              todayEntry?.mood === 'elevated' && "bg-mood-elevated/10 border-mood-elevated/20",
+              todayEntry?.mood === 'stable' && "bg-mood-stable/10 border-mood-stable/20",
+              todayEntry?.mood === 'depressed' && "bg-mood-depressed/10 border-mood-depressed/20",
+            )}>
               {todayEntry?.mood === 'elevated' && <Zap className="w-5 h-5 text-mood-elevated" />}
               {todayEntry?.mood === 'stable' && <Sun className="w-5 h-5 text-mood-stable" />}
               {todayEntry?.mood === 'depressed' && <CloudRain className="w-5 h-5 text-mood-depressed" />}
-              <span>Mående: <strong>{MOOD_LABELS[todayEntry!.mood]}</strong></span>
+              <span className="font-medium">Mående: <strong>{MOOD_LABELS[todayEntry!.mood]}</strong></span>
             </div>
             {preferences?.include_sleep && todayEntry?.sleepQuality && (
-              <div className="flex items-center gap-3 p-2 rounded-lg bg-muted/30">
-                <Moon className="w-5 h-5 text-primary" />
-                <span>Sömn: <strong>{QUALITY_LABELS[todayEntry.sleepQuality]}</strong></span>
+              <div className={cn(
+                "flex items-center gap-3 p-3 rounded-xl border",
+                todayEntry.sleepQuality === 'good' ? "bg-mood-stable/10 border-mood-stable/20" : "bg-mood-depressed/10 border-mood-depressed/20"
+              )}>
+                <Moon className={cn("w-5 h-5", todayEntry.sleepQuality === 'good' ? "text-mood-stable" : "text-mood-depressed")} />
+                <span className="font-medium">Sömn: <strong>{QUALITY_LABELS[todayEntry.sleepQuality]}</strong></span>
               </div>
             )}
             {preferences?.include_eating && todayEntry?.eatingQuality && (
-              <div className="flex items-center gap-3 p-2 rounded-lg bg-muted/30">
-                <Utensils className="w-5 h-5 text-primary" />
-                <span>Mat: <strong>{QUALITY_LABELS[todayEntry.eatingQuality]}</strong></span>
+              <div className={cn(
+                "flex items-center gap-3 p-3 rounded-xl border",
+                todayEntry.eatingQuality === 'good' ? "bg-mood-stable/10 border-mood-stable/20" : todayEntry.eatingQuality === 'bad' ? "bg-mood-depressed/10 border-mood-depressed/20" : "bg-primary/10 border-primary/20"
+              )}>
+                <Utensils className={cn("w-5 h-5", todayEntry.eatingQuality === 'good' ? "text-mood-stable" : todayEntry.eatingQuality === 'bad' ? "text-mood-depressed" : "text-primary")} />
+                <span className="font-medium">Mat: <strong>{QUALITY_LABELS[todayEntry.eatingQuality]}</strong></span>
               </div>
             )}
             {preferences?.include_exercise && todayEntry?.exercised !== undefined && (
-              <div className="flex items-center gap-3 p-2 rounded-lg bg-muted/30">
-                <Dumbbell className="w-5 h-5 text-primary" />
-                <span>Träning: <strong>{todayEntry.exercised ? 'Ja' : 'Nej'}</strong></span>
+              <div className={cn(
+                "flex items-center gap-3 p-3 rounded-xl border",
+                todayEntry.exercised ? "bg-mood-stable/10 border-mood-stable/20" : "bg-muted/50 border-border"
+              )}>
+                <Dumbbell className={cn("w-5 h-5", todayEntry.exercised ? "text-mood-stable" : "text-muted-foreground")} />
+                <span className="font-medium">Träning: <strong>{todayEntry.exercised ? 'Ja' : 'Nej'}</strong></span>
               </div>
             )}
             {customQuestions.map((q) => {
               const answer = customAnswersState[q.id];
               if (!answer) return null;
               return (
-                <div key={q.id} className="flex items-center gap-3 p-2 rounded-lg bg-muted/30">
-                  <HelpCircle className="w-5 h-5 text-primary" />
-                  <span>{q.question_text}: <strong>{answer === 'yes' ? 'Ja' : 'Nej'}</strong></span>
+                <div key={q.id} className={cn(
+                  "flex items-center gap-3 p-3 rounded-xl border",
+                  answer === 'yes' ? "bg-mood-stable/10 border-mood-stable/20" : "bg-muted/50 border-border"
+                )}>
+                  <HelpCircle className={cn("w-5 h-5", answer === 'yes' ? "text-mood-stable" : "text-muted-foreground")} />
+                  <span className="font-medium">{q.question_text}: <strong>{answer === 'yes' ? 'Ja' : 'Nej'}</strong></span>
                 </div>
               );
             })}
@@ -375,19 +401,29 @@ export function TodayCheckin({
         )}
       </div>
 
-      {/* Progress bar - hide during success animation */}
+      {/* Progress dots */}
       {currentStep !== 'success-animation' && (
-        <div className="max-w-md mx-auto mb-5 md:mb-8">
-          <Progress value={getStepProgress()} className="h-1.5 md:h-2" />
-          <p className="text-xs text-muted-foreground text-center mt-1.5">
-            Steg {STEPS.indexOf(currentStep) + 1} av {STEPS.length}
-          </p>
+        <div className="flex items-center justify-center gap-2 mb-5 md:mb-8">
+          {STEPS.map((step, i) => {
+            const currentIndex = STEPS.indexOf(currentStep);
+            const isActive = i === currentIndex;
+            const isCompleted = i < currentIndex;
+            return (
+              <div
+                key={step}
+                className={cn(
+                  "rounded-full transition-all duration-300",
+                  isActive ? "w-6 h-2 bg-primary" : isCompleted ? "w-2 h-2 bg-primary/60" : "w-2 h-2 bg-muted-foreground/20"
+                )}
+              />
+            );
+          })}
         </div>
       )}
 
       {/* Step: Mood */}
       {currentStep === 'mood' && (
-        <div className="space-y-4 md:space-y-6 fade-in">
+        <div className={`space-y-4 md:space-y-6 step-slide-in`} key={stepKey}>
           {isEditing && (
             <Button variant="ghost" size="sm" onClick={() => setIsEditing(false)} className="mb-2 gap-1 text-destructive hover:text-destructive hover:bg-destructive/10">
               <X className="w-4 h-4" />
@@ -447,7 +483,7 @@ export function TodayCheckin({
 
       {/* Step: Sleep */}
       {currentStep === 'sleep' && (
-        <div className="space-y-4 md:space-y-6 fade-in">
+        <div className={`space-y-4 md:space-y-6 step-slide-in`} key={stepKey}>
           <Button variant="ghost" size="sm" onClick={goBack} className="mb-2 gap-1">
             <ChevronLeft className="w-4 h-4" />
             Tillbaka
@@ -512,7 +548,7 @@ export function TodayCheckin({
 
       {/* Step: Eating */}
       {currentStep === 'eating' && (
-        <div className="space-y-4 md:space-y-6 fade-in">
+        <div className={`space-y-4 md:space-y-6 step-slide-in`} key={stepKey}>
           <Button variant="ghost" size="sm" onClick={goBack} className="mb-2 gap-1">
             <ChevronLeft className="w-4 h-4" />
             Tillbaka
@@ -590,7 +626,7 @@ export function TodayCheckin({
 
       {/* Step: Exercise */}
       {currentStep === 'exercise' && (
-        <div className="space-y-4 md:space-y-6 fade-in">
+        <div className={`space-y-4 md:space-y-6 step-slide-in`} key={stepKey}>
           <Button variant="ghost" size="sm" onClick={goBack} className="mb-2 gap-1">
             <ChevronLeft className="w-4 h-4" />
             Tillbaka
@@ -655,7 +691,7 @@ export function TodayCheckin({
 
       {/* Step: Medication */}
       {currentStep === 'medication' && (
-        <div className="space-y-4 md:space-y-6 fade-in">
+        <div className={`space-y-4 md:space-y-6 step-slide-in`} key={stepKey}>
           <Button variant="ghost" size="sm" onClick={goBack} className="mb-2 gap-1">
             <ChevronLeft className="w-4 h-4" />
             Tillbaka
@@ -858,7 +894,7 @@ export function TodayCheckin({
                 Slutför incheckning
               </Button>
             ) : (
-              <Button onClick={() => setCurrentStep(getNextStep('medication') as Step)} className="w-full mt-4 gap-2">
+              <Button onClick={() => navigateStep(getNextStep('medication') as Step)} className="w-full mt-4 gap-2">
                 <ChevronRight className="w-4 h-4" />
                 Nästa
               </Button>
@@ -869,7 +905,7 @@ export function TodayCheckin({
 
       {/* Step: Custom Questions */}
       {currentStep === 'custom_questions' && (
-        <div className="space-y-4 md:space-y-6 fade-in">
+        <div className={`space-y-4 md:space-y-6 step-slide-in`} key={stepKey}>
           <Button variant="ghost" size="sm" onClick={goBack} className="mb-2 gap-1">
             <ChevronLeft className="w-4 h-4" />
             Tillbaka
