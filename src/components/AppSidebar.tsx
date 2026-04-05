@@ -1,4 +1,4 @@
-import { CalendarDays, BarChart3, LogOut, UserCircle, Users, Home, FileText, Sparkles } from "lucide-react";
+import { CalendarDays, BarChart3, LogOut, UserCircle, Users, Home, FileText, Sparkles, Settings } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { NavLink } from "@/components/NavLink";
 import { useSidebar } from "@/components/ui/sidebar";
@@ -26,6 +26,7 @@ const patientNavItems = [
   { title: "Översikt", url: "/oversikt", icon: BarChart3 },
   { title: "Kännetecken", url: "/kannetecken", icon: Sparkles },
   { title: "Min profil", url: "/profil", icon: UserCircle },
+  { title: "Inställningar", url: "/installningar", icon: Settings },
 ];
 
 const doctorNavItems = [
