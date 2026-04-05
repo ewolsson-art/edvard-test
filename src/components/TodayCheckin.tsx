@@ -281,7 +281,7 @@ export function TodayCheckin({
   // Show complete state
   if (isCheckinComplete && !isEditing) {
     return (
-      <div className="glass-card p-5 sm:p-8 md:p-10 fade-in max-h-[calc(100vh-6rem)] md:max-h-[calc(100vh-4rem)] overflow-y-auto">
+      <div className="glass-card p-5 sm:p-8 md:p-10 fade-in min-h-[calc(100svh-4rem)] md:min-h-0 md:max-h-[calc(100vh-4rem)] overflow-y-auto flex flex-col justify-center md:block border-0 md:border bg-transparent md:bg-card/80 rounded-none md:rounded-2xl shadow-none md:shadow-sm">
         <div className="text-center mb-5">
           <p className="text-muted-foreground text-sm capitalize">{formattedDate}</p>
           {!isDisplayToday && (
@@ -393,7 +393,7 @@ export function TodayCheckin({
   }
 
   return (
-    <div className="glass-card p-5 sm:p-8 md:p-12 fade-in max-h-[calc(100vh-6rem)] md:max-h-[calc(100vh-4rem)] overflow-y-auto">
+    <div className="glass-card p-5 sm:p-8 md:p-12 fade-in min-h-[calc(100svh-4rem)] md:min-h-0 md:max-h-[calc(100vh-4rem)] overflow-y-auto flex flex-col justify-center md:block border-0 md:border bg-transparent md:bg-card/80 rounded-none md:rounded-2xl shadow-none md:shadow-sm">
       <div className="text-center mb-4 md:mb-5">
         <p className="text-muted-foreground text-sm capitalize">{formattedDate}</p>
         {!isDisplayToday && (
