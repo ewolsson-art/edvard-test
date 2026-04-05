@@ -483,44 +483,44 @@ export function TodayCheckin({
 
       {/* Step: Sleep */}
       {currentStep === 'sleep' && (
-        <div className={`space-y-4 md:space-y-6 step-slide-in`} key={stepKey}>
-          <Button variant="ghost" size="sm" onClick={goBack} className="mb-2 gap-1">
+        <div className={`space-y-6 md:space-y-8 step-slide-in`} key={stepKey}>
+          <Button variant="ghost" size="sm" onClick={goBack} className="gap-1.5 text-muted-foreground/60">
             <ChevronLeft className="w-4 h-4" />
             Tillbaka
           </Button>
-          <div className="text-center mb-4 md:mb-6">
-            <Moon className="w-10 h-10 md:w-12 md:h-12 mx-auto mb-3 text-primary" />
-            <h1 className="font-display text-xl sm:text-2xl md:text-3xl font-bold mb-1">
+          <div className="text-center">
+            <Moon className="w-12 h-12 md:w-14 md:h-14 mx-auto mb-4 text-primary" />
+            <h1 className="font-display text-2xl sm:text-3xl font-bold">
               Hur har du sovit?
             </h1>
           </div>
 
-          <div className="grid grid-cols-2 gap-3 sm:gap-5 max-w-lg mx-auto">
+          <div className="grid grid-cols-2 gap-4 max-w-sm mx-auto">
             <button
               onClick={() => handleSleepSelect('good')}
               className={cn(
-                "checkin-option-card positive",
+                "checkin-option-card positive aspect-square",
                 checkinData.sleepQuality === 'good' && "selected"
               )}
             >
-              <div className="icon-wrapper">
+              <div className="icon-wrapper !w-14 !h-14">
                 <ThumbsUp className="w-8 h-8 text-mood-stable" />
               </div>
               <span className="font-semibold text-lg">Bra</span>
-              <span className="text-xs text-muted-foreground">Jag sov gott</span>
+              <span className="text-xs text-muted-foreground/60">Jag sov gott</span>
             </button>
             <button
               onClick={() => handleSleepSelect('bad')}
               className={cn(
-                "checkin-option-card negative",
+                "checkin-option-card negative aspect-square",
                 checkinData.sleepQuality === 'bad' && "selected"
               )}
             >
-              <div className="icon-wrapper">
+              <div className="icon-wrapper !w-14 !h-14">
                 <ThumbsDown className="w-8 h-8 text-mood-depressed" />
               </div>
               <span className="font-semibold text-lg">Dåligt</span>
-              <span className="text-xs text-muted-foreground">Sov oroligt</span>
+              <span className="text-xs text-muted-foreground/60">Sov oroligt</span>
             </button>
           </div>
 
@@ -537,7 +537,7 @@ export function TodayCheckin({
           ) : (
             <button
               onClick={() => setShowComment('sleep')}
-              className="flex items-center gap-2 mx-auto text-sm text-muted-foreground hover:text-foreground transition-colors"
+              className="flex items-center gap-2 mx-auto text-sm text-muted-foreground/60 hover:text-foreground transition-colors"
             >
               <MessageSquare className="w-4 h-4" />
               Lägg till kommentar
