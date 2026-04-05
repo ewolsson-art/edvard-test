@@ -36,11 +36,11 @@ export function HowItWorksSection() {
   const { ref, visible } = useInView(0.1);
 
   return (
-    <section className="relative z-10 bg-[hsl(225_30%_7%)] py-20 md:py-32 px-4 md:px-8 overflow-hidden">
+    <section className="relative z-10 bg-[hsl(225_30%_7%)] py-14 md:py-32 px-5 md:px-8 overflow-hidden">
       <div className="max-w-5xl mx-auto">
         <IntroBlock />
 
-        <div ref={ref} className="mt-16 md:mt-24">
+        <div ref={ref} className="mt-10 md:mt-24">
           {/* Desktop: horizontal */}
           <div className="hidden md:flex items-start justify-center gap-16">
             {steps.map((step, i) => (
@@ -49,7 +49,7 @@ export function HowItWorksSection() {
           </div>
 
           {/* Mobile: vertical */}
-          <div className="flex md:hidden flex-col items-center gap-10">
+          <div className="flex md:hidden flex-col items-center gap-8">
             {steps.map((step, i) => (
               <div key={step.title} className="w-full">
                 <StepCard step={step} index={i} visible={visible} />
@@ -58,7 +58,7 @@ export function HowItWorksSection() {
           </div>
         </div>
 
-        <div className="mt-14 md:mt-20 flex justify-center">
+        <div className="mt-10 md:mt-20 flex justify-center">
           <a
             href="/signup"
             className="px-10 py-3.5 rounded-full bg-[hsl(45_85%_55%)] text-[hsl(225_30%_7%)] font-semibold text-base tracking-wide shadow-[0_4px_20px_hsl(45_85%_55%/0.3)] hover:shadow-[0_6px_28px_hsl(45_85%_55%/0.45)] hover:scale-105 active:scale-[0.98] transition-all duration-200"

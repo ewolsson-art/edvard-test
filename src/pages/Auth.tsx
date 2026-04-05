@@ -69,13 +69,13 @@ const Auth = () => {
   }
   return <div className="flex flex-col">
       {/* === HERO WITH NIGHT SKY === */}
-      <div className="min-h-screen flex flex-col relative overflow-hidden">
+      <div className="min-h-[100svh] flex flex-col relative overflow-hidden">
       {/* === DARK NIGHT SKY === */}
       <div className="absolute inset-0 bg-gradient-to-b from-[hsl(230_30%_5%)] via-[hsl(225_35%_8%)] to-[hsl(220_30%_12%)]" />
 
       {/* Moon */}
-      <div className="absolute top-[14%] right-[10%] w-14 h-14 md:w-20 md:h-20 rounded-full bg-[hsl(45_25%_82%)] shadow-[0_0_40px_12px_hsl(45_25%_82%/0.15)]" />
-      <div className="absolute top-[15.5%] right-[10.5%] w-3 h-3 md:w-4 md:h-4 rounded-full bg-[hsl(45_15%_72%)] opacity-25" />
+      <div className="absolute top-[18%] md:top-[14%] right-[10%] w-12 h-12 md:w-20 md:h-20 rounded-full bg-[hsl(45_25%_82%)] shadow-[0_0_40px_12px_hsl(45_25%_82%/0.15)]" />
+      <div className="absolute top-[19.2%] md:top-[15.5%] right-[10.5%] w-2.5 h-2.5 md:w-4 md:h-4 rounded-full bg-[hsl(45_15%_72%)] opacity-25" />
 
       {/* Stars */}
       <div className="absolute inset-0 pointer-events-none">
@@ -86,7 +86,7 @@ const Auth = () => {
       </div>
 
       {/* === CITY SKYLINE === */}
-      <div className="absolute bottom-0 left-0 right-0 h-[55%] md:h-[50%] pointer-events-none">
+      <div className="absolute bottom-0 left-0 right-0 h-[45%] md:h-[50%] pointer-events-none">
         <svg className="absolute bottom-0 w-full h-full" viewBox="0 0 1440 600" preserveAspectRatio="none">
 
           {/* === BACK ROW - tall buildings === */}
@@ -201,31 +201,33 @@ const Auth = () => {
         </svg>
       </div>
 
-      {/* Lampposts */}
-      <Lamppost x="left-[7%]" glowDelay={0} />
-      <Lamppost x="left-[25%]" glowDelay={1} />
-      <Lamppost x="left-[50%]" glowDelay={2} />
-      <Lamppost x="right-[25%]" glowDelay={1.5} />
-      <Lamppost x="right-[8%]" glowDelay={3} />
+      {/* Lampposts - hidden on small mobile for cleaner look */}
+      <div className="hidden sm:block">
+        <Lamppost x="left-[7%]" glowDelay={0} />
+        <Lamppost x="left-[25%]" glowDelay={1} />
+        <Lamppost x="left-[50%]" glowDelay={2} />
+        <Lamppost x="right-[25%]" glowDelay={1.5} />
+        <Lamppost x="right-[8%]" glowDelay={3} />
+      </div>
 
       <AuthNavbar />
 
       {/* Hero Section */}
-      <section className="relative z-10 flex-1 flex flex-col justify-end px-4 md:px-8 pb-6 md:pb-[12%]">
+      <section className="relative z-10 flex-1 flex flex-col justify-center md:justify-end px-5 md:px-8 pb-[18%] md:pb-[12%] pt-20 md:pt-0">
         <div className="max-w-6xl mx-auto w-full">
           <div className="flex items-end gap-6 md:gap-10 animate-fade-in">
             {/* Text content */}
-            <div className="space-y-4 md:space-y-6 max-w-xl">
-              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-display font-bold text-white leading-[1.1] tracking-tight drop-shadow-lg">
+            <div className="space-y-3 md:space-y-6 max-w-xl">
+              <h1 className="text-[1.75rem] sm:text-4xl md:text-5xl lg:text-6xl font-display font-bold text-white leading-[1.15] tracking-tight drop-shadow-lg">
                 Följ ditt mående med{" "}
                 <span className="text-[hsl(45_85%_55%)]">bättre insikt</span>
               </h1>
-              <p className="text-base sm:text-lg md:text-xl text-white/80 leading-relaxed">
+              <p className="text-[0.95rem] sm:text-lg md:text-xl text-white/80 leading-relaxed">
                 Din interaktiva och personliga stämningsdagbok
               </p>
-              <div className="flex flex-wrap gap-4 pt-2">
+              <div className="flex flex-wrap gap-4 pt-1 md:pt-2">
                 <button
-                  className="px-10 py-3.5 rounded-full bg-[hsl(45_85%_55%)] text-[hsl(225_30%_7%)] font-semibold text-base tracking-wide shadow-[0_4px_20px_hsl(45_85%_55%/0.3)] hover:shadow-[0_6px_28px_hsl(45_85%_55%/0.45)] hover:scale-105 active:scale-[0.98] transition-all duration-200"
+                  className="px-8 md:px-10 py-3 md:py-3.5 rounded-full bg-[hsl(45_85%_55%)] text-[hsl(225_30%_7%)] font-semibold text-[0.95rem] md:text-base tracking-wide shadow-[0_4px_20px_hsl(45_85%_55%/0.3)] hover:shadow-[0_6px_28px_hsl(45_85%_55%/0.45)] hover:scale-105 active:scale-[0.98] transition-all duration-200"
                   onClick={() => navigate("/signup")}
                 >
                   Prova kostnadsfritt
