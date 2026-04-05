@@ -60,10 +60,10 @@ export function HowItWorksSection() {
 
         <div className="mt-10 md:mt-20 flex justify-center">
           <a
-            href="/signup"
+            href="/skapa-konto"
             className="px-10 py-3.5 rounded-full bg-[hsl(45_85%_55%)] text-[hsl(225_30%_7%)] font-semibold text-base tracking-wide shadow-[0_4px_20px_hsl(260_60%_72%/0.3)] hover:shadow-[0_6px_28px_hsl(260_60%_72%/0.45)] hover:scale-105 active:scale-[0.98] transition-all duration-200"
           >
-            Kom igång kostnadsfritt
+            Kom igång
           </a>
         </div>
       </div>
@@ -104,9 +104,9 @@ function StepCard({ step, index, visible }: { step: typeof steps[number]; index:
       />
 
       {/* Icon with number */}
-      <div className="flex-shrink-0 w-16 h-16 rounded-2xl bg-[hsl(260_60%_72%/0.10)] border border-[hsl(260_60%_72%/0.18)] flex items-center justify-center relative mb-5 z-10">
-        <step.icon className="w-7 h-7 text-[hsl(45_85%_55%)]" />
-        <span className="absolute -top-2.5 -left-2.5 w-7 h-7 rounded-full bg-[hsl(45_85%_55%)] text-[hsl(225_30%_7%)] text-xs font-bold flex items-center justify-center shadow-lg">
+      <div className="flex-shrink-0 w-20 h-20 md:w-24 md:h-24 rounded-2xl bg-[hsl(260_60%_72%/0.10)] border border-[hsl(260_60%_72%/0.18)] flex items-center justify-center relative mb-6 z-10">
+        <step.icon className="w-9 h-9 md:w-11 md:h-11 text-[hsl(45_85%_55%)]" />
+        <span className="absolute -top-3 -left-3 w-8 h-8 rounded-full bg-[hsl(45_85%_55%)] text-[hsl(225_30%_7%)] text-sm font-bold flex items-center justify-center shadow-lg">
           {index + 1}
         </span>
       </div>
