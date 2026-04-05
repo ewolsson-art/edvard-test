@@ -141,7 +141,7 @@ const Login = () => {
                   </Label>
                   <Link
                     to="/glomt-losenord"
-                    className="text-xs text-[hsl(260 60% 72%)] hover:text-[hsl(45_85%_65%)] transition-colors"
+                    className="text-xs text-[hsl(260 60% 72%)] hover:text-[hsl(260_60%_80%)] transition-colors"
                   >
                     Glömt lösenord?
                   </Link>
@@ -171,7 +171,7 @@ const Login = () => {
 
               <Button
                 type="submit"
-                className="w-full h-12 rounded-xl text-base font-semibold bg-[hsl(260 60% 72%)] text-[hsl(230_30%_5%)] hover:bg-[hsl(45_85%_65%)] shadow-lg shadow-[hsl(45_85%_55%/0.2)] hover:shadow-xl transition-all duration-300 group"
+                className="w-full h-12 rounded-xl text-base font-semibold bg-[hsl(260 60% 72%)] text-[hsl(230_30%_5%)] hover:bg-[hsl(260_60%_80%)] shadow-lg shadow-[hsl(45_85%_55%/0.2)] hover:shadow-xl transition-all duration-300 group"
                 disabled={isSubmitting}
               >
                 {isSubmitting ? (

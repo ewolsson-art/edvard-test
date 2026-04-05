@@ -92,7 +92,7 @@ const ForgotPassword = () => {
                     Försök med annan e-post
                   </Button>
                   <Link to="/logga-in" className="block">
-                    <Button className="w-full bg-[hsl(260 60% 72%)] text-[hsl(230_30%_5%)] hover:bg-[hsl(45_85%_65%)]">
+                    <Button className="w-full bg-[hsl(260 60% 72%)] text-[hsl(230_30%_5%)] hover:bg-[hsl(260_60%_80%)]">
                       Tillbaka till inloggning
                     </Button>
                   </Link>
@@ -131,7 +131,7 @@ const ForgotPassword = () => {
 
                   <Button
                     type="submit"
-                    className="w-full h-12 rounded-xl text-base font-semibold bg-[hsl(260 60% 72%)] text-[hsl(230_30%_5%)] hover:bg-[hsl(45_85%_65%)] shadow-lg shadow-[hsl(45_85%_55%/0.2)] transition-all duration-300"
+                    className="w-full h-12 rounded-xl text-base font-semibold bg-[hsl(260 60% 72%)] text-[hsl(230_30%_5%)] hover:bg-[hsl(260_60%_80%)] shadow-lg shadow-[hsl(45_85%_55%/0.2)] transition-all duration-300"
                     disabled={isSubmitting}
                   >
                     {isSubmitting ? (

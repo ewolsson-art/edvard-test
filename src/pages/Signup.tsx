@@ -306,7 +306,7 @@ const Signup = () => {
                 <Button
                   onClick={handleContinue}
                   disabled={!role}
-                  className="w-full h-11 rounded-xl text-sm font-semibold bg-[hsl(260 60% 72%)] text-[hsl(230_30%_5%)] hover:bg-[hsl(45_85%_65%)] shadow-lg shadow-[hsl(45_85%_55%/0.2)] hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 group mt-5"
+                  className="w-full h-11 rounded-xl text-sm font-semibold bg-[hsl(260 60% 72%)] text-[hsl(230_30%_5%)] hover:bg-[hsl(260_60%_80%)] shadow-lg shadow-[hsl(45_85%_55%/0.2)] hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 group mt-5"
                 >
                   Fortsätt
                   <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
@@ -501,7 +501,7 @@ const Signup = () => {
                     </Button>
                     <Button
                       type="submit"
-                      className="flex-1 h-10 rounded-lg text-sm font-semibold bg-[hsl(260 60% 72%)] text-[hsl(230_30%_5%)] hover:bg-[hsl(45_85%_65%)] shadow-lg shadow-[hsl(45_85%_55%/0.2)] hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 group"
+                      className="flex-1 h-10 rounded-lg text-sm font-semibold bg-[hsl(260 60% 72%)] text-[hsl(230_30%_5%)] hover:bg-[hsl(260_60%_80%)] shadow-lg shadow-[hsl(45_85%_55%/0.2)] hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 group"
                       disabled={isSubmitting}
                     >
                       {isSubmitting ? (
