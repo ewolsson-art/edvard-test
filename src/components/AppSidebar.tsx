@@ -22,7 +22,7 @@ import {
 } from "@/components/ui/sidebar";
 
 const patientNavItems = [
-  { title: "Check-in", url: "/", icon: CalendarDays },
+  { title: "Idag", url: "/", icon: CalendarDays },
   { title: "Översikt", url: "/oversikt", icon: BarChart3 },
   { title: "Kännetecken", url: "/kannetecken", icon: Sparkles },
   { title: "Min profil", url: "/profil", icon: UserCircle },
