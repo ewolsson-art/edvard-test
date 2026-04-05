@@ -168,7 +168,7 @@ const Signup = () => {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[hsl(230_30%_5%)]">
-        <Loader2 className="h-8 w-8 animate-spin text-[hsl(45_85%_55%)]" />
+        <Loader2 className="h-8 w-8 animate-spin text-[hsl(260 60% 72%)]" />
       </div>
     );
   }
@@ -185,7 +185,7 @@ const Signup = () => {
                   <div className="w-20 h-20 bg-[hsl(45_85%_55%/0.15)] rounded-full blur-xl animate-pulse" />
                 </div>
                 <div className="h-16 w-16 rounded-full bg-[hsl(45_85%_55%/0.15)] flex items-center justify-center relative">
-                  <CheckCircle2 className="h-8 w-8 text-[hsl(45_85%_55%)] animate-scale-in" />
+                  <CheckCircle2 className="h-8 w-8 text-[hsl(260 60% 72%)] animate-scale-in" />
                 </div>
               </div>
               <h2 className="text-2xl font-bold text-white mb-4 font-display">Bekräfta din e-post</h2>
@@ -222,17 +222,17 @@ const Signup = () => {
               <div className="text-xs text-white/50 font-medium mr-2">Steg {currentStepIndex + 1}/2</div>
               <div className={cn(
                 "w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold transition-all duration-300",
-                step === "role" ? "bg-[hsl(45_85%_55%)] text-[hsl(230_30%_5%)] shadow-md shadow-[hsl(45_85%_55%/0.3)]" : "bg-white/10 text-white/60"
+                step === "role" ? "bg-[hsl(260 60% 72%)] text-[hsl(230_30%_5%)] shadow-md shadow-[hsl(45_85%_55%/0.3)]" : "bg-white/10 text-white/60"
               )} aria-hidden="true">
                 1
               </div>
               <div className={cn(
                 "w-12 h-1 rounded-full transition-all duration-500",
-                step === "details" || step === "submitting" ? "bg-[hsl(45_85%_55%)]" : "bg-white/15"
+                step === "details" || step === "submitting" ? "bg-[hsl(260 60% 72%)]" : "bg-white/15"
               )} aria-hidden="true" />
               <div className={cn(
                 "w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold transition-all duration-300",
-                step === "details" || step === "submitting" ? "bg-[hsl(45_85%_55%)] text-[hsl(230_30%_5%)] shadow-md shadow-[hsl(45_85%_55%/0.3)]" : "bg-white/10 text-white/30"
+                step === "details" || step === "submitting" ? "bg-[hsl(260 60% 72%)] text-[hsl(230_30%_5%)] shadow-md shadow-[hsl(45_85%_55%/0.3)]" : "bg-white/10 text-white/30"
               )} aria-hidden="true">
                 2
               </div>
@@ -270,14 +270,14 @@ const Signup = () => {
                         className={cn(
                           "w-full p-3 rounded-xl border-2 text-left transition-all duration-300 group",
                           isSelected 
-                            ? "border-[hsl(45_85%_55%)] bg-[hsl(45_85%_55%/0.1)] shadow-md shadow-[hsl(45_85%_55%/0.1)]" 
+                            ? "border-[hsl(260 60% 72%)] bg-[hsl(45_85%_55%/0.1)] shadow-md shadow-[hsl(45_85%_55%/0.1)]" 
                             : "border-white/15 bg-white/5 hover:border-white/30 hover:bg-white/10"
                         )}
                       >
                         <div className="flex items-center gap-3">
                           <div className={cn(
                             "w-10 h-10 rounded-lg flex-shrink-0 flex items-center justify-center transition-all duration-300",
-                            isSelected ? "bg-[hsl(45_85%_55%)] text-[hsl(230_30%_5%)]" : "bg-white/10 text-white/60 group-hover:bg-white/15"
+                            isSelected ? "bg-[hsl(260 60% 72%)] text-[hsl(230_30%_5%)]" : "bg-white/10 text-white/60 group-hover:bg-white/15"
                           )} aria-hidden="true">
                             <Icon className="h-5 w-5" aria-hidden="true" />
                           </div>
@@ -285,12 +285,12 @@ const Signup = () => {
                             <div className="flex items-center justify-between">
                               <h3 className={cn(
                                 "font-semibold text-sm transition-colors",
-                                isSelected ? "text-[hsl(45_85%_55%)]" : "text-white"
+                                isSelected ? "text-[hsl(260 60% 72%)]" : "text-white"
                               )}>
                                 {info.title}
                               </h3>
                               {isSelected && (
-                                <CheckCircle2 className="h-4 w-4 text-[hsl(45_85%_55%)] animate-scale-in" aria-hidden="true" />
+                                <CheckCircle2 className="h-4 w-4 text-[hsl(260 60% 72%)] animate-scale-in" aria-hidden="true" />
                               )}
                             </div>
                             <p className="text-xs text-white/50">
@@ -306,7 +306,7 @@ const Signup = () => {
                 <Button
                   onClick={handleContinue}
                   disabled={!role}
-                  className="w-full h-11 rounded-xl text-sm font-semibold bg-[hsl(45_85%_55%)] text-[hsl(230_30%_5%)] hover:bg-[hsl(45_85%_65%)] shadow-lg shadow-[hsl(45_85%_55%/0.2)] hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 group mt-5"
+                  className="w-full h-11 rounded-xl text-sm font-semibold bg-[hsl(260 60% 72%)] text-[hsl(230_30%_5%)] hover:bg-[hsl(45_85%_65%)] shadow-lg shadow-[hsl(45_85%_55%/0.2)] hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 group mt-5"
                 >
                   Fortsätt
                   <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
@@ -320,7 +320,7 @@ const Signup = () => {
                 <div className="flex flex-col items-center mb-4">
                   {role && (
                     <div className={cn(
-                      "w-11 h-11 rounded-xl flex items-center justify-center mb-3 bg-[hsl(45_85%_55%)] text-[hsl(230_30%_5%)]"
+                      "w-11 h-11 rounded-xl flex items-center justify-center mb-3 bg-[hsl(260 60% 72%)] text-[hsl(230_30%_5%)]"
                     )} aria-hidden="true">
                       {(() => {
                         const Icon = roleInfo[role].icon;
@@ -501,7 +501,7 @@ const Signup = () => {
                     </Button>
                     <Button
                       type="submit"
-                      className="flex-1 h-10 rounded-lg text-sm font-semibold bg-[hsl(45_85%_55%)] text-[hsl(230_30%_5%)] hover:bg-[hsl(45_85%_65%)] shadow-lg shadow-[hsl(45_85%_55%/0.2)] hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 group"
+                      className="flex-1 h-10 rounded-lg text-sm font-semibold bg-[hsl(260 60% 72%)] text-[hsl(230_30%_5%)] hover:bg-[hsl(45_85%_65%)] shadow-lg shadow-[hsl(45_85%_55%/0.2)] hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 group"
                       disabled={isSubmitting}
                     >
                       {isSubmitting ? (
@@ -533,7 +533,7 @@ const Signup = () => {
                 to="/logga-in"
                 className="inline-flex items-center gap-1 text-xs text-white/50 hover:text-white transition-colors duration-200"
               >
-                Har du redan ett konto? <span className="text-[hsl(45_85%_55%)] font-semibold">Logga in</span>
+                Har du redan ett konto? <span className="text-[hsl(260 60% 72%)] font-semibold">Logga in</span>
               </Link>
             </div>
           </div>
