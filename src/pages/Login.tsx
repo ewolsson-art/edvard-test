@@ -81,7 +81,7 @@ const Login = () => {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[hsl(230_30%_5%)]">
-        <Loader2 className="h-8 w-8 animate-spin text-[hsl(260_60%_72%)]" />
+        <Loader2 className="h-8 w-8 animate-spin text-[hsl(265_55%_58%)]" />
       </div>
     );
   }
@@ -105,7 +105,7 @@ const Login = () => {
 
             {isVerified && (
               <div className="mb-6 p-4 rounded-xl bg-[hsl(260_60%_72%/0.15)] border border-[hsl(260_60%_72%/0.3)] flex items-center gap-3">
-                <CheckCircle2 className="h-5 w-5 text-[hsl(260_60%_72%)] flex-shrink-0" />
+                <CheckCircle2 className="h-5 w-5 text-[hsl(265_55%_58%)] flex-shrink-0" />
                 <p className="text-sm text-white">
                   Din e-post är nu verifierad! Logga in för att fortsätta.
                 </p>
@@ -141,7 +141,7 @@ const Login = () => {
                   </Label>
                   <Link
                     to="/glomt-losenord"
-                    className="text-xs text-[hsl(260_60%_72%)] hover:text-[hsl(260_60%_80%)] transition-colors"
+                    className="text-xs text-[hsl(265_55%_58%)] hover:text-[hsl(265_55%_68%)] transition-colors"
                   >
                     Glömt lösenord?
                   </Link>
@@ -171,7 +171,7 @@ const Login = () => {
 
               <Button
                 type="submit"
-                className="w-full h-12 rounded-xl text-base font-semibold bg-[hsl(260_60%_72%)] text-[hsl(230_30%_5%)] hover:bg-[hsl(260_60%_80%)] shadow-lg shadow-[hsl(260_60%_72%/0.2)] hover:shadow-xl transition-all duration-300 group"
+                className="w-full h-12 rounded-xl text-base font-semibold bg-[hsl(265_55%_58%)] text-[hsl(230_30%_5%)] hover:bg-[hsl(265_55%_68%)] shadow-lg shadow-[hsl(260_60%_72%/0.2)] hover:shadow-xl transition-all duration-300 group"
                 disabled={isSubmitting}
               >
                 {isSubmitting ? (
@@ -190,7 +190,7 @@ const Login = () => {
                 to="/skapa-konto"
                 className="text-sm text-white/60 hover:text-white transition-colors font-semibold"
               >
-                Har du inget konto? <span className="text-[hsl(260_60%_72%)]">Skapa ett</span>
+                Har du inget konto? <span className="text-[hsl(265_55%_58%)]">Skapa ett</span>
               </Link>
             </div>
           </div>
