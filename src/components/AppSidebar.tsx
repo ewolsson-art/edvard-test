@@ -108,55 +108,62 @@ export function AppSidebar() {
           </Link>
         </div>
 
-        <SidebarGroup>
-          <SidebarGroupContent>
-            <SidebarMenu className="space-y-2 px-2" role="menubar" aria-label="Navigeringsmeny">
-              {navItems.map((item) => (
-                <SidebarMenuItem key={item.title} role="none">
-                  <SidebarMenuButton asChild tooltip={item.title} role="menuitem">
-                    <NavLink 
-                      to={item.url} 
-                      end={item.url === '/' || item.url === '/lakare' || item.url === '/anhorig'}
-                      className="group relative flex items-center gap-4 px-3 py-3.5 rounded-lg transition-colors duration-200 hover:bg-muted/60 text-white/70 hover:text-white" 
-                      activeClassName="bg-muted/80 text-white font-medium"
-                      aria-label={item.url === '/profil' && hasPending ? `${item.title} - Du har nya notifikationer` : item.title}
-                      aria-current={location.pathname === item.url ? "page" : undefined}
-                      onClick={() => { if (isMobile) setOpenMobile(false); }}
-                    >
-                      {item.url === '/profil' && avatarUrl ? (
-                        <div className="relative">
-                          <Avatar className="h-6 w-6 shrink-0">
-                            <AvatarImage src={avatarUrl} alt="Profilbild" className="object-cover" />
-                            <AvatarFallback className="text-xs bg-muted text-muted-foreground">{getInitials()}</AvatarFallback>
-                          </Avatar>
-                          {hasPending && (
-                            <span className="absolute -top-0.5 -right-0.5 flex h-2.5 w-2.5" aria-hidden="true">
-                              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-destructive opacity-75"></span>
-                              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-destructive"></span>
-                            </span>
-                          )}
-                        </div>
-                      ) : (
-                        <div className="relative">
-                          <item.icon className="h-5 w-5 shrink-0 transition-colors duration-200" aria-hidden="true" />
-                          {item.url === '/profil' && hasPending && (
-                            <span className="absolute -top-0.5 -right-0.5 flex h-2.5 w-2.5" aria-hidden="true">
-                              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-destructive opacity-75"></span>
-                              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-destructive"></span>
-                            </span>
-                          )}
-                        </div>
-                      )}
-                      {!isCollapsed && (
-                        <span className="text-[17px] font-medium tracking-normal">{item.title}</span>
-                      )}
-                    </NavLink>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
+        {navGroups.map((group, gi) => (
+          <SidebarGroup key={group.label} className={gi > 0 ? 'mt-6' : ''}>
+            {!isCollapsed && (
+              <div className="px-4 mb-3">
+                <span className="text-xs font-semibold uppercase tracking-widest text-muted-foreground/50">{group.label}</span>
+              </div>
+            )}
+            <SidebarGroupContent>
+              <SidebarMenu className="space-y-1 px-2" role="menubar" aria-label={group.label}>
+                {group.items.map((item) => (
+                  <SidebarMenuItem key={item.title} role="none">
+                    <SidebarMenuButton asChild tooltip={item.title} role="menuitem">
+                      <NavLink 
+                        to={item.url} 
+                        end={item.url === '/' || item.url === '/lakare' || item.url === '/anhorig'}
+                        className="group relative flex items-center gap-4 px-3 py-3 rounded-lg transition-colors duration-200 hover:bg-muted/60 text-white/70 hover:text-white" 
+                        activeClassName="bg-muted/80 text-white font-medium"
+                        aria-label={item.url === '/profil' && hasPending ? `${item.title} - Du har nya notifikationer` : item.title}
+                        aria-current={location.pathname === item.url ? "page" : undefined}
+                        onClick={() => { if (isMobile) setOpenMobile(false); }}
+                      >
+                        {item.url === '/profil' && avatarUrl ? (
+                          <div className="relative">
+                            <Avatar className="h-6 w-6 shrink-0">
+                              <AvatarImage src={avatarUrl} alt="Profilbild" className="object-cover" />
+                              <AvatarFallback className="text-xs bg-muted text-muted-foreground">{getInitials()}</AvatarFallback>
+                            </Avatar>
+                            {hasPending && (
+                              <span className="absolute -top-0.5 -right-0.5 flex h-2.5 w-2.5" aria-hidden="true">
+                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-destructive opacity-75"></span>
+                                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-destructive"></span>
+                              </span>
+                            )}
+                          </div>
+                        ) : (
+                          <div className="relative">
+                            <item.icon className="h-5 w-5 shrink-0 transition-colors duration-200" aria-hidden="true" />
+                            {item.url === '/profil' && hasPending && (
+                              <span className="absolute -top-0.5 -right-0.5 flex h-2.5 w-2.5" aria-hidden="true">
+                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-destructive opacity-75"></span>
+                                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-destructive"></span>
+                              </span>
+                            )}
+                          </div>
+                        )}
+                        {!isCollapsed && (
+                          <span className="text-[17px] font-medium tracking-normal">{item.title}</span>
+                        )}
+                      </NavLink>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                ))}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        ))}
       </SidebarContent>
 
       <SidebarFooter className="p-3 bg-sidebar border-t border-border/40">
