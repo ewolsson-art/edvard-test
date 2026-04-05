@@ -90,43 +90,49 @@ export function AuthNavbar() {
         </div>
       </nav>
 
-      {/* Mobile menu - fullscreen overlay, rendered OUTSIDE nav to avoid stacking context issues */}
+      {/* Mobile menu - fullscreen overlay inspired by Residy */}
       {isMobileMenuOpen && (
-        <div
-          className="lg:hidden fixed inset-0 z-[9999] bg-[hsl(230,30%,5%)] flex flex-col"
-        >
-          {/* Header with logo + close */}
-          <div className="flex items-center justify-between h-16 px-4 sm:px-6">
-            <div className="cursor-pointer" onClick={() => { setIsMobileMenuOpen(false); navigate('/auth'); }}>
-              <Logo size="sm" className="[&_span]:!bg-none [&_span]:!text-white" />
-            </div>
-            <Button
-              variant="ghost"
-              size="icon"
+        <div className="lg:hidden fixed inset-0 z-[9999] bg-black flex flex-col">
+          {/* Close button top-right */}
+          <div className="flex items-center justify-end h-16 px-5">
+            <button
               onClick={() => setIsMobileMenuOpen(false)}
-              className="h-10 w-10 text-white hover:bg-white/10"
+              className="text-white/60 hover:text-white transition-colors"
+              aria-label="Stäng meny"
             >
-              <X className="h-6 w-6" />
-            </Button>
+              <X className="h-7 w-7" />
+            </button>
           </div>
 
-          {/* Nav links centered */}
-          <div className="flex-1 flex flex-col items-center justify-center gap-2 px-8">
+          {/* Primary links - large, bold, left-aligned */}
+          <div className="flex-1 flex flex-col px-8 pt-8">
+            <div className="space-y-4">
+              <button
+                onClick={() => { setIsMobileMenuOpen(false); navigate('/logga-in'); }}
+                className="block text-left text-3xl font-bold text-white tracking-tight hover:text-white/80 transition-colors"
+              >
+                Logga in
+              </button>
+              <button
+                onClick={() => { setIsMobileMenuOpen(false); navigate('/skapa-konto'); }}
+                className="block text-left text-3xl font-bold text-white tracking-tight hover:text-white/80 transition-colors"
+              >
+                Skapa konto
+              </button>
+            </div>
+          </div>
+
+          {/* Secondary links at the bottom */}
+          <div className="px-8 pb-12 space-y-3 border-t border-white/10 pt-6">
             {navItems.map((item) => (
               <button
                 key={item.href}
                 onClick={() => handleNavClick(item.href)}
-                className="w-full text-center py-4 text-lg font-medium text-white/70 hover:text-white hover:bg-white/5 rounded-2xl transition-all duration-200"
+                className="block text-left text-base text-white/50 hover:text-white/80 transition-colors"
               >
                 {item.label}
               </button>
             ))}
-            <button
-              onClick={() => { setIsMobileMenuOpen(false); navigate("/logga-in"); }}
-              className="w-full mt-6 px-5 py-4 text-base font-semibold text-[hsl(225_30%_7%)] bg-[hsl(45_85%_55%)] rounded-full hover:bg-[hsl(45_85%_60%)] transition-all duration-200 shadow-[0_2px_20px_hsl(45_85%_55%/0.3)]"
-            >
-              Logga in
-            </button>
           </div>
         </div>
       )}
