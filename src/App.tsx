@@ -15,7 +15,7 @@ import Auth from "./pages/Auth";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Overview from "./pages/Overview";
-import Reports from "./pages/Reports";
+
 
 import Medications from "./pages/Medications";
 import AboutUs from "./pages/AboutUs";
@@ -131,11 +131,8 @@ const App = () => (
                 <AppLayout><CharacteristicDetail /></AppLayout>
               </ProtectedRoute>
             } />
-            <Route path="/rapporter" element={
-              <ProtectedRoute>
-                <AppLayout><Reports /></AppLayout>
-              </ProtectedRoute>
-            } />
+
+
 
 
             <Route path="/mediciner" element={

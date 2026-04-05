@@ -32,6 +32,7 @@ import { MoodStats as MoodStatsType, ExerciseType, QualityType } from '@/types/m
 import { Last30DaysOverview } from '@/components/Last30DaysOverview';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Dumbbell, Moon, Utensils, Pill } from 'lucide-react';
+import Reports from './Reports';
 
 type ViewType = 'week' | 'month' | 'year' | '30days';
 
@@ -819,6 +820,10 @@ const Overview = () => {
           currentTypes={exerciseDialogDate ? (getEntryForDate(format(exerciseDialogDate, 'yyyy-MM-dd'))?.exerciseTypes || []) : []}
           onSave={handleSaveExerciseTypes}
         />
+        {/* Reports section */}
+        <div className="mt-12 pt-8 border-t border-border/50">
+          <Reports />
+        </div>
       </div>
     </div>
   );
