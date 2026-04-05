@@ -521,14 +521,11 @@ const Overview = () => {
   const showMedication = preferences?.include_medication !== false && activeMedications.length > 0;
 
   return (
-    <div className="py-8 px-4 md:px-8">
-      <div className="max-w-6xl mx-auto space-y-12">
-        <header className="mb-8">
-          <div className="flex items-center justify-between mb-4">
-            <h1 className="font-display text-3xl md:text-4xl font-bold">
-              Översikt
-            </h1>
-          </div>
+    <div className="p-5 md:p-8 pb-24">
+      <div className="max-w-6xl mx-auto space-y-8">
+        <header>
+          <h1 className="font-display text-3xl font-bold mb-2">Översikt</h1>
+          <p className="text-sm text-muted-foreground mb-6">Se dina mönster och trender över tid.</p>
           
           <Tabs value={view} onValueChange={handleViewChange} className="w-full">
             <TabsList className="inline-flex h-9 bg-muted/50 p-0.5 rounded-lg">

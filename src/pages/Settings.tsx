@@ -219,9 +219,10 @@ const Settings = () => {
 
   // Main settings list
   return (
-    <div className="py-6 px-4 md:px-8">
+    <div className="p-5 md:p-8 pb-24">
       <div className="max-w-2xl mx-auto">
-        <h1 className="font-display text-2xl font-bold mb-6 text-center md:text-left">Inställningar</h1>
+        <h1 className="font-display text-3xl font-bold mb-2">Inställningar</h1>
+        <p className="text-sm text-muted-foreground mb-8">Anpassa appen efter dina behov.</p>
 
         {/* Check-in section */}
         {isPatient && (
@@ -246,7 +247,7 @@ const Settings = () => {
 
 function SubPage({ title, onBack, children }: { title: string; onBack: () => void; children: React.ReactNode }) {
   return (
-    <div className="py-6 px-4 md:px-8 animate-fade-in">
+    <div className="p-5 md:p-8 pb-24 animate-fade-in">
       <div className="max-w-2xl mx-auto">
         <div className="flex items-center gap-3 mb-6">
           <button onClick={onBack} className="p-2 -ml-2 rounded-lg hover:bg-muted transition-colors" aria-label="Tillbaka">
@@ -264,7 +265,7 @@ function SettingsGroup({ label, children }: { label: string; children: React.Rea
   return (
     <div className="mb-6">
       <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2 px-1">{label}</p>
-      <div className="rounded-xl border border-border bg-card overflow-hidden divide-y divide-border">
+      <div className="rounded-xl border border-border/50 bg-card/50 overflow-hidden divide-y divide-border/50">
         {children}
       </div>
     </div>
