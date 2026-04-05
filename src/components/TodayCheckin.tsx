@@ -329,38 +329,55 @@ export function TodayCheckin({
           )}
 
           {/* Summary */}
-          <div className="max-w-md mx-auto mt-3 space-y-1.5 text-left">
-            <div className="flex items-center gap-3 p-2 rounded-lg bg-muted/30">
+          <div className="max-w-md mx-auto mt-3 space-y-2 text-left">
+            <div className={cn(
+              "flex items-center gap-3 p-3 rounded-xl border",
+              todayEntry?.mood === 'elevated' && "bg-mood-elevated/10 border-mood-elevated/20",
+              todayEntry?.mood === 'stable' && "bg-mood-stable/10 border-mood-stable/20",
+              todayEntry?.mood === 'depressed' && "bg-mood-depressed/10 border-mood-depressed/20",
+            )}>
               {todayEntry?.mood === 'elevated' && <Zap className="w-5 h-5 text-mood-elevated" />}
               {todayEntry?.mood === 'stable' && <Sun className="w-5 h-5 text-mood-stable" />}
               {todayEntry?.mood === 'depressed' && <CloudRain className="w-5 h-5 text-mood-depressed" />}
-              <span>Mående: <strong>{MOOD_LABELS[todayEntry!.mood]}</strong></span>
+              <span className="font-medium">Mående: <strong>{MOOD_LABELS[todayEntry!.mood]}</strong></span>
             </div>
             {preferences?.include_sleep && todayEntry?.sleepQuality && (
-              <div className="flex items-center gap-3 p-2 rounded-lg bg-muted/30">
-                <Moon className="w-5 h-5 text-primary" />
-                <span>Sömn: <strong>{QUALITY_LABELS[todayEntry.sleepQuality]}</strong></span>
+              <div className={cn(
+                "flex items-center gap-3 p-3 rounded-xl border",
+                todayEntry.sleepQuality === 'good' ? "bg-mood-stable/10 border-mood-stable/20" : "bg-mood-depressed/10 border-mood-depressed/20"
+              )}>
+                <Moon className={cn("w-5 h-5", todayEntry.sleepQuality === 'good' ? "text-mood-stable" : "text-mood-depressed")} />
+                <span className="font-medium">Sömn: <strong>{QUALITY_LABELS[todayEntry.sleepQuality]}</strong></span>
               </div>
             )}
             {preferences?.include_eating && todayEntry?.eatingQuality && (
-              <div className="flex items-center gap-3 p-2 rounded-lg bg-muted/30">
-                <Utensils className="w-5 h-5 text-primary" />
-                <span>Mat: <strong>{QUALITY_LABELS[todayEntry.eatingQuality]}</strong></span>
+              <div className={cn(
+                "flex items-center gap-3 p-3 rounded-xl border",
+                todayEntry.eatingQuality === 'good' ? "bg-mood-stable/10 border-mood-stable/20" : todayEntry.eatingQuality === 'bad' ? "bg-mood-depressed/10 border-mood-depressed/20" : "bg-primary/10 border-primary/20"
+              )}>
+                <Utensils className={cn("w-5 h-5", todayEntry.eatingQuality === 'good' ? "text-mood-stable" : todayEntry.eatingQuality === 'bad' ? "text-mood-depressed" : "text-primary")} />
+                <span className="font-medium">Mat: <strong>{QUALITY_LABELS[todayEntry.eatingQuality]}</strong></span>
               </div>
             )}
             {preferences?.include_exercise && todayEntry?.exercised !== undefined && (
-              <div className="flex items-center gap-3 p-2 rounded-lg bg-muted/30">
-                <Dumbbell className="w-5 h-5 text-primary" />
-                <span>Träning: <strong>{todayEntry.exercised ? 'Ja' : 'Nej'}</strong></span>
+              <div className={cn(
+                "flex items-center gap-3 p-3 rounded-xl border",
+                todayEntry.exercised ? "bg-mood-stable/10 border-mood-stable/20" : "bg-muted/50 border-border"
+              )}>
+                <Dumbbell className={cn("w-5 h-5", todayEntry.exercised ? "text-mood-stable" : "text-muted-foreground")} />
+                <span className="font-medium">Träning: <strong>{todayEntry.exercised ? 'Ja' : 'Nej'}</strong></span>
               </div>
             )}
             {customQuestions.map((q) => {
               const answer = customAnswersState[q.id];
               if (!answer) return null;
               return (
-                <div key={q.id} className="flex items-center gap-3 p-2 rounded-lg bg-muted/30">
-                  <HelpCircle className="w-5 h-5 text-primary" />
-                  <span>{q.question_text}: <strong>{answer === 'yes' ? 'Ja' : 'Nej'}</strong></span>
+                <div key={q.id} className={cn(
+                  "flex items-center gap-3 p-3 rounded-xl border",
+                  answer === 'yes' ? "bg-mood-stable/10 border-mood-stable/20" : "bg-muted/50 border-border"
+                )}>
+                  <HelpCircle className={cn("w-5 h-5", answer === 'yes' ? "text-mood-stable" : "text-muted-foreground")} />
+                  <span className="font-medium">{q.question_text}: <strong>{answer === 'yes' ? 'Ja' : 'Nej'}</strong></span>
                 </div>
               );
             })}
