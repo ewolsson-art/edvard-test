@@ -69,7 +69,7 @@ const Auth = () => {
   }
   return <div className="flex flex-col">
       {/* === HERO WITH NIGHT SKY === */}
-      <div className="min-h-screen flex flex-col relative overflow-hidden">
+      <div className="min-h-[100svh] flex flex-col relative overflow-hidden">
       {/* === DARK NIGHT SKY === */}
       <div className="absolute inset-0 bg-gradient-to-b from-[hsl(230_30%_5%)] via-[hsl(225_35%_8%)] to-[hsl(220_30%_12%)]" />
 
