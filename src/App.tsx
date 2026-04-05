@@ -44,6 +44,7 @@ import ResetPassword from "./pages/ResetPassword";
 import ForgotPassword from "./pages/ForgotPassword";
 import Characteristics from "./pages/Characteristics";
 import CharacteristicDetail from "./pages/CharacteristicDetail";
+import Insights from "./pages/Insights";
 
 const queryClient = new QueryClient();
 
@@ -132,9 +133,11 @@ const App = () => (
                 <AppLayout><CharacteristicDetail /></AppLayout>
               </ProtectedRoute>
             } />
-
-
-
+            <Route path="/insikter" element={
+              <ProtectedRoute>
+                <AppLayout><Insights /></AppLayout>
+              </ProtectedRoute>
+            } />
 
             <Route path="/mediciner" element={
               <ProtectedRoute>
