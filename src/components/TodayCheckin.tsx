@@ -192,6 +192,7 @@ export function TodayCheckin({
   const [slideDirection, setSlideDirection] = useState<'forward' | 'back'>('forward');
   const [stepKey, setStepKey] = useState(0);
   const [showComment, setShowComment] = useState<Step | null>(null);
+  const [showCustomTagInput, setShowCustomTagInput] = useState(false);
   const [showSideEffects, setShowSideEffects] = useState(false);
   const commentRef = useRef<HTMLDivElement>(null);
   
