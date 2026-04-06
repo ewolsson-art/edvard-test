@@ -16,6 +16,7 @@ import { MonthCalendar } from '@/components/MonthCalendar';
 import { ExerciseMonthCalendar } from '@/components/ExerciseMonthCalendar';
 import { SleepMonthCalendar } from '@/components/SleepMonthCalendar';
 import { EatingMonthCalendar } from '@/components/EatingMonthCalendar';
+import { ScrollableMonthsCalendar } from '@/components/ScrollableMonthsCalendar';
 
 import { SleepWeekCalendar } from '@/components/SleepWeekCalendar';
 import { EatingWeekCalendar } from '@/components/EatingWeekCalendar';
@@ -583,11 +584,14 @@ const Overview = () => {
                         onDayClick={handleDayClick} />
                     )}
                     {view === 'month' && (
-                      <MonthCalendar currentDate={currentMonth} moodData={monthMoodData}
-                        medicationData={monthMedicationData}
-                        onPrevMonth={() => setCurrentMonth(prev => subMonths(prev, 1))}
-                        onNextMonth={() => setCurrentMonth(prev => addMonths(prev, 1))}
-                        onDayClick={handleDayClick} />
+                      <ScrollableMonthsCalendar
+                        year={currentYear}
+                        type="mood"
+                        getEntryForDate={getEntryForDate}
+                        getMedicationsTakenOnDate={getMedicationsTakenOnDate}
+                        getEntriesForMonth={getEntriesForMonth}
+                        onDayClick={handleDayClick}
+                      />
                     )}
                     {view === 'year' && (
                       <YearHeatmap year={currentYear} entries={yearEntries}
@@ -625,10 +629,12 @@ const Overview = () => {
                         onDayClick={handleDayClick} />
                     )}
                     {view === 'month' && (
-                      <SleepMonthCalendar currentDate={currentMonth} sleepData={monthSleepData}
-                        onPrevMonth={() => setCurrentMonth(prev => subMonths(prev, 1))}
-                        onNextMonth={() => setCurrentMonth(prev => addMonths(prev, 1))}
-                        onDayClick={handleDayClick} />
+                      <ScrollableMonthsCalendar
+                        year={currentYear}
+                        type="sleep"
+                        getEntryForDate={getEntryForDate}
+                        onDayClick={handleDayClick}
+                      />
                     )}
                     {view === 'year' && (
                       <SleepYearHeatmap year={currentYear} entries={yearEntries}
@@ -660,10 +666,12 @@ const Overview = () => {
                         onDayClick={handleDayClick} />
                     )}
                     {view === 'month' && (
-                      <EatingMonthCalendar currentDate={currentMonth} eatingData={monthEatingData}
-                        onPrevMonth={() => setCurrentMonth(prev => subMonths(prev, 1))}
-                        onNextMonth={() => setCurrentMonth(prev => addMonths(prev, 1))}
-                        onDayClick={handleDayClick} />
+                      <ScrollableMonthsCalendar
+                        year={currentYear}
+                        type="eating"
+                        getEntryForDate={getEntryForDate}
+                        onDayClick={handleDayClick}
+                      />
                     )}
                     {view === 'year' && (
                       <EatingYearHeatmap year={currentYear} entries={yearEntries}
@@ -699,10 +707,12 @@ const Overview = () => {
                         onDayClick={handleExerciseDayClick} />
                     )}
                     {view === 'month' && (
-                      <ExerciseMonthCalendar currentDate={currentMonth} exerciseData={monthExerciseData}
-                        onPrevMonth={() => setCurrentMonth(prev => subMonths(prev, 1))}
-                        onNextMonth={() => setCurrentMonth(prev => addMonths(prev, 1))}
-                        onDayClick={handleExerciseDayClick} />
+                      <ScrollableMonthsCalendar
+                        year={currentYear}
+                        type="exercise"
+                        getEntryForDate={getEntryForDate}
+                        onDayClick={handleExerciseDayClick}
+                      />
                     )}
                     {view === 'year' && (
                       <ExerciseYearHeatmap year={currentYear} entries={yearEntries}
