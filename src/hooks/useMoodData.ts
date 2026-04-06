@@ -77,6 +77,7 @@ export function useMoodData() {
       medication_comment: data.medicationComment || null,
       medication_side_effects: data.medicationSideEffects || null,
       tags: data.tags || null,
+    };
 
     const { error } = await supabase
       .from('mood_entries')
