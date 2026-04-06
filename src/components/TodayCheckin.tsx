@@ -614,8 +614,8 @@ export function TodayCheckin({
         </div>
       )}
 
-      {/* Step: Energy */}
-      {currentStep === 'energy' && (
+      {/* Step: Tags */}
+      {currentStep === 'tags' && (
         <div className={`space-y-6 md:space-y-8 step-slide-in`} key={stepKey}>
           <div className="flex items-center justify-between">
             <Button variant="ghost" size="sm" onClick={goBack} className="gap-1.5 text-muted-foreground/60">
@@ -625,31 +625,44 @@ export function TodayCheckin({
             <div />
           </div>
           <div className="text-center">
-            <Battery className="w-12 h-12 md:w-14 md:h-14 mx-auto mb-4 text-primary" />
             <h1 className="font-display text-2xl sm:text-3xl font-bold">
-              Var är din energi?
+              Något som stack ut?
             </h1>
             <p className="text-muted-foreground mt-2 text-sm">
-              Energi + humör ger en tydligare bild
+              Välj det som stämmer – eller hoppa vidare
             </p>
           </div>
 
-          <div className="grid grid-cols-3 gap-3 max-w-md mx-auto">
-            {energyButtons.map(({ energy, icon: Icon, label, cssClass }) => (
-              <button
-                key={energy}
-                onClick={() => handleEnergySelect(energy)}
-                className={cn(
-                  "rounded-2xl border-2 p-5 sm:p-6 flex flex-col items-center gap-3 transition-all duration-300",
-                  "hover:-translate-y-1 hover:shadow-lg active:scale-[0.98]",
-                  cssClass,
-                  checkinData.energyLevel === energy && "ring-2 ring-primary ring-offset-2 ring-offset-background scale-[1.01]"
-                )}
-              >
-                <Icon className="w-8 h-8 sm:w-10 sm:h-10" />
-                <span className="font-semibold text-base">{label}</span>
-              </button>
-            ))}
+          <div className="flex flex-wrap gap-2.5 justify-center max-w-md mx-auto">
+            {TAG_OPTIONS.map(({ value, label, emoji }) => {
+              const selected = (checkinData.tags || []).includes(value);
+              return (
+                <button
+                  key={value}
+                  onClick={() => handleTagToggle(value)}
+                  className={cn(
+                    "px-4 py-2.5 rounded-full border text-sm font-medium transition-all duration-200",
+                    "active:scale-95",
+                    selected
+                      ? "bg-primary/15 border-primary/40 text-primary"
+                      : "border-border/50 text-muted-foreground hover:border-border hover:bg-white/[0.04]"
+                  )}
+                >
+                  <span className="mr-1.5">{emoji}</span>
+                  {label}
+                </button>
+              );
+            })}
+          </div>
+
+          <div className="flex justify-center pt-2">
+            <Button
+              onClick={handleTagsContinue}
+              className="px-8 py-3 rounded-xl text-base font-semibold"
+            >
+              {(checkinData.tags || []).length > 0 ? 'Fortsätt' : 'Hoppa över'}
+              <ChevronRight className="w-4 h-4 ml-1.5" />
+            </Button>
           </div>
         </div>
       )}
