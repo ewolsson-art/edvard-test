@@ -717,7 +717,6 @@ const Overview = () => {
               </section>
             )}
 
-          </>
 
         <DayDetailDialog
           open={dialogOpen}
