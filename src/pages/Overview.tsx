@@ -747,6 +747,7 @@ const Overview = () => {
           currentTypes={exerciseDialogDate ? (getEntryForDate(format(exerciseDialogDate, 'yyyy-MM-dd'))?.exerciseTypes || []) : []}
           onSave={handleSaveExerciseTypes}
         />
+        </div>
       </div>
     </div>
   );
