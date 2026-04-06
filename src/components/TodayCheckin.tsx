@@ -426,27 +426,29 @@ export function TodayCheckin({
     const followUp = todayEntry ? getSmartFollowUp(todayEntry.mood, todayEntry.energyLevel) : null;
 
     return (
-      <div className="fade-in h-full md:h-auto flex flex-col justify-center px-6 py-8 md:glass-card md:p-10 md:max-h-[calc(100vh-4rem)] md:overflow-y-auto md:border md:bg-card/80 md:rounded-2xl md:shadow-sm">
-        <div className="text-center mb-6">
-          <p className="text-muted-foreground/70 text-xs tracking-widest uppercase">{formattedDate}</p>
+      <div className="fade-in h-full md:h-auto flex flex-col justify-center px-5 py-8 md:glass-card md:p-10 md:max-h-[calc(100vh-4rem)] md:overflow-y-auto md:border md:bg-card/80 md:rounded-2xl md:shadow-sm">
+        <div className="text-center mb-5">
+          <p className="text-muted-foreground/60 text-[11px] tracking-[0.2em] uppercase font-medium">{formattedDate}</p>
           {!isDisplayToday && (
-            <p className="text-xs text-primary mt-1.5 font-medium">Retroaktiv incheckning</p>
+            <p className="text-[11px] text-primary mt-1 font-medium">Retroaktiv incheckning</p>
           )}
         </div>
 
-        <div className="text-center fade-in">
-          <div className={cn("inline-flex items-center justify-center w-14 h-14 md:w-20 md:h-20 rounded-full mb-4", moodDisplay?.bgClass)}>
-            <CheckCircle2 className={cn("w-7 h-7 md:w-10 md:h-10", moodDisplay?.colorClass || 'text-mood-stable')} />
+        <div className="fade-in">
+          <div className="flex justify-center mb-4">
+            <div className={cn("w-14 h-14 md:w-16 md:h-16 rounded-full flex items-center justify-center", moodDisplay?.bgClass)}>
+              <CheckCircle2 className={cn("w-7 h-7 md:w-8 md:h-8", moodDisplay?.colorClass || 'text-mood-stable')} />
+            </div>
           </div>
           
-          <h1 className="font-display text-lg md:text-2xl font-bold text-foreground">
+          <h1 className="font-display text-[22px] md:text-2xl font-bold text-foreground text-center">
             Du har checkat in!
           </h1>
 
           {/* Smart follow-up message */}
           {followUp && (
-            <div className="max-w-sm mx-auto mt-4 p-4 rounded-xl bg-card border border-border/50">
-              <p className="text-sm text-foreground leading-relaxed">
+            <div className="max-w-sm mx-auto mt-4 p-4 rounded-xl bg-card border border-border/30">
+              <p className="text-sm text-foreground/80 leading-relaxed text-center">
                 <span className="mr-1.5">{followUp.icon}</span>
                 {followUp.message}
               </p>
@@ -470,7 +472,7 @@ export function TodayCheckin({
               <div className="flex items-center justify-center gap-2 mb-2">
                 <Heart className="w-5 h-5 text-primary" />
               </div>
-              <p className="text-sm text-foreground leading-relaxed">
+              <p className="text-sm text-foreground/80 leading-relaxed text-center">
                 Det är tufft just nu, men bättre dagar kommer. <span className="text-primary font-medium">Håll ut! 💪</span>
                 {encouragementData.goodDaysCount > 0 && (
                   <>
@@ -484,17 +486,15 @@ export function TodayCheckin({
           )}
 
           {/* Summary */}
-          <div className="max-w-sm mx-auto mt-5 space-y-2.5 text-left">
-            {/* Mood summary */}
+          <div className="max-w-sm mx-auto mt-5 space-y-2 text-left">
             {todayEntry && moodDisplay && (
               <div className={cn("flex items-center gap-3 px-4 py-3 rounded-xl border", moodDisplay.bgClass, moodDisplay.borderClass)}>
                 <MoodIcon className={cn("w-5 h-5 flex-shrink-0", moodDisplay.colorClass)} />
                 <span className="text-sm font-medium">Mående: <strong>{MOOD_LABELS[todayEntry.mood]}</strong></span>
               </div>
             )}
-            {/* Tags summary */}
             {todayEntry?.tags && todayEntry.tags.length > 0 && (
-              <div className="flex items-center gap-3 px-4 py-3 rounded-xl border bg-card border-border/50">
+              <div className="flex items-center gap-3 px-4 py-3 rounded-xl border bg-card border-border/30">
                 <AlertTriangle className="w-5 h-5 flex-shrink-0 text-primary" />
                 <span className="text-sm font-medium">
                   {todayEntry.tags.map(t => ALL_TAG_OPTIONS.find(o => o.value === t)?.label || t).join(', ')}
@@ -522,7 +522,7 @@ export function TodayCheckin({
             {preferences?.include_exercise && todayEntry?.exercised !== undefined && (
               <div className={cn(
                 "flex items-center gap-3 px-4 py-3 rounded-xl border",
-                todayEntry.exercised ? "bg-mood-stable/10 border-mood-stable/20" : "bg-muted/50 border-border"
+                todayEntry.exercised ? "bg-mood-stable/10 border-mood-stable/20" : "bg-muted/30 border-border/30"
               )}>
                 <Dumbbell className={cn("w-5 h-5 flex-shrink-0", todayEntry.exercised ? "text-mood-stable" : "text-muted-foreground")} />
                 <span className="text-sm font-medium">Träning: <strong>{todayEntry.exercised ? 'Ja' : 'Nej'}</strong></span>
@@ -534,7 +534,7 @@ export function TodayCheckin({
               return (
                 <div key={q.id} className={cn(
                   "flex items-center gap-3 px-4 py-3 rounded-xl border",
-                  answer === 'yes' ? "bg-mood-stable/10 border-mood-stable/20" : "bg-muted/50 border-border"
+                  answer === 'yes' ? "bg-mood-stable/10 border-mood-stable/20" : "bg-muted/30 border-border/30"
                 )}>
                   <HelpCircle className={cn("w-5 h-5 flex-shrink-0", answer === 'yes' ? "text-mood-stable" : "text-muted-foreground")} />
                   <span className="text-sm font-medium">{q.question_text}: <strong>{answer === 'yes' ? 'Ja' : 'Nej'}</strong></span>
@@ -543,10 +543,12 @@ export function TodayCheckin({
             })}
           </div>
 
-          <Button variant="ghost" size="sm" onClick={handleEdit} className="mt-6 gap-2 text-muted-foreground">
-            <Pencil className="w-4 h-4" />
-            Ändra incheckning
-          </Button>
+          <div className="flex justify-center">
+            <Button variant="ghost" size="sm" onClick={handleEdit} className="mt-6 gap-2 text-muted-foreground/50">
+              <Pencil className="w-4 h-4" />
+              Ändra incheckning
+            </Button>
+          </div>
         </div>
       </div>
     );
