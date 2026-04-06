@@ -564,9 +564,6 @@ export function TodayCheckin({
       {/* Progress dots */}
       {currentStep !== 'success-animation' && (
         <div className="flex flex-col items-center gap-1.5 mb-8 md:mb-10">
-          <p className="text-xs text-muted-foreground/60">
-            Steg {STEPS.indexOf(currentStep) + 1} av {STEPS.length}
-          </p>
           <div className="flex items-center gap-2.5">
             {STEPS.map((step, i) => {
               const currentIndex = STEPS.indexOf(currentStep);
@@ -974,11 +971,6 @@ export function TodayCheckin({
             <h1 className="font-display text-2xl sm:text-3xl font-bold">
               Hur gick det med medicinen?
             </h1>
-            {hasMedications && (
-              <p className="text-sm text-muted-foreground mt-2">
-                {medicationsTakenToday.length} av {activeMedications.length} tagna
-              </p>
-            )}
           </div>
 
           {/* Direct medication checklist */}
@@ -1024,9 +1016,9 @@ export function TodayCheckin({
                     className={cn(
                       "w-full flex items-center gap-4 p-4 rounded-2xl border-2 transition-all text-left",
                       "active:scale-[0.98]",
-                      isTaken 
-                        ? "border-mood-stable/40 bg-mood-stable/10" 
-                        : "border-border/50 bg-card/50 hover:border-muted-foreground/30"
+                    isTaken 
+                        ? "border-mood-stable/30 bg-mood-stable/5" 
+                        : "border-border/40 bg-card/30 hover:border-muted-foreground/30"
                     )}
                   >
                     <div className={cn(
@@ -1139,13 +1131,13 @@ export function TodayCheckin({
             {renderCommentSection('medication')}
 
             {isLastStep('medication') ? (
-              <Button onClick={handleComplete} className="w-full mt-4 gap-2">
+              <Button onClick={handleComplete} className="w-full mt-6 py-6 text-base font-semibold gap-2">
                 Klar ✓
               </Button>
             ) : (
-              <Button onClick={() => navigateStep(getNextStep('medication') as Step)} className="w-full mt-4 gap-2">
+              <Button onClick={() => navigateStep(getNextStep('medication') as Step)} className="w-full mt-6 py-6 text-base font-semibold gap-2">
+                Fortsätt
                 <ChevronRight className="w-4 h-4" />
-                Nästa
               </Button>
             )}
           </div>
