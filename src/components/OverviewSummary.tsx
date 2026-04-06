@@ -117,13 +117,6 @@ export function OverviewSummary({
             warning
           />
         )}
-        {showMedication && (
-          <MetricCard
-            icon={Pill}
-            value={`${medicationPercentage}%`}
-            label="Medicin tagen"
-          />
-        )}
       </div>
     </div>
   );
