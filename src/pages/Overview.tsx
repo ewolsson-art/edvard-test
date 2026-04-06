@@ -517,11 +517,14 @@ const Overview = () => {
   const showExercise = preferences?.include_exercise !== false;
   const showMedication = preferences?.include_medication !== false && activeMedications.length > 0;
 
-  return (
-    <div className="p-5 md:p-8 pb-24">
+   return (
+    <div className="pb-24">
       <div className="max-w-6xl mx-auto space-y-6">
-        <header>
-          <h1 className="font-display text-3xl font-bold mb-2">Översikt</h1>
+        <header className="sticky top-0 z-20 bg-background pt-5 px-5 md:pt-8 md:px-8 pb-3 -mx-5 md:-mx-8">
+          <div className="flex items-center justify-between mb-2">
+            <h1 className="font-display text-3xl font-bold">Översikt</h1>
+            <span className="text-lg font-semibold text-muted-foreground">{currentYear}</span>
+          </div>
           <p className="text-sm text-muted-foreground mb-5">Se dina mönster och trender över tid.</p>
           
           <div className="flex items-center gap-3">
@@ -560,6 +563,7 @@ const Overview = () => {
           </div>
         </header>
 
+        <div className="px-5 md:px-8 space-y-6">
             {/* Summary Card - only in stats view */}
             {sectionView === 'stats' && (
               <OverviewSummary
@@ -743,6 +747,7 @@ const Overview = () => {
           currentTypes={exerciseDialogDate ? (getEntryForDate(format(exerciseDialogDate, 'yyyy-MM-dd'))?.exerciseTypes || []) : []}
           onSave={handleSaveExerciseTypes}
         />
+        </div>
       </div>
     </div>
   );
