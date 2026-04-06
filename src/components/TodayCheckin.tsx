@@ -555,16 +555,7 @@ export function TodayCheckin({
                 Avbryt
               </Button>
             ) : <div />}
-            <button
-              onClick={() => setShowComment(showComment === 'mood' ? null : 'mood')}
-              className={cn(
-                "p-2.5 rounded-xl transition-colors",
-                showComment === 'mood' ? "bg-primary/10 text-primary" : "text-muted-foreground/40 hover:text-muted-foreground hover:bg-muted/50"
-              )}
-              aria-label="Lägg till kommentar"
-            >
-              <MessageSquare className="w-5 h-5" />
-            </button>
+            <div />
           </div>
           <div className="text-center">
             <h1 className="font-display text-2xl sm:text-3xl md:text-3xl font-bold leading-tight">
@@ -600,8 +591,6 @@ export function TodayCheckin({
               </button>
             ))}
           </div>
-
-          {renderCommentSection('mood')}
         </div>
       )}
 
@@ -613,7 +602,16 @@ export function TodayCheckin({
               <ChevronLeft className="w-4 h-4" />
               Tillbaka
             </Button>
-            <div />
+            <button
+              onClick={() => setShowComment(showComment === 'mood' ? null : 'mood')}
+              className={cn(
+                "p-2.5 rounded-xl transition-colors",
+                showComment === 'mood' ? "bg-primary/10 text-primary" : "text-muted-foreground/40 hover:text-muted-foreground hover:bg-muted/50"
+              )}
+              aria-label="Lägg till kommentar"
+            >
+              <MessageSquare className="w-5 h-5" />
+            </button>
           </div>
           <div className="text-center">
             <h1 className="font-display text-2xl sm:text-3xl font-bold">
