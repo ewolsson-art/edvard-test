@@ -9,7 +9,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Loader2, User, Mail, Save, Stethoscope, HeartPulse, Building2, Hospital, Users, ChevronRight, Pill, UserPlus, Heart, ClipboardList, Sparkles, Zap, Sun, Cloud } from 'lucide-react';
+import { Loader2, User, Mail, Save, Stethoscope, HeartPulse, Building2, Hospital, Users, ChevronRight, Pill, UserPlus, Heart, ClipboardList, Sparkles, Zap, Sun, Cloud, FileText } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { DiagnosesSection } from '@/components/DiagnosesSection';
 import { MedicationsSection } from '@/components/MedicationsSection';
@@ -26,7 +26,7 @@ const profileSchema = z.object({
   lastName: z.string().trim().max(50, { message: "Max 50 tecken" }).optional(),
 });
 
-type ProfileView = 'main' | 'edit' | 'medications' | 'doctors' | 'relatives' | 'diagnoses' | 'delegates' | 'relative-patients' | 'characteristics';
+type ProfileView = 'main' | 'edit' | 'medications' | 'doctors' | 'relatives' | 'diagnoses' | 'delegates' | 'relative-patients' | 'characteristics' | 'reports';
 
 const Profile = () => {
   const { user } = useAuth();
@@ -174,6 +174,10 @@ const Profile = () => {
       </SubPage>
     );
   }
+  if (view === 'reports') {
+    const Reports = require('./Reports').default;
+    return <SubPage title="Rapporter" onBack={() => setView('main')}><Reports /></SubPage>;
+  }
 
   // Main profile view
   const displayName = [profile?.first_name, profile?.last_name].filter(Boolean).join(' ') || 'Användare';
@@ -211,6 +215,7 @@ const Profile = () => {
             <SettingsRow icon={Pill} label="Mediciner" description="Hantera dina mediciner" onClick={() => setView('medications')} />
             <SettingsRow icon={ClipboardList} label="Diagnoser" description="Dina registrerade diagnoser" onClick={() => setView('diagnoses')} />
             <SettingsRow icon={Sparkles} label="Kännetecken" description="Mönster för olika perioder" onClick={() => setView('characteristics')} />
+            <SettingsRow icon={FileText} label="Rapporter" description="Skapa och dela rapporter" onClick={() => setView('reports')} />
           </SettingsGroup>
         )}
 
