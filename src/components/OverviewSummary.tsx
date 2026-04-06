@@ -62,6 +62,17 @@ export function OverviewSummary({
     });
   }, [entries]);
 
+  // All-time mood distribution by group
+  const allTimeDistribution = useMemo(() => {
+    if (entries.length === 0) return null;
+    const total = entries.length;
+    return MOOD_GROUPS.map((group) => {
+      const count = entries.filter((e) => group.moods.includes(e.mood)).length;
+      const percentage = Math.round((count / total) * 100);
+      return { ...group, count, percentage };
+    });
+  }, [entries]);
+
   // Current streak
   const currentStreak = useMemo(() => {
     if (entries.length === 0) return null;
