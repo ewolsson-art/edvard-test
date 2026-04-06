@@ -581,7 +581,7 @@ export function TodayCheckin({
 
           {/* Date label + Heading */}
           <div className="mb-10">
-            <p className="text-muted-foreground/30 text-[11px] tracking-[0.15em] uppercase font-medium mb-3">
+            <p className="text-muted-foreground/50 text-[13px] tracking-[0.08em] uppercase font-semibold mb-3">
               {isDisplayToday ? format(displayDate, "EEEE d MMMM", { locale: sv }) : formattedDate}
             </p>
             <h1 className="font-display text-[28px] sm:text-3xl md:text-3xl font-bold leading-tight tracking-tight">
