@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { MoodStats as MoodStatsType, MoodEntry, MOOD_LABELS, MOOD_ICONS } from '@/types/mood';
-import { CalendarCheck, Pill, Moon, Repeat, Clock } from 'lucide-react';
+import { CalendarCheck, Moon, Repeat, Clock } from 'lucide-react';
 
 interface OverviewSummaryProps {
   stats: MoodStatsType;
