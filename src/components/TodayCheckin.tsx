@@ -497,7 +497,7 @@ export function TodayCheckin({
               <div className="flex items-center gap-3 px-4 py-3 rounded-xl border bg-card border-border/50">
                 <AlertTriangle className="w-5 h-5 flex-shrink-0 text-primary" />
                 <span className="text-sm font-medium">
-                  {todayEntry.tags.map(t => TAG_OPTIONS.find(o => o.value === t)?.label || t).join(', ')}
+                  {todayEntry.tags.map(t => ALL_TAG_OPTIONS.find(o => o.value === t)?.label || t).join(', ')}
                 </span>
               </div>
             )}
@@ -664,7 +664,7 @@ export function TodayCheckin({
           </div>
 
           <div className="flex flex-wrap gap-2.5 justify-center max-w-md mx-auto">
-            {TAG_OPTIONS.map(({ value, label, emoji }) => {
+            {(checkinData.mood ? MOOD_TAGS[checkinData.mood] : []).map(({ value, label, emoji }) => {
               const selected = (checkinData.tags || []).includes(value);
               return (
                 <button
@@ -685,7 +685,7 @@ export function TodayCheckin({
             })}
             {/* Custom tags already added */}
             {(checkinData.tags || [])
-              .filter(t => !TAG_OPTIONS.some(o => o.value === t))
+              .filter(t => !(checkinData.mood ? MOOD_TAGS[checkinData.mood] : []).some(o => o.value === t))
               .map(tag => (
                 <button
                   key={tag}
