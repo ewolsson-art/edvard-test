@@ -83,6 +83,8 @@ const MOOD_CONFIG = {
 const CharacteristicDetail = () => {
   const { moodType } = useParams<{ moodType: string }>();
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const { toast } = useToast();
   const config = moodType ? MOOD_CONFIG[moodType as keyof typeof MOOD_CONFIG] : null;
 
   const {
@@ -102,6 +104,10 @@ const CharacteristicDetail = () => {
   const [newValue, setNewValue] = useState('');
   const [isAdding, setIsAdding] = useState(false);
   const [showInput, setShowInput] = useState(false);
+  const [aiSuggestions, setAiSuggestions] = useState<string[]>([]);
+  const [aiPatterns, setAiPatterns] = useState<string[]>([]);
+  const [isLoadingAi, setIsLoadingAi] = useState(false);
+  const [aiLoaded, setAiLoaded] = useState(false);
 
   if (!config) {
     navigate('/kannetecken');
@@ -121,8 +127,44 @@ const CharacteristicDetail = () => {
     if (success) {
       setNewValue('');
       setShowInput(false);
+      // Remove from AI suggestions if it was there
+      setAiSuggestions(prev => prev.filter(s => s.toLowerCase() !== newValue.trim().toLowerCase()));
     }
     setIsAdding(false);
+  };
+
+  const handleAddSuggestion = async (suggestion: string) => {
+    const success = await addCharacteristic(suggestion, config.type);
+    if (success) {
+      setAiSuggestions(prev => prev.filter(s => s !== suggestion));
+    }
+  };
+
+  const handleDismissSuggestion = (suggestion: string) => {
+    setAiSuggestions(prev => prev.filter(s => s !== suggestion));
+  };
+
+  const loadAiSuggestions = async () => {
+    if (!user) return;
+    setIsLoadingAi(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('suggest-characteristics', {
+        body: { moodType: config.type },
+      });
+      if (error) throw error;
+      setAiSuggestions(data.suggestions || []);
+      setAiPatterns(data.patternsFound || []);
+      setAiLoaded(true);
+    } catch (error: any) {
+      console.error('Error loading AI suggestions:', error);
+      toast({
+        title: 'Kunde inte hämta förslag',
+        description: 'Försök igen senare.',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsLoadingAi(false);
+    }
   };
 
   if (isLoading || !moodLoaded) {
@@ -242,7 +284,7 @@ const CharacteristicDetail = () => {
               Inga kännetecken tillagda ännu
             </p>
             <p className="text-xs text-muted-foreground/60 mt-1">
-              Tryck på knappen ovan eller välj ett förslag nedan
+              Tryck på knappen ovan eller låt AI föreslå baserat på dina dagboksanteckningar
             </p>
           </div>
         ) : (
@@ -270,11 +312,84 @@ const CharacteristicDetail = () => {
         )}
       </div>
 
-      {/* Suggestions */}
+      {/* AI Suggestions - based on check-in data */}
+      <div className="rounded-2xl border border-primary/20 bg-primary/5 p-6 md:p-8 mb-6">
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-2.5">
+            <Sparkles className="w-4 h-4 text-primary" />
+            <p className="text-sm font-medium text-foreground">Förslag baserat på dina incheckningar</p>
+          </div>
+        </div>
+
+        {!aiLoaded && !isLoadingAi ? (
+          <div className="text-center py-4">
+            <p className="text-sm text-muted-foreground mb-3">
+              AI kan analysera dina dagboksanteckningar och hitta mönster som beskriver hur du är under dessa perioder.
+            </p>
+            <Button
+              variant="outline"
+              onClick={loadAiSuggestions}
+              className="gap-2 rounded-xl border-primary/30 hover:bg-primary/10"
+            >
+              <Sparkles className="w-4 h-4" />
+              Analysera mina anteckningar
+            </Button>
+          </div>
+        ) : isLoadingAi ? (
+          <div className="flex items-center justify-center gap-3 py-6">
+            <Loader2 className="w-5 h-5 animate-spin text-primary" />
+            <p className="text-sm text-muted-foreground">Analyserar dina incheckningar…</p>
+          </div>
+        ) : aiSuggestions.length > 0 ? (
+          <div className="space-y-4">
+            {aiPatterns.length > 0 && (
+              <div className="text-xs text-muted-foreground space-y-1 mb-3">
+                <p className="font-medium text-foreground/70">Mönster vi hittade:</p>
+                {aiPatterns.map((p, i) => (
+                  <p key={i} className="flex items-center gap-1.5">
+                    <span className="w-1 h-1 rounded-full bg-primary/50" />
+                    {p}
+                  </p>
+                ))}
+              </div>
+            )}
+            <div className="flex flex-wrap gap-2">
+              {aiSuggestions.map((suggestion) => (
+                <div key={suggestion} className="inline-flex items-center gap-1">
+                  <button
+                    onClick={() => handleAddSuggestion(suggestion)}
+                    className={cn(
+                      "text-sm px-4 py-2 rounded-full font-medium transition-all duration-200 hover:scale-[1.03]",
+                      config.colorClasses.suggestion
+                    )}
+                  >
+                    + {suggestion}
+                  </button>
+                  <button
+                    onClick={() => handleDismissSuggestion(suggestion)}
+                    className="p-1 rounded-full hover:bg-muted/50 text-muted-foreground/50 hover:text-muted-foreground transition-colors"
+                    aria-label={`Avfärda ${suggestion}`}
+                  >
+                    <X className="w-3 h-3" />
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+        ) : (
+          <p className="text-sm text-muted-foreground text-center py-2">
+            {entries.length < 5
+              ? "Du behöver fler incheckningar med kommentarer för att få förslag."
+              : "Inga nya förslag just nu. Fortsätt logga så kommer fler!"}
+          </p>
+        )}
+      </div>
+
+      {/* Static suggestions */}
       <div className="rounded-2xl border border-border/60 bg-card p-6 md:p-8">
         <div className="flex items-center gap-2.5 mb-4">
           <Lightbulb className="w-4 h-4 text-muted-foreground" />
-          <p className="text-sm font-medium text-muted-foreground">Förslag att komma igång</p>
+          <p className="text-sm font-medium text-muted-foreground">Vanliga förslag</p>
         </div>
         <div className="flex flex-wrap gap-2">
           {config.suggestions.map((suggestion) => (
