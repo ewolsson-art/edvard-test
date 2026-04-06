@@ -563,27 +563,6 @@ export function TodayCheckin({
     <div className="fade-in h-full md:h-auto flex flex-col justify-center px-5 py-4 overflow-hidden md:overflow-y-auto md:glass-card md:p-12 md:max-h-[calc(100vh-4rem)] md:border md:bg-card/80 md:rounded-2xl md:shadow-sm">
       {/* Date removed from here - now shown inline with each step heading */}
 
-      {/* Progress dots */}
-      {currentStep !== 'success-animation' && (
-        <div className="flex justify-start mb-6 md:mb-8">
-          <div className="flex items-center gap-2">
-            {STEPS.map((step, i) => {
-              const currentIndex = STEPS.indexOf(currentStep);
-              const isActive = i === currentIndex;
-              const isCompleted = i < currentIndex;
-              return (
-                <div
-                  key={step}
-                  className={cn(
-                    "rounded-full transition-all duration-500",
-                    isActive ? "w-7 h-2 bg-primary" : isCompleted ? "w-2 h-2 bg-primary/50" : "w-2 h-2 bg-muted-foreground/15"
-                  )}
-                />
-              );
-            })}
-          </div>
-        </div>
-      )}
 
       {/* Step: Mood */}
       {currentStep === 'mood' && (
