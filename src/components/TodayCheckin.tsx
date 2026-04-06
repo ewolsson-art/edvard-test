@@ -514,21 +514,26 @@ export function TodayCheckin({
 
       {/* Progress dots */}
       {currentStep !== 'success-animation' && (
-        <div className="flex items-center justify-center gap-2 mb-8 md:mb-10">
-          {STEPS.map((step, i) => {
-            const currentIndex = STEPS.indexOf(currentStep);
-            const isActive = i === currentIndex;
-            const isCompleted = i < currentIndex;
-            return (
-              <div
-                key={step}
-                className={cn(
-                  "rounded-full transition-all duration-500",
-                  isActive ? "w-8 h-2.5 bg-primary" : isCompleted ? "w-2.5 h-2.5 bg-primary/50" : "w-2.5 h-2.5 bg-muted-foreground/15"
-                )}
-              />
-            );
-          })}
+        <div className="flex flex-col items-center gap-1.5 mb-8 md:mb-10">
+          <p className="text-xs text-muted-foreground/60">
+            Steg {STEPS.indexOf(currentStep) + 1} av {STEPS.length}
+          </p>
+          <div className="flex items-center gap-2.5">
+            {STEPS.map((step, i) => {
+              const currentIndex = STEPS.indexOf(currentStep);
+              const isActive = i === currentIndex;
+              const isCompleted = i < currentIndex;
+              return (
+                <div
+                  key={step}
+                  className={cn(
+                    "rounded-full transition-all duration-500",
+                    isActive ? "w-8 h-2.5 bg-primary" : isCompleted ? "w-2.5 h-2.5 bg-primary/50" : "w-2.5 h-2.5 bg-muted-foreground/15"
+                  )}
+                />
+              );
+            })}
+          </div>
         </div>
       )}
 
@@ -1087,8 +1092,7 @@ export function TodayCheckin({
               }
               handleComplete();
             }} className="w-full mt-4 gap-2">
-              <ChevronRight className="w-4 h-4" />
-              Slutför incheckning
+              Klar ✓
             </Button>
           </div>
         </div>
