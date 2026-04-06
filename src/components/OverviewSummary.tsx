@@ -62,14 +62,46 @@ export function OverviewSummary({
     });
   }, [entries]);
 
-  // All-time mood distribution by group
+  // All-time mood distribution by group + average episode length
   const allTimeDistribution = useMemo(() => {
     if (entries.length === 0) return null;
     const total = entries.length;
+    const sorted = [...entries].sort((a, b) => a.date.localeCompare(b.date));
+
     return MOOD_GROUPS.map((group) => {
-      const count = entries.filter((e) => group.moods.includes(e.mood)).length;
+      const count = sorted.filter((e) => group.moods.includes(e.mood)).length;
       const percentage = Math.round((count / total) * 100);
-      return { ...group, count, percentage };
+
+      // Calculate average consecutive episode length for this group
+      let episodes = 0;
+      let totalEpisodeDays = 0;
+      let inEpisode = false;
+      let currentLength = 0;
+
+      for (const entry of sorted) {
+        if (group.moods.includes(entry.mood)) {
+          if (!inEpisode) {
+            inEpisode = true;
+            episodes++;
+            currentLength = 1;
+          } else {
+            currentLength++;
+          }
+        } else {
+          if (inEpisode) {
+            totalEpisodeDays += currentLength;
+            inEpisode = false;
+            currentLength = 0;
+          }
+        }
+      }
+      if (inEpisode) {
+        totalEpisodeDays += currentLength;
+      }
+
+      const avgEpisodeDays = episodes > 0 ? Math.round((totalEpisodeDays / episodes) * 10) / 10 : 0;
+
+      return { ...group, count, percentage, avgEpisodeDays };
     });
   }, [entries]);
 
