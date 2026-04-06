@@ -720,7 +720,6 @@ const Overview = () => {
             )}
 
           </>
-        )}
 
         <DayDetailDialog
           open={dialogOpen}
