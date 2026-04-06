@@ -10,10 +10,11 @@ interface MonthCalendarProps {
   moodData: Record<number, MoodType>;
   medicationData?: Record<number, number>;
   relativeCommentsData?: Record<number, string>;
-  onPrevMonth: () => void;
-  onNextMonth: () => void;
+  onPrevMonth?: () => void;
+  onNextMonth?: () => void;
   onDayClick?: (date: Date) => void;
   onDayDoubleClick?: (date: Date) => void;
+  hideNavigation?: boolean;
 }
 
 const weekDays = ['M', 'T', 'O', 'T', 'F', 'L', 'S'];
@@ -27,6 +28,7 @@ export function MonthCalendar({
   onNextMonth,
   onDayClick,
   onDayDoubleClick,
+  hideNavigation = false,
 }: MonthCalendarProps) {
   const days = useMemo(() => {
     const start = startOfWeek(startOfMonth(currentDate), { weekStartsOn: 1 });
@@ -56,22 +58,24 @@ export function MonthCalendar({
   return (
     <div className="fade-in">
       {/* Navigation */}
-      <div className="flex items-center gap-3 mb-4">
-        <button
-          onClick={onPrevMonth}
-          className="flex items-center gap-1 text-primary hover:opacity-70 transition-opacity"
-          aria-label="Föregående månad"
-        >
-          <ChevronLeft className="w-5 h-5" />
-        </button>
-        <button
-          onClick={onNextMonth}
-          className="text-primary hover:opacity-70 transition-opacity rotate-180"
-          aria-label="Nästa månad"
-        >
-          <ChevronLeft className="w-5 h-5" />
-        </button>
-      </div>
+      {!hideNavigation && (
+        <div className="flex items-center gap-3 mb-4">
+          <button
+            onClick={onPrevMonth}
+            className="flex items-center gap-1 text-primary hover:opacity-70 transition-opacity"
+            aria-label="Föregående månad"
+          >
+            <ChevronLeft className="w-5 h-5" />
+          </button>
+          <button
+            onClick={onNextMonth}
+            className="text-primary hover:opacity-70 transition-opacity rotate-180"
+            aria-label="Nästa månad"
+          >
+            <ChevronLeft className="w-5 h-5" />
+          </button>
+        </div>
+      )}
 
       {/* Month title - Apple style large text */}
       <h2 className="font-display text-3xl font-bold capitalize mb-4">
