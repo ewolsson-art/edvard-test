@@ -282,6 +282,7 @@ export type Database = {
           date: string
           eating_comment: string | null
           eating_quality: string | null
+          energy_level: string | null
           exercise_comment: string | null
           exercise_types: string[] | null
           exercised: boolean | null
@@ -300,6 +301,7 @@ export type Database = {
           date: string
           eating_comment?: string | null
           eating_quality?: string | null
+          energy_level?: string | null
           exercise_comment?: string | null
           exercise_types?: string[] | null
           exercised?: boolean | null
@@ -318,6 +320,7 @@ export type Database = {
           date?: string
           eating_comment?: string | null
           eating_quality?: string | null
+          energy_level?: string | null
           exercise_comment?: string | null
           exercise_types?: string[] | null
           exercised?: boolean | null
