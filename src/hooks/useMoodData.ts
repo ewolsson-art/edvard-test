@@ -47,6 +47,7 @@ export function useMoodData() {
           exerciseTypes: (entry.exercise_types as ExerciseType[] | null) ?? undefined,
           medicationComment: (entry as { medication_comment?: string }).medication_comment || undefined,
           medicationSideEffects: (entry as { medication_side_effects?: string[] }).medication_side_effects ?? undefined,
+          tags: (entry as { tags?: string[] }).tags ?? undefined,
           timestamp: new Date(entry.created_at).getTime(),
         }));
         setEntries(formattedEntries);
