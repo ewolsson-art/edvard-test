@@ -565,8 +565,7 @@ export function TodayCheckin({
 
       {/* Progress dots */}
       {currentStep !== 'success-animation' && (
-        <div className="flex justify-start mb-8 md:mb-10 px-0">
-        <div className="flex justify-start px-0">
+        <div className="flex justify-start mb-6 md:mb-8">
           <div className="flex items-center gap-2">
             {STEPS.map((step, i) => {
               const currentIndex = STEPS.indexOf(currentStep);
