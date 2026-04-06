@@ -33,7 +33,6 @@ const patientNavGroups = [
   {
     label: "Konto",
     items: [
-      { title: "Min profil", url: "/profil", icon: UserCircle },
       { title: "Inställningar", url: "/installningar", icon: Settings },
     ],
   },
