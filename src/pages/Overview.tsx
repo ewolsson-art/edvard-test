@@ -576,44 +576,18 @@ const Overview = () => {
           />
         )}
 
-        {/* === NEW LAYOUT: Summary → Distribution → Calendar → Stats === */}
         {view !== '30days' && (
           <>
-            {/* 1. Summary Card */}
-            <OverviewSummary
-              stats={stats}
-              entries={entries}
-              periodLabel={label}
-              sleepBadDays={sleepBadDays}
-              showSleep={showSleep}
-            />
-
-            {/* 2. Mood Distribution Bar */}
-            {/* Section view toggle */}
-            <div className="flex items-center gap-1 p-1 bg-muted/50 rounded-lg w-fit">
-              <button
-                onClick={() => setSectionView('calendar')}
-                className={`p-2 rounded-md transition-all ${
-                  sectionView === 'calendar'
-                    ? 'bg-background text-foreground shadow-sm'
-                    : 'text-muted-foreground hover:text-foreground'
-                }`}
-                aria-label="Kalender"
-              >
-                <CalendarDays className="w-4 h-4" />
-              </button>
-              <button
-                onClick={() => setSectionView('stats')}
-                className={`p-2 rounded-md transition-all ${
-                  sectionView === 'stats'
-                    ? 'bg-background text-foreground shadow-sm'
-                    : 'text-muted-foreground hover:text-foreground'
-                }`}
-                aria-label="Statistik"
-              >
-                <BarChart3 className="w-4 h-4" />
-              </button>
-            </div>
+            {/* Summary Card - only in stats view */}
+            {sectionView === 'stats' && (
+              <OverviewSummary
+                stats={stats}
+                entries={entries}
+                periodLabel={label}
+                sleepBadDays={sleepBadDays}
+                showSleep={showSleep}
+              />
+            )}
 
             {showMood && (
               <section>
