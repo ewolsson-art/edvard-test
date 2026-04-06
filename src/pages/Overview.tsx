@@ -28,12 +28,13 @@ import { MedicationYearHeatmap } from '@/components/MedicationYearHeatmap';
 import { DayDetailDialog } from '@/components/DayDetailDialog';
 import { ExerciseTypeDialog } from '@/components/ExerciseTypeDialog';
 import { AIInsights } from '@/components/AIInsights';
+import { OverviewSummary } from '@/components/OverviewSummary';
+import { MoodDistributionBar } from '@/components/MoodDistributionBar';
 import { MoodStats as MoodStatsType, ExerciseType, QualityType } from '@/types/mood';
 import { Last30DaysOverview } from '@/components/Last30DaysOverview';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Dumbbell, Moon, Utensils, Pill } from 'lucide-react';
 import Reports from './Reports';
-
 type ViewType = 'week' | 'month' | 'year' | '30days';
 
 const Overview = () => {
@@ -465,6 +466,22 @@ const Overview = () => {
     ? getMedicationsTakenOnDate(format(selectedDate, 'yyyy-MM-dd'))
     : [];
 
+  // Calculate sleep bad days for summary
+  const sleepBadDays = useMemo(() => {
+    if (view === 'week') return weekSleepStats.bad;
+    if (view === 'month') return monthSleepStats.bad;
+    if (view === 'year') return yearSleepStats.bad;
+    return 0;
+  }, [view, weekSleepStats, monthSleepStats, yearSleepStats]);
+
+  const medPercentage = useMemo(() => {
+    const ms = view === 'week' ? weekMedicationStats 
+      : view === 'month' ? monthMedicationStats 
+      : view === 'year' ? yearMedicationStats : null;
+    if (!ms || ms.totalDays === 0) return 0;
+    return Math.round((ms.taken / ms.totalDays) * 100);
+  }, [view, weekMedicationStats, monthMedicationStats, yearMedicationStats]);
+
   if (!isLoaded || !medsLoaded || prefsLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -474,7 +491,6 @@ const Overview = () => {
   }
 
   const getStatsForView = () => {
-    // Default empty stats for 30days view (handled separately)
     const emptyStats = {
       stats: { elevated: 0, somewhat_elevated: 0, stable: 0, somewhat_depressed: 0, depressed: 0, unregistered: 0, total: 0, totalDays: 0 },
       exerciseStats: { exercised: 0, notExercised: 0, unregistered: 0, total: 0, totalDays: 0 },
@@ -483,41 +499,17 @@ const Overview = () => {
       medicationStats: { taken: 0, notTaken: 0, unregistered: 0, total: 0, totalDays: 0 },
       label: 'Senaste 30 dagarna'
     };
-    
     switch (view) {
-      case 'week': return { 
-        stats: weekStats, 
-        exerciseStats: weekExerciseStats, 
-        sleepStats: weekSleepStats,
-        eatingStats: weekEatingStats,
-        medicationStats: weekMedicationStats,
-        label: weekLabel 
-      };
-      case 'month': return { 
-        stats: monthStats, 
-        exerciseStats: monthExerciseStats, 
-        sleepStats: monthSleepStats,
-        eatingStats: monthEatingStats,
-        medicationStats: monthMedicationStats,
-        label: monthLabel 
-      };
-      case 'year': return { 
-        stats: yearStats, 
-        exerciseStats: yearExerciseStats, 
-        sleepStats: yearSleepStats,
-        eatingStats: yearEatingStats,
-        medicationStats: yearMedicationStats,
-        label: `${currentYear}` 
-      };
+      case 'week': return { stats: weekStats, exerciseStats: weekExerciseStats, sleepStats: weekSleepStats, eatingStats: weekEatingStats, medicationStats: weekMedicationStats, label: weekLabel };
+      case 'month': return { stats: monthStats, exerciseStats: monthExerciseStats, sleepStats: monthSleepStats, eatingStats: monthEatingStats, medicationStats: monthMedicationStats, label: monthLabel };
+      case 'year': return { stats: yearStats, exerciseStats: yearExerciseStats, sleepStats: yearSleepStats, eatingStats: yearEatingStats, medicationStats: yearMedicationStats, label: `${currentYear}` };
       case '30days':
-      default:
-        return emptyStats;
+      default: return emptyStats;
     }
   };
 
   const { stats, exerciseStats, sleepStats, eatingStats, medicationStats, label } = getStatsForView();
   
-  // Check which sections to show based on preferences
   const showMood = preferences?.include_mood !== false;
   const showSleep = preferences?.include_sleep !== false;
   const showEating = preferences?.include_eating !== false;
@@ -526,10 +518,10 @@ const Overview = () => {
 
   return (
     <div className="p-5 md:p-8 pb-24">
-      <div className="max-w-6xl mx-auto space-y-8">
+      <div className="max-w-6xl mx-auto space-y-6">
         <header>
           <h1 className="font-display text-3xl font-bold mb-2">Översikt</h1>
-          <p className="text-sm text-muted-foreground mb-6">Se dina mönster och trender över tid.</p>
+          <p className="text-sm text-muted-foreground mb-5">Se dina mönster och trender över tid.</p>
           
           <Tabs value={view} onValueChange={handleViewChange} className="w-full">
             <TabsList className="inline-flex h-9 bg-muted/50 p-0.5 rounded-lg">
@@ -553,261 +545,217 @@ const Overview = () => {
           />
         )}
 
-        {/* Mående Section - only show for week/month/year views */}
-        {showMood && view !== '30days' && (
-          <section>
-            <h2 className="font-display text-2xl font-semibold mb-6">Mående</h2>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {/* Calendar/View */}
-              {view === 'week' && (
-                <WeekCalendar
-                  weekDays={weekDays}
-                  weekLabel={weekLabel}
-                  getEntryForDate={getEntryForDate}
-                  getMedicationsTakenOnDate={getMedicationsTakenOnDate}
-                  onPrevWeek={() => setCurrentWeek(prev => subWeeks(prev, 1))}
-                  onNextWeek={() => setCurrentWeek(prev => addWeeks(prev, 1))}
-                  onDayClick={handleDayClick}
-                />
-              )}
-
-              {view === 'month' && (
-                <MonthCalendar
-                  currentDate={currentMonth}
-                  moodData={monthMoodData}
-                  medicationData={monthMedicationData}
-                  onPrevMonth={() => setCurrentMonth(prev => subMonths(prev, 1))}
-                  onNextMonth={() => setCurrentMonth(prev => addMonths(prev, 1))}
-                  onDayClick={handleDayClick}
-                  
-                />
-              )}
-
-              {view === 'year' && (
-                <div className="lg:col-span-2">
-                  <YearHeatmap 
-                    year={currentYear} 
-                    entries={yearEntries} 
-                    medicationDates={yearMedicationDates}
-                    onPrevYear={() => setCurrentYear(prev => prev - 1)}
-                    onNextYear={() => setCurrentYear(prev => prev + 1)}
-                    onMonthClick={handleMonthClick}
-                  />
-                </div>
-              )}
-              
-              {/* Mood Stats */}
-              <div className="lg:self-start">
-                <MoodStats stats={stats} periodLabel={label} />
-              </div>
-            </div>
-          </section>
-        )}
-
-        {/* Sömn Section */}
-        {showSleep && view !== '30days' && (
-        <section>
-          <div className="flex items-center gap-3 mb-6">
-            <Moon className="w-6 h-6 text-primary" />
-            <h2 className="font-display text-2xl font-semibold">Sömn</h2>
-          </div>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {view === 'week' && (
-              <SleepWeekCalendar
-                weekDays={weekDays}
-                weekLabel={weekLabel}
-                getSleepForDate={(dateStr) => getEntryForDate(dateStr)?.sleepQuality}
-                onPrevWeek={() => setCurrentWeek(prev => subWeeks(prev, 1))}
-                onNextWeek={() => setCurrentWeek(prev => addWeeks(prev, 1))}
-                onDayClick={handleDayClick}
-              />
-            )}
-
-            {view === 'month' && (
-              <SleepMonthCalendar
-                currentDate={currentMonth}
-                sleepData={monthSleepData}
-                onPrevMonth={() => setCurrentMonth(prev => subMonths(prev, 1))}
-                onNextMonth={() => setCurrentMonth(prev => addMonths(prev, 1))}
-                onDayClick={handleDayClick}
-              />
-            )}
-
-            {view === 'year' && (
-              <SleepYearHeatmap
-                year={currentYear}
-                entries={yearEntries}
-                onPrevYear={() => setCurrentYear(prev => prev - 1)}
-                onNextYear={() => setCurrentYear(prev => prev + 1)}
-                onMonthClick={handleMonthClick}
-              />
-            )}
-            
-            <div className="lg:self-start">
-              <SleepStats stats={sleepStats} periodLabel={label} />
-            </div>
-          </div>
-        </section>
-        )}
-
-        {/* Kost Section */}
-        {showEating && view !== '30days' && (
-        <section>
-          <div className="flex items-center gap-3 mb-6">
-            <Utensils className="w-6 h-6 text-primary" />
-            <h2 className="font-display text-2xl font-semibold">Kost</h2>
-          </div>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {view === 'week' && (
-              <EatingWeekCalendar
-                weekDays={weekDays}
-                weekLabel={weekLabel}
-                getEatingForDate={(dateStr) => getEntryForDate(dateStr)?.eatingQuality}
-                onPrevWeek={() => setCurrentWeek(prev => subWeeks(prev, 1))}
-                onNextWeek={() => setCurrentWeek(prev => addWeeks(prev, 1))}
-                onDayClick={handleDayClick}
-              />
-            )}
-
-            {view === 'month' && (
-              <EatingMonthCalendar
-                currentDate={currentMonth}
-                eatingData={monthEatingData}
-                onPrevMonth={() => setCurrentMonth(prev => subMonths(prev, 1))}
-                onNextMonth={() => setCurrentMonth(prev => addMonths(prev, 1))}
-                onDayClick={handleDayClick}
-              />
-            )}
-
-            {view === 'year' && (
-              <EatingYearHeatmap
-                year={currentYear}
-                entries={yearEntries}
-                onPrevYear={() => setCurrentYear(prev => prev - 1)}
-                onNextYear={() => setCurrentYear(prev => prev + 1)}
-                onMonthClick={handleMonthClick}
-              />
-            )}
-            
-            <div className="lg:self-start">
-              <EatingStats stats={eatingStats} periodLabel={label} />
-            </div>
-          </div>
-        </section>
-        )}
-
-        {/* Träning Section */}
-        {showExercise && view !== '30days' && (
-        <section>
-          <div className="flex items-center gap-3 mb-6">
-            <Dumbbell className="w-6 h-6 text-primary" />
-            <h2 className="font-display text-2xl font-semibold">Träning</h2>
-          </div>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {view === 'week' && (
-              <ExerciseWeekCalendar
-                weekDays={weekDays}
-                weekLabel={weekLabel}
-                getExerciseForDate={(dateStr) => {
-                  const entry = getEntryForDate(dateStr);
-                  if (entry?.exercised === undefined) return undefined;
-                  return { exercised: entry.exercised, types: entry.exerciseTypes };
-                }}
-                onPrevWeek={() => setCurrentWeek(prev => subWeeks(prev, 1))}
-                onNextWeek={() => setCurrentWeek(prev => addWeeks(prev, 1))}
-                onDayClick={handleExerciseDayClick}
-              />
-            )}
-
-            {view === 'month' && (
-              <ExerciseMonthCalendar
-                currentDate={currentMonth}
-                exerciseData={monthExerciseData}
-                onPrevMonth={() => setCurrentMonth(prev => subMonths(prev, 1))}
-                onNextMonth={() => setCurrentMonth(prev => addMonths(prev, 1))}
-                onDayClick={handleExerciseDayClick}
-              />
-            )}
-
-            {view === 'year' && (
-              <ExerciseYearHeatmap
-                year={currentYear}
-                entries={yearEntries}
-                onPrevYear={() => setCurrentYear(prev => prev - 1)}
-                onNextYear={() => setCurrentYear(prev => prev + 1)}
-                onMonthClick={handleMonthClick}
-              />
-            )}
-            
-            <div className="lg:self-start">
-              <ExerciseStats stats={exerciseStats} periodLabel={label} />
-            </div>
-          </div>
-        </section>
-        )}
-
-        {/* Medicin Section */}
-        {showMedication && view !== '30days' && (
-        <section>
-          <div className="flex items-center gap-3 mb-6">
-            <Pill className="w-6 h-6 text-primary" />
-            <h2 className="font-display text-2xl font-semibold">Medicin</h2>
-          </div>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {view === 'week' && (
-              <MedicationWeekCalendar
-                weekDays={weekDays}
-                weekLabel={weekLabel}
-                getMedicationForDate={(dateStr) => {
-                  const meds = getMedicationsTakenOnDate(dateStr);
-                  if (meds.length === 0 && !logs.some(log => log.date === dateStr)) return undefined;
-                  return {
-                    taken: meds.length,
-                    total: activeMedications.length,
-                    medicationNames: meds.map(m => m.name),
-                  };
-                }}
-                onPrevWeek={() => setCurrentWeek(prev => subWeeks(prev, 1))}
-                onNextWeek={() => setCurrentWeek(prev => addWeeks(prev, 1))}
-                onDayClick={handleDayClick}
-              />
-            )}
-
-            {view === 'month' && (
-              <MedicationMonthCalendar
-                currentDate={currentMonth}
-                medicationData={monthMedicationCalendarData}
-                onPrevMonth={() => setCurrentMonth(prev => subMonths(prev, 1))}
-                onNextMonth={() => setCurrentMonth(prev => addMonths(prev, 1))}
-                onDayClick={handleDayClick}
-              />
-            )}
-
-            {view === 'year' && (
-              <MedicationYearHeatmap
-                year={currentYear}
-                medicationDates={yearMedicationDates}
-                onPrevYear={() => setCurrentYear(prev => prev - 1)}
-                onNextYear={() => setCurrentYear(prev => prev + 1)}
-                onMonthClick={handleMonthClick}
-              />
-            )}
-            
-            <div className="lg:self-start">
-              <MedicationStats stats={medicationStats} periodLabel={label} />
-            </div>
-          </div>
-        </section>
-        )}
-
-        {/* AI Insights Section */}
+        {/* === NEW LAYOUT: Summary → Distribution → Calendar → Stats === */}
         {view !== '30days' && (
-          <AIInsights
-            entries={entries}
-            stats={stats}
-            periodLabel={label}
-            view={view}
-          />
+          <>
+            {/* 1. Summary Card */}
+            <OverviewSummary
+              stats={stats}
+              entries={entries}
+              periodLabel={label}
+              medicationPercentage={medPercentage}
+              sleepBadDays={sleepBadDays}
+              showMedication={showMedication}
+              showSleep={showSleep}
+            />
+
+            {/* 2. Mood Distribution Bar */}
+            {showMood && (
+              <MoodDistributionBar stats={stats} periodLabel={label} />
+            )}
+
+            {/* 3. Mående – Calendar + Stats */}
+            {showMood && (
+              <section>
+                <h2 className="font-display text-xl font-semibold mb-4">Mående</h2>
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  {view === 'week' && (
+                    <WeekCalendar
+                      weekDays={weekDays}
+                      weekLabel={weekLabel}
+                      getEntryForDate={getEntryForDate}
+                      getMedicationsTakenOnDate={getMedicationsTakenOnDate}
+                      onPrevWeek={() => setCurrentWeek(prev => subWeeks(prev, 1))}
+                      onNextWeek={() => setCurrentWeek(prev => addWeeks(prev, 1))}
+                      onDayClick={handleDayClick}
+                    />
+                  )}
+                  {view === 'month' && (
+                    <MonthCalendar
+                      currentDate={currentMonth}
+                      moodData={monthMoodData}
+                      medicationData={monthMedicationData}
+                      onPrevMonth={() => setCurrentMonth(prev => subMonths(prev, 1))}
+                      onNextMonth={() => setCurrentMonth(prev => addMonths(prev, 1))}
+                      onDayClick={handleDayClick}
+                    />
+                  )}
+                  {view === 'year' && (
+                    <div className="lg:col-span-2">
+                      <YearHeatmap 
+                        year={currentYear} 
+                        entries={yearEntries} 
+                        medicationDates={yearMedicationDates}
+                        onPrevYear={() => setCurrentYear(prev => prev - 1)}
+                        onNextYear={() => setCurrentYear(prev => prev + 1)}
+                        onMonthClick={handleMonthClick}
+                      />
+                    </div>
+                  )}
+                  <div className="lg:self-start">
+                    <MoodStats stats={stats} periodLabel={label} />
+                  </div>
+                </div>
+              </section>
+            )}
+
+            {/* 4. Sömn */}
+            {showSleep && (
+              <section>
+                <div className="flex items-center gap-2.5 mb-4">
+                  <Moon className="w-5 h-5 text-primary" />
+                  <h2 className="font-display text-xl font-semibold">Sömn</h2>
+                </div>
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  {view === 'week' && (
+                    <SleepWeekCalendar weekDays={weekDays} weekLabel={weekLabel}
+                      getSleepForDate={(dateStr) => getEntryForDate(dateStr)?.sleepQuality}
+                      onPrevWeek={() => setCurrentWeek(prev => subWeeks(prev, 1))}
+                      onNextWeek={() => setCurrentWeek(prev => addWeeks(prev, 1))}
+                      onDayClick={handleDayClick} />
+                  )}
+                  {view === 'month' && (
+                    <SleepMonthCalendar currentDate={currentMonth} sleepData={monthSleepData}
+                      onPrevMonth={() => setCurrentMonth(prev => subMonths(prev, 1))}
+                      onNextMonth={() => setCurrentMonth(prev => addMonths(prev, 1))}
+                      onDayClick={handleDayClick} />
+                  )}
+                  {view === 'year' && (
+                    <SleepYearHeatmap year={currentYear} entries={yearEntries}
+                      onPrevYear={() => setCurrentYear(prev => prev - 1)}
+                      onNextYear={() => setCurrentYear(prev => prev + 1)}
+                      onMonthClick={handleMonthClick} />
+                  )}
+                  <div className="lg:self-start">
+                    <SleepStats stats={sleepStats} periodLabel={label} />
+                  </div>
+                </div>
+              </section>
+            )}
+
+            {/* 5. Kost */}
+            {showEating && (
+              <section>
+                <div className="flex items-center gap-2.5 mb-4">
+                  <Utensils className="w-5 h-5 text-primary" />
+                  <h2 className="font-display text-xl font-semibold">Kost</h2>
+                </div>
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  {view === 'week' && (
+                    <EatingWeekCalendar weekDays={weekDays} weekLabel={weekLabel}
+                      getEatingForDate={(dateStr) => getEntryForDate(dateStr)?.eatingQuality}
+                      onPrevWeek={() => setCurrentWeek(prev => subWeeks(prev, 1))}
+                      onNextWeek={() => setCurrentWeek(prev => addWeeks(prev, 1))}
+                      onDayClick={handleDayClick} />
+                  )}
+                  {view === 'month' && (
+                    <EatingMonthCalendar currentDate={currentMonth} eatingData={monthEatingData}
+                      onPrevMonth={() => setCurrentMonth(prev => subMonths(prev, 1))}
+                      onNextMonth={() => setCurrentMonth(prev => addMonths(prev, 1))}
+                      onDayClick={handleDayClick} />
+                  )}
+                  {view === 'year' && (
+                    <EatingYearHeatmap year={currentYear} entries={yearEntries}
+                      onPrevYear={() => setCurrentYear(prev => prev - 1)}
+                      onNextYear={() => setCurrentYear(prev => prev + 1)}
+                      onMonthClick={handleMonthClick} />
+                  )}
+                  <div className="lg:self-start">
+                    <EatingStats stats={eatingStats} periodLabel={label} />
+                  </div>
+                </div>
+              </section>
+            )}
+
+            {/* 6. Träning */}
+            {showExercise && (
+              <section>
+                <div className="flex items-center gap-2.5 mb-4">
+                  <Dumbbell className="w-5 h-5 text-primary" />
+                  <h2 className="font-display text-xl font-semibold">Träning</h2>
+                </div>
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  {view === 'week' && (
+                    <ExerciseWeekCalendar weekDays={weekDays} weekLabel={weekLabel}
+                      getExerciseForDate={(dateStr) => {
+                        const entry = getEntryForDate(dateStr);
+                        if (entry?.exercised === undefined) return undefined;
+                        return { exercised: entry.exercised, types: entry.exerciseTypes };
+                      }}
+                      onPrevWeek={() => setCurrentWeek(prev => subWeeks(prev, 1))}
+                      onNextWeek={() => setCurrentWeek(prev => addWeeks(prev, 1))}
+                      onDayClick={handleExerciseDayClick} />
+                  )}
+                  {view === 'month' && (
+                    <ExerciseMonthCalendar currentDate={currentMonth} exerciseData={monthExerciseData}
+                      onPrevMonth={() => setCurrentMonth(prev => subMonths(prev, 1))}
+                      onNextMonth={() => setCurrentMonth(prev => addMonths(prev, 1))}
+                      onDayClick={handleExerciseDayClick} />
+                  )}
+                  {view === 'year' && (
+                    <ExerciseYearHeatmap year={currentYear} entries={yearEntries}
+                      onPrevYear={() => setCurrentYear(prev => prev - 1)}
+                      onNextYear={() => setCurrentYear(prev => prev + 1)}
+                      onMonthClick={handleMonthClick} />
+                  )}
+                  <div className="lg:self-start">
+                    <ExerciseStats stats={exerciseStats} periodLabel={label} />
+                  </div>
+                </div>
+              </section>
+            )}
+
+            {/* 7. Medicin */}
+            {showMedication && (
+              <section>
+                <div className="flex items-center gap-2.5 mb-4">
+                  <Pill className="w-5 h-5 text-primary" />
+                  <h2 className="font-display text-xl font-semibold">Medicin</h2>
+                </div>
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  {view === 'week' && (
+                    <MedicationWeekCalendar weekDays={weekDays} weekLabel={weekLabel}
+                      getMedicationForDate={(dateStr) => {
+                        const meds = getMedicationsTakenOnDate(dateStr);
+                        if (meds.length === 0 && !logs.some(log => log.date === dateStr)) return undefined;
+                        return { taken: meds.length, total: activeMedications.length, medicationNames: meds.map(m => m.name) };
+                      }}
+                      onPrevWeek={() => setCurrentWeek(prev => subWeeks(prev, 1))}
+                      onNextWeek={() => setCurrentWeek(prev => addWeeks(prev, 1))}
+                      onDayClick={handleDayClick} />
+                  )}
+                  {view === 'month' && (
+                    <MedicationMonthCalendar currentDate={currentMonth} medicationData={monthMedicationCalendarData}
+                      onPrevMonth={() => setCurrentMonth(prev => subMonths(prev, 1))}
+                      onNextMonth={() => setCurrentMonth(prev => addMonths(prev, 1))}
+                      onDayClick={handleDayClick} />
+                  )}
+                  {view === 'year' && (
+                    <MedicationYearHeatmap year={currentYear} medicationDates={yearMedicationDates}
+                      onPrevYear={() => setCurrentYear(prev => prev - 1)}
+                      onNextYear={() => setCurrentYear(prev => prev + 1)}
+                      onMonthClick={handleMonthClick} />
+                  )}
+                  <div className="lg:self-start">
+                    <MedicationStats stats={medicationStats} periodLabel={label} />
+                  </div>
+                </div>
+              </section>
+            )}
+
+            {/* 8. AI Insights */}
+            <AIInsights entries={entries} stats={stats} periodLabel={label} view={view} />
+          </>
         )}
 
         <DayDetailDialog
@@ -825,8 +773,9 @@ const Overview = () => {
           currentTypes={exerciseDialogDate ? (getEntryForDate(format(exerciseDialogDate, 'yyyy-MM-dd'))?.exerciseTypes || []) : []}
           onSave={handleSaveExerciseTypes}
         />
+
         {/* Reports section */}
-        <div className="mt-12 pt-8 border-t border-border/50">
+        <div className="mt-8 pt-6 border-t border-border/30">
           <Reports />
         </div>
       </div>
