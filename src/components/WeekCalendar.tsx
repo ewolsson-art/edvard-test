@@ -100,46 +100,6 @@ export function WeekCalendar({
         })}
       </div>
 
-      {/* Day details section */}
-      <div className="mt-6 space-y-3">
-        {weekDays.map((day) => {
-          const dateStr = format(day, 'yyyy-MM-dd');
-          const entry = getEntryForDate(dateStr);
-          const isTodayDate = isToday(day);
-
-          if (!entry) return null;
-
-          return (
-            <div
-              key={`detail-${dateStr}`}
-              className={cn(
-                "flex items-start gap-3 p-3 rounded-xl border transition-colors",
-                isTodayDate && "ring-2 ring-primary/30",
-                entry.mood === 'elevated' && "bg-mood-elevated/10 border-mood-elevated/30",
-                entry.mood === 'stable' && "bg-mood-stable/10 border-mood-stable/30",
-                entry.mood === 'depressed' && "bg-mood-depressed/10 border-mood-depressed/30"
-              )}
-            >
-              <span className="text-2xl">{MOOD_ICONS[entry.mood]}</span>
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2">
-                  <span className={cn(
-                    "text-sm font-medium",
-                    isTodayDate && "text-primary"
-                  )}>
-                    {format(day, 'EEEE d MMMM', { locale: sv })}
-                  </span>
-                </div>
-                {entry.comment && (
-                  <p className="text-sm text-muted-foreground mt-1 line-clamp-2">
-                    {entry.comment}
-                  </p>
-                )}
-              </div>
-            </div>
-          );
-        })}
-      </div>
     </div>
   );
 }
