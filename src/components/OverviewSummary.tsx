@@ -194,17 +194,24 @@ export function OverviewSummary({
             ))}
           </div>
 
-          {/* Legend */}
-          <div className="flex justify-between">
+          {/* Legend + average episode */}
+          <div className="grid grid-cols-3 gap-2">
             {allTimeDistribution.map((group) => (
-              <div key={group.key} className="flex items-center gap-1.5">
-                <span className="text-xs">{group.icon}</span>
-                <span className="text-[11px] text-muted-foreground">
-                  {group.percentage}%
-                </span>
-                <span className="text-[10px] text-muted-foreground/60">
-                  ({group.count}d)
-                </span>
+              <div key={group.key} className="text-center space-y-0.5">
+                <div className="flex items-center justify-center gap-1">
+                  <span className="text-xs">{group.icon}</span>
+                  <span className="text-[11px] font-medium text-foreground">
+                    {group.percentage}%
+                  </span>
+                  <span className="text-[10px] text-muted-foreground/60">
+                    ({group.count}d)
+                  </span>
+                </div>
+                {group.avgEpisodeDays > 0 && (
+                  <p className="text-[10px] text-muted-foreground">
+                    ~{group.avgEpisodeDays} d/gång
+                  </p>
+                )}
               </div>
             ))}
           </div>
