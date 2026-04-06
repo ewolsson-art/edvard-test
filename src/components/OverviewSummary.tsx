@@ -138,6 +138,47 @@ export function OverviewSummary({
         </div>
       </div>
 
+      {/* All-time mood distribution */}
+      {allTimeDistribution && (
+        <div className="space-y-2.5">
+          <div className="flex items-baseline justify-between">
+            <p className="text-xs text-muted-foreground font-medium uppercase tracking-wider">Fördelning totalt</p>
+            <p className="text-[11px] text-muted-foreground">{entries.length} {entries.length === 1 ? 'dag' : 'dagar'}</p>
+          </div>
+          
+          {/* Stacked bar */}
+          <div className="flex h-3 rounded-full overflow-hidden">
+            {allTimeDistribution.map((group) => (
+              group.percentage > 0 && (
+                <div
+                  key={group.key}
+                  className={`${
+                    group.key === 'elevated' ? 'bg-orange-400' :
+                    group.key === 'stable' ? 'bg-emerald-400' : 'bg-blue-400'
+                  }`}
+                  style={{ width: `${group.percentage}%` }}
+                />
+              )
+            ))}
+          </div>
+
+          {/* Legend */}
+          <div className="flex justify-between">
+            {allTimeDistribution.map((group) => (
+              <div key={group.key} className="flex items-center gap-1.5">
+                <span className="text-xs">{group.icon}</span>
+                <span className="text-[11px] text-muted-foreground">
+                  {group.percentage}%
+                </span>
+                <span className="text-[10px] text-muted-foreground/60">
+                  ({group.count}d)
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* Key metrics */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         <MetricCard
