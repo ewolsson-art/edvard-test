@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo, useRef, KeyboardEvent } from 'react';
-import { format, differenceInDays, parseISO, isToday } from 'date-fns';
+import { format, differenceInDays, parseISO, isToday, isYesterday } from 'date-fns';
 import { sv } from 'date-fns/locale';
 import { Flame, Zap, Sun, Cloud, CloudRain, MessageSquare, CheckCircle2, Pill, Pencil, Moon, Utensils, Dumbbell, ThumbsUp, ThumbsDown, Check, X, ChevronRight, ChevronLeft, Heart, AlertTriangle, HelpCircle, CalendarIcon, Plus } from 'lucide-react';
 import { Calendar } from '@/components/ui/calendar';
@@ -47,7 +47,7 @@ const moodButtons: { mood: MoodType; icon: typeof Zap; label: string; sublabel: 
   { mood: 'somewhat_elevated', icon: Zap, label: 'Upp', sublabel: 'Energisk, positiv', cssClass: 'mood-btn-somewhat-elevated' },
   { mood: 'stable', icon: Sun, label: 'Stabil', sublabel: 'Balanserad, lugn', cssClass: 'mood-btn-stable' },
   { mood: 'somewhat_depressed', icon: Cloud, label: 'Låg', sublabel: 'Tung, trött', cssClass: 'mood-btn-somewhat-depressed' },
-  { mood: 'depressed', icon: CloudRain, label: 'Mycket låg', sublabel: 'Mörkt, hopplöst', cssClass: 'mood-btn-depressed' },
+  { mood: 'depressed', icon: CloudRain, label: 'Mycket låg', sublabel: 'Väldigt tungt idag', cssClass: 'mood-btn-depressed' },
 ];
 
 const MOOD_TAGS: Record<MoodType, { value: string; label: string; emoji: string }[]> = {
@@ -149,7 +149,12 @@ export function TodayCheckin({
 }: TodayCheckinProps) {
   const displayDate = selectedDateProp || new Date();
   const isDisplayToday = isToday(displayDate);
-  const formattedDate = format(displayDate, "EEEE d MMMM", { locale: sv });
+  const isDisplayYesterday = isYesterday(displayDate);
+  const formattedDate = isDisplayToday 
+    ? 'Idag' 
+    : isDisplayYesterday 
+      ? 'Igår' 
+      : format(displayDate, "EEEE d MMMM", { locale: sv });
 
   // Build dynamic steps based on preferences
   const STEPS = useMemo(() => {
@@ -556,17 +561,11 @@ export function TodayCheckin({
 
   return (
     <div className="fade-in h-full md:h-auto flex flex-col justify-center px-5 py-4 overflow-hidden md:overflow-y-auto md:glass-card md:p-12 md:max-h-[calc(100vh-4rem)] md:border md:bg-card/80 md:rounded-2xl md:shadow-sm">
-      {/* Date - always visible */}
-      <div className="text-center mb-4 md:mb-5">
-        <p className="text-muted-foreground/60 text-[11px] tracking-[0.2em] uppercase font-medium">{formattedDate}</p>
-        {!isDisplayToday && (
-          <p className="text-[11px] text-primary mt-1 font-medium">Retroaktiv incheckning</p>
-        )}
-      </div>
+      {/* Date removed from here - now shown inline with each step heading */}
 
       {/* Progress dots */}
       {currentStep !== 'success-animation' && (
-        <div className="flex justify-center mb-8 md:mb-10">
+        <div className="flex justify-start mb-6 md:mb-8">
           <div className="flex items-center gap-2">
             {STEPS.map((step, i) => {
               const currentIndex = STEPS.indexOf(currentStep);
@@ -590,7 +589,7 @@ export function TodayCheckin({
       {currentStep === 'mood' && (
         <div className="step-slide-in flex flex-col flex-1" key={stepKey}>
           {/* Toolbar */}
-          <div className="flex items-center justify-between h-10 mb-6">
+          <div className="flex items-center justify-between h-10 mb-4">
             {isEditing ? (
               <Button variant="ghost" size="sm" onClick={() => setIsEditing(false)} className="gap-1.5 text-destructive hover:text-destructive hover:bg-destructive/10 -ml-2">
                 <X className="w-4 h-4" />
@@ -600,16 +599,19 @@ export function TodayCheckin({
             <div />
           </div>
 
-          {/* Heading */}
+          {/* Date label + Heading */}
           <div className="mb-8">
+            <p className="text-muted-foreground/50 text-[13px] tracking-wide capitalize mb-1.5">
+              {isDisplayToday ? format(displayDate, "EEEE d MMMM", { locale: sv }) : formattedDate}
+            </p>
             <h1 className="font-display text-[28px] sm:text-3xl md:text-3xl font-bold leading-tight tracking-tight">
               {isDisplayToday 
                 ? (firstName ? `Hej ${firstName}!` : 'Hej!')
                 : 'Hur mådde du?'
               }
             </h1>
-            <p className="text-muted-foreground/70 mt-1.5 text-[15px]">
-              {isDisplayToday ? 'Hur känns det idag?' : formattedDate}
+            <p className="text-muted-foreground/70 mt-1 text-[15px]">
+              {isDisplayToday ? 'Hur känns det idag?' : ''}
             </p>
           </div>
 
@@ -662,10 +664,11 @@ export function TodayCheckin({
 
           {/* Heading */}
           <div className="mb-8">
+            <p className="text-muted-foreground/50 text-[13px] tracking-wide capitalize mb-1.5">{formattedDate}</p>
             <h1 className="font-display text-[28px] sm:text-3xl font-bold tracking-tight">
               Något som stack ut?
             </h1>
-            <p className="text-muted-foreground/60 mt-1.5 text-[15px]">
+            <p className="text-muted-foreground/60 mt-1 text-[15px]">
               Välj det som stämmer – eller hoppa vidare
             </p>
           </div>
@@ -782,6 +785,7 @@ export function TodayCheckin({
 
           {/* Heading */}
           <div className="mb-8">
+            <p className="text-muted-foreground/50 text-[13px] tracking-wide capitalize mb-1.5">{formattedDate}</p>
             <h1 className="font-display text-[28px] sm:text-3xl font-bold tracking-tight">
               Hur har du sovit?
             </h1>
@@ -843,6 +847,7 @@ export function TodayCheckin({
 
           {/* Heading */}
           <div className="mb-8">
+            <p className="text-muted-foreground/50 text-[13px] tracking-wide capitalize mb-1.5">{formattedDate}</p>
             <h1 className="font-display text-[28px] sm:text-3xl font-bold tracking-tight">
               Hur har du ätit?
             </h1>
@@ -914,6 +919,7 @@ export function TodayCheckin({
 
           {/* Heading */}
           <div className="mb-8">
+            <p className="text-muted-foreground/50 text-[13px] tracking-wide capitalize mb-1.5">{formattedDate}</p>
             <h1 className="font-display text-[28px] sm:text-3xl font-bold tracking-tight">
               Har du tränat?
             </h1>
@@ -987,6 +993,7 @@ export function TodayCheckin({
 
           {/* Heading */}
           <div className="mb-8">
+            <p className="text-muted-foreground/50 text-[13px] tracking-wide capitalize mb-1.5">{formattedDate}</p>
             <h1 className="font-display text-[28px] sm:text-3xl font-bold tracking-tight">
               Hur gick det med medicinen?
             </h1>
@@ -1177,6 +1184,7 @@ export function TodayCheckin({
 
           {/* Heading */}
           <div className="mb-8">
+            <p className="text-muted-foreground/50 text-[13px] tracking-wide capitalize mb-1.5">{formattedDate}</p>
             <h1 className="font-display text-[28px] sm:text-3xl font-bold tracking-tight">
               Egna frågor
             </h1>
