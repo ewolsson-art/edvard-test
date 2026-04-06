@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Brain, TrendingUp, Shield, AlertTriangle, Lightbulb, Activity, Loader2, Sparkles, RefreshCw } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
+import { Brain, TrendingUp, Shield, AlertTriangle, Lightbulb, Activity, Sparkles, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
 import { cn } from '@/lib/utils';
@@ -20,11 +20,79 @@ const MOOD_LABELS: Record<string, string> = {
   depressed: 'Nedstämd',
 };
 
+const THINKING_PHRASES = [
+  'Läser dina incheckningar…',
+  'Analyserar sömnmönster…',
+  'Kartlägger humörtrender…',
+  'Letar efter mönster…',
+  'Bygger din prognos…',
+  'Sammanställer insikter…',
+];
+
+function InsightsLoadingAnimation() {
+  const [phraseIndex, setPhraseIndex] = useState(0);
+  const [progress, setProgress] = useState(0);
+
+  useEffect(() => {
+    const phraseTimer = setInterval(() => {
+      setPhraseIndex(prev => (prev + 1) % THINKING_PHRASES.length);
+    }, 2400);
+    return () => clearInterval(phraseTimer);
+  }, []);
+
+  useEffect(() => {
+    const progressTimer = setInterval(() => {
+      setProgress(prev => Math.min(prev + Math.random() * 8 + 2, 92));
+    }, 800);
+    return () => clearInterval(progressTimer);
+  }, []);
+
+  return (
+    <div className="flex flex-col items-center justify-center py-20 text-center px-5">
+      {/* Animated brain orb */}
+      <div className="relative w-28 h-28 mb-10">
+        {/* Outer rotating ring */}
+        <div className="absolute inset-0 rounded-full border-2 border-primary/20 animate-[spin_8s_linear_infinite]">
+          <div className="absolute -top-1.5 left-1/2 -translate-x-1/2 w-3 h-3 rounded-full bg-primary shadow-[0_0_12px_hsl(var(--primary))]" />
+        </div>
+        {/* Middle pulsing ring */}
+        <div className="absolute inset-3 rounded-full border border-primary/10 animate-[pulse_3s_ease-in-out_infinite]" />
+        {/* Inner orb */}
+        <div className="absolute inset-5 rounded-full bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center backdrop-blur-sm">
+          <Brain className="w-10 h-10 text-primary animate-[pulse_2s_ease-in-out_infinite]" />
+        </div>
+        {/* Floating particles */}
+        <div className="absolute top-2 right-2 w-2 h-2 rounded-full bg-primary/40 animate-[bounce_2s_ease-in-out_infinite]" />
+        <div className="absolute bottom-4 left-1 w-1.5 h-1.5 rounded-full bg-primary/30 animate-[bounce_2.5s_ease-in-out_infinite_0.5s]" />
+        <div className="absolute top-1/2 right-0 w-1.5 h-1.5 rounded-full bg-primary/25 animate-[bounce_3s_ease-in-out_infinite_1s]" />
+      </div>
+
+      {/* Animated phrase */}
+      <p className="text-[15px] text-foreground/80 font-medium h-6 transition-all duration-500 animate-fade-in" key={phraseIndex}>
+        {THINKING_PHRASES[phraseIndex]}
+      </p>
+
+      {/* Progress bar */}
+      <div className="w-48 h-1 rounded-full bg-muted/30 mt-5 overflow-hidden">
+        <div
+          className="h-full rounded-full bg-gradient-to-r from-primary/60 to-primary transition-all duration-700 ease-out"
+          style={{ width: `${progress}%` }}
+        />
+      </div>
+
+      <p className="text-[11px] text-muted-foreground/40 mt-3">
+        Detta kan ta några sekunder
+      </p>
+    </div>
+  );
+}
+
 export default function Insights() {
   const [analysis, setAnalysis] = useState<string | null>(null);
   const [stats, setStats] = useState<InsightStats | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const hasTriggered = useRef(false);
 
   const generateInsights = async () => {
     setLoading(true);
@@ -53,6 +121,14 @@ export default function Insights() {
     }
   };
 
+  // Auto-trigger on mount
+  useEffect(() => {
+    if (!hasTriggered.current) {
+      hasTriggered.current = true;
+      generateInsights();
+    }
+  }, []);
+
   const parseSection = (text: string, header: string): string | null => {
     const regex = new RegExp(`${header}:?\\s*\\n([\\s\\S]*?)(?=\\n[A-ZÅÄÖ]{3,}|$)`, 'i');
     const match = text.match(regex);
@@ -75,32 +151,18 @@ export default function Insights() {
         AI-driven analys av ditt mående baserat på all din data.
       </p>
 
-      {!analysis && !loading && (
-        <div className="flex flex-col items-center justify-center py-16 text-center">
-          <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center mb-6">
-            <Sparkles className="w-10 h-10 text-primary" />
-          </div>
-          <h2 className="font-display text-xl font-semibold mb-2">Upptäck mönster i ditt mående</h2>
-          <p className="text-sm text-muted-foreground max-w-sm mb-8 leading-relaxed">
-            Vår AI analyserar alla dina incheckningar och identifierar mönster, styrkor och varningssignaler.
-          </p>
-          {error && (
-            <div className="mb-6 p-4 rounded-xl bg-destructive/10 border border-destructive/20 text-sm text-destructive max-w-sm">
-              {error}
-            </div>
-          )}
-          <Button onClick={generateInsights} size="lg" className="gap-2 rounded-xl px-8">
-            <Brain className="w-5 h-5" />
-            Generera insikter
-          </Button>
-        </div>
-      )}
+      {loading && <InsightsLoadingAnimation />}
 
-      {loading && (
-        <div className="flex flex-col items-center justify-center py-20 text-center">
-          <Loader2 className="w-10 h-10 text-primary animate-spin mb-6" />
-          <p className="text-sm text-muted-foreground">Analyserar ditt mående...</p>
-          <p className="text-xs text-muted-foreground/50 mt-1">Detta kan ta några sekunder</p>
+      {!loading && error && !analysis && (
+        <div className="flex flex-col items-center justify-center py-16 text-center">
+          <div className="w-20 h-20 rounded-full bg-destructive/10 flex items-center justify-center mb-6">
+            <AlertTriangle className="w-10 h-10 text-destructive" />
+          </div>
+          <p className="text-sm text-muted-foreground max-w-sm mb-6">{error}</p>
+          <Button onClick={generateInsights} variant="outline" className="gap-2 rounded-xl">
+            <RefreshCw className="w-4 h-4" />
+            Försök igen
+          </Button>
         </div>
       )}
 
