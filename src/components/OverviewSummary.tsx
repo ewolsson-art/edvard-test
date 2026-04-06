@@ -14,9 +14,7 @@ export function OverviewSummary({
   stats,
   entries,
   periodLabel,
-  medicationPercentage,
   sleepBadDays,
-  showMedication,
   showSleep,
 }: OverviewSummaryProps) {
   // Current streak: how many consecutive days in the same mood state (from most recent)
