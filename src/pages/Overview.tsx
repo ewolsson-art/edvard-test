@@ -587,11 +587,6 @@ const Overview = () => {
             </div>
 
             {showMood && (
-              <MoodDistributionBar stats={stats} periodLabel={label} />
-            )}
-
-            {/* 3. Mående – Calendar + Stats */}
-            {showMood && (
               <section>
                 <h2 className="font-display text-xl font-semibold mb-4">Mående</h2>
                 {sectionView === 'calendar' ? (
@@ -619,7 +614,12 @@ const Overview = () => {
                     )}
                   </>
                 ) : (
-                  <MoodStats stats={stats} periodLabel={label} />
+                  <>
+                    <MoodDistributionBar stats={stats} periodLabel={label} />
+                    <div className="mt-4">
+                      <MoodStats stats={stats} periodLabel={label} />
+                    </div>
+                  </>
                 )}
               </section>
             )}
