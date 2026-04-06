@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
-import { MoodStats as MoodStatsType, MoodEntry } from '@/types/mood';
-import { Activity, CalendarCheck, Pill, Moon } from 'lucide-react';
+import { MoodStats as MoodStatsType, MoodEntry, MOOD_LABELS, MOOD_ICONS } from '@/types/mood';
+import { CalendarCheck, Pill, Moon, Repeat, Clock } from 'lucide-react';
 
 interface OverviewSummaryProps {
   stats: MoodStatsType;
@@ -14,54 +14,104 @@ interface OverviewSummaryProps {
 
 export function OverviewSummary({
   stats,
+  entries,
   periodLabel,
   medicationPercentage,
   sleepBadDays,
   showMedication,
   showSleep,
 }: OverviewSummaryProps) {
-  const dominantMood = useMemo(() => {
-    const moods = [
-      { key: 'elevated' as const, count: stats.elevated, label: 'Mycket upp' },
-      { key: 'somewhat_elevated' as const, count: stats.somewhat_elevated, label: 'Upp' },
-      { key: 'stable' as const, count: stats.stable, label: 'Stabil' },
-      { key: 'somewhat_depressed' as const, count: stats.somewhat_depressed, label: 'Låg' },
-      { key: 'depressed' as const, count: stats.depressed, label: 'Mycket låg' },
-    ].filter(m => m.count > 0);
-    
-    if (moods.length === 0) return null;
-    return moods.sort((a, b) => b.count - a.count)[0];
-  }, [stats]);
+  // Current streak: how many consecutive days in the same mood state (from most recent)
+  const currentStreak = useMemo(() => {
+    if (entries.length === 0) return null;
+    const sorted = [...entries].sort((a, b) => b.date.localeCompare(a.date));
+    const currentMood = sorted[0].mood;
+    let count = 1;
+    for (let i = 1; i < sorted.length; i++) {
+      if (sorted[i].mood === currentMood) {
+        count++;
+      } else {
+        break;
+      }
+    }
+    return {
+      mood: currentMood,
+      label: MOOD_LABELS[currentMood] || currentMood,
+      icon: MOOD_ICONS[currentMood] || '•',
+      days: count,
+    };
+  }, [entries]);
+
+  // Days since last different mood state
+  const daysSinceOtherMood = useMemo(() => {
+    if (entries.length < 2 || !currentStreak) return null;
+    const sorted = [...entries].sort((a, b) => b.date.localeCompare(a.date));
+    const currentMood = sorted[0].mood;
+    for (let i = 1; i < sorted.length; i++) {
+      if (sorted[i].mood !== currentMood) {
+        const lastDifferentDate = new Date(sorted[i].date);
+        const today = new Date();
+        const diffDays = Math.floor((today.getTime() - lastDifferentDate.getTime()) / (1000 * 60 * 60 * 24));
+        return {
+          mood: sorted[i].mood,
+          label: MOOD_LABELS[sorted[i].mood] || sorted[i].mood,
+          icon: MOOD_ICONS[sorted[i].mood] || '•',
+          daysAgo: diffDays,
+        };
+      }
+    }
+    return null;
+  }, [entries, currentStreak]);
 
   const registrationRate = stats.totalDays > 0 
     ? Math.round((stats.total / stats.totalDays) * 100) 
     : 0;
 
   return (
-    <div className="rounded-2xl bg-card/60 border border-border/40 p-5 space-y-4">
+    <div className="rounded-2xl bg-card/60 border border-border/40 p-5 space-y-5">
       <div className="flex items-center justify-between">
         <h2 className="text-lg font-semibold">Sammanfattning</h2>
         <span className="text-xs text-muted-foreground uppercase tracking-wider">{periodLabel}</span>
       </div>
 
-      {dominantMood && (
-        <p className="text-sm text-muted-foreground">
-          {dominantMood.label} dominerar ({dominantMood.count} dagar)
-        </p>
+      {/* Current streak */}
+      {currentStreak && (
+        <div className="flex items-center gap-3 rounded-xl bg-card/80 border border-border/30 p-4">
+          <span className="text-2xl">{currentStreak.icon}</span>
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-1.5">
+              <Repeat className="w-3.5 h-3.5 text-muted-foreground" />
+              <p className="text-sm font-medium">
+                {currentStreak.days} {currentStreak.days === 1 ? 'dag' : 'dagar'} i rad
+              </p>
+            </div>
+            <p className="text-xs text-muted-foreground mt-0.5">
+              {currentStreak.label}
+            </p>
+          </div>
+          {daysSinceOtherMood && (
+            <div className="text-right flex-shrink-0">
+              <div className="flex items-center gap-1 justify-end">
+                <Clock className="w-3 h-3 text-muted-foreground/70" />
+                <p className="text-xs text-muted-foreground">
+                  {daysSinceOtherMood.daysAgo}d sedan
+                </p>
+              </div>
+              <p className="text-[11px] text-muted-foreground/60 mt-0.5">
+                {daysSinceOtherMood.icon} {daysSinceOtherMood.label}
+              </p>
+            </div>
+          )}
+        </div>
       )}
 
-      {/* Key metrics row */}
+      {/* Key metrics */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         <MetricCard
           icon={CalendarCheck}
           value={`${stats.total}/${stats.totalDays}`}
           label="Registrerade"
           sublabel={`${registrationRate}%`}
-        />
-        <MetricCard
-          icon={Activity}
-          value={`${stats.stable}`}
-          label="Stabila dagar"
         />
         {showSleep && sleepBadDays > 0 && (
           <MetricCard
@@ -90,7 +140,7 @@ function MetricCard({
   sublabel,
   warning,
 }: { 
-  icon: typeof Activity; 
+  icon: typeof CalendarCheck; 
   value: string; 
   label: string; 
   sublabel?: string;
