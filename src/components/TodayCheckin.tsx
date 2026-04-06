@@ -561,17 +561,11 @@ export function TodayCheckin({
 
   return (
     <div className="fade-in h-full md:h-auto flex flex-col justify-center px-5 py-4 overflow-hidden md:overflow-y-auto md:glass-card md:p-12 md:max-h-[calc(100vh-4rem)] md:border md:bg-card/80 md:rounded-2xl md:shadow-sm">
-      {/* Date - always visible */}
-      <div className="text-center mb-4 md:mb-5">
-        <p className="text-muted-foreground/60 text-[11px] tracking-[0.2em] uppercase font-medium">{formattedDate}</p>
-        {!isDisplayToday && (
-          <p className="text-[11px] text-primary mt-1 font-medium">Retroaktiv incheckning</p>
-        )}
-      </div>
+      {/* Date removed from here - now shown inline with each step heading */}
 
       {/* Progress dots */}
       {currentStep !== 'success-animation' && (
-        <div className="flex justify-center mb-8 md:mb-10">
+        <div className="flex justify-start mb-8 md:mb-10 px-0">
           <div className="flex items-center gap-2">
             {STEPS.map((step, i) => {
               const currentIndex = STEPS.indexOf(currentStep);
