@@ -215,6 +215,7 @@ const Profile = () => {
             <SettingsRow icon={Pill} label="Mediciner" description="Hantera dina mediciner" onClick={() => setView('medications')} />
             <SettingsRow icon={ClipboardList} label="Diagnoser" description="Dina registrerade diagnoser" onClick={() => setView('diagnoses')} />
             <SettingsRow icon={Sparkles} label="Kännetecken" description="Mönster för olika perioder" onClick={() => setView('characteristics')} />
+            <SettingsRow icon={FileText} label="Rapporter" description="Skapa och dela rapporter" onClick={() => setView('reports')} />
           </SettingsGroup>
         )}
 
