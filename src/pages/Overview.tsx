@@ -525,14 +525,43 @@ const Overview = () => {
           <h1 className="font-display text-3xl font-bold mb-2">Översikt</h1>
           <p className="text-sm text-muted-foreground mb-5">Se dina mönster och trender över tid.</p>
           
-          <Tabs value={view} onValueChange={handleViewChange} className="w-full">
-            <TabsList className="inline-flex h-9 bg-muted/50 p-0.5 rounded-lg">
-              <TabsTrigger value="month" className="text-xs px-3 rounded-md">Månad</TabsTrigger>
-              <TabsTrigger value="week" className="text-xs px-3 rounded-md">Vecka</TabsTrigger>
-              <TabsTrigger value="year" className="text-xs px-3 rounded-md">År</TabsTrigger>
-              <TabsTrigger value="30days" className="text-xs px-3 rounded-md">30d</TabsTrigger>
-            </TabsList>
-          </Tabs>
+          <div className="flex items-center gap-3">
+            <Tabs value={view} onValueChange={handleViewChange} className="flex-1">
+              <TabsList className="inline-flex h-9 bg-muted/50 p-0.5 rounded-lg">
+                <TabsTrigger value="month" className="text-xs px-3 rounded-md">Månad</TabsTrigger>
+                <TabsTrigger value="week" className="text-xs px-3 rounded-md">Vecka</TabsTrigger>
+                <TabsTrigger value="year" className="text-xs px-3 rounded-md">År</TabsTrigger>
+                <TabsTrigger value="30days" className="text-xs px-3 rounded-md">30d</TabsTrigger>
+              </TabsList>
+            </Tabs>
+
+            {view !== '30days' && (
+              <div className="flex items-center gap-1 p-1 bg-muted/50 rounded-lg">
+                <button
+                  onClick={() => setSectionView('calendar')}
+                  className={`p-2 rounded-md transition-all ${
+                    sectionView === 'calendar'
+                      ? 'bg-background text-foreground shadow-sm'
+                      : 'text-muted-foreground hover:text-foreground'
+                  }`}
+                  aria-label="Kalender"
+                >
+                  <CalendarDays className="w-4 h-4" />
+                </button>
+                <button
+                  onClick={() => setSectionView('stats')}
+                  className={`p-2 rounded-md transition-all ${
+                    sectionView === 'stats'
+                      ? 'bg-background text-foreground shadow-sm'
+                      : 'text-muted-foreground hover:text-foreground'
+                  }`}
+                  aria-label="Statistik"
+                >
+                  <BarChart3 className="w-4 h-4" />
+                </button>
+              </div>
+            )}
+          </div>
         </header>
 
         {/* Last 30 Days View */}
@@ -547,44 +576,18 @@ const Overview = () => {
           />
         )}
 
-        {/* === NEW LAYOUT: Summary → Distribution → Calendar → Stats === */}
         {view !== '30days' && (
           <>
-            {/* 1. Summary Card */}
-            <OverviewSummary
-              stats={stats}
-              entries={entries}
-              periodLabel={label}
-              sleepBadDays={sleepBadDays}
-              showSleep={showSleep}
-            />
-
-            {/* 2. Mood Distribution Bar */}
-            {/* Section view toggle */}
-            <div className="flex items-center gap-1 p-1 bg-muted/50 rounded-lg w-fit">
-              <button
-                onClick={() => setSectionView('calendar')}
-                className={`p-2 rounded-md transition-all ${
-                  sectionView === 'calendar'
-                    ? 'bg-background text-foreground shadow-sm'
-                    : 'text-muted-foreground hover:text-foreground'
-                }`}
-                aria-label="Kalender"
-              >
-                <CalendarDays className="w-4 h-4" />
-              </button>
-              <button
-                onClick={() => setSectionView('stats')}
-                className={`p-2 rounded-md transition-all ${
-                  sectionView === 'stats'
-                    ? 'bg-background text-foreground shadow-sm'
-                    : 'text-muted-foreground hover:text-foreground'
-                }`}
-                aria-label="Statistik"
-              >
-                <BarChart3 className="w-4 h-4" />
-              </button>
-            </div>
+            {/* Summary Card - only in stats view */}
+            {sectionView === 'stats' && (
+              <OverviewSummary
+                stats={stats}
+                entries={entries}
+                periodLabel={label}
+                sleepBadDays={sleepBadDays}
+                showSleep={showSleep}
+              />
+            )}
 
             {showMood && (
               <section>
