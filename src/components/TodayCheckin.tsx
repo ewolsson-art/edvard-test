@@ -566,6 +566,7 @@ export function TodayCheckin({
       {/* Progress dots */}
       {currentStep !== 'success-animation' && (
         <div className="flex justify-start mb-8 md:mb-10 px-0">
+        <div className="flex justify-start px-0">
           <div className="flex items-center gap-2">
             {STEPS.map((step, i) => {
               const currentIndex = STEPS.indexOf(currentStep);
@@ -589,7 +590,7 @@ export function TodayCheckin({
       {currentStep === 'mood' && (
         <div className="step-slide-in flex flex-col flex-1" key={stepKey}>
           {/* Toolbar */}
-          <div className="flex items-center justify-between h-10 mb-6">
+          <div className="flex items-center justify-between h-10 mb-4">
             {isEditing ? (
               <Button variant="ghost" size="sm" onClick={() => setIsEditing(false)} className="gap-1.5 text-destructive hover:text-destructive hover:bg-destructive/10 -ml-2">
                 <X className="w-4 h-4" />
@@ -599,16 +600,19 @@ export function TodayCheckin({
             <div />
           </div>
 
-          {/* Heading */}
+          {/* Date label + Heading */}
           <div className="mb-8">
+            <p className="text-muted-foreground/50 text-[13px] tracking-wide capitalize mb-1.5">
+              {isDisplayToday ? format(displayDate, "EEEE d MMMM", { locale: sv }) : formattedDate}
+            </p>
             <h1 className="font-display text-[28px] sm:text-3xl md:text-3xl font-bold leading-tight tracking-tight">
               {isDisplayToday 
                 ? (firstName ? `Hej ${firstName}!` : 'Hej!')
                 : 'Hur mådde du?'
               }
             </h1>
-            <p className="text-muted-foreground/70 mt-1.5 text-[15px]">
-              {isDisplayToday ? 'Hur känns det idag?' : formattedDate}
+            <p className="text-muted-foreground/70 mt-1 text-[15px]">
+              {isDisplayToday ? 'Hur känns det idag?' : ''}
             </p>
           </div>
 
