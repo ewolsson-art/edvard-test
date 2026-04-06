@@ -26,7 +26,7 @@ const profileSchema = z.object({
   lastName: z.string().trim().max(50, { message: "Max 50 tecken" }).optional(),
 });
 
-type ProfileView = 'main' | 'edit' | 'medications' | 'doctors' | 'relatives' | 'diagnoses' | 'delegates' | 'relative-patients' | 'characteristics';
+type ProfileView = 'main' | 'edit' | 'medications' | 'doctors' | 'relatives' | 'diagnoses' | 'delegates' | 'relative-patients' | 'characteristics' | 'reports';
 
 const Profile = () => {
   const { user } = useAuth();
@@ -173,6 +173,10 @@ const Profile = () => {
         </div>
       </SubPage>
     );
+  }
+  if (view === 'reports') {
+    const Reports = require('./Reports').default;
+    return <SubPage title="Rapporter" onBack={() => setView('main')}><Reports /></SubPage>;
   }
 
   // Main profile view
