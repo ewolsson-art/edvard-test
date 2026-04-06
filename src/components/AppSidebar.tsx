@@ -123,7 +123,6 @@ export function AppSidebar() {
                 <span className="text-[15px] font-semibold text-white truncate">
                   {firstName || 'Användare'}
                 </span>
-                <span className="text-[11px] text-white/35 font-normal">Friendly</span>
               </div>
             </Link>
           </div>
