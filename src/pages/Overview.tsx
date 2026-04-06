@@ -594,44 +594,33 @@ const Overview = () => {
             {showMood && (
               <section>
                 <h2 className="font-display text-xl font-semibold mb-4">Mående</h2>
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                  {view === 'week' && (
-                    <WeekCalendar
-                      weekDays={weekDays}
-                      weekLabel={weekLabel}
-                      getEntryForDate={getEntryForDate}
-                      getMedicationsTakenOnDate={getMedicationsTakenOnDate}
-                      onPrevWeek={() => setCurrentWeek(prev => subWeeks(prev, 1))}
-                      onNextWeek={() => setCurrentWeek(prev => addWeeks(prev, 1))}
-                      onDayClick={handleDayClick}
-                    />
-                  )}
-                  {view === 'month' && (
-                    <MonthCalendar
-                      currentDate={currentMonth}
-                      moodData={monthMoodData}
-                      medicationData={monthMedicationData}
-                      onPrevMonth={() => setCurrentMonth(prev => subMonths(prev, 1))}
-                      onNextMonth={() => setCurrentMonth(prev => addMonths(prev, 1))}
-                      onDayClick={handleDayClick}
-                    />
-                  )}
-                  {view === 'year' && (
-                    <div className="lg:col-span-2">
-                      <YearHeatmap 
-                        year={currentYear} 
-                        entries={yearEntries} 
+                {sectionView === 'calendar' ? (
+                  <>
+                    {view === 'week' && (
+                      <WeekCalendar weekDays={weekDays} weekLabel={weekLabel}
+                        getEntryForDate={getEntryForDate} getMedicationsTakenOnDate={getMedicationsTakenOnDate}
+                        onPrevWeek={() => setCurrentWeek(prev => subWeeks(prev, 1))}
+                        onNextWeek={() => setCurrentWeek(prev => addWeeks(prev, 1))}
+                        onDayClick={handleDayClick} />
+                    )}
+                    {view === 'month' && (
+                      <MonthCalendar currentDate={currentMonth} moodData={monthMoodData}
+                        medicationData={monthMedicationData}
+                        onPrevMonth={() => setCurrentMonth(prev => subMonths(prev, 1))}
+                        onNextMonth={() => setCurrentMonth(prev => addMonths(prev, 1))}
+                        onDayClick={handleDayClick} />
+                    )}
+                    {view === 'year' && (
+                      <YearHeatmap year={currentYear} entries={yearEntries}
                         medicationDates={yearMedicationDates}
                         onPrevYear={() => setCurrentYear(prev => prev - 1)}
                         onNextYear={() => setCurrentYear(prev => prev + 1)}
-                        onMonthClick={handleMonthClick}
-                      />
-                    </div>
-                  )}
-                  <div className="lg:self-start">
-                    <MoodStats stats={stats} periodLabel={label} />
-                  </div>
-                </div>
+                        onMonthClick={handleMonthClick} />
+                    )}
+                  </>
+                ) : (
+                  <MoodStats stats={stats} periodLabel={label} />
+                )}
               </section>
             )}
 
