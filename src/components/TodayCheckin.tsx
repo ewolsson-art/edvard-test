@@ -149,7 +149,12 @@ export function TodayCheckin({
 }: TodayCheckinProps) {
   const displayDate = selectedDateProp || new Date();
   const isDisplayToday = isToday(displayDate);
-  const formattedDate = format(displayDate, "EEEE d MMMM", { locale: sv });
+  const isDisplayYesterday = isYesterday(displayDate);
+  const formattedDate = isDisplayToday 
+    ? 'Idag' 
+    : isDisplayYesterday 
+      ? 'Igår' 
+      : format(displayDate, "EEEE d MMMM", { locale: sv });
 
   // Build dynamic steps based on preferences
   const STEPS = useMemo(() => {
