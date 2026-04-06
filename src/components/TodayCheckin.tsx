@@ -504,7 +504,7 @@ export function TodayCheckin({
   }
 
   return (
-    <div className="fade-in h-full md:h-auto flex flex-col justify-center px-6 py-8 md:glass-card md:p-12 md:max-h-[calc(100vh-4rem)] md:overflow-y-auto md:border md:bg-card/80 md:rounded-2xl md:shadow-sm">
+    <div className="fade-in h-full md:h-auto flex flex-col justify-center px-6 py-4 overflow-hidden md:overflow-y-auto md:glass-card md:p-12 md:max-h-[calc(100vh-4rem)] md:border md:bg-card/80 md:rounded-2xl md:shadow-sm">
       <div className="text-center mb-5 md:mb-6">
         <p className="text-muted-foreground/70 text-xs tracking-widest uppercase">{formattedDate}</p>
         {!isDisplayToday && (
