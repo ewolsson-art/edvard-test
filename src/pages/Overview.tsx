@@ -553,9 +553,7 @@ const Overview = () => {
               stats={stats}
               entries={entries}
               periodLabel={label}
-              medicationPercentage={medPercentage}
               sleepBadDays={sleepBadDays}
-              showMedication={showMedication}
               showSleep={showSleep}
             />
 

@@ -1,14 +1,12 @@
 import { useMemo } from 'react';
 import { MoodStats as MoodStatsType, MoodEntry, MOOD_LABELS, MOOD_ICONS } from '@/types/mood';
-import { CalendarCheck, Pill, Moon, Repeat, Clock } from 'lucide-react';
+import { CalendarCheck, Moon, Repeat, Clock } from 'lucide-react';
 
 interface OverviewSummaryProps {
   stats: MoodStatsType;
   entries: MoodEntry[];
   periodLabel: string;
-  medicationPercentage: number;
   sleepBadDays: number;
-  showMedication: boolean;
   showSleep: boolean;
 }
 
@@ -16,9 +14,7 @@ export function OverviewSummary({
   stats,
   entries,
   periodLabel,
-  medicationPercentage,
   sleepBadDays,
-  showMedication,
   showSleep,
 }: OverviewSummaryProps) {
   // Current streak: how many consecutive days in the same mood state (from most recent)
@@ -119,13 +115,6 @@ export function OverviewSummary({
             value={`${sleepBadDays}`}
             label="Dålig sömn"
             warning
-          />
-        )}
-        {showMedication && (
-          <MetricCard
-            icon={Pill}
-            value={`${medicationPercentage}%`}
-            label="Medicin tagen"
           />
         )}
       </div>
