@@ -76,6 +76,7 @@ const Overview = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [exerciseDialogOpen, setExerciseDialogOpen] = useState(false);
   const [exerciseDialogDate, setExerciseDialogDate] = useState<Date | null>(null);
+  const [sectionView, setSectionView] = useState<'calendar' | 'stats'>('calendar');
   const navigate = useNavigate();
 
   const { entries, isLoaded, getEntryForDate, getEntriesForMonth, getEntriesForYear, getStatsForYear, updateExerciseTypes } = useMoodData();
