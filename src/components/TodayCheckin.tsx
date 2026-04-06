@@ -1,7 +1,7 @@
-import { useState, useEffect, useMemo, useRef } from 'react';
+import { useState, useEffect, useMemo, useRef, KeyboardEvent } from 'react';
 import { format, differenceInDays, parseISO, isToday } from 'date-fns';
 import { sv } from 'date-fns/locale';
-import { Flame, Zap, Sun, Cloud, CloudRain, MessageSquare, CheckCircle2, Pill, Pencil, Moon, Utensils, Dumbbell, ThumbsUp, ThumbsDown, Check, X, ChevronRight, ChevronLeft, Heart, AlertTriangle, HelpCircle, CalendarIcon } from 'lucide-react';
+import { Flame, Zap, Sun, Cloud, CloudRain, MessageSquare, CheckCircle2, Pill, Pencil, Moon, Utensils, Dumbbell, ThumbsUp, ThumbsDown, Check, X, ChevronRight, ChevronLeft, Heart, AlertTriangle, HelpCircle, CalendarIcon, Plus } from 'lucide-react';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { MoodType, MoodEntry, MOOD_LABELS, ENERGY_LABELS, QualityType, QUALITY_LABELS, CheckinData, EnergyType } from '@/types/mood';
@@ -644,6 +644,58 @@ export function TodayCheckin({
                 </button>
               );
             })}
+            {/* Custom tags already added */}
+            {(checkinData.tags || [])
+              .filter(t => !TAG_OPTIONS.some(o => o.value === t))
+              .map(tag => (
+                <button
+                  key={tag}
+                  onClick={() => handleTagToggle(tag)}
+                  className="px-4 py-2.5 rounded-full border text-sm font-medium transition-all duration-200 active:scale-95 bg-primary/15 border-primary/40 text-primary"
+                >
+                  <span className="mr-1.5">🏷️</span>
+                  {tag}
+                </button>
+              ))
+            }
+          </div>
+
+          {/* Custom tag input */}
+          <div className="flex items-center gap-2 max-w-sm mx-auto">
+            <div className="relative flex-1">
+              <input
+                type="text"
+                placeholder="Skriv en egen tagg..."
+                className="w-full px-4 py-2.5 rounded-full border border-border/50 bg-white/[0.04] text-sm text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:border-primary/40 focus:ring-1 focus:ring-primary/20 transition-all"
+                maxLength={30}
+                onKeyDown={(e: KeyboardEvent<HTMLInputElement>) => {
+                  if (e.key === 'Enter') {
+                    const val = (e.target as HTMLInputElement).value.trim().toLowerCase();
+                    if (val && !(checkinData.tags || []).includes(val)) {
+                      handleTagToggle(val);
+                    }
+                    (e.target as HTMLInputElement).value = '';
+                  }
+                }}
+              />
+            </div>
+            <button
+              type="button"
+              onClick={() => {
+                const input = document.querySelector<HTMLInputElement>('input[placeholder="Skriv en egen tagg..."]');
+                if (input) {
+                  const val = input.value.trim().toLowerCase();
+                  if (val && !(checkinData.tags || []).includes(val)) {
+                    handleTagToggle(val);
+                  }
+                  input.value = '';
+                }
+              }}
+              className="p-2.5 rounded-full border border-border/50 text-muted-foreground hover:text-primary hover:border-primary/40 transition-all"
+              aria-label="Lägg till tagg"
+            >
+              <Plus className="w-4 h-4" />
+            </button>
           </div>
 
           <div className="flex justify-center pt-2">
