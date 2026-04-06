@@ -136,12 +136,41 @@ export function OverviewSummary({
 
       {/* Current streak */}
       {currentStreak && currentStreak.days > 0 && (
-        <div className="rounded-xl bg-card/80 border border-border/30 px-4 py-3">
+        <div className="rounded-xl bg-card/80 border border-border/30 px-4 py-3 space-y-2">
           <p className="text-sm text-muted-foreground">
             <span className="text-base mr-1.5">{currentStreak.icon}</span>
             <span className="font-medium text-foreground">{currentStreak.days} {currentStreak.days === 1 ? 'dag' : 'dagar'}</span>
             {' '}i rad — {currentStreak.label}
           </p>
+          {/* Encouraging message when depressed */}
+          {(() => {
+            const isDepressed = entries.length > 0 && ['depressed', 'somewhat_depressed'].includes(
+              [...entries].sort((a, b) => b.date.localeCompare(a.date))[0]?.mood
+            );
+            if (!isDepressed || !allTimeDistribution) return null;
+            const depGroup = allTimeDistribution.find(g => g.key === 'depressed');
+            const stableGroup = allTimeDistribution.find(g => g.key === 'stable');
+            const avgDays = depGroup?.avgEpisodeDays || 0;
+            const stablePct = stableGroup?.percentage || 0;
+
+            return (
+              <div className="rounded-lg bg-emerald-500/10 border border-emerald-500/20 px-3 py-2.5 space-y-1">
+                <p className="text-sm font-medium text-emerald-400 flex items-center gap-1.5">
+                  <span>💚</span> Det vänder snart
+                </p>
+                {avgDays > 0 && (
+                  <p className="text-xs text-muted-foreground">
+                    Dina nedstämda perioder varar i snitt <span className="font-semibold text-foreground">{avgDays} {avgDays === 1 ? 'dag' : 'dagar'}</span>. Du är på dag {currentStreak.days}.
+                  </p>
+                )}
+                {stablePct > 0 && (
+                  <p className="text-xs text-muted-foreground">
+                    <span className="font-semibold text-foreground">{stablePct}%</span> av alla dina dagar har du mått stabilt — det är dit du är på väg.
+                  </p>
+                )}
+              </div>
+            );
+          })()}
         </div>
       )}
 
