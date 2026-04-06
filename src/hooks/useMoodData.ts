@@ -76,7 +76,7 @@ export function useMoodData() {
       exercise_types: data.exerciseTypes || null,
       medication_comment: data.medicationComment || null,
       medication_side_effects: data.medicationSideEffects || null,
-    };
+      tags: data.tags || null,
 
     const { error } = await supabase
       .from('mood_entries')
@@ -107,6 +107,7 @@ export function useMoodData() {
         exerciseTypes: data.exerciseTypes,
         medicationComment: data.medicationComment,
         medicationSideEffects: data.medicationSideEffects,
+        tags: data.tags,
         timestamp: Date.now(),
       };
       setEntries(prev => {
