@@ -536,28 +536,28 @@ const Overview = () => {
             </Tabs>
 
             {view !== '30days' && (
-              <div className="flex items-center gap-1 p-1 bg-muted/50 rounded-lg">
+              <div className="flex items-center gap-1 p-1.5 bg-muted/50 rounded-xl">
                 <button
                   onClick={() => setSectionView('calendar')}
-                  className={`p-2 rounded-md transition-all ${
+                  className={`p-2.5 rounded-lg transition-all ${
                     sectionView === 'calendar'
                       ? 'bg-background text-foreground shadow-sm'
                       : 'text-muted-foreground hover:text-foreground'
                   }`}
                   aria-label="Kalender"
                 >
-                  <CalendarDays className="w-4 h-4" />
+                  <CalendarDays className="w-6 h-6" />
                 </button>
                 <button
                   onClick={() => setSectionView('stats')}
-                  className={`p-2 rounded-md transition-all ${
+                  className={`p-2.5 rounded-lg transition-all ${
                     sectionView === 'stats'
                       ? 'bg-background text-foreground shadow-sm'
                       : 'text-muted-foreground hover:text-foreground'
                   }`}
                   aria-label="Statistik"
                 >
-                  <BarChart3 className="w-4 h-4" />
+                  <BarChart3 className="w-6 h-6" />
                 </button>
               </div>
             )}
