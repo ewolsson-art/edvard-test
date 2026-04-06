@@ -36,7 +36,7 @@ import { MoodStats as MoodStatsType, ExerciseType, QualityType } from '@/types/m
 import { Last30DaysOverview } from '@/components/Last30DaysOverview';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Dumbbell, Moon, Utensils } from 'lucide-react';
-type ViewType = 'week' | 'month' | 'year';
+type ViewType = 'month' | 'year';
 
 const Overview = () => {
   const [searchParams, setSearchParams] = useSearchParams();
