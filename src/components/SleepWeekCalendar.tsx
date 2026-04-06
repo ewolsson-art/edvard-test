@@ -77,45 +77,6 @@ export function SleepWeekCalendar({
         })}
       </div>
 
-      {/* Day details section */}
-      <div className="mt-6 space-y-3">
-        {weekDays.map((day) => {
-          const dateStr = format(day, 'yyyy-MM-dd');
-          const quality = getSleepForDate(dateStr);
-          const isTodayDate = isToday(day);
-
-          if (!quality) return null;
-
-          return (
-            <div
-              key={`detail-${dateStr}`}
-              className={cn(
-                "flex items-start gap-3 p-3 rounded-xl border transition-colors",
-                isTodayDate && "ring-2 ring-primary/30",
-                quality === 'good' && "bg-mood-stable/10 border-mood-stable/30",
-                quality === 'bad' && "bg-mood-depressed/10 border-mood-depressed/30"
-              )}
-            >
-              <span className="text-2xl">
-                {quality === 'good' ? '😴' : '😵'}
-              </span>
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2">
-                  <span className={cn(
-                    "text-sm font-medium",
-                    isTodayDate && "text-primary"
-                  )}>
-                    {format(day, 'EEEE d MMMM', { locale: sv })}
-                  </span>
-                </div>
-                <p className="text-sm text-muted-foreground mt-1">
-                  {quality === 'good' ? 'Sov bra' : 'Sov dåligt'}
-                </p>
-              </div>
-            </div>
-          );
-        })}
-      </div>
     </div>
   );
 }

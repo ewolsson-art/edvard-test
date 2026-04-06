@@ -91,49 +91,6 @@ export function ExerciseWeekCalendar({
         })}
       </div>
 
-      {/* Day details section */}
-      <div className="mt-6 space-y-3">
-        {weekDays.map((day) => {
-          const dateStr = format(day, 'yyyy-MM-dd');
-          const data = getExerciseForDate(dateStr);
-          const isTodayDate = isToday(day);
-
-          if (!data) return null;
-
-          return (
-            <div
-              key={`detail-${dateStr}`}
-              className={cn(
-                "flex items-start gap-3 p-3 rounded-xl border transition-colors",
-                isTodayDate && "ring-2 ring-primary/30",
-                data.exercised && "bg-mood-stable/10 border-mood-stable/30",
-                !data.exercised && "bg-mood-depressed/10 border-mood-depressed/30"
-              )}
-            >
-              <span className="text-2xl">
-                {data.exercised ? '💪' : '🛋️'}
-              </span>
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2">
-                  <span className={cn(
-                    "text-sm font-medium",
-                    isTodayDate && "text-primary"
-                  )}>
-                    {format(day, 'EEEE d MMMM', { locale: sv })}
-                  </span>
-                </div>
-                <p className="text-sm text-muted-foreground mt-1">
-                  {data.exercised 
-                    ? data.types && data.types.length > 0 
-                      ? data.types.map(t => EXERCISE_TYPE_LABELS[t]).join(', ')
-                      : 'Tränade'
-                    : 'Tränade inte'}
-                </p>
-              </div>
-            </div>
-          );
-        })}
-      </div>
     </div>
   );
 }
