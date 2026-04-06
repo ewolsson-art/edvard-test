@@ -786,3 +786,106 @@
     --tw-ring-color: hsl(var(--mood-depressed));
   }
 }
+
+/* ===== Celebration Animation ===== */
+@keyframes celebration-confetti-fall {
+  0% {
+    transform: translateY(-20px) translateX(0) rotate(0deg) scale(0);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+    transform: translateY(0) translateX(0) rotate(0deg) scale(1);
+  }
+  100% {
+    transform: translateY(calc(100vh)) translateX(var(--drift)) rotate(var(--spin));
+    opacity: 0;
+  }
+}
+
+@keyframes celebration-ring-expand {
+  0% {
+    width: 0;
+    height: 0;
+    opacity: 0.6;
+    border-width: 3px;
+  }
+  100% {
+    width: var(--ring-size);
+    height: var(--ring-size);
+    opacity: 0;
+    border-width: 1px;
+  }
+}
+
+@keyframes celebration-check-pop {
+  0% { transform: scale(0) rotate(-45deg); }
+  50% { transform: scale(1.15) rotate(5deg); }
+  70% { transform: scale(0.95) rotate(-2deg); }
+  100% { transform: scale(1) rotate(0deg); }
+}
+
+@keyframes celebration-check-stroke {
+  0% { stroke-dashoffset: 60; opacity: 0; }
+  30% { opacity: 1; }
+  100% { stroke-dashoffset: 0; opacity: 1; }
+}
+
+@keyframes celebration-sparkle {
+  0%, 100% { transform: scale(0) rotate(0deg); opacity: 0; }
+  50% { transform: scale(1.2) rotate(180deg); opacity: 1; }
+  80% { transform: scale(0.9) rotate(270deg); opacity: 0.8; }
+}
+
+@keyframes celebration-emoji-pop {
+  0% { transform: scale(0) rotate(-20deg); }
+  60% { transform: scale(1.3) rotate(5deg); }
+  100% { transform: scale(1) rotate(0deg); }
+}
+
+@keyframes celebration-glow-pulse {
+  0%, 100% { opacity: 0.3; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(1.1); }
+}
+
+.celebration-confetti {
+  position: absolute;
+  left: var(--x);
+  top: -10px;
+  width: var(--size);
+  height: var(--size);
+  background: var(--color);
+  border-radius: var(--shape);
+  animation: celebration-confetti-fall 2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+  animation-delay: var(--delay);
+  opacity: 0;
+}
+
+.celebration-ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 3px solid hsl(var(--primary) / 0.3);
+  animation: celebration-ring-expand 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-delay: var(--ring-delay);
+}
+
+.celebration-check-enter {
+  animation: celebration-check-pop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.celebration-check-draw {
+  animation: celebration-check-stroke 0.5s ease-out 0.2s forwards;
+}
+
+.celebration-sparkle {
+  animation: celebration-sparkle 1.2s ease-in-out infinite;
+  animation-delay: var(--sparkle-delay);
+}
+
+.celebration-emoji-pop {
+  animation: celebration-emoji-pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.celebration-glow {
+  animation: celebration-glow-pulse 2s ease-in-out infinite;
+}
