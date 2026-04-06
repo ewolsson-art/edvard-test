@@ -504,7 +504,6 @@ const Overview = () => {
       case 'week': return { stats: weekStats, exerciseStats: weekExerciseStats, sleepStats: weekSleepStats, eatingStats: weekEatingStats, medicationStats: weekMedicationStats, label: weekLabel };
       case 'month': return { stats: monthStats, exerciseStats: monthExerciseStats, sleepStats: monthSleepStats, eatingStats: monthEatingStats, medicationStats: monthMedicationStats, label: monthLabel };
       case 'year': return { stats: yearStats, exerciseStats: yearExerciseStats, sleepStats: yearSleepStats, eatingStats: yearEatingStats, medicationStats: yearMedicationStats, label: `${currentYear}` };
-      case '30days':
       default: return emptyStats;
     }
   };
@@ -533,8 +532,7 @@ const Overview = () => {
               </TabsList>
             </Tabs>
 
-            {view !== '30days' && (
-              <div className="flex items-center gap-1 p-1.5 bg-muted/50 rounded-xl">
+            <div className="flex items-center gap-1 p-1.5 bg-muted/50 rounded-xl">
                 <button
                   onClick={() => setSectionView('calendar')}
                   className={`p-2.5 rounded-lg transition-all ${
@@ -558,23 +556,10 @@ const Overview = () => {
                   <BarChart3 className="w-6 h-6" />
                 </button>
               </div>
-            )}
           </div>
         </header>
 
-        {/* Last 30 Days View */}
-        {view === '30days' && (
-          <Last30DaysOverview
-            entries={entries}
-            getEntryForDate={getEntryForDate}
-            getMedicationsTakenOnDate={getMedicationsTakenOnDate}
-            activeMedicationsCount={activeMedications.length}
-            preferences={preferences}
-            onDayClick={handleDayClick}
-          />
-        )}
-
-        {view !== '30days' && (
+        <>
           <>
             {/* Summary Card - only in stats view */}
             {sectionView === 'stats' && (
