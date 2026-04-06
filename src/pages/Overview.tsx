@@ -28,12 +28,13 @@ import { MedicationYearHeatmap } from '@/components/MedicationYearHeatmap';
 import { DayDetailDialog } from '@/components/DayDetailDialog';
 import { ExerciseTypeDialog } from '@/components/ExerciseTypeDialog';
 import { AIInsights } from '@/components/AIInsights';
+import { OverviewSummary } from '@/components/OverviewSummary';
+import { MoodDistributionBar } from '@/components/MoodDistributionBar';
 import { MoodStats as MoodStatsType, ExerciseType, QualityType } from '@/types/mood';
 import { Last30DaysOverview } from '@/components/Last30DaysOverview';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Dumbbell, Moon, Utensils, Pill } from 'lucide-react';
 import Reports from './Reports';
-
 type ViewType = 'week' | 'month' | 'year' | '30days';
 
 const Overview = () => {
