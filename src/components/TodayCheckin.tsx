@@ -1,10 +1,10 @@
 import { useState, useEffect, useMemo, useRef } from 'react';
 import { format, differenceInDays, parseISO, isToday } from 'date-fns';
 import { sv } from 'date-fns/locale';
-import { Zap, Sun, CloudRain, MessageSquare, CheckCircle2, Pill, Pencil, Moon, Utensils, Dumbbell, ThumbsUp, ThumbsDown, Check, X, ChevronRight, ChevronLeft, Heart, AlertTriangle, HelpCircle, CalendarIcon } from 'lucide-react';
+import { Flame, Zap, Sun, Cloud, CloudRain, MessageSquare, CheckCircle2, Pill, Pencil, Moon, Utensils, Dumbbell, ThumbsUp, ThumbsDown, Check, X, ChevronRight, ChevronLeft, Heart, AlertTriangle, HelpCircle, CalendarIcon, Battery, BatteryLow, BatteryMedium, BatteryFull } from 'lucide-react';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { MoodType, MoodEntry, MOOD_LABELS, QualityType, QUALITY_LABELS, CheckinData } from '@/types/mood';
+import { MoodType, MoodEntry, MOOD_LABELS, ENERGY_LABELS, QualityType, QUALITY_LABELS, CheckinData, EnergyType } from '@/types/mood';
 import { Medication } from '@/types/medication';
 import { UserPreferences } from '@/hooks/useUserPreferences';
 import { CustomQuestion } from '@/hooks/useCustomCheckinQuestions';
@@ -42,16 +42,44 @@ interface TodayCheckinProps {
   onSelectDate?: (date: Date) => void;
 }
 
-const moodButtons: { mood: MoodType; icon: typeof Zap; label: string; cssClass: string }[] = [
-  { mood: 'elevated', icon: Zap, label: MOOD_LABELS.elevated, cssClass: 'mood-btn-elevated' },
-  { mood: 'stable', icon: Sun, label: MOOD_LABELS.stable, cssClass: 'mood-btn-stable' },
-  { mood: 'depressed', icon: CloudRain, label: MOOD_LABELS.depressed, cssClass: 'mood-btn-depressed' },
+const moodButtons: { mood: MoodType; icon: typeof Zap; label: string; sublabel: string; cssClass: string }[] = [
+  { mood: 'elevated', icon: Flame, label: 'Mycket upp', sublabel: 'Rastlös, racing thoughts', cssClass: 'mood-btn-elevated' },
+  { mood: 'somewhat_elevated', icon: Zap, label: 'Upp', sublabel: 'Energisk, positiv', cssClass: 'mood-btn-somewhat-elevated' },
+  { mood: 'stable', icon: Sun, label: 'Stabil', sublabel: 'Balanserad, lugn', cssClass: 'mood-btn-stable' },
+  { mood: 'somewhat_depressed', icon: Cloud, label: 'Låg', sublabel: 'Tung, trött', cssClass: 'mood-btn-somewhat-depressed' },
+  { mood: 'depressed', icon: CloudRain, label: 'Mycket låg', sublabel: 'Mörkt, hopplöst', cssClass: 'mood-btn-depressed' },
 ];
 
-type Step = 'mood' | 'sleep' | 'eating' | 'exercise' | 'medication' | 'custom_questions' | 'success-animation' | 'complete';
+const energyButtons: { energy: EnergyType; icon: typeof Battery; label: string; cssClass: string }[] = [
+  { energy: 'low', icon: BatteryLow, label: 'Låg', cssClass: 'border-mood-somewhat-depressed/30 hover:border-mood-somewhat-depressed bg-mood-somewhat-depressed/5 hover:bg-mood-somewhat-depressed/10' },
+  { energy: 'normal', icon: BatteryMedium, label: 'Normal', cssClass: 'border-mood-stable/30 hover:border-mood-stable bg-mood-stable/5 hover:bg-mood-stable/10' },
+  { energy: 'high', icon: BatteryFull, label: 'Hög', cssClass: 'border-mood-somewhat-elevated/30 hover:border-mood-somewhat-elevated bg-mood-somewhat-elevated/5 hover:bg-mood-somewhat-elevated/10' },
+];
 
-// Default steps - will be filtered based on preferences
-const ALL_STEPS: Step[] = ['mood', 'sleep', 'eating', 'exercise', 'medication', 'custom_questions'];
+// Smart follow-up messages based on mood + energy combination
+function getSmartFollowUp(mood: MoodType, energy?: EnergyType): { message: string; icon: string } | null {
+  if (mood === 'depressed' && energy === 'high') {
+    return { message: 'Hög energi + lågt humör kan tyda på ångest. Försök andas lugnt.', icon: '💙' };
+  }
+  if (mood === 'depressed' || mood === 'somewhat_depressed') {
+    return { message: 'Det är tufft just nu. Kom ihåg att bättre dagar kommer.', icon: '💛' };
+  }
+  if (mood === 'elevated' && energy === 'high') {
+    return { message: 'Mycket hög energi + humör – känner du igen detta mönster?', icon: '⚠️' };
+  }
+  if (mood === 'elevated') {
+    return { message: 'Håll koll på sömnen och försök sakta ner lite.', icon: '🧘' };
+  }
+  if (mood === 'somewhat_elevated' && energy === 'high') {
+    return { message: 'Du verkar ha en bra dag! Njut av den.', icon: '✨' };
+  }
+  if (mood === 'stable') {
+    return { message: 'Bra att höra! Stabilitet är styrka.', icon: '☀️' };
+  }
+  return null;
+}
+
+type Step = 'mood' | 'energy' | 'sleep' | 'eating' | 'exercise' | 'medication' | 'custom_questions' | 'success-animation' | 'complete';
 
 export function TodayCheckin({ 
   todayEntry, 
@@ -75,7 +103,7 @@ export function TodayCheckin({
 
   // Build dynamic steps based on preferences
   const STEPS = useMemo(() => {
-    const steps: Step[] = ['mood']; // Mood is always included
+    const steps: Step[] = ['mood', 'energy']; // Mood + Energy always included
     
     if (preferences?.include_sleep) steps.push('sleep');
     if (preferences?.include_eating) steps.push('eating');
@@ -88,10 +116,9 @@ export function TodayCheckin({
 
   // Calculate encouragement data for depressed mood
   const encouragementData = useMemo(() => {
-    const goodDays = yearEntries.filter(e => e.mood === 'stable' || e.mood === 'elevated');
+    const goodDays = yearEntries.filter(e => e.mood === 'stable' || e.mood === 'somewhat_elevated');
     const goodDaysCount = goodDays.length;
     
-    // Find the most recent good day
     const sortedGoodDays = goodDays
       .map(e => ({ ...e, dateObj: parseISO(e.date) }))
       .sort((a, b) => b.dateObj.getTime() - a.dateObj.getTime());
@@ -138,6 +165,7 @@ export function TodayCheckin({
     if (todayEntry) {
       setCheckinData({
         mood: todayEntry.mood,
+        energyLevel: todayEntry.energyLevel,
         moodComment: todayEntry.comment,
         sleepQuality: todayEntry.sleepQuality,
         sleepComment: todayEntry.sleepComment,
@@ -182,9 +210,15 @@ export function TodayCheckin({
 
   const handleMoodSelect = (mood: MoodType) => {
     setCheckinData(prev => ({ ...prev, mood }));
-    const nextStep = getNextStep('mood');
+    // Always go to energy step next
+    navigateStep('energy');
+  };
+
+  const handleEnergySelect = (energy: EnergyType) => {
+    setCheckinData(prev => ({ ...prev, energyLevel: energy }));
+    const nextStep = getNextStep('energy');
     if (nextStep === 'success-animation') {
-      handleCompleteWithData({ ...checkinData, mood });
+      handleCompleteWithData({ ...checkinData, energyLevel: energy });
     } else {
       navigateStep(nextStep);
     }
@@ -235,7 +269,6 @@ export function TodayCheckin({
     const success = await onSaveCheckin(checkinData);
     if (success) {
       setCurrentStep('success-animation');
-      // Show animation for 2 seconds, then show complete state
       setTimeout(() => {
         setCurrentStep('complete');
         setIsEditing(false);
@@ -246,12 +279,6 @@ export function TodayCheckin({
   const handleEdit = () => {
     setIsEditing(true);
     setCurrentStep('mood');
-  };
-
-  const getStepProgress = () => {
-    const stepIndex = STEPS.indexOf(currentStep);
-    if (currentStep === 'complete' || isCheckinComplete) return 100;
-    return ((stepIndex) / STEPS.length) * 100;
   };
 
   const goBack = () => {
@@ -320,8 +347,33 @@ export function TodayCheckin({
 
   const hasMedications = activeMedications.length > 0;
 
+  // Helper to get mood icon and color for summary
+  const getMoodDisplay = (mood: MoodType) => {
+    const config: Record<MoodType, { icon: typeof Zap; colorClass: string; bgClass: string; borderClass: string }> = {
+      elevated: { icon: Flame, colorClass: 'text-mood-elevated', bgClass: 'bg-mood-elevated/10', borderClass: 'border-mood-elevated/20' },
+      somewhat_elevated: { icon: Zap, colorClass: 'text-mood-somewhat-elevated', bgClass: 'bg-mood-somewhat-elevated/10', borderClass: 'border-mood-somewhat-elevated/20' },
+      stable: { icon: Sun, colorClass: 'text-mood-stable', bgClass: 'bg-mood-stable/10', borderClass: 'border-mood-stable/20' },
+      somewhat_depressed: { icon: Cloud, colorClass: 'text-mood-somewhat-depressed', bgClass: 'bg-mood-somewhat-depressed/10', borderClass: 'border-mood-somewhat-depressed/20' },
+      depressed: { icon: CloudRain, colorClass: 'text-mood-depressed', bgClass: 'bg-mood-depressed/10', borderClass: 'border-mood-depressed/20' },
+    };
+    return config[mood];
+  };
+
+  const getEnergyDisplay = (energy: EnergyType) => {
+    const config: Record<EnergyType, { icon: typeof Battery; colorClass: string; label: string }> = {
+      low: { icon: BatteryLow, colorClass: 'text-mood-somewhat-depressed', label: 'Låg energi' },
+      normal: { icon: BatteryMedium, colorClass: 'text-mood-stable', label: 'Normal energi' },
+      high: { icon: BatteryFull, colorClass: 'text-mood-somewhat-elevated', label: 'Hög energi' },
+    };
+    return config[energy];
+  };
+
   // Show complete state
   if (isCheckinComplete && !isEditing) {
+    const moodDisplay = todayEntry ? getMoodDisplay(todayEntry.mood) : null;
+    const MoodIcon = moodDisplay?.icon || Sun;
+    const followUp = todayEntry ? getSmartFollowUp(todayEntry.mood, todayEntry.energyLevel) : null;
+
     return (
       <div className="fade-in h-full md:h-auto flex flex-col justify-center px-6 py-8 md:glass-card md:p-10 md:max-h-[calc(100vh-4rem)] md:overflow-y-auto md:border md:bg-card/80 md:rounded-2xl md:shadow-sm">
         <div className="text-center mb-6">
@@ -332,13 +384,23 @@ export function TodayCheckin({
         </div>
 
         <div className="text-center fade-in">
-          <div className="inline-flex items-center justify-center w-14 h-14 md:w-20 md:h-20 rounded-full bg-mood-stable/15 mb-4">
-            <CheckCircle2 className="w-7 h-7 md:w-10 md:h-10 text-mood-stable" />
+          <div className={cn("inline-flex items-center justify-center w-14 h-14 md:w-20 md:h-20 rounded-full mb-4", moodDisplay?.bgClass)}>
+            <CheckCircle2 className={cn("w-7 h-7 md:w-10 md:h-10", moodDisplay?.colorClass || 'text-mood-stable')} />
           </div>
           
-          <h1 className="font-display text-lg md:text-2xl font-bold text-mood-stable">
+          <h1 className="font-display text-lg md:text-2xl font-bold text-foreground">
             Du har checkat in!
           </h1>
+
+          {/* Smart follow-up message */}
+          {followUp && (
+            <div className="max-w-sm mx-auto mt-4 p-4 rounded-xl bg-card border border-border/50">
+              <p className="text-sm text-foreground leading-relaxed">
+                <span className="mr-1.5">{followUp.icon}</span>
+                {followUp.message}
+              </p>
+            </div>
+          )}
 
           {/* Streak badge */}
           {streakData.currentStreak > 0 && (
@@ -352,7 +414,7 @@ export function TodayCheckin({
           )}
 
           {/* Encouragement message for depressed mood */}
-          {todayEntry?.mood === 'depressed' && (
+          {(todayEntry?.mood === 'depressed' || todayEntry?.mood === 'somewhat_depressed') && (
             <div className="max-w-sm mx-auto mt-5 p-4 rounded-xl bg-primary/10 border border-primary/20">
               <div className="flex items-center justify-center gap-2 mb-2">
                 <Heart className="w-5 h-5 text-primary" />
@@ -372,17 +434,24 @@ export function TodayCheckin({
 
           {/* Summary */}
           <div className="max-w-sm mx-auto mt-5 space-y-2.5 text-left">
-            <div className={cn(
-              "flex items-center gap-3 px-4 py-3 rounded-xl border",
-              todayEntry?.mood === 'elevated' && "bg-mood-elevated/10 border-mood-elevated/20",
-              todayEntry?.mood === 'stable' && "bg-mood-stable/10 border-mood-stable/20",
-              todayEntry?.mood === 'depressed' && "bg-mood-depressed/10 border-mood-depressed/20",
-            )}>
-              {todayEntry?.mood === 'elevated' && <Zap className="w-5 h-5 text-mood-elevated flex-shrink-0" />}
-              {todayEntry?.mood === 'stable' && <Sun className="w-5 h-5 text-mood-stable flex-shrink-0" />}
-              {todayEntry?.mood === 'depressed' && <CloudRain className="w-5 h-5 text-mood-depressed flex-shrink-0" />}
-              <span className="text-sm font-medium">Mående: <strong>{MOOD_LABELS[todayEntry!.mood]}</strong></span>
-            </div>
+            {/* Mood summary */}
+            {todayEntry && moodDisplay && (
+              <div className={cn("flex items-center gap-3 px-4 py-3 rounded-xl border", moodDisplay.bgClass, moodDisplay.borderClass)}>
+                <MoodIcon className={cn("w-5 h-5 flex-shrink-0", moodDisplay.colorClass)} />
+                <span className="text-sm font-medium">Mående: <strong>{MOOD_LABELS[todayEntry.mood]}</strong></span>
+              </div>
+            )}
+            {/* Energy summary */}
+            {todayEntry?.energyLevel && (() => {
+              const energyDisplay = getEnergyDisplay(todayEntry.energyLevel);
+              const EnergyIcon = energyDisplay.icon;
+              return (
+                <div className="flex items-center gap-3 px-4 py-3 rounded-xl border bg-card border-border/50">
+                  <EnergyIcon className={cn("w-5 h-5 flex-shrink-0", energyDisplay.colorClass)} />
+                  <span className="text-sm font-medium">Energi: <strong>{energyDisplay.label}</strong></span>
+                </div>
+              );
+            })()}
             {preferences?.include_sleep && todayEntry?.sleepQuality && (
               <div className={cn(
                 "flex items-center gap-3 px-4 py-3 rounded-xl border",
@@ -445,7 +514,7 @@ export function TodayCheckin({
 
       {/* Progress dots */}
       {currentStep !== 'success-animation' && (
-        <div className="flex items-center justify-center gap-2.5 mb-8 md:mb-10">
+        <div className="flex items-center justify-center gap-2 mb-8 md:mb-10">
           {STEPS.map((step, i) => {
             const currentIndex = STEPS.indexOf(currentStep);
             const isActive = i === currentIndex;
@@ -463,7 +532,7 @@ export function TodayCheckin({
         </div>
       )}
 
-      {/* Step: Mood */}
+      {/* Step: Mood - 5 levels in vertical list */}
       {currentStep === 'mood' && (
         <div className={`space-y-6 md:space-y-8 step-slide-in relative`} key={stepKey}>
           <div className="flex items-center justify-between">
@@ -487,33 +556,79 @@ export function TodayCheckin({
           <div className="text-center">
             <h1 className="font-display text-2xl sm:text-3xl md:text-3xl font-bold leading-tight">
               {isDisplayToday 
-                ? (firstName ? `Hej ${firstName}! Hur har du mått idag?` : 'Hej! Hur har du mått idag?')
-                : (firstName ? `Hej ${firstName}! Hur mådde du den här dagen?` : 'Hur mådde du den här dagen?')
+                ? (firstName ? `Hej ${firstName}!` : 'Hej!')
+                : 'Hur mådde du?'
               }
             </h1>
+            <p className="text-muted-foreground mt-2 text-base">
+              {isDisplayToday ? 'Hur känns det idag?' : formattedDate}
+            </p>
           </div>
 
-          <div className="grid grid-cols-3 gap-3.5 md:gap-6 max-w-3xl mx-auto">
-            {moodButtons.map(({ mood, icon: Icon, label, cssClass }) => (
+          <div className="flex flex-col gap-3 max-w-md mx-auto">
+            {moodButtons.map(({ mood, icon: Icon, label, sublabel, cssClass }) => (
               <button
                 key={mood}
                 onClick={() => handleMoodSelect(mood)}
                 className={cn(
-                  "mood-btn rounded-[1.25rem] aspect-square flex flex-col items-center justify-center gap-3 group",
+                  "mood-btn rounded-2xl flex items-center gap-4 px-5 py-4 text-left group",
                   cssClass,
-                  checkinData.mood === mood && "ring-3 ring-offset-2 ring-offset-background scale-[1.02]"
+                  checkinData.mood === mood && "ring-3 ring-offset-2 ring-offset-background scale-[1.01]"
                 )}
               >
-                <div className="relative">
-                  <div className="absolute inset-0 bg-white/20 rounded-full blur-xl scale-150 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                  <Icon className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 relative z-10 transition-transform duration-300 group-hover:scale-110" />
+                <div className="relative flex-shrink-0">
+                  <Icon className="w-7 h-7 sm:w-8 sm:h-8 relative z-10 transition-transform duration-300 group-hover:scale-110" />
                 </div>
-                <span className="font-semibold text-sm sm:text-base text-center leading-tight tracking-wide">{label}</span>
+                <div className="flex-1 min-w-0">
+                  <span className="font-semibold text-base sm:text-lg block">{label}</span>
+                  <span className="text-xs sm:text-sm opacity-70 block">{sublabel}</span>
+                </div>
+                <ChevronRight className="w-5 h-5 opacity-40 group-hover:opacity-70 transition-opacity flex-shrink-0" />
               </button>
             ))}
           </div>
 
           {renderCommentSection('mood')}
+        </div>
+      )}
+
+      {/* Step: Energy */}
+      {currentStep === 'energy' && (
+        <div className={`space-y-6 md:space-y-8 step-slide-in`} key={stepKey}>
+          <div className="flex items-center justify-between">
+            <Button variant="ghost" size="sm" onClick={goBack} className="gap-1.5 text-muted-foreground/60">
+              <ChevronLeft className="w-4 h-4" />
+              Tillbaka
+            </Button>
+            <div />
+          </div>
+          <div className="text-center">
+            <Battery className="w-12 h-12 md:w-14 md:h-14 mx-auto mb-4 text-primary" />
+            <h1 className="font-display text-2xl sm:text-3xl font-bold">
+              Var är din energi?
+            </h1>
+            <p className="text-muted-foreground mt-2 text-sm">
+              Energi + humör ger en tydligare bild
+            </p>
+          </div>
+
+          <div className="grid grid-cols-3 gap-3 max-w-md mx-auto">
+            {energyButtons.map(({ energy, icon: Icon, label, cssClass }) => (
+              <button
+                key={energy}
+                onClick={() => handleEnergySelect(energy)}
+                className={cn(
+                  "rounded-2xl border-2 p-5 sm:p-6 flex flex-col items-center gap-3 transition-all duration-300",
+                  "hover:-translate-y-1 hover:shadow-lg active:scale-[0.98]",
+                  cssClass,
+                  checkinData.energyLevel === energy && "ring-2 ring-primary ring-offset-2 ring-offset-background scale-[1.01]"
+                )}
+              >
+                <Icon className="w-8 h-8 sm:w-10 sm:h-10" />
+                <span className="font-semibold text-base">{label}</span>
+              </button>
+            ))}
+          </div>
         </div>
       )}
 
@@ -745,7 +860,6 @@ export function TodayCheckin({
           <div className="grid grid-cols-2 gap-4 max-w-sm mx-auto">
             <button
               onClick={() => {
-                // Mark all medications as taken
                 activeMedications.forEach(med => {
                   if (!medicationsTakenToday.includes(med.id)) {
                     onToggleMedication(med.id, true);
@@ -765,7 +879,6 @@ export function TodayCheckin({
             </button>
             <button
               onClick={() => {
-                // Mark all medications as not taken
                 activeMedications.forEach(med => {
                   if (medicationsTakenToday.includes(med.id)) {
                     onToggleMedication(med.id, false);
@@ -827,7 +940,6 @@ export function TodayCheckin({
           {/* Side effects section */}
           <div className="max-w-md mx-auto space-y-4">
             <div className="border-t pt-4">
-              {/* Side effects section */}
               {showSideEffects && (
                 <div className="mt-3 space-y-2">
                   <p className="text-sm font-medium text-amber-600 dark:text-amber-400">
@@ -871,7 +983,6 @@ export function TodayCheckin({
               )}
             </div>
 
-            {/* Comment section */}
             {renderCommentSection('medication')}
 
             {isLastStep('medication') ? (

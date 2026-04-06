@@ -1,10 +1,12 @@
-export type MoodType = 'elevated' | 'stable' | 'depressed';
+export type MoodType = 'depressed' | 'somewhat_depressed' | 'stable' | 'somewhat_elevated' | 'elevated';
+export type EnergyType = 'low' | 'normal' | 'high';
 export type QualityType = 'good' | 'okay' | 'bad';
 export type ExerciseType = 'chest' | 'shoulders' | 'back' | 'legs';
 
 export interface MoodEntry {
   date: string; // ISO date string YYYY-MM-DD
   mood: MoodType;
+  energyLevel?: EnergyType;
   comment?: string;
   sleepQuality?: QualityType;
   sleepComment?: string;
@@ -20,6 +22,7 @@ export interface MoodEntry {
 
 export interface CheckinData {
   mood?: MoodType;
+  energyLevel?: EnergyType;
   moodComment?: string;
   sleepQuality?: QualityType;
   sleepComment?: string;
@@ -34,7 +37,9 @@ export interface CheckinData {
 
 export interface MoodStats {
   elevated: number;
+  somewhat_elevated: number;
   stable: number;
+  somewhat_depressed: number;
   depressed: number;
   unregistered: number;
   total: number;
@@ -42,15 +47,25 @@ export interface MoodStats {
 }
 
 export const MOOD_LABELS: Record<MoodType, string> = {
-  elevated: 'Uppvarvad',
+  elevated: 'Mycket upp',
+  somewhat_elevated: 'Upp',
   stable: 'Stabil',
-  depressed: 'Nedstämd',
+  somewhat_depressed: 'Låg',
+  depressed: 'Mycket låg',
 };
 
 export const MOOD_ICONS: Record<MoodType, string> = {
-  elevated: '⚡',
+  elevated: '🔥',
+  somewhat_elevated: '⚡',
   stable: '☀️',
+  somewhat_depressed: '🌥️',
   depressed: '🌧️',
+};
+
+export const ENERGY_LABELS: Record<EnergyType, string> = {
+  low: 'Låg',
+  normal: 'Normal',
+  high: 'Hög',
 };
 
 export const QUALITY_LABELS: Record<QualityType, string> = {
@@ -72,3 +87,15 @@ export const EXERCISE_TYPE_EMOJIS: Record<ExerciseType, string> = {
   back: '🧗',
   legs: '🦵',
 };
+
+// Map legacy 3-level mood types to new 5-level system
+export function normalizeMoodType(mood: string): MoodType {
+  switch (mood) {
+    case 'elevated': return 'elevated';
+    case 'somewhat_elevated': return 'somewhat_elevated';
+    case 'stable': return 'stable';
+    case 'somewhat_depressed': return 'somewhat_depressed';
+    case 'depressed': return 'depressed';
+    default: return 'stable';
+  }
+}

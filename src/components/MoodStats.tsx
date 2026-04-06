@@ -1,5 +1,5 @@
 import { MoodStats as MoodStatsType, MOOD_LABELS } from '@/types/mood';
-import { Zap, Sun, CloudRain, Calendar, HelpCircle } from 'lucide-react';
+import { Flame, Zap, Sun, Cloud, CloudRain, Calendar, HelpCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface MoodStatsProps {
@@ -11,12 +11,21 @@ export function MoodStats({ stats, periodLabel }: MoodStatsProps) {
   const statCards = [
     {
       key: 'elevated',
-      icon: Zap,
+      icon: Flame,
       count: stats.elevated,
       bgClass: 'bg-mood-elevated-light',
       textClass: 'text-mood-elevated',
       barClass: 'bg-mood-elevated',
       label: MOOD_LABELS.elevated,
+    },
+    {
+      key: 'somewhat_elevated',
+      icon: Zap,
+      count: stats.somewhat_elevated,
+      bgClass: 'bg-mood-somewhat-elevated-light',
+      textClass: 'text-mood-somewhat-elevated',
+      barClass: 'bg-mood-somewhat-elevated',
+      label: MOOD_LABELS.somewhat_elevated,
     },
     {
       key: 'stable',
@@ -26,6 +35,15 @@ export function MoodStats({ stats, periodLabel }: MoodStatsProps) {
       textClass: 'text-mood-stable',
       barClass: 'bg-mood-stable',
       label: MOOD_LABELS.stable,
+    },
+    {
+      key: 'somewhat_depressed',
+      icon: Cloud,
+      count: stats.somewhat_depressed,
+      bgClass: 'bg-mood-somewhat-depressed-light',
+      textClass: 'text-mood-somewhat-depressed',
+      barClass: 'bg-mood-somewhat-depressed',
+      label: MOOD_LABELS.somewhat_depressed,
     },
     {
       key: 'depressed',
@@ -61,23 +79,23 @@ export function MoodStats({ stats, periodLabel }: MoodStatsProps) {
         </h3>
       </div>
 
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
+      <div className="grid grid-cols-3 sm:grid-cols-6 gap-2 mb-6">
         {statCards.map(({ key, icon: Icon, count, bgClass, textClass, label }) => (
           <div
             key={key}
-            className={cn("stat-card text-center p-4", bgClass)}
+            className={cn("stat-card text-center p-3", bgClass)}
           >
-            <Icon className={cn("w-5 h-5 mx-auto mb-2", textClass)} />
-            <p className={cn("text-2xl font-bold", textClass)}>{count}</p>
-            <p className="text-xs text-muted-foreground mt-1">{label}</p>
-            <p className="text-xs text-muted-foreground">
+            <Icon className={cn("w-4 h-4 mx-auto mb-1", textClass)} />
+            <p className={cn("text-xl font-bold", textClass)}>{count}</p>
+            <p className="text-[10px] text-muted-foreground mt-1 leading-tight">{label}</p>
+            <p className="text-[10px] text-muted-foreground">
               {percentage(count)}%
             </p>
           </div>
         ))}
       </div>
 
-      <div className="space-y-3">
+      <div className="space-y-2">
         {statCards.map(({ key, count, label, barClass }) => (
           <div key={key} className="space-y-1">
             <div className="flex justify-between text-sm">

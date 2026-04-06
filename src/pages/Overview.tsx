@@ -89,17 +89,19 @@ const Overview = () => {
   }, [currentWeek]);
 
   const weekStats = useMemo((): MoodStatsType => {
-    let elevated = 0, stable = 0, depressed = 0;
+    let elevated = 0, somewhat_elevated = 0, stable = 0, somewhat_depressed = 0, depressed = 0;
     weekDays.forEach(day => {
       const entry = getEntryForDate(format(day, 'yyyy-MM-dd'));
       if (entry?.mood === 'elevated') elevated++;
-      if (entry?.mood === 'stable') stable++;
-      if (entry?.mood === 'depressed') depressed++;
+      else if (entry?.mood === 'somewhat_elevated') somewhat_elevated++;
+      else if (entry?.mood === 'stable') stable++;
+      else if (entry?.mood === 'somewhat_depressed') somewhat_depressed++;
+      else if (entry?.mood === 'depressed') depressed++;
     });
-    const total = elevated + stable + depressed;
+    const total = elevated + somewhat_elevated + stable + somewhat_depressed + depressed;
     const totalDays = weekDays.length;
     const unregistered = totalDays - total;
-    return { elevated, stable, depressed, unregistered, total, totalDays };
+    return { elevated, somewhat_elevated, stable, somewhat_depressed, depressed, unregistered, total, totalDays };
   }, [weekDays, getEntryForDate]);
 
   const weekExerciseStats = useMemo((): ExerciseStatsType => {
@@ -187,17 +189,19 @@ const Overview = () => {
   }, [currentMonth, getMedicationsTakenOnDate]);
 
   const monthStats = useMemo((): MoodStatsType => {
-    let elevated = 0, stable = 0, depressed = 0;
+    let elevated = 0, somewhat_elevated = 0, stable = 0, somewhat_depressed = 0, depressed = 0;
     Object.values(monthMoodData).forEach(mood => {
       if (mood === 'elevated') elevated++;
-      if (mood === 'stable') stable++;
-      if (mood === 'depressed') depressed++;
+      else if (mood === 'somewhat_elevated') somewhat_elevated++;
+      else if (mood === 'stable') stable++;
+      else if (mood === 'somewhat_depressed') somewhat_depressed++;
+      else if (mood === 'depressed') depressed++;
     });
-    const total = elevated + stable + depressed;
+    const total = elevated + somewhat_elevated + stable + somewhat_depressed + depressed;
     const end = endOfMonth(currentMonth);
     const totalDays = end.getDate();
     const unregistered = totalDays - total;
-    return { elevated, stable, depressed, unregistered, total, totalDays };
+    return { elevated, somewhat_elevated, stable, somewhat_depressed, depressed, unregistered, total, totalDays };
   }, [monthMoodData, currentMonth]);
 
   const monthExerciseStats = useMemo((): ExerciseStatsType => {
@@ -472,7 +476,7 @@ const Overview = () => {
   const getStatsForView = () => {
     // Default empty stats for 30days view (handled separately)
     const emptyStats = {
-      stats: { elevated: 0, stable: 0, depressed: 0, unregistered: 0, total: 0, totalDays: 0 },
+      stats: { elevated: 0, somewhat_elevated: 0, stable: 0, somewhat_depressed: 0, depressed: 0, unregistered: 0, total: 0, totalDays: 0 },
       exerciseStats: { exercised: 0, notExercised: 0, unregistered: 0, total: 0, totalDays: 0 },
       sleepStats: { good: 0, bad: 0, unregistered: 0, total: 0, totalDays: 0 },
       eatingStats: { good: 0, bad: 0, unregistered: 0, total: 0, totalDays: 0 },

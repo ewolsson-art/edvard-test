@@ -1,0 +1,1 @@
+ALTER TABLE public.mood_entries ADD COLUMN energy_level text DEFAULT NULL;
