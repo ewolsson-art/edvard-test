@@ -182,6 +182,7 @@ export function TodayCheckin({
         eatingComment: todayEntry.eatingComment,
         exercised: todayEntry.exercised,
         exerciseComment: todayEntry.exerciseComment,
+        tags: todayEntry.tags,
       });
     } else {
       setCheckinData({});
