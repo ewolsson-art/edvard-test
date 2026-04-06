@@ -470,16 +470,14 @@ const Overview = () => {
 
   // Calculate sleep bad days for summary
   const sleepBadDays = useMemo(() => {
-    if (view === 'week') return weekSleepStats.bad;
-    if (view === 'month') return monthSleepStats.bad;
-    if (view === 'year') return yearSleepStats.bad;
-    return 0;
+     if (view === 'month') return monthSleepStats.bad;
+     if (view === 'year') return yearSleepStats.bad;
+     return 0;
   }, [view, weekSleepStats, monthSleepStats, yearSleepStats]);
 
   const medPercentage = useMemo(() => {
-    const ms = view === 'week' ? weekMedicationStats 
-      : view === 'month' ? monthMedicationStats 
-      : view === 'year' ? yearMedicationStats : null;
+     const ms = view === 'month' ? monthMedicationStats 
+       : view === 'year' ? yearMedicationStats : null;
     if (!ms || ms.totalDays === 0) return 0;
     return Math.round((ms.taken / ms.totalDays) * 100);
   }, [view, weekMedicationStats, monthMedicationStats, yearMedicationStats]);
@@ -502,9 +500,8 @@ const Overview = () => {
       label: 'Senaste 30 dagarna'
     };
     switch (view) {
-      case 'week': return { stats: weekStats, exerciseStats: weekExerciseStats, sleepStats: weekSleepStats, eatingStats: weekEatingStats, medicationStats: weekMedicationStats, label: weekLabel };
-      case 'month': return { stats: monthStats, exerciseStats: monthExerciseStats, sleepStats: monthSleepStats, eatingStats: monthEatingStats, medicationStats: monthMedicationStats, label: monthLabel };
-      case 'year': return { stats: yearStats, exerciseStats: yearExerciseStats, sleepStats: yearSleepStats, eatingStats: yearEatingStats, medicationStats: yearMedicationStats, label: `${currentYear}` };
+       case 'month': return { stats: monthStats, exerciseStats: monthExerciseStats, sleepStats: monthSleepStats, eatingStats: monthEatingStats, medicationStats: monthMedicationStats, label: monthLabel };
+       case 'year': return { stats: yearStats, exerciseStats: yearExerciseStats, sleepStats: yearSleepStats, eatingStats: yearEatingStats, medicationStats: yearMedicationStats, label: `${currentYear}` };
       default: return emptyStats;
     }
   };
@@ -530,7 +527,6 @@ const Overview = () => {
           <div className="flex items-center gap-3">
             <Tabs value={view} onValueChange={handleViewChange} className="flex-1">
               <TabsList className="inline-flex w-full h-11 bg-muted/80 p-1 rounded-full gap-0">
-                <TabsTrigger value="week" className="flex-1 text-sm font-semibold px-2 py-1.5 rounded-full data-[state=active]:bg-muted-foreground/30 data-[state=active]:text-foreground data-[state=active]:shadow-none">V</TabsTrigger>
                 <TabsTrigger value="month" className="flex-1 text-sm font-semibold px-2 py-1.5 rounded-full data-[state=active]:bg-muted-foreground/30 data-[state=active]:text-foreground data-[state=active]:shadow-none">M</TabsTrigger>
                 <TabsTrigger value="year" className="flex-1 text-sm font-semibold px-2 py-1.5 rounded-full data-[state=active]:bg-muted-foreground/30 data-[state=active]:text-foreground data-[state=active]:shadow-none">ÅR</TabsTrigger>
               </TabsList>
@@ -580,14 +576,7 @@ const Overview = () => {
                 
                 {sectionView === 'calendar' ? (
                   <>
-                    {view === 'week' && (
-                      <WeekCalendar weekDays={weekDays} weekLabel={weekLabel}
-                        getEntryForDate={getEntryForDate} getMedicationsTakenOnDate={getMedicationsTakenOnDate}
-                        onPrevWeek={() => setCurrentWeek(prev => subWeeks(prev, 1))}
-                        onNextWeek={() => setCurrentWeek(prev => addWeeks(prev, 1))}
-                        onDayClick={handleDayClick} />
-                    )}
-                    {view === 'month' && (
+                     {view === 'month' && (
                       <ScrollableMonthsCalendar
                         year={currentYear}
                         type="mood"
@@ -625,14 +614,7 @@ const Overview = () => {
                 </div>
                 {sectionView === 'calendar' ? (
                   <>
-                    {view === 'week' && (
-                      <SleepWeekCalendar weekDays={weekDays} weekLabel={weekLabel}
-                        getSleepForDate={(dateStr) => getEntryForDate(dateStr)?.sleepQuality}
-                        onPrevWeek={() => setCurrentWeek(prev => subWeeks(prev, 1))}
-                        onNextWeek={() => setCurrentWeek(prev => addWeeks(prev, 1))}
-                        onDayClick={handleDayClick} />
-                    )}
-                    {view === 'month' && (
+                     {view === 'month' && (
                       <ScrollableMonthsCalendar
                         year={currentYear}
                         type="sleep"
@@ -662,14 +644,7 @@ const Overview = () => {
                 </div>
                 {sectionView === 'calendar' ? (
                   <>
-                    {view === 'week' && (
-                      <EatingWeekCalendar weekDays={weekDays} weekLabel={weekLabel}
-                        getEatingForDate={(dateStr) => getEntryForDate(dateStr)?.eatingQuality}
-                        onPrevWeek={() => setCurrentWeek(prev => subWeeks(prev, 1))}
-                        onNextWeek={() => setCurrentWeek(prev => addWeeks(prev, 1))}
-                        onDayClick={handleDayClick} />
-                    )}
-                    {view === 'month' && (
+                     {view === 'month' && (
                       <ScrollableMonthsCalendar
                         year={currentYear}
                         type="eating"
@@ -699,18 +674,7 @@ const Overview = () => {
                 </div>
                 {sectionView === 'calendar' ? (
                   <>
-                    {view === 'week' && (
-                      <ExerciseWeekCalendar weekDays={weekDays} weekLabel={weekLabel}
-                        getExerciseForDate={(dateStr) => {
-                          const entry = getEntryForDate(dateStr);
-                          if (entry?.exercised === undefined) return undefined;
-                          return { exercised: entry.exercised, types: entry.exerciseTypes };
-                        }}
-                        onPrevWeek={() => setCurrentWeek(prev => subWeeks(prev, 1))}
-                        onNextWeek={() => setCurrentWeek(prev => addWeeks(prev, 1))}
-                        onDayClick={handleExerciseDayClick} />
-                    )}
-                    {view === 'month' && (
+                     {view === 'month' && (
                       <ScrollableMonthsCalendar
                         year={currentYear}
                         type="exercise"
