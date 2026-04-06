@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { MoodEntry, MoodType, MoodStats, CheckinData, QualityType, ExerciseType } from '@/types/mood';
+import { MoodEntry, MoodType, MoodStats, CheckinData, QualityType, ExerciseType, EnergyType, normalizeMoodType } from '@/types/mood';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
@@ -35,7 +35,8 @@ export function useMoodData() {
       } else {
         const formattedEntries: MoodEntry[] = (data || []).map(entry => ({
           date: entry.date,
-          mood: entry.mood as MoodType,
+          mood: normalizeMoodType(entry.mood),
+          energyLevel: (entry as any).energy_level as EnergyType | undefined,
           comment: entry.comment || undefined,
           sleepQuality: entry.sleep_quality as QualityType | undefined,
           sleepComment: entry.sleep_comment || undefined,
@@ -64,6 +65,7 @@ export function useMoodData() {
       user_id: user.id,
       date,
       mood: data.mood,
+      energy_level: data.energyLevel || null,
       comment: data.moodComment || null,
       sleep_quality: data.sleepQuality || null,
       sleep_comment: data.sleepComment || null,
@@ -91,10 +93,10 @@ export function useMoodData() {
       });
       return false;
     } else {
-      // Update local state
       const newEntry: MoodEntry = {
         date,
         mood: data.mood!,
+        energyLevel: data.energyLevel,
         comment: data.moodComment,
         sleepQuality: data.sleepQuality,
         sleepComment: data.sleepComment,
@@ -168,7 +170,6 @@ export function useMoodData() {
         variant: "destructive",
       });
     } else {
-      // Update local state
       setEntries(prev => {
         const existing = prev.find(e => e.date === date);
         const filtered = prev.filter(e => e.date !== date);
@@ -234,13 +235,15 @@ export function useMoodData() {
   const getStatsForYear = useCallback((year: number): MoodStats => {
     const yearEntries = getEntriesForYear(year);
     const elevated = yearEntries.filter(e => e.mood === 'elevated').length;
+    const somewhat_elevated = yearEntries.filter(e => e.mood === 'somewhat_elevated').length;
     const stable = yearEntries.filter(e => e.mood === 'stable').length;
+    const somewhat_depressed = yearEntries.filter(e => e.mood === 'somewhat_depressed').length;
     const depressed = yearEntries.filter(e => e.mood === 'depressed').length;
-    const total = elevated + stable + depressed;
+    const total = elevated + somewhat_elevated + stable + somewhat_depressed + depressed;
     const isLeapYear = (year % 4 === 0 && year % 100 !== 0) || (year % 400 === 0);
     const totalDays = isLeapYear ? 366 : 365;
     const unregistered = totalDays - total;
-    return { elevated, stable, depressed, unregistered, total, totalDays };
+    return { elevated, somewhat_elevated, stable, somewhat_depressed, depressed, unregistered, total, totalDays };
   }, [getEntriesForYear]);
 
   const removeEntry = useCallback(async (date: string) => {
