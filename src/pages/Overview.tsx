@@ -590,7 +590,7 @@ const Overview = () => {
 
             {showMood && (
               <section>
-                <h2 className="font-display text-xl font-semibold mb-4">Mående</h2>
+                
                 {sectionView === 'calendar' ? (
                   <>
                     {view === 'week' && (
