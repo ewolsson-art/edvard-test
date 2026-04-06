@@ -109,9 +109,10 @@ export function AppSidebar() {
         {!isCollapsed && (
           <div className="px-6 mb-10">
             <Link 
-              to={homeUrl}
+              to="/profil"
               className="flex items-center gap-3.5 hover:opacity-80 transition-opacity"
-              aria-label="Gå till startsidan"
+              aria-label="Gå till min profil"
+              onClick={() => { if (isMobile) setOpenMobile(false); }}
             >
               <Avatar className="h-10 w-10 shrink-0 ring-1 ring-white/10">
                 {avatarUrl ? (
