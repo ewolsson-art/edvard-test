@@ -696,6 +696,8 @@ export function TodayCheckin({
             </button>
           </div>
 
+          {renderCommentSection('mood')}
+
           <div className="flex justify-center pt-2">
             <Button
               onClick={handleTagsContinue}
