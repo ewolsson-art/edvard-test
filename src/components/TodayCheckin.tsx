@@ -50,10 +50,19 @@ const moodButtons: { mood: MoodType; icon: typeof Zap; label: string; sublabel: 
   { mood: 'depressed', icon: CloudRain, label: 'Mycket låg', sublabel: 'Mörkt, hopplöst', cssClass: 'mood-btn-depressed' },
 ];
 
-const energyButtons: { energy: EnergyType; icon: typeof Battery; label: string; cssClass: string }[] = [
-  { energy: 'low', icon: BatteryLow, label: 'Låg', cssClass: 'border-mood-somewhat-depressed/30 hover:border-mood-somewhat-depressed bg-mood-somewhat-depressed/5 hover:bg-mood-somewhat-depressed/10' },
-  { energy: 'normal', icon: BatteryMedium, label: 'Normal', cssClass: 'border-mood-stable/30 hover:border-mood-stable bg-mood-stable/5 hover:bg-mood-stable/10' },
-  { energy: 'high', icon: BatteryFull, label: 'Hög', cssClass: 'border-mood-somewhat-elevated/30 hover:border-mood-somewhat-elevated bg-mood-somewhat-elevated/5 hover:bg-mood-somewhat-elevated/10' },
+const TAG_OPTIONS = [
+  { value: 'ångest', label: 'Ångest', emoji: '😰' },
+  { value: 'irritabilitet', label: 'Irritabilitet', emoji: '😤' },
+  { value: 'rastlöshet', label: 'Rastlöshet', emoji: '🦶' },
+  { value: 'sömnsvårigheter', label: 'Sömnsvårigheter', emoji: '🌙' },
+  { value: 'koncentrationssvårigheter', label: 'Fokussvårt', emoji: '🧠' },
+  { value: 'social tillbakadragning', label: 'Isolering', emoji: '🚪' },
+  { value: 'racing thoughts', label: 'Racing thoughts', emoji: '💭' },
+  { value: 'impulsivitet', label: 'Impulsivitet', emoji: '⚡' },
+  { value: 'gråtmild', label: 'Gråtmild', emoji: '😢' },
+  { value: 'hopplöshet', label: 'Hopplöshet', emoji: '🌑' },
+  { value: 'eufori', label: 'Eufori', emoji: '✨' },
+  { value: 'stress', label: 'Stress', emoji: '😓' },
 ];
 
 // Smart follow-up messages based on mood + energy combination
