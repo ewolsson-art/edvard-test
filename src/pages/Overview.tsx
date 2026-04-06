@@ -466,65 +466,6 @@ const Overview = () => {
     ? getMedicationsTakenOnDate(format(selectedDate, 'yyyy-MM-dd'))
     : [];
 
-  if (!isLoaded || !medsLoaded || prefsLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
-      </div>
-    );
-  }
-
-  const getStatsForView = () => {
-    // Default empty stats for 30days view (handled separately)
-    const emptyStats = {
-      stats: { elevated: 0, somewhat_elevated: 0, stable: 0, somewhat_depressed: 0, depressed: 0, unregistered: 0, total: 0, totalDays: 0 },
-      exerciseStats: { exercised: 0, notExercised: 0, unregistered: 0, total: 0, totalDays: 0 },
-      sleepStats: { good: 0, bad: 0, unregistered: 0, total: 0, totalDays: 0 },
-      eatingStats: { good: 0, bad: 0, unregistered: 0, total: 0, totalDays: 0 },
-      medicationStats: { taken: 0, notTaken: 0, unregistered: 0, total: 0, totalDays: 0 },
-      label: 'Senaste 30 dagarna'
-    };
-    
-    switch (view) {
-      case 'week': return { 
-        stats: weekStats, 
-        exerciseStats: weekExerciseStats, 
-        sleepStats: weekSleepStats,
-        eatingStats: weekEatingStats,
-        medicationStats: weekMedicationStats,
-        label: weekLabel 
-      };
-      case 'month': return { 
-        stats: monthStats, 
-        exerciseStats: monthExerciseStats, 
-        sleepStats: monthSleepStats,
-        eatingStats: monthEatingStats,
-        medicationStats: monthMedicationStats,
-        label: monthLabel 
-      };
-      case 'year': return { 
-        stats: yearStats, 
-        exerciseStats: yearExerciseStats, 
-        sleepStats: yearSleepStats,
-        eatingStats: yearEatingStats,
-        medicationStats: yearMedicationStats,
-        label: `${currentYear}` 
-      };
-      case '30days':
-      default:
-        return emptyStats;
-    }
-  };
-
-  const { stats, exerciseStats, sleepStats, eatingStats, medicationStats, label } = getStatsForView();
-  
-  // Check which sections to show based on preferences
-  const showMood = preferences?.include_mood !== false;
-  const showSleep = preferences?.include_sleep !== false;
-  const showEating = preferences?.include_eating !== false;
-  const showExercise = preferences?.include_exercise !== false;
-  const showMedication = preferences?.include_medication !== false && activeMedications.length > 0;
-
   // Calculate sleep bad days for summary
   const sleepBadDays = useMemo(() => {
     if (view === 'week') return weekSleepStats.bad;
@@ -540,6 +481,40 @@ const Overview = () => {
     if (!ms || ms.totalDays === 0) return 0;
     return Math.round((ms.taken / ms.totalDays) * 100);
   }, [view, weekMedicationStats, monthMedicationStats, yearMedicationStats]);
+
+  if (!isLoaded || !medsLoaded || prefsLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
+
+  const getStatsForView = () => {
+    const emptyStats = {
+      stats: { elevated: 0, somewhat_elevated: 0, stable: 0, somewhat_depressed: 0, depressed: 0, unregistered: 0, total: 0, totalDays: 0 },
+      exerciseStats: { exercised: 0, notExercised: 0, unregistered: 0, total: 0, totalDays: 0 },
+      sleepStats: { good: 0, bad: 0, unregistered: 0, total: 0, totalDays: 0 },
+      eatingStats: { good: 0, bad: 0, unregistered: 0, total: 0, totalDays: 0 },
+      medicationStats: { taken: 0, notTaken: 0, unregistered: 0, total: 0, totalDays: 0 },
+      label: 'Senaste 30 dagarna'
+    };
+    switch (view) {
+      case 'week': return { stats: weekStats, exerciseStats: weekExerciseStats, sleepStats: weekSleepStats, eatingStats: weekEatingStats, medicationStats: weekMedicationStats, label: weekLabel };
+      case 'month': return { stats: monthStats, exerciseStats: monthExerciseStats, sleepStats: monthSleepStats, eatingStats: monthEatingStats, medicationStats: monthMedicationStats, label: monthLabel };
+      case 'year': return { stats: yearStats, exerciseStats: yearExerciseStats, sleepStats: yearSleepStats, eatingStats: yearEatingStats, medicationStats: yearMedicationStats, label: `${currentYear}` };
+      case '30days':
+      default: return emptyStats;
+    }
+  };
+
+  const { stats, exerciseStats, sleepStats, eatingStats, medicationStats, label } = getStatsForView();
+  
+  const showMood = preferences?.include_mood !== false;
+  const showSleep = preferences?.include_sleep !== false;
+  const showEating = preferences?.include_eating !== false;
+  const showExercise = preferences?.include_exercise !== false;
+  const showMedication = preferences?.include_medication !== false && activeMedications.length > 0;
 
   return (
     <div className="p-5 md:p-8 pb-24">
