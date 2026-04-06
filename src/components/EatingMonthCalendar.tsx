@@ -9,9 +9,10 @@ import { QualityType } from '@/types/mood';
 interface EatingMonthCalendarProps {
   currentDate: Date;
   eatingData: Record<number, QualityType>;
-  onPrevMonth: () => void;
-  onNextMonth: () => void;
+  onPrevMonth?: () => void;
+  onNextMonth?: () => void;
   onDayClick?: (date: Date) => void;
+  hideNavigation?: boolean;
 }
 
 const weekDays = ['Mån', 'Tis', 'Ons', 'Tor', 'Fre', 'Lör', 'Sön'];
@@ -21,7 +22,8 @@ export function EatingMonthCalendar({
   eatingData,
   onPrevMonth, 
   onNextMonth,
-  onDayClick 
+  onDayClick,
+  hideNavigation = false,
 }: EatingMonthCalendarProps) {
   const days = useMemo(() => {
     const start = startOfWeek(startOfMonth(currentDate), { weekStartsOn: 1 });
@@ -33,11 +35,16 @@ export function EatingMonthCalendar({
 
   return (
     <div className="glass-card p-6 fade-in">
-      <CalendarHeader
-        title={monthYear}
-        onPrev={onPrevMonth}
-        onNext={onNextMonth}
-      />
+      {!hideNavigation && (
+        <CalendarHeader
+          title={monthYear}
+          onPrev={onPrevMonth!}
+          onNext={onNextMonth!}
+        />
+      )}
+      {hideNavigation && (
+        <h3 className="font-display text-xl font-semibold capitalize mb-4">{monthYear}</h3>
+      )}
 
       <div className="grid grid-cols-7 gap-2 mb-2">
         {weekDays.map(day => (
