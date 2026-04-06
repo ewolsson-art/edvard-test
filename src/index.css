@@ -110,9 +110,9 @@
     --mood-somewhat-depressed-light: 220 60% 95%;
     --mood-somewhat-depressed-foreground: 220 60% 28%;
 
-    --mood-depressed: 0 84% 60%;
-    --mood-depressed-light: 0 60% 95%;
-    --mood-depressed-foreground: 0 84% 30%;
+    --mood-depressed: 350 60% 52%;
+    --mood-depressed-light: 350 40% 94%;
+    --mood-depressed-foreground: 350 60% 28%;
 
     /* Sidebar - light */
     --sidebar-background: 40 25% 96%;
@@ -159,9 +159,9 @@
     --mood-somewhat-depressed: 220 55% 50%;
     --mood-somewhat-depressed-light: 220 30% 18%;
     --mood-somewhat-depressed-foreground: 220 55% 85%;
-    --mood-depressed: 0 70% 55%;
-    --mood-depressed-light: 0 30% 18%;
-    --mood-depressed-foreground: 0 70% 85%;
+    --mood-depressed: 350 55% 48%;
+    --mood-depressed-light: 350 25% 18%;
+    --mood-depressed-foreground: 350 55% 82%;
 
     --sidebar-background: 230 30% 5%;
     --sidebar-foreground: 0 0% 90%;
@@ -267,7 +267,7 @@
   }
 
   .mood-btn-depressed {
-    background: linear-gradient(145deg, hsl(var(--mood-depressed)) 0%, hsl(0 75% 52%) 100%);
+    background: linear-gradient(145deg, hsl(var(--mood-depressed)) 0%, hsl(345 50% 42%) 100%);
     @apply text-white shadow-lg shadow-mood-depressed/20;
     @apply hover:shadow-xl hover:shadow-mood-depressed/30;
     @apply focus:ring-mood-depressed;
