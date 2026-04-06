@@ -736,44 +736,6 @@ const Overview = () => {
               </section>
             )}
 
-            {/* 7. Medicin */}
-            {showMedication && (
-              <section>
-                <div className="flex items-center gap-2.5 mb-4">
-                  <Pill className="w-5 h-5 text-primary" />
-                  <h2 className="font-display text-xl font-semibold">Medicin</h2>
-                </div>
-                {sectionView === 'calendar' ? (
-                  <>
-                    {view === 'week' && (
-                      <MedicationWeekCalendar weekDays={weekDays} weekLabel={weekLabel}
-                        getMedicationForDate={(dateStr) => {
-                          const meds = getMedicationsTakenOnDate(dateStr);
-                          if (meds.length === 0 && !logs.some(log => log.date === dateStr)) return undefined;
-                          return { taken: meds.length, total: activeMedications.length, medicationNames: meds.map(m => m.name) };
-                        }}
-                        onPrevWeek={() => setCurrentWeek(prev => subWeeks(prev, 1))}
-                        onNextWeek={() => setCurrentWeek(prev => addWeeks(prev, 1))}
-                        onDayClick={handleDayClick} />
-                    )}
-                    {view === 'month' && (
-                      <MedicationMonthCalendar currentDate={currentMonth} medicationData={monthMedicationCalendarData}
-                        onPrevMonth={() => setCurrentMonth(prev => subMonths(prev, 1))}
-                        onNextMonth={() => setCurrentMonth(prev => addMonths(prev, 1))}
-                        onDayClick={handleDayClick} />
-                    )}
-                    {view === 'year' && (
-                      <MedicationYearHeatmap year={currentYear} medicationDates={yearMedicationDates}
-                        onPrevYear={() => setCurrentYear(prev => prev - 1)}
-                        onNextYear={() => setCurrentYear(prev => prev + 1)}
-                        onMonthClick={handleMonthClick} />
-                    )}
-                  </>
-                ) : (
-                  <MedicationStats stats={medicationStats} periodLabel={label} />
-                )}
-              </section>
-            )}
           </>
         )}
 
@@ -792,11 +754,6 @@ const Overview = () => {
           currentTypes={exerciseDialogDate ? (getEntryForDate(format(exerciseDialogDate, 'yyyy-MM-dd'))?.exerciseTypes || []) : []}
           onSave={handleSaveExerciseTypes}
         />
-
-        {/* Reports section */}
-        <div className="mt-8 pt-6 border-t border-border/30">
-          <Reports />
-        </div>
       </div>
     </div>
   );

@@ -9,7 +9,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Loader2, User, Mail, Save, Stethoscope, HeartPulse, Building2, Hospital, Users, ChevronRight, Pill, UserPlus, Heart, ClipboardList, Sparkles, Zap, Sun, Cloud } from 'lucide-react';
+import { Loader2, User, Mail, Save, Stethoscope, HeartPulse, Building2, Hospital, Users, ChevronRight, Pill, UserPlus, Heart, ClipboardList, Sparkles, Zap, Sun, Cloud, FileText } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { DiagnosesSection } from '@/components/DiagnosesSection';
 import { MedicationsSection } from '@/components/MedicationsSection';
