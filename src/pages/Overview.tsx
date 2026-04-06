@@ -10,22 +10,22 @@ import { MoodStats } from '@/components/MoodStats';
 import { ExerciseStats, ExerciseStatsType } from '@/components/ExerciseStats';
 import { SleepStats, SleepStatsType } from '@/components/SleepStats';
 import { EatingStats, EatingStatsType } from '@/components/EatingStats';
-import { MedicationStats, MedicationStatsType } from '@/components/MedicationStats';
+import { MedicationStatsType } from '@/components/MedicationStats';
 import { WeekCalendar } from '@/components/WeekCalendar';
 import { MonthCalendar } from '@/components/MonthCalendar';
 import { ExerciseMonthCalendar } from '@/components/ExerciseMonthCalendar';
 import { SleepMonthCalendar } from '@/components/SleepMonthCalendar';
 import { EatingMonthCalendar } from '@/components/EatingMonthCalendar';
-import { MedicationMonthCalendar } from '@/components/MedicationMonthCalendar';
+
 import { SleepWeekCalendar } from '@/components/SleepWeekCalendar';
 import { EatingWeekCalendar } from '@/components/EatingWeekCalendar';
 import { ExerciseWeekCalendar } from '@/components/ExerciseWeekCalendar';
-import { MedicationWeekCalendar } from '@/components/MedicationWeekCalendar';
+
 import { YearHeatmap } from '@/components/YearHeatmap';
 import { SleepYearHeatmap } from '@/components/SleepYearHeatmap';
 import { EatingYearHeatmap } from '@/components/EatingYearHeatmap';
 import { ExerciseYearHeatmap } from '@/components/ExerciseYearHeatmap';
-import { MedicationYearHeatmap } from '@/components/MedicationYearHeatmap';
+
 import { DayDetailDialog } from '@/components/DayDetailDialog';
 import { ExerciseTypeDialog } from '@/components/ExerciseTypeDialog';
 import { AIInsights } from '@/components/AIInsights';
@@ -34,8 +34,7 @@ import { MoodDistributionBar } from '@/components/MoodDistributionBar';
 import { MoodStats as MoodStatsType, ExerciseType, QualityType } from '@/types/mood';
 import { Last30DaysOverview } from '@/components/Last30DaysOverview';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Dumbbell, Moon, Utensils, Pill } from 'lucide-react';
-import Reports from './Reports';
+import { Dumbbell, Moon, Utensils } from 'lucide-react';
 type ViewType = 'week' | 'month' | 'year' | '30days';
 
 const Overview = () => {
