@@ -149,7 +149,7 @@ export function AppSidebar() {
               </div>
             )}
             <SidebarGroupContent>
-              <SidebarMenu className="space-y-1 px-3" role="menubar" aria-label={group.label}>
+              <SidebarMenu className="space-y-2.5 px-3" role="menubar" aria-label={group.label}>
                 {group.items.map((item) => {
                   const active = isActive(item.url);
                   const isPrimary = 'primary' in item && item.primary;
