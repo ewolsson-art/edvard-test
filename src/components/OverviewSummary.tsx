@@ -6,9 +6,7 @@ interface OverviewSummaryProps {
   stats: MoodStatsType;
   entries: MoodEntry[];
   periodLabel: string;
-  medicationPercentage: number;
   sleepBadDays: number;
-  showMedication: boolean;
   showSleep: boolean;
 }
 
