@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
-import { MoodStats as MoodStatsType, MoodEntry, MOOD_LABELS } from '@/types/mood';
-import { Activity, CalendarCheck, Pill, Moon, TrendingUp, TrendingDown, Minus } from 'lucide-react';
+import { MoodStats as MoodStatsType, MoodEntry } from '@/types/mood';
+import { Activity, CalendarCheck, Pill, Moon } from 'lucide-react';
 
 interface OverviewSummaryProps {
   stats: MoodStatsType;
@@ -14,7 +14,6 @@ interface OverviewSummaryProps {
 
 export function OverviewSummary({
   stats,
-  entries,
   periodLabel,
   medicationPercentage,
   sleepBadDays,
@@ -34,39 +33,9 @@ export function OverviewSummary({
     return moods.sort((a, b) => b.count - a.count)[0];
   }, [stats]);
 
-  // Determine trend from recent entries
-  const trend = useMemo(() => {
-    if (entries.length < 3) return 'neutral';
-    const recent = entries.slice(-7);
-    const moodValues: Record<string, number> = {
-      depressed: 1, somewhat_depressed: 2, stable: 3, somewhat_elevated: 4, elevated: 5,
-    };
-    const recentAvg = recent.reduce((sum, e) => sum + (moodValues[e.mood] || 3), 0) / recent.length;
-    const olderEntries = entries.slice(-14, -7);
-    if (olderEntries.length === 0) return 'neutral';
-    const olderAvg = olderEntries.reduce((sum, e) => sum + (moodValues[e.mood] || 3), 0) / olderEntries.length;
-    
-    if (recentAvg > olderAvg + 0.5) return 'up';
-    if (recentAvg < olderAvg - 0.5) return 'down';
-    return 'neutral';
-  }, [entries]);
-
   const registrationRate = stats.totalDays > 0 
     ? Math.round((stats.total / stats.totalDays) * 100) 
     : 0;
-
-  const trendText = trend === 'up' 
-    ? 'Uppåtgående trend' 
-    : trend === 'down' 
-    ? 'Nedåtgående trend' 
-    : 'Stabil trend';
-
-  const TrendIcon = trend === 'up' ? TrendingUp : trend === 'down' ? TrendingDown : Minus;
-  const trendColor = trend === 'up' 
-    ? 'text-mood-somewhat-elevated' 
-    : trend === 'down' 
-    ? 'text-mood-somewhat-depressed' 
-    : 'text-mood-stable';
 
   return (
     <div className="rounded-2xl bg-card/60 border border-border/40 p-5 space-y-4">
@@ -75,20 +44,11 @@ export function OverviewSummary({
         <span className="text-xs text-muted-foreground uppercase tracking-wider">{periodLabel}</span>
       </div>
 
-      {/* Trend indicator */}
-      <div className="flex items-center gap-2.5">
-        <div className={`flex items-center justify-center w-9 h-9 rounded-xl bg-card border border-border/50`}>
-          <TrendIcon className={`w-4.5 h-4.5 ${trendColor}`} />
-        </div>
-        <div>
-          <p className={`text-sm font-medium ${trendColor}`}>{trendText}</p>
-          {dominantMood && (
-            <p className="text-xs text-muted-foreground">
-              {dominantMood.label} dominerar ({dominantMood.count} dagar)
-            </p>
-          )}
-        </div>
-      </div>
+      {dominantMood && (
+        <p className="text-sm text-muted-foreground">
+          {dominantMood.label} dominerar ({dominantMood.count} dagar)
+        </p>
+      )}
 
       {/* Key metrics row */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
