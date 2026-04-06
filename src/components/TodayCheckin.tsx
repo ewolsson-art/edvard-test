@@ -376,14 +376,6 @@ export function TodayCheckin({
     return config[mood];
   };
 
-  const getEnergyDisplay = (energy: EnergyType) => {
-    const config: Record<EnergyType, { icon: typeof Battery; colorClass: string; label: string }> = {
-      low: { icon: BatteryLow, colorClass: 'text-mood-somewhat-depressed', label: 'Låg energi' },
-      normal: { icon: BatteryMedium, colorClass: 'text-mood-stable', label: 'Normal energi' },
-      high: { icon: BatteryFull, colorClass: 'text-mood-somewhat-elevated', label: 'Hög energi' },
-    };
-    return config[energy];
-  };
 
   // Show complete state
   if (isCheckinComplete && !isEditing) {
@@ -458,17 +450,15 @@ export function TodayCheckin({
                 <span className="text-sm font-medium">Mående: <strong>{MOOD_LABELS[todayEntry.mood]}</strong></span>
               </div>
             )}
-            {/* Energy summary */}
-            {todayEntry?.energyLevel && (() => {
-              const energyDisplay = getEnergyDisplay(todayEntry.energyLevel);
-              const EnergyIcon = energyDisplay.icon;
-              return (
-                <div className="flex items-center gap-3 px-4 py-3 rounded-xl border bg-card border-border/50">
-                  <EnergyIcon className={cn("w-5 h-5 flex-shrink-0", energyDisplay.colorClass)} />
-                  <span className="text-sm font-medium">Energi: <strong>{energyDisplay.label}</strong></span>
-                </div>
-              );
-            })()}
+            {/* Tags summary */}
+            {todayEntry?.tags && todayEntry.tags.length > 0 && (
+              <div className="flex items-center gap-3 px-4 py-3 rounded-xl border bg-card border-border/50">
+                <AlertTriangle className="w-5 h-5 flex-shrink-0 text-primary" />
+                <span className="text-sm font-medium">
+                  {todayEntry.tags.map(t => TAG_OPTIONS.find(o => o.value === t)?.label || t).join(', ')}
+                </span>
+              </div>
+            )}
             {preferences?.include_sleep && todayEntry?.sleepQuality && (
               <div className={cn(
                 "flex items-center gap-3 px-4 py-3 rounded-xl border",
