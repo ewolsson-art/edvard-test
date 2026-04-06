@@ -560,6 +560,32 @@ const Overview = () => {
             />
 
             {/* 2. Mood Distribution Bar */}
+            {/* Section view toggle */}
+            <div className="flex items-center gap-1 p-1 bg-muted/50 rounded-lg w-fit">
+              <button
+                onClick={() => setSectionView('calendar')}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-all ${
+                  sectionView === 'calendar'
+                    ? 'bg-background text-foreground shadow-sm'
+                    : 'text-muted-foreground hover:text-foreground'
+                }`}
+              >
+                <CalendarDays className="w-3.5 h-3.5" />
+                Kalender
+              </button>
+              <button
+                onClick={() => setSectionView('stats')}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-all ${
+                  sectionView === 'stats'
+                    ? 'bg-background text-foreground shadow-sm'
+                    : 'text-muted-foreground hover:text-foreground'
+                }`}
+              >
+                <BarChart3 className="w-3.5 h-3.5" />
+                Statistik
+              </button>
+            </div>
+
             {showMood && (
               <MoodDistributionBar stats={stats} periodLabel={label} />
             )}
