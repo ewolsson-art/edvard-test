@@ -564,25 +564,25 @@ const Overview = () => {
             <div className="flex items-center gap-1 p-1 bg-muted/50 rounded-lg w-fit">
               <button
                 onClick={() => setSectionView('calendar')}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-all ${
+                className={`p-2 rounded-md transition-all ${
                   sectionView === 'calendar'
                     ? 'bg-background text-foreground shadow-sm'
                     : 'text-muted-foreground hover:text-foreground'
                 }`}
+                aria-label="Kalender"
               >
-                <CalendarDays className="w-3.5 h-3.5" />
-                Kalender
+                <CalendarDays className="w-4 h-4" />
               </button>
               <button
                 onClick={() => setSectionView('stats')}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-all ${
+                className={`p-2 rounded-md transition-all ${
                   sectionView === 'stats'
                     ? 'bg-background text-foreground shadow-sm'
                     : 'text-muted-foreground hover:text-foreground'
                 }`}
+                aria-label="Statistik"
               >
-                <BarChart3 className="w-3.5 h-3.5" />
-                Statistik
+                <BarChart3 className="w-4 h-4" />
               </button>
             </div>
 
