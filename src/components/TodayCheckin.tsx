@@ -88,7 +88,7 @@ function getSmartFollowUp(mood: MoodType, energy?: EnergyType): { message: strin
   return null;
 }
 
-type Step = 'mood' | 'energy' | 'sleep' | 'eating' | 'exercise' | 'medication' | 'custom_questions' | 'success-animation' | 'complete';
+type Step = 'mood' | 'tags' | 'sleep' | 'eating' | 'exercise' | 'medication' | 'custom_questions' | 'success-animation' | 'complete';
 
 export function TodayCheckin({ 
   todayEntry, 
@@ -112,7 +112,7 @@ export function TodayCheckin({
 
   // Build dynamic steps based on preferences
   const STEPS = useMemo(() => {
-    const steps: Step[] = ['mood', 'energy']; // Mood + Energy always included
+    const steps: Step[] = ['mood', 'tags']; // Mood + Tags always included
     
     if (preferences?.include_sleep) steps.push('sleep');
     if (preferences?.include_eating) steps.push('eating');
@@ -219,15 +219,23 @@ export function TodayCheckin({
 
   const handleMoodSelect = (mood: MoodType) => {
     setCheckinData(prev => ({ ...prev, mood }));
-    // Always go to energy step next
-    navigateStep('energy');
+    navigateStep('tags');
   };
 
-  const handleEnergySelect = (energy: EnergyType) => {
-    setCheckinData(prev => ({ ...prev, energyLevel: energy }));
-    const nextStep = getNextStep('energy');
+  const handleTagToggle = (tag: string) => {
+    setCheckinData(prev => {
+      const current = prev.tags || [];
+      const updated = current.includes(tag) 
+        ? current.filter(t => t !== tag) 
+        : [...current, tag];
+      return { ...prev, tags: updated };
+    });
+  };
+
+  const handleTagsContinue = () => {
+    const nextStep = getNextStep('tags');
     if (nextStep === 'success-animation') {
-      handleCompleteWithData({ ...checkinData, energyLevel: energy });
+      handleCompleteWithData(checkinData);
     } else {
       navigateStep(nextStep);
     }
