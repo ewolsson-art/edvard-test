@@ -559,8 +559,6 @@ const Overview = () => {
           </div>
         </header>
 
-        <>
-          <>
             {/* Summary Card - only in stats view */}
             {sectionView === 'stats' && (
               <OverviewSummary
