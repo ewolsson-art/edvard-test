@@ -664,10 +664,11 @@ export function TodayCheckin({
 
           {/* Heading */}
           <div className="mb-8">
+            <p className="text-muted-foreground/50 text-[13px] tracking-wide capitalize mb-1.5">{formattedDate}</p>
             <h1 className="font-display text-[28px] sm:text-3xl font-bold tracking-tight">
               Något som stack ut?
             </h1>
-            <p className="text-muted-foreground/60 mt-1.5 text-[15px]">
+            <p className="text-muted-foreground/60 mt-1 text-[15px]">
               Välj det som stämmer – eller hoppa vidare
             </p>
           </div>
@@ -784,6 +785,7 @@ export function TodayCheckin({
 
           {/* Heading */}
           <div className="mb-8">
+            <p className="text-muted-foreground/50 text-[13px] tracking-wide capitalize mb-1.5">{formattedDate}</p>
             <h1 className="font-display text-[28px] sm:text-3xl font-bold tracking-tight">
               Hur har du sovit?
             </h1>
@@ -845,6 +847,7 @@ export function TodayCheckin({
 
           {/* Heading */}
           <div className="mb-8">
+            <p className="text-muted-foreground/50 text-[13px] tracking-wide capitalize mb-1.5">{formattedDate}</p>
             <h1 className="font-display text-[28px] sm:text-3xl font-bold tracking-tight">
               Hur har du ätit?
             </h1>
@@ -916,6 +919,7 @@ export function TodayCheckin({
 
           {/* Heading */}
           <div className="mb-8">
+            <p className="text-muted-foreground/50 text-[13px] tracking-wide capitalize mb-1.5">{formattedDate}</p>
             <h1 className="font-display text-[28px] sm:text-3xl font-bold tracking-tight">
               Har du tränat?
             </h1>
@@ -989,6 +993,7 @@ export function TodayCheckin({
 
           {/* Heading */}
           <div className="mb-8">
+            <p className="text-muted-foreground/50 text-[13px] tracking-wide capitalize mb-1.5">{formattedDate}</p>
             <h1 className="font-display text-[28px] sm:text-3xl font-bold tracking-tight">
               Hur gick det med medicinen?
             </h1>
