@@ -50,20 +50,61 @@ const moodButtons: { mood: MoodType; icon: typeof Zap; label: string; sublabel: 
   { mood: 'depressed', icon: CloudRain, label: 'Mycket låg', sublabel: 'Mörkt, hopplöst', cssClass: 'mood-btn-depressed' },
 ];
 
-const TAG_OPTIONS = [
-  { value: 'ångest', label: 'Ångest', emoji: '😰' },
-  { value: 'irritabilitet', label: 'Irritabilitet', emoji: '😤' },
-  { value: 'rastlöshet', label: 'Rastlöshet', emoji: '🦶' },
-  { value: 'sömnsvårigheter', label: 'Sömnsvårigheter', emoji: '🌙' },
-  { value: 'koncentrationssvårigheter', label: 'Fokussvårt', emoji: '🧠' },
-  { value: 'social tillbakadragning', label: 'Isolering', emoji: '🚪' },
-  { value: 'racing thoughts', label: 'Racing thoughts', emoji: '💭' },
-  { value: 'impulsivitet', label: 'Impulsivitet', emoji: '⚡' },
-  { value: 'gråtmild', label: 'Gråtmild', emoji: '😢' },
-  { value: 'hopplöshet', label: 'Hopplöshet', emoji: '🌑' },
-  { value: 'eufori', label: 'Eufori', emoji: '✨' },
-  { value: 'stress', label: 'Stress', emoji: '😓' },
-];
+const MOOD_TAGS: Record<MoodType, { value: string; label: string; emoji: string }[]> = {
+  elevated: [
+    { value: 'racing thoughts', label: 'Racing thoughts', emoji: '💭' },
+    { value: 'rastlöshet', label: 'Rastlöshet', emoji: '🦶' },
+    { value: 'impulsivitet', label: 'Impulsivitet', emoji: '⚡' },
+    { value: 'eufori', label: 'Eufori', emoji: '✨' },
+    { value: 'irritabilitet', label: 'Irritabilitet', emoji: '😤' },
+    { value: 'sömnsvårigheter', label: 'Sömnsvårt', emoji: '🌙' },
+    { value: 'storslagna planer', label: 'Storslagna planer', emoji: '🏔️' },
+    { value: 'pratar mycket', label: 'Pratar mycket', emoji: '🗣️' },
+  ],
+  somewhat_elevated: [
+    { value: 'rastlöshet', label: 'Rastlöshet', emoji: '🦶' },
+    { value: 'impulsivitet', label: 'Impulsivitet', emoji: '⚡' },
+    { value: 'irritabilitet', label: 'Irritabilitet', emoji: '😤' },
+    { value: 'kreativ', label: 'Kreativ', emoji: '🎨' },
+    { value: 'social', label: 'Social', emoji: '👥' },
+    { value: 'sömnsvårigheter', label: 'Sömnsvårt', emoji: '🌙' },
+    { value: 'produktiv', label: 'Produktiv', emoji: '🚀' },
+    { value: 'stress', label: 'Stress', emoji: '😓' },
+  ],
+  stable: [
+    { value: 'lugn', label: 'Lugn', emoji: '🧘' },
+    { value: 'fokuserad', label: 'Fokuserad', emoji: '🎯' },
+    { value: 'tacksam', label: 'Tacksam', emoji: '🙏' },
+    { value: 'social', label: 'Social', emoji: '👥' },
+    { value: 'stress', label: 'Stress', emoji: '😓' },
+    { value: 'ångest', label: 'Ångest', emoji: '😰' },
+    { value: 'trött', label: 'Trött', emoji: '😴' },
+    { value: 'nöjd', label: 'Nöjd', emoji: '😊' },
+  ],
+  somewhat_depressed: [
+    { value: 'ångest', label: 'Ångest', emoji: '😰' },
+    { value: 'trött', label: 'Trött', emoji: '😴' },
+    { value: 'koncentrationssvårigheter', label: 'Fokussvårt', emoji: '🧠' },
+    { value: 'social tillbakadragning', label: 'Isolering', emoji: '🚪' },
+    { value: 'gråtmild', label: 'Gråtmild', emoji: '😢' },
+    { value: 'irritabilitet', label: 'Irritabilitet', emoji: '😤' },
+    { value: 'stress', label: 'Stress', emoji: '😓' },
+    { value: 'sömnsvårigheter', label: 'Sömnsvårt', emoji: '🌙' },
+  ],
+  depressed: [
+    { value: 'hopplöshet', label: 'Hopplöshet', emoji: '🌑' },
+    { value: 'ångest', label: 'Ångest', emoji: '😰' },
+    { value: 'gråtmild', label: 'Gråtmild', emoji: '😢' },
+    { value: 'social tillbakadragning', label: 'Isolering', emoji: '🚪' },
+    { value: 'koncentrationssvårigheter', label: 'Fokussvårt', emoji: '🧠' },
+    { value: 'tomhet', label: 'Tomhet', emoji: '🫥' },
+    { value: 'skuldkänslor', label: 'Skuldkänslor', emoji: '😞' },
+    { value: 'sömnsvårigheter', label: 'Sömnsvårt', emoji: '🌙' },
+  ],
+};
+
+// All unique tags for display in summaries
+const ALL_TAG_OPTIONS = Object.values(MOOD_TAGS).flat().filter((t, i, arr) => arr.findIndex(a => a.value === t.value) === i);
 
 // Smart follow-up messages based on mood + energy combination
 function getSmartFollowUp(mood: MoodType, energy?: EnergyType): { message: string; icon: string } | null {
