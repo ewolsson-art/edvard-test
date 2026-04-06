@@ -750,9 +750,6 @@ const Overview = () => {
                 </div>
               </section>
             )}
-
-            {/* 8. AI Insights */}
-            <AIInsights entries={entries} stats={stats} periodLabel={label} view={view} />
           </>
         )}
 
