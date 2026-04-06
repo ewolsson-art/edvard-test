@@ -292,6 +292,7 @@ export type Database = {
           mood: string
           sleep_comment: string | null
           sleep_quality: string | null
+          tags: string[] | null
           updated_at: string
           user_id: string
         }
@@ -311,6 +312,7 @@ export type Database = {
           mood: string
           sleep_comment?: string | null
           sleep_quality?: string | null
+          tags?: string[] | null
           updated_at?: string
           user_id: string
         }
@@ -330,6 +332,7 @@ export type Database = {
           mood?: string
           sleep_comment?: string | null
           sleep_quality?: string | null
+          tags?: string[] | null
           updated_at?: string
           user_id?: string
         }

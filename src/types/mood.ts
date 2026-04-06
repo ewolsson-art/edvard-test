@@ -17,6 +17,7 @@ export interface MoodEntry {
   exerciseTypes?: ExerciseType[];
   medicationComment?: string;
   medicationSideEffects?: string[];
+  tags?: string[];
   timestamp: number;
 }
 
@@ -33,6 +34,7 @@ export interface CheckinData {
   exerciseTypes?: ExerciseType[];
   medicationComment?: string;
   medicationSideEffects?: string[];
+  tags?: string[];
 }
 
 export interface MoodStats {

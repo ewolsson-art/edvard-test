@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo, useRef } from 'react';
 import { format, differenceInDays, parseISO, isToday } from 'date-fns';
 import { sv } from 'date-fns/locale';
-import { Flame, Zap, Sun, Cloud, CloudRain, MessageSquare, CheckCircle2, Pill, Pencil, Moon, Utensils, Dumbbell, ThumbsUp, ThumbsDown, Check, X, ChevronRight, ChevronLeft, Heart, AlertTriangle, HelpCircle, CalendarIcon, Battery, BatteryLow, BatteryMedium, BatteryFull } from 'lucide-react';
+import { Flame, Zap, Sun, Cloud, CloudRain, MessageSquare, CheckCircle2, Pill, Pencil, Moon, Utensils, Dumbbell, ThumbsUp, ThumbsDown, Check, X, ChevronRight, ChevronLeft, Heart, AlertTriangle, HelpCircle, CalendarIcon } from 'lucide-react';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { MoodType, MoodEntry, MOOD_LABELS, ENERGY_LABELS, QualityType, QUALITY_LABELS, CheckinData, EnergyType } from '@/types/mood';
@@ -50,10 +50,19 @@ const moodButtons: { mood: MoodType; icon: typeof Zap; label: string; sublabel: 
   { mood: 'depressed', icon: CloudRain, label: 'Mycket låg', sublabel: 'Mörkt, hopplöst', cssClass: 'mood-btn-depressed' },
 ];
 
-const energyButtons: { energy: EnergyType; icon: typeof Battery; label: string; cssClass: string }[] = [
-  { energy: 'low', icon: BatteryLow, label: 'Låg', cssClass: 'border-mood-somewhat-depressed/30 hover:border-mood-somewhat-depressed bg-mood-somewhat-depressed/5 hover:bg-mood-somewhat-depressed/10' },
-  { energy: 'normal', icon: BatteryMedium, label: 'Normal', cssClass: 'border-mood-stable/30 hover:border-mood-stable bg-mood-stable/5 hover:bg-mood-stable/10' },
-  { energy: 'high', icon: BatteryFull, label: 'Hög', cssClass: 'border-mood-somewhat-elevated/30 hover:border-mood-somewhat-elevated bg-mood-somewhat-elevated/5 hover:bg-mood-somewhat-elevated/10' },
+const TAG_OPTIONS = [
+  { value: 'ångest', label: 'Ångest', emoji: '😰' },
+  { value: 'irritabilitet', label: 'Irritabilitet', emoji: '😤' },
+  { value: 'rastlöshet', label: 'Rastlöshet', emoji: '🦶' },
+  { value: 'sömnsvårigheter', label: 'Sömnsvårigheter', emoji: '🌙' },
+  { value: 'koncentrationssvårigheter', label: 'Fokussvårt', emoji: '🧠' },
+  { value: 'social tillbakadragning', label: 'Isolering', emoji: '🚪' },
+  { value: 'racing thoughts', label: 'Racing thoughts', emoji: '💭' },
+  { value: 'impulsivitet', label: 'Impulsivitet', emoji: '⚡' },
+  { value: 'gråtmild', label: 'Gråtmild', emoji: '😢' },
+  { value: 'hopplöshet', label: 'Hopplöshet', emoji: '🌑' },
+  { value: 'eufori', label: 'Eufori', emoji: '✨' },
+  { value: 'stress', label: 'Stress', emoji: '😓' },
 ];
 
 // Smart follow-up messages based on mood + energy combination
@@ -79,7 +88,7 @@ function getSmartFollowUp(mood: MoodType, energy?: EnergyType): { message: strin
   return null;
 }
 
-type Step = 'mood' | 'energy' | 'sleep' | 'eating' | 'exercise' | 'medication' | 'custom_questions' | 'success-animation' | 'complete';
+type Step = 'mood' | 'tags' | 'sleep' | 'eating' | 'exercise' | 'medication' | 'custom_questions' | 'success-animation' | 'complete';
 
 export function TodayCheckin({ 
   todayEntry, 
@@ -103,7 +112,7 @@ export function TodayCheckin({
 
   // Build dynamic steps based on preferences
   const STEPS = useMemo(() => {
-    const steps: Step[] = ['mood', 'energy']; // Mood + Energy always included
+    const steps: Step[] = ['mood', 'tags']; // Mood + Tags always included
     
     if (preferences?.include_sleep) steps.push('sleep');
     if (preferences?.include_eating) steps.push('eating');
@@ -173,6 +182,7 @@ export function TodayCheckin({
         eatingComment: todayEntry.eatingComment,
         exercised: todayEntry.exercised,
         exerciseComment: todayEntry.exerciseComment,
+        tags: todayEntry.tags,
       });
     } else {
       setCheckinData({});
@@ -210,15 +220,23 @@ export function TodayCheckin({
 
   const handleMoodSelect = (mood: MoodType) => {
     setCheckinData(prev => ({ ...prev, mood }));
-    // Always go to energy step next
-    navigateStep('energy');
+    navigateStep('tags');
   };
 
-  const handleEnergySelect = (energy: EnergyType) => {
-    setCheckinData(prev => ({ ...prev, energyLevel: energy }));
-    const nextStep = getNextStep('energy');
+  const handleTagToggle = (tag: string) => {
+    setCheckinData(prev => {
+      const current = prev.tags || [];
+      const updated = current.includes(tag) 
+        ? current.filter(t => t !== tag) 
+        : [...current, tag];
+      return { ...prev, tags: updated };
+    });
+  };
+
+  const handleTagsContinue = () => {
+    const nextStep = getNextStep('tags');
     if (nextStep === 'success-animation') {
-      handleCompleteWithData({ ...checkinData, energyLevel: energy });
+      handleCompleteWithData(checkinData);
     } else {
       navigateStep(nextStep);
     }
@@ -359,14 +377,6 @@ export function TodayCheckin({
     return config[mood];
   };
 
-  const getEnergyDisplay = (energy: EnergyType) => {
-    const config: Record<EnergyType, { icon: typeof Battery; colorClass: string; label: string }> = {
-      low: { icon: BatteryLow, colorClass: 'text-mood-somewhat-depressed', label: 'Låg energi' },
-      normal: { icon: BatteryMedium, colorClass: 'text-mood-stable', label: 'Normal energi' },
-      high: { icon: BatteryFull, colorClass: 'text-mood-somewhat-elevated', label: 'Hög energi' },
-    };
-    return config[energy];
-  };
 
   // Show complete state
   if (isCheckinComplete && !isEditing) {
@@ -441,17 +451,15 @@ export function TodayCheckin({
                 <span className="text-sm font-medium">Mående: <strong>{MOOD_LABELS[todayEntry.mood]}</strong></span>
               </div>
             )}
-            {/* Energy summary */}
-            {todayEntry?.energyLevel && (() => {
-              const energyDisplay = getEnergyDisplay(todayEntry.energyLevel);
-              const EnergyIcon = energyDisplay.icon;
-              return (
-                <div className="flex items-center gap-3 px-4 py-3 rounded-xl border bg-card border-border/50">
-                  <EnergyIcon className={cn("w-5 h-5 flex-shrink-0", energyDisplay.colorClass)} />
-                  <span className="text-sm font-medium">Energi: <strong>{energyDisplay.label}</strong></span>
-                </div>
-              );
-            })()}
+            {/* Tags summary */}
+            {todayEntry?.tags && todayEntry.tags.length > 0 && (
+              <div className="flex items-center gap-3 px-4 py-3 rounded-xl border bg-card border-border/50">
+                <AlertTriangle className="w-5 h-5 flex-shrink-0 text-primary" />
+                <span className="text-sm font-medium">
+                  {todayEntry.tags.map(t => TAG_OPTIONS.find(o => o.value === t)?.label || t).join(', ')}
+                </span>
+              </div>
+            )}
             {preferences?.include_sleep && todayEntry?.sleepQuality && (
               <div className={cn(
                 "flex items-center gap-3 px-4 py-3 rounded-xl border",
@@ -597,8 +605,8 @@ export function TodayCheckin({
         </div>
       )}
 
-      {/* Step: Energy */}
-      {currentStep === 'energy' && (
+      {/* Step: Tags */}
+      {currentStep === 'tags' && (
         <div className={`space-y-6 md:space-y-8 step-slide-in`} key={stepKey}>
           <div className="flex items-center justify-between">
             <Button variant="ghost" size="sm" onClick={goBack} className="gap-1.5 text-muted-foreground/60">
@@ -608,31 +616,44 @@ export function TodayCheckin({
             <div />
           </div>
           <div className="text-center">
-            <Battery className="w-12 h-12 md:w-14 md:h-14 mx-auto mb-4 text-primary" />
             <h1 className="font-display text-2xl sm:text-3xl font-bold">
-              Var är din energi?
+              Något som stack ut?
             </h1>
             <p className="text-muted-foreground mt-2 text-sm">
-              Energi + humör ger en tydligare bild
+              Välj det som stämmer – eller hoppa vidare
             </p>
           </div>
 
-          <div className="grid grid-cols-3 gap-3 max-w-md mx-auto">
-            {energyButtons.map(({ energy, icon: Icon, label, cssClass }) => (
-              <button
-                key={energy}
-                onClick={() => handleEnergySelect(energy)}
-                className={cn(
-                  "rounded-2xl border-2 p-5 sm:p-6 flex flex-col items-center gap-3 transition-all duration-300",
-                  "hover:-translate-y-1 hover:shadow-lg active:scale-[0.98]",
-                  cssClass,
-                  checkinData.energyLevel === energy && "ring-2 ring-primary ring-offset-2 ring-offset-background scale-[1.01]"
-                )}
-              >
-                <Icon className="w-8 h-8 sm:w-10 sm:h-10" />
-                <span className="font-semibold text-base">{label}</span>
-              </button>
-            ))}
+          <div className="flex flex-wrap gap-2.5 justify-center max-w-md mx-auto">
+            {TAG_OPTIONS.map(({ value, label, emoji }) => {
+              const selected = (checkinData.tags || []).includes(value);
+              return (
+                <button
+                  key={value}
+                  onClick={() => handleTagToggle(value)}
+                  className={cn(
+                    "px-4 py-2.5 rounded-full border text-sm font-medium transition-all duration-200",
+                    "active:scale-95",
+                    selected
+                      ? "bg-primary/15 border-primary/40 text-primary"
+                      : "border-border/50 text-muted-foreground hover:border-border hover:bg-white/[0.04]"
+                  )}
+                >
+                  <span className="mr-1.5">{emoji}</span>
+                  {label}
+                </button>
+              );
+            })}
+          </div>
+
+          <div className="flex justify-center pt-2">
+            <Button
+              onClick={handleTagsContinue}
+              className="px-8 py-3 rounded-xl text-base font-semibold"
+            >
+              {(checkinData.tags || []).length > 0 ? 'Fortsätt' : 'Hoppa över'}
+              <ChevronRight className="w-4 h-4 ml-1.5" />
+            </Button>
           </div>
         </div>
       )}
