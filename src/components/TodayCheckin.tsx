@@ -192,6 +192,7 @@ export function TodayCheckin({
   const [slideDirection, setSlideDirection] = useState<'forward' | 'back'>('forward');
   const [stepKey, setStepKey] = useState(0);
   const [showComment, setShowComment] = useState<Step | null>(null);
+  const [showCustomTagInput, setShowCustomTagInput] = useState(false);
   const [showSideEffects, setShowSideEffects] = useState(false);
   const commentRef = useRef<HTMLDivElement>(null);
   
@@ -640,18 +641,18 @@ export function TodayCheckin({
           </div>
 
           {/* Heading */}
-          <div className="mb-8">
-            <p className="text-muted-foreground/50 text-[13px] tracking-wide capitalize mb-1.5">{formattedDate}</p>
+          <div className="mb-10">
+            <p className="text-muted-foreground/30 text-[11px] tracking-[0.15em] uppercase font-medium mb-3">{formattedDate}</p>
             <h1 className="font-display text-[28px] sm:text-3xl font-bold tracking-tight">
-              Något som stack ut?
+              Något särskilt idag?
             </h1>
-            <p className="text-muted-foreground/60 mt-1 text-[15px]">
-              Välj det som stämmer – eller hoppa vidare
+            <p className="text-muted-foreground/40 mt-1.5 text-[15px]">
+              Välj det som stämmer
             </p>
           </div>
 
           {/* Tags */}
-          <div className="flex flex-wrap gap-2 max-w-md mb-6">
+          <div className="flex flex-wrap gap-2.5 max-w-md mb-6">
             {(checkinData.mood ? MOOD_TAGS[checkinData.mood] : []).map(({ value, label, emoji }) => {
               const selected = (checkinData.tags || []).includes(value);
               return (
@@ -666,6 +667,7 @@ export function TodayCheckin({
                       : "border-border/40 text-muted-foreground/80 hover:border-border/70 hover:bg-white/[0.03]"
                   )}
                 >
+                  {selected && <Check className="w-3.5 h-3.5 mr-1.5 inline" />}
                   <span className="mr-1.5">{emoji}</span>
                   {label}
                 </button>
@@ -680,49 +682,52 @@ export function TodayCheckin({
                   onClick={() => handleTagToggle(tag)}
                   className="px-4 py-2.5 rounded-full border text-sm font-medium transition-all duration-200 active:scale-95 bg-primary/15 border-primary/40 text-primary"
                 >
+                  <Check className="w-3.5 h-3.5 mr-1.5 inline" />
                   <span className="mr-1.5">🏷️</span>
                   {tag}
                 </button>
               ))
             }
-          </div>
-
-          {/* Custom tag input */}
-          <div className="flex items-center gap-2 max-w-sm mb-6">
-            <div className="relative flex-1">
-              <input
-                type="text"
-                placeholder="Skriv en egen tagg..."
-                className="w-full px-4 py-2.5 rounded-full border border-border/40 bg-white/[0.03] text-sm text-foreground placeholder:text-muted-foreground/30 focus:outline-none focus:border-primary/40 focus:ring-1 focus:ring-primary/20 transition-all"
-                maxLength={30}
-                onKeyDown={(e: KeyboardEvent<HTMLInputElement>) => {
-                  if (e.key === 'Enter') {
-                    const val = (e.target as HTMLInputElement).value.trim().toLowerCase();
+            {/* Add custom tag button — progressive disclosure */}
+            {!showCustomTagInput ? (
+              <button
+                onClick={() => setShowCustomTagInput(true)}
+                className="px-4 py-2.5 rounded-full border border-dashed border-border/30 text-sm font-medium text-muted-foreground/40 hover:text-muted-foreground/60 hover:border-border/50 transition-all"
+              >
+                <Plus className="w-3.5 h-3.5 mr-1.5 inline" />
+                Lägg till egen
+              </button>
+            ) : (
+              <div className="w-full mt-2 flex items-center gap-2 max-w-xs">
+                <input
+                  type="text"
+                  autoFocus
+                  placeholder="Skriv en egen tagg..."
+                  className="flex-1 px-4 py-2.5 rounded-full border border-primary/30 bg-white/[0.03] text-sm text-foreground placeholder:text-muted-foreground/30 focus:outline-none focus:border-primary/40 focus:ring-1 focus:ring-primary/20 transition-all"
+                  maxLength={30}
+                  onKeyDown={(e: KeyboardEvent<HTMLInputElement>) => {
+                    if (e.key === 'Enter') {
+                      const val = (e.target as HTMLInputElement).value.trim().toLowerCase();
+                      if (val && !(checkinData.tags || []).includes(val)) {
+                        handleTagToggle(val);
+                      }
+                      (e.target as HTMLInputElement).value = '';
+                      setShowCustomTagInput(false);
+                    }
+                    if (e.key === 'Escape') {
+                      setShowCustomTagInput(false);
+                    }
+                  }}
+                  onBlur={(e) => {
+                    const val = e.target.value.trim().toLowerCase();
                     if (val && !(checkinData.tags || []).includes(val)) {
                       handleTagToggle(val);
                     }
-                    (e.target as HTMLInputElement).value = '';
-                  }
-                }}
-              />
-            </div>
-            <button
-              type="button"
-              onClick={() => {
-                const input = document.querySelector<HTMLInputElement>('input[placeholder="Skriv en egen tagg..."]');
-                if (input) {
-                  const val = input.value.trim().toLowerCase();
-                  if (val && !(checkinData.tags || []).includes(val)) {
-                    handleTagToggle(val);
-                  }
-                  input.value = '';
-                }
-              }}
-              className="p-2.5 rounded-full border border-border/40 text-muted-foreground/50 hover:text-primary hover:border-primary/40 transition-all"
-              aria-label="Lägg till tagg"
-            >
-              <Plus className="w-4 h-4" />
-            </button>
+                    setShowCustomTagInput(false);
+                  }}
+                />
+              </div>
+            )}
           </div>
 
           {renderCommentSection('mood')}
@@ -732,7 +737,7 @@ export function TodayCheckin({
               onClick={handleTagsContinue}
               className="px-8 py-3 rounded-xl text-base font-semibold"
             >
-              {(checkinData.tags || []).length > 0 ? 'Fortsätt' : 'Hoppa över'}
+              Klar
               <ChevronRight className="w-4 h-4 ml-1.5" />
             </Button>
           </div>
