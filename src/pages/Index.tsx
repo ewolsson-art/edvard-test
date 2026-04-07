@@ -86,17 +86,6 @@ const Index = () => {
   return (
     <div className="fixed inset-0 md:relative md:h-screen flex items-center justify-center md:py-4 md:px-5 overflow-hidden">
       <div className="w-full h-full md:h-auto md:max-w-xl relative">
-        {/* Subtle streak badge in top right */}
-        {streakData.currentStreak > 0 && (
-          <div className="absolute top-4 right-4 md:-top-1 md:right-0 z-10">
-            <StreakBadge 
-              currentStreak={streakData.currentStreak}
-              longestStreak={streakData.longestStreak}
-              hasCheckedInToday={streakData.hasCheckedInToday}
-              variant="compact"
-            />
-          </div>
-        )}
         <TodayCheckin
           todayEntry={selectedEntry} 
           activeMedications={activeMedications}

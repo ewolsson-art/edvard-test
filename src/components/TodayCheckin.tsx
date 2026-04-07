@@ -576,7 +576,14 @@ export function TodayCheckin({
                 Avbryt
               </Button>
             ) : <div />}
-            <div />
+            {streakData.currentStreak > 0 && (
+              <StreakBadge 
+                currentStreak={streakData.currentStreak}
+                longestStreak={streakData.longestStreak}
+                hasCheckedInToday={streakData.hasCheckedInToday}
+                variant="compact"
+              />
+            )}
           </div>
 
           {/* Date label + Heading */}
