@@ -106,6 +106,13 @@ export const PostCard = ({ post, userId, onToggleReaction, onDeletePost, onCreat
         )}
       </div>
 
+      {/* Title */}
+      {post.title && (
+        <div className="px-4 pb-1">
+          <h3 className="text-base font-bold text-foreground leading-snug">{post.title}</h3>
+        </div>
+      )}
+
       {/* Content — double-tap to like */}
       <div className="relative px-4 pb-3 select-none" onDoubleClick={handleDoubleClick}>
         <p className="text-[15px] text-foreground/85 leading-relaxed whitespace-pre-wrap">{post.content}</p>
