@@ -550,7 +550,7 @@ const Overview = () => {
               </Tabs>
             )}
 
-            <div className="flex items-center gap-1 p-1.5 bg-muted/50 rounded-xl">
+            <div className="flex items-center gap-1 p-1.5 bg-muted/50 rounded-xl ml-auto">
                 <button
                   onClick={() => setSectionView('calendar')}
                   className={`p-2.5 rounded-lg transition-all ${
