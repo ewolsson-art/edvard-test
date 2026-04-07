@@ -230,7 +230,7 @@ const Auth = () => {
               </p>
               <div className="flex flex-wrap gap-4 pt-1 md:pt-2">
                 <button
-                  className="px-8 md:px-10 py-3 md:py-3.5 rounded-full bg-[hsl(45_85%_55%)] text-[hsl(225_30%_7%)] font-semibold text-[0.95rem] md:text-base tracking-wide shadow-[0_4px_20px_hsl(260_60%_72%/0.3)] hover:shadow-[0_6px_28px_hsl(260_60%_72%/0.45)] hover:scale-105 active:scale-[0.98] transition-all duration-200"
+                  className="px-8 md:px-10 py-3 md:py-3.5 rounded-full bg-[hsl(45_85%_55%)] text-[hsl(225_30%_7%)] font-semibold text-[0.95rem] md:text-base tracking-wide shadow-[0_4px_20px_hsl(260_60%_72%/0.3)] hover:shadow-[0_6px_28px_hsl(260_60%_72%/0.45)] hover:scale-105 active:scale-[0.98] transition-all duration-200 lg:hidden"
                   onClick={() => navigate("/logga-in")}
                 >
                   Logga in
