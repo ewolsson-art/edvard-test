@@ -6,7 +6,6 @@ import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
-import { Logo } from '@/components/Logo';
 import { PostCard } from '@/components/community/PostCard';
 
 const CATEGORIES = [

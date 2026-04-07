@@ -145,7 +145,7 @@ const App = () => (
                 <AppLayout><BadDay /></AppLayout>
               </ProtectedRoute>
             } />
-            <Route path="/forum" element={<Community />} />
+            <Route path="/forum" element={<AppLayout><Community /></AppLayout>} />
 
             <Route path="/mediciner" element={
               <ProtectedRoute>
