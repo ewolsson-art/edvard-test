@@ -222,8 +222,7 @@ const Settings = () => {
         {/* Check-in section */}
         {isPatient && (
           <SettingsGroup label="Din check-in">
-            <SettingsRow icon={SettingsIcon} label="Anpassa check-in" description="Välj kategorier" onClick={() => setView('checkin')} />
-            <SettingsRow icon={MessageSquarePlus} label="Egna frågor" description="Lägg till egna frågor" onClick={() => setView('custom-questions')} />
+            <SettingsRow icon={SettingsIcon} label="Anpassa check-in" description="Välj kategorier och egna frågor" onClick={() => setView('checkin')} />
             <SettingsRow icon={Bell} label="Notiser" description="Påminnelser och push" onClick={() => setView('notifications')} />
           </SettingsGroup>
         )}
