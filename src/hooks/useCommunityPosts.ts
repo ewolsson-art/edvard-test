@@ -20,6 +20,17 @@ function getAnonymousName(userId: string, postId?: string): string {
   return ANIMAL_NAMES[Math.abs(hash) % ANIMAL_NAMES.length];
 }
 
+export interface CommunityReply {
+  id: string;
+  post_id: string;
+  user_id: string;
+  content: string;
+  is_anonymous: boolean;
+  anonymous_name: string | null;
+  created_at: string;
+  author_name: string;
+}
+
 export interface CommunityPost {
   id: string;
   user_id: string;
@@ -32,6 +43,7 @@ export interface CommunityPost {
   author_name?: string;
   reaction_count: number;
   user_has_reacted: boolean;
+  replies: CommunityReply[];
 }
 
 export function useCommunityPosts() {
@@ -41,7 +53,6 @@ export function useCommunityPosts() {
   const [loading, setLoading] = useState(true);
 
   const fetchPosts = useCallback(async () => {
-    setLoading(true);
     setLoading(true);
 
     const { data: postsData, error } = await supabase
@@ -60,10 +71,17 @@ export function useCommunityPosts() {
       .from('community_reactions')
       .select('post_id, user_id');
 
-    // Fetch profile names for non-anonymous posts
-    const nonAnonUserIds = [...new Set(
-      (postsData || []).filter(p => !p.is_anonymous).map(p => p.user_id)
-    )];
+    // Fetch replies
+    const { data: repliesData } = await supabase
+      .from('community_replies')
+      .select('*')
+      .order('created_at', { ascending: true });
+
+    // Fetch profile names for non-anonymous posts and replies
+    const allUserIds = new Set<string>();
+    (postsData || []).filter(p => !p.is_anonymous).forEach(p => allUserIds.add(p.user_id));
+    (repliesData || []).filter(r => !r.is_anonymous).forEach(r => allUserIds.add(r.user_id));
+    const nonAnonUserIds = [...allUserIds];
 
     let profileMap: Record<string, string> = {};
     if (nonAnonUserIds.length > 0) {
@@ -79,13 +97,23 @@ export function useCommunityPosts() {
 
     const enrichedPosts: CommunityPost[] = (postsData || []).map(post => {
       const postReactions = (reactions || []).filter(r => r.post_id === post.id);
+      const postReplies: CommunityReply[] = (repliesData || [])
+        .filter(r => r.post_id === post.id)
+        .map(r => ({
+          ...r,
+          author_name: r.is_anonymous
+            ? (r.anonymous_name || getAnonymousName(r.user_id, post.id))
+            : (profileMap[r.user_id] || 'Användare'),
+        }));
+
       return {
         ...post,
         author_name: post.is_anonymous 
           ? (post.anonymous_name || getAnonymousName(post.user_id))
           : (profileMap[post.user_id] || 'Användare'),
         reaction_count: postReactions.length,
-        user_has_reacted: postReactions.some(r => r.user_id === user.id),
+        user_has_reacted: user ? postReactions.some(r => r.user_id === user.id) : false,
+        replies: postReplies,
       };
     });
 
@@ -115,6 +143,42 @@ export function useCommunityPosts() {
 
     await fetchPosts();
     return true;
+  };
+
+  const createReply = async (postId: string, content: string, isAnonymous: boolean) => {
+    if (!user) return false;
+
+    const anonymousName = isAnonymous ? getAnonymousName(user.id, postId) : null;
+
+    const { error } = await supabase.from('community_replies').insert({
+      post_id: postId,
+      user_id: user.id,
+      content: content.trim(),
+      is_anonymous: isAnonymous,
+      anonymous_name: anonymousName,
+    });
+
+    if (error) {
+      toast({ title: 'Kunde inte skapa svar', variant: 'destructive' });
+      return false;
+    }
+
+    await fetchPosts();
+    return true;
+  };
+
+  const deleteReply = async (replyId: string) => {
+    const { error } = await supabase
+      .from('community_replies')
+      .delete()
+      .eq('id', replyId);
+
+    if (error) {
+      toast({ title: 'Kunde inte ta bort svar', variant: 'destructive' });
+      return;
+    }
+
+    await fetchPosts();
   };
 
   const toggleReaction = async (postId: string) => {
@@ -153,5 +217,5 @@ export function useCommunityPosts() {
     await fetchPosts();
   };
 
-  return { posts, loading, createPost, toggleReaction, deletePost };
+  return { posts, loading, createPost, createReply, deleteReply, toggleReaction, deletePost };
 }
