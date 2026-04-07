@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { formatDistanceToNow } from 'date-fns';
 import { sv } from 'date-fns/locale';
-import { Heart, Send, Eye, EyeOff, Trash2, MessageCircle, LogIn } from 'lucide-react';
+import { Heart, Send, Eye, EyeOff, Trash2, MessageCircle, LogIn, ShieldCheck, ChevronDown, ChevronUp } from 'lucide-react';
 import { useCommunityPosts } from '@/hooks/useCommunityPosts';
 import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/button';
@@ -25,6 +25,7 @@ const Community = () => {
   const [selectedCategory, setSelectedCategory] = useState('general');
   const [filterCategory, setFilterCategory] = useState<string | null>(null);
   const [isPosting, setIsPosting] = useState(false);
+  const [rulesOpen, setRulesOpen] = useState(false);
 
   const handleSubmit = async () => {
     if (!content.trim() || isPosting) return;
@@ -70,6 +71,52 @@ const Community = () => {
       </div>
 
       <div className="px-5 md:px-8 py-6 max-w-2xl mx-auto space-y-6">
+        {/* Group rules */}
+        <div className="bg-card/40 backdrop-blur-sm rounded-xl border border-border/20 overflow-hidden">
+          <button
+            onClick={() => setRulesOpen(!rulesOpen)}
+            className="w-full flex items-center justify-between px-4 py-3 hover:bg-white/[0.02] transition-colors"
+          >
+            <div className="flex items-center gap-2">
+              <ShieldCheck className="h-4 w-4 text-primary" />
+              <span className="text-sm font-medium text-foreground/90">Gruppens regler</span>
+            </div>
+            {rulesOpen ? (
+              <ChevronUp className="h-4 w-4 text-muted-foreground/50" />
+            ) : (
+              <ChevronDown className="h-4 w-4 text-muted-foreground/50" />
+            )}
+          </button>
+          
+          {rulesOpen && (
+            <div className="px-4 pb-4 space-y-2.5 border-t border-border/10 pt-3">
+              {[
+                'Alla är vi olika, jämför inte varandra.',
+                'Våra diagnoser kan skiljas åt, likaså behandling och den skall ej ställas av oss utan av läkare.',
+                'Det är ok att prata medicin och behandling men alla skall prata med läkare angående sin egen medicinering. Man får ej rekommendera behandling eller naturläkemedel för andra.',
+                'Vi respekterar varandras religion, åsikter kring andlighet och sexuell läggning.',
+                'Inga dejtinginlägg eller meddelanden av dess slag till medlemmar.',
+                'Det är strikt förbjudet att dela inlägg från gruppen.',
+                'Inget valarbete, politiska inlägg eller diskussioner kring politik.',
+                'TW (triggervarning) används vid självmord samt självskadeinlägg. Eventuell bild skall läggas i kommentarerna.',
+                'Inget köp och sälj är tillåtet och man får inte söka ekonomiskt stöd här.',
+                'Olagliga droger får ej diskuteras som alternativ medicin. Trådar raderas omedelbart.',
+                'Inga efterlysningar till intervjuer — detta är en stödgrupp.',
+                'Det är inte tillåtet att dela eller länka till andra grupper eller bloggar.',
+                'Det är ok att lägga upp vardagliga saker men man ska respektera alla regler.',
+                'Det är inte tillåtet att blockera admins.',
+                'Otrevliga inlägg undanbedes. PM är rätt väg för klagomål. Otrevligheter leder till uteslutning.',
+                'Allvarliga regelbrott kan leda till omedelbar uteslutning. I annat fall gäller 1 varning innan avstängning.',
+              ].map((rule, i) => (
+                <div key={i} className="flex gap-2.5 text-[13px] leading-relaxed text-muted-foreground/70">
+                  <span className="text-primary/60 font-medium shrink-0 w-5 text-right">{i + 1}.</span>
+                  <span>{rule}</span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
         {/* New post form - only for logged in users */}
         {user ? (
           <div className="bg-card/60 backdrop-blur-sm rounded-xl border border-border/30 p-4 space-y-4">
