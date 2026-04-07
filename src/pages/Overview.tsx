@@ -584,8 +584,8 @@ const Overview = () => {
                 stats={stats}
                 entries={entries}
                 periodLabel={label}
-                sleepBadDays={sleepBadDays}
-                showSleep={showSleep}
+                sleepBadDays={0}
+                showSleep={false}
               />
             )}
 
