@@ -145,11 +145,7 @@ const App = () => (
                 <AppLayout><BadDay /></AppLayout>
               </ProtectedRoute>
             } />
-            <Route path="/forum" element={
-              <ProtectedRoute>
-                <AppLayout><Community /></AppLayout>
-              </ProtectedRoute>
-            } />
+            <Route path="/forum" element={<Community />} />
 
             <Route path="/mediciner" element={
               <ProtectedRoute>

@@ -41,7 +41,7 @@ export function useCommunityPosts() {
   const [loading, setLoading] = useState(true);
 
   const fetchPosts = useCallback(async () => {
-    if (!user) return;
+    setLoading(true);
     setLoading(true);
 
     const { data: postsData, error } = await supabase
