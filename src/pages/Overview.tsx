@@ -518,7 +518,7 @@ const Overview = () => {
    return (
     <div className="pb-24" style={{ overflowX: 'clip' }}>
       <div className="max-w-6xl mx-auto space-y-6">
-        <header className="sticky top-0 z-20 bg-background pt-5 px-5 md:pt-8 md:px-8 pb-3 -mx-5 md:-mx-8">
+        <header className="sticky top-12 sm:top-14 md:top-0 z-20 bg-background pt-5 px-5 md:pt-8 md:px-8 pb-3 -mx-5 md:-mx-8">
           <div className="flex items-center justify-between mb-2">
             <h1 className="font-display text-3xl font-bold">Översikt</h1>
             <div className="flex items-center gap-3">
