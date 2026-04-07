@@ -12,7 +12,37 @@ interface EncouragingStat {
   label: string;
   detail: string;
   color: string;
-  bgColor: string;
+  ringColor: string;
+}
+
+function StatCircle({ stat, index }: { stat: EncouragingStat; index: number }) {
+  return (
+    <div
+      className="flex flex-col items-center gap-2 animate-fade-in"
+      style={{ animationDelay: `${index * 120}ms` }}
+    >
+      <div className={cn(
+        'relative w-20 h-20 rounded-full flex items-center justify-center',
+        'border-2 transition-all',
+        stat.ringColor
+      )}>
+        {/* Glow effect */}
+        <div className={cn(
+          'absolute inset-0 rounded-full opacity-20 blur-md',
+          stat.ringColor.replace('border-', 'bg-')
+        )} />
+        <div className="flex flex-col items-center z-10">
+          <stat.icon className={cn('w-5 h-5 mb-0.5', stat.color)} />
+          <span className={cn('text-base font-bold leading-none', stat.color)}>
+            {stat.value}
+          </span>
+        </div>
+      </div>
+      <span className="text-[11px] font-medium text-foreground/70 text-center max-w-[90px] leading-tight">
+        {stat.label}
+      </span>
+    </div>
+  );
 }
 
 export default function BadDay() {
@@ -24,13 +54,11 @@ export default function BadDay() {
 
     const sorted = [...entries].sort((a, b) => a.date.localeCompare(b.date));
 
-    // Group moods
     const groupMood = (mood: string) =>
       (mood === 'elevated' || mood === 'somewhat_elevated') ? 'elevated'
         : (mood === 'depressed' || mood === 'somewhat_depressed') ? 'depressed'
         : 'stable';
 
-    // Episodes
     const episodes: { mood: string; days: number }[] = [];
     let epStart = 0;
     for (let i = 1; i <= sorted.length; i++) {
@@ -42,13 +70,11 @@ export default function BadDay() {
       }
     }
 
-    // Average depressed episode length
     const depEpisodes = episodes.filter(e => e.mood === 'depressed');
     const avgDepDays = depEpisodes.length > 0
       ? Math.round(depEpisodes.reduce((a, b) => a + b.days, 0) / depEpisodes.length * 10) / 10
       : 0;
 
-    // Current streak
     const currentGroup = groupMood(sorted[sorted.length - 1].mood);
     let currentStreak = 0;
     for (let i = sorted.length - 1; i >= 0; i--) {
@@ -56,7 +82,6 @@ export default function BadDay() {
       else break;
     }
 
-    // How many times the user went from depressed to stable/elevated
     let recoveryCount = 0;
     for (let i = 0; i < episodes.length - 1; i++) {
       if (episodes[i].mood === 'depressed' && episodes[i + 1].mood !== 'depressed') {
@@ -64,22 +89,9 @@ export default function BadDay() {
       }
     }
 
-    // % of total days that were stable or elevated
     const goodDays = sorted.filter(e => groupMood(e.mood) !== 'depressed').length;
     const goodPct = Math.round((goodDays / sorted.length) * 100);
 
-    // After depressed episodes, how quickly did mood improve?
-    // (average of the first non-depressed episode length after a depressed one)
-    let recoveryAfterDep: number[] = [];
-    for (let i = 0; i < episodes.length - 1; i++) {
-      if (episodes[i].mood === 'depressed') {
-        recoveryAfterDep.push(episodes[i].days);
-      }
-    }
-
-    // Longest stable streak ever
-
-    // Longest stable streak ever
     const stableEpisodes = episodes.filter(e => e.mood === 'stable' || e.mood === 'elevated');
     const longestStable = stableEpisodes.length > 0 ? Math.max(...stableEpisodes.map(e => e.days)) : 0;
 
@@ -92,7 +104,7 @@ export default function BadDay() {
         label: 'Återhämtning',
         detail: 'Du har återhämtat dig från nedstämdhet tidigare. Du kan göra det igen.',
         color: 'text-mood-stable',
-        bgColor: 'bg-mood-stable/10 border-mood-stable/20',
+        ringColor: 'border-mood-stable/40',
       });
     }
 
@@ -100,30 +112,30 @@ export default function BadDay() {
       stats.push({
         icon: Clock,
         value: `~${avgDepDays}d`,
-        label: 'Genomsnittlig period',
-        detail: `Dina nedstämda perioder varar i snitt ${avgDepDays} incheckade dagar. Det går över.`,
+        label: 'Snittperiod',
+        detail: `Dina nedstämda perioder varar i snitt ${avgDepDays} incheckade dagar.`,
         color: 'text-primary',
-        bgColor: 'bg-primary/10 border-primary/20',
+        ringColor: 'border-primary/40',
       });
     }
 
     stats.push({
       icon: Sun,
       value: `${goodPct}%`,
-      label: 'Bra dagar totalt',
-      detail: `${goodPct}% av alla dina incheckade dagar har du mått stabilt eller uppvarvat.`,
+      label: 'Bra dagar',
+      detail: `${goodPct}% av dina incheckade dagar har du mått stabilt eller uppvarvat.`,
       color: 'text-mood-stable',
-      bgColor: 'bg-mood-stable/10 border-mood-stable/20',
+      ringColor: 'border-mood-stable/40',
     });
 
     if (longestStable > 0) {
       stats.push({
         icon: Shield,
         value: `${longestStable}d`,
-        label: 'Längsta stabila period',
-        detail: `Din längsta period utan nedstämdhet var ${longestStable} incheckade dagar. Du kan nå dit igen.`,
+        label: 'Längsta stabila',
+        detail: `Din längsta period utan nedstämdhet var ${longestStable} incheckade dagar.`,
         color: 'text-primary',
-        bgColor: 'bg-primary/10 border-primary/20',
+        ringColor: 'border-primary/40',
       });
     }
 
@@ -136,7 +148,7 @@ export default function BadDay() {
           label: 'Kvar i snitt',
           detail: `Baserat på ditt mönster kan det vända inom ~${daysLeft} dagar.`,
           color: 'text-mood-stable',
-          bgColor: 'bg-mood-stable/10 border-mood-stable/20',
+          ringColor: 'border-mood-stable/40',
         });
       }
     }
@@ -146,27 +158,26 @@ export default function BadDay() {
 
   const greeting = firstName ? `${firstName}, ` : '';
 
+  // Pick the most relevant detail to show below circles
+  const activeDetail = encouragingStats?.stats[0]?.detail;
+
   return (
     <div className="p-5 md:p-8 max-w-2xl mx-auto md:mx-0 pb-24">
-      <h1 className="font-display text-3xl font-bold mb-2">Dålig dag?</h1>
+      <h1 className="font-display text-3xl font-bold mb-6">Dålig dag?</h1>
 
-      {/* Encouraging hero */}
-      <div className="rounded-2xl border border-primary/20 bg-primary/5 p-6 mb-6">
-        <div className="flex items-start gap-4">
-          <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center flex-shrink-0">
-            <Heart className="w-7 h-7 text-primary" />
-          </div>
-          <div>
-            <p className="text-lg font-semibold text-foreground mb-1">
-              {greeting}det kommer bli bättre.
-            </p>
-            <p className="text-sm text-muted-foreground">
-              {encouragingStats && encouragingStats.recoveryCount > 0
-                ? 'Du har återhämtat dig förut. Dina egna siffror visar att detta är tillfälligt.'
-                : 'Dina incheckningar visar att svåra perioder alltid tar slut. Här är bevis från din egen data.'}
-            </p>
-          </div>
+      {/* Hero message */}
+      <div className="text-center mb-8">
+        <div className="w-16 h-16 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center mx-auto mb-4">
+          <Heart className="w-8 h-8 text-primary" />
         </div>
+        <p className="text-xl font-semibold text-foreground mb-1">
+          {greeting}det kommer bli bättre.
+        </p>
+        <p className="text-sm text-muted-foreground max-w-sm mx-auto">
+          {encouragingStats && encouragingStats.recoveryCount > 0
+            ? 'Du har återhämtat dig förut. Dina siffror visar att detta är tillfälligt.'
+            : 'Svåra perioder tar slut. Här är bevis från din data.'}
+        </p>
       </div>
 
       {(!encouragingStats || !entries || entries.length < 5) ? (
@@ -177,36 +188,29 @@ export default function BadDay() {
           </p>
         </div>
       ) : (
-        <div className="space-y-3">
-          {encouragingStats.stats.map((stat, i) => (
-            <div
-              key={i}
-              className={cn(
-                'rounded-2xl border p-4 transition-all animate-fade-in',
-                stat.bgColor
-              )}
-              style={{ animationDelay: `${i * 100}ms` }}
-            >
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-xl bg-background/50 flex items-center justify-center flex-shrink-0">
-                  <stat.icon className={cn('w-6 h-6', stat.color)} />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-baseline gap-2">
-                    <span className={cn('text-2xl font-bold', stat.color)}>{stat.value}</span>
-                    <span className="text-sm font-medium text-foreground/80">{stat.label}</span>
-                  </div>
-                  <p className="text-xs text-muted-foreground mt-0.5">{stat.detail}</p>
-                </div>
-              </div>
-            </div>
-          ))}
-
-          <div className="pt-4 text-center">
-            <p className="text-[11px] text-muted-foreground/50">
-              ❤️ Baserat på dina {entries.length} incheckningar
-            </p>
+        <div className="space-y-8">
+          {/* Circles grid */}
+          <div className="flex flex-wrap justify-center gap-6">
+            {encouragingStats.stats.map((stat, i) => (
+              <StatCircle key={i} stat={stat} index={i} />
+            ))}
           </div>
+
+          {/* Detail text below */}
+          {encouragingStats.stats.length > 0 && (
+            <div className="rounded-2xl border border-border/30 bg-card/40 p-5 text-center space-y-3">
+              {encouragingStats.stats.map((stat, i) => (
+                <p key={i} className="text-xs text-muted-foreground leading-relaxed">
+                  <stat.icon className={cn('w-3.5 h-3.5 inline-block mr-1.5 -mt-0.5', stat.color)} />
+                  {stat.detail}
+                </p>
+              ))}
+            </div>
+          )}
+
+          <p className="text-[11px] text-muted-foreground/40 text-center">
+            ❤️ Baserat på dina {entries.length} incheckningar
+          </p>
         </div>
       )}
     </div>
