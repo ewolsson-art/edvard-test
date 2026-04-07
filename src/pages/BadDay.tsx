@@ -216,8 +216,8 @@ export default function BadDay() {
       {/* Vill du prata med någon? */}
       <div className="mt-10 rounded-2xl border border-border/30 bg-card/40 p-6 text-center">
         <Phone className="w-7 h-7 text-primary mx-auto mb-3" />
-        <p className="text-lg font-semibold text-foreground mb-1">Vill du prata med någon?</p>
-        <p className="text-sm text-muted-foreground mb-5">Du är inte ensam. Ring en av linjerna nedan.</p>
+        <p className="text-lg font-semibold text-foreground mb-1">Glöm aldrig att det finns människor som gärna lyssnar på dig</p>
+        <p className="text-sm text-muted-foreground mb-5">Du är inte ensam. Ring när du behöver.</p>
 
         <div className="space-y-3 max-w-sm mx-auto">
           {[
