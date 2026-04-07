@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { useUserPreferences } from '@/hooks/useUserPreferences';
 import { useUserRole } from '@/hooks/useUserRole';
-import { useCustomCheckinQuestions } from '@/hooks/useCustomCheckinQuestions';
+
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
@@ -21,11 +21,11 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
-import { Loader2, Save, Trash2, AlertTriangle, Brain, Moon, Utensils, Dumbbell, Pill, ChevronRight, Bell, Lock, MessageSquarePlus, Settings as SettingsIcon } from 'lucide-react';
+import { Loader2, Save, Trash2, AlertTriangle, Brain, Moon, Utensils, Dumbbell, Pill, ChevronRight, Bell, Lock, Settings as SettingsIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { NotificationSettings } from '@/components/NotificationSettings';
 import { ChangePasswordSection } from '@/components/ChangePasswordSection';
-import { CustomQuestionsSection } from '@/components/CustomQuestionsSection';
+
 
 const CHECKIN_OPTIONS = [
   { id: 'include_mood', label: 'Mående', description: 'Hur du mår idag', icon: Brain, required: true },
@@ -41,7 +41,7 @@ const Settings = () => {
   const { user, signOut } = useAuth();
   const { isPatient, isLoading: roleLoading } = useUserRole();
   const { preferences, loading: preferencesLoading, updatePreferences } = useUserPreferences();
-  const { questions: customQuestions, addQuestion, removeQuestion } = useCustomCheckinQuestions();
+  
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -166,7 +166,7 @@ const Settings = () => {
           {hasCheckinChanges ? 'Spara ändringar' : 'Inga ändringar'}
         </Button>
 
-        <CustomQuestionsSection questions={customQuestions} onAdd={addQuestion} onRemove={removeQuestion} />
+        
       </SubPage>
     );
   }
