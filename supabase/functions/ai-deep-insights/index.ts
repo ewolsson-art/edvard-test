@@ -75,6 +75,7 @@ serve(async (req) => {
     const totalDays = moodEntries.length;
     const firstDate = moodEntries[0]?.date;
     const lastDate = moodEntries[moodEntries.length - 1]?.date;
+    const moodCounts = { elevated: 0, stable: 0, depressed: 0 };
     const sleepCounts = { good: 0, bad: 0, unknown: 0 };
     const eatingCounts = { good: 0, bad: 0, okay: 0, unknown: 0 };
     let exerciseDays = 0;
