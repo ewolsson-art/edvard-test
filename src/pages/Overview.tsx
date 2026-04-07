@@ -616,12 +616,7 @@ const Overview = () => {
                     )}
                   </>
                 ) : (
-                  <>
-                    <MoodDistributionBar stats={stats} periodLabel={label} />
-                    <div className="mt-4">
-                      <MoodStats stats={stats} periodLabel={label} />
-                    </div>
-                  </>
+                  <MoodDistributionBar stats={stats} periodLabel={label} />
                 )}
               </section>
             )}
