@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback, useRef } from 'react';
 import { CalendarDays, BarChart3 } from 'lucide-react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { format, startOfWeek, endOfWeek, addWeeks, subWeeks, eachDayOfInterval, addMonths, subMonths, startOfMonth, endOfMonth, isBefore, startOfDay, isToday } from 'date-fns';
