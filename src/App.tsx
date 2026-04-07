@@ -47,6 +47,7 @@ import CharacteristicDetail from "./pages/CharacteristicDetail";
 import Insights from "./pages/Insights";
 import BadDay from "./pages/BadDay";
 import Community from "./pages/Community";
+import CommunityThread from "./pages/CommunityThread";
 
 const queryClient = new QueryClient();
 
@@ -146,6 +147,7 @@ const App = () => (
               </ProtectedRoute>
             } />
             <Route path="/forum" element={<AppLayout><Community /></AppLayout>} />
+            <Route path="/forum/:threadId" element={<AppLayout><CommunityThread /></AppLayout>} />
 
             <Route path="/mediciner" element={
               <ProtectedRoute>
