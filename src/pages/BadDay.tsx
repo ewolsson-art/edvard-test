@@ -77,10 +77,7 @@ export default function BadDay() {
       }
     }
 
-    // Days with good sleep during depressed periods vs not
-    const depEntries = sorted.filter(e => groupMood(e.mood) === 'depressed');
-    const depWithGoodSleep = depEntries.filter(e => e.sleepQuality === 'good').length;
-    const depWithExercise = depEntries.filter(e => e.exercised).length;
+    // Longest stable streak ever
 
     // Longest stable streak ever
     const stableEpisodes = episodes.filter(e => e.mood === 'stable' || e.mood === 'elevated');
