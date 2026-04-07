@@ -166,7 +166,7 @@ const Settings = () => {
           {hasCheckinChanges ? 'Spara ändringar' : 'Inga ändringar'}
         </Button>
 
-        <CustomQuestionsSection questions={customQuestions} onAdd={addQuestion} onRemove={removeQuestion} />
+        
       </SubPage>
     );
   }
