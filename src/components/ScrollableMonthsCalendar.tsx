@@ -34,7 +34,7 @@ export const ScrollableMonthsCalendar = forwardRef<ScrollableMonthsCalendarRef, 
   const scrollToCurrentMonth = useCallback(() => {
     if (year === currentYear && currentMonthRef.current) {
       requestAnimationFrame(() => {
-        currentMonthRef.current?.scrollIntoView({ block: 'start', behavior: 'smooth' });
+        currentMonthRef.current?.scrollIntoView({ block: 'center', behavior: 'smooth' });
       });
     }
   }, [year, currentYear]);
@@ -47,7 +47,7 @@ export const ScrollableMonthsCalendar = forwardRef<ScrollableMonthsCalendarRef, 
   useEffect(() => {
     if (year === currentYear && currentMonthRef.current) {
       requestAnimationFrame(() => {
-        currentMonthRef.current?.scrollIntoView({ block: 'start', behavior: 'auto' });
+        currentMonthRef.current?.scrollIntoView({ block: 'center', behavior: 'auto' });
       });
     }
   }, [year, currentYear]);
