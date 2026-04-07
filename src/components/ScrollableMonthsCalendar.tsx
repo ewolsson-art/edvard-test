@@ -1,4 +1,4 @@
-import { useMemo, useRef, useEffect } from 'react';
+import { useMemo, useRef, useEffect, useCallback } from 'react';
 import { format, startOfMonth, endOfMonth, eachDayOfInterval } from 'date-fns';
 import { MonthCalendar } from './MonthCalendar';
 import { SleepMonthCalendar } from './SleepMonthCalendar';
@@ -27,11 +27,19 @@ export function ScrollableMonthsCalendar({
   const currentMonth = new Date().getMonth();
   const currentYear = new Date().getFullYear();
 
-  useEffect(() => {
+  const scrollToCurrentMonth = useCallback(() => {
     if (year === currentYear && currentMonthRef.current) {
-      currentMonthRef.current.scrollIntoView({ block: 'start', behavior: 'auto' });
+      // Use requestAnimationFrame to ensure DOM is ready
+      requestAnimationFrame(() => {
+        currentMonthRef.current?.scrollIntoView({ block: 'start', behavior: 'auto' });
+      });
     }
   }, [year, currentYear]);
+
+  // Scroll on mount and whenever the component re-renders (e.g. switching views)
+  useEffect(() => {
+    scrollToCurrentMonth();
+  }, [scrollToCurrentMonth]);
 
   const months = useMemo(() => {
     return Array.from({ length: 12 }, (_, i) => {
