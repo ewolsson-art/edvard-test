@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { useMoodData } from '@/hooks/useMoodData';
 import { useProfile } from '@/hooks/useProfile';
 import {
-  Heart, Sun, TrendingUp, Clock, Shield, Sparkles, ArrowUpRight
+  Heart, Sun, TrendingUp, Clock, Shield, Sparkles, ArrowUpRight, Phone, ExternalLink
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -212,6 +212,37 @@ export default function BadDay() {
           </p>
         </div>
       )}
+
+      {/* Vill du prata med någon? */}
+      <div className="mt-10 rounded-2xl border border-border/30 bg-card/40 p-6 text-center">
+        <Phone className="w-7 h-7 text-primary mx-auto mb-3" />
+        <p className="text-lg font-semibold text-foreground mb-1">Vill du prata med någon?</p>
+        <p className="text-sm text-muted-foreground mb-5">Du är inte ensam. Ring en av linjerna nedan.</p>
+
+        <div className="space-y-3 max-w-sm mx-auto">
+          {[
+            { name: 'Mind Självmordslinjen', phone: '90101', note: 'Dygnet runt' },
+            { name: 'Jourhavande medmänniska', phone: '08-702 16 80', note: 'Kväll & natt' },
+            { name: 'Mind Äldrelinjen', phone: '020-22 22 33', note: 'Vardagar' },
+            { name: '1177 Vårdguiden', phone: '1177', note: 'Dygnet runt' },
+          ].map((line) => (
+            <a
+              key={line.phone}
+              href={`tel:${line.phone.replace(/[^0-9]/g, '')}`}
+              className="flex items-center justify-between rounded-xl border border-border/20 bg-background/40 px-4 py-3 hover:bg-primary/5 transition-colors group"
+            >
+              <div className="text-left">
+                <span className="text-sm font-medium text-foreground">{line.name}</span>
+                <span className="block text-[11px] text-muted-foreground">{line.note}</span>
+              </div>
+              <div className="flex items-center gap-1.5 text-primary">
+                <span className="text-sm font-semibold">{line.phone}</span>
+                <ExternalLink className="w-3.5 h-3.5 opacity-50 group-hover:opacity-100 transition-opacity" />
+              </div>
+            </a>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }
