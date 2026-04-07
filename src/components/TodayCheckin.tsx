@@ -1227,7 +1227,9 @@ export function TodayCheckin({
 
       {/* Success Animation */}
       {currentStep === 'success-animation' && (
-        <CelebrationAnimation />
+        <div className="flex-1 flex items-center justify-center min-h-[400px]">
+          <CelebrationAnimation />
+        </div>
       )}
 
     </div>
