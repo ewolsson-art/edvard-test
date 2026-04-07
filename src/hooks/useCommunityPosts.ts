@@ -34,6 +34,7 @@ export interface CommunityReply {
 export interface CommunityPost {
   id: string;
   user_id: string;
+  title: string | null;
   content: string;
   category: string;
   is_anonymous: boolean;
@@ -123,13 +124,14 @@ export function useCommunityPosts() {
 
   useEffect(() => { fetchPosts(); }, [fetchPosts]);
 
-  const createPost = async (content: string, category: string, isAnonymous: boolean) => {
+  const createPost = async (content: string, category: string, isAnonymous: boolean, title?: string) => {
     if (!user) return false;
 
     const anonymousName = isAnonymous ? getAnonymousName(user.id) : null;
 
     const { error } = await supabase.from('community_posts').insert({
       user_id: user.id,
+      title: title?.trim() || null,
       content: content.trim(),
       category,
       is_anonymous: isAnonymous,
