@@ -539,12 +539,14 @@ const Overview = () => {
           <p className="text-sm text-muted-foreground mb-5">Se dina mönster och trender över tid.</p>
           
           <div className="flex items-center gap-3">
-            <Tabs value={view} onValueChange={handleViewChange} className="flex-1">
-              <TabsList className="inline-flex w-full h-11 bg-muted/80 p-1 rounded-full gap-0">
-                <TabsTrigger value="month" className="flex-1 text-sm font-semibold px-2 py-1.5 rounded-full data-[state=active]:bg-muted-foreground/30 data-[state=active]:text-foreground data-[state=active]:shadow-none">M</TabsTrigger>
-                <TabsTrigger value="year" className="flex-1 text-sm font-semibold px-2 py-1.5 rounded-full data-[state=active]:bg-muted-foreground/30 data-[state=active]:text-foreground data-[state=active]:shadow-none">ÅR</TabsTrigger>
-              </TabsList>
-            </Tabs>
+            {sectionView === 'calendar' && (
+              <Tabs value={view} onValueChange={handleViewChange} className="flex-1">
+                <TabsList className="inline-flex w-full h-11 bg-muted/80 p-1 rounded-full gap-0">
+                  <TabsTrigger value="month" className="flex-1 text-sm font-semibold px-2 py-1.5 rounded-full data-[state=active]:bg-muted-foreground/30 data-[state=active]:text-foreground data-[state=active]:shadow-none">M</TabsTrigger>
+                  <TabsTrigger value="year" className="flex-1 text-sm font-semibold px-2 py-1.5 rounded-full data-[state=active]:bg-muted-foreground/30 data-[state=active]:text-foreground data-[state=active]:shadow-none">ÅR</TabsTrigger>
+                </TabsList>
+              </Tabs>
+            )}
 
             <div className="flex items-center gap-1 p-1.5 bg-muted/50 rounded-xl">
                 <button
