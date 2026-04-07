@@ -161,10 +161,12 @@ const Settings = () => {
             );
           })}
         </div>
-        <Button onClick={handleSaveCheckin} className="w-full gap-2" disabled={isSavingCheckin || !hasCheckinChanges}>
+        <Button onClick={handleSaveCheckin} className="w-full gap-2 mb-8" disabled={isSavingCheckin || !hasCheckinChanges}>
           {isSavingCheckin ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
           {hasCheckinChanges ? 'Spara ändringar' : 'Inga ändringar'}
         </Button>
+
+        <CustomQuestionsSection questions={customQuestions} onAdd={addQuestion} onRemove={removeQuestion} />
       </SubPage>
     );
   }
