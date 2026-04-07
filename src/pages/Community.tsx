@@ -1,12 +1,14 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { formatDistanceToNow } from 'date-fns';
 import { sv } from 'date-fns/locale';
-import { Heart, Send, Eye, EyeOff, Trash2, MessageCircle } from 'lucide-react';
+import { Heart, Send, Eye, EyeOff, Trash2, MessageCircle, LogIn } from 'lucide-react';
 import { useCommunityPosts } from '@/hooks/useCommunityPosts';
 import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
+import { Logo } from '@/components/Logo';
 
 const CATEGORIES = [
   { id: 'general', label: 'Allmänt', emoji: '💬' },
@@ -41,42 +43,62 @@ const Community = () => {
   return (
     <div className="min-h-screen">
       {/* Sticky header */}
-      <div className="sticky top-12 md:top-0 z-30 bg-background/95 backdrop-blur-xl border-b border-border/30">
-        <div className="px-5 md:px-8 py-4">
-          <h1 className="text-xl font-bold text-foreground">Forum</h1>
+      <div className="sticky top-0 z-30 bg-background/95 backdrop-blur-xl border-b border-border/30">
+        <div className="px-5 md:px-8 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <Link to="/" className="hover:opacity-80 transition-opacity">
+              <Logo size="sm" showText={false} />
+            </Link>
+            <h1 className="text-xl font-bold text-foreground">Forum</h1>
+          </div>
+          {!user && (
+            <Link to="/logga-in">
+              <Button size="sm" variant="outline" className="rounded-full gap-2 text-xs">
+                <LogIn className="h-3.5 w-3.5" />
+                Logga in
+              </Button>
+            </Link>
+          )}
+          {user && (
+            <Link to="/">
+              <Button size="sm" variant="ghost" className="rounded-full text-xs text-muted-foreground">
+                Tillbaka till appen
+              </Button>
+            </Link>
+          )}
         </div>
       </div>
 
-      <div className="px-5 md:px-8 py-6 max-w-2xl md:mx-0 space-y-6">
-        {/* New post form */}
-        <div className="bg-card/60 backdrop-blur-sm rounded-xl border border-border/30 p-4 space-y-4">
-          <Textarea
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            placeholder="Dela dina tankar..."
-            className="min-h-[80px] bg-transparent border-0 resize-none focus-visible:ring-0 text-[15px] placeholder:text-muted-foreground/50 p-0"
-            maxLength={1000}
-          />
+      <div className="px-5 md:px-8 py-6 max-w-2xl mx-auto space-y-6">
+        {/* New post form - only for logged in users */}
+        {user ? (
+          <div className="bg-card/60 backdrop-blur-sm rounded-xl border border-border/30 p-4 space-y-4">
+            <Textarea
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+              placeholder="Dela dina tankar..."
+              className="min-h-[80px] bg-transparent border-0 resize-none focus-visible:ring-0 text-[15px] placeholder:text-muted-foreground/50 p-0"
+              maxLength={1000}
+            />
 
-          {/* Category chips */}
-          <div className="flex flex-wrap gap-2">
-            {CATEGORIES.map(cat => (
-              <button
-                key={cat.id}
-                onClick={() => setSelectedCategory(cat.id)}
-                className={`text-xs px-3 py-1.5 rounded-full transition-all ${
-                  selectedCategory === cat.id
-                    ? 'bg-primary/20 text-primary border border-primary/30'
-                    : 'bg-white/[0.04] text-muted-foreground hover:bg-white/[0.08] border border-transparent'
-                }`}
-              >
-                {cat.emoji} {cat.label}
-              </button>
-            ))}
-          </div>
+            {/* Category chips */}
+            <div className="flex flex-wrap gap-2">
+              {CATEGORIES.map(cat => (
+                <button
+                  key={cat.id}
+                  onClick={() => setSelectedCategory(cat.id)}
+                  className={`text-xs px-3 py-1.5 rounded-full transition-all ${
+                    selectedCategory === cat.id
+                      ? 'bg-primary/20 text-primary border border-primary/30'
+                      : 'bg-white/[0.04] text-muted-foreground hover:bg-white/[0.08] border border-transparent'
+                  }`}
+                >
+                  {cat.emoji} {cat.label}
+                </button>
+              ))}
+            </div>
 
-          <div className="flex items-center justify-between pt-1">
-            <div className="flex items-center gap-3">
+            <div className="flex items-center justify-between pt-1">
               <div className="flex items-center gap-2">
                 {isAnonymous ? (
                   <EyeOff className="h-4 w-4 text-muted-foreground" />
@@ -92,19 +114,33 @@ const Community = () => {
                   className="scale-75"
                 />
               </div>
-            </div>
 
-            <Button
-              size="sm"
-              onClick={handleSubmit}
-              disabled={!content.trim() || isPosting}
-              className="rounded-full gap-2 px-4"
-            >
-              <Send className="h-3.5 w-3.5" />
-              Posta
-            </Button>
+              <Button
+                size="sm"
+                onClick={handleSubmit}
+                disabled={!content.trim() || isPosting}
+                className="rounded-full gap-2 px-4"
+              >
+                <Send className="h-3.5 w-3.5" />
+                Posta
+              </Button>
+            </div>
           </div>
-        </div>
+        ) : (
+          <div className="bg-card/40 backdrop-blur-sm rounded-xl border border-border/20 p-6 text-center space-y-3">
+            <p className="text-sm text-muted-foreground">
+              Logga in eller skapa ett konto för att dela dina tankar
+            </p>
+            <div className="flex gap-3 justify-center">
+              <Link to="/logga-in">
+                <Button size="sm" className="rounded-full">Logga in</Button>
+              </Link>
+              <Link to="/skapa-konto">
+                <Button size="sm" variant="outline" className="rounded-full">Skapa konto</Button>
+              </Link>
+            </div>
+          </div>
+        )}
 
         {/* Filter */}
         <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
@@ -185,22 +221,29 @@ const Community = () => {
 
                   {/* Actions */}
                   <div className="flex items-center gap-3 pt-1">
-                    <button
-                      onClick={() => toggleReaction(post.id)}
-                      className={`flex items-center gap-1.5 text-xs transition-all ${
-                        post.user_has_reacted
-                          ? 'text-red-400'
-                          : 'text-muted-foreground/50 hover:text-red-400/70'
-                      }`}
-                    >
-                      <Heart
-                        className="h-4 w-4"
-                        fill={post.user_has_reacted ? 'currentColor' : 'none'}
-                      />
-                      {post.reaction_count > 0 && (
-                        <span>{post.reaction_count}</span>
-                      )}
-                    </button>
+                    {user ? (
+                      <button
+                        onClick={() => toggleReaction(post.id)}
+                        className={`flex items-center gap-1.5 text-xs transition-all ${
+                          post.user_has_reacted
+                            ? 'text-red-400'
+                            : 'text-muted-foreground/50 hover:text-red-400/70'
+                        }`}
+                      >
+                        <Heart
+                          className="h-4 w-4"
+                          fill={post.user_has_reacted ? 'currentColor' : 'none'}
+                        />
+                        {post.reaction_count > 0 && (
+                          <span>{post.reaction_count}</span>
+                        )}
+                      </button>
+                    ) : (
+                      <div className="flex items-center gap-1.5 text-xs text-muted-foreground/40">
+                        <Heart className="h-4 w-4" />
+                        {post.reaction_count > 0 && <span>{post.reaction_count}</span>}
+                      </div>
+                    )}
 
                     {isOwn && (
                       <button
