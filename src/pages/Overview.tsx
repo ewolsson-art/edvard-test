@@ -520,7 +520,21 @@ const Overview = () => {
         <header className="sticky top-0 z-20 bg-background pt-5 px-5 md:pt-8 md:px-8 pb-3 -mx-5 md:-mx-8">
           <div className="flex items-center justify-between mb-2">
             <h1 className="font-display text-3xl font-bold">Översikt</h1>
-            <span className="text-lg font-semibold text-muted-foreground">{currentYear}</span>
+            <div className="flex items-center gap-3">
+              {(currentYear !== new Date().getFullYear() || currentMonth.getMonth() !== new Date().getMonth()) && (
+                <button
+                  onClick={() => {
+                    const now = new Date();
+                    setCurrentYear(now.getFullYear());
+                    setCurrentMonth(new Date(now.getFullYear(), now.getMonth(), 1));
+                  }}
+                  className="text-sm font-semibold text-primary px-3 py-1 rounded-full border border-primary/30 bg-primary/5 hover:bg-primary/10 transition-colors"
+                >
+                  Idag
+                </button>
+              )}
+              <span className="text-lg font-semibold text-muted-foreground">{currentYear}</span>
+            </div>
           </div>
           <p className="text-sm text-muted-foreground mb-5">Se dina mönster och trender över tid.</p>
           
