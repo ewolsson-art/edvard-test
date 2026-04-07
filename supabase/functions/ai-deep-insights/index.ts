@@ -71,9 +71,10 @@ serve(async (req) => {
       );
     }
 
-    // Build comprehensive data summary
+    // Build comprehensive data summary - only based on actual check-in days
     const totalDays = moodEntries.length;
-    const moodCounts = { elevated: 0, stable: 0, depressed: 0 };
+    const firstDate = moodEntries[0]?.date;
+    const lastDate = moodEntries[moodEntries.length - 1]?.date;
     const sleepCounts = { good: 0, bad: 0, unknown: 0 };
     const eatingCounts = { good: 0, bad: 0, okay: 0, unknown: 0 };
     let exerciseDays = 0;
@@ -122,24 +123,32 @@ serve(async (req) => {
       else break;
     }
 
-    const dateRange = `${moodEntries[0]?.date} till ${moodEntries[moodEntries.length - 1]?.date}`;
+    const dateRange = `${firstDate} till ${lastDate}`;
+
+    // Calculate calendar days between first and last entry
+    const calendarDays = firstDate && lastDate
+      ? Math.ceil((new Date(lastDate).getTime() - new Date(firstDate).getTime()) / (1000 * 60 * 60 * 24)) + 1
+      : totalDays;
+    const missingDays = calendarDays - totalDays;
 
     const prompt = `Analysera följande data noggrant och ge en djupgående insikt om personens mående, bakgrund och prognos.
 
-📊 DATAÖVERSIKT (${totalDays} dagar, ${dateRange}):
+VIKTIGT: Basera din analys ENBART på de ${totalDays} dagar som användaren faktiskt har checkat in. Dra inga slutsatser om dagar utan data.${missingDays > 0 ? ` Det finns ${missingDays} dagar utan incheckning under perioden – nämn inte detta som ett problem, det är normalt.` : ''}
+
+📊 DATAÖVERSIKT (${totalDays} incheckade dagar under perioden ${dateRange}):
 - Uppvarvad: ${moodCounts.elevated} dagar (${Math.round(moodCounts.elevated / totalDays * 100)}%)
 - Stabil: ${moodCounts.stable} dagar (${Math.round(moodCounts.stable / totalDays * 100)}%)
 - Nedstämd: ${moodCounts.depressed} dagar (${Math.round(moodCounts.depressed / totalDays * 100)}%)
 
-🛌 Sömn: ${sleepCounts.good} bra, ${sleepCounts.bad} dåliga
-🍽️ Mat: ${eatingCounts.good} bra, ${eatingCounts.bad} dåliga
-🏋️ Träning: ${exerciseDays} av ${totalDays} dagar
+🛌 Sömn: ${sleepCounts.good} bra, ${sleepCounts.bad} dåliga (av ${totalDays} incheckningar)
+🍽️ Mat: ${eatingCounts.good} bra, ${eatingCounts.bad} dåliga (av ${totalDays} incheckningar)
+🏋️ Träning: ${exerciseDays} av ${totalDays} incheckade dagar
 
-📈 SENASTE 7 DAGARNA: ${recent7Moods.join(', ')}
-📈 SENASTE 30 DAGARNA: ${recent30Moods.join(', ')}
+📈 SENASTE 7 INCHECKNINGARNA: ${recent7Moods.join(', ')}
+📈 SENASTE 30 INCHECKNINGARNA: ${recent30Moods.join(', ')}
 🔄 Nuvarande streak: ${streak} dagar ${currentMood}
 
-🔗 KORRELATIONER:
+🔗 KORRELATIONER (baserat på incheckad data):
 - Dålig sömn följt av nedstämdhet: ${badSleepThenDepressed} gånger
 - Bra sömn följt av stabilt/uppvarvat: ${goodSleepThenStable} gånger
 - Humörövergångar: ${transitions.slice(-20).join(', ')}
@@ -152,22 +161,22 @@ ${comments.length > 0 ? `💬 EGNA KOMMENTARER (senaste):\n${comments.slice(-10)
 Svara med följande struktur i vanlig text (INTE markdown/JSON):
 
 SAMMANFATTNING:
-(2-3 meningar som sammanfattar personens mående-mönster)
+(2-3 meningar som sammanfattar personens mående-mönster baserat på incheckad data)
 
 BAKGRUND & ANALYS:
-(Beskriv identifierade mönster, korrelationer mellan sömn/mat/träning och mående. Nämn eventuella cykliska mönster.)
+(Beskriv identifierade mönster, korrelationer mellan sömn/mat/träning och mående. Nämn eventuella cykliska mönster. Basera ALLT på faktisk incheckad data.)
 
 STYRKOR:
-(Vad gör personen bra? Vilka positiva mönster finns?)
+(Vad gör personen bra? Vilka positiva mönster finns i den incheckade datan?)
 
 VARNINGSSIGNALER:
-(Vilka mönster bör personen vara uppmärksam på? Basera på historisk data.)
+(Vilka mönster bör personen vara uppmärksam på? Basera på historisk incheckad data.)
 
 PROGNOS:
-(Baserat på nuvarande trend och historiska mönster, vad kan förväntas den närmaste veckan/månaden?)
+(Baserat på nuvarande trend och historiska mönster i incheckningarna, vad kan förväntas den närmaste veckan/månaden?)
 
 REKOMMENDATIONER:
-(3-5 konkreta, empatiska förslag baserade på data. Aldrig medicinsk rådgivning.)`;
+(3-5 konkreta, empatiska förslag baserade på incheckad data. Aldrig medicinsk rådgivning.)`;
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
