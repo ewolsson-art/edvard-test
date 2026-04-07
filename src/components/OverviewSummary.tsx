@@ -84,7 +84,18 @@ export function OverviewSummary({ stats, entries, periodLabel }: OverviewSummary
     return calcDistribution(entries.filter(e => new Date(e.date).getFullYear() === currentYear));
   }, [entries]);
 
-  const registrationRate = stats.totalDays > 0 ? Math.round((stats.total / stats.totalDays) * 100) : 0;
+  // Calculate days since first check-in
+  const { totalDaysSinceStart, registrationRate } = useMemo(() => {
+    if (entries.length === 0) return { totalDaysSinceStart: 0, registrationRate: 0 };
+    const sorted = [...entries].sort((a, b) => a.date.localeCompare(b.date));
+    const firstDate = new Date(sorted[0].date);
+    firstDate.setHours(0, 0, 0, 0);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const totalDays = Math.round((today.getTime() - firstDate.getTime()) / (1000 * 60 * 60 * 24)) + 1;
+    const rate = totalDays > 0 ? Math.round((entries.length / totalDays) * 100) : 0;
+    return { totalDaysSinceStart: totalDays, registrationRate: rate };
+  }, [entries]);
 
   if (entries.length === 0) {
     return (
