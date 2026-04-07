@@ -1,12 +1,11 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Send, Eye, EyeOff, MessageCircle, LogIn, ShieldCheck, ChevronDown, ChevronUp } from 'lucide-react';
+import { Send, Eye, EyeOff, MessageCircle, ShieldCheck, ChevronDown, ChevronUp } from 'lucide-react';
 import { useCommunityPosts } from '@/hooks/useCommunityPosts';
 import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
-import { Logo } from '@/components/Logo';
 import { PostCard } from '@/components/community/PostCard';
 
 const CATEGORIES = [
@@ -57,25 +56,8 @@ const Community = () => {
 
   return (
     <div className="min-h-screen">
-      {/* Sticky header */}
-      <div className="sticky top-0 z-30 bg-background/95 backdrop-blur-xl border-b border-border/30">
-        <div className="px-5 md:px-8 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <Link to="/" className="hover:opacity-80 transition-opacity"><Logo size="sm" showText={false} /></Link>
-            <h1 className="text-xl font-bold text-foreground">Forum</h1>
-          </div>
-          {!user && (
-            <Link to="/logga-in">
-              <Button size="sm" variant="outline" className="rounded-full gap-2 text-xs"><LogIn className="h-3.5 w-3.5" />Logga in</Button>
-            </Link>
-          )}
-          {user && (
-            <Link to="/"><Button size="sm" variant="ghost" className="rounded-full text-xs text-muted-foreground">Tillbaka till appen</Button></Link>
-          )}
-        </div>
-      </div>
-
       <div className="px-5 md:px-8 py-6 max-w-2xl mx-auto space-y-6">
+        <h1 className="text-xl font-bold text-foreground">Forum</h1>
         {/* Rules */}
         <div className="bg-card/40 backdrop-blur-sm rounded-xl border border-border/20 overflow-hidden">
           <button onClick={() => setRulesOpen(!rulesOpen)} className="w-full flex items-center justify-between px-4 py-3 hover:bg-white/[0.02] transition-colors">
