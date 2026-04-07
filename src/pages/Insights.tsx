@@ -145,7 +145,7 @@ export default function Insights() {
   ] : [];
 
   return (
-    <div className="p-5 md:p-8 max-w-2xl mx-auto pb-24">
+    <div className="p-5 md:p-8 max-w-2xl mx-auto md:mx-0 pb-24">
       <h1 className="font-display text-3xl font-bold mb-2">Insikter</h1>
       <p className="text-sm text-muted-foreground mb-8">
         AI-driven analys av ditt mående baserat på all din data.
