@@ -1,4 +1,4 @@
-import { useMemo, useRef, useEffect, useCallback } from 'react';
+import { useMemo, useRef, useEffect, useCallback, forwardRef, useImperativeHandle } from 'react';
 import { format, startOfMonth, endOfMonth, eachDayOfInterval } from 'date-fns';
 import { MonthCalendar } from './MonthCalendar';
 import { SleepMonthCalendar } from './SleepMonthCalendar';
@@ -15,31 +15,42 @@ interface ScrollableMonthsCalendarProps {
   onDayClick?: (date: Date) => void;
 }
 
-export function ScrollableMonthsCalendar({
+export interface ScrollableMonthsCalendarRef {
+  scrollToToday: () => void;
+}
+
+export const ScrollableMonthsCalendar = forwardRef<ScrollableMonthsCalendarRef, ScrollableMonthsCalendarProps>(({
   year,
   type,
   getEntryForDate,
   getMedicationsTakenOnDate,
   getEntriesForMonth,
   onDayClick,
-}: ScrollableMonthsCalendarProps) {
+}, ref) => {
   const currentMonthRef = useRef<HTMLDivElement>(null);
   const currentMonth = new Date().getMonth();
   const currentYear = new Date().getFullYear();
 
   const scrollToCurrentMonth = useCallback(() => {
     if (year === currentYear && currentMonthRef.current) {
-      // Use requestAnimationFrame to ensure DOM is ready
+      requestAnimationFrame(() => {
+        currentMonthRef.current?.scrollIntoView({ block: 'start', behavior: 'smooth' });
+      });
+    }
+  }, [year, currentYear]);
+
+  useImperativeHandle(ref, () => ({
+    scrollToToday: scrollToCurrentMonth,
+  }), [scrollToCurrentMonth]);
+
+  // Scroll on mount
+  useEffect(() => {
+    if (year === currentYear && currentMonthRef.current) {
       requestAnimationFrame(() => {
         currentMonthRef.current?.scrollIntoView({ block: 'start', behavior: 'auto' });
       });
     }
   }, [year, currentYear]);
-
-  // Scroll on mount and whenever the component re-renders (e.g. switching views)
-  useEffect(() => {
-    scrollToCurrentMonth();
-  }, [scrollToCurrentMonth]);
 
   const months = useMemo(() => {
     return Array.from({ length: 12 }, (_, i) => {
@@ -135,4 +146,6 @@ export function ScrollableMonthsCalendar({
       })}
     </div>
   );
-}
+});
+
+ScrollableMonthsCalendar.displayName = 'ScrollableMonthsCalendar';
