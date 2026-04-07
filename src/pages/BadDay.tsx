@@ -13,6 +13,7 @@ interface EncouragingStat {
   detail: string;
   color: string;
   ringColor: string;
+  glowColor: string;
 }
 
 function StatCircle({ stat, index }: { stat: EncouragingStat; index: number }) {
@@ -28,7 +29,7 @@ function StatCircle({ stat, index }: { stat: EncouragingStat; index: number }) {
       )}>
         <div className={cn(
           'absolute inset-0 rounded-full opacity-20 blur-md',
-          stat.ringColor.replace('border-', 'bg-')
+          stat.glowColor
         )} />
         <div className="flex flex-col items-center z-10">
           <stat.icon className={cn('w-6 h-6 mb-1', stat.color)} />
