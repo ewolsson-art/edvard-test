@@ -102,17 +102,14 @@ const Community = () => {
             </div>
           </div>
         ) : (
-          <div className="bg-card/40 backdrop-blur-sm rounded-xl border border-border/20 p-6 text-center space-y-3">
-            <p className="text-sm text-muted-foreground">Logga in eller skapa ett konto för att dela dina tankar</p>
-            <div className="flex gap-3 justify-center">
-              <Link to="/logga-in"><Button size="sm" className="rounded-full">Logga in</Button></Link>
-              <Link to="/skapa-konto"><Button size="sm" variant="outline" className="rounded-full">Skapa konto</Button></Link>
-            </div>
+          <div className="flex items-center justify-between bg-card/30 rounded-xl border border-border/10 px-4 py-3">
+            <p className="text-xs text-muted-foreground/70">Logga in för att delta i diskussionen</p>
+            <Link to="/logga-in"><Button size="sm" variant="ghost" className="rounded-full text-xs h-7 px-3 text-primary hover:text-primary">Logga in</Button></Link>
           </div>
         )}
 
         {/* Filter */}
-        <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
+        <div className="flex gap-2 flex-wrap">
           <button onClick={() => setFilterCategory(null)} className={`text-xs px-3 py-1.5 rounded-full whitespace-nowrap transition-all ${!filterCategory ? 'bg-white/10 text-foreground' : 'text-muted-foreground hover:text-foreground'}`}>Alla</button>
           {CATEGORIES.map(cat => (
             <button key={cat.id} onClick={() => setFilterCategory(filterCategory === cat.id ? null : cat.id)} className={`text-xs px-3 py-1.5 rounded-full whitespace-nowrap transition-all ${filterCategory === cat.id ? 'bg-white/10 text-foreground' : 'text-muted-foreground hover:text-foreground'}`}>

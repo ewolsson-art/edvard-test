@@ -13,6 +13,7 @@ interface EncouragingStat {
   detail: string;
   color: string;
   ringColor: string;
+  glowColor: string;
 }
 
 function StatCircle({ stat, index }: { stat: EncouragingStat; index: number }) {
@@ -28,7 +29,7 @@ function StatCircle({ stat, index }: { stat: EncouragingStat; index: number }) {
       )}>
         <div className={cn(
           'absolute inset-0 rounded-full opacity-20 blur-md',
-          stat.ringColor.replace('border-', 'bg-')
+          stat.glowColor
         )} />
         <div className="flex flex-col items-center z-10">
           <stat.icon className={cn('w-6 h-6 mb-1', stat.color)} />
@@ -104,6 +105,7 @@ export default function BadDay() {
         detail: 'Du har återhämtat dig från nedstämdhet tidigare. Du kan göra det igen.',
         color: 'text-mood-stable',
         ringColor: 'border-mood-stable/40',
+        glowColor: 'bg-mood-stable/40',
       });
     }
 
@@ -115,6 +117,7 @@ export default function BadDay() {
         detail: `Dina nedstämda perioder varar i snitt ${avgDepDays} incheckade dagar.`,
         color: 'text-primary',
         ringColor: 'border-primary/40',
+        glowColor: 'bg-primary/40',
       });
     }
 
@@ -125,6 +128,7 @@ export default function BadDay() {
       detail: `${goodPct}% av dina incheckade dagar har du mått stabilt eller uppvarvat.`,
       color: 'text-mood-stable',
       ringColor: 'border-mood-stable/40',
+      glowColor: 'bg-mood-stable/40',
     });
 
     if (longestStable > 0) {
@@ -135,6 +139,7 @@ export default function BadDay() {
         detail: `Din längsta period utan nedstämdhet var ${longestStable} incheckade dagar.`,
         color: 'text-primary',
         ringColor: 'border-primary/40',
+        glowColor: 'bg-primary/40',
       });
     }
 
@@ -148,6 +153,7 @@ export default function BadDay() {
           detail: `Baserat på ditt mönster kan det vända inom ~${daysLeft} dagar.`,
           color: 'text-mood-stable',
           ringColor: 'border-mood-stable/40',
+          glowColor: 'bg-mood-stable/40',
         });
       }
     }
