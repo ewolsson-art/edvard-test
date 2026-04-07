@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { useMoodData } from '@/hooks/useMoodData';
 import { useProfile } from '@/hooks/useProfile';
 import {
-  Heart, Sun, TrendingUp, Clock, Shield, Sparkles, ArrowUpRight, Dumbbell, Moon
+  Heart, Sun, TrendingUp, Clock, Shield, Sparkles, ArrowUpRight
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -91,9 +91,9 @@ export default function BadDay() {
     if (recoveryCount > 0) {
       stats.push({
         icon: ArrowUpRight,
-        value: `${recoveryCount}x`,
-        label: 'Återhämtningar',
-        detail: `Du har tagit dig ur nedstämdhet ${recoveryCount} ${recoveryCount === 1 ? 'gång' : 'gånger'} tidigare.`,
+        value: '✓',
+        label: 'Återhämtning',
+        detail: 'Du har återhämtat dig från nedstämdhet tidigare. Du kan göra det igen.',
         color: 'text-mood-stable',
         bgColor: 'bg-mood-stable/10 border-mood-stable/20',
       });
@@ -104,7 +104,7 @@ export default function BadDay() {
         icon: Clock,
         value: `~${avgDepDays}d`,
         label: 'Genomsnittlig period',
-        detail: `Dina nedstämda perioder varar i snitt ${avgDepDays} dagar. Det går över.`,
+        detail: `Dina nedstämda perioder varar i snitt ${avgDepDays} incheckade dagar. Det går över.`,
         color: 'text-primary',
         bgColor: 'bg-primary/10 border-primary/20',
       });
@@ -124,31 +124,7 @@ export default function BadDay() {
         icon: Shield,
         value: `${longestStable}d`,
         label: 'Längsta stabila period',
-        detail: `Din längsta period utan nedstämdhet var ${longestStable} dagar. Du kan nå dit igen.`,
-        color: 'text-primary',
-        bgColor: 'bg-primary/10 border-primary/20',
-      });
-    }
-
-    if (depWithExercise > 0 && depEntries.length > 0) {
-      const exercisePct = Math.round((depWithExercise / depEntries.length) * 100);
-      stats.push({
-        icon: Dumbbell,
-        value: `${exercisePct}%`,
-        label: 'Träning under svåra dagar',
-        detail: `Du tränade ${exercisePct}% av dina nedstämda dagar — varje rörelse hjälper.`,
-        color: 'text-mood-stable',
-        bgColor: 'bg-mood-stable/10 border-mood-stable/20',
-      });
-    }
-
-    if (depWithGoodSleep > 0 && depEntries.length > 0) {
-      const sleepPct = Math.round((depWithGoodSleep / depEntries.length) * 100);
-      stats.push({
-        icon: Moon,
-        value: `${sleepPct}%`,
-        label: 'Bra sömn under svåra dagar',
-        detail: `Du sov bra ${sleepPct}% av dina nedstämda dagar — sömn är din allierade.`,
+        detail: `Din längsta period utan nedstämdhet var ${longestStable} incheckade dagar. Du kan nå dit igen.`,
         color: 'text-primary',
         bgColor: 'bg-primary/10 border-primary/20',
       });
@@ -189,7 +165,7 @@ export default function BadDay() {
             </p>
             <p className="text-sm text-muted-foreground">
               {encouragingStats && encouragingStats.recoveryCount > 0
-                ? `Du har återhämtat dig ${encouragingStats.recoveryCount} ${encouragingStats.recoveryCount === 1 ? 'gång' : 'gånger'} förut. Dina egna siffror visar att detta är tillfälligt.`
+                ? 'Du har återhämtat dig förut. Dina egna siffror visar att detta är tillfälligt.'
                 : 'Dina incheckningar visar att svåra perioder alltid tar slut. Här är bevis från din egen data.'}
             </p>
           </div>
