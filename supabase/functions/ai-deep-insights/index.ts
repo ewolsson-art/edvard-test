@@ -71,30 +71,27 @@ serve(async (req) => {
       );
     }
 
-    // Build comprehensive data summary - only based on actual check-in days
+    // Build comprehensive data summary
     const totalDays = moodEntries.length;
     const firstDate = moodEntries[0]?.date;
     const lastDate = moodEntries[moodEntries.length - 1]?.date;
     const moodCounts = { elevated: 0, stable: 0, depressed: 0 };
     const sleepCounts = { good: 0, bad: 0, unknown: 0 };
-    const eatingCounts = { good: 0, bad: 0, okay: 0, unknown: 0 };
     let exerciseDays = 0;
     const comments: string[] = [];
 
     for (const e of moodEntries) {
-      moodCounts[e.mood as keyof typeof moodCounts]++;
+      if (e.mood === 'elevated' || e.mood === 'somewhat_elevated') moodCounts.elevated++;
+      else if (e.mood === 'depressed' || e.mood === 'somewhat_depressed') moodCounts.depressed++;
+      else moodCounts.stable++;
       if (e.sleep_quality === 'good') sleepCounts.good++;
       else if (e.sleep_quality === 'bad') sleepCounts.bad++;
       else sleepCounts.unknown++;
-      if (e.eating_quality === 'good') eatingCounts.good++;
-      else if (e.eating_quality === 'bad') eatingCounts.bad++;
-      else if (e.eating_quality === 'okay') eatingCounts.okay++;
-      else eatingCounts.unknown++;
       if (e.exercised) exerciseDays++;
       if (e.comment) comments.push(`${e.date}: ${e.comment}`);
     }
 
-    // Detect patterns
+    // Recent data
     const last7 = moodEntries.slice(-7);
     const last30 = moodEntries.slice(-30);
     const recent7Moods = last7.map(e => e.mood);
@@ -104,8 +101,8 @@ serve(async (req) => {
     let badSleepThenDepressed = 0;
     let goodSleepThenStable = 0;
     for (let i = 0; i < moodEntries.length - 1; i++) {
-      if (moodEntries[i].sleep_quality === 'bad' && moodEntries[i + 1].mood === 'depressed') badSleepThenDepressed++;
-      if (moodEntries[i].sleep_quality === 'good' && (moodEntries[i + 1].mood === 'stable' || moodEntries[i + 1].mood === 'elevated')) goodSleepThenStable++;
+      if (moodEntries[i].sleep_quality === 'bad' && (moodEntries[i + 1].mood === 'depressed' || moodEntries[i + 1].mood === 'somewhat_depressed')) badSleepThenDepressed++;
+      if (moodEntries[i].sleep_quality === 'good' && (moodEntries[i + 1].mood === 'stable' || moodEntries[i + 1].mood === 'elevated' || moodEntries[i + 1].mood === 'somewhat_elevated')) goodSleepThenStable++;
     }
 
     // Mood transitions
@@ -116,7 +113,7 @@ serve(async (req) => {
       }
     }
 
-    // Streak detection
+    // Streak
     let currentMood = moodEntries[moodEntries.length - 1]?.mood;
     let streak = 0;
     for (let i = moodEntries.length - 1; i >= 0; i--) {
@@ -125,59 +122,51 @@ serve(async (req) => {
     }
 
     const dateRange = `${firstDate} till ${lastDate}`;
-
-    // Calculate calendar days between first and last entry
     const calendarDays = firstDate && lastDate
       ? Math.ceil((new Date(lastDate).getTime() - new Date(firstDate).getTime()) / (1000 * 60 * 60 * 24)) + 1
       : totalDays;
     const missingDays = calendarDays - totalDays;
 
-    const prompt = `Analysera följande data noggrant och ge en djupgående insikt om personens mående, bakgrund och prognos.
+    const prompt = `Analysera följande data och svara ENBART med giltig JSON (inget annat).
 
-VIKTIGT: Basera din analys ENBART på de ${totalDays} dagar som användaren faktiskt har checkat in. Dra inga slutsatser om dagar utan data.${missingDays > 0 ? ` Det finns ${missingDays} dagar utan incheckning under perioden – nämn inte detta som ett problem, det är normalt.` : ''}
+VIKTIGT: Basera analysen ENBART på de ${totalDays} dagar som användaren faktiskt har checkat in.${missingDays > 0 ? ` Det finns ${missingDays} dagar utan incheckning – ignorera dessa.` : ''}
 
-📊 DATAÖVERSIKT (${totalDays} incheckade dagar under perioden ${dateRange}):
+📊 DATA (${totalDays} incheckade dagar, ${dateRange}):
 - Uppvarvad: ${moodCounts.elevated} dagar (${Math.round(moodCounts.elevated / totalDays * 100)}%)
 - Stabil: ${moodCounts.stable} dagar (${Math.round(moodCounts.stable / totalDays * 100)}%)
 - Nedstämd: ${moodCounts.depressed} dagar (${Math.round(moodCounts.depressed / totalDays * 100)}%)
+🛌 Sömn: ${sleepCounts.good} bra, ${sleepCounts.bad} dåliga
+🏋️ Träning: ${exerciseDays} av ${totalDays} dagar
+📈 Senaste 7: ${recent7Moods.join(', ')}
+📈 Senaste 30: ${recent30Moods.join(', ')}
+🔄 Streak: ${streak} dagar ${currentMood}
+🔗 Dålig sömn → nedstämd: ${badSleepThenDepressed}x | Bra sömn → stabil: ${goodSleepThenStable}x
+🔄 Övergångar: ${transitions.slice(-15).join(', ')}
+${diagnoses.length > 0 ? `🏥 Diagnoser: ${diagnoses.map(d => d.name).join(', ')}` : ''}
+${characteristics.length > 0 ? `🔍 Kännetecken: ${characteristics.map(c => `${c.mood_type}: ${c.name}`).join(', ')}` : ''}
+${medications.length > 0 ? `💊 Mediciner: ${medications.map(m => `${m.name} ${m.dosage}`).join(', ')}` : ''}
+${comments.length > 0 ? `💬 Kommentarer: ${comments.slice(-5).join(' | ')}` : ''}
 
-🛌 Sömn: ${sleepCounts.good} bra, ${sleepCounts.bad} dåliga (av ${totalDays} incheckningar)
-🍽️ Mat: ${eatingCounts.good} bra, ${eatingCounts.bad} dåliga (av ${totalDays} incheckningar)
-🏋️ Träning: ${exerciseDays} av ${totalDays} incheckade dagar
+Svara med EXAKT denna JSON-struktur (på svenska):
+{
+  "status": "good" | "warning" | "alert",
+  "statusLabel": "kort etikett, t.ex. 'Stabilt läge' eller 'Var uppmärksam'",
+  "statusDescription": "en mening som sammanfattar nuläget",
+  "trendDirection": "improving" | "declining" | "stable" | "fluctuating",
+  "trendLabel": "kort beskrivning av trendriktningen",
+  "patterns": [
+    { "icon": "sleep" | "exercise" | "mood" | "correlation", "label": "kort mönsterbeskrivning", "impact": "positive" | "negative" | "neutral" }
+  ],
+  "prognosis": {
+    "shortTerm": "prognos för kommande veckan, en mening",
+    "longTerm": "prognos för kommande månaden, en mening",
+    "confidence": "low" | "medium" | "high"
+  },
+  "strengths": ["styrka 1", "styrka 2"],
+  "warnings": ["varning 1"]
+}
 
-📈 SENASTE 7 INCHECKNINGARNA: ${recent7Moods.join(', ')}
-📈 SENASTE 30 INCHECKNINGARNA: ${recent30Moods.join(', ')}
-🔄 Nuvarande streak: ${streak} dagar ${currentMood}
-
-🔗 KORRELATIONER (baserat på incheckad data):
-- Dålig sömn följt av nedstämdhet: ${badSleepThenDepressed} gånger
-- Bra sömn följt av stabilt/uppvarvat: ${goodSleepThenStable} gånger
-- Humörövergångar: ${transitions.slice(-20).join(', ')}
-
-${diagnoses.length > 0 ? `🏥 DIAGNOSER: ${diagnoses.map(d => d.name).join(', ')}` : 'Inga registrerade diagnoser.'}
-${characteristics.length > 0 ? `🔍 KÄNNETECKEN:\n${characteristics.map(c => `- ${c.mood_type}: ${c.name}`).join('\n')}` : ''}
-${medications.length > 0 ? `💊 MEDICINER: ${medications.map(m => `${m.name} ${m.dosage} (${m.active ? 'aktiv' : 'avslutad'})`).join(', ')}` : ''}
-${comments.length > 0 ? `💬 EGNA KOMMENTARER (senaste):\n${comments.slice(-10).join('\n')}` : ''}
-
-Svara med följande struktur i vanlig text (INTE markdown/JSON):
-
-SAMMANFATTNING:
-(2-3 meningar som sammanfattar personens mående-mönster baserat på incheckad data)
-
-BAKGRUND & ANALYS:
-(Beskriv identifierade mönster, korrelationer mellan sömn/mat/träning och mående. Nämn eventuella cykliska mönster. Basera ALLT på faktisk incheckad data.)
-
-STYRKOR:
-(Vad gör personen bra? Vilka positiva mönster finns i den incheckade datan?)
-
-VARNINGSSIGNALER:
-(Vilka mönster bör personen vara uppmärksam på? Basera på historisk incheckad data.)
-
-PROGNOS:
-(Baserat på nuvarande trend och historiska mönster i incheckningarna, vad kan förväntas den närmaste veckan/månaden?)
-
-REKOMMENDATIONER:
-(3-5 konkreta, empatiska förslag baserade på incheckad data. Aldrig medicinsk rådgivning.)`;
+Ge max 3 patterns, max 3 strengths, max 2 warnings. Var varm och empatisk i tonen.`;
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
@@ -190,11 +179,11 @@ REKOMMENDATIONER:
         messages: [
           {
             role: "system",
-            content: `Du är en empatisk och intelligent hälsoanalytiker specialiserad på mönsterigenkänning för personer med humörsvängningar. Du analyserar data observationellt och ger insikter utan att vara dömande. Du ger ALDRIG medicinsk rådgivning men kan uppmuntra kontakt med vårdgivare. Svara alltid på svenska. Var varm och stödjande i tonen.`,
+            content: `Du är en empatisk hälsoanalytiker som svarar ENBART med giltig JSON. Du analyserar humördata observationellt. Du ger ALDRIG medicinsk rådgivning. Svara alltid på svenska.`,
           },
           { role: "user", content: prompt },
         ],
-        max_tokens: 2500,
+        max_tokens: 1500,
       }),
     });
 
@@ -215,11 +204,21 @@ REKOMMENDATIONER:
     }
 
     const data = await response.json();
-    const analysis = data.choices?.[0]?.message?.content || "";
+    const rawContent = data.choices?.[0]?.message?.content || "";
+    
+    // Parse JSON from response (handle markdown code blocks)
+    let structured;
+    try {
+      const jsonMatch = rawContent.match(/\{[\s\S]*\}/);
+      structured = jsonMatch ? JSON.parse(jsonMatch[0]) : null;
+    } catch {
+      structured = null;
+    }
 
     return new Response(
       JSON.stringify({
-        analysis,
+        structured,
+        analysis: rawContent,
         stats: {
           totalDays,
           dateRange,
