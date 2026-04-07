@@ -45,6 +45,7 @@ import ForgotPassword from "./pages/ForgotPassword";
 import Characteristics from "./pages/Characteristics";
 import CharacteristicDetail from "./pages/CharacteristicDetail";
 import Insights from "./pages/Insights";
+import BadDay from "./pages/BadDay";
 
 const queryClient = new QueryClient();
 
@@ -136,6 +137,11 @@ const App = () => (
             <Route path="/insikter" element={
               <ProtectedRoute>
                 <AppLayout><Insights /></AppLayout>
+              </ProtectedRoute>
+            } />
+            <Route path="/dalig-dag" element={
+              <ProtectedRoute>
+                <AppLayout><BadDay /></AppLayout>
               </ProtectedRoute>
             } />
 
