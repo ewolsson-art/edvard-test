@@ -18,27 +18,26 @@ interface EncouragingStat {
 function StatCircle({ stat, index }: { stat: EncouragingStat; index: number }) {
   return (
     <div
-      className="flex flex-col items-center gap-2 animate-fade-in"
+      className="flex flex-col items-center gap-3 animate-fade-in"
       style={{ animationDelay: `${index * 120}ms` }}
     >
       <div className={cn(
-        'relative w-20 h-20 rounded-full flex items-center justify-center',
+        'relative w-28 h-28 rounded-full flex items-center justify-center',
         'border-2 transition-all',
         stat.ringColor
       )}>
-        {/* Glow effect */}
         <div className={cn(
           'absolute inset-0 rounded-full opacity-20 blur-md',
           stat.ringColor.replace('border-', 'bg-')
         )} />
         <div className="flex flex-col items-center z-10">
-          <stat.icon className={cn('w-5 h-5 mb-0.5', stat.color)} />
-          <span className={cn('text-base font-bold leading-none', stat.color)}>
+          <stat.icon className={cn('w-6 h-6 mb-1', stat.color)} />
+          <span className={cn('text-xl font-bold leading-none', stat.color)}>
             {stat.value}
           </span>
         </div>
       </div>
-      <span className="text-[11px] font-medium text-foreground/70 text-center max-w-[90px] leading-tight">
+      <span className="text-xs font-medium text-foreground/70 text-center max-w-[100px] leading-tight">
         {stat.label}
       </span>
     </div>
@@ -162,18 +161,18 @@ export default function BadDay() {
   const activeDetail = encouragingStats?.stats[0]?.detail;
 
   return (
-    <div className="p-5 md:p-8 max-w-2xl mx-auto md:mx-0 pb-24">
-      <h1 className="font-display text-3xl font-bold mb-6">Dålig dag?</h1>
+    <div className="p-5 md:p-8 max-w-3xl mx-auto pb-24">
+      <h1 className="font-display text-3xl font-bold mb-6 text-center">Dålig dag?</h1>
 
       {/* Hero message */}
-      <div className="text-center mb-8">
-        <div className="w-16 h-16 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center mx-auto mb-4">
-          <Heart className="w-8 h-8 text-primary" />
+      <div className="text-center mb-10">
+        <div className="w-20 h-20 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center mx-auto mb-5">
+          <Heart className="w-10 h-10 text-primary" />
         </div>
-        <p className="text-xl font-semibold text-foreground mb-1">
+        <p className="text-2xl font-semibold text-foreground mb-2">
           {greeting}det kommer bli bättre.
         </p>
-        <p className="text-sm text-muted-foreground max-w-sm mx-auto">
+        <p className="text-base text-muted-foreground max-w-md mx-auto">
           {encouragingStats && encouragingStats.recoveryCount > 0
             ? 'Du har återhämtat dig förut. Dina siffror visar att detta är tillfälligt.'
             : 'Svåra perioder tar slut. Här är bevis från din data.'}
@@ -190,7 +189,7 @@ export default function BadDay() {
       ) : (
         <div className="space-y-8">
           {/* Circles grid */}
-          <div className="flex flex-wrap justify-center gap-6">
+          <div className="flex flex-wrap justify-center gap-8">
             {encouragingStats.stats.map((stat, i) => (
               <StatCircle key={i} stat={stat} index={i} />
             ))}
