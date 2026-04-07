@@ -596,6 +596,7 @@ const Overview = () => {
                   <>
                      {view === 'month' && (
                       <ScrollableMonthsCalendar
+                        ref={scrollableCalendarRef}
                         year={currentYear}
                         type="mood"
                         getEntryForDate={getEntryForDate}
