@@ -565,7 +565,10 @@ const Overview = () => {
                   <CalendarDays className="w-6 h-6" />
                 </button>
                 <button
-                  onClick={() => setSectionView('stats')}
+                  onClick={() => {
+                    setSectionView('stats');
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }}
                   className={`p-2.5 rounded-lg transition-all ${
                     sectionView === 'stats'
                       ? 'bg-background text-foreground shadow-sm'
