@@ -213,7 +213,7 @@ const Auth = () => {
       <AuthNavbar />
 
       {/* Text readability overlay */}
-      <div className="absolute inset-0 bg-gradient-to-t from-[hsl(230_30%_5%)] via-[hsl(230_30%_5%/0.6)] to-transparent pointer-events-none z-[5]" />
+      <div className="absolute inset-0 bg-gradient-to-t from-[hsl(230_30%_5%/0.85)] via-[hsl(230_30%_5%/0.3)] to-transparent pointer-events-none z-[5]" />
 
       {/* Hero Section */}
       <section className="relative z-10 flex-1 flex flex-col justify-center md:justify-end px-5 md:px-8 pb-[18%] md:pb-[12%] pt-20 md:pt-0">
