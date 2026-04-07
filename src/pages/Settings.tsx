@@ -171,13 +171,6 @@ const Settings = () => {
     );
   }
 
-  if (view === 'custom-questions') {
-    return (
-      <SubPage title="Egna frågor" onBack={() => setView('main')}>
-        <CustomQuestionsSection questions={customQuestions} onAdd={addQuestion} onRemove={removeQuestion} />
-      </SubPage>
-    );
-  }
 
   if (view === 'notifications') {
     return (
