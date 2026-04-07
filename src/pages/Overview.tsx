@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback, useRef } from 'react';
 import { CalendarDays, BarChart3 } from 'lucide-react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { format, startOfWeek, endOfWeek, addWeeks, subWeeks, eachDayOfInterval, addMonths, subMonths, startOfMonth, endOfMonth, isBefore, startOfDay, isToday } from 'date-fns';
@@ -16,7 +16,7 @@ import { MonthCalendar } from '@/components/MonthCalendar';
 import { ExerciseMonthCalendar } from '@/components/ExerciseMonthCalendar';
 import { SleepMonthCalendar } from '@/components/SleepMonthCalendar';
 import { EatingMonthCalendar } from '@/components/EatingMonthCalendar';
-import { ScrollableMonthsCalendar } from '@/components/ScrollableMonthsCalendar';
+import { ScrollableMonthsCalendar, ScrollableMonthsCalendarRef } from '@/components/ScrollableMonthsCalendar';
 
 import { SleepWeekCalendar } from '@/components/SleepWeekCalendar';
 import { EatingWeekCalendar } from '@/components/EatingWeekCalendar';
@@ -78,6 +78,7 @@ const Overview = () => {
   const [exerciseDialogOpen, setExerciseDialogOpen] = useState(false);
   const [exerciseDialogDate, setExerciseDialogDate] = useState<Date | null>(null);
   const [sectionView, setSectionView] = useState<'calendar' | 'stats'>('calendar');
+  const scrollableCalendarRef = useRef<ScrollableMonthsCalendarRef>(null);
   const navigate = useNavigate();
 
   const { entries, isLoaded, getEntryForDate, getEntriesForMonth, getEntriesForYear, getStatsForYear, updateExerciseTypes } = useMoodData();
@@ -526,6 +527,9 @@ const Overview = () => {
                   const now = new Date();
                   setCurrentYear(now.getFullYear());
                   setCurrentMonth(new Date(now.getFullYear(), now.getMonth(), 1));
+                  setTimeout(() => {
+                    scrollableCalendarRef.current?.scrollToToday();
+                  }, 50);
                 }}
                 className="text-sm font-semibold text-primary px-3 py-1 rounded-full border border-primary/30 bg-primary/5 hover:bg-primary/10 transition-colors"
               >
@@ -592,6 +596,7 @@ const Overview = () => {
                   <>
                      {view === 'month' && (
                       <ScrollableMonthsCalendar
+                        ref={scrollableCalendarRef}
                         year={currentYear}
                         type="mood"
                         getEntryForDate={getEntryForDate}
