@@ -191,28 +191,6 @@ export function OverviewSummary({ stats, entries, periodLabel }: OverviewSummary
         </section>
       )}
 
-      {/* 4. This year */}
-      {yearDistribution && (
-        <section className="rounded-2xl bg-card/60 border border-border/40 p-5">
-          <SectionHeader icon={CalendarCheck} title={`${new Date().getFullYear()}`} />
-          <p className="text-xs text-muted-foreground mt-1 mb-3">Dagar i varje tillstånd i år.</p>
-          <div className="flex h-4 rounded-full overflow-hidden mb-3">
-            {yearDistribution.map(item => item.percentage > 0 && (
-              <div key={item.key} className={item.barClass} style={{ width: `${item.percentage}%` }} />
-            ))}
-          </div>
-          <div className="grid grid-cols-3 gap-3">
-            {yearDistribution.map(item => (
-              <div key={item.key} className="text-center">
-                <item.icon className={`w-4 h-4 mx-auto ${item.colorClass}`} />
-                <p className="text-lg font-bold mt-0.5">{item.count}</p>
-                <p className="text-xs text-muted-foreground">{item.percentage}%</p>
-              </div>
-            ))}
-          </div>
-        </section>
-      )}
-
       {/* 5. Average episode length */}
       {allTimeDistribution && (
         <section className="rounded-2xl bg-card/60 border border-border/40 p-5">
