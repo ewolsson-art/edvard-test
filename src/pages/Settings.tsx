@@ -161,21 +161,16 @@ const Settings = () => {
             );
           })}
         </div>
-        <Button onClick={handleSaveCheckin} className="w-full gap-2" disabled={isSavingCheckin || !hasCheckinChanges}>
+        <Button onClick={handleSaveCheckin} className="w-full gap-2 mb-8" disabled={isSavingCheckin || !hasCheckinChanges}>
           {isSavingCheckin ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
           {hasCheckinChanges ? 'Spara ändringar' : 'Inga ändringar'}
         </Button>
-      </SubPage>
-    );
-  }
 
-  if (view === 'custom-questions') {
-    return (
-      <SubPage title="Egna frågor" onBack={() => setView('main')}>
         <CustomQuestionsSection questions={customQuestions} onAdd={addQuestion} onRemove={removeQuestion} />
       </SubPage>
     );
   }
+
 
   if (view === 'notifications') {
     return (
@@ -227,8 +222,7 @@ const Settings = () => {
         {/* Check-in section */}
         {isPatient && (
           <SettingsGroup label="Din check-in">
-            <SettingsRow icon={SettingsIcon} label="Anpassa check-in" description="Välj kategorier" onClick={() => setView('checkin')} />
-            <SettingsRow icon={MessageSquarePlus} label="Egna frågor" description="Lägg till egna frågor" onClick={() => setView('custom-questions')} />
+            <SettingsRow icon={SettingsIcon} label="Anpassa check-in" description="Välj kategorier och egna frågor" onClick={() => setView('checkin')} />
             <SettingsRow icon={Bell} label="Notiser" description="Påminnelser och push" onClick={() => setView('notifications')} />
           </SettingsGroup>
         )}
