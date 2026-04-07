@@ -46,6 +46,7 @@ import Characteristics from "./pages/Characteristics";
 import CharacteristicDetail from "./pages/CharacteristicDetail";
 import Insights from "./pages/Insights";
 import BadDay from "./pages/BadDay";
+import Community from "./pages/Community";
 
 const queryClient = new QueryClient();
 
@@ -142,6 +143,11 @@ const App = () => (
             <Route path="/dalig-dag" element={
               <ProtectedRoute>
                 <AppLayout><BadDay /></AppLayout>
+              </ProtectedRoute>
+            } />
+            <Route path="/forum" element={
+              <ProtectedRoute>
+                <AppLayout><Community /></AppLayout>
               </ProtectedRoute>
             } />
 
