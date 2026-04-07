@@ -168,7 +168,7 @@ export default function BadDay() {
 
   return (
     <div className="p-5 md:p-8 max-w-3xl mx-auto pb-24">
-      <h1 className="font-display text-3xl font-bold mb-6 text-center">Dålig dag?</h1>
+      <h1 className="font-display text-3xl font-bold mb-6">Dålig dag?</h1>
 
       {/* Hero message */}
       <div className="text-center mb-10">
