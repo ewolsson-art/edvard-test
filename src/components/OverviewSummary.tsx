@@ -245,10 +245,10 @@ export function OverviewSummary({ stats, entries, periodLabel }: OverviewSummary
       <section className="rounded-2xl bg-card/60 border border-border/40 p-4 flex items-center justify-between">
         <div>
           <p className="text-sm font-medium">Registrerade dagar</p>
-          <p className="text-xs text-muted-foreground">{periodLabel}</p>
+          <p className="text-xs text-muted-foreground">Sedan första incheckning</p>
         </div>
         <div className="text-right">
-          <p className="text-xl font-bold">{stats.total}<span className="text-muted-foreground font-normal text-sm">/{stats.totalDays}</span></p>
+          <p className="text-xl font-bold">{entries.length}<span className="text-muted-foreground font-normal text-sm">/{totalDaysSinceStart}</span></p>
           <p className="text-xs text-muted-foreground">{registrationRate}%</p>
         </div>
       </section>
