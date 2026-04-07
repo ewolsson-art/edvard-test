@@ -519,9 +519,9 @@ const Overview = () => {
     <div className="pb-24" style={{ overflowX: 'clip' }}>
       <div className="max-w-6xl mx-auto space-y-6">
         <header className="sticky top-12 sm:top-14 md:top-0 z-20 bg-background pt-5 px-5 md:pt-8 md:px-8 pb-3 -mx-5 md:-mx-8">
-          <div className="flex items-center justify-between mb-2">
+          <div className="flex items-baseline justify-between mb-2">
             <h1 className="font-display text-3xl font-bold">Översikt</h1>
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-4">
               {sectionView === 'calendar' && (
                 <button
                   onClick={() => {
@@ -537,7 +537,7 @@ const Overview = () => {
                   Idag
                 </button>
               )}
-              <span className="text-lg font-semibold text-muted-foreground">{currentYear}</span>
+              <span className="text-xl font-semibold text-muted-foreground">{currentYear}</span>
             </div>
           </div>
           <p className="text-sm text-muted-foreground mb-5">Se dina mönster och trender över tid.</p>
