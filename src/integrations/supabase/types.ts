@@ -73,6 +73,68 @@ export type Database = {
           },
         ]
       }
+      community_posts: {
+        Row: {
+          anonymous_name: string | null
+          category: string
+          content: string
+          created_at: string
+          id: string
+          is_anonymous: boolean
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          anonymous_name?: string | null
+          category?: string
+          content: string
+          created_at?: string
+          id?: string
+          is_anonymous?: boolean
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          anonymous_name?: string | null
+          category?: string
+          content?: string
+          created_at?: string
+          id?: string
+          is_anonymous?: boolean
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      community_reactions: {
+        Row: {
+          created_at: string
+          id: string
+          post_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          post_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          post_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "community_reactions_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "community_posts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       custom_checkin_answers: {
         Row: {
           answer_value: string | null
