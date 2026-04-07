@@ -21,7 +21,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
-import { Loader2, Save, Trash2, AlertTriangle, Brain, Moon, Utensils, Dumbbell, Pill, ChevronRight, Bell, Lock, MessageSquarePlus, Settings as SettingsIcon } from 'lucide-react';
+import { Loader2, Save, Trash2, AlertTriangle, Brain, Moon, Utensils, Dumbbell, Pill, ChevronRight, Bell, Lock, Settings as SettingsIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { NotificationSettings } from '@/components/NotificationSettings';
 import { ChangePasswordSection } from '@/components/ChangePasswordSection';
