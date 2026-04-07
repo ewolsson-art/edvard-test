@@ -48,7 +48,7 @@ function InsightsLoadingAnimation() {
   }, []);
 
   return (
-    <div className="flex flex-col items-center justify-center py-20 text-center px-5">
+    <div className="fixed inset-0 flex flex-col items-center justify-center text-center px-5 z-10">
       {/* Animated brain orb */}
       <div className="relative w-28 h-28 mb-10">
         {/* Outer rotating ring */}
