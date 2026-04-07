@@ -215,7 +215,7 @@ const Settings = () => {
   // Main settings list
   return (
     <div className="p-5 md:p-8 pb-24">
-      <div className="max-w-2xl mx-auto">
+        <div className="max-w-2xl mx-auto md:mx-0">
         <h1 className="font-display text-3xl font-bold mb-2">Inställningar</h1>
         <p className="text-sm text-muted-foreground mb-8">Anpassa appen efter dina behov.</p>
 
@@ -242,7 +242,7 @@ const Settings = () => {
 function SubPage({ title, onBack, children }: { title: string; onBack: () => void; children: React.ReactNode }) {
   return (
     <div className="p-5 md:p-8 pb-24 animate-fade-in">
-      <div className="max-w-2xl mx-auto">
+      <div className="max-w-2xl mx-auto md:mx-0">
         <div className="flex items-center gap-3 mb-6">
           <button onClick={onBack} className="p-2 -ml-2 rounded-lg hover:bg-muted transition-colors" aria-label="Tillbaka">
             <ChevronRight className="w-5 h-5 rotate-180 text-foreground" />
