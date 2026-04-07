@@ -20,10 +20,12 @@ interface PostCardProps {
   onDeletePost: (postId: string) => void;
   onCreateReply: (postId: string, content: string, isAnonymous: boolean) => Promise<boolean>;
   onDeleteReply: (replyId: string) => void;
+  expanded?: boolean;
 }
 
-export const PostCard = ({ post, userId, onToggleReaction, onDeletePost, onCreateReply, onDeleteReply }: PostCardProps) => {
-  const [showReplies, setShowReplies] = useState(false);
+export const PostCard = ({ post, userId, onToggleReaction, onDeletePost, onCreateReply, onDeleteReply, expanded = false }: PostCardProps) => {
+  const [showReplies, setShowReplies] = useState(expanded);
+
   const [replyContent, setReplyContent] = useState('');
   const [replyAnonymous, setReplyAnonymous] = useState(true);
   const [isReplying, setIsReplying] = useState(false);
@@ -103,6 +105,13 @@ export const PostCard = ({ post, userId, onToggleReaction, onDeletePost, onCreat
           </button>
         )}
       </div>
+
+      {/* Title */}
+      {post.title && (
+        <div className="px-4 pb-1">
+          <h3 className="text-base font-bold text-foreground leading-snug">{post.title}</h3>
+        </div>
+      )}
 
       {/* Content — double-tap to like */}
       <div className="relative px-4 pb-3 select-none" onDoubleClick={handleDoubleClick}>

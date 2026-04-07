@@ -5,8 +5,9 @@ import { useCommunityPosts } from '@/hooks/useCommunityPosts';
 import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
+import { Input } from '@/components/ui/input';
 import { Switch } from '@/components/ui/switch';
-import { PostCard } from '@/components/community/PostCard';
+import { ThreadListItem } from '@/components/community/ThreadListItem';
 
 const CATEGORIES = [
   { id: 'general', label: 'Allmänt', emoji: '💬' },
@@ -36,7 +37,8 @@ const RULES = [
 
 const Community = () => {
   const { user } = useAuth();
-  const { posts, loading, createPost, createReply, deleteReply, toggleReaction, deletePost } = useCommunityPosts();
+  const { posts, loading, createPost } = useCommunityPosts();
+  const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [isAnonymous, setIsAnonymous] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState('general');
@@ -48,9 +50,10 @@ const Community = () => {
   const handleSubmit = async () => {
     if (!content.trim() || isPosting) return;
     setIsPosting(true);
-    const success = await createPost(content, selectedCategory, isAnonymous);
+    const success = await createPost(content, selectedCategory, isAnonymous, title);
     if (success) {
       setContent('');
+      setTitle('');
       setMobileFormOpen(false);
     }
     setIsPosting(false);
@@ -59,8 +62,15 @@ const Community = () => {
   const filteredPosts = filterCategory ? posts.filter(p => p.category === filterCategory) : posts;
 
   const PostForm = () => (
-    <div className="bg-card/60 backdrop-blur-sm rounded-xl border border-border/30 p-4 space-y-4">
-      <Textarea value={content} onChange={(e) => setContent(e.target.value)} placeholder="Dela dina tankar..." className="min-h-[80px] bg-transparent border-0 resize-none focus-visible:ring-0 text-[15px] placeholder:text-muted-foreground/50 p-0" maxLength={1000} />
+    <div className="bg-card/60 backdrop-blur-sm rounded-xl border border-border/30 p-4 space-y-3">
+      <Input
+        value={title}
+        onChange={(e) => setTitle(e.target.value)}
+        placeholder="Rubrik på din tråd..."
+        className="bg-transparent border-0 focus-visible:ring-0 text-base font-semibold placeholder:text-muted-foreground/40 px-0 h-auto"
+        maxLength={120}
+      />
+      <Textarea value={content} onChange={(e) => setContent(e.target.value)} placeholder="Skriv ditt inlägg..." className="min-h-[80px] bg-transparent border-0 resize-none focus-visible:ring-0 text-[15px] placeholder:text-muted-foreground/50 p-0" maxLength={2000} />
       <div className="flex flex-wrap gap-2">
         {CATEGORIES.map(cat => (
           <button key={cat.id} onClick={() => setSelectedCategory(cat.id)} className={`text-xs px-3 py-1.5 rounded-full transition-all ${selectedCategory === cat.id ? 'bg-primary/20 text-primary border border-primary/30' : 'bg-white/[0.04] text-muted-foreground hover:bg-white/[0.08] border border-transparent'}`}>
@@ -75,7 +85,7 @@ const Community = () => {
           <Switch checked={!isAnonymous} onCheckedChange={(checked) => setIsAnonymous(!checked)} className="scale-75" />
         </div>
         <Button size="sm" onClick={handleSubmit} disabled={!content.trim() || isPosting} className="rounded-full gap-2 px-4">
-          <Send className="h-3.5 w-3.5" />Posta
+          <Send className="h-3.5 w-3.5" />Skapa tråd
         </Button>
       </div>
     </div>
@@ -129,26 +139,18 @@ const Community = () => {
           ))}
         </div>
 
-        {/* Posts */}
+        {/* Thread list */}
         {loading ? (
           <div className="flex justify-center py-12"><div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin" /></div>
         ) : filteredPosts.length === 0 ? (
           <div className="text-center py-16 space-y-3">
             <MessageCircle className="h-10 w-10 mx-auto text-muted-foreground/30" />
-            <p className="text-muted-foreground text-sm">Inga inlägg ännu. Var den första!</p>
+            <p className="text-muted-foreground text-sm">Inga trådar ännu. Var den första!</p>
           </div>
         ) : (
-          <div className="space-y-3 md:space-y-3">
+          <div className="space-y-2 md:space-y-3">
             {filteredPosts.map(post => (
-              <PostCard
-                key={post.id}
-                post={post}
-                userId={user?.id}
-                onToggleReaction={toggleReaction}
-                onDeletePost={deletePost}
-                onCreateReply={createReply}
-                onDeleteReply={deleteReply}
-              />
+              <ThreadListItem key={post.id} post={post} />
             ))}
           </div>
         )}
@@ -161,7 +163,7 @@ const Community = () => {
             <div className="fixed inset-0 z-50 md:hidden flex items-end justify-center bg-black/60 backdrop-blur-sm" onClick={() => setMobileFormOpen(false)}>
               <div className="w-full max-w-lg bg-card border-t border-border/30 rounded-t-2xl p-5 space-y-4 animate-in slide-in-from-bottom duration-300" onClick={(e) => e.stopPropagation()}>
                 <div className="flex items-center justify-between">
-                  <span className="text-sm font-semibold text-foreground">Nytt inlägg</span>
+                  <span className="text-sm font-semibold text-foreground">Ny tråd</span>
                   <button onClick={() => setMobileFormOpen(false)} className="text-destructive">
                     <X className="h-5 w-5" />
                   </button>
