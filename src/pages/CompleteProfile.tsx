@@ -101,6 +101,17 @@ const CompleteProfile = () => {
       console.error("Profile creation error:", profileError);
     }
 
+    // If social login user with stored role, assign it
+    if (storedRole && !user?.user_metadata?.role) {
+      await supabase.from("user_roles").upsert({
+        user_id: user!.id,
+        role: storedRole as "patient" | "relative",
+      }, { onConflict: "user_id" });
+    }
+
+    // Clean up stored role
+    localStorage.removeItem("signup_role");
+
     toast({
       title: "Profil sparad!",
       description: "Välkommen till Toddy",
