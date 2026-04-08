@@ -10,8 +10,7 @@ import { Loader2, Eye, EyeOff, Lock, Sparkles } from "lucide-react";
 import { z } from "zod";
 
 const profileSchema = z.object({
-  firstName: z.string().min(1, "Förnamn krävs"),
-  lastName: z.string().min(1, "Efternamn krävs"),
+  username: z.string().min(1, "Namn krävs").max(50, "Max 50 tecken"),
   password: z.string().min(6, "Lösenordet måste vara minst 6 tecken"),
   confirmPassword: z.string(),
 }).refine((data) => data.password === data.confirmPassword, {
@@ -24,8 +23,7 @@ const CompleteProfile = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
 
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
