@@ -62,19 +62,15 @@ export const ThreadListItem = ({ post }: ThreadListItemProps) => {
           )}
         </div>
         <div className="flex items-center gap-3">
-          {post.reaction_count > 0 && (
-            <span className="flex items-center gap-1 text-[12px] text-muted-foreground/40">
-              <Heart className="h-3.5 w-3.5" fill={post.user_has_reacted ? 'currentColor' : 'none'} strokeWidth={1.8}
-                     style={{ color: post.user_has_reacted ? 'rgb(239 68 68)' : undefined }} />
-              {post.reaction_count}
-            </span>
-          )}
-          {replyCount > 0 && (
-            <span className="flex items-center gap-1 text-[12px] text-muted-foreground/40">
-              <MessageCircle className="h-3.5 w-3.5" strokeWidth={1.8} />
-              {replyCount}
-            </span>
-          )}
+          <span className="flex items-center gap-1 text-[12px] text-muted-foreground/40">
+            <Heart className="h-3.5 w-3.5" fill={post.user_has_reacted ? 'currentColor' : 'none'} strokeWidth={1.8}
+                   style={{ color: post.user_has_reacted ? 'rgb(239 68 68)' : undefined }} />
+            {post.reaction_count}
+          </span>
+          <span className="flex items-center gap-1 text-[12px] text-muted-foreground/40">
+            <MessageCircle className="h-3.5 w-3.5" strokeWidth={1.8} />
+            {replyCount}
+          </span>
         </div>
       </div>
     </button>
