@@ -86,6 +86,7 @@ const Overview = () => {
   const { entries, isLoaded, getEntryForDate, getEntriesForMonth, getEntriesForYear, getStatsForYear, updateExerciseTypes } = useMoodData();
   const { isLoaded: medsLoaded, getMedicationsTakenOnDate, logs, activeMedications } = useMedications();
   const { preferences, loading: prefsLoading } = useUserPreferences();
+  const { characteristics } = useCharacteristics();
 
   // Week data
   const weekDays = useMemo(() => {
