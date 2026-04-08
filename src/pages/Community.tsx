@@ -39,6 +39,7 @@ const RULES = [
 
 const Community = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const { posts, loading, createPost } = useCommunityPosts();
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
