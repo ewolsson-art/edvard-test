@@ -40,6 +40,7 @@ export function ProtectedRoute({ children, skipOnboardingCheck = false }: Protec
     if (patientOnlyPaths.includes(location.pathname)) {
       return <Navigate to="/lakare" replace />;
     }
+    // Allow doctors to access shared pages like forum and notifications
     // Allow doctors to access doctor-specific and shared pages
     return <>{children}</>;
   }
@@ -52,10 +53,11 @@ export function ProtectedRoute({ children, skipOnboardingCheck = false }: Protec
     }
     
     // Relatives can only access their dashboard, profile, reports, and patient detail views (no chat)
-    const relativeAllowedPaths = ['/anhorig', '/profil', '/anhorig-onboarding', '/anhorig-rapporter'];
+    const relativeAllowedPaths = ['/anhorig', '/profil', '/anhorig-onboarding', '/anhorig-rapporter', '/forum', '/community', '/notiser', '/installningar'];
     const isPatientDetailPath = location.pathname.startsWith('/patient/');
+    const isForumThread = location.pathname.startsWith('/forum/') || location.pathname.startsWith('/community/');
     
-    if (!relativeAllowedPaths.includes(location.pathname) && !isPatientDetailPath) {
+    if (!relativeAllowedPaths.includes(location.pathname) && !isPatientDetailPath && !isForumThread) {
       return <Navigate to="/anhorig" replace />;
     }
     
