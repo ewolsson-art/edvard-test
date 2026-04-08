@@ -167,7 +167,7 @@ export default function BadDay() {
   const activeDetail = encouragingStats?.stats[0]?.detail;
 
   return (
-    <div className="p-5 md:p-8 max-w-3xl mx-auto pb-24">
+    <div className="p-5 md:p-8 max-w-2xl md:mx-0 pb-24">
       <h1 className="font-display text-3xl font-bold mb-6">Dålig dag?</h1>
 
       {/* Hero message */}
