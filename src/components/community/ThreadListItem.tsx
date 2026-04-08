@@ -45,18 +45,6 @@ export const ThreadListItem = ({ post }: ThreadListItemProps) => {
         )}
       </div>
 
-      {/* Category + time */}
-      <div className="flex items-center gap-2 mb-2">
-        {cat && (
-          <span className="text-xs px-2.5 py-1 rounded-full bg-white/[0.06] text-muted-foreground/60">
-            {cat.emoji} {cat.label}
-          </span>
-        )}
-        <span className="text-xs text-muted-foreground/50">
-          {formatDistanceToNow(new Date(post.created_at), { addSuffix: true, locale: sv })}
-        </span>
-      </div>
-
       {/* Title */}
       <h3 className="text-base font-semibold text-foreground/90 leading-snug mb-1.5">
         {title}
@@ -69,8 +57,18 @@ export const ThreadListItem = ({ post }: ThreadListItemProps) => {
         </p>
       )}
 
-      {/* Footer: stats */}
-      <div className="flex items-center justify-end mt-3 pt-3 border-t border-border/20">
+      {/* Footer: category + time + stats */}
+      <div className="flex items-center justify-between mt-3 pt-3 border-t border-border/20">
+        <div className="flex items-center gap-2">
+          {cat && (
+            <span className="text-xs px-2.5 py-1 rounded-full bg-white/[0.06] text-muted-foreground/60">
+              {cat.emoji} {cat.label}
+            </span>
+          )}
+          <span className="text-xs text-muted-foreground/50">
+            {formatDistanceToNow(new Date(post.created_at), { addSuffix: true, locale: sv })}
+          </span>
+        </div>
         <div className="flex items-center gap-4">
           <span className="flex items-center gap-1.5 text-sm text-muted-foreground/50">
             <Heart className="h-4.5 w-4.5" fill={post.user_has_reacted ? 'currentColor' : 'none'} strokeWidth={1.8}
