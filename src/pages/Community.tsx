@@ -361,6 +361,13 @@ const Community = () => {
                 >
                   <ImagePlus className="h-5 w-5" />
                 </button>
+                <button
+                  onClick={() => setPollMode(!pollMode)}
+                  className={`transition-colors ${pollMode ? 'text-primary' : 'text-muted-foreground hover:text-foreground'}`}
+                  title="Lägg till omröstning"
+                >
+                  <BarChart3 className="h-5 w-5" />
+                </button>
                 <div className="flex items-center gap-2">
                   {isAnonymous ? <EyeOff className="h-4 w-4 text-muted-foreground" /> : <Eye className="h-4 w-4 text-muted-foreground" />}
                   <span className="text-xs text-muted-foreground">{isAnonymous ? 'Anonymt' : 'Med namn'}</span>
