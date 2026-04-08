@@ -87,10 +87,10 @@ const Community = () => {
         value={title}
         onChange={(e) => setTitle(e.target.value)}
         placeholder="Rubrik (valfritt)"
-        className="bg-transparent border-0 focus-visible:ring-0 text-base font-semibold placeholder:text-muted-foreground/40 px-0 h-auto"
+        className="bg-transparent border border-white/20 focus-visible:ring-0 text-base font-semibold placeholder:text-muted-foreground/40 px-3 h-auto rounded-lg"
         maxLength={120}
       />
-      <Textarea value={content} onChange={(e) => setContent(e.target.value)} placeholder="Skriv ditt inlägg..." className="min-h-[160px] bg-transparent border-0 resize-none focus-visible:ring-0 text-[15px] placeholder:text-muted-foreground/50 p-0" maxLength={2000} />
+      <Textarea value={content} onChange={(e) => setContent(e.target.value)} placeholder="Skriv ditt inlägg..." className="min-h-[160px] bg-transparent border border-white/20 resize-none focus-visible:ring-0 text-[15px] placeholder:text-muted-foreground/50 p-3 rounded-lg" maxLength={2000} />
       <div className="flex flex-wrap gap-2">
         {CATEGORIES.map(cat => (
           <button key={cat.id} onClick={() => setSelectedCategory(cat.id)} className={`text-xs px-3 py-1.5 rounded-full transition-all ${selectedCategory === cat.id ? 'bg-primary/20 text-primary border border-primary/30' : 'bg-white/[0.04] text-muted-foreground hover:bg-white/[0.08] border border-transparent'}`}>
