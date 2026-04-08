@@ -186,7 +186,30 @@ const Community = () => {
           {/* Right sidebar — popular threads (desktop only) */}
           <aside className="hidden lg:block w-72 xl:w-80 shrink-0">
             <div className="sticky top-8 space-y-4">
-              <div className="bg-card/40 backdrop-blur-sm rounded-xl border border-border/20 p-4">
+              {/* Post button + collapsible form */}
+              {user && (
+                <div>
+                  {desktopFormOpen ? (
+                    <div className="space-y-3">
+                      {postForm}
+                      <button
+                        onClick={() => setDesktopFormOpen(false)}
+                        className="text-xs text-muted-foreground/50 hover:text-muted-foreground transition-colors"
+                      >
+                        Avbryt
+                      </button>
+                    </div>
+                  ) : (
+                    <Button
+                      onClick={() => setDesktopFormOpen(true)}
+                      className="w-full rounded-xl gap-2"
+                    >
+                      <Plus className="h-4 w-4" />
+                      Posta inlägg
+                    </Button>
+                  )}
+                </div>
+              )}
                 <div className="flex items-center gap-2 mb-4">
                   <TrendingUp className="h-4 w-4 text-primary" />
                   <h2 className="text-sm font-semibold text-foreground/90">Populära trådar</h2>
