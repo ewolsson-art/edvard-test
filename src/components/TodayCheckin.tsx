@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo, useRef, KeyboardEvent } from 'react';
 import { format, differenceInDays, parseISO, isToday, isYesterday } from 'date-fns';
 import { sv } from 'date-fns/locale';
-import { Flame, Zap, Sun, Cloud, CloudRain, MessageSquarePlus, CheckCircle2, Pill, Pencil, Moon, Utensils, Dumbbell, ThumbsUp, ThumbsDown, Check, X, ChevronRight, ChevronLeft, Heart, AlertTriangle, HelpCircle, CalendarIcon, Plus } from 'lucide-react';
+import { Flame, Zap, Sun, Cloud, CloudRain, MessageSquarePlus, CheckCircle2, Pill, Pencil, Moon, MoonStar, CloudMoon, Utensils, Dumbbell, ThumbsUp, ThumbsDown, Check, X, ChevronRight, ChevronLeft, Heart, AlertTriangle, HelpCircle, CalendarIcon, Plus } from 'lucide-react';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { MoodType, MoodEntry, MOOD_LABELS, ENERGY_LABELS, QualityType, QUALITY_LABELS, CheckinData, EnergyType } from '@/types/mood';
@@ -772,7 +772,7 @@ export function TodayCheckin({
               )}
             >
               <div className="icon-wrapper !w-14 !h-14">
-                <ThumbsUp className="w-8 h-8 text-mood-stable" />
+                <MoonStar className="w-8 h-8 text-mood-stable" />
               </div>
               <span className="font-semibold text-lg">Bra</span>
               <span className="text-xs text-muted-foreground/50">Jag sov gott</span>
@@ -785,7 +785,7 @@ export function TodayCheckin({
               )}
             >
               <div className="icon-wrapper !w-14 !h-14">
-                <ThumbsDown className="w-8 h-8 text-mood-depressed" />
+                <CloudMoon className="w-8 h-8 text-mood-depressed" />
               </div>
               <span className="font-semibold text-lg">Dåligt</span>
               <span className="text-xs text-muted-foreground/50">Sov oroligt</span>
