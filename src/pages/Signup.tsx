@@ -95,6 +95,23 @@ const Signup = () => {
     setIsSubmitting(false);
   };
 
+  const handleSocialLogin = async (provider: "google" | "apple") => {
+    // Store selected role in localStorage so we can use it after redirect
+    if (role) {
+      localStorage.setItem("signup_role", role);
+    }
+    const result = await lovable.auth.signInWithOAuth(provider, {
+      redirect_uri: window.location.origin + "/slutfor-profil",
+    });
+    if (result.error) {
+      toast({
+        title: "Något gick fel",
+        description: result.error.message || "Kunde inte logga in",
+        variant: "destructive",
+      });
+    }
+  };
+
   const handleVerifyPhone = async () => {
     if (!otpCode.trim() || otpCode.length < 6) {
       toast({ title: "Ange den 6-siffriga koden", variant: "destructive" });
