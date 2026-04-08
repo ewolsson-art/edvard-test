@@ -49,6 +49,7 @@ const Community = () => {
   const [isPosting, setIsPosting] = useState(false);
   const [rulesOpen, setRulesOpen] = useState(false);
   const [mobileFormOpen, setMobileFormOpen] = useState(false);
+  const [desktopFormOpen, setDesktopFormOpen] = useState(false);
 
   const handleSubmit = async () => {
     if (!content.trim() || isPosting) return;
@@ -58,6 +59,7 @@ const Community = () => {
       setContent('');
       setTitle('');
       setMobileFormOpen(false);
+      setDesktopFormOpen(false);
     }
     setIsPosting(false);
   };
@@ -133,12 +135,8 @@ const Community = () => {
               )}
             </div>
 
-            {/* Desktop post form */}
-            {user ? (
-              <div className="hidden md:block">
-                {postForm}
-              </div>
-            ) : (
+            {/* CTA for non-logged-in users (shown on all screen sizes) */}
+            {!user && (
               <div className="rounded-2xl bg-card/60 border border-border/40 p-5 space-y-3">
                 <p className="text-sm font-medium text-foreground">Vill du delta i diskussionen?</p>
                 <p className="text-xs text-muted-foreground leading-relaxed">
@@ -189,6 +187,30 @@ const Community = () => {
           {/* Right sidebar — popular threads (desktop only) */}
           <aside className="hidden lg:block w-72 xl:w-80 shrink-0">
             <div className="sticky top-8 space-y-4">
+              {/* Post button + collapsible form */}
+              {user && (
+                <div>
+                  {desktopFormOpen ? (
+                    <div className="space-y-3">
+                      {postForm}
+                      <button
+                        onClick={() => setDesktopFormOpen(false)}
+                        className="text-xs text-muted-foreground/50 hover:text-muted-foreground transition-colors"
+                      >
+                        Avbryt
+                      </button>
+                    </div>
+                  ) : (
+                    <Button
+                      onClick={() => setDesktopFormOpen(true)}
+                      className="w-full rounded-xl gap-2"
+                    >
+                      <Plus className="h-4 w-4" />
+                      Posta inlägg
+                    </Button>
+                  )}
+                </div>
+              )}
               <div className="bg-card/40 backdrop-blur-sm rounded-xl border border-border/20 p-4">
                 <div className="flex items-center gap-2 mb-4">
                   <TrendingUp className="h-4 w-4 text-primary" />
@@ -198,7 +220,7 @@ const Community = () => {
                   <p className="text-xs text-muted-foreground/50">Inga populära trådar ännu.</p>
                 ) : (
                   <div className="space-y-1">
-                    {popularPosts.map((post, i) => {
+                    {popularPosts.map((post) => {
                       const postTitle = post.title || post.content.slice(0, 50) + (post.content.length > 50 ? '…' : '');
                       return (
                         <button
