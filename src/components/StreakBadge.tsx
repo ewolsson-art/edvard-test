@@ -75,7 +75,7 @@ export function StreakBadge({
           isOnFire ? "bg-orange-500/25" : "bg-primary/15"
         )}>
           <Flame className={cn(
-            "w-4.5 h-4.5",
+            "w-5 h-5",
             isOnFire ? "text-orange-500 animate-pulse" : "text-primary"
           )} />
         </div>
