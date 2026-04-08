@@ -34,6 +34,17 @@ export const ThreadListItem = ({ post }: ThreadListItemProps) => {
       onClick={() => navigate(`/forum/${post.id}`)}
       className="w-full text-left rounded-2xl bg-card/60 border border-border/40 p-5 hover:bg-card/80 transition-all active:scale-[0.99]"
     >
+      {/* Author info */}
+      <div className="flex items-center gap-2.5 mb-2">
+        <div className="w-7 h-7 rounded-full bg-gradient-to-br from-primary/40 to-primary/10 flex items-center justify-center text-[11px] font-bold text-primary">
+          {post.author_name?.charAt(0) || '?'}
+        </div>
+        <span className="text-sm font-semibold text-foreground/90">{post.author_name}</span>
+        {post.is_anonymous && (
+          <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-white/[0.06] text-muted-foreground/50">anonym</span>
+        )}
+      </div>
+
       {/* Category + time */}
       <div className="flex items-center gap-2 mb-2">
         {cat && (
