@@ -548,9 +548,9 @@ const Overview = () => {
           <div className="flex items-center gap-3">
             {sectionView === 'calendar' && (
               <Tabs value={view} onValueChange={handleViewChange} className="flex-1">
-                <TabsList className="inline-flex w-full h-11 bg-muted/80 p-1 rounded-full gap-0">
-                  <TabsTrigger value="month" className="flex-1 text-sm font-semibold px-2 py-1.5 rounded-full data-[state=active]:bg-muted-foreground/30 data-[state=active]:text-foreground data-[state=active]:shadow-none">M</TabsTrigger>
-                  <TabsTrigger value="year" className="flex-1 text-sm font-semibold px-2 py-1.5 rounded-full data-[state=active]:bg-muted-foreground/30 data-[state=active]:text-foreground data-[state=active]:shadow-none">ÅR</TabsTrigger>
+                <TabsList className="inline-flex w-full h-9 bg-muted/80 p-0.5 rounded-full gap-0">
+                  <TabsTrigger value="month" className="flex-1 text-xs font-semibold px-2 py-1 rounded-full data-[state=active]:bg-muted-foreground/30 data-[state=active]:text-foreground data-[state=active]:shadow-none">M</TabsTrigger>
+                  <TabsTrigger value="year" className="flex-1 text-xs font-semibold px-2 py-1 rounded-full data-[state=active]:bg-muted-foreground/30 data-[state=active]:text-foreground data-[state=active]:shadow-none">ÅR</TabsTrigger>
                 </TabsList>
               </Tabs>
             )}
