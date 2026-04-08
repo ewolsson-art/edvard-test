@@ -30,6 +30,7 @@ import { ExerciseYearHeatmap } from '@/components/ExerciseYearHeatmap';
 import { DayDetailDialog } from '@/components/DayDetailDialog';
 import { ExerciseTypeDialog } from '@/components/ExerciseTypeDialog';
 import { AIInsights } from '@/components/AIInsights';
+import { OverviewSummary } from '@/components/OverviewSummary';
 import { LessonsFromPast } from '@/components/LessonsFromPast';
 import { useCharacteristics } from '@/hooks/useCharacteristics';
 
