@@ -81,8 +81,8 @@ const Characteristics = () => {
       </div>
 
       {/* Cards */}
-      <div className="space-y-4">
-        {moodCards.map((card, index) => {
+      <div className="rounded-2xl bg-foreground/[0.03] backdrop-blur-sm overflow-hidden divide-y divide-border/20">
+        {moodCards.map((card) => {
           const Icon = card.icon;
           const chars = getCharacteristics(card.type);
           const isActive = latestMood === card.type;
@@ -92,62 +92,44 @@ const Characteristics = () => {
               key={card.type}
               onClick={() => navigate(`/kannetecken/${card.slug}`)}
               className={cn(
-                "w-full relative overflow-hidden rounded-2xl border border-border/60 bg-card p-6 md:p-7",
-                "flex items-center gap-5 text-left",
-                "transition-all duration-300 group",
-                "hover:scale-[1.015] hover:border-border",
-                card.hoverShadow,
-                isActive && card.borderActive
+                "w-full flex items-center gap-3.5 px-4 py-4 text-left transition-colors duration-150",
+                "hover:bg-foreground/[0.04] active:bg-foreground/[0.06] group",
+                isActive && "bg-foreground/[0.03]"
               )}
-              style={{ animationDelay: `${index * 80}ms` }}
             >
-              {/* Subtle gradient overlay */}
-              <div className={cn("absolute inset-0 bg-gradient-to-r opacity-60 pointer-events-none", card.gradient)} />
-
               {/* Icon */}
-              <div className={cn(
-                "relative z-10 p-3.5 rounded-2xl shrink-0 shadow-lg",
-                card.iconBg
-              )}>
-                <Icon className={cn("h-7 w-7", card.iconColor)} />
-              </div>
+              <Icon className={cn("w-[18px] h-[18px] flex-shrink-0", card.iconColor)} />
 
               {/* Content */}
-              <div className="relative z-10 flex-1 min-w-0">
-                <div className="flex items-center gap-2.5 mb-1">
-                  <h2 className="font-bold text-xl text-foreground tracking-tight">{card.title}</h2>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2 mb-0.5">
+                  <span className="text-[15px] font-medium text-foreground/80">{card.title}</span>
                   {isActive && (
-                    <span className="flex items-center gap-1.5">
-                      <span className={cn("w-2 h-2 rounded-full animate-pulse", card.activeDot)} />
-                      <span className="text-xs font-medium text-muted-foreground">Nu</span>
+                    <span className="flex items-center gap-1">
+                      <span className={cn("w-1.5 h-1.5 rounded-full animate-pulse", card.dotColor)} />
+                      <span className="text-[11px] text-foreground/30">Nu</span>
                     </span>
                   )}
                 </div>
 
                 {chars.length > 0 ? (
-                  <div className="flex flex-wrap gap-1.5 mt-2">
+                  <div className="flex flex-wrap gap-1 mt-1">
                     {chars.slice(0, 4).map((c) => (
-                      <span key={c.id} className={cn("text-xs py-1 px-2.5 rounded-full font-medium", card.badgeItem)}>
-                        {c.name}
+                      <span key={c.id} className={cn("text-[11px] font-medium", card.chipColor)}>
+                        {c.name}{chars.indexOf(c) < Math.min(chars.length, 4) - 1 ? ' ·' : ''}
                       </span>
                     ))}
                     {chars.length > 4 && (
-                      <span className={cn("text-xs font-semibold self-center", card.countColor)}>
-                        +{chars.length - 4}
-                      </span>
+                      <span className="text-[11px] text-foreground/20">+{chars.length - 4}</span>
                     )}
                   </div>
                 ) : (
-                  <p className="text-sm text-muted-foreground mt-0.5">{card.subtitle}</p>
+                  <p className="text-[12px] text-foreground/30 mt-0.5">{card.subtitle}</p>
                 )}
               </div>
 
               {/* Arrow */}
-              <div className="relative z-10 shrink-0">
-                <div className="w-10 h-10 rounded-xl bg-muted/50 group-hover:bg-muted flex items-center justify-center transition-all duration-300">
-                  <ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-foreground group-hover:translate-x-0.5 transition-all duration-300" />
-                </div>
-              </div>
+              <ChevronRight className="w-4 h-4 text-foreground/15 flex-shrink-0" />
             </button>
           );
         })}
