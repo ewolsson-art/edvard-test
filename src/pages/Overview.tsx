@@ -31,6 +31,8 @@ import { DayDetailDialog } from '@/components/DayDetailDialog';
 import { ExerciseTypeDialog } from '@/components/ExerciseTypeDialog';
 import { AIInsights } from '@/components/AIInsights';
 import { OverviewSummary } from '@/components/OverviewSummary';
+import { LessonsFromPast } from '@/components/LessonsFromPast';
+import { useCharacteristics } from '@/hooks/useCharacteristics';
 
 import { MoodStats as MoodStatsType, ExerciseType, QualityType } from '@/types/mood';
 import { Last30DaysOverview } from '@/components/Last30DaysOverview';
@@ -84,6 +86,7 @@ const Overview = () => {
   const { entries, isLoaded, getEntryForDate, getEntriesForMonth, getEntriesForYear, getStatsForYear, updateExerciseTypes } = useMoodData();
   const { isLoaded: medsLoaded, getMedicationsTakenOnDate, logs, activeMedications } = useMedications();
   const { preferences, loading: prefsLoading } = useUserPreferences();
+  const { characteristics } = useCharacteristics();
 
   // Week data
   const weekDays = useMemo(() => {
@@ -592,6 +595,10 @@ const Overview = () => {
                 sleepBadDays={0}
                 showSleep={false}
               />
+            )}
+
+            {sectionView === 'stats' && (
+              <LessonsFromPast entries={entries} characteristics={characteristics} />
             )}
 
             {showMood && sectionView === 'calendar' && (
