@@ -766,45 +766,48 @@ export function TodayCheckin({
             </h1>
           </div>
 
-          <div className="grid grid-cols-3 gap-3 max-w-md">
+          <div className="flex flex-col gap-3.5 max-w-md">
             <button
               onClick={() => handleSleepSelect('good')}
               className={cn(
-                "checkin-option-card positive aspect-square",
-                checkinData.sleepQuality === 'good' && "selected"
+                "rounded-2xl flex items-center gap-4 px-5 py-[14px] text-left group transition-all bg-emerald-500/90 hover:bg-emerald-500",
+                checkinData.sleepQuality === 'good' && "ring-3 ring-offset-2 ring-offset-background scale-[1.01]"
               )}
             >
-              <div className="icon-wrapper !w-12 !h-12">
-                <MoonStar className="w-7 h-7 text-mood-stable" />
+              <MoonStar className="w-6 h-6 sm:w-7 sm:h-7 text-white/90 flex-shrink-0 transition-transform duration-300 group-hover:scale-110" />
+              <div className="flex-1 min-w-0">
+                <span className="font-semibold text-[15px] sm:text-base text-white block">Bra</span>
+                <span className="text-xs text-white/60 block">Sov gott</span>
               </div>
-              <span className="font-semibold text-base">Bra</span>
-              <span className="text-[10px] text-muted-foreground/50">Sov gott</span>
+              <ChevronRight className="w-5 h-5 text-white/30 group-hover:text-white/60 transition-opacity flex-shrink-0" />
             </button>
             <button
               onClick={() => handleSleepSelect('okay')}
               className={cn(
-                "checkin-option-card aspect-square",
-                checkinData.sleepQuality === 'okay' && "selected"
+                "rounded-2xl flex items-center gap-4 px-5 py-[14px] text-left group transition-all bg-amber-500/90 hover:bg-amber-500",
+                checkinData.sleepQuality === 'okay' && "ring-3 ring-offset-2 ring-offset-background scale-[1.01]"
               )}
             >
-              <div className="icon-wrapper !w-12 !h-12">
-                <Moon className="w-7 h-7 text-mood-somewhat-elevated" />
+              <Moon className="w-6 h-6 sm:w-7 sm:h-7 text-white/90 flex-shrink-0 transition-transform duration-300 group-hover:scale-110" />
+              <div className="flex-1 min-w-0">
+                <span className="font-semibold text-[15px] sm:text-base text-white block">Helt ok</span>
+                <span className="text-xs text-white/60 block">Varken bra eller dåligt</span>
               </div>
-              <span className="font-semibold text-base">Helt ok</span>
-              <span className="text-[10px] text-muted-foreground/50">Varken bra eller dåligt</span>
+              <ChevronRight className="w-5 h-5 text-white/30 group-hover:text-white/60 transition-opacity flex-shrink-0" />
             </button>
             <button
               onClick={() => handleSleepSelect('bad')}
               className={cn(
-                "checkin-option-card negative aspect-square",
-                checkinData.sleepQuality === 'bad' && "selected"
+                "rounded-2xl flex items-center gap-4 px-5 py-[14px] text-left group transition-all bg-rose-500/90 hover:bg-rose-500",
+                checkinData.sleepQuality === 'bad' && "ring-3 ring-offset-2 ring-offset-background scale-[1.01]"
               )}
             >
-              <div className="icon-wrapper !w-12 !h-12">
-                <CloudMoon className="w-7 h-7 text-mood-depressed" />
+              <CloudMoon className="w-6 h-6 sm:w-7 sm:h-7 text-white/90 flex-shrink-0 transition-transform duration-300 group-hover:scale-110" />
+              <div className="flex-1 min-w-0">
+                <span className="font-semibold text-[15px] sm:text-base text-white block">Dåligt</span>
+                <span className="text-xs text-white/60 block">Sov oroligt</span>
               </div>
-              <span className="font-semibold text-base">Dåligt</span>
-              <span className="text-[10px] text-muted-foreground/50">Sov oroligt</span>
+              <ChevronRight className="w-5 h-5 text-white/30 group-hover:text-white/60 transition-opacity flex-shrink-0" />
             </button>
           </div>
 
@@ -841,42 +844,48 @@ export function TodayCheckin({
             </h1>
           </div>
 
-          <div className="grid grid-cols-3 gap-3 max-w-sm">
+          <div className="flex flex-col gap-3.5 max-w-md">
             <button
               onClick={() => handleEatingSelect('good')}
               className={cn(
-                "checkin-option-card positive aspect-square",
-                checkinData.eatingQuality === 'good' && "selected"
+                "rounded-2xl flex items-center gap-4 px-5 py-[14px] text-left group transition-all bg-emerald-500/90 hover:bg-emerald-500",
+                checkinData.eatingQuality === 'good' && "ring-3 ring-offset-2 ring-offset-background scale-[1.01]"
               )}
             >
-              <div className="icon-wrapper !w-12 !h-12">
-                <ThumbsUp className="w-7 h-7 text-mood-stable" />
+              <ThumbsUp className="w-6 h-6 sm:w-7 sm:h-7 text-white/90 flex-shrink-0 transition-transform duration-300 group-hover:scale-110" />
+              <div className="flex-1 min-w-0">
+                <span className="font-semibold text-[15px] sm:text-base text-white block">Bra</span>
+                <span className="text-xs text-white/60 block">Ätit bra idag</span>
               </div>
-              <span className="font-semibold text-base">Bra</span>
+              <ChevronRight className="w-5 h-5 text-white/30 group-hover:text-white/60 transition-opacity flex-shrink-0" />
             </button>
             <button
               onClick={() => handleEatingSelect('okay')}
               className={cn(
-                "checkin-option-card neutral aspect-square",
-                checkinData.eatingQuality === 'okay' && "selected"
+                "rounded-2xl flex items-center gap-4 px-5 py-[14px] text-left group transition-all bg-amber-500/90 hover:bg-amber-500",
+                checkinData.eatingQuality === 'okay' && "ring-3 ring-offset-2 ring-offset-background scale-[1.01]"
               )}
             >
-              <div className="icon-wrapper !w-12 !h-12">
-                <Utensils className="w-7 h-7 text-primary" />
+              <Utensils className="w-6 h-6 sm:w-7 sm:h-7 text-white/90 flex-shrink-0 transition-transform duration-300 group-hover:scale-110" />
+              <div className="flex-1 min-w-0">
+                <span className="font-semibold text-[15px] sm:text-base text-white block">Ok</span>
+                <span className="text-xs text-white/60 block">Varken bra eller dåligt</span>
               </div>
-              <span className="font-semibold text-base">Ok</span>
+              <ChevronRight className="w-5 h-5 text-white/30 group-hover:text-white/60 transition-opacity flex-shrink-0" />
             </button>
             <button
               onClick={() => handleEatingSelect('bad')}
               className={cn(
-                "checkin-option-card negative aspect-square",
-                checkinData.eatingQuality === 'bad' && "selected"
+                "rounded-2xl flex items-center gap-4 px-5 py-[14px] text-left group transition-all bg-rose-500/90 hover:bg-rose-500",
+                checkinData.eatingQuality === 'bad' && "ring-3 ring-offset-2 ring-offset-background scale-[1.01]"
               )}
             >
-              <div className="icon-wrapper !w-12 !h-12">
-                <ThumbsDown className="w-7 h-7 text-mood-depressed" />
+              <ThumbsDown className="w-6 h-6 sm:w-7 sm:h-7 text-white/90 flex-shrink-0 transition-transform duration-300 group-hover:scale-110" />
+              <div className="flex-1 min-w-0">
+                <span className="font-semibold text-[15px] sm:text-base text-white block">Dåligt</span>
+                <span className="text-xs text-white/60 block">Ätit dåligt</span>
               </div>
-              <span className="font-semibold text-base">Dåligt</span>
+              <ChevronRight className="w-5 h-5 text-white/30 group-hover:text-white/60 transition-opacity flex-shrink-0" />
             </button>
           </div>
 
@@ -913,32 +922,34 @@ export function TodayCheckin({
             </h1>
           </div>
 
-          <div className="grid grid-cols-2 gap-4 max-w-sm">
+          <div className="flex flex-col gap-3.5 max-w-md">
             <button
               onClick={() => handleExerciseSelect(true)}
               className={cn(
-                "checkin-option-card positive aspect-square",
-                checkinData.exercised === true && "selected"
+                "rounded-2xl flex items-center gap-4 px-5 py-[14px] text-left group transition-all bg-emerald-500/90 hover:bg-emerald-500",
+                checkinData.exercised === true && "ring-3 ring-offset-2 ring-offset-background scale-[1.01]"
               )}
             >
-              <div className="icon-wrapper !w-14 !h-14">
-                <Check className="w-8 h-8 text-mood-stable" />
+              <Check className="w-6 h-6 sm:w-7 sm:h-7 text-white/90 flex-shrink-0 transition-transform duration-300 group-hover:scale-110" />
+              <div className="flex-1 min-w-0">
+                <span className="font-semibold text-[15px] sm:text-base text-white block">Ja</span>
+                <span className="text-xs text-white/60 block">Jag har tränat</span>
               </div>
-              <span className="font-semibold text-lg">Ja</span>
-              <span className="text-xs text-muted-foreground/50">Jag har tränat</span>
+              <ChevronRight className="w-5 h-5 text-white/30 group-hover:text-white/60 transition-opacity flex-shrink-0" />
             </button>
             <button
               onClick={() => handleExerciseSelect(false)}
               className={cn(
-                "checkin-option-card neutral aspect-square",
-                checkinData.exercised === false && "selected"
+                "rounded-2xl flex items-center gap-4 px-5 py-[14px] text-left group transition-all bg-muted/50 hover:bg-muted/70",
+                checkinData.exercised === false && "ring-3 ring-offset-2 ring-offset-background scale-[1.01]"
               )}
             >
-              <div className="icon-wrapper !w-14 !h-14">
-                <X className="w-8 h-8 text-muted-foreground" />
+              <X className="w-6 h-6 sm:w-7 sm:h-7 text-muted-foreground flex-shrink-0 transition-transform duration-300 group-hover:scale-110" />
+              <div className="flex-1 min-w-0">
+                <span className="font-semibold text-[15px] sm:text-base block">Nej</span>
+                <span className="text-xs text-muted-foreground/60 block">Vilodag</span>
               </div>
-              <span className="font-semibold text-lg">Nej</span>
-              <span className="text-xs text-muted-foreground/50">Vilodag</span>
+              <ChevronRight className="w-5 h-5 text-muted-foreground/30 group-hover:text-muted-foreground/60 transition-opacity flex-shrink-0" />
             </button>
           </div>
 
