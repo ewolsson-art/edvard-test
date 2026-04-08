@@ -83,7 +83,6 @@ const Onboarding = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   
   // Step data
-  const [selectedDiagnoses, setSelectedDiagnoses] = useState<string[]>([]);
   const [selections, setSelections] = useState({
     include_mood: true,
     include_sleep: true,
@@ -96,12 +95,6 @@ const Onboarding = () => {
     elevated: [],
     stable: [],
     depressed: [],
-  });
-  const [notificationSettings, setNotificationSettings] = useState<NotificationSettings>({
-    checkinEnabled: false,
-    checkinTime: '20:00',
-    medicationEnabled: false,
-    medicationTime: '08:00',
   });
   const [invites, setInvites] = useState<InviteInput>({
     doctors: [],
