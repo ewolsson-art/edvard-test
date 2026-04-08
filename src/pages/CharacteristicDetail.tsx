@@ -168,27 +168,38 @@ const CharacteristicDetail = () => {
         </div>
 
         {/* Dina kännetecken – primary section */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between mb-3">
-            <h2 className="text-[13px] font-medium text-foreground/30 uppercase tracking-wide">
-              Dina kännetecken
-            </h2>
+        <div className="mb-10">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-2">
+              <div className={cn("w-0.5 h-3.5 rounded-full", config.dotColor, "opacity-40")} />
+              <h2 className="text-[13px] font-medium text-foreground/40 uppercase tracking-wide">
+                Dina kännetecken
+              </h2>
+            </div>
             {characteristics.length > 0 && (
               <span className="text-[12px] text-foreground/20">{characteristics.length} st</span>
             )}
           </div>
 
           {characteristics.length > 0 && (
-            <div className="space-y-0">
-              {characteristics.map((char) => (
+            <div className={cn("border-l-2 pl-4 ml-[1px]", 
+              config.type === 'elevated' ? 'border-amber-400/15' : 
+              config.type === 'stable' ? 'border-emerald-400/15' : 
+              'border-rose-400/15'
+            )}>
+              {characteristics.map((char, index) => (
                 <div
                   key={char.id}
-                  className="flex items-center justify-between py-2.5 group"
+                  className={cn(
+                    "flex items-center justify-between py-3 group cursor-default",
+                    "hover:bg-foreground/[0.02] -mx-3 px-3 rounded-md transition-all duration-200 hover:translate-x-0.5",
+                    index < characteristics.length - 1 && "border-b border-foreground/[0.04]"
+                  )}
                 >
                   <span className="text-[14px] text-foreground/70">{char.name}</span>
                   <button
                     onClick={() => deleteCharacteristic(char.id)}
-                    className="text-foreground/15 hover:text-destructive transition-colors"
+                    className="opacity-40 hover:opacity-100 text-foreground/30 hover:text-destructive transition-all duration-200 p-1 -m-1"
                     aria-label={`Ta bort ${char.name}`}
                   >
                     <X className="h-3.5 w-3.5" />
@@ -200,7 +211,7 @@ const CharacteristicDetail = () => {
 
           {/* Inline add */}
           {showInput ? (
-            <div className="flex items-center gap-2 mt-2">
+            <div className="flex items-center gap-2 mt-3 ml-[11px]">
               <Input
                 placeholder={config.placeholder}
                 value={newValue}
@@ -232,17 +243,23 @@ const CharacteristicDetail = () => {
           ) : (
             <button
               onClick={() => setShowInput(true)}
-              className="inline-flex items-center gap-1.5 text-[13px] text-foreground/25 hover:text-foreground/40 transition-colors mt-1"
+              className={cn(
+                "inline-flex items-center gap-1.5 text-[13px] transition-all duration-200 mt-3 ml-[11px]",
+                "text-foreground/25 hover:text-foreground/45",
+                config.type === 'elevated' ? 'hover:text-amber-400/60' :
+                config.type === 'stable' ? 'hover:text-emerald-400/60' :
+                'hover:text-rose-400/60'
+              )}
             >
               <Plus className="w-3.5 h-3.5" />
-              {characteristics.length === 0 ? 'Lägg till ditt första kännetecken' : 'Lägg till'}
+              {characteristics.length === 0 ? 'Lägg till ditt första kännetecken' : 'Lägg till kännetecken'}
             </button>
           )}
         </div>
 
         {/* AI suggestions – secondary, inline */}
-        <div className="mb-8">
-          <div className="flex items-center gap-2 mb-2">
+        <div className="mb-8 pt-2">
+          <div className="flex items-center gap-2 mb-3">
             <Sparkles className="w-3.5 h-3.5 text-foreground/20" />
             <h2 className="text-[13px] font-medium text-foreground/30 uppercase tracking-wide">
               AI-förslag
@@ -250,12 +267,13 @@ const CharacteristicDetail = () => {
           </div>
 
           {!aiLoaded && !isLoadingAi ? (
-            <div className="flex items-center gap-3">
-              <p className="text-[13px] text-foreground/20">Analysera dina dagboksanteckningar</p>
+            <div className="flex flex-col gap-1.5">
+              <p className="text-[13px] text-foreground/25">Analysera dina dagboksanteckningar för att hitta mönster</p>
               <button
                 onClick={loadAiSuggestions}
-                className="text-[13px] font-medium text-primary hover:text-primary/80 transition-colors"
+                className="inline-flex items-center gap-1.5 text-[13px] font-medium text-primary hover:text-primary/80 transition-all duration-200 w-fit"
               >
+                <Sparkles className="w-3 h-3" />
                 Analysera
               </button>
             </div>
