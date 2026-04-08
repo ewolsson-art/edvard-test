@@ -12,10 +12,7 @@ interface NavItem {
 
 const navItems: NavItem[] = [
   { label: 'Om oss', href: '/om-oss' },
-  { label: 'För patienter', href: '/for-patienter' },
-  { label: 'För vårdgivare', href: '/for-vardgivare' },
-  { label: 'För anhöriga', href: '/for-anhoriga' },
-  { label: 'Samarbetspartners', href: '/samarbetspartners' },
+  { label: 'Så funkar det', href: '/auth#hur-det-funkar' },
 ];
 
 export function AuthNavbar() {
