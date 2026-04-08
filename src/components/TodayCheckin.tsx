@@ -464,18 +464,45 @@ export function TodayCheckin({
             {!isDisplayToday && <span className="text-primary ml-2">Retroaktiv</span>}
           </p>
 
-          {/* Checkmark with mood-colored glow */}
-          <div className="relative mb-5">
+          {/* Checkmark with deep radial glow */}
+          <div className="relative mb-6">
+            {/* Outer ambient glow */}
+            <div 
+              className={cn(
+                "absolute rounded-full",
+                moodDisplay?.colorClass?.replace('text-', 'bg-') || 'bg-mood-stable'
+              )} 
+              style={{ 
+                inset: '-40px',
+                filter: 'blur(50px)',
+                opacity: 0.12,
+                animation: 'fade-in 1.2s ease-out'
+              }} 
+            />
+            {/* Inner focused glow */}
+            <div 
+              className={cn(
+                "absolute rounded-full",
+                moodDisplay?.colorClass?.replace('text-', 'bg-') || 'bg-mood-stable'
+              )} 
+              style={{ 
+                inset: '-16px',
+                filter: 'blur(24px)',
+                opacity: 0.2,
+                animation: 'fade-in 0.8s ease-out'
+              }} 
+            />
             <div className={cn(
-              "absolute inset-0 rounded-full blur-xl opacity-30 animate-pulse",
-              moodDisplay?.colorClass?.replace('text-', 'bg-') || 'bg-mood-stable'
-            )} style={{ transform: 'scale(1.5)' }} />
-            <div className={cn(
-              "relative w-16 h-16 rounded-full flex items-center justify-center",
-              "bg-card border border-border/20"
+              "relative w-[72px] h-[72px] rounded-full flex items-center justify-center",
+              "bg-card/80 border border-border/10 backdrop-blur-sm"
             )}>
-              <Check className={cn("w-8 h-8", moodDisplay?.colorClass || 'text-mood-stable')} 
-                style={{ animation: 'scale-in 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)' }} />
+              <Check 
+                className={cn("w-9 h-9", moodDisplay?.colorClass || 'text-mood-stable')} 
+                style={{ 
+                  animation: 'scale-in 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)',
+                  strokeWidth: 2.5
+                }} 
+              />
             </div>
           </div>
 
@@ -494,64 +521,73 @@ export function TodayCheckin({
 
           {/* Streak as hero moment */}
           {streakData.currentStreak > 0 && (
-            <div className="mt-6 mb-2">
+            <div className="mt-7 mb-2">
               <div className={cn(
-                "inline-flex items-center gap-2",
+                "flex flex-col items-center",
                 streakData.currentStreak >= 7 ? "text-orange-400" : "text-primary"
               )}>
-                <Flame className={cn(
-                  "w-5 h-5",
-                  streakData.currentStreak >= 7 && "animate-pulse"
-                )} />
-                <span className="text-[32px] md:text-[38px] font-bold tabular-nums leading-none">
-                  {streakData.currentStreak}
-                </span>
-                <span className="text-sm font-medium opacity-70 self-end mb-1">
+                <div className="flex items-center gap-2.5 mb-1">
+                  <Flame className={cn(
+                    "w-6 h-6",
+                    streakData.currentStreak >= 7 && "animate-pulse"
+                  )} />
+                  <span 
+                    className="text-[44px] md:text-[52px] font-bold tabular-nums leading-none tracking-tight"
+                    style={{ animation: 'scale-in 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 0.2s both' }}
+                  >
+                    {streakData.currentStreak}
+                  </span>
+                </div>
+                <span className="text-[12px] font-medium opacity-50 tracking-[0.05em] uppercase">
                   {streakData.currentStreak === 1 ? 'dag' : 'dagar'} i rad
                 </span>
               </div>
               {streakData.currentStreak > 0 && streakData.currentStreak === streakData.longestStreak && streakData.currentStreak > 1 && (
-                <p className="text-[11px] text-yellow-400/80 font-medium mt-1 flex items-center justify-center gap-1">
-                  <Trophy className="w-3 h-3" /> Nytt rekord!
-                </p>
+                <div 
+                  className="inline-flex items-center gap-1.5 mt-3 px-3 py-1 rounded-full bg-yellow-400/10 border border-yellow-400/15"
+                  style={{ animation: 'scale-in 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.5s both' }}
+                >
+                  <Trophy className="w-3 h-3 text-yellow-400/80" />
+                  <span className="text-[11px] font-semibold text-yellow-400/80">Nytt rekord</span>
+                </div>
               )}
             </div>
           )}
 
           {/* Divider */}
-          <div className="w-12 h-px bg-border/40 my-5" />
+          <div className="w-10 h-px bg-border/30 my-5" />
 
-          {/* Inline summary - no boxes, just clean text */}
-          <div className="flex flex-wrap items-center justify-center gap-x-1.5 gap-y-1 text-[13px] text-foreground/50">
-            {summaryItems.map((item, i) => (
-              <span key={item.label} className="flex items-center gap-1">
-                {i > 0 && <span className="text-border mx-1">·</span>}
-                <span>{item.label}:</span>
-                <span className={cn("font-semibold", item.colorClass || 'text-foreground/80')}>{item.value}</span>
+          {/* Inline summary with small icons */}
+          <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-[13px]">
+            {summaryItems.map((item) => (
+              <span key={item.label} className="flex items-center gap-1.5">
+                <span className={cn("w-1.5 h-1.5 rounded-full flex-shrink-0", item.colorClass?.replace('text-', 'bg-') || 'bg-foreground/30')} />
+                <span className="text-foreground/40">{item.label}</span>
+                <span className={cn("font-semibold", item.colorClass || 'text-foreground/70')}>{item.value}</span>
               </span>
             ))}
           </div>
 
           {/* Tags as subtle text */}
           {tags.length > 0 && (
-            <p className="text-[12px] text-foreground/30 mt-3">
+            <p className="text-[12px] text-foreground/25 mt-3">
               {tags.join(' · ')}
             </p>
           )}
 
           {/* Custom answers inline */}
           {customAnswerItems.length > 0 && (
-            <div className="flex flex-wrap items-center justify-center gap-x-1.5 gap-y-1 text-[12px] text-foreground/30 mt-2">
+            <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-[12px] text-foreground/25 mt-2">
               {customAnswerItems.map((item, i) => (
-                <span key={i}>
-                  {i > 0 && <span className="mx-1">·</span>}
-                  {item.question}: <span className="font-medium text-foreground/50">{item.answer}</span>
+                <span key={i} className="flex items-center gap-1.5">
+                  <span className="w-1 h-1 rounded-full bg-foreground/15 flex-shrink-0" />
+                  {item.question}: <span className="font-medium text-foreground/40">{item.answer}</span>
                 </span>
               ))}
             </div>
           )}
 
-          {/* Encouragement for low mood - subtle, integrated */}
+          {/* Encouragement for low mood */}
           {(todayEntry?.mood === 'depressed' || todayEntry?.mood === 'somewhat_depressed') && (
             <div className="mt-6 px-5 py-4 rounded-xl border border-primary/10 bg-primary/5">
               <p className="text-[13px] text-foreground/60 leading-relaxed">
@@ -566,10 +602,10 @@ export function TodayCheckin({
             </div>
           )}
 
-          {/* Edit link - subtle text, not a button */}
+          {/* Edit link - visible but secondary */}
           <button
             onClick={handleEdit}
-            className="mt-8 text-[13px] text-muted-foreground/30 hover:text-muted-foreground/60 transition-colors hover:underline underline-offset-4"
+            className="mt-8 text-[13px] text-foreground/40 hover:text-foreground/70 transition-colors duration-200 hover:underline underline-offset-4 decoration-foreground/20 cursor-pointer"
           >
             Ändra incheckning
           </button>
