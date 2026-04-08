@@ -39,6 +39,7 @@ export interface CommunityPost {
   category: string;
   is_anonymous: boolean;
   anonymous_name: string | null;
+  image_url: string | null;
   created_at: string;
   updated_at: string;
   author_name?: string;
@@ -124,10 +125,28 @@ export function useCommunityPosts() {
 
   useEffect(() => { fetchPosts(); }, [fetchPosts]);
 
-  const createPost = async (content: string, category: string, isAnonymous: boolean, title?: string) => {
+  const uploadImage = async (file: File): Promise<string | null> => {
+    if (!user) return null;
+    const ext = file.name.split('.').pop();
+    const path = `${user.id}/${Date.now()}.${ext}`;
+    const { error } = await supabase.storage.from('forum-images').upload(path, file);
+    if (error) {
+      toast({ title: 'Kunde inte ladda upp bild', variant: 'destructive' });
+      return null;
+    }
+    const { data } = supabase.storage.from('forum-images').getPublicUrl(path);
+    return data.publicUrl;
+  };
+
+  const createPost = async (content: string, category: string, isAnonymous: boolean, title?: string, imageFile?: File | null) => {
     if (!user) return false;
 
     const anonymousName = isAnonymous ? getAnonymousName(user.id) : null;
+    let imageUrl: string | null = null;
+    if (imageFile) {
+      imageUrl = await uploadImage(imageFile);
+      if (!imageUrl) return false;
+    }
 
     const { error } = await supabase.from('community_posts').insert({
       user_id: user.id,
@@ -136,7 +155,8 @@ export function useCommunityPosts() {
       category,
       is_anonymous: isAnonymous,
       anonymous_name: anonymousName,
-    });
+      image_url: imageUrl,
+    } as any);
 
     if (error) {
       toast({ title: 'Kunde inte skapa inlägg', variant: 'destructive' });

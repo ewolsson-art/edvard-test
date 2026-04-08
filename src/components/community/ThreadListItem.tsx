@@ -57,6 +57,13 @@ export const ThreadListItem = ({ post }: ThreadListItemProps) => {
         </p>
       )}
 
+      {/* Image thumbnail */}
+      {post.image_url && (
+        <div className="mb-3 rounded-lg overflow-hidden max-h-40">
+          <img src={post.image_url} alt="" className="w-full h-full object-cover max-h-40" loading="lazy" />
+        </div>
+      )}
+
       {/* Footer: category + time + stats */}
       <div className="flex items-center justify-between mt-3 pt-3 border-t border-border/20">
         <div className="flex items-center gap-2">

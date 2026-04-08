@@ -121,6 +121,13 @@ export const PostCard = ({ post, userId, onToggleReaction, onDeletePost, onCreat
         </div>
       )}
 
+      {/* Image */}
+      {post.image_url && (
+        <div className="px-4 pb-2">
+          <img src={post.image_url} alt="Inläggsbild" className="w-full rounded-lg object-cover max-h-96" loading="lazy" />
+        </div>
+      )}
+
       {/* Content — double-tap to like */}
       <div className="relative px-4 pb-3 select-none" onDoubleClick={handleDoubleClick}>
         <p className="text-[15px] text-foreground/85 leading-relaxed whitespace-pre-wrap">{post.content}</p>

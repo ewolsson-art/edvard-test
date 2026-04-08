@@ -1,6 +1,6 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Send, Eye, EyeOff, MessageCircle, ChevronDown, ChevronUp, Plus, X, Heart, TrendingUp } from 'lucide-react';
+import { Send, Eye, EyeOff, MessageCircle, ChevronDown, ChevronUp, Plus, X, Heart, TrendingUp, ImagePlus } from 'lucide-react';
 import { useCommunityPosts } from '@/hooks/useCommunityPosts';
 import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/button';
@@ -40,14 +40,36 @@ const Community = () => {
   const [rulesOpen, setRulesOpen] = useState(false);
   const [mobileFormOpen, setMobileFormOpen] = useState(false);
   const [desktopFormOpen, setDesktopFormOpen] = useState(false);
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const imageInputRef = useRef<HTMLInputElement>(null);
+
+  const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (file.size > 5 * 1024 * 1024) {
+        alert('Bilden får vara max 5 MB');
+        return;
+      }
+      setImageFile(file);
+      setImagePreview(URL.createObjectURL(file));
+    }
+  };
+
+  const clearImage = () => {
+    setImageFile(null);
+    setImagePreview(null);
+    if (imageInputRef.current) imageInputRef.current.value = '';
+  };
 
   const handleSubmit = async () => {
     if (!content.trim() || isPosting) return;
     setIsPosting(true);
-    const success = await createPost(content, selectedCategory, isAnonymous, title);
+    const success = await createPost(content, selectedCategory, isAnonymous, title, imageFile);
     if (success) {
       setContent('');
       setTitle('');
+      clearImage();
       setMobileFormOpen(false);
       setDesktopFormOpen(false);
     }
@@ -241,6 +263,19 @@ const Community = () => {
               maxLength={2000}
             />
 
+            {/* Image preview */}
+            {imagePreview && (
+              <div className="relative mt-3 rounded-lg overflow-hidden border border-white/20 max-h-60">
+                <img src={imagePreview} alt="Förhandsvisning" className="w-full h-full object-cover max-h-60" />
+                <button
+                  onClick={clearImage}
+                  className="absolute top-2 right-2 bg-black/60 text-white rounded-full p-1 hover:bg-black/80 transition-colors"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              </div>
+            )}
+
             {/* Category selector — compact */}
             <div className="mt-3">
               <button
@@ -267,10 +302,26 @@ const Community = () => {
 
             {/* Footer */}
             <div className="flex items-center justify-between pt-4 mt-auto">
-              <div className="flex items-center gap-2">
-                {isAnonymous ? <EyeOff className="h-4 w-4 text-muted-foreground" /> : <Eye className="h-4 w-4 text-muted-foreground" />}
-                <span className="text-xs text-muted-foreground">{isAnonymous ? 'Anonymt' : 'Med namn'}</span>
-                <Switch checked={!isAnonymous} onCheckedChange={(checked) => setIsAnonymous(!checked)} className="scale-75" />
+              <div className="flex items-center gap-3">
+                <input
+                  ref={imageInputRef}
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageSelect}
+                  className="hidden"
+                />
+                <button
+                  onClick={() => imageInputRef.current?.click()}
+                  className="text-muted-foreground hover:text-foreground transition-colors"
+                  title="Lägg till bild"
+                >
+                  <ImagePlus className="h-5 w-5" />
+                </button>
+                <div className="flex items-center gap-2">
+                  {isAnonymous ? <EyeOff className="h-4 w-4 text-muted-foreground" /> : <Eye className="h-4 w-4 text-muted-foreground" />}
+                  <span className="text-xs text-muted-foreground">{isAnonymous ? 'Anonymt' : 'Med namn'}</span>
+                  <Switch checked={!isAnonymous} onCheckedChange={(checked) => setIsAnonymous(!checked)} className="scale-75" />
+                </div>
               </div>
               <Button size="sm" onClick={handleSubmit} disabled={!content.trim() || isPosting} className="rounded-full gap-2 px-4">
                 <Send className="h-3.5 w-3.5" />Posta inlägg
