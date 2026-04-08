@@ -568,7 +568,7 @@ const Onboarding = () => {
                     <div className="space-y-1">
                       {invites.doctors.map(email => (
                         <p key={email} className="text-xs flex items-center gap-1">
-                          <Stethoscope className="w-3 h-3" /> {email}
+                          <UserPlus className="w-3 h-3" /> {email}
                         </p>
                       ))}
                       {invites.relatives.map(email => (
