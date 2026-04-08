@@ -263,6 +263,19 @@ const Community = () => {
               maxLength={2000}
             />
 
+            {/* Image preview */}
+            {imagePreview && (
+              <div className="relative mt-3 rounded-lg overflow-hidden border border-white/20 max-h-60">
+                <img src={imagePreview} alt="Förhandsvisning" className="w-full h-full object-cover max-h-60" />
+                <button
+                  onClick={clearImage}
+                  className="absolute top-2 right-2 bg-black/60 text-white rounded-full p-1 hover:bg-black/80 transition-colors"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              </div>
+            )}
+
             {/* Category selector — compact */}
             <div className="mt-3">
               <button
@@ -289,10 +302,26 @@ const Community = () => {
 
             {/* Footer */}
             <div className="flex items-center justify-between pt-4 mt-auto">
-              <div className="flex items-center gap-2">
-                {isAnonymous ? <EyeOff className="h-4 w-4 text-muted-foreground" /> : <Eye className="h-4 w-4 text-muted-foreground" />}
-                <span className="text-xs text-muted-foreground">{isAnonymous ? 'Anonymt' : 'Med namn'}</span>
-                <Switch checked={!isAnonymous} onCheckedChange={(checked) => setIsAnonymous(!checked)} className="scale-75" />
+              <div className="flex items-center gap-3">
+                <input
+                  ref={imageInputRef}
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageSelect}
+                  className="hidden"
+                />
+                <button
+                  onClick={() => imageInputRef.current?.click()}
+                  className="text-muted-foreground hover:text-foreground transition-colors"
+                  title="Lägg till bild"
+                >
+                  <ImagePlus className="h-5 w-5" />
+                </button>
+                <div className="flex items-center gap-2">
+                  {isAnonymous ? <EyeOff className="h-4 w-4 text-muted-foreground" /> : <Eye className="h-4 w-4 text-muted-foreground" />}
+                  <span className="text-xs text-muted-foreground">{isAnonymous ? 'Anonymt' : 'Med namn'}</span>
+                  <Switch checked={!isAnonymous} onCheckedChange={(checked) => setIsAnonymous(!checked)} className="scale-75" />
+                </div>
               </div>
               <Button size="sm" onClick={handleSubmit} disabled={!content.trim() || isPosting} className="rounded-full gap-2 px-4">
                 <Send className="h-3.5 w-3.5" />Posta inlägg
