@@ -17,7 +17,6 @@ const MOOD_CONFIG = {
     icon: Zap,
     iconColor: 'text-amber-400',
     dotColor: 'bg-amber-400',
-    suggestions: ['Mer social', 'Sover mindre', 'Mer energi', 'Pratar snabbare', 'Tar fler initiativ', 'Rastlös'],
     placeholder: 'T.ex. Mer social, Pratar snabbare...',
   },
   stabil: {
@@ -27,7 +26,6 @@ const MOOD_CONFIG = {
     icon: Sun,
     iconColor: 'text-emerald-400',
     dotColor: 'bg-emerald-400',
-    suggestions: ['God sömn', 'Regelbundna rutiner', 'Fokuserad', 'Social balans', 'Stabil aptit', 'Lugn'],
     placeholder: 'T.ex. God sömn, Lugn och fokuserad...',
   },
   nedstamd: {
@@ -37,7 +35,6 @@ const MOOD_CONFIG = {
     icon: Cloud,
     iconColor: 'text-rose-400',
     dotColor: 'bg-rose-400',
-    suggestions: ['Drar mig undan', 'Sover mer', 'Mindre energi', 'Svårt att koncentrera', 'Tappar aptiten', 'Gråter lättare'],
     placeholder: 'T.ex. Drar mig undan, Sover mer...',
   },
 };
