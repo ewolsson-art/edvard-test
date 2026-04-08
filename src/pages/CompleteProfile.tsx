@@ -48,7 +48,7 @@ const CompleteProfile = () => {
     e.preventDefault();
 
     try {
-      profileSchema.parse({ firstName, lastName, password, confirmPassword });
+      profileSchema.parse({ username, password, confirmPassword });
       setValidationErrors({});
     } catch (error) {
       if (error instanceof z.ZodError) {
@@ -68,8 +68,8 @@ const CompleteProfile = () => {
     const { error: updateError } = await supabase.auth.updateUser({
       password,
       data: {
-        first_name: firstName,
-        last_name: lastName,
+        first_name: username,
+        last_name: '',
         profile_completed: true,
         ...(storedRole && !user?.user_metadata?.role ? { role: storedRole } : {}),
       },
@@ -89,8 +89,8 @@ const CompleteProfile = () => {
       .from("profiles")
       .upsert({
         user_id: user!.id,
-        first_name: firstName,
-        last_name: lastName,
+        first_name: username,
+        last_name: '',
       }, { onConflict: "user_id" });
 
     if (profileError) {
