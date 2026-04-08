@@ -290,7 +290,10 @@ const Signup = () => {
                                 "font-semibold text-sm transition-colors",
                                 isSelected ? "text-[hsl(45_85%_55%)]" : "text-white"
                               )}>
-                                {info.title}
+                                {info.prefix && (
+                                  <span className="text-xs font-normal text-white/50 block leading-tight">{info.prefix}</span>
+                                )}
+                                <span className="capitalize">{info.title}</span>
                               </h3>
                               {isSelected && (
                                 <CheckCircle2 className="h-4 w-4 text-[hsl(45_85%_55%)] animate-scale-in" aria-hidden="true" />
