@@ -49,6 +49,7 @@ const Community = () => {
   const [isPosting, setIsPosting] = useState(false);
   const [rulesOpen, setRulesOpen] = useState(false);
   const [mobileFormOpen, setMobileFormOpen] = useState(false);
+  const [desktopFormOpen, setDesktopFormOpen] = useState(false);
 
   const handleSubmit = async () => {
     if (!content.trim() || isPosting) return;
