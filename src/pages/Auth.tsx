@@ -236,7 +236,7 @@ const Auth = () => {
                   Kom igång gratis
                 </button>
                 <p className="text-white/40 text-xs md:text-sm tracking-wide">
-                  Tar 30 sekunder · Helt anonymt
+                  Tar 30 sekunder
                 </p>
               </div>
             </div>
