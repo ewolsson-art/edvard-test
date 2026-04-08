@@ -92,9 +92,9 @@ const Characteristics = () => {
               key={card.type}
               onClick={() => navigate(`/kannetecken/${card.slug}`)}
               className={cn(
-                "w-full flex items-center gap-3.5 px-4 py-4 text-left transition-colors duration-150",
+                "w-full flex items-center gap-4 px-4 py-5 text-left transition-all duration-200",
                 "hover:bg-foreground/[0.04] active:bg-foreground/[0.06] group",
-                isActive && "bg-foreground/[0.03]"
+                isActive && "bg-foreground/[0.02]"
               )}
             >
               {/* Icon */}
@@ -102,34 +102,28 @@ const Characteristics = () => {
 
               {/* Content */}
               <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2 mb-0.5">
+                <div className="flex items-center gap-2.5 mb-0.5">
                   <span className="text-[15px] font-medium text-foreground/80">{card.title}</span>
                   {isActive && (
-                    <span className="flex items-center gap-1">
+                    <span className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-foreground/[0.04]">
                       <span className={cn("w-1.5 h-1.5 rounded-full animate-pulse", card.dotColor)} />
-                      <span className="text-[11px] text-foreground/30">Nu</span>
+                      <span className="text-[10px] font-medium text-foreground/40">Nuvarande</span>
                     </span>
                   )}
                 </div>
 
                 {chars.length > 0 ? (
-                  <div className="flex flex-wrap gap-1 mt-1">
-                    {chars.slice(0, 4).map((c) => (
-                      <span key={c.id} className={cn("text-[11px] font-medium", card.chipColor)}>
-                        {c.name}{chars.indexOf(c) < Math.min(chars.length, 4) - 1 ? ' ·' : ''}
-                      </span>
-                    ))}
-                    {chars.length > 4 && (
-                      <span className="text-[11px] text-foreground/20">+{chars.length - 4}</span>
-                    )}
-                  </div>
+                  <p className="text-[11px] text-foreground/20 mt-1">
+                    {chars.slice(0, 4).map(c => c.name).join(' · ')}
+                    {chars.length > 4 && ` +${chars.length - 4}`}
+                  </p>
                 ) : (
-                  <p className="text-[12px] text-foreground/30 mt-0.5">{card.subtitle}</p>
+                  <p className="text-[12px] text-foreground/25 mt-0.5">{card.subtitle}</p>
                 )}
               </div>
 
               {/* Arrow */}
-              <ChevronRight className="w-4 h-4 text-foreground/15 flex-shrink-0" />
+              <ChevronRight className="w-4 h-4 text-foreground/15 flex-shrink-0 group-hover:text-foreground/30 transition-colors" />
             </button>
           );
         })}
