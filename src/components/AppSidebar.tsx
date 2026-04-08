@@ -7,6 +7,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useProfile } from "@/hooks/useProfile";
 import { useUserRole } from "@/hooks/useUserRole";
 import { usePendingNotifications } from "@/hooks/usePendingNotifications";
+import { useNotifications } from "@/hooks/useNotifications";
 import { Button } from "@/components/ui/button";
 import { Logo } from "@/components/Logo";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
