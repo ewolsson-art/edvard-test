@@ -175,6 +175,7 @@ const Characteristics = () => {
       <div className="mt-10">
         <CharacteristicsSharingSection />
       </div>
+      </div>
     </div>
   );
 };
