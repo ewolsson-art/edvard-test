@@ -629,7 +629,7 @@ export function TodayCheckin({
               )}
               aria-label="Lägg till kommentar"
             >
-              <MessageSquare className="w-5 h-5" />
+              <MessageSquarePlus className="w-5 h-5" />
             </button>
           </div>
 
@@ -751,7 +751,7 @@ export function TodayCheckin({
               )}
               aria-label="Lägg till kommentar"
             >
-              <MessageSquare className="w-5 h-5" />
+              <MessageSquarePlus className="w-5 h-5" />
             </button>
           </div>
 
@@ -813,7 +813,7 @@ export function TodayCheckin({
               )}
               aria-label="Lägg till kommentar"
             >
-              <MessageSquare className="w-5 h-5" />
+              <MessageSquarePlus className="w-5 h-5" />
             </button>
           </div>
 
@@ -885,7 +885,7 @@ export function TodayCheckin({
               )}
               aria-label="Lägg till kommentar"
             >
-              <MessageSquare className="w-5 h-5" />
+              <MessageSquarePlus className="w-5 h-5" />
             </button>
           </div>
 
@@ -958,7 +958,7 @@ export function TodayCheckin({
                 )}
                 aria-label="Lägg till kommentar"
               >
-                <MessageSquare className="w-5 h-5" />
+                <MessageSquarePlus className="w-5 h-5" />
               </button>
             </div>
           </div>
