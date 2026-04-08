@@ -133,15 +133,11 @@ const Onboarding = () => {
 
   const getSkipText = () => {
     switch (step) {
-      case 2: return selectedDiagnoses.length === 0 ? 'Hoppa över' : 'Fortsätt';
-      case 4: return selectedMedications.length === 0 ? 'Hoppa över' : 'Fortsätt';
-      case 5: 
-        const totalChars = characteristics.elevated.length + characteristics.stable.length + characteristics.depressed.length;
-        return totalChars === 0 ? 'Hoppa över' : 'Fortsätt';
-      case 6:
-        const anyNotif = notificationSettings.checkinEnabled || notificationSettings.medicationEnabled;
-        return anyNotif ? 'Fortsätt' : 'Hoppa över';
-      case 7:
+      case 3: return selectedMedications.length === 0 ? 'Hoppa över' : 'Fortsätt';
+      case 4: 
+        const totalC = characteristics.elevated.length + characteristics.stable.length + characteristics.depressed.length;
+        return totalC === 0 ? 'Hoppa över' : 'Fortsätt';
+      case 5:
         const anyInvite = invites.doctors.length > 0 || invites.relatives.length > 0;
         return anyInvite ? 'Fortsätt' : 'Hoppa över';
       default: return 'Fortsätt';
