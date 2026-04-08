@@ -236,7 +236,7 @@ const Auth = () => {
                   Kom igång
                 </button>
                 <p className="text-white/40 text-xs md:text-sm tracking-wide">
-                  Tar 30 sekunder
+                  Tar 30 sekunder. Ingen bindning.
                 </p>
               </div>
             </div>
