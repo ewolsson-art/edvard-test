@@ -594,11 +594,8 @@ const Overview = () => {
               />
             )}
 
-            {showMood && (
+            {showMood && sectionView === 'calendar' && (
               <section>
-                
-                {sectionView === 'calendar' ? (
-                  <>
                      {view === 'month' && (
                       <ScrollableMonthsCalendar
                         ref={scrollableCalendarRef}
@@ -617,10 +614,6 @@ const Overview = () => {
                         onNextYear={() => setCurrentYear(prev => prev + 1)}
                         onMonthClick={handleMonthClick} />
                     )}
-                  </>
-                ) : (
-                  <MoodDistributionBar stats={stats} periodLabel={label} />
-                )}
               </section>
             )}
 
