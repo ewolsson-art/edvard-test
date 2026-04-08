@@ -24,12 +24,6 @@ export interface RelativeConnection {
   };
   relative_email?: string;
 }
-  relative_profile?: {
-    first_name: string | null;
-    last_name: string | null;
-  };
-  relative_email?: string;
-}
 
 export function usePatientRelativeConnections() {
   const { user } = useAuth();
