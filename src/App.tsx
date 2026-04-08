@@ -137,7 +137,9 @@ const App = () => (
               </ProtectedRoute>
             } />
             <Route path="/forum" element={<AppLayout><Community /></AppLayout>} />
+            <Route path="/community" element={<AppLayout><Community /></AppLayout>} />
             <Route path="/forum/:threadId" element={<AppLayout><CommunityThread /></AppLayout>} />
+            <Route path="/community/:threadId" element={<AppLayout><CommunityThread /></AppLayout>} />
 
             <Route path="/mediciner" element={
               <ProtectedRoute>
