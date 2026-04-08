@@ -207,6 +207,11 @@ export function AppSidebar() {
                                   <span className="relative inline-flex rounded-full h-2 w-2 bg-destructive"></span>
                                 </span>
                               )}
+                              {item.url === '/notiser' && notifUnread > 0 && (
+                                <span className="absolute -top-1 -right-1.5 min-w-[16px] h-4 px-1 flex items-center justify-center rounded-full bg-primary text-[10px] font-bold text-primary-foreground" aria-hidden="true">
+                                  {notifUnread > 9 ? '9+' : notifUnread}
+                                </span>
+                              )}
                             </div>
                           )}
                           {!isCollapsed && (
