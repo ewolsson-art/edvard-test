@@ -385,28 +385,14 @@ export function TodayCheckin({
     const config = commentConfig[step];
     if (!config) return null;
 
-    if (isMobile) {
-      return (
-        <FullscreenComment
-          title={config.title}
-          placeholder={config.placeholder}
-          value={config.getValue()}
-          onChange={config.setValue}
-          onClose={() => setShowComment(null)}
-        />
-      );
-    }
-
     return (
-      <div ref={commentRef} className="max-w-md mx-auto space-y-3">
-        <Textarea
-          placeholder={config.placeholder}
-          value={config.getValue()}
-          onChange={(e) => config.setValue(e.target.value)}
-          className="min-h-[80px] resize-none"
-          maxLength={500}
-        />
-      </div>
+      <FullscreenComment
+        title={config.title}
+        placeholder={config.placeholder}
+        value={config.getValue()}
+        onChange={config.setValue}
+        onClose={() => setShowComment(null)}
+      />
     );
   };
 
