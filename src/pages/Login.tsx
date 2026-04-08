@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate, Link, useSearchParams } from "react-router-dom";
 import { z } from "zod";
 import { useAuth } from "@/hooks/useAuth";
+import { useProfile } from "@/hooks/useProfile";
 import { lovable } from "@/integrations/lovable/index";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -25,18 +26,21 @@ const Login = () => {
   const isVerified = searchParams.get("verified") === "true";
 
   const { user, loading, signIn } = useAuth();
+  const { profile, isLoading: profileLoading } = useProfile();
   const navigate = useNavigate();
   const { toast } = useToast();
 
   useEffect(() => {
-    if (!loading && user) {
-      if (!user.user_metadata?.profile_completed) {
+    if (!loading && !profileLoading && user) {
+      const profileCompleted = user.user_metadata?.profile_completed;
+      const hasProfileInDb = profile?.first_name;
+      if (!profileCompleted && !user.user_metadata?.first_name && !hasProfileInDb) {
         navigate("/slutfor-profil");
       } else {
         navigate("/");
       }
     }
-  }, [user, loading, navigate]);
+  }, [user, loading, profileLoading, profile, navigate]);
 
   const validateForm = () => {
     try {
