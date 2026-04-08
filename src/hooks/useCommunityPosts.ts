@@ -172,7 +172,7 @@ export function useCommunityPosts() {
     return data.publicUrl;
   };
 
-  const createPost = async (content: string, category: string, isAnonymous: boolean, title?: string, imageFile?: File | null) => {
+  const createPost = async (content: string, category: string, isAnonymous: boolean, title?: string, imageFile?: File | null, pollOptionTexts?: string[]) => {
     if (!user) return false;
 
     const anonymousName = isAnonymous ? getAnonymousName(user.id) : null;
@@ -182,7 +182,7 @@ export function useCommunityPosts() {
       if (!imageUrl) return false;
     }
 
-    const { error } = await supabase.from('community_posts').insert({
+    const { data: postData, error } = await supabase.from('community_posts').insert({
       user_id: user.id,
       title: title?.trim() || null,
       content: content.trim(),
@@ -190,15 +190,48 @@ export function useCommunityPosts() {
       is_anonymous: isAnonymous,
       anonymous_name: anonymousName,
       image_url: imageUrl,
-    } as any);
+    } as any).select('id').single();
 
-    if (error) {
+    if (error || !postData) {
       toast({ title: 'Kunde inte skapa inlägg', variant: 'destructive' });
       return false;
     }
 
+    // Create poll options if provided
+    if (pollOptionTexts && pollOptionTexts.length >= 2) {
+      const options = pollOptionTexts.map((text, i) => ({
+        post_id: postData.id,
+        option_text: text.trim(),
+        sort_order: i,
+      }));
+      await supabase.from('poll_options').insert(options as any);
+    }
+
     await fetchPosts();
     return true;
+  };
+
+  const votePoll = async (postId: string, optionId: string) => {
+    if (!user) return;
+    const post = posts.find(p => p.id === postId);
+    if (!post) return;
+
+    // Remove existing vote for this poll
+    if (post.user_voted_option_id) {
+      await supabase.from('poll_votes').delete()
+        .eq('option_id', post.user_voted_option_id)
+        .eq('user_id', user.id);
+    }
+
+    // Cast new vote (unless clicking same option to unvote)
+    if (post.user_voted_option_id !== optionId) {
+      await supabase.from('poll_votes').insert({
+        option_id: optionId,
+        user_id: user.id,
+      } as any);
+    }
+
+    await fetchPosts();
   };
 
   const createReply = async (postId: string, content: string, isAnonymous: boolean) => {
