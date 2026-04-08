@@ -170,12 +170,9 @@ const CharacteristicDetail = () => {
         {/* Dina kännetecken – primary section */}
         <div className="mb-10">
           <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-2">
-              <div className={cn("w-0.5 h-3.5 rounded-full", config.dotColor, "opacity-40")} />
-              <h2 className="text-[13px] font-medium text-foreground/40 uppercase tracking-wide">
-                Dina kännetecken
-              </h2>
-            </div>
+            <h2 className="text-[13px] font-medium text-foreground/30 uppercase tracking-wide">
+              Dina kännetecken
+            </h2>
             {characteristics.length > 0 && (
               <span className="text-[12px] text-foreground/20">{characteristics.length} st</span>
             )}
