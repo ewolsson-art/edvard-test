@@ -3,6 +3,7 @@ import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { useUserPreferences } from '@/hooks/useUserPreferences';
 import { useUserRole } from '@/hooks/useUserRole';
+import { useProfile } from '@/hooks/useProfile';
 import { Loader2 } from 'lucide-react';
 
 interface ProtectedRouteProps {
@@ -14,10 +15,11 @@ export function ProtectedRoute({ children, skipOnboardingCheck = false }: Protec
   const { user, loading: authLoading } = useAuth();
   const { needsOnboarding, loading: prefsLoading } = useUserPreferences();
   const { isDoctor, isRelative, isLoading: roleLoading } = useUserRole();
+  const { profile, isLoading: profileLoading } = useProfile();
   const location = useLocation();
 
   // Wait for all loading states to complete
-  if (authLoading || prefsLoading || roleLoading) {
+  if (authLoading || prefsLoading || roleLoading || profileLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <Loader2 className="w-8 h-8 animate-spin text-primary" />
@@ -30,8 +32,10 @@ export function ProtectedRoute({ children, skipOnboardingCheck = false }: Protec
   }
 
   // Check if user needs to complete their profile (OTP signup flow)
+  // Skip if user already has a profile with a first_name in the profiles table
   const profileCompleted = user.user_metadata?.profile_completed;
-  if (!profileCompleted && !user.user_metadata?.first_name && location.pathname !== '/slutfor-profil') {
+  const hasProfileInDb = profile?.first_name;
+  if (!profileCompleted && !user.user_metadata?.first_name && !hasProfileInDb && location.pathname !== '/slutfor-profil') {
     return <Navigate to="/slutfor-profil" replace />;
   }
 
