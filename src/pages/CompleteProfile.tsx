@@ -136,7 +136,7 @@ const CompleteProfile = () => {
     }
   };
 
-  if (loading) {
+  if (loading || profileLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[hsl(230_30%_5%)]">
         <Loader2 className="h-8 w-8 animate-spin text-[hsl(45_85%_55%)]" />
