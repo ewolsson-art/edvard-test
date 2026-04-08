@@ -855,6 +855,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      assign_initial_role: {
+        Args: { _role: Database["public"]["Enums"]["app_role"] }
+        Returns: boolean
+      }
       get_doctor_email_for_patient: {
         Args: { p_doctor_id: string; p_patient_id: string }
         Returns: string
