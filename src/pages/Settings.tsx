@@ -216,8 +216,8 @@ const Settings = () => {
   return (
     <div className="p-5 md:p-8 pb-24">
         <div className="max-w-2xl mx-auto md:mx-0">
-        <h1 className="font-display text-3xl font-bold mb-2">Inställningar</h1>
-        <p className="text-sm text-muted-foreground mb-8">Anpassa appen efter dina behov.</p>
+        <h1 className="font-display text-2xl font-bold mb-1">Inställningar</h1>
+        <p className="text-[13px] text-foreground/30 mb-10">Anpassa appen efter dina behov</p>
 
         {/* Check-in section */}
         {isPatient && (
