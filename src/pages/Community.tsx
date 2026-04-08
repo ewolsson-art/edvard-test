@@ -1,6 +1,6 @@
 import { useState, useMemo, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Send, Eye, EyeOff, MessageCircle, ChevronDown, ChevronUp, Plus, X, Heart, TrendingUp, ImagePlus } from 'lucide-react';
+import { Send, Eye, EyeOff, MessageCircle, ChevronDown, ChevronUp, Plus, X, Heart, TrendingUp, ImagePlus, BarChart3, Minus } from 'lucide-react';
 import { useCommunityPosts } from '@/hooks/useCommunityPosts';
 import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/button';
@@ -43,6 +43,8 @@ const Community = () => {
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const imageInputRef = useRef<HTMLInputElement>(null);
+  const [pollMode, setPollMode] = useState(false);
+  const [pollOptions, setPollOptions] = useState<string[]>(['', '']);
 
   const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -64,12 +66,16 @@ const Community = () => {
 
   const handleSubmit = async () => {
     if (!content.trim() || isPosting) return;
+    const validPollOptions = pollMode ? pollOptions.filter(o => o.trim()) : [];
+    if (pollMode && validPollOptions.length < 2) return;
     setIsPosting(true);
-    const success = await createPost(content, selectedCategory, isAnonymous, title, imageFile);
+    const success = await createPost(content, selectedCategory, isAnonymous, title, imageFile, validPollOptions.length >= 2 ? validPollOptions : undefined);
     if (success) {
       setContent('');
       setTitle('');
       clearImage();
+      setPollMode(false);
+      setPollOptions(['', '']);
       setMobileFormOpen(false);
       setDesktopFormOpen(false);
     }
