@@ -64,7 +64,7 @@ export function CustomQuestionsSection({ questions, onAdd, onRemove }: CustomQue
           placeholder="T.ex. Har du ätit godis?"
           value={newQuestion}
           onChange={(e) => setNewQuestion(e.target.value)}
-          onKeyDown={(e) => e.key === 'Enter' && handleAdd()}
+          onKeyDown={(e) => { if (e.key === 'Enter') { (e.target as HTMLInputElement).blur(); handleAdd(); } }}
           maxLength={200}
           disabled={isAdding}
         />
