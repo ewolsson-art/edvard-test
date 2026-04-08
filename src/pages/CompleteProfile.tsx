@@ -4,10 +4,8 @@ import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { DarkNightBackground } from "@/components/DarkNightBackground";
-import { Logo } from "@/components/Logo";
 import { Loader2, Eye, EyeOff, Lock, Sparkles } from "lucide-react";
 import { z } from "zod";
 
@@ -39,7 +37,6 @@ const CompleteProfile = () => {
     if (!loading && !user) {
       navigate("/logga-in");
     }
-    // If profile already complete, redirect
     if (!loading && user?.user_metadata?.profile_completed) {
       navigate("/");
     }
@@ -64,10 +61,8 @@ const CompleteProfile = () => {
 
     setIsSubmitting(true);
 
-    // Check if there's a stored role from social signup
     const storedRole = localStorage.getItem("signup_role");
 
-    // Update user password and metadata
     const { error: updateError } = await supabase.auth.updateUser({
       password,
       data: {
@@ -88,7 +83,6 @@ const CompleteProfile = () => {
       return;
     }
 
-    // Create/update profile in the profiles table
     const { error: profileError } = await supabase
       .from("profiles")
       .upsert({
@@ -101,7 +95,6 @@ const CompleteProfile = () => {
       console.error("Profile creation error:", profileError);
     }
 
-    // If social login user with stored role, assign it
     if (storedRole && !user?.user_metadata?.role) {
       await supabase.from("user_roles").upsert({
         user_id: user!.id,
@@ -109,7 +102,6 @@ const CompleteProfile = () => {
       }, { onConflict: "user_id" });
     }
 
-    // Clean up stored role
     localStorage.removeItem("signup_role");
 
     toast({
@@ -117,7 +109,6 @@ const CompleteProfile = () => {
       description: "Välkommen till Toddy",
     });
 
-    // Full reload to pick up new metadata/role
     window.location.href = "/";
   };
 
@@ -131,107 +122,99 @@ const CompleteProfile = () => {
 
   return (
     <DarkNightBackground>
-      <div className="flex flex-1 items-center justify-center px-4 py-12">
-        <div className="w-full max-w-md">
-          <div className="bg-[hsl(225_25%_14%)] backdrop-blur-xl rounded-2xl shadow-2xl border border-white/[0.06] p-6 md:p-8 animate-fade-in">
-            <div className="flex flex-col items-center mb-6">
-              <Logo size="sm" className="[&_span]:!bg-none [&_span]:!text-white" />
-              <h1 className="mt-4 text-xl md:text-2xl font-bold text-white font-display">
-                Slutför din profil
-              </h1>
-              <p className="mt-1 text-xs text-white/50 text-center">
-                Välj ett namn och lösenord för ditt konto
-              </p>
+      <div className="flex flex-1 items-center justify-center px-6 py-12">
+        <div className="w-full max-w-sm">
+
+          <h1 className="text-2xl md:text-3xl font-bold text-white font-display tracking-tight animate-fade-in">
+            Slutför din profil
+          </h1>
+          <p className="mt-2 text-sm text-white/40 animate-fade-in">
+            Välj ett namn och lösenord
+          </p>
+
+          <form onSubmit={handleSubmit} className="mt-8 space-y-4 animate-fade-in">
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-1.5">
+                <Input
+                  id="firstName"
+                  placeholder="Förnamn"
+                  value={firstName}
+                  onChange={(e) => setFirstName(e.target.value)}
+                  className={`h-14 bg-white/[0.04] border-0 ring-1 ring-white/[0.08] rounded-2xl text-white placeholder:text-white/20 focus:ring-2 focus:ring-[hsl(45_85%_55%/0.5)] focus:bg-white/[0.06] transition-all text-base px-4 ${validationErrors.firstName ? 'ring-red-400/40' : ''}`}
+                  disabled={isSubmitting}
+                  autoComplete="given-name"
+                />
+                {validationErrors.firstName && <p className="text-xs text-red-400/80 pl-1">{validationErrors.firstName}</p>}
+              </div>
+              <div className="space-y-1.5">
+                <Input
+                  id="lastName"
+                  placeholder="Efternamn"
+                  value={lastName}
+                  onChange={(e) => setLastName(e.target.value)}
+                  className={`h-14 bg-white/[0.04] border-0 ring-1 ring-white/[0.08] rounded-2xl text-white placeholder:text-white/20 focus:ring-2 focus:ring-[hsl(45_85%_55%/0.5)] focus:bg-white/[0.06] transition-all text-base px-4 ${validationErrors.lastName ? 'ring-red-400/40' : ''}`}
+                  disabled={isSubmitting}
+                  autoComplete="family-name"
+                />
+                {validationErrors.lastName && <p className="text-xs text-red-400/80 pl-1">{validationErrors.lastName}</p>}
+              </div>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="grid grid-cols-2 gap-3">
-                <div className="space-y-1.5">
-                  <Label htmlFor="firstName" className="text-xs font-medium text-white/80">Förnamn</Label>
-                  <Input
-                    id="firstName"
-                    placeholder="Anna"
-                    value={firstName}
-                    onChange={(e) => setFirstName(e.target.value)}
-                    className={`h-11 bg-white/[0.08] border-white/20 rounded-xl text-white placeholder:text-white/30 transition-all text-base ${validationErrors.firstName ? 'border-red-400/60' : ''}`}
-                    disabled={isSubmitting}
-                    autoComplete="given-name"
-                  />
-                  {validationErrors.firstName && <p className="text-xs text-red-400">{validationErrors.firstName}</p>}
-                </div>
-                <div className="space-y-1.5">
-                  <Label htmlFor="lastName" className="text-xs font-medium text-white/80">Efternamn</Label>
-                  <Input
-                    id="lastName"
-                    placeholder="Andersson"
-                    value={lastName}
-                    onChange={(e) => setLastName(e.target.value)}
-                    className={`h-11 bg-white/[0.08] border-white/20 rounded-xl text-white placeholder:text-white/30 transition-all text-base ${validationErrors.lastName ? 'border-red-400/60' : ''}`}
-                    disabled={isSubmitting}
-                    autoComplete="family-name"
-                  />
-                  {validationErrors.lastName && <p className="text-xs text-red-400">{validationErrors.lastName}</p>}
-                </div>
+            <div className="space-y-1.5">
+              <div className="relative">
+                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-[18px] w-[18px] text-white/25" />
+                <Input
+                  id="password"
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Lösenord (minst 6 tecken)"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className={`pl-12 pr-12 h-14 bg-white/[0.04] border-0 ring-1 ring-white/[0.08] rounded-2xl text-white placeholder:text-white/20 focus:ring-2 focus:ring-[hsl(45_85%_55%/0.5)] focus:bg-white/[0.06] transition-all text-base ${validationErrors.password ? 'ring-red-400/40' : ''}`}
+                  disabled={isSubmitting}
+                  autoComplete="new-password"
+                />
+                <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-4 top-1/2 -translate-y-1/2 text-white/25 hover:text-white/50 transition-colors">
+                  {showPassword ? <EyeOff className="h-[18px] w-[18px]" /> : <Eye className="h-[18px] w-[18px]" />}
+                </button>
               </div>
+              {validationErrors.password && <p className="text-xs text-red-400/80 pl-1">{validationErrors.password}</p>}
+            </div>
 
-              <div className="space-y-1.5">
-                <Label htmlFor="password" className="text-xs font-medium text-white/80">Lösenord (minst 6 tecken)</Label>
-                <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/40" />
-                  <Input
-                    id="password"
-                    type={showPassword ? "text" : "password"}
-                    placeholder="••••••••"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className={`pl-10 pr-10 h-11 bg-white/[0.08] border-white/20 rounded-xl text-white placeholder:text-white/30 transition-all text-base ${validationErrors.password ? 'border-red-400/60' : ''}`}
-                    disabled={isSubmitting}
-                    autoComplete="new-password"
-                  />
-                  <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-white/40 hover:text-white/70 transition-colors">
-                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                  </button>
-                </div>
-                {validationErrors.password && <p className="text-xs text-red-400">{validationErrors.password}</p>}
+            <div className="space-y-1.5">
+              <div className="relative">
+                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-[18px] w-[18px] text-white/25" />
+                <Input
+                  id="confirmPassword"
+                  type={showConfirmPassword ? "text" : "password"}
+                  placeholder="Bekräfta lösenord"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  className={`pl-12 pr-12 h-14 bg-white/[0.04] border-0 ring-1 ring-white/[0.08] rounded-2xl text-white placeholder:text-white/20 focus:ring-2 focus:ring-[hsl(45_85%_55%/0.5)] focus:bg-white/[0.06] transition-all text-base ${validationErrors.confirmPassword ? 'ring-red-400/40' : ''}`}
+                  disabled={isSubmitting}
+                  autoComplete="new-password"
+                />
+                <button type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)} className="absolute right-4 top-1/2 -translate-y-1/2 text-white/25 hover:text-white/50 transition-colors">
+                  {showConfirmPassword ? <EyeOff className="h-[18px] w-[18px]" /> : <Eye className="h-[18px] w-[18px]" />}
+                </button>
               </div>
+              {validationErrors.confirmPassword && <p className="text-xs text-red-400/80 pl-1">{validationErrors.confirmPassword}</p>}
+            </div>
 
-              <div className="space-y-1.5">
-                <Label htmlFor="confirmPassword" className="text-xs font-medium text-white/80">Bekräfta lösenord</Label>
-                <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/40" />
-                  <Input
-                    id="confirmPassword"
-                    type={showConfirmPassword ? "text" : "password"}
-                    placeholder="••••••••"
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                    className={`pl-10 pr-10 h-11 bg-white/[0.08] border-white/20 rounded-xl text-white placeholder:text-white/30 transition-all text-base ${validationErrors.confirmPassword ? 'border-red-400/60' : ''}`}
-                    disabled={isSubmitting}
-                    autoComplete="new-password"
-                  />
-                  <button type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-white/40 hover:text-white/70 transition-colors">
-                    {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                  </button>
-                </div>
-                {validationErrors.confirmPassword && <p className="text-xs text-red-400">{validationErrors.confirmPassword}</p>}
-              </div>
-
-              <Button
-                type="submit"
-                disabled={isSubmitting}
-                className="w-full h-11 rounded-xl text-sm font-semibold bg-[hsl(45_85%_55%)] text-[hsl(230_30%_5%)] hover:bg-[hsl(45_85%_65%)] shadow-lg transition-all mt-2"
-              >
-                {isSubmitting ? (
-                  <Loader2 className="h-5 w-5 animate-spin" />
-                ) : (
-                  <>
-                    <Sparkles className="h-4 w-4 mr-2" />
-                    Spara och fortsätt
-                  </>
-                )}
-              </Button>
-            </form>
-          </div>
+            <Button
+              type="submit"
+              disabled={isSubmitting}
+              className="w-full h-12 rounded-2xl text-[15px] font-semibold bg-[hsl(45_85%_55%)] text-[hsl(230_30%_5%)] hover:bg-[hsl(45_85%_65%)] shadow-[0_4px_20px_-4px_hsl(45_85%_55%/0.4)] hover:shadow-[0_6px_28px_-4px_hsl(45_85%_55%/0.5)] transition-all duration-300 mt-4"
+            >
+              {isSubmitting ? (
+                <Loader2 className="h-5 w-5 animate-spin" />
+              ) : (
+                <>
+                  <Sparkles className="h-4 w-4 mr-2" />
+                  Spara och fortsätt
+                </>
+              )}
+            </Button>
+          </form>
         </div>
       </div>
     </DarkNightBackground>
