@@ -633,18 +633,6 @@ const Overview = () => {
               </section>
             )}
 
-  // Scroll to today when year view is loaded initially
-  useEffect(() => {
-    if (view === 'year' && isLoaded) {
-      setTimeout(() => {
-        const todayEl = document.querySelector('[data-today="true"]');
-        if (todayEl) {
-          todayEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }
-      }, 300);
-    }
-  }, [isLoaded]);
-
 
         <DayDetailDialog
           open={dialogOpen}
