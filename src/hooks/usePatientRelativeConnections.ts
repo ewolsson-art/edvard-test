@@ -16,7 +16,14 @@ export interface RelativeConnection {
   share_medication: boolean;
   share_comments: boolean;
   share_characteristics: boolean;
+  notify_low_mood: boolean;
   created_at: string;
+  relative_profile?: {
+    first_name: string | null;
+    last_name: string | null;
+  };
+  relative_email?: string;
+}
   relative_profile?: {
     first_name: string | null;
     last_name: string | null;
@@ -129,6 +136,7 @@ export function usePatientRelativeConnections() {
       share_medication: boolean;
       share_comments: boolean;
       share_characteristics: boolean;
+      notify_low_mood: boolean;
     }>
   ) => {
     const { error } = await supabase
