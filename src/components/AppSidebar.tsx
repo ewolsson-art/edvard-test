@@ -81,6 +81,7 @@ export function AppSidebar() {
   const { firstName, fullName, avatarUrl } = useProfile();
   const { isDoctor, isPatient, isRelative, isLoading: roleLoading } = useUserRole();
   const { hasPending } = usePendingNotifications();
+  const { unreadCount: notifUnread } = useNotifications();
   
   const isMobile = useIsMobile();
   const isCollapsed = state === "collapsed";
