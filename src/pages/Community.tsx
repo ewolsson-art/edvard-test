@@ -1,6 +1,6 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Send, Eye, EyeOff, MessageCircle, ChevronDown, ChevronUp, Plus, X, Heart, TrendingUp } from 'lucide-react';
+import { Send, Eye, EyeOff, MessageCircle, ChevronDown, ChevronUp, Plus, X, Heart, TrendingUp, ImagePlus } from 'lucide-react';
 import { useCommunityPosts } from '@/hooks/useCommunityPosts';
 import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/button';
@@ -40,14 +40,36 @@ const Community = () => {
   const [rulesOpen, setRulesOpen] = useState(false);
   const [mobileFormOpen, setMobileFormOpen] = useState(false);
   const [desktopFormOpen, setDesktopFormOpen] = useState(false);
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const imageInputRef = useRef<HTMLInputElement>(null);
+
+  const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (file.size > 5 * 1024 * 1024) {
+        alert('Bilden får vara max 5 MB');
+        return;
+      }
+      setImageFile(file);
+      setImagePreview(URL.createObjectURL(file));
+    }
+  };
+
+  const clearImage = () => {
+    setImageFile(null);
+    setImagePreview(null);
+    if (imageInputRef.current) imageInputRef.current.value = '';
+  };
 
   const handleSubmit = async () => {
     if (!content.trim() || isPosting) return;
     setIsPosting(true);
-    const success = await createPost(content, selectedCategory, isAnonymous, title);
+    const success = await createPost(content, selectedCategory, isAnonymous, title, imageFile);
     if (success) {
       setContent('');
       setTitle('');
+      clearImage();
       setMobileFormOpen(false);
       setDesktopFormOpen(false);
     }
