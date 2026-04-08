@@ -173,25 +173,27 @@ const CompleteProfile = () => {
               {validationErrors.password && <p className="text-xs text-red-400/80 pl-1">{validationErrors.password}</p>}
             </div>
 
-            <div className="space-y-1.5">
-              <div className="relative">
-                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-[18px] w-[18px] text-white/25" />
-                <Input
-                  id="confirmPassword"
-                  type={showConfirmPassword ? "text" : "password"}
-                  placeholder="Bekräfta lösenord"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  className={`pl-12 pr-12 h-14 bg-white/[0.04] border-0 ring-1 ring-white/[0.08] rounded-2xl text-white placeholder:text-white/20 focus:ring-2 focus:ring-[hsl(45_85%_55%/0.5)] focus:bg-white/[0.06] transition-all text-base ${validationErrors.confirmPassword ? 'ring-red-400/40' : ''}`}
-                  disabled={isSubmitting}
-                  autoComplete="new-password"
-                />
-                <button type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)} className="absolute right-4 top-1/2 -translate-y-1/2 text-white/25 hover:text-white/50 transition-colors">
-                  {showConfirmPassword ? <EyeOff className="h-[18px] w-[18px]" /> : <Eye className="h-[18px] w-[18px]" />}
-                </button>
+            {password.length > 0 && (
+              <div className="space-y-1.5 animate-fade-in">
+                <div className="relative">
+                  <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-[18px] w-[18px] text-white/25" />
+                  <Input
+                    id="confirmPassword"
+                    type={showConfirmPassword ? "text" : "password"}
+                    placeholder="Bekräfta lösenord"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    className={`pl-12 pr-12 h-14 bg-white/[0.04] border-0 ring-1 ring-white/[0.08] rounded-2xl text-white placeholder:text-white/20 focus:ring-2 focus:ring-[hsl(45_85%_55%/0.5)] focus:bg-white/[0.06] transition-all text-base ${validationErrors.confirmPassword ? 'ring-red-400/40' : ''}`}
+                    disabled={isSubmitting}
+                    autoComplete="new-password"
+                  />
+                  <button type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)} className="absolute right-4 top-1/2 -translate-y-1/2 text-white/25 hover:text-white/50 transition-colors">
+                    {showConfirmPassword ? <EyeOff className="h-[18px] w-[18px]" /> : <Eye className="h-[18px] w-[18px]" />}
+                  </button>
+                </div>
+                {validationErrors.confirmPassword && <p className="text-xs text-red-400/80 pl-1">{validationErrors.confirmPassword}</p>}
               </div>
-              {validationErrors.confirmPassword && <p className="text-xs text-red-400/80 pl-1">{validationErrors.confirmPassword}</p>}
-            </div>
+            )}
 
             <Button
               type="submit"
