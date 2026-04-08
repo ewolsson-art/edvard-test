@@ -132,6 +132,7 @@ export function YearHeatmap({ year, entries, medicationDates = [], onPrevYear, o
                         <div
                           key={dateStr}
                           className="flex items-center justify-center"
+                          {...(isTodayDate ? { 'data-today': 'true' } : {})}
                         >
                           <span className={cn(
                             "flex items-center justify-center text-[10px] w-5 h-5 rounded-full leading-none",

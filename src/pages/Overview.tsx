@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback, useRef } from 'react';
+import { useState, useMemo, useCallback, useRef, useEffect } from 'react';
 import { CalendarDays, BarChart3 } from 'lucide-react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { format, startOfWeek, endOfWeek, addWeeks, subWeeks, eachDayOfInterval, addMonths, subMonths, startOfMonth, endOfMonth, isBefore, startOfDay, isToday } from 'date-fns';
@@ -87,6 +87,18 @@ const Overview = () => {
   const { isLoaded: medsLoaded, getMedicationsTakenOnDate, logs, activeMedications } = useMedications();
   const { preferences, loading: prefsLoading } = useUserPreferences();
   const { characteristics } = useCharacteristics();
+
+  // Scroll to today when year view is loaded initially
+  useEffect(() => {
+    if (view === 'year' && isLoaded) {
+      setTimeout(() => {
+        const todayEl = document.querySelector('[data-today="true"]');
+        if (todayEl) {
+          todayEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      }, 300);
+    }
+  }, [view, isLoaded]);
 
   // Week data
   const weekDays = useMemo(() => {
@@ -462,6 +474,15 @@ const Overview = () => {
   const handleViewChange = (newView: string) => {
     setView(newView as ViewType);
     setSearchParams({ view: newView });
+    if (newView === 'year') {
+      // Scroll to today's date after render
+      setTimeout(() => {
+        const todayEl = document.querySelector('[data-today="true"]');
+        if (todayEl) {
+          todayEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      }, 100);
+    }
   };
 
   const selectedEntry = selectedDate 
@@ -623,7 +644,6 @@ const Overview = () => {
                     )}
               </section>
             )}
-
 
 
         <DayDetailDialog
