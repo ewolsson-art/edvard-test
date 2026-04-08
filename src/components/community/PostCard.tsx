@@ -232,9 +232,14 @@ export const PostCard = ({ post, userId, onToggleReaction, onDeletePost, onCreat
             type="text"
             value={replyContent}
             onChange={(e) => setReplyContent(e.target.value)}
-            onKeyDown={(e) => e.key === 'Enter' && !e.shiftKey && handleReply()}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && !e.shiftKey) {
+                (e.target as HTMLInputElement).blur();
+                handleReply();
+              }
+            }}
             placeholder={replyAnonymous ? 'Lägg till en kommentar anonymt...' : 'Lägg till en kommentar...'}
-            className="flex-1 bg-transparent text-[13px] text-foreground placeholder:text-muted-foreground/40 outline-none"
+            className="flex-1 bg-transparent text-base md:text-[13px] text-foreground placeholder:text-muted-foreground/40 outline-none"
             maxLength={500}
           />
           {replyContent.trim() && (
