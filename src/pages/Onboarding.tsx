@@ -323,43 +323,8 @@ const Onboarding = () => {
             </div>
           )}
 
-          {/* Step 2: Diagnosis */}
+          {/* Step 2: Choose categories */}
           {step === 2 && (
-            <div className="animate-fade-in">
-              <div className="text-center mb-3">
-                <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-primary/10 mb-2">
-                  <Stethoscope className="w-5 h-5 text-primary" />
-                </div>
-                <h1 className="font-display text-xl md:text-2xl font-bold mb-1">
-                  Dina diagnoser
-                </h1>
-                <p className="text-sm text-muted-foreground">
-                  Lägg till dina diagnoser (valfritt)
-                </p>
-              </div>
-
-              <div className="glass-card p-4 mb-4">
-                <DiagnosisStep 
-                  selectedDiagnoses={selectedDiagnoses}
-                  onDiagnosesChange={setSelectedDiagnoses}
-                />
-              </div>
-
-              <div className="flex gap-2">
-                <Button variant="outline" onClick={handleBack} className="flex-1" size="default">
-                  <ArrowLeft className="w-4 h-4 mr-1" />
-                  Tillbaka
-                </Button>
-                <Button onClick={handleNext} className="flex-1" size="default">
-                  {getSkipText()}
-                  <ArrowRight className="w-4 h-4 ml-1" />
-                </Button>
-              </div>
-            </div>
-          )}
-
-          {/* Step 3: Choose categories */}
-          {step === 3 && (
             <div className="animate-fade-in">
               <div className="text-center mb-3">
                 <h1 className="font-display text-xl md:text-2xl font-bold mb-1">
