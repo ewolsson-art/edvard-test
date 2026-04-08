@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
+import { useProfile } from "@/hooks/useProfile";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -20,6 +21,7 @@ const profileSchema = z.object({
 
 const CompleteProfile = () => {
   const { user, loading } = useAuth();
+  const { profile, isLoading: profileLoading } = useProfile();
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -32,17 +34,33 @@ const CompleteProfile = () => {
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
 
   useEffect(() => {
-    if (!loading && user?.user_metadata?.profile_completed) {
+    if (loading || profileLoading) return;
+
+    // Existing user with completed profile → go to dashboard
+    const profileCompleted = user?.user_metadata?.profile_completed;
+    const hasFirstName = user?.user_metadata?.first_name;
+    const hasProfileInDb = profile?.first_name;
+
+    if (user && (profileCompleted || hasFirstName || hasProfileInDb)) {
       navigate("/");
+      return;
     }
-    // Give auth session time to establish after magic link redirect
-    if (!loading && !user) {
-      const timeout = setTimeout(() => {
+
+    // No user and no auth callback in URL → redirect to login
+    if (!user) {
+      const hash = window.location.hash;
+      const hasAuthParams = hash.includes('access_token') || hash.includes('type=magiclink');
+      if (!hasAuthParams) {
         navigate("/logga-in");
-      }, 2000);
-      return () => clearTimeout(timeout);
+      } else {
+        // Wait for auth to process magic link
+        const timeout = setTimeout(() => {
+          navigate("/logga-in");
+        }, 3000);
+        return () => clearTimeout(timeout);
+      }
     }
-  }, [user, loading, navigate]);
+  }, [user, loading, profileLoading, profile, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
