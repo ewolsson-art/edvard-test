@@ -37,19 +37,22 @@ type Step = "role" | "details" | "submitting";
 const roleInfo = {
   patient: {
     icon: User,
-    title: "Patient",
+    prefix: "Jag är",
+    title: "bipolär",
     description: "Följ ditt mående och dela med din vårdgivare",
     benefits: ["Dagliga incheckningar", "AI-insikter", "Dela med läkare"],
   },
   doctor: {
     icon: Stethoscope,
+    prefix: "",
     title: "Vårdgivare",
     description: "Följ dina patienters mående och välbefinnande",
     benefits: ["Patientöversikt", "Meddelandefunktion", "Trendanalyser"],
   },
   relative: {
     icon: Users,
-    title: "Anhörig",
+    prefix: "Jag är",
+    title: "anhörig",
     description: "Stötta dina nära genom att följa deras resa",
     benefits: ["Följ patienters mående", "Lämna kommentarer", "Få notiser"],
   },
@@ -287,7 +290,10 @@ const Signup = () => {
                                 "font-semibold text-sm transition-colors",
                                 isSelected ? "text-[hsl(45_85%_55%)]" : "text-white"
                               )}>
-                                {info.title}
+                                {info.prefix && (
+                                  <span className="text-xs font-normal text-white/50 block leading-tight">{info.prefix}</span>
+                                )}
+                                <span className="capitalize">{info.title}</span>
                               </h3>
                               {isSelected && (
                                 <CheckCircle2 className="h-4 w-4 text-[hsl(45_85%_55%)] animate-scale-in" aria-hidden="true" />
@@ -332,7 +338,7 @@ const Signup = () => {
                     Skapa ditt konto
                   </h1>
                   <p className="mt-1 text-xs text-white/50 text-center">
-                    {role && `Du registrerar dig som ${roleInfo[role].title.toLowerCase()}`}
+                    {role && `Du registrerar dig som ${roleInfo[role].prefix ? roleInfo[role].prefix.toLowerCase() + ' ' : ''}${roleInfo[role].title.toLowerCase()}`}
                   </p>
                 </div>
 
