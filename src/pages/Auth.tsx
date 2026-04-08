@@ -233,7 +233,7 @@ const Auth = () => {
                   className="px-10 md:px-14 py-3.5 md:py-4 rounded-full bg-[hsl(45_85%_55%)] text-[hsl(225_30%_7%)] font-bold text-base md:text-lg tracking-wide shadow-[0_4px_24px_hsl(45_85%_55%/0.35)] hover:shadow-[0_8px_32px_hsl(45_85%_55%/0.5)] hover:bg-[hsl(45_85%_62%)] hover:scale-105 active:scale-[0.98] transition-all duration-200 w-fit"
                   onClick={() => navigate("/skapa-konto")}
                 >
-                  Kom igång gratis
+                  Kom igång
                 </button>
                 <p className="text-white/40 text-xs md:text-sm tracking-wide">
                   Tar 30 sekunder
