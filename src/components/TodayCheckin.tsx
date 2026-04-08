@@ -1157,13 +1157,41 @@ export function TodayCheckin({
 
             {renderCommentSection('medication')}
 
+            {/* Status summary */}
+            {activeMedications.length > 0 && (
+              <div className="flex items-center justify-center gap-2 mt-4">
+                <div className="flex gap-1">
+                  {activeMedications.map(med => (
+                    <div
+                      key={med.id}
+                      className={cn(
+                        "w-2 h-2 rounded-full transition-all",
+                        medicationsTakenToday.includes(med.id) ? "bg-mood-stable" : "bg-muted-foreground/20"
+                      )}
+                    />
+                  ))}
+                </div>
+                <span className="text-xs text-muted-foreground/50">
+                  {medicationsTakenToday.length} av {activeMedications.length} tagna
+                </span>
+              </div>
+            )}
+
             {isLastStep('medication') ? (
-              <Button onClick={handleComplete} className="w-full mt-8 py-6 text-base font-semibold gap-2">
-                Klar ✓
+              <Button onClick={handleComplete} className="w-full mt-4 py-6 text-base font-semibold gap-2">
+                {medicationsTakenToday.length === 0 && activeMedications.length > 0
+                  ? 'Hoppa över'
+                  : medicationsTakenToday.length < activeMedications.length
+                    ? 'Fortsätt ändå'
+                    : 'Klar ✓'}
               </Button>
             ) : (
-              <Button onClick={() => navigateStep(getNextStep('medication') as Step)} className="w-full mt-8 py-6 text-base font-semibold gap-2">
-                Fortsätt
+              <Button onClick={() => navigateStep(getNextStep('medication') as Step)} className="w-full mt-4 py-6 text-base font-semibold gap-2">
+                {medicationsTakenToday.length === 0 && activeMedications.length > 0
+                  ? 'Hoppa över'
+                  : medicationsTakenToday.length < activeMedications.length
+                    ? 'Fortsätt ändå'
+                    : 'Fortsätt'}
                 <ChevronRight className="w-4 h-4" />
               </Button>
             )}
