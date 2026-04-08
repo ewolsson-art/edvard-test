@@ -130,7 +130,7 @@ const Characteristics = () => {
       </div>
 
       {/* Sharing section */}
-      <div className="mt-10">
+      <div className="mt-12">
         <CharacteristicsSharingSection />
       </div>
       </div>

@@ -53,7 +53,7 @@ export const CharacteristicsSharingSection = () => {
         {approvedConnections.map((connection) => (
           <div 
             key={connection.id} 
-            className="flex items-center justify-between px-4 py-4"
+            className="flex items-center justify-between px-4 py-4 hover:bg-foreground/[0.04] transition-all duration-200"
           >
             <div className="flex items-center gap-3 min-w-0">
               <div className="w-8 h-8 rounded-full bg-foreground/[0.06] flex items-center justify-center flex-shrink-0">
@@ -66,7 +66,7 @@ export const CharacteristicsSharingSection = () => {
                   {getRelativeName(connection)}
                 </p>
                 <p className="text-[11px] text-foreground/20">
-                  {connection.share_characteristics ? 'Kan se kännetecken' : 'Ingen åtkomst'}
+                  {connection.share_characteristics ? 'Delad' : 'Inte delad'}
                 </p>
               </div>
             </div>
