@@ -170,36 +170,25 @@ const CharacteristicDetail = () => {
         {/* Dina kännetecken – primary section */}
         <div className="mb-10">
           <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-2">
-              <div className={cn("w-0.5 h-3.5 rounded-full", config.dotColor, "opacity-40")} />
-              <h2 className="text-[13px] font-medium text-foreground/40 uppercase tracking-wide">
-                Dina kännetecken
-              </h2>
-            </div>
+            <h2 className="text-[13px] font-medium text-foreground/30 uppercase tracking-wide">
+              Dina kännetecken
+            </h2>
             {characteristics.length > 0 && (
               <span className="text-[12px] text-foreground/20">{characteristics.length} st</span>
             )}
           </div>
 
           {characteristics.length > 0 && (
-            <div className={cn("border-l-2 pl-4 ml-[1px]", 
-              config.type === 'elevated' ? 'border-amber-400/15' : 
-              config.type === 'stable' ? 'border-emerald-400/15' : 
-              'border-rose-400/15'
-            )}>
-              {characteristics.map((char, index) => (
+            <div className="space-y-1">
+              {characteristics.map((char) => (
                 <div
                   key={char.id}
-                  className={cn(
-                    "flex items-center justify-between py-3 group cursor-default",
-                    "hover:bg-foreground/[0.02] -mx-3 px-3 rounded-md transition-all duration-200 hover:translate-x-0.5",
-                    index < characteristics.length - 1 && "border-b border-foreground/[0.04]"
-                  )}
+                  className="flex items-center justify-between px-4 py-3 rounded-xl hover:bg-foreground/[0.03] transition-all duration-200 group cursor-default"
                 >
                   <span className="text-[14px] text-foreground/70">{char.name}</span>
                   <button
                     onClick={() => deleteCharacteristic(char.id)}
-                    className="opacity-40 hover:opacity-100 text-foreground/30 hover:text-destructive transition-all duration-200 p-1 -m-1"
+                    className="opacity-0 group-hover:opacity-100 text-foreground/30 hover:text-destructive transition-all duration-200 p-1 -m-1"
                     aria-label={`Ta bort ${char.name}`}
                   >
                     <X className="h-3.5 w-3.5" />
@@ -211,7 +200,7 @@ const CharacteristicDetail = () => {
 
           {/* Inline add */}
           {showInput ? (
-            <div className="flex items-center gap-2 mt-3 ml-[11px]">
+            <div className="flex items-center gap-2 mt-2 px-4">
               <Input
                 placeholder={config.placeholder}
                 value={newValue}
@@ -244,11 +233,8 @@ const CharacteristicDetail = () => {
             <button
               onClick={() => setShowInput(true)}
               className={cn(
-                "inline-flex items-center gap-1.5 text-[13px] transition-all duration-200 mt-3 ml-[11px]",
-                "text-foreground/25 hover:text-foreground/45",
-                config.type === 'elevated' ? 'hover:text-amber-400/60' :
-                config.type === 'stable' ? 'hover:text-emerald-400/60' :
-                'hover:text-rose-400/60'
+                "inline-flex items-center gap-1.5 text-[13px] transition-all duration-200 mt-1 px-4",
+                "text-foreground/25 hover:text-foreground/45"
               )}
             >
               <Plus className="w-3.5 h-3.5" />
