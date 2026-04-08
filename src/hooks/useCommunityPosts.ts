@@ -88,6 +88,16 @@ export function useCommunityPosts() {
       .select('*')
       .order('created_at', { ascending: true });
 
+    // Fetch poll options and votes
+    const { data: pollOptions } = await supabase
+      .from('poll_options')
+      .select('*')
+      .order('sort_order', { ascending: true });
+
+    const { data: pollVotes } = await supabase
+      .from('poll_votes')
+      .select('option_id, user_id');
+
     // Fetch profile names for non-anonymous posts and replies
     const allUserIds = new Set<string>();
     (postsData || []).filter(p => !p.is_anonymous).forEach(p => allUserIds.add(p.user_id));
@@ -117,6 +127,19 @@ export function useCommunityPosts() {
             : (profileMap[r.user_id] || 'Användare'),
         }));
 
+      const postPollOptions: PollOption[] = (pollOptions || [])
+        .filter(o => o.post_id === post.id)
+        .map(o => ({
+          id: o.id,
+          option_text: o.option_text,
+          sort_order: o.sort_order,
+          vote_count: (pollVotes || []).filter(v => v.option_id === o.id).length,
+        }));
+
+      const userVote = user
+        ? (pollVotes || []).find(v => v.user_id === user.id && postPollOptions.some(o => o.id === v.option_id))
+        : null;
+
       return {
         ...post,
         author_name: post.is_anonymous 
@@ -125,6 +148,8 @@ export function useCommunityPosts() {
         reaction_count: postReactions.length,
         user_has_reacted: user ? postReactions.some(r => r.user_id === user.id) : false,
         replies: postReplies,
+        poll_options: postPollOptions,
+        user_voted_option_id: userVote?.option_id || null,
       };
     });
 
