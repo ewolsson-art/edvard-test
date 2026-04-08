@@ -16,6 +16,14 @@ const CATEGORIES = [
   { id: 'recovery', label: 'Återhämtning', emoji: '☀️' },
   { id: 'low', label: 'Tunga dagar', emoji: '🌊' },
   { id: 'tips', label: 'Tips', emoji: '💡' },
+  { id: 'medication', label: 'Läkemedel', emoji: '💊' },
+  { id: 'side-effects', label: 'Biverkningar', emoji: '⚠️' },
+  { id: 'family', label: 'Anhöriga', emoji: '👨‍👩‍👧' },
+  { id: 'work', label: 'Jobb & studier', emoji: '💼' },
+  { id: 'sleep', label: 'Sömn', emoji: '😴' },
+  { id: 'exercise', label: 'Träning', emoji: '🏃' },
+  { id: 'therapy', label: 'Terapi', emoji: '🧠' },
+  { id: 'selfcare', label: 'Egenvård', emoji: '🧘' },
 ];
 
 const RULES = [
