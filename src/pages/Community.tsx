@@ -74,7 +74,7 @@ const Community = () => {
   }, [posts]);
 
   const postForm = (
-    <div className="bg-card/60 backdrop-blur-sm rounded-xl border border-border/30 p-4 space-y-3">
+    <div className="bg-card/60 backdrop-blur-sm rounded-xl p-4 space-y-3">
       <Input
         value={title}
         onChange={(e) => setTitle(e.target.value)}
