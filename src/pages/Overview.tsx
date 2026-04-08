@@ -597,6 +597,10 @@ const Overview = () => {
               />
             )}
 
+            {sectionView === 'stats' && (
+              <LessonsFromPast entries={entries} characteristics={characteristics} />
+            )}
+
             {showMood && sectionView === 'calendar' && (
               <section>
                      {view === 'month' && (
