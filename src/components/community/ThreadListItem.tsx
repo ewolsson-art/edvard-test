@@ -78,6 +78,11 @@ export const ThreadListItem = ({ post }: ThreadListItemProps) => {
           </span>
         </div>
         <div className="flex items-center gap-4">
+          {hasPoll && (
+            <span className="flex items-center gap-1.5 text-sm text-primary/60">
+              <BarChart3 className="h-4 w-4" strokeWidth={1.8} />
+            </span>
+          )}
           <span className="flex items-center gap-1.5 text-sm text-muted-foreground/50">
             <Heart className="h-4.5 w-4.5" fill={post.user_has_reacted ? 'currentColor' : 'none'} strokeWidth={1.8}
                    style={{ color: post.user_has_reacted ? 'rgb(239 68 68)' : undefined }} />
