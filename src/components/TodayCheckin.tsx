@@ -653,9 +653,6 @@ export function TodayCheckin({
             <h1 className="font-display text-[28px] sm:text-3xl font-bold tracking-tight">
               Något särskilt idag?
             </h1>
-            <p className="text-muted-foreground/40 mt-1.5 text-[15px]">
-              Välj det som stämmer
-            </p>
           </div>
 
           {/* Tags */}
