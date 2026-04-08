@@ -78,7 +78,7 @@ const Community = () => {
       <Input
         value={title}
         onChange={(e) => setTitle(e.target.value)}
-        placeholder="Rubrik på din tråd..."
+        placeholder="Rubrik (valfritt)"
         className="bg-transparent border-0 focus-visible:ring-0 text-base font-semibold placeholder:text-muted-foreground/40 px-0 h-auto"
         maxLength={120}
       />
