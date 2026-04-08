@@ -110,7 +110,15 @@ const CompleteProfile = () => {
       description: "Välkommen till Toddy",
     });
 
-    window.location.href = "/";
+    // Redirect based on role
+    const effectiveRole = storedRole || user?.user_metadata?.role;
+    if (effectiveRole === 'relative') {
+      window.location.href = "/anhorig-onboarding";
+    } else if (effectiveRole === 'doctor') {
+      window.location.href = "/lakare-onboarding";
+    } else {
+      window.location.href = "/";
+    }
   };
 
   if (loading) {
