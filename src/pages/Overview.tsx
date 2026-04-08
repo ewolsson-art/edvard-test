@@ -578,7 +578,17 @@ const Overview = () => {
 
             <div className="flex items-center gap-0.5 p-1 bg-muted/50 rounded-lg ml-auto">
                 <button
-                  onClick={() => setSectionView('calendar')}
+                  onClick={() => {
+                    setSectionView('calendar');
+                    if (view === 'year') {
+                      setTimeout(() => {
+                        const todayEl = document.querySelector('[data-today="true"]');
+                        if (todayEl) {
+                          todayEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        }
+                      }, 100);
+                    }
+                  }}
                   className={`p-2 rounded-md transition-all ${
                     sectionView === 'calendar'
                       ? 'bg-background text-foreground shadow-sm'
