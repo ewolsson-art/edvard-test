@@ -153,16 +153,7 @@ const Onboarding = () => {
       const { error } = await createPreferences(selections);
       if (error) throw new Error('Kunde inte spara preferenser');
 
-      // 2. Save diagnoses
-      if (selectedDiagnoses.length > 0) {
-        const diagnosesToInsert = selectedDiagnoses.map(name => ({
-          user_id: user.id,
-          name: name.trim(),
-        }));
-        await supabase.from('diagnoses').insert(diagnosesToInsert);
-      }
-
-      // 3. Save medications
+      // 2. Save medications
       if (selectedMedications.length > 0) {
         const today = new Date().toISOString().split('T')[0];
         const medicationsToInsert = selectedMedications.map(med => ({
@@ -175,7 +166,7 @@ const Onboarding = () => {
         await supabase.from('medications').insert(medicationsToInsert);
       }
 
-      // 4. Save characteristics
+      // 3. Save characteristics
       const allCharacteristics = [
         ...characteristics.elevated.map(name => ({ user_id: user.id, name, mood_type: 'elevated' })),
         ...characteristics.stable.map(name => ({ user_id: user.id, name, mood_type: 'stable' })),
@@ -183,17 +174,6 @@ const Onboarding = () => {
       ];
       if (allCharacteristics.length > 0) {
         await supabase.from('characteristics').insert(allCharacteristics);
-      }
-
-      // 5. Save notification preferences
-      if (notificationSettings.checkinEnabled || notificationSettings.medicationEnabled) {
-        await supabase.from('notification_preferences').upsert({
-          user_id: user.id,
-          checkin_enabled: notificationSettings.checkinEnabled,
-          checkin_time: notificationSettings.checkinTime,
-          medication_enabled: notificationSettings.medicationEnabled,
-          medication_time: notificationSettings.medicationTime,
-        });
       }
 
       // 6. Create doctor connection requests
