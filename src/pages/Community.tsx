@@ -126,9 +126,23 @@ const Community = () => {
             <PostForm />
           </div>
         ) : (
-          <div className="flex items-center justify-between bg-card/30 rounded-xl border border-border/10 px-4 py-3">
-            <p className="text-xs text-muted-foreground/70">Logga in för att delta i diskussionen</p>
-            <Link to="/logga-in"><Button size="sm" variant="ghost" className="rounded-full text-xs h-7 px-3 text-primary hover:text-primary">Logga in</Button></Link>
+          <div className="rounded-2xl bg-card/60 border border-border/40 p-5 space-y-3">
+            <p className="text-sm font-medium text-foreground">Vill du delta i diskussionen?</p>
+            <p className="text-xs text-muted-foreground leading-relaxed">
+              Skapa ett konto för att skriva inlägg, kommentera och gilla – helt anonymt om du vill.
+            </p>
+            <div className="flex items-center gap-3">
+              <Link to="/skapa-konto">
+                <Button size="sm" className="rounded-full gap-2 px-5">
+                  Skapa konto
+                </Button>
+              </Link>
+              <Link to="/logga-in">
+                <Button size="sm" variant="ghost" className="rounded-full text-xs text-muted-foreground hover:text-foreground">
+                  Har redan ett konto? Logga in
+                </Button>
+              </Link>
+            </div>
           </div>
         )}
 
