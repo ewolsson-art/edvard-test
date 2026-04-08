@@ -601,7 +601,12 @@ const Overview = () => {
                 <button
                   onClick={() => {
                     setSectionView('stats');
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                    setTimeout(() => {
+                      window.scrollTo({ top: 0, behavior: 'smooth' });
+                      // Fallback: also try scrolling the main content container
+                      const mainEl = document.querySelector('main');
+                      if (mainEl) mainEl.scrollTo({ top: 0, behavior: 'smooth' });
+                    }, 50);
                   }}
                   className={`p-2 rounded-md transition-all ${
                     sectionView === 'stats'
