@@ -74,7 +74,7 @@ const FEATURES = [
   },
 ];
 
-const TOTAL_STEPS = 8;
+const TOTAL_STEPS = 6;
 
 const Onboarding = () => {
   const { toast } = useToast();
