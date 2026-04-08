@@ -62,12 +62,42 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return { error };
   };
 
+  const signInWithOtp = async (emailOrPhone: string, role: string) => {
+    const isPhone = emailOrPhone.startsWith('+');
+    if (isPhone) {
+      const { error } = await supabase.auth.signInWithOtp({
+        phone: emailOrPhone,
+        options: { data: { role } }
+      });
+      return { error };
+    } else {
+      const { error } = await supabase.auth.signInWithOtp({
+        email: emailOrPhone,
+        options: {
+          emailRedirectTo: `${window.location.origin}/slutfor-profil`,
+          data: { role },
+          shouldCreateUser: true,
+        }
+      });
+      return { error };
+    }
+  };
+
+  const verifyOtp = async (phone: string, token: string) => {
+    const { error } = await supabase.auth.verifyOtp({
+      phone,
+      token,
+      type: 'sms'
+    });
+    return { error };
+  };
+
   const signOut = async () => {
     await supabase.auth.signOut();
   };
 
   return (
-    <AuthContext.Provider value={{ user, session, loading, signUp, signIn, signOut }}>
+    <AuthContext.Provider value={{ user, session, loading, signUp, signIn, signInWithOtp, verifyOtp, signOut }}>
       {children}
     </AuthContext.Provider>
   );
