@@ -64,6 +64,13 @@ const Community = () => {
 
   const filteredPosts = filterCategory ? posts.filter(p => p.category === filterCategory) : posts;
 
+  const popularPosts = useMemo(() => {
+    return [...posts]
+      .sort((a, b) => (b.reaction_count + b.replies.length) - (a.reaction_count + a.replies.length))
+      .filter(p => p.reaction_count + p.replies.length > 0)
+      .slice(0, 5);
+  }, [posts]);
+
   const postForm = (
     <div className="bg-card/60 backdrop-blur-sm rounded-xl border border-border/30 p-4 space-y-3">
       <Input
