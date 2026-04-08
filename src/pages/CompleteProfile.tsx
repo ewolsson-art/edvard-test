@@ -34,11 +34,15 @@ const CompleteProfile = () => {
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
 
   useEffect(() => {
-    if (!loading && !user) {
-      navigate("/logga-in");
-    }
     if (!loading && user?.user_metadata?.profile_completed) {
       navigate("/");
+    }
+    // Give auth session time to establish after magic link redirect
+    if (!loading && !user) {
+      const timeout = setTimeout(() => {
+        navigate("/logga-in");
+      }, 2000);
+      return () => clearTimeout(timeout);
     }
   }, [user, loading, navigate]);
 
