@@ -18,7 +18,7 @@ const roleInfo = {
     icon: User,
     prefix: "Jag är",
     title: "bipolär",
-    description: "Följ ditt mående och dela med din vårdgivare",
+    description: "Följ ditt mående och få bättre insikt",
   },
   relative: {
     icon: Users,
