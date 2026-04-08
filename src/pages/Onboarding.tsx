@@ -445,8 +445,8 @@ const Onboarding = () => {
             </div>
           )}
 
-          {/* Step 5: Characteristics */}
-          {step === 5 && (
+          {/* Step 4: Characteristics */}
+          {step === 4 && (
             <div className="animate-fade-in">
               <div className="text-center mb-3">
                 <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-primary/10 mb-2">
@@ -480,44 +480,8 @@ const Onboarding = () => {
             </div>
           )}
 
-          {/* Step 6: Notifications */}
-          {step === 6 && (
-            <div className="animate-fade-in">
-              <div className="text-center mb-3">
-                <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-primary/10 mb-2">
-                  <Bell className="w-5 h-5 text-primary" />
-                </div>
-                <h1 className="font-display text-xl md:text-2xl font-bold mb-1">
-                  Påminnelser
-                </h1>
-                <p className="text-sm text-muted-foreground">
-                  Få påminnelser för att inte glömma bort att checka in
-                </p>
-              </div>
-
-              <div className="glass-card p-4 mb-4">
-                <NotificationStep 
-                  settings={notificationSettings}
-                  onSettingsChange={setNotificationSettings}
-                  includeMedication={selections.include_medication}
-                />
-              </div>
-
-              <div className="flex gap-2">
-                <Button variant="outline" onClick={handleBack} className="flex-1" size="default">
-                  <ArrowLeft className="w-4 h-4 mr-1" />
-                  Tillbaka
-                </Button>
-                <Button onClick={handleNext} className="flex-1" size="default">
-                  {getSkipText()}
-                  <ArrowRight className="w-4 h-4 ml-1" />
-                </Button>
-              </div>
-            </div>
-          )}
-
-          {/* Step 7: Invite */}
-          {step === 7 && (
+          {/* Step 5: Invite */}
+          {step === 5 && (
             <div className="animate-fade-in">
               <div className="text-center mb-3">
                 <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-primary/10 mb-2">
@@ -551,8 +515,8 @@ const Onboarding = () => {
             </div>
           )}
 
-          {/* Step 8: Confirm & Start */}
-          {step === 8 && (
+          {/* Step 6: Confirm & Start */}
+          {step === 6 && (
             <div className="animate-fade-in">
               <div className="text-center mb-4">
                 <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-green-100 dark:bg-green-900/30 mb-3">
