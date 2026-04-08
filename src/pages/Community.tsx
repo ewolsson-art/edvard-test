@@ -63,35 +63,6 @@ const Community = () => {
       .slice(0, 5);
   }, [posts]);
 
-  const postForm = (
-    <div className="bg-card/60 backdrop-blur-sm rounded-xl p-4 space-y-3">
-      <Input
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-        placeholder="Rubrik (valfritt)"
-        className="bg-transparent border border-white/20 focus-visible:ring-0 text-base font-semibold placeholder:text-muted-foreground/40 px-3 h-auto rounded-lg"
-        maxLength={120}
-      />
-      <Textarea value={content} onChange={(e) => setContent(e.target.value)} placeholder="Skriv ditt inlägg..." className="min-h-[160px] bg-transparent border border-white/20 resize-none focus-visible:ring-0 text-[15px] placeholder:text-muted-foreground/50 p-3 rounded-lg" maxLength={2000} />
-      <div className="flex flex-wrap gap-2">
-        {CATEGORIES.map(cat => (
-          <button key={cat.id} onClick={() => setSelectedCategory(cat.id)} className={`text-xs px-3 py-1.5 rounded-full transition-all ${selectedCategory === cat.id ? 'bg-primary/20 text-primary border border-primary/30' : 'bg-white/[0.04] text-muted-foreground hover:bg-white/[0.08] border border-transparent'}`}>
-            {cat.emoji} {cat.label}
-          </button>
-        ))}
-      </div>
-      <div className="flex items-center justify-between pt-1">
-        <div className="flex items-center gap-2">
-          {isAnonymous ? <EyeOff className="h-4 w-4 text-muted-foreground" /> : <Eye className="h-4 w-4 text-muted-foreground" />}
-          <span className="text-xs text-muted-foreground">{isAnonymous ? 'Anonymt' : 'Med namn'}</span>
-          <Switch checked={!isAnonymous} onCheckedChange={(checked) => setIsAnonymous(!checked)} className="scale-75" />
-        </div>
-        <Button size="sm" onClick={handleSubmit} disabled={!content.trim() || isPosting} className="rounded-full gap-2 px-4">
-          <Send className="h-3.5 w-3.5" />Posta inlägg
-        </Button>
-      </div>
-    </div>
-  );
 
   return (
     <div className="min-h-screen">
