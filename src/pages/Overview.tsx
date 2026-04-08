@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback, useRef } from 'react';
+import { useState, useMemo, useCallback, useRef, useEffect } from 'react';
 import { CalendarDays, BarChart3 } from 'lucide-react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { format, startOfWeek, endOfWeek, addWeeks, subWeeks, eachDayOfInterval, addMonths, subMonths, startOfMonth, endOfMonth, isBefore, startOfDay, isToday } from 'date-fns';
@@ -462,6 +462,15 @@ const Overview = () => {
   const handleViewChange = (newView: string) => {
     setView(newView as ViewType);
     setSearchParams({ view: newView });
+    if (newView === 'year') {
+      // Scroll to today's date after render
+      setTimeout(() => {
+        const todayEl = document.querySelector('[data-today="true"]');
+        if (todayEl) {
+          todayEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      }, 100);
+    }
   };
 
   const selectedEntry = selectedDate 
