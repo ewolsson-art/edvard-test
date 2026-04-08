@@ -42,13 +42,6 @@ const roleInfo = {
     description: "Följ ditt mående och dela med din vårdgivare",
     benefits: ["Dagliga incheckningar", "AI-insikter", "Dela med läkare"],
   },
-  doctor: {
-    icon: Stethoscope,
-    prefix: "",
-    title: "Vårdgivare",
-    description: "Följ dina patienters mående och välbefinnande",
-    benefits: ["Patientöversikt", "Meddelandefunktion", "Trendanalyser"],
-  },
   relative: {
     icon: Users,
     prefix: "Jag är",
@@ -57,6 +50,19 @@ const roleInfo = {
     benefits: ["Följ patienters mående", "Lämna kommentarer", "Få notiser"],
   },
 };
+
+const allRoleInfo = {
+  ...roleInfo,
+  doctor: {
+    icon: Stethoscope,
+    prefix: "",
+    title: "Vårdgivare",
+    description: "Följ dina patienters mående och välbefinnande",
+    benefits: ["Patientöversikt", "Meddelandefunktion", "Trendanalyser"],
+  },
+};
+
+type VisibleRole = "patient" | "relative";
 
 const Signup = () => {
   const [step, setStep] = useState<Step>("role");
@@ -257,7 +263,7 @@ const Signup = () => {
                 </div>
 
                 <div className="space-y-2" role="radiogroup" aria-label="Välj kontotyp">
-                  {(Object.keys(roleInfo) as AccountRole[]).map((roleKey) => {
+                  {(Object.keys(roleInfo) as VisibleRole[]).map((roleKey) => {
                     const info = roleInfo[roleKey];
                     const Icon = info.icon;
                     const isSelected = role === roleKey;
@@ -338,7 +344,7 @@ const Signup = () => {
                     Skapa ditt konto
                   </h1>
                   <p className="mt-1 text-xs text-white/50 text-center">
-                    {role && `Du registrerar dig som ${roleInfo[role].prefix ? roleInfo[role].prefix.toLowerCase() + ' ' : ''}${roleInfo[role].title.toLowerCase()}`}
+                    {role && role in allRoleInfo && `Du registrerar dig som ${allRoleInfo[role as keyof typeof allRoleInfo].prefix ? allRoleInfo[role as keyof typeof allRoleInfo].prefix.toLowerCase() + ' ' : ''}${allRoleInfo[role as keyof typeof allRoleInfo].title.toLowerCase()}`}
                   </p>
                 </div>
 
