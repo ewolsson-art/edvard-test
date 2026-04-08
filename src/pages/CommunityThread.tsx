@@ -8,7 +8,7 @@ const CommunityThread = () => {
   const { threadId } = useParams<{ threadId: string }>();
   const navigate = useNavigate();
   const { user } = useAuth();
-  const { posts, loading, toggleReaction, deletePost, createReply, deleteReply } = useCommunityPosts();
+  const { posts, loading, toggleReaction, deletePost, createReply, deleteReply, votePoll } = useCommunityPosts();
 
   const post = posts.find(p => p.id === threadId);
 
@@ -41,6 +41,7 @@ const CommunityThread = () => {
             onDeletePost={(id) => { deletePost(id); navigate('/forum'); }}
             onCreateReply={createReply}
             onDeleteReply={deleteReply}
+            onVotePoll={votePoll}
             expanded
           />
         )}
