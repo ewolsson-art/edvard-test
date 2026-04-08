@@ -282,6 +282,44 @@ const Community = () => {
               </div>
             )}
 
+            {/* Poll options */}
+            {pollMode && (
+              <div className="mt-3 space-y-2">
+                <span className="text-xs font-medium text-muted-foreground">Omröstningsalternativ</span>
+                {pollOptions.map((opt, i) => (
+                  <div key={i} className="flex items-center gap-2">
+                    <Input
+                      value={opt}
+                      onChange={(e) => {
+                        const next = [...pollOptions];
+                        next[i] = e.target.value;
+                        setPollOptions(next);
+                      }}
+                      placeholder={`Alternativ ${i + 1}`}
+                      className="bg-transparent border border-white/20 focus-visible:ring-0 text-sm placeholder:text-muted-foreground/40 h-9 rounded-lg"
+                      maxLength={100}
+                    />
+                    {pollOptions.length > 2 && (
+                      <button
+                        onClick={() => setPollOptions(pollOptions.filter((_, idx) => idx !== i))}
+                        className="text-muted-foreground/50 hover:text-destructive transition-colors shrink-0"
+                      >
+                        <Minus className="h-4 w-4" />
+                      </button>
+                    )}
+                  </div>
+                ))}
+                {pollOptions.length < 6 && (
+                  <button
+                    onClick={() => setPollOptions([...pollOptions, ''])}
+                    className="text-xs text-primary hover:text-primary/80 transition-colors flex items-center gap-1"
+                  >
+                    <Plus className="h-3 w-3" /> Lägg till alternativ
+                  </button>
+                )}
+              </div>
+            )}
+
             {/* Category selector — compact */}
             <div className="mt-3">
               <button
