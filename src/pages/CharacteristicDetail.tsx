@@ -188,7 +188,7 @@ const CharacteristicDetail = () => {
                   <span className="text-[14px] text-foreground/70">{char.name}</span>
                   <button
                     onClick={() => deleteCharacteristic(char.id)}
-                    className="text-foreground/10 hover:text-destructive transition-colors opacity-0 group-hover:opacity-100"
+                    className="text-foreground/15 hover:text-destructive transition-colors"
                     aria-label={`Ta bort ${char.name}`}
                   >
                     <X className="h-3.5 w-3.5" />
