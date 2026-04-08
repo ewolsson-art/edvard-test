@@ -92,7 +92,7 @@ const Login = () => {
       
       <div className="flex flex-1 items-center justify-center px-4 pt-20 pb-12">
         <div className="w-full max-w-md">
-          <div className="bg-white/[0.08] backdrop-blur-xl rounded-3xl shadow-2xl border border-white/10 p-8 md:p-10">
+          <div className="bg-[hsl(225_25%_14%)] backdrop-blur-xl rounded-3xl shadow-2xl border border-white/[0.06] p-8 md:p-10">
             <div className="flex flex-col items-center mb-8">
               <Logo size="md" className="[&_span]:!bg-none [&_span]:!text-white" />
               <h1 className="mt-6 text-2xl md:text-3xl font-bold text-white font-display">
