@@ -95,7 +95,7 @@ const Community = () => {
           <Switch checked={!isAnonymous} onCheckedChange={(checked) => setIsAnonymous(!checked)} className="scale-75" />
         </div>
         <Button size="sm" onClick={handleSubmit} disabled={!content.trim() || isPosting} className="rounded-full gap-2 px-4">
-          <Send className="h-3.5 w-3.5" />Skapa tråd
+          <Send className="h-3.5 w-3.5" />Posta inlägg
         </Button>
       </div>
     </div>
