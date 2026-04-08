@@ -693,15 +693,18 @@ export function TodayCheckin({
                   type="text"
                   autoFocus
                   placeholder="Skriv en egen tagg..."
-                  className="flex-1 px-4 py-2.5 rounded-full border border-primary/30 bg-white/[0.03] text-sm text-foreground placeholder:text-muted-foreground/30 focus:outline-none focus:border-primary/40 focus:ring-1 focus:ring-primary/20 transition-all"
+                  className="flex-1 px-4 py-2.5 rounded-full border border-primary/30 bg-white/[0.03] text-base text-foreground placeholder:text-muted-foreground/30 focus:outline-none focus:border-primary/40 focus:ring-1 focus:ring-primary/20 transition-all"
                   maxLength={30}
                   onKeyDown={(e: KeyboardEvent<HTMLInputElement>) => {
                     if (e.key === 'Enter') {
-                      const val = (e.target as HTMLInputElement).value.trim().toLowerCase();
+                      e.preventDefault();
+                      const input = e.target as HTMLInputElement;
+                      const val = input.value.trim().toLowerCase();
                       if (val && !(checkinData.tags || []).includes(val)) {
                         handleTagToggle(val);
                       }
-                      (e.target as HTMLInputElement).value = '';
+                      input.value = '';
+                      input.blur();
                       setShowCustomTagInput(false);
                     }
                     if (e.key === 'Escape') {
