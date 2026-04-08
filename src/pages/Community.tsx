@@ -61,7 +61,7 @@ const Community = () => {
 
   const filteredPosts = filterCategory ? posts.filter(p => p.category === filterCategory) : posts;
 
-  const PostForm = () => (
+  const postForm = (
     <div className="bg-card/60 backdrop-blur-sm rounded-xl border border-border/30 p-4 space-y-3">
       <Input
         value={title}
