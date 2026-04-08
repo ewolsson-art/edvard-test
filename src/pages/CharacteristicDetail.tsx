@@ -179,19 +179,19 @@ const CharacteristicDetail = () => {
           </div>
 
           {characteristics.length > 0 && (
-            <div className="space-y-1">
+            <div className="flex flex-wrap gap-2">
               {characteristics.map((char) => (
                 <div
                   key={char.id}
-                  className="flex items-center justify-between px-4 py-3 rounded-xl hover:bg-foreground/[0.03] transition-all duration-200 group cursor-default"
+                  className="group inline-flex items-center gap-2 px-3.5 py-2 rounded-full bg-foreground/[0.04] border border-foreground/[0.06] hover:bg-foreground/[0.06] transition-all duration-200 cursor-default"
                 >
-                  <span className="text-[14px] text-foreground/70">{char.name}</span>
+                  <span className="text-[13px] text-foreground/60 group-hover:text-foreground/80 transition-colors">{char.name}</span>
                   <button
                     onClick={() => deleteCharacteristic(char.id)}
-                    className="opacity-0 group-hover:opacity-100 text-foreground/30 hover:text-destructive transition-all duration-200 p-1 -m-1"
+                    className="opacity-0 group-hover:opacity-100 text-foreground/25 hover:text-destructive transition-all duration-150 -mr-1"
                     aria-label={`Ta bort ${char.name}`}
                   >
-                    <X className="h-3.5 w-3.5" />
+                    <X className="h-3 w-3" />
                   </button>
                 </div>
               ))}
@@ -200,7 +200,7 @@ const CharacteristicDetail = () => {
 
           {/* Inline add */}
           {showInput ? (
-            <div className="flex items-center gap-2 mt-2 px-4">
+            <div className="flex items-center gap-2 mt-2">
               <Input
                 placeholder={config.placeholder}
                 value={newValue}
@@ -233,7 +233,7 @@ const CharacteristicDetail = () => {
             <button
               onClick={() => setShowInput(true)}
               className={cn(
-                "inline-flex items-center gap-1.5 text-[13px] transition-all duration-200 mt-1 px-4",
+                "inline-flex items-center gap-1.5 text-[13px] transition-all duration-200 mt-1",
                 "text-foreground/25 hover:text-foreground/45"
               )}
             >
