@@ -69,17 +69,8 @@ export const ThreadListItem = ({ post }: ThreadListItemProps) => {
         </p>
       )}
 
-      {/* Footer: author + stats */}
-      <div className="flex items-center justify-between mt-3 pt-3 border-t border-border/20">
-        <div className="flex items-center gap-2.5">
-          <div className="w-7 h-7 rounded-full bg-gradient-to-br from-primary/40 to-primary/10 flex items-center justify-center text-[11px] font-bold text-primary">
-            {post.author_name?.charAt(0) || '?'}
-          </div>
-          <span className="text-sm text-muted-foreground/70">{post.author_name}</span>
-          {post.is_anonymous && (
-            <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-white/[0.06] text-muted-foreground/50">anonym</span>
-          )}
-        </div>
+      {/* Footer: stats */}
+      <div className="flex items-center justify-end mt-3 pt-3 border-t border-border/20">
         <div className="flex items-center gap-4">
           <span className="flex items-center gap-1.5 text-sm text-muted-foreground/50">
             <Heart className="h-4.5 w-4.5" fill={post.user_has_reacted ? 'currentColor' : 'none'} strokeWidth={1.8}
