@@ -31,7 +31,7 @@ import { DayDetailDialog } from '@/components/DayDetailDialog';
 import { ExerciseTypeDialog } from '@/components/ExerciseTypeDialog';
 import { AIInsights } from '@/components/AIInsights';
 import { OverviewSummary } from '@/components/OverviewSummary';
-import { MoodDistributionBar } from '@/components/MoodDistributionBar';
+
 import { MoodStats as MoodStatsType, ExerciseType, QualityType } from '@/types/mood';
 import { Last30DaysOverview } from '@/components/Last30DaysOverview';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
