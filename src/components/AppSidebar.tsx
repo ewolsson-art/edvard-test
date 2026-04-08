@@ -62,13 +62,15 @@ const relativeNavGroups = [
     label: "Översikt",
     items: [
       { title: "Hem", url: "/anhorig", icon: Home, primary: true },
-      { title: "Rapporter", url: "/anhorig-rapporter", icon: FileText },
+      { title: "Forum", url: "/forum", icon: MessageCircle },
+      { title: "Notiser", url: "/notiser", icon: Bell },
     ],
   },
   {
     label: "Konto",
     items: [
       { title: "Min profil", url: "/profil", icon: UserCircle },
+      { title: "Inställningar", url: "/installningar", icon: Settings },
     ],
   },
 ];
