@@ -36,18 +36,18 @@ export function StreakBadge({
           <TooltipTrigger asChild>
             <div 
               className={cn(
-                "flex items-center gap-1.5 px-2.5 py-1 rounded-full text-sm font-medium",
+                "flex items-center gap-2 px-3.5 py-1.5 rounded-full text-base font-bold",
                 isOnFire 
-                  ? "bg-orange-500/20 text-orange-600 dark:text-orange-400" 
-                  : "bg-primary/10 text-primary",
+                  ? "bg-orange-500/30 text-orange-400 border border-orange-500/40" 
+                  : "bg-primary/20 text-primary border border-primary/30",
                 className
               )}
             >
               <Flame className={cn(
-                "w-4 h-4",
+                "w-5 h-5",
                 isOnFire && "animate-pulse"
               )} />
-              <span>{currentStreak}</span>
+              <span>{currentStreak} 🔥</span>
             </div>
           </TooltipTrigger>
           <TooltipContent>
