@@ -1,9 +1,8 @@
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Plus, X, Zap, Cloud, Sun, ChevronLeft, Lightbulb, Sparkles, Loader2 } from 'lucide-react';
+import { Plus, X, Zap, Cloud, Sun, ChevronLeft, Sparkles, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
 import { useCharacteristics } from '@/hooks/useCharacteristics';
 import { useMoodData } from '@/hooks/useMoodData';
 import { useAuth } from '@/hooks/useAuth';
@@ -15,68 +14,44 @@ const MOOD_CONFIG = {
   uppvarvad: {
     type: 'elevated' as const,
     title: 'Uppvarvad period',
-    description: 'Hur känner du dig när du är uppvarvad?',
+    description: 'Hur känner du igen den här perioden?',
     icon: Zap,
-    colorClasses: {
-      badge: 'bg-amber-500 text-white',
-      badgeItem: 'bg-amber-500/10 text-amber-800 dark:text-amber-300 border border-amber-500/20',
-      badgeItemHover: 'hover:bg-amber-500/15',
-      iconBg: 'bg-gradient-to-br from-amber-400 to-amber-600',
-      iconColor: 'text-white',
-      button: 'bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white shadow-lg shadow-amber-500/25 hover:shadow-amber-500/40',
-      suggestion: 'bg-amber-500/8 hover:bg-amber-500/15 text-amber-700 dark:text-amber-300 border border-amber-500/15 hover:border-amber-500/30',
-      headerGradient: 'from-amber-500/15 via-amber-400/5 to-transparent',
-      activeDot: 'bg-amber-500',
-      emptyBorder: 'border-amber-500/20',
-      inputRing: 'focus-within:ring-amber-500/30',
-    },
+    iconColor: 'text-amber-400',
+    dotColor: 'bg-amber-400',
+    chipText: 'text-foreground/60',
+    chipBg: 'bg-foreground/[0.04] hover:bg-foreground/[0.06]',
+    chipBorder: 'border-foreground/[0.06]',
+    suggestionText: 'text-amber-300/70',
     suggestions: ['Mer social', 'Sover mindre', 'Mer energi', 'Pratar snabbare', 'Tar fler initiativ', 'Rastlös'],
     placeholder: 'T.ex. Mer social, Pratar snabbare...',
-    badgeLabel: 'Aktuellt mående',
   },
   stabil: {
     type: 'stable' as const,
     title: 'Stabil period',
-    description: 'Hur känner du dig när du är i balans?',
+    description: 'Hur känner du igen den här perioden?',
     icon: Sun,
-    colorClasses: {
-      badge: 'bg-emerald-500 text-white',
-      badgeItem: 'bg-emerald-500/10 text-emerald-800 dark:text-emerald-300 border border-emerald-500/20',
-      badgeItemHover: 'hover:bg-emerald-500/15',
-      iconBg: 'bg-gradient-to-br from-emerald-400 to-emerald-600',
-      iconColor: 'text-white',
-      button: 'bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40',
-      suggestion: 'bg-emerald-500/8 hover:bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border border-emerald-500/15 hover:border-emerald-500/30',
-      headerGradient: 'from-emerald-500/15 via-emerald-400/5 to-transparent',
-      activeDot: 'bg-emerald-500',
-      emptyBorder: 'border-emerald-500/20',
-      inputRing: 'focus-within:ring-emerald-500/30',
-    },
+    iconColor: 'text-emerald-400',
+    dotColor: 'bg-emerald-400',
+    chipText: 'text-foreground/60',
+    chipBg: 'bg-foreground/[0.04] hover:bg-foreground/[0.06]',
+    chipBorder: 'border-foreground/[0.06]',
+    suggestionText: 'text-emerald-300/70',
     suggestions: ['God sömn', 'Regelbundna rutiner', 'Fokuserad', 'Social balans', 'Stabil aptit', 'Lugn'],
     placeholder: 'T.ex. God sömn, Lugn och fokuserad...',
-    badgeLabel: 'Aktuellt mående',
   },
   nedstamd: {
     type: 'depressed' as const,
     title: 'Nedstämd period',
-    description: 'Hur känner du dig när du är nedstämd?',
+    description: 'Hur känner du igen den här perioden?',
     icon: Cloud,
-    colorClasses: {
-      badge: 'bg-rose-500 text-white',
-      badgeItem: 'bg-rose-500/10 text-rose-800 dark:text-rose-300 border border-rose-500/20',
-      badgeItemHover: 'hover:bg-rose-500/15',
-      iconBg: 'bg-gradient-to-br from-rose-400 to-rose-600',
-      iconColor: 'text-white',
-      button: 'bg-gradient-to-r from-rose-500 to-rose-600 hover:from-rose-600 hover:to-rose-700 text-white shadow-lg shadow-rose-500/25 hover:shadow-rose-500/40',
-      suggestion: 'bg-rose-500/8 hover:bg-rose-500/15 text-rose-700 dark:text-rose-300 border border-rose-500/15 hover:border-rose-500/30',
-      headerGradient: 'from-rose-500/15 via-rose-400/5 to-transparent',
-      activeDot: 'bg-rose-500',
-      emptyBorder: 'border-rose-500/20',
-      inputRing: 'focus-within:ring-rose-500/30',
-    },
+    iconColor: 'text-rose-400',
+    dotColor: 'bg-rose-400',
+    chipText: 'text-foreground/60',
+    chipBg: 'bg-foreground/[0.04] hover:bg-foreground/[0.06]',
+    chipBorder: 'border-foreground/[0.06]',
+    suggestionText: 'text-rose-300/70',
     suggestions: ['Drar mig undan', 'Sover mer', 'Mindre energi', 'Svårt att koncentrera', 'Tappar aptiten', 'Gråter lättare'],
     placeholder: 'T.ex. Drar mig undan, Sover mer...',
-    badgeLabel: 'Aktuellt mående',
   },
 };
 
@@ -127,7 +102,6 @@ const CharacteristicDetail = () => {
     if (success) {
       setNewValue('');
       setShowInput(false);
-      // Remove from AI suggestions if it was there
       setAiSuggestions(prev => prev.filter(s => s.toLowerCase() !== newValue.trim().toLowerCase()));
     }
     setIsAdding(false);
@@ -179,234 +153,221 @@ const CharacteristicDetail = () => {
   const isActive = latestMood === config.type;
 
   return (
-    <div className="max-w-2xl mx-auto py-8 px-4 md:px-8">
-      {/* Back button */}
-      <button
-        onClick={() => navigate('/kannetecken')}
-        className="mb-8 inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors group"
-      >
-        <ChevronLeft className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" />
-        Tillbaka till kännetecken
-      </button>
+    <div className="p-5 md:p-8 pb-24">
+      <div className="max-w-2xl mx-auto md:mx-0">
+        {/* Back */}
+        <button
+          onClick={() => navigate('/kannetecken')}
+          className="mb-8 inline-flex items-center gap-1 text-[13px] text-foreground/30 hover:text-foreground/50 transition-colors group"
+        >
+          <ChevronLeft className="w-3.5 h-3.5 group-hover:-translate-x-0.5 transition-transform" />
+          Tillbaka till kännetecken
+        </button>
 
-      {/* Hero header */}
-      <div className={cn(
-        "relative overflow-hidden rounded-3xl border border-border/60 bg-card p-8 md:p-10 mb-8"
-      )}>
-        <div className={cn("absolute inset-0 bg-gradient-to-br opacity-80 pointer-events-none", config.colorClasses.headerGradient)} />
-        
-        <div className="relative z-10 flex items-start gap-5">
-          <div className={cn("p-4 rounded-2xl shadow-lg shrink-0", config.colorClasses.iconBg)}>
-            <Icon className={cn("h-8 w-8", config.colorClasses.iconColor)} />
-          </div>
-          <div>
-            <div className="flex items-center gap-3 mb-2">
-              <h1 className="font-display text-2xl md:text-3xl font-bold text-foreground tracking-tight">
-                {config.title}
-              </h1>
-              {isActive && (
-                <span className="flex items-center gap-1.5 bg-card/80 backdrop-blur-sm px-2.5 py-1 rounded-full border border-border/50">
-                  <span className={cn("w-2 h-2 rounded-full animate-pulse", config.colorClasses.activeDot)} />
-                  <span className="text-xs font-medium text-muted-foreground">{config.badgeLabel}</span>
-                </span>
-              )}
-            </div>
-            <p className="text-muted-foreground leading-relaxed">{config.description}</p>
-          </div>
-        </div>
-      </div>
-
-      {/* Add section */}
-      <div className="mb-8">
-        {showInput ? (
-          <div className={cn(
-            "flex gap-2 p-4 rounded-2xl border border-border/60 bg-card animate-in fade-in slide-in-from-top-2 duration-200",
-            config.colorClasses.inputRing
-          )}>
-            <Input
-              placeholder={config.placeholder}
-              value={newValue}
-              onChange={(e) => setNewValue(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') handleAdd();
-                if (e.key === 'Escape') {
-                  setShowInput(false);
-                  setNewValue('');
-                }
-              }}
-              className="flex-1 border-0 bg-transparent shadow-none focus-visible:ring-0 text-base"
-              autoFocus
-            />
-            <Button
-              size="icon"
-              variant="ghost"
-              onClick={() => {
-                setShowInput(false);
-                setNewValue('');
-              }}
-              className="text-destructive hover:text-destructive hover:bg-destructive/10 shrink-0 rounded-xl"
-            >
-              <X className="h-4 w-4" />
-            </Button>
-            <Button
-              onClick={handleAdd}
-              disabled={!newValue.trim() || isAdding}
-              className={cn("shrink-0 rounded-xl px-5", config.colorClasses.button)}
-            >
-              Lägg till
-            </Button>
-          </div>
-        ) : (
-          <Button
-            onClick={() => setShowInput(true)}
-            className={cn("gap-2.5 rounded-xl px-6 py-5 text-base font-semibold transition-all duration-300", config.colorClasses.button)}
-          >
-            <Plus className="h-5 w-5" />
-            Lägg till kännetecken
-          </Button>
-        )}
-      </div>
-
-      {/* Characteristics list */}
-      <div className="rounded-2xl border border-border/60 bg-card p-6 md:p-8 mb-6">
-        <div className="flex items-center justify-between mb-5">
-          <h2 className="font-display text-lg font-semibold text-foreground">Dina kännetecken</h2>
-          {characteristics.length > 0 && (
-            <span className="text-sm text-muted-foreground">{characteristics.length} st</span>
-          )}
-        </div>
-        {characteristics.length === 0 ? (
-          <div className={cn("text-center py-10 rounded-xl border-2 border-dashed", config.colorClasses.emptyBorder)}>
-            <div className={cn("w-12 h-12 rounded-2xl mx-auto mb-3 flex items-center justify-center opacity-40", config.colorClasses.iconBg)}>
-              <Icon className={cn("h-6 w-6", config.colorClasses.iconColor)} />
-            </div>
-            <p className="text-sm text-muted-foreground">
-              Inga kännetecken tillagda ännu
-            </p>
-            <p className="text-xs text-muted-foreground/60 mt-1">
-              Tryck på knappen ovan eller låt AI föreslå baserat på dina dagboksanteckningar
-            </p>
-          </div>
-        ) : (
-          <div className="flex flex-wrap gap-2.5">
-            {characteristics.map((char) => (
-              <span
-                key={char.id}
-                className={cn(
-                  "inline-flex items-center gap-2 py-2 px-4 rounded-full text-sm font-medium transition-colors",
-                  config.colorClasses.badgeItem,
-                  config.colorClasses.badgeItemHover
-                )}
-              >
-                {char.name}
-                <button
-                  onClick={() => deleteCharacteristic(char.id)}
-                  className="text-destructive/60 hover:text-destructive transition-colors"
-                  aria-label={`Ta bort ${char.name}`}
-                >
-                  <X className="h-3.5 w-3.5" />
-                </button>
+        {/* Header */}
+        <div className="mb-10">
+          <div className="flex items-center gap-3 mb-1">
+            <Icon className={cn("w-[18px] h-[18px]", config.iconColor)} />
+            <h1 className="font-display text-2xl font-bold text-foreground">
+              {config.title}
+            </h1>
+            {isActive && (
+              <span className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-foreground/[0.04]">
+                <span className={cn("w-1.5 h-1.5 rounded-full animate-pulse", config.dotColor)} />
+                <span className="text-[10px] font-medium text-foreground/40">Nuvarande</span>
               </span>
-            ))}
+            )}
           </div>
-        )}
-      </div>
-
-      {/* AI Suggestions - based on check-in data */}
-      <div className="rounded-2xl border border-primary/20 bg-primary/5 p-6 md:p-8 mb-6">
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-2.5">
-            <Sparkles className="w-4 h-4 text-primary" />
-            <p className="text-sm font-medium text-foreground">Förslag baserat på dina incheckningar</p>
-          </div>
+          <p className="text-[13px] text-foreground/30 ml-[30px]">
+            {config.description}
+          </p>
         </div>
 
-        {!aiLoaded && !isLoadingAi ? (
-          <div className="text-center py-4">
-            <p className="text-sm text-muted-foreground mb-3">
-              AI kan analysera dina dagboksanteckningar och hitta mönster som beskriver hur du är under dessa perioder.
-            </p>
-            <Button
-              variant="outline"
-              onClick={loadAiSuggestions}
-              className="gap-2 rounded-xl border-primary/30 hover:bg-primary/10"
-            >
-              <Sparkles className="w-4 h-4" />
-              Analysera mina anteckningar
-            </Button>
+        {/* Characteristics section */}
+        <div className="mb-10">
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="text-[13px] font-medium text-foreground/30 uppercase tracking-wide">
+              Dina kännetecken
+            </h2>
+            {characteristics.length > 0 && (
+              <span className="text-[12px] text-foreground/20">{characteristics.length} st</span>
+            )}
           </div>
-        ) : isLoadingAi ? (
-          <div className="flex items-center justify-center gap-3 py-6">
-            <Loader2 className="w-5 h-5 animate-spin text-primary" />
-            <p className="text-sm text-muted-foreground">Analyserar dina incheckningar…</p>
-          </div>
-        ) : aiSuggestions.length > 0 ? (
-          <div className="space-y-4">
-            {aiPatterns.length > 0 && (
-              <div className="text-xs text-muted-foreground space-y-1 mb-3">
-                <p className="font-medium text-foreground/70">Mönster vi hittade:</p>
-                {aiPatterns.map((p, i) => (
-                  <p key={i} className="flex items-center gap-1.5">
-                    <span className="w-1 h-1 rounded-full bg-primary/50" />
-                    {p}
-                  </p>
+
+          <div className="rounded-2xl bg-foreground/[0.03] backdrop-blur-sm overflow-hidden">
+            {characteristics.length === 0 ? (
+              <div className="px-4 py-8 text-center">
+                <p className="text-[13px] text-foreground/25">
+                  Inga kännetecken tillagda ännu
+                </p>
+                <p className="text-[11px] text-foreground/15 mt-1">
+                  Lägg till manuellt eller låt AI analysera dina anteckningar
+                </p>
+              </div>
+            ) : (
+              <div className="px-4 py-4 flex flex-wrap gap-2">
+                {characteristics.map((char) => (
+                  <span
+                    key={char.id}
+                    className={cn(
+                      "inline-flex items-center gap-1.5 py-1.5 px-3 rounded-full text-[13px]",
+                      "bg-foreground/[0.04] border border-foreground/[0.06]",
+                      "text-foreground/60 transition-colors"
+                    )}
+                  >
+                    {char.name}
+                    <button
+                      onClick={() => deleteCharacteristic(char.id)}
+                      className="text-foreground/20 hover:text-destructive transition-colors"
+                      aria-label={`Ta bort ${char.name}`}
+                    >
+                      <X className="h-3 w-3" />
+                    </button>
+                  </span>
                 ))}
               </div>
             )}
-            <div className="flex flex-wrap gap-2">
-              {aiSuggestions.map((suggestion) => (
-                <div key={suggestion} className="inline-flex items-center gap-1">
+
+            {/* Inline add */}
+            <div className="border-t border-border/20">
+              {showInput ? (
+                <div className="flex items-center gap-2 px-4 py-3">
+                  <Input
+                    placeholder={config.placeholder}
+                    value={newValue}
+                    onChange={(e) => setNewValue(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') handleAdd();
+                      if (e.key === 'Escape') {
+                        setShowInput(false);
+                        setNewValue('');
+                      }
+                    }}
+                    className="flex-1 border-0 bg-transparent shadow-none focus-visible:ring-0 text-[14px] h-8 px-0"
+                    autoFocus
+                  />
                   <button
-                    onClick={() => handleAddSuggestion(suggestion)}
-                    className={cn(
-                      "text-sm px-4 py-2 rounded-full font-medium transition-all duration-200 hover:scale-[1.03]",
-                      config.colorClasses.suggestion
-                    )}
+                    onClick={handleAdd}
+                    disabled={!newValue.trim() || isAdding}
+                    className="text-[13px] font-medium text-primary hover:text-primary/80 disabled:text-foreground/15 transition-colors"
                   >
-                    + {suggestion}
+                    Spara
                   </button>
                   <button
-                    onClick={() => handleDismissSuggestion(suggestion)}
-                    className="p-1 rounded-full hover:bg-muted/50 text-muted-foreground/50 hover:text-muted-foreground transition-colors"
-                    aria-label={`Avfärda ${suggestion}`}
+                    onClick={() => { setShowInput(false); setNewValue(''); }}
+                    className="text-foreground/20 hover:text-destructive transition-colors"
                   >
-                    <X className="w-3 h-3" />
+                    <X className="h-3.5 w-3.5" />
                   </button>
                 </div>
+              ) : (
+                <button
+                  onClick={() => setShowInput(true)}
+                  className="w-full flex items-center gap-2 px-4 py-3.5 text-[13px] text-foreground/25 hover:text-foreground/40 hover:bg-foreground/[0.02] transition-all"
+                >
+                  <Plus className="w-3.5 h-3.5" />
+                  Lägg till kännetecken
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* AI Suggestions section */}
+        <div className="mb-10">
+          <div className="flex items-center gap-2 mb-3">
+            <Sparkles className="w-3.5 h-3.5 text-foreground/20" />
+            <h2 className="text-[13px] font-medium text-foreground/30 uppercase tracking-wide">
+              AI-förslag
+            </h2>
+          </div>
+
+          <div className="rounded-2xl bg-foreground/[0.03] backdrop-blur-sm overflow-hidden">
+            {!aiLoaded && !isLoadingAi ? (
+              <div className="px-4 py-6 text-center">
+                <p className="text-[13px] text-foreground/25 mb-3">
+                  Analysera dina dagboksanteckningar för personliga förslag
+                </p>
+                <button
+                  onClick={loadAiSuggestions}
+                  className="inline-flex items-center gap-1.5 text-[13px] font-medium text-primary hover:text-primary/80 transition-colors"
+                >
+                  <Sparkles className="w-3.5 h-3.5" />
+                  Analysera mina anteckningar
+                </button>
+              </div>
+            ) : isLoadingAi ? (
+              <div className="flex items-center justify-center gap-2.5 py-8">
+                <Loader2 className="w-4 h-4 animate-spin text-foreground/20" />
+                <p className="text-[13px] text-foreground/25">Analyserar dina incheckningar…</p>
+              </div>
+            ) : aiSuggestions.length > 0 ? (
+              <div className="px-4 py-4">
+                {aiPatterns.length > 0 && (
+                  <div className="mb-3 space-y-1">
+                    <p className="text-[11px] font-medium text-foreground/25">Mönster vi hittade:</p>
+                    {aiPatterns.map((p, i) => (
+                      <p key={i} className="text-[11px] text-foreground/20 flex items-center gap-1.5">
+                        <span className="w-1 h-1 rounded-full bg-foreground/15" />
+                        {p}
+                      </p>
+                    ))}
+                  </div>
+                )}
+                <div className="flex flex-wrap gap-2">
+                  {aiSuggestions.map((suggestion) => (
+                    <span key={suggestion} className="inline-flex items-center gap-1">
+                      <button
+                        onClick={() => handleAddSuggestion(suggestion)}
+                        className="text-[13px] px-3 py-1.5 rounded-full bg-foreground/[0.04] border border-foreground/[0.06] text-foreground/40 hover:text-foreground/60 hover:bg-foreground/[0.06] transition-all"
+                      >
+                        + {suggestion}
+                      </button>
+                      <button
+                        onClick={() => handleDismissSuggestion(suggestion)}
+                        className="p-0.5 text-foreground/15 hover:text-foreground/30 transition-colors"
+                        aria-label={`Avfärda ${suggestion}`}
+                      >
+                        <X className="w-2.5 h-2.5" />
+                      </button>
+                    </span>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <div className="px-4 py-6 text-center">
+                <p className="text-[13px] text-foreground/25">
+                  {entries.length < 5
+                    ? "Du behöver fler incheckningar med kommentarer för att få förslag."
+                    : "Inga nya förslag just nu. Fortsätt logga så kommer fler!"}
+                </p>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Static suggestions */}
+        <div>
+          <h2 className="text-[13px] font-medium text-foreground/30 uppercase tracking-wide mb-3">
+            Vanliga förslag
+          </h2>
+          <div className="rounded-2xl bg-foreground/[0.03] backdrop-blur-sm overflow-hidden px-4 py-4">
+            <div className="flex flex-wrap gap-2">
+              {config.suggestions.map((suggestion) => (
+                <button
+                  key={suggestion}
+                  onClick={() => {
+                    setNewValue(suggestion);
+                    setShowInput(true);
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }}
+                  className="text-[13px] px-3 py-1.5 rounded-full bg-foreground/[0.04] border border-foreground/[0.06] text-foreground/30 hover:text-foreground/50 hover:bg-foreground/[0.06] transition-all"
+                >
+                  {suggestion}
+                </button>
               ))}
             </div>
           </div>
-        ) : (
-          <p className="text-sm text-muted-foreground text-center py-2">
-            {entries.length < 5
-              ? "Du behöver fler incheckningar med kommentarer för att få förslag."
-              : "Inga nya förslag just nu. Fortsätt logga så kommer fler!"}
-          </p>
-        )}
-      </div>
-
-      {/* Static suggestions */}
-      <div className="rounded-2xl border border-border/60 bg-card p-6 md:p-8">
-        <div className="flex items-center gap-2.5 mb-4">
-          <Lightbulb className="w-4 h-4 text-muted-foreground" />
-          <p className="text-sm font-medium text-muted-foreground">Vanliga förslag</p>
-        </div>
-        <div className="flex flex-wrap gap-2">
-          {config.suggestions.map((suggestion) => (
-            <button
-              key={suggestion}
-              onClick={() => {
-                setNewValue(suggestion);
-                setShowInput(true);
-              }}
-              className={cn(
-                "text-sm px-4 py-2 rounded-full font-medium transition-all duration-200 hover:scale-[1.03]",
-                config.colorClasses.suggestion
-              )}
-            >
-              {suggestion}
-            </button>
-          ))}
         </div>
       </div>
     </div>
