@@ -15,26 +15,54 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+// Check if the current URL has auth callback hash params
+function hasAuthCallbackParams(): boolean {
+  const hash = window.location.hash;
+  return hash.includes('access_token') || hash.includes('type=magiclink') || hash.includes('type=recovery') || hash.includes('type=signup');
+}
+
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    let initialSessionResolved = false;
+
     // Set up auth state listener FIRST
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, session) => {
         setSession(session);
         setUser(session?.user ?? null);
-        setLoading(false);
+        // If we get a SIGNED_IN event (e.g. from magic link), always stop loading
+        if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED' || event === 'SIGNED_OUT' || event === 'USER_UPDATED') {
+          setLoading(false);
+          initialSessionResolved = true;
+        }
       }
     );
 
     // THEN check for existing session
     supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-      setLoading(false);
+      // Only set state from getSession if onAuthStateChange hasn't already resolved
+      // This prevents the race condition where getSession returns null before hash params are processed
+      if (!initialSessionResolved) {
+        setSession(session);
+        setUser(session?.user ?? null);
+        // If there are auth callback params in the URL but no session yet,
+        // keep loading=true to wait for onAuthStateChange to fire
+        if (!session && hasAuthCallbackParams()) {
+          // Wait for onAuthStateChange to process the hash params
+          // Set a timeout as fallback in case it never fires
+          setTimeout(() => {
+            if (!initialSessionResolved) {
+              setLoading(false);
+            }
+          }, 3000);
+        } else {
+          setLoading(false);
+        }
+      }
     });
 
     return () => subscription.unsubscribe();
