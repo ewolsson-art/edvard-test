@@ -136,35 +136,21 @@ const CompleteProfile = () => {
             Slutför din profil
           </h1>
           <p className="mt-2 text-sm text-white/40 animate-fade-in">
-            Välj ett namn och lösenord
+            Välj ett användarnamn och lösenord
           </p>
 
           <form onSubmit={handleSubmit} className="mt-8 space-y-4 animate-fade-in">
-            <div className="grid grid-cols-2 gap-3">
-              <div className="space-y-1.5">
-                <Input
-                  id="firstName"
-                  placeholder="Förnamn"
-                  value={firstName}
-                  onChange={(e) => setFirstName(e.target.value)}
-                  className={`h-14 bg-white/[0.04] border-0 ring-1 ring-white/[0.08] rounded-2xl text-white placeholder:text-white/20 focus:ring-2 focus:ring-[hsl(45_85%_55%/0.5)] focus:bg-white/[0.06] transition-all text-base px-4 ${validationErrors.firstName ? 'ring-red-400/40' : ''}`}
-                  disabled={isSubmitting}
-                  autoComplete="given-name"
-                />
-                {validationErrors.firstName && <p className="text-xs text-red-400/80 pl-1">{validationErrors.firstName}</p>}
-              </div>
-              <div className="space-y-1.5">
-                <Input
-                  id="lastName"
-                  placeholder="Efternamn"
-                  value={lastName}
-                  onChange={(e) => setLastName(e.target.value)}
-                  className={`h-14 bg-white/[0.04] border-0 ring-1 ring-white/[0.08] rounded-2xl text-white placeholder:text-white/20 focus:ring-2 focus:ring-[hsl(45_85%_55%/0.5)] focus:bg-white/[0.06] transition-all text-base px-4 ${validationErrors.lastName ? 'ring-red-400/40' : ''}`}
-                  disabled={isSubmitting}
-                  autoComplete="family-name"
-                />
-                {validationErrors.lastName && <p className="text-xs text-red-400/80 pl-1">{validationErrors.lastName}</p>}
-              </div>
+            <div className="space-y-1.5">
+              <Input
+                id="username"
+                placeholder="Ditt namn eller valfritt användarnamn"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                className={`h-14 bg-white/[0.04] border-0 ring-1 ring-white/[0.08] rounded-2xl text-white placeholder:text-white/20 focus:ring-2 focus:ring-[hsl(45_85%_55%/0.5)] focus:bg-white/[0.06] transition-all text-base px-4 ${validationErrors.username ? 'ring-red-400/40' : ''}`}
+                disabled={isSubmitting}
+                autoComplete="username"
+              />
+              {validationErrors.username && <p className="text-xs text-red-400/80 pl-1">{validationErrors.username}</p>}
             </div>
 
             <div className="space-y-1.5">
