@@ -29,6 +29,12 @@ export function ProtectedRoute({ children, skipOnboardingCheck = false }: Protec
     return <Navigate to="/auth" replace />;
   }
 
+  // Check if user needs to complete their profile (OTP signup flow)
+  const profileCompleted = user.user_metadata?.profile_completed;
+  if (!profileCompleted && !user.user_metadata?.first_name && location.pathname !== '/slutfor-profil') {
+    return <Navigate to="/slutfor-profil" replace />;
+  }
+
   // Doctors: Redirect to doctor onboarding if they haven't completed it
   if (isDoctor) {
     // Check if doctor needs onboarding (no preferences record or not completed)
