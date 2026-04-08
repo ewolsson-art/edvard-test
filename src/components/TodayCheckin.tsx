@@ -772,7 +772,7 @@ export function TodayCheckin({
               )}
             >
               <div className="icon-wrapper !w-14 !h-14">
-                <ThumbsUp className="w-8 h-8 text-mood-stable" />
+                <MoonStar className="w-8 h-8 text-mood-stable" />
               </div>
               <span className="font-semibold text-lg">Bra</span>
               <span className="text-xs text-muted-foreground/50">Jag sov gott</span>
@@ -785,7 +785,7 @@ export function TodayCheckin({
               )}
             >
               <div className="icon-wrapper !w-14 !h-14">
-                <ThumbsDown className="w-8 h-8 text-mood-depressed" />
+                <CloudMoon className="w-8 h-8 text-mood-depressed" />
               </div>
               <span className="font-semibold text-lg">Dåligt</span>
               <span className="text-xs text-muted-foreground/50">Sov oroligt</span>
