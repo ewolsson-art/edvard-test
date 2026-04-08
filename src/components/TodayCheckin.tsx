@@ -562,21 +562,23 @@ export function TodayCheckin({
                 Avbryt
               </Button>
             ) : <div />}
-            {streakData.currentStreak > 0 && (
-              <StreakBadge 
-                currentStreak={streakData.currentStreak}
-                longestStreak={streakData.longestStreak}
-                hasCheckedInToday={streakData.hasCheckedInToday}
-                variant="compact"
-              />
-            )}
           </div>
 
-          {/* Date label + Heading */}
+          {/* Date label + Heading + Streak */}
           <div className="mb-10">
-            <p className="text-muted-foreground/50 text-[13px] tracking-[0.08em] uppercase font-semibold mb-3">
-              {isDisplayToday ? format(displayDate, "EEEE d MMMM", { locale: sv }) : formattedDate}
-            </p>
+            <div className="flex items-center justify-between mb-3">
+              <p className="text-muted-foreground/50 text-[13px] tracking-[0.08em] uppercase font-semibold">
+                {isDisplayToday ? format(displayDate, "EEEE d MMMM", { locale: sv }) : formattedDate}
+              </p>
+              {streakData.currentStreak > 0 && (
+                <StreakBadge 
+                  currentStreak={streakData.currentStreak}
+                  longestStreak={streakData.longestStreak}
+                  hasCheckedInToday={streakData.hasCheckedInToday}
+                  variant="compact"
+                />
+              )}
+            </div>
             <h1 className="font-display text-[28px] sm:text-3xl md:text-3xl font-bold leading-tight tracking-tight">
               {isDisplayToday ? 'Hur känns det idag?' : 'Hur mådde du?'}
             </h1>
