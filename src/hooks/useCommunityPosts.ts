@@ -31,6 +31,13 @@ export interface CommunityReply {
   author_name: string;
 }
 
+export interface PollOption {
+  id: string;
+  option_text: string;
+  sort_order: number;
+  vote_count: number;
+}
+
 export interface CommunityPost {
   id: string;
   user_id: string;
@@ -46,6 +53,8 @@ export interface CommunityPost {
   reaction_count: number;
   user_has_reacted: boolean;
   replies: CommunityReply[];
+  poll_options: PollOption[];
+  user_voted_option_id: string | null;
 }
 
 export function useCommunityPosts() {
