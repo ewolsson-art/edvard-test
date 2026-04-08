@@ -17,7 +17,6 @@ const MOOD_CONFIG = {
     icon: Zap,
     iconColor: 'text-amber-400',
     dotColor: 'bg-amber-400',
-    suggestions: ['Mer social', 'Sover mindre', 'Mer energi', 'Pratar snabbare', 'Tar fler initiativ', 'Rastlös'],
     placeholder: 'T.ex. Mer social, Pratar snabbare...',
   },
   stabil: {
@@ -27,7 +26,6 @@ const MOOD_CONFIG = {
     icon: Sun,
     iconColor: 'text-emerald-400',
     dotColor: 'bg-emerald-400',
-    suggestions: ['God sömn', 'Regelbundna rutiner', 'Fokuserad', 'Social balans', 'Stabil aptit', 'Lugn'],
     placeholder: 'T.ex. God sömn, Lugn och fokuserad...',
   },
   nedstamd: {
@@ -37,7 +35,6 @@ const MOOD_CONFIG = {
     icon: Cloud,
     iconColor: 'text-rose-400',
     dotColor: 'bg-rose-400',
-    suggestions: ['Drar mig undan', 'Sover mer', 'Mindre energi', 'Svårt att koncentrera', 'Tappar aptiten', 'Gråter lättare'],
     placeholder: 'T.ex. Drar mig undan, Sover mer...',
   },
 };
@@ -308,27 +305,6 @@ const CharacteristicDetail = () => {
           )}
         </div>
 
-        {/* Static suggestions – tertiary, no card */}
-        <div>
-          <h2 className="text-[13px] font-medium text-foreground/30 uppercase tracking-wide mb-2">
-            Vanliga kännetecken
-          </h2>
-          <div className="flex flex-wrap gap-2">
-            {config.suggestions.map((suggestion) => (
-              <button
-                key={suggestion}
-                onClick={() => {
-                  setNewValue(suggestion);
-                  setShowInput(true);
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
-                }}
-                className="text-[13px] px-3 py-1.5 rounded-full bg-foreground/[0.04] border border-foreground/[0.06] text-foreground/20 hover:text-foreground/40 hover:bg-foreground/[0.06] transition-all"
-              >
-                {suggestion}
-              </button>
-            ))}
-          </div>
-        </div>
       </div>
     </div>
   );
