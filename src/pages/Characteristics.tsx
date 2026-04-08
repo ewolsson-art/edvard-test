@@ -86,18 +86,14 @@ const Characteristics = () => {
   }
 
   return (
-    <div className="max-w-2xl mx-auto py-8 px-4 md:px-8">
+    <div className="p-5 md:p-8 pb-24">
+      <div className="max-w-2xl mx-auto md:mx-0">
       {/* Header */}
       <div className="mb-10">
-        <div className="flex items-center gap-3 mb-3">
-          <div className="p-2 rounded-xl bg-primary/10">
-            <Sparkles className="w-5 h-5 text-primary" />
-          </div>
-          <h1 className="font-display text-3xl md:text-4xl font-bold text-foreground">
-            Mina kännetecken
-          </h1>
-        </div>
-        <p className="text-muted-foreground leading-relaxed ml-[52px]">
+        <h1 className="font-display text-2xl font-bold text-foreground mb-1">
+          Mina kännetecken
+        </h1>
+        <p className="text-[13px] text-foreground/30">
           Lär känna dina mönster – det hjälper dig och din vårdgivare att tidigt upptäcka förändringar.
         </p>
       </div>
