@@ -276,7 +276,7 @@ const Community = () => {
           onClick={() => { setDesktopFormOpen(false); setMobileFormOpen(false); }}
         >
           <div
-            className="w-full max-w-lg mx-4 bg-card border border-border/30 rounded-2xl p-6 space-y-4 animate-in fade-in zoom-in-95 duration-200"
+            className="w-full max-w-lg mx-4 bg-card rounded-2xl p-6 space-y-4 animate-in fade-in zoom-in-95 duration-200"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between">
