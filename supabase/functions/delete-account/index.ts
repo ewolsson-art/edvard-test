@@ -77,7 +77,7 @@ Deno.serve(async (req) => {
     const { error: deleteError } = await supabaseAdmin.auth.admin.deleteUser(userId);
 
     if (deleteError) {
-      console.error("Error deleting user:", deleteError);
+      console.error("Error deleting user", { code: deleteError?.code, hint: deleteError?.hint });
       return new Response(
         JSON.stringify({ error: "Failed to delete account" }),
         { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
@@ -89,7 +89,7 @@ Deno.serve(async (req) => {
       { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   } catch (error) {
-    console.error("Error in delete-account function:", error);
+    console.error("Unhandled error in delete-account", { name: error instanceof Error ? error.name : 'Unknown', message: error instanceof Error ? error.message : String(error) });
     return new Response(
       JSON.stringify({ error: "Internal server error" }),
       { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
