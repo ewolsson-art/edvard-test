@@ -252,30 +252,6 @@ const Auth = () => {
       </section>
       </div>
 
-      {/* === SOCIAL PROOF === */}
-      <section className="relative z-10 bg-[hsl(225_30%_6%)] py-12 md:py-20 px-5 md:px-8">
-        <div className="max-w-4xl mx-auto text-center">
-          <div className="flex flex-wrap items-center justify-center gap-8 md:gap-16 text-white/50">
-            <div className="flex flex-col items-center">
-              <span className="text-3xl md:text-4xl font-bold text-[hsl(45_85%_55%)]">500+</span>
-              <span className="text-sm mt-1">Användare</span>
-            </div>
-            <div className="w-px h-10 bg-white/10 hidden md:block" />
-            <div className="flex flex-col items-center">
-              <span className="text-3xl md:text-4xl font-bold text-[hsl(45_85%_55%)]">50 000+</span>
-              <span className="text-sm mt-1">Incheckningar</span>
-            </div>
-            <div className="w-px h-10 bg-white/10 hidden md:block" />
-            <div className="flex flex-col items-center">
-              <span className="text-3xl md:text-4xl font-bold text-[hsl(45_85%_55%)]">4.8★</span>
-              <span className="text-sm mt-1">Betyg</span>
-            </div>
-          </div>
-          <p className="mt-8 text-white/40 text-sm italic max-w-md mx-auto">
-            "Toddy har gett mig bättre koll på mitt mående och gjort samtalen med min läkare mycket mer produktiva."
-          </p>
-        </div>
-      </section>
 
       {/* === HOW IT WORKS === */}
       <HowItWorksSection />
