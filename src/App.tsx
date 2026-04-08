@@ -44,7 +44,7 @@ import ResetPassword from "./pages/ResetPassword";
 import ForgotPassword from "./pages/ForgotPassword";
 import Characteristics from "./pages/Characteristics";
 import CharacteristicDetail from "./pages/CharacteristicDetail";
-import Insights from "./pages/Insights";
+
 import BadDay from "./pages/BadDay";
 import Community from "./pages/Community";
 import CommunityThread from "./pages/CommunityThread";
@@ -134,11 +134,6 @@ const App = () => (
             <Route path="/kannetecken/:moodType" element={
               <ProtectedRoute>
                 <AppLayout><CharacteristicDetail /></AppLayout>
-              </ProtectedRoute>
-            } />
-            <Route path="/insikter" element={
-              <ProtectedRoute>
-                <AppLayout><Insights /></AppLayout>
               </ProtectedRoute>
             } />
             <Route path="/dalig-dag" element={
