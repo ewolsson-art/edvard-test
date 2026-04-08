@@ -179,21 +179,21 @@ const CharacteristicDetail = () => {
           </div>
 
           {characteristics.length > 0 && (
-            <div className="flex flex-wrap gap-2 mb-3">
+            <div className="space-y-0">
               {characteristics.map((char) => (
-                <span
+                <div
                   key={char.id}
-                  className="inline-flex items-center gap-1.5 py-1.5 px-3 rounded-full text-[13px] bg-foreground/[0.04] border border-foreground/[0.06] text-foreground/60 transition-colors"
+                  className="flex items-center justify-between py-2.5 group"
                 >
-                  {char.name}
+                  <span className="text-[14px] text-foreground/70">{char.name}</span>
                   <button
                     onClick={() => deleteCharacteristic(char.id)}
-                    className="text-foreground/20 hover:text-destructive transition-colors"
+                    className="text-foreground/10 hover:text-destructive transition-colors opacity-0 group-hover:opacity-100"
                     aria-label={`Ta bort ${char.name}`}
                   >
-                    <X className="h-3 w-3" />
+                    <X className="h-3.5 w-3.5" />
                   </button>
-                </span>
+                </div>
               ))}
             </div>
           )}
