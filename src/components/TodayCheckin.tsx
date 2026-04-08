@@ -1253,14 +1253,23 @@ export function TodayCheckin({
           </div>
 
           <div className="max-w-md mt-auto pt-6">
-            <Button onClick={async () => {
-              if (onSaveCustomAnswers) {
-                await onSaveCustomAnswers(customAnswersState);
-              }
-              handleComplete();
-            }} className="w-full py-6 text-base font-semibold gap-2">
-              Klar ✓
-            </Button>
+            {(() => {
+              const totalQ = customQuestions.length;
+              const answeredQ = Object.keys(customAnswersState).length;
+              const allAnswered = answeredQ >= totalQ;
+              const noneAnswered = answeredQ === 0;
+              const label = allAnswered ? 'Klar ✓' : noneAnswered ? 'Hoppa över' : 'Fortsätt ändå';
+              return (
+                <Button onClick={async () => {
+                  if (onSaveCustomAnswers) {
+                    await onSaveCustomAnswers(customAnswersState);
+                  }
+                  handleComplete();
+                }} className="w-full py-6 text-base font-semibold gap-2">
+                  {label}
+                </Button>
+              );
+            })()}
           </div>
         </div>
       )}
