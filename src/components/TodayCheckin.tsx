@@ -417,130 +417,162 @@ export function TodayCheckin({
     const MoodIcon = moodDisplay?.icon || Sun;
     const followUp = todayEntry ? getSmartFollowUp(todayEntry.mood, todayEntry.energyLevel) : null;
 
+    // Build inline summary items
+    const summaryItems: { label: string; value: string; colorClass?: string }[] = [];
+    if (todayEntry) {
+      summaryItems.push({ label: 'Mående', value: MOOD_LABELS[todayEntry.mood], colorClass: moodDisplay?.colorClass });
+    }
+    if (preferences?.include_sleep && todayEntry?.sleepQuality) {
+      summaryItems.push({ 
+        label: 'Sömn', 
+        value: QUALITY_LABELS[todayEntry.sleepQuality],
+        colorClass: todayEntry.sleepQuality === 'good' ? 'text-mood-stable' : todayEntry.sleepQuality === 'bad' ? 'text-mood-depressed' : 'text-primary'
+      });
+    }
+    if (preferences?.include_eating && todayEntry?.eatingQuality) {
+      summaryItems.push({ 
+        label: 'Mat', 
+        value: QUALITY_LABELS[todayEntry.eatingQuality],
+        colorClass: todayEntry.eatingQuality === 'good' ? 'text-mood-stable' : todayEntry.eatingQuality === 'bad' ? 'text-mood-depressed' : 'text-primary'
+      });
+    }
+    if (preferences?.include_exercise && todayEntry?.exercised !== undefined) {
+      summaryItems.push({ 
+        label: 'Träning', 
+        value: todayEntry.exercised ? 'Ja' : 'Nej',
+        colorClass: todayEntry.exercised ? 'text-mood-stable' : 'text-muted-foreground'
+      });
+    }
+
+    const tags = todayEntry?.tags && todayEntry.tags.length > 0
+      ? todayEntry.tags.map(t => ALL_TAG_OPTIONS.find(o => o.value === t)?.label || t)
+      : [];
+
+    const customAnswerItems = customQuestions
+      .filter(q => customAnswersState[q.id])
+      .map(q => ({ question: q.question_text, answer: customAnswersState[q.id] === 'yes' ? 'Ja' : 'Nej' }));
+
     return (
       <div className="fade-in h-full md:h-auto flex flex-col justify-center px-5 py-8 md:glass-card md:p-10 md:max-h-[calc(100vh-4rem)] md:overflow-y-auto md:border md:bg-card/80 md:rounded-2xl md:shadow-sm">
-        <div className="text-center mb-5">
-          <p className="text-muted-foreground/60 text-[11px] tracking-[0.2em] uppercase font-medium">{formattedDate}</p>
-          {!isDisplayToday && (
-            <p className="text-[11px] text-primary mt-1 font-medium">Retroaktiv incheckning</p>
-          )}
-        </div>
+        
+        {/* Single unified moment */}
+        <div className="flex flex-col items-center text-center max-w-sm mx-auto w-full">
+          
+          {/* Date */}
+          <p className="text-muted-foreground/40 text-[11px] tracking-[0.2em] uppercase font-medium mb-6">
+            {formattedDate}
+            {!isDisplayToday && <span className="text-primary ml-2">Retroaktiv</span>}
+          </p>
 
-        <div className="fade-in">
-          <div className="flex justify-center mb-4">
-            <div className={cn("w-14 h-14 md:w-16 md:h-16 rounded-full flex items-center justify-center", moodDisplay?.bgClass)}>
-              <CheckCircle2 className={cn("w-7 h-7 md:w-8 md:h-8", moodDisplay?.colorClass || 'text-mood-stable')} />
+          {/* Checkmark with mood-colored glow */}
+          <div className="relative mb-5">
+            <div className={cn(
+              "absolute inset-0 rounded-full blur-xl opacity-30 animate-pulse",
+              moodDisplay?.colorClass?.replace('text-', 'bg-') || 'bg-mood-stable'
+            )} style={{ transform: 'scale(1.5)' }} />
+            <div className={cn(
+              "relative w-16 h-16 rounded-full flex items-center justify-center",
+              "bg-card border border-border/20"
+            )}>
+              <Check className={cn("w-8 h-8", moodDisplay?.colorClass || 'text-mood-stable')} 
+                style={{ animation: 'scale-in 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)' }} />
             </div>
           </div>
-          
-          <h1 className="font-display text-[22px] md:text-2xl font-bold text-foreground text-center">
-            Du har checkat in!
+
+          {/* Main heading */}
+          <h1 className="font-display text-[24px] md:text-[28px] font-bold text-foreground mb-2">
+            Du har checkat in
           </h1>
 
-          {/* Smart follow-up message */}
+          {/* Smart follow-up as subtitle */}
           {followUp && (
-            <div className="max-w-sm mx-auto mt-4 p-4 rounded-xl bg-card border border-border/30">
-              <p className="text-sm text-foreground/80 leading-relaxed text-center">
-                <span className="mr-1.5">{followUp.icon}</span>
-                {followUp.message}
-              </p>
-            </div>
+            <p className="text-[15px] text-foreground/60 leading-relaxed mb-1">
+              <span className="mr-1">{followUp.icon}</span>
+              {followUp.message}
+            </p>
           )}
 
-          {/* Streak badge */}
+          {/* Streak as hero moment */}
           {streakData.currentStreak > 0 && (
-            <div className="max-w-sm mx-auto mt-5">
-              <StreakBadge 
-                currentStreak={streakData.currentStreak}
-                longestStreak={streakData.longestStreak}
-                hasCheckedInToday={streakData.hasCheckedInToday}
-              />
+            <div className="mt-6 mb-2">
+              <div className={cn(
+                "inline-flex items-center gap-2",
+                streakData.currentStreak >= 7 ? "text-orange-400" : "text-primary"
+              )}>
+                <Flame className={cn(
+                  "w-5 h-5",
+                  streakData.currentStreak >= 7 && "animate-pulse"
+                )} />
+                <span className="text-[32px] md:text-[38px] font-bold tabular-nums leading-none">
+                  {streakData.currentStreak}
+                </span>
+                <span className="text-sm font-medium opacity-70 self-end mb-1">
+                  {streakData.currentStreak === 1 ? 'dag' : 'dagar'} i rad
+                </span>
+              </div>
+              {streakData.currentStreak > 0 && streakData.currentStreak === streakData.longestStreak && streakData.currentStreak > 1 && (
+                <p className="text-[11px] text-yellow-400/80 font-medium mt-1 flex items-center justify-center gap-1">
+                  <Trophy className="w-3 h-3" /> Nytt rekord!
+                </p>
+              )}
             </div>
           )}
 
-          {/* Encouragement message for depressed mood */}
+          {/* Divider */}
+          <div className="w-12 h-px bg-border/40 my-5" />
+
+          {/* Inline summary - no boxes, just clean text */}
+          <div className="flex flex-wrap items-center justify-center gap-x-1.5 gap-y-1 text-[13px] text-foreground/50">
+            {summaryItems.map((item, i) => (
+              <span key={item.label} className="flex items-center gap-1">
+                {i > 0 && <span className="text-border mx-1">·</span>}
+                <span>{item.label}:</span>
+                <span className={cn("font-semibold", item.colorClass || 'text-foreground/80')}>{item.value}</span>
+              </span>
+            ))}
+          </div>
+
+          {/* Tags as subtle text */}
+          {tags.length > 0 && (
+            <p className="text-[12px] text-foreground/30 mt-3">
+              {tags.join(' · ')}
+            </p>
+          )}
+
+          {/* Custom answers inline */}
+          {customAnswerItems.length > 0 && (
+            <div className="flex flex-wrap items-center justify-center gap-x-1.5 gap-y-1 text-[12px] text-foreground/30 mt-2">
+              {customAnswerItems.map((item, i) => (
+                <span key={i}>
+                  {i > 0 && <span className="mx-1">·</span>}
+                  {item.question}: <span className="font-medium text-foreground/50">{item.answer}</span>
+                </span>
+              ))}
+            </div>
+          )}
+
+          {/* Encouragement for low mood - subtle, integrated */}
           {(todayEntry?.mood === 'depressed' || todayEntry?.mood === 'somewhat_depressed') && (
-            <div className="max-w-sm mx-auto mt-5 p-4 rounded-xl bg-primary/10 border border-primary/20">
-              <div className="flex items-center justify-center gap-2 mb-2">
-                <Heart className="w-5 h-5 text-primary" />
-              </div>
-              <p className="text-sm text-foreground/80 leading-relaxed text-center">
-                Det är tufft just nu, men bättre dagar kommer. <span className="text-primary font-medium">Håll ut! 💪</span>
+            <div className="mt-6 px-5 py-4 rounded-xl border border-primary/10 bg-primary/5">
+              <p className="text-[13px] text-foreground/60 leading-relaxed">
+                <Heart className="w-3.5 h-3.5 inline mr-1.5 text-primary/60 -mt-0.5" />
+                Bättre dagar kommer.
                 {encouragementData.goodDaysCount > 0 && (
-                  <>
-                    {' '}Du mådde bra för{' '}
-                    <strong>{encouragementData.daysSinceGood !== null ? encouragementData.daysSinceGood : '?'} {encouragementData.daysSinceGood === 1 ? 'dag' : 'dagar'}</strong> sen
-                    {' '}och du har mått bra <strong>{encouragementData.goodDaysCount} {encouragementData.goodDaysCount === 1 ? 'dag' : 'dagar'}</strong> i år.
-                  </>
+                  <span className="text-foreground/40">
+                    {' '}Du mådde bra för {encouragementData.daysSinceGood ?? '?'} {encouragementData.daysSinceGood === 1 ? 'dag' : 'dagar'} sen.
+                  </span>
                 )}
               </p>
             </div>
           )}
 
-          {/* Summary */}
-          <div className="max-w-sm mx-auto mt-5 space-y-2 text-left">
-            {todayEntry && moodDisplay && (
-              <div className={cn("flex items-center gap-3 px-4 py-3 rounded-xl border", moodDisplay.bgClass, moodDisplay.borderClass)}>
-                <MoodIcon className={cn("w-5 h-5 flex-shrink-0", moodDisplay.colorClass)} />
-                <span className="text-sm font-medium">Mående: <strong>{MOOD_LABELS[todayEntry.mood]}</strong></span>
-              </div>
-            )}
-            {todayEntry?.tags && todayEntry.tags.length > 0 && (
-              <div className="flex items-center gap-3 px-4 py-3 rounded-xl border bg-card border-border/30">
-                <AlertTriangle className="w-5 h-5 flex-shrink-0 text-primary" />
-                <span className="text-sm font-medium">
-                  {todayEntry.tags.map(t => ALL_TAG_OPTIONS.find(o => o.value === t)?.label || t).join(', ')}
-                </span>
-              </div>
-            )}
-            {preferences?.include_sleep && todayEntry?.sleepQuality && (
-              <div className={cn(
-                "flex items-center gap-3 px-4 py-3 rounded-xl border",
-                todayEntry.sleepQuality === 'good' ? "bg-mood-stable/10 border-mood-stable/20" : "bg-mood-depressed/10 border-mood-depressed/20"
-              )}>
-                <Moon className={cn("w-5 h-5 flex-shrink-0", todayEntry.sleepQuality === 'good' ? "text-mood-stable" : "text-mood-depressed")} />
-                <span className="text-sm font-medium">Sömn: <strong>{QUALITY_LABELS[todayEntry.sleepQuality]}</strong></span>
-              </div>
-            )}
-            {preferences?.include_eating && todayEntry?.eatingQuality && (
-              <div className={cn(
-                "flex items-center gap-3 px-4 py-3 rounded-xl border",
-                todayEntry.eatingQuality === 'good' ? "bg-mood-stable/10 border-mood-stable/20" : todayEntry.eatingQuality === 'bad' ? "bg-mood-depressed/10 border-mood-depressed/20" : "bg-primary/10 border-primary/20"
-              )}>
-                <Utensils className={cn("w-5 h-5 flex-shrink-0", todayEntry.eatingQuality === 'good' ? "text-mood-stable" : todayEntry.eatingQuality === 'bad' ? "text-mood-depressed" : "text-primary")} />
-                <span className="text-sm font-medium">Mat: <strong>{QUALITY_LABELS[todayEntry.eatingQuality]}</strong></span>
-              </div>
-            )}
-            {preferences?.include_exercise && todayEntry?.exercised !== undefined && (
-              <div className={cn(
-                "flex items-center gap-3 px-4 py-3 rounded-xl border",
-                todayEntry.exercised ? "bg-mood-stable/10 border-mood-stable/20" : "bg-muted/30 border-border/30"
-              )}>
-                <Dumbbell className={cn("w-5 h-5 flex-shrink-0", todayEntry.exercised ? "text-mood-stable" : "text-muted-foreground")} />
-                <span className="text-sm font-medium">Träning: <strong>{todayEntry.exercised ? 'Ja' : 'Nej'}</strong></span>
-              </div>
-            )}
-            {customQuestions.map((q) => {
-              const answer = customAnswersState[q.id];
-              if (!answer) return null;
-              return (
-                <div key={q.id} className={cn(
-                  "flex items-center gap-3 px-4 py-3 rounded-xl border",
-                  answer === 'yes' ? "bg-mood-stable/10 border-mood-stable/20" : "bg-muted/30 border-border/30"
-                )}>
-                  <HelpCircle className={cn("w-5 h-5 flex-shrink-0", answer === 'yes' ? "text-mood-stable" : "text-muted-foreground")} />
-                  <span className="text-sm font-medium">{q.question_text}: <strong>{answer === 'yes' ? 'Ja' : 'Nej'}</strong></span>
-                </div>
-              );
-            })}
-          </div>
-
-          <div className="flex justify-center">
-            <Button variant="ghost" size="sm" onClick={handleEdit} className="mt-6 gap-2 text-muted-foreground/50">
-              <Pencil className="w-4 h-4" />
-              Ändra incheckning
-            </Button>
-          </div>
+          {/* Edit link - subtle text, not a button */}
+          <button
+            onClick={handleEdit}
+            className="mt-8 text-[13px] text-muted-foreground/30 hover:text-muted-foreground/60 transition-colors hover:underline underline-offset-4"
+          >
+            Ändra incheckning
+          </button>
         </div>
       </div>
     );
