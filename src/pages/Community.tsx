@@ -59,6 +59,7 @@ const Community = () => {
       setContent('');
       setTitle('');
       setMobileFormOpen(false);
+      setDesktopFormOpen(false);
     }
     setIsPosting(false);
   };
