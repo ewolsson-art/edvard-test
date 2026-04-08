@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Send, Eye, EyeOff, MessageCircle, ShieldCheck, ChevronDown, ChevronUp, Plus, X, Heart, TrendingUp } from 'lucide-react';
+import { Send, Eye, EyeOff, MessageCircle, ChevronDown, ChevronUp, Plus, X, Heart, TrendingUp } from 'lucide-react';
 import { useCommunityPosts } from '@/hooks/useCommunityPosts';
 import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/button';
@@ -26,24 +26,6 @@ const CATEGORIES = [
   { id: 'selfcare', label: 'Egenvård', emoji: '🧘' },
 ];
 
-const RULES = [
-  'Alla är vi olika, jämför inte varandra.',
-  'Våra diagnoser kan skiljas åt, likaså behandling och den skall ej ställas av oss utan av läkare.',
-  'Det är ok att prata medicin och behandling men alla skall prata med läkare angående sin egen medicinering. Man får ej rekommendera behandling eller naturläkemedel för andra.',
-  'Vi respekterar varandras religion, åsikter kring andlighet och sexuell läggning.',
-  'Inga dejtinginlägg eller meddelanden av dess slag till medlemmar.',
-  'Det är strikt förbjudet att dela inlägg från gruppen.',
-  'Inget valarbete, politiska inlägg eller diskussioner kring politik.',
-  'TW (triggervarning) används vid självmord samt självskadeinlägg. Eventuell bild skall läggas i kommentarerna.',
-  'Inget köp och sälj är tillåtet och man får inte söka ekonomiskt stöd här.',
-  'Olagliga droger får ej diskuteras som alternativ medicin. Trådar raderas omedelbart.',
-  'Inga efterlysningar till intervjuer — detta är en stödgrupp.',
-  'Det är inte tillåtet att dela eller länka till andra grupper eller bloggar.',
-  'Det är ok att lägga upp vardagliga saker men man ska respektera alla regler.',
-  'Det är inte tillåtet att blockera admins.',
-  'Otrevliga inlägg undanbedes. PM är rätt väg för klagomål. Otrevligheter leder till uteslutning.',
-  'Allvarliga regelbrott kan leda till omedelbar uteslutning. I annat fall gäller 1 varning innan avstängning.',
-];
 
 const Community = () => {
   const { user } = useAuth();
@@ -122,58 +104,38 @@ const Community = () => {
               <p className="text-sm text-muted-foreground mt-1">Läs och dela inlägg från andra användare. Du är alltid anonym om du vill.</p>
             </div>
 
-            {/* Rules */}
+            {/* Categories dropdown */}
             <div className="bg-card/40 backdrop-blur-sm rounded-xl border border-border/20 overflow-hidden">
               <button onClick={() => setRulesOpen(!rulesOpen)} className="w-full flex items-center justify-between px-4 py-3 hover:bg-white/[0.02] transition-colors">
                 <div className="flex items-center gap-2">
-                  <ShieldCheck className="h-4 w-4 text-primary" />
-                  <span className="text-sm font-medium text-foreground/90">Gruppens regler</span>
+                  <span className="text-sm font-medium text-foreground/90">
+                    {filterCategory ? `${CATEGORIES.find(c => c.id === filterCategory)?.emoji} ${CATEGORIES.find(c => c.id === filterCategory)?.label}` : 'Alla kategorier'}
+                  </span>
                 </div>
                 {rulesOpen ? <ChevronUp className="h-4 w-4 text-muted-foreground/50" /> : <ChevronDown className="h-4 w-4 text-muted-foreground/50" />}
               </button>
               {rulesOpen && (
-                <div className="px-4 pb-4 space-y-2.5 border-t border-border/10 pt-3">
-                  {RULES.map((rule, i) => (
-                    <div key={i} className="flex gap-2.5 text-[13px] leading-relaxed text-muted-foreground/70">
-                      <span className="text-primary/60 font-medium shrink-0 w-5 text-right">{i + 1}.</span>
-                      <span>{rule}</span>
-                    </div>
+                <div className="px-4 pb-3 border-t border-border/10 pt-2 space-y-0.5">
+                  <button
+                    onClick={() => { setFilterCategory(null); setRulesOpen(false); }}
+                    className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${!filterCategory ? 'bg-primary/10 text-primary' : 'text-muted-foreground hover:text-foreground hover:bg-white/[0.04]'}`}
+                  >
+                    Alla kategorier
+                  </button>
+                  {CATEGORIES.map(cat => (
+                    <button
+                      key={cat.id}
+                      onClick={() => { setFilterCategory(filterCategory === cat.id ? null : cat.id); setRulesOpen(false); }}
+                      className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${filterCategory === cat.id ? 'bg-primary/10 text-primary' : 'text-muted-foreground hover:text-foreground hover:bg-white/[0.04]'}`}
+                    >
+                      {cat.emoji} {cat.label}
+                    </button>
                   ))}
                 </div>
               )}
             </div>
 
             {/* CTA for non-logged-in users (shown on all screen sizes) */}
-            {!user && (
-              <div className="rounded-2xl bg-card/60 border border-border/40 p-5 space-y-3">
-                <p className="text-sm font-medium text-foreground">Vill du delta i diskussionen?</p>
-                <p className="text-xs text-muted-foreground leading-relaxed">
-                  Skapa ett konto för att skriva inlägg, kommentera och gilla – helt anonymt om du vill.
-                </p>
-                <div className="flex items-center gap-3">
-                  <Link to="/skapa-konto">
-                    <Button size="sm" className="rounded-full gap-2 px-5">
-                      Skapa konto
-                    </Button>
-                  </Link>
-                  <Link to="/logga-in">
-                    <Button size="sm" variant="ghost" className="rounded-full text-xs text-muted-foreground hover:text-foreground">
-                      Har redan ett konto? Logga in
-                    </Button>
-                  </Link>
-                </div>
-              </div>
-            )}
-
-            {/* Filter */}
-            <div className="flex gap-2 flex-wrap">
-              <button onClick={() => setFilterCategory(null)} className={`text-xs px-3 py-1.5 rounded-full whitespace-nowrap transition-all ${!filterCategory ? 'bg-white/10 text-foreground' : 'text-muted-foreground hover:text-foreground'}`}>Alla</button>
-              {CATEGORIES.map(cat => (
-                <button key={cat.id} onClick={() => setFilterCategory(filterCategory === cat.id ? null : cat.id)} className={`text-xs px-3 py-1.5 rounded-full whitespace-nowrap transition-all ${filterCategory === cat.id ? 'bg-white/10 text-foreground' : 'text-muted-foreground hover:text-foreground'}`}>
-                  {cat.emoji} {cat.label}
-                </button>
-              ))}
-            </div>
 
             {/* Thread list */}
             {loading ? (
