@@ -326,7 +326,7 @@ export function TodayCheckin({
       setTimeout(() => {
         setCurrentStep('complete');
         setIsEditing(false);
-      }, 2000);
+      }, 3500);
     }
   };
 
@@ -337,7 +337,7 @@ export function TodayCheckin({
       setTimeout(() => {
         setCurrentStep('complete');
         setIsEditing(false);
-      }, 2000);
+      }, 3500);
     }
   };
 
