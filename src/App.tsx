@@ -40,6 +40,7 @@ import PatientDetail from "./pages/PatientDetail";
 import ManageConnections from "./pages/ManageConnections";
 import NotFound from "./pages/NotFound";
 import SharedReport from "./pages/SharedReport";
+import Reports from "./pages/Reports";
 import ResetPassword from "./pages/ResetPassword";
 import ForgotPassword from "./pages/ForgotPassword";
 import Characteristics from "./pages/Characteristics";
@@ -145,6 +146,11 @@ const App = () => (
             <Route path="/mediciner" element={
               <ProtectedRoute>
                 <AppLayout><Medications /></AppLayout>
+              </ProtectedRoute>
+            } />
+            <Route path="/rapporter" element={
+              <ProtectedRoute>
+                <AppLayout><Reports /></AppLayout>
               </ProtectedRoute>
             } />
             <Route path="/profil" element={
