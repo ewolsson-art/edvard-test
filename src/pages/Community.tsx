@@ -134,12 +134,8 @@ const Community = () => {
               )}
             </div>
 
-            {/* Desktop post form */}
-            {user ? (
-              <div className="hidden md:block">
-                {postForm}
-              </div>
-            ) : (
+            {/* CTA for non-logged-in users (shown on all screen sizes) */}
+            {!user && (
               <div className="rounded-2xl bg-card/60 border border-border/40 p-5 space-y-3">
                 <p className="text-sm font-medium text-foreground">Vill du delta i diskussionen?</p>
                 <p className="text-xs text-muted-foreground leading-relaxed">
