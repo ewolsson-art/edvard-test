@@ -14,7 +14,7 @@ const CommunityThread = () => {
 
   return (
     <div className="min-h-screen">
-      <div className="px-4 md:px-8 py-6 max-w-2xl mx-auto space-y-4">
+      <div className="p-5 md:p-8 max-w-2xl md:mx-0 space-y-4 pb-24">
         {/* Back button */}
         <button
           onClick={() => navigate('/forum')}

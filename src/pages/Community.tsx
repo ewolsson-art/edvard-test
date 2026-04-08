@@ -93,8 +93,11 @@ const Community = () => {
 
   return (
     <div className="min-h-screen">
-      <div className="px-4 md:px-8 py-6 max-w-2xl mx-auto space-y-4 md:space-y-6">
-        <h1 className="text-xl font-bold text-foreground">Forum</h1>
+      <div className="p-5 md:p-8 max-w-2xl md:mx-0 space-y-4 md:space-y-6 pb-24">
+        <div>
+          <h1 className="font-display text-3xl font-bold">Forum</h1>
+          <p className="text-sm text-muted-foreground mt-1">Dela tankar och stötta varandra.</p>
+        </div>
 
         {/* Rules */}
         <div className="bg-card/40 backdrop-blur-sm rounded-xl border border-border/20 overflow-hidden">
