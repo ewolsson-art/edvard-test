@@ -263,7 +263,7 @@ const Signup = () => {
                 </div>
 
                 <div className="space-y-2" role="radiogroup" aria-label="Välj kontotyp">
-                  {(Object.keys(roleInfo) as AccountRole[]).map((roleKey) => {
+                  {(Object.keys(roleInfo) as VisibleRole[]).map((roleKey) => {
                     const info = roleInfo[roleKey];
                     const Icon = info.icon;
                     const isSelected = role === roleKey;
