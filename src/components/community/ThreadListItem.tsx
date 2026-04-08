@@ -1,6 +1,6 @@
 import { formatDistanceToNow } from 'date-fns';
 import { sv } from 'date-fns/locale';
-import { Heart, MessageCircle } from 'lucide-react';
+import { Heart, MessageCircle, BarChart3 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import type { CommunityPost } from '@/hooks/useCommunityPosts';
 
@@ -27,6 +27,7 @@ export const ThreadListItem = ({ post }: ThreadListItemProps) => {
   const navigate = useNavigate();
   const cat = CATEGORIES.find(c => c.id === post.category);
   const replyCount = post.replies.length;
+  const hasPoll = post.poll_options.length > 0;
   const title = post.title || post.content.slice(0, 60) + (post.content.length > 60 ? '…' : '');
 
   return (
@@ -77,6 +78,11 @@ export const ThreadListItem = ({ post }: ThreadListItemProps) => {
           </span>
         </div>
         <div className="flex items-center gap-4">
+          {hasPoll && (
+            <span className="flex items-center gap-1.5 text-sm text-primary/60">
+              <BarChart3 className="h-4 w-4" strokeWidth={1.8} />
+            </span>
+          )}
           <span className="flex items-center gap-1.5 text-sm text-muted-foreground/50">
             <Heart className="h-4.5 w-4.5" fill={post.user_has_reacted ? 'currentColor' : 'none'} strokeWidth={1.8}
                    style={{ color: post.user_has_reacted ? 'rgb(239 68 68)' : undefined }} />

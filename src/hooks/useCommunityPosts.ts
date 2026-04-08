@@ -31,6 +31,13 @@ export interface CommunityReply {
   author_name: string;
 }
 
+export interface PollOption {
+  id: string;
+  option_text: string;
+  sort_order: number;
+  vote_count: number;
+}
+
 export interface CommunityPost {
   id: string;
   user_id: string;
@@ -46,6 +53,8 @@ export interface CommunityPost {
   reaction_count: number;
   user_has_reacted: boolean;
   replies: CommunityReply[];
+  poll_options: PollOption[];
+  user_voted_option_id: string | null;
 }
 
 export function useCommunityPosts() {
@@ -79,6 +88,16 @@ export function useCommunityPosts() {
       .select('*')
       .order('created_at', { ascending: true });
 
+    // Fetch poll options and votes
+    const { data: pollOptions } = await supabase
+      .from('poll_options')
+      .select('*')
+      .order('sort_order', { ascending: true });
+
+    const { data: pollVotes } = await supabase
+      .from('poll_votes')
+      .select('option_id, user_id');
+
     // Fetch profile names for non-anonymous posts and replies
     const allUserIds = new Set<string>();
     (postsData || []).filter(p => !p.is_anonymous).forEach(p => allUserIds.add(p.user_id));
@@ -108,6 +127,19 @@ export function useCommunityPosts() {
             : (profileMap[r.user_id] || 'Användare'),
         }));
 
+      const postPollOptions: PollOption[] = (pollOptions || [])
+        .filter(o => o.post_id === post.id)
+        .map(o => ({
+          id: o.id,
+          option_text: o.option_text,
+          sort_order: o.sort_order,
+          vote_count: (pollVotes || []).filter(v => v.option_id === o.id).length,
+        }));
+
+      const userVote = user
+        ? (pollVotes || []).find(v => v.user_id === user.id && postPollOptions.some(o => o.id === v.option_id))
+        : null;
+
       return {
         ...post,
         author_name: post.is_anonymous 
@@ -116,6 +148,8 @@ export function useCommunityPosts() {
         reaction_count: postReactions.length,
         user_has_reacted: user ? postReactions.some(r => r.user_id === user.id) : false,
         replies: postReplies,
+        poll_options: postPollOptions,
+        user_voted_option_id: userVote?.option_id || null,
       };
     });
 
@@ -138,7 +172,7 @@ export function useCommunityPosts() {
     return data.publicUrl;
   };
 
-  const createPost = async (content: string, category: string, isAnonymous: boolean, title?: string, imageFile?: File | null) => {
+  const createPost = async (content: string, category: string, isAnonymous: boolean, title?: string, imageFile?: File | null, pollOptionTexts?: string[]) => {
     if (!user) return false;
 
     const anonymousName = isAnonymous ? getAnonymousName(user.id) : null;
@@ -148,7 +182,7 @@ export function useCommunityPosts() {
       if (!imageUrl) return false;
     }
 
-    const { error } = await supabase.from('community_posts').insert({
+    const { data: postData, error } = await supabase.from('community_posts').insert({
       user_id: user.id,
       title: title?.trim() || null,
       content: content.trim(),
@@ -156,15 +190,48 @@ export function useCommunityPosts() {
       is_anonymous: isAnonymous,
       anonymous_name: anonymousName,
       image_url: imageUrl,
-    } as any);
+    } as any).select('id').single();
 
-    if (error) {
+    if (error || !postData) {
       toast({ title: 'Kunde inte skapa inlägg', variant: 'destructive' });
       return false;
     }
 
+    // Create poll options if provided
+    if (pollOptionTexts && pollOptionTexts.length >= 2) {
+      const options = pollOptionTexts.map((text, i) => ({
+        post_id: postData.id,
+        option_text: text.trim(),
+        sort_order: i,
+      }));
+      await supabase.from('poll_options').insert(options as any);
+    }
+
     await fetchPosts();
     return true;
+  };
+
+  const votePoll = async (postId: string, optionId: string) => {
+    if (!user) return;
+    const post = posts.find(p => p.id === postId);
+    if (!post) return;
+
+    // Remove existing vote for this poll
+    if (post.user_voted_option_id) {
+      await supabase.from('poll_votes').delete()
+        .eq('option_id', post.user_voted_option_id)
+        .eq('user_id', user.id);
+    }
+
+    // Cast new vote (unless clicking same option to unvote)
+    if (post.user_voted_option_id !== optionId) {
+      await supabase.from('poll_votes').insert({
+        option_id: optionId,
+        user_id: user.id,
+      } as any);
+    }
+
+    await fetchPosts();
   };
 
   const createReply = async (postId: string, content: string, isAnonymous: boolean) => {
@@ -239,5 +306,5 @@ export function useCommunityPosts() {
     await fetchPosts();
   };
 
-  return { posts, loading, createPost, createReply, deleteReply, toggleReaction, deletePost };
+  return { posts, loading, createPost, createReply, deleteReply, toggleReaction, deletePost, votePoll };
 }
