@@ -68,7 +68,7 @@ export function AuthNavbar() {
               </button>
               <button
                 onClick={() => navigate("/skapa-konto")}
-                className="ml-2 px-5 py-2 text-sm font-semibold text-[hsl(225_30%_7%)] bg-[hsl(45_85%_55%)] rounded-full hover:bg-[hsl(45_85%_62%)] hover:scale-105 active:scale-[0.98] transition-all duration-200"
+                className="ml-2 px-5 py-2 text-sm font-semibold text-white/70 border border-white/20 rounded-full hover:bg-white hover:text-[hsl(225_30%_7%)] hover:border-white transition-all duration-200"
               >
                 Kom igång
               </button>
