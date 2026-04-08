@@ -88,6 +88,18 @@ const Overview = () => {
   const { preferences, loading: prefsLoading } = useUserPreferences();
   const { characteristics } = useCharacteristics();
 
+  // Scroll to today when year view is loaded initially
+  useEffect(() => {
+    if (view === 'year' && isLoaded) {
+      setTimeout(() => {
+        const todayEl = document.querySelector('[data-today="true"]');
+        if (todayEl) {
+          todayEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      }, 300);
+    }
+  }, [view, isLoaded]);
+
   // Week data
   const weekDays = useMemo(() => {
     const start = startOfWeek(currentWeek, { weekStartsOn: 1 });
