@@ -45,6 +45,7 @@ export const RelativeConnectionsSection = () => {
     share_medication: true,
     share_comments: false,
     share_characteristics: false,
+    notify_low_mood: false,
   });
 
   const handleInvite = async () => {
@@ -100,6 +101,7 @@ export const RelativeConnectionsSection = () => {
       share_medication: true,
       share_comments: false,
       share_characteristics: false,
+      notify_low_mood: false,
     });
     setRespondDialogOpen(true);
   };
@@ -157,6 +159,10 @@ export const RelativeConnectionsSection = () => {
     { key: 'share_medication', label: 'Mediciner' },
     { key: 'share_comments', label: 'Kommentarer' },
     { key: 'share_characteristics', label: 'Kännetecken' },
+  ];
+
+  const notificationOptions = [
+    { key: 'notify_low_mood', label: 'Notis vid mycket lågt mående', description: 'Anhörig får en notis om du checkar in som "Mycket låg"' },
   ];
 
   return (
