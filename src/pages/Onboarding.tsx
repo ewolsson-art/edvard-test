@@ -243,51 +243,44 @@ const Onboarding = () => {
       </header>
 
       {/* Main content */}
-      <main className="flex-1 flex flex-col items-center p-3 pt-4 overflow-y-auto">
-        <div className="w-full max-w-lg">
+      <main className="flex-1 flex flex-col items-center px-6 pt-6 overflow-y-auto">
+        <div className="w-full max-w-sm">
           {/* Step 1: Welcome */}
           {step === 1 && (
             <div className="animate-fade-in">
-              <div className="text-center mb-4">
-                <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-primary/10 mb-3">
-                  <Sparkles className="w-6 h-6 text-primary" />
-                </div>
-                <h1 className="font-display text-2xl md:text-3xl font-bold mb-2">
-                  Välkommen till Friendly
-                </h1>
-                <p className="text-sm text-muted-foreground max-w-md mx-auto">
-                  Din personliga stämningsdagbok för att förstå och följa ditt mående
-                </p>
-              </div>
+              <h1 className="text-2xl md:text-3xl font-bold text-white font-display tracking-tight">
+                Välkommen till Friendly
+              </h1>
+              <p className="mt-2 text-sm text-white/40">
+                Din personliga stämningsdagbok för att förstå och följa ditt mående
+              </p>
 
-              <div className="glass-card p-4 mb-4">
-                <h2 className="font-semibold text-sm mb-3">Vad du kan göra:</h2>
-                <div className="space-y-2.5">
-                  {FEATURES.map((feature, index) => {
-                    const Icon = feature.icon;
-                    return (
-                      <div key={index} className="flex items-start gap-3">
-                        <div className="p-2 rounded-lg bg-primary/10 shrink-0">
-                          <Icon className="w-4 h-4 text-primary" />
-                        </div>
-                        <div>
-                          <h3 className="font-medium text-sm">{feature.title}</h3>
-                          <p className="text-xs text-muted-foreground">{feature.description}</p>
-                        </div>
+              <div className="mt-8 space-y-4">
+                {FEATURES.map((feature, index) => {
+                  const Icon = feature.icon;
+                  return (
+                    <div key={index} className="flex items-start gap-3">
+                      <div className="p-2 rounded-xl bg-white/[0.04] shrink-0">
+                        <Icon className="w-4 h-4 text-[hsl(45_85%_55%)]" />
                       </div>
-                    );
-                  })}
-                </div>
+                      <div>
+                        <h3 className="font-medium text-sm text-white">{feature.title}</h3>
+                        <p className="text-xs text-white/40">{feature.description}</p>
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
 
-              <div className="bg-muted/50 rounded-lg p-3 text-center mb-4">
-                <p className="text-xs text-muted-foreground">
-                  <span className="font-medium text-foreground">Skapad av och för personer med bipolär sjukdom</span>
-                  {' '}i samråd med läkare och experter
-                </p>
-              </div>
+              <p className="mt-6 text-xs text-white/30 text-center">
+                <span className="text-white/50 font-medium">Skapad av och för personer med bipolär sjukdom</span>
+                {' '}i samråd med läkare och experter
+              </p>
 
-              <Button onClick={handleNext} className="w-full" size="default">
+              <Button 
+                onClick={handleNext} 
+                className="w-full h-12 rounded-2xl text-[15px] font-semibold bg-[hsl(45_85%_55%)] text-[hsl(230_30%_5%)] hover:bg-[hsl(45_85%_65%)] shadow-[0_4px_20px_-4px_hsl(45_85%_55%/0.4)] hover:shadow-[0_6px_28px_-4px_hsl(45_85%_55%/0.5)] transition-all duration-300 mt-6"
+              >
                 Kom igång
                 <ArrowRight className="w-4 h-4 ml-2" />
               </Button>
@@ -297,16 +290,14 @@ const Onboarding = () => {
           {/* Step 2: Choose categories */}
           {step === 2 && (
             <div className="animate-fade-in">
-              <div className="text-center mb-3">
-                <h1 className="font-display text-xl md:text-2xl font-bold mb-1">
-                  Skapa din incheckning
-                </h1>
-                <p className="text-sm text-muted-foreground">
-                  Välj vad du vill ha med i din dagliga incheckning
-                </p>
-              </div>
+              <h1 className="text-2xl md:text-3xl font-bold text-white font-display tracking-tight">
+                Skapa din incheckning
+              </h1>
+              <p className="mt-2 text-sm text-white/40">
+                Välj vad du vill ha med i din dagliga incheckning
+              </p>
 
-              <div className="space-y-2 mb-3">
+              <div className="mt-6 space-y-2.5">
                 {CHECKIN_OPTIONS.map((option) => {
                   const Icon = option.icon;
                   const isChecked = selections[option.id as keyof typeof selections];
@@ -315,10 +306,10 @@ const Onboarding = () => {
                     <div
                       key={option.id}
                       className={cn(
-                        "flex items-center gap-3 p-2.5 rounded-lg border-2 transition-all cursor-pointer",
+                        "flex items-center gap-3 p-3 rounded-2xl transition-all cursor-pointer",
                         isChecked 
-                          ? 'border-primary bg-primary/5' 
-                          : 'border-border bg-card hover:border-primary/30'
+                          ? 'bg-white/[0.06] ring-1 ring-[hsl(45_85%_55%/0.3)]' 
+                          : 'bg-white/[0.04] ring-1 ring-white/[0.08] hover:ring-white/[0.15]'
                       )}
                       onClick={() => handleToggle(option.id)}
                     >
@@ -326,30 +317,30 @@ const Onboarding = () => {
                         id={option.id}
                         checked={isChecked}
                         onCheckedChange={() => handleToggle(option.id)}
-                        className="pointer-events-none"
+                        className="pointer-events-none border-white/20 data-[state=checked]:bg-[hsl(45_85%_55%)] data-[state=checked]:border-[hsl(45_85%_55%)]"
                       />
                       <div className={cn(
-                        "p-1.5 rounded-lg transition-colors",
-                        isChecked ? 'bg-primary/10' : 'bg-muted'
+                        "p-1.5 rounded-xl transition-colors",
+                        isChecked ? 'bg-[hsl(45_85%_55%/0.1)]' : 'bg-white/[0.04]'
                       )}>
                         <Icon className={cn(
                           "w-4 h-4 transition-colors",
-                          isChecked ? 'text-primary' : 'text-muted-foreground'
+                          isChecked ? 'text-[hsl(45_85%_55%)]' : 'text-white/30'
                         )} />
                       </div>
                       <div className="flex-1 min-w-0">
                         <Label 
                           htmlFor={option.id} 
-                          className="text-sm font-medium cursor-pointer flex items-center gap-2"
+                          className="text-sm font-medium cursor-pointer flex items-center gap-2 text-white"
                         >
                           {option.label}
                           {option.recommended && (
-                            <span className="text-[10px] bg-primary/10 text-primary px-1.5 py-0.5 rounded-full">
+                            <span className="text-[10px] bg-[hsl(45_85%_55%/0.1)] text-[hsl(45_85%_55%)] px-1.5 py-0.5 rounded-full">
                               Rekommenderas
                             </span>
                           )}
                         </Label>
-                        <p className="text-xs text-muted-foreground line-clamp-1">
+                        <p className="text-xs text-white/30 line-clamp-1">
                           {option.description}
                         </p>
                       </div>
@@ -359,21 +350,24 @@ const Onboarding = () => {
               </div>
 
               {!hasAnySelection && (
-                <p className="text-xs text-destructive text-center mb-2">
+                <p className="text-xs text-red-400/80 text-center mt-3">
                   Välj minst en kategori för att fortsätta
                 </p>
               )}
 
-              <p className="text-xs text-muted-foreground text-center mb-3">
+              <p className="text-xs text-white/20 text-center mt-3">
                 Du kan ändra detta senare i inställningarna
               </p>
 
-              <div className="flex gap-2">
-                <Button variant="outline" onClick={handleBack} className="flex-1" size="default">
-                  <ArrowLeft className="w-4 h-4 mr-1" />
-                  Tillbaka
-                </Button>
-                <Button onClick={handleNext} className="flex-1" size="default" disabled={!hasAnySelection}>
+              <div className="flex gap-3 mt-6">
+                <button onClick={handleBack} className="h-12 px-5 rounded-2xl text-sm font-medium text-white/50 hover:text-white/80 bg-white/[0.04] ring-1 ring-white/[0.08] hover:bg-white/[0.06] transition-all">
+                  <ArrowLeft className="w-4 h-4" />
+                </button>
+                <Button 
+                  onClick={handleNext} 
+                  className="flex-1 h-12 rounded-2xl text-[15px] font-semibold bg-[hsl(45_85%_55%)] text-[hsl(230_30%_5%)] hover:bg-[hsl(45_85%_65%)] shadow-[0_4px_20px_-4px_hsl(45_85%_55%/0.4)] transition-all duration-300" 
+                  disabled={!hasAnySelection}
+                >
                   Fortsätt
                   <ArrowRight className="w-4 h-4 ml-1" />
                 </Button>
@@ -384,31 +378,28 @@ const Onboarding = () => {
           {/* Step 3: Medications */}
           {step === 3 && (
             <div className="animate-fade-in">
-              <div className="text-center mb-3">
-                <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-primary/10 mb-2">
-                  <Pill className="w-5 h-5 text-primary" />
-                </div>
-                <h1 className="font-display text-xl md:text-2xl font-bold mb-1">
-                  Dina mediciner
-                </h1>
-                <p className="text-sm text-muted-foreground">
-                  Lägg till dina aktuella mediciner (valfritt)
-                </p>
-              </div>
+              <h1 className="text-2xl md:text-3xl font-bold text-white font-display tracking-tight">
+                Dina mediciner
+              </h1>
+              <p className="mt-2 text-sm text-white/40">
+                Lägg till dina aktuella mediciner (valfritt)
+              </p>
 
-              <div className="glass-card p-4 mb-4 max-h-[50vh] overflow-y-auto">
+              <div className="mt-6 max-h-[50vh] overflow-y-auto">
                 <MedicationStep 
                   selectedMedications={selectedMedications}
                   onMedicationsChange={setSelectedMedications}
                 />
               </div>
 
-              <div className="flex gap-2">
-                <Button variant="outline" onClick={handleBack} className="flex-1" size="default">
-                  <ArrowLeft className="w-4 h-4 mr-1" />
-                  Tillbaka
-                </Button>
-                <Button onClick={handleNext} className="flex-1" size="default">
+              <div className="flex gap-3 mt-6">
+                <button onClick={handleBack} className="h-12 px-5 rounded-2xl text-sm font-medium text-white/50 hover:text-white/80 bg-white/[0.04] ring-1 ring-white/[0.08] hover:bg-white/[0.06] transition-all">
+                  <ArrowLeft className="w-4 h-4" />
+                </button>
+                <Button 
+                  onClick={handleNext} 
+                  className="flex-1 h-12 rounded-2xl text-[15px] font-semibold bg-[hsl(45_85%_55%)] text-[hsl(230_30%_5%)] hover:bg-[hsl(45_85%_65%)] shadow-[0_4px_20px_-4px_hsl(45_85%_55%/0.4)] transition-all duration-300"
+                >
                   {getSkipText()}
                   <ArrowRight className="w-4 h-4 ml-1" />
                 </Button>
@@ -419,31 +410,28 @@ const Onboarding = () => {
           {/* Step 4: Characteristics */}
           {step === 4 && (
             <div className="animate-fade-in">
-              <div className="text-center mb-3">
-                <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-primary/10 mb-2">
-                  <Heart className="w-5 h-5 text-primary" />
-                </div>
-                <h1 className="font-display text-xl md:text-2xl font-bold mb-1">
-                  Dina kännetecken
-                </h1>
-                <p className="text-sm text-muted-foreground">
-                  Hur märker du och andra att du mår på ett visst sätt?
-                </p>
-              </div>
+              <h1 className="text-2xl md:text-3xl font-bold text-white font-display tracking-tight">
+                Dina kännetecken
+              </h1>
+              <p className="mt-2 text-sm text-white/40">
+                Hur märker du och andra att du mår på ett visst sätt?
+              </p>
 
-              <div className="glass-card p-4 mb-4">
+              <div className="mt-6">
                 <CharacteristicsStep 
                   characteristics={characteristics}
                   onCharacteristicsChange={setCharacteristics}
                 />
               </div>
 
-              <div className="flex gap-2">
-                <Button variant="outline" onClick={handleBack} className="flex-1" size="default">
-                  <ArrowLeft className="w-4 h-4 mr-1" />
-                  Tillbaka
-                </Button>
-                <Button onClick={handleNext} className="flex-1" size="default">
+              <div className="flex gap-3 mt-6">
+                <button onClick={handleBack} className="h-12 px-5 rounded-2xl text-sm font-medium text-white/50 hover:text-white/80 bg-white/[0.04] ring-1 ring-white/[0.08] hover:bg-white/[0.06] transition-all">
+                  <ArrowLeft className="w-4 h-4" />
+                </button>
+                <Button 
+                  onClick={handleNext} 
+                  className="flex-1 h-12 rounded-2xl text-[15px] font-semibold bg-[hsl(45_85%_55%)] text-[hsl(230_30%_5%)] hover:bg-[hsl(45_85%_65%)] shadow-[0_4px_20px_-4px_hsl(45_85%_55%/0.4)] transition-all duration-300"
+                >
                   {getSkipText()}
                   <ArrowRight className="w-4 h-4 ml-1" />
                 </Button>
@@ -454,31 +442,28 @@ const Onboarding = () => {
           {/* Step 5: Invite */}
           {step === 5 && (
             <div className="animate-fade-in">
-              <div className="text-center mb-3">
-                <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-primary/10 mb-2">
-                  <UserPlus className="w-5 h-5 text-primary" />
-                </div>
-                <h1 className="font-display text-xl md:text-2xl font-bold mb-1">
-                  Bjud in
-                </h1>
-                <p className="text-sm text-muted-foreground">
-                  Dela din data med läkare eller anhöriga
-                </p>
-              </div>
+              <h1 className="text-2xl md:text-3xl font-bold text-white font-display tracking-tight">
+                Bjud in
+              </h1>
+              <p className="mt-2 text-sm text-white/40">
+                Dela din data med läkare eller anhöriga
+              </p>
 
-              <div className="glass-card p-4 mb-4">
+              <div className="mt-6">
                 <InviteStep 
                   invites={invites}
                   onInvitesChange={setInvites}
                 />
               </div>
 
-              <div className="flex gap-2">
-                <Button variant="outline" onClick={handleBack} className="flex-1" size="default">
-                  <ArrowLeft className="w-4 h-4 mr-1" />
-                  Tillbaka
-                </Button>
-                <Button onClick={handleNext} className="flex-1" size="default">
+              <div className="flex gap-3 mt-6">
+                <button onClick={handleBack} className="h-12 px-5 rounded-2xl text-sm font-medium text-white/50 hover:text-white/80 bg-white/[0.04] ring-1 ring-white/[0.08] hover:bg-white/[0.06] transition-all">
+                  <ArrowLeft className="w-4 h-4" />
+                </button>
+                <Button 
+                  onClick={handleNext} 
+                  className="flex-1 h-12 rounded-2xl text-[15px] font-semibold bg-[hsl(45_85%_55%)] text-[hsl(230_30%_5%)] hover:bg-[hsl(45_85%_65%)] shadow-[0_4px_20px_-4px_hsl(45_85%_55%/0.4)] transition-all duration-300"
+                >
                   {getSkipText()}
                   <ArrowRight className="w-4 h-4 ml-1" />
                 </Button>
@@ -489,43 +474,37 @@ const Onboarding = () => {
           {/* Step 6: Confirm & Start */}
           {step === 6 && (
             <div className="animate-fade-in">
-              <div className="text-center mb-4">
-                <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-green-100 dark:bg-green-900/30 mb-3">
-                  <CheckCircle2 className="w-6 h-6 text-green-600 dark:text-green-400" />
-                </div>
-                <h1 className="font-display text-xl md:text-2xl font-bold mb-1">
-                  Allt är redo!
-                </h1>
-                <p className="text-sm text-muted-foreground">
-                  Här är en sammanfattning
-                </p>
-              </div>
+              <h1 className="text-2xl md:text-3xl font-bold text-white font-display tracking-tight">
+                Allt är redo!
+              </h1>
+              <p className="mt-2 text-sm text-white/40">
+                Här är en sammanfattning
+              </p>
 
-              <div className="space-y-3 mb-4">
+              <div className="mt-6 space-y-3">
                 {/* Checkin categories */}
-                <div className="glass-card p-3">
-                  <h2 className="font-semibold text-xs mb-2 text-muted-foreground uppercase tracking-wide">Din incheckning</h2>
+                <div className="p-3 rounded-2xl bg-white/[0.04] ring-1 ring-white/[0.08]">
+                  <h2 className="font-semibold text-[11px] mb-2 text-white/30 uppercase tracking-wide">Din incheckning</h2>
                   <div className="flex flex-wrap gap-1.5">
                     {CHECKIN_OPTIONS.filter(opt => selections[opt.id as keyof typeof selections]).map((option) => {
                       const Icon = option.icon;
                       return (
-                        <div key={option.id} className="flex items-center gap-1.5 px-2 py-1 rounded-lg bg-primary/5 border border-primary/10">
-                          <Icon className="w-3 h-3 text-primary" />
-                          <span className="text-xs font-medium">{option.label}</span>
+                        <div key={option.id} className="flex items-center gap-1.5 px-2 py-1 rounded-xl bg-[hsl(45_85%_55%/0.08)] ring-1 ring-[hsl(45_85%_55%/0.15)]">
+                          <Icon className="w-3 h-3 text-[hsl(45_85%_55%)]" />
+                          <span className="text-xs font-medium text-white/80">{option.label}</span>
                         </div>
                       );
                     })}
                   </div>
                 </div>
 
-
                 {/* Medications */}
                 {selectedMedications.length > 0 && (
-                  <div className="glass-card p-3">
-                    <h2 className="font-semibold text-xs mb-2 text-muted-foreground uppercase tracking-wide">Mediciner</h2>
+                  <div className="p-3 rounded-2xl bg-white/[0.04] ring-1 ring-white/[0.08]">
+                    <h2 className="font-semibold text-[11px] mb-2 text-white/30 uppercase tracking-wide">Mediciner</h2>
                     <div className="flex flex-wrap gap-1.5">
                       {selectedMedications.map((med) => (
-                        <span key={med.name} className="px-2 py-1 text-xs rounded-full bg-secondary text-secondary-foreground">
+                        <span key={med.name} className="px-2 py-1 text-xs rounded-xl bg-white/[0.06] text-white/70 ring-1 ring-white/[0.08]">
                           {med.name}
                         </span>
                       ))}
@@ -535,44 +514,43 @@ const Onboarding = () => {
 
                 {/* Characteristics */}
                 {totalChars > 0 && (
-                  <div className="glass-card p-3">
-                    <h2 className="font-semibold text-xs mb-2 text-muted-foreground uppercase tracking-wide">Kännetecken</h2>
+                  <div className="p-3 rounded-2xl bg-white/[0.04] ring-1 ring-white/[0.08]">
+                    <h2 className="font-semibold text-[11px] mb-2 text-white/30 uppercase tracking-wide">Kännetecken</h2>
                     <div className="space-y-1.5">
                       {characteristics.elevated.length > 0 && (
                         <div className="flex items-center gap-2">
-                          <span className="text-[10px] text-amber-600 font-medium w-16">Uppvarvad:</span>
-                          <span className="text-xs text-muted-foreground">{characteristics.elevated.join(', ')}</span>
+                          <span className="text-[10px] text-amber-500/80 font-medium w-16">Uppvarvad:</span>
+                          <span className="text-xs text-white/40">{characteristics.elevated.join(', ')}</span>
                         </div>
                       )}
                       {characteristics.stable.length > 0 && (
                         <div className="flex items-center gap-2">
-                          <span className="text-[10px] text-emerald-600 font-medium w-16">Stabil:</span>
-                          <span className="text-xs text-muted-foreground">{characteristics.stable.join(', ')}</span>
+                          <span className="text-[10px] text-emerald-500/80 font-medium w-16">Stabil:</span>
+                          <span className="text-xs text-white/40">{characteristics.stable.join(', ')}</span>
                         </div>
                       )}
                       {characteristics.depressed.length > 0 && (
                         <div className="flex items-center gap-2">
-                          <span className="text-[10px] text-red-600 font-medium w-16">Nedstämd:</span>
-                          <span className="text-xs text-muted-foreground">{characteristics.depressed.join(', ')}</span>
+                          <span className="text-[10px] text-red-400/80 font-medium w-16">Nedstämd:</span>
+                          <span className="text-xs text-white/40">{characteristics.depressed.join(', ')}</span>
                         </div>
                       )}
                     </div>
                   </div>
                 )}
 
-
                 {/* Invites */}
                 {(invites.doctors.length > 0 || invites.relatives.length > 0) && (
-                  <div className="glass-card p-3">
-                    <h2 className="font-semibold text-xs mb-2 text-muted-foreground uppercase tracking-wide">Inbjudningar</h2>
+                  <div className="p-3 rounded-2xl bg-white/[0.04] ring-1 ring-white/[0.08]">
+                    <h2 className="font-semibold text-[11px] mb-2 text-white/30 uppercase tracking-wide">Inbjudningar</h2>
                     <div className="space-y-1">
                       {invites.doctors.map(email => (
-                        <p key={email} className="text-xs flex items-center gap-1">
+                        <p key={email} className="text-xs flex items-center gap-1 text-white/50">
                           <UserPlus className="w-3 h-3" /> {email}
                         </p>
                       ))}
                       {invites.relatives.map(email => (
-                        <p key={email} className="text-xs flex items-center gap-1">
+                        <p key={email} className="text-xs flex items-center gap-1 text-white/50">
                           <UserPlus className="w-3 h-3" /> {email}
                         </p>
                       ))}
@@ -581,20 +559,19 @@ const Onboarding = () => {
                 )}
               </div>
 
-              <div className="bg-muted/50 rounded-lg p-3 mb-4">
-                <h3 className="font-medium text-xs mb-1">Tips:</h3>
-                <ul className="text-xs text-muted-foreground space-y-0.5">
-                  <li>• Checka in varje dag, gärna vid samma tid</li>
-                  <li>• Din data är privat och säker</li>
-                </ul>
-              </div>
+              <p className="mt-4 text-xs text-white/20 text-center">
+                Checka in varje dag, gärna vid samma tid • Din data är privat och säker
+              </p>
 
-              <div className="flex gap-2">
-                <Button variant="outline" onClick={handleBack} size="default">
-                  <ArrowLeft className="w-4 h-4 mr-1" />
-                  Tillbaka
-                </Button>
-                <Button onClick={handleSubmit} className="flex-1" size="default" disabled={isSubmitting}>
+              <div className="flex gap-3 mt-6">
+                <button onClick={handleBack} className="h-12 px-5 rounded-2xl text-sm font-medium text-white/50 hover:text-white/80 bg-white/[0.04] ring-1 ring-white/[0.08] hover:bg-white/[0.06] transition-all">
+                  <ArrowLeft className="w-4 h-4" />
+                </button>
+                <Button 
+                  onClick={handleSubmit} 
+                  className="flex-1 h-12 rounded-2xl text-[15px] font-semibold bg-[hsl(45_85%_55%)] text-[hsl(230_30%_5%)] hover:bg-[hsl(45_85%_65%)] shadow-[0_4px_20px_-4px_hsl(45_85%_55%/0.4)] hover:shadow-[0_6px_28px_-4px_hsl(45_85%_55%/0.5)] transition-all duration-300" 
+                  disabled={isSubmitting}
+                >
                   {isSubmitting ? (
                     <Loader2 className="w-4 h-4 animate-spin mr-1" />
                   ) : (
