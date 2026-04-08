@@ -518,19 +518,6 @@ const Onboarding = () => {
                   </div>
                 </div>
 
-                {/* Diagnoses */}
-                {selectedDiagnoses.length > 0 && (
-                  <div className="glass-card p-3">
-                    <h2 className="font-semibold text-xs mb-2 text-muted-foreground uppercase tracking-wide">Diagnoser</h2>
-                    <div className="flex flex-wrap gap-1.5">
-                      {selectedDiagnoses.map((diagnosis) => (
-                        <span key={diagnosis} className="px-2 py-1 text-xs rounded-full bg-secondary text-secondary-foreground">
-                          {diagnosis}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                )}
 
                 {/* Medications */}
                 {selectedMedications.length > 0 && (
@@ -573,20 +560,6 @@ const Onboarding = () => {
                   </div>
                 )}
 
-                {/* Notifications */}
-                {(notificationSettings.checkinEnabled || notificationSettings.medicationEnabled) && (
-                  <div className="glass-card p-3">
-                    <h2 className="font-semibold text-xs mb-2 text-muted-foreground uppercase tracking-wide">Påminnelser</h2>
-                    <div className="space-y-1">
-                      {notificationSettings.checkinEnabled && (
-                        <p className="text-xs">Incheckning kl {notificationSettings.checkinTime}</p>
-                      )}
-                      {notificationSettings.medicationEnabled && (
-                        <p className="text-xs">Medicin kl {notificationSettings.medicationTime}</p>
-                      )}
-                    </div>
-                  </div>
-                )}
 
                 {/* Invites */}
                 {(invites.doctors.length > 0 || invites.relatives.length > 0) && (
