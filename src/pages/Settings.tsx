@@ -216,8 +216,8 @@ const Settings = () => {
   return (
     <div className="p-5 md:p-8 pb-24">
         <div className="max-w-2xl mx-auto md:mx-0">
-        <h1 className="font-display text-3xl font-bold mb-2">Inställningar</h1>
-        <p className="text-sm text-muted-foreground mb-8">Anpassa appen efter dina behov.</p>
+        <h1 className="font-display text-2xl font-bold mb-1">Inställningar</h1>
+        <p className="text-[13px] text-foreground/30 mb-10">Anpassa appen efter dina behov</p>
 
         {/* Check-in section */}
         {isPatient && (
@@ -257,9 +257,9 @@ function SubPage({ title, onBack, children }: { title: string; onBack: () => voi
 
 function SettingsGroup({ label, children }: { label: string; children: React.ReactNode }) {
   return (
-    <div className="mb-6">
-      <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2 px-1">{label}</p>
-      <div className="rounded-xl border border-border/50 bg-card/50 overflow-hidden divide-y divide-border/50">
+    <div className="mb-8">
+      <p className="text-[11px] font-semibold uppercase tracking-[0.15em] text-foreground/25 mb-3 px-1">{label}</p>
+      <div className="rounded-2xl bg-foreground/[0.03] backdrop-blur-sm overflow-hidden divide-y divide-border/20">
         {children}
       </div>
     </div>
@@ -276,14 +276,19 @@ function SettingsRow({ icon: Icon, label, description, destructive, onClick }: {
   return (
     <button
       onClick={onClick}
-      className="w-full flex items-center gap-4 px-4 py-3.5 text-left hover:bg-muted/50 active:bg-muted transition-colors"
+      className={cn(
+        "w-full flex items-center gap-3.5 px-4 py-3.5 text-left transition-colors duration-150",
+        destructive 
+          ? "hover:bg-destructive/5 active:bg-destructive/10" 
+          : "hover:bg-foreground/[0.04] active:bg-foreground/[0.06]"
+      )}
     >
-      <Icon className={cn("w-5 h-5 flex-shrink-0", destructive ? "text-destructive" : "text-muted-foreground")} />
+      <Icon className={cn("w-[18px] h-[18px] flex-shrink-0", destructive ? "text-foreground/40 group-hover:text-destructive" : "text-foreground/30")} />
       <div className="flex-1 min-w-0">
-        <span className={cn("text-[15px] font-medium", destructive ? "text-destructive" : "text-foreground")}>{label}</span>
-        {description && <p className="text-xs text-muted-foreground truncate">{description}</p>}
+        <span className={cn("text-[15px] font-medium", destructive ? "text-foreground/70 hover:text-destructive" : "text-foreground/80")}>{label}</span>
+        {description && <p className="text-[12px] text-foreground/30 truncate mt-0.5">{description}</p>}
       </div>
-      <ChevronRight className="w-4 h-4 text-muted-foreground/50 flex-shrink-0" />
+      <ChevronRight className="w-4 h-4 text-foreground/15 flex-shrink-0" />
     </button>
   );
 }
