@@ -27,7 +27,7 @@ const patientNavGroups = [
     items: [
       { title: "Idag", url: "/", icon: CalendarDays, primary: true },
       { title: "Översikt", url: "/oversikt", icon: BarChart3 },
-      { title: "Insikter", url: "/insikter", icon: Brain },
+      
       { title: "Dålig dag?", url: "/dalig-dag", icon: HeartHandshake },
       { title: "Forum", url: "/forum", icon: MessageCircle },
     ],
