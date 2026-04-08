@@ -61,7 +61,7 @@ const Community = () => {
 
   const filteredPosts = filterCategory ? posts.filter(p => p.category === filterCategory) : posts;
 
-  const PostForm = () => (
+  const postForm = (
     <div className="bg-card/60 backdrop-blur-sm rounded-xl border border-border/30 p-4 space-y-3">
       <Input
         value={title}
@@ -123,7 +123,7 @@ const Community = () => {
         {/* Desktop post form */}
         {user ? (
           <div className="hidden md:block">
-            <PostForm />
+            {postForm}
           </div>
         ) : (
           <div className="rounded-2xl bg-card/60 border border-border/40 p-5 space-y-3">
@@ -185,7 +185,7 @@ const Community = () => {
                     <X className="h-5 w-5" />
                   </button>
                 </div>
-                <PostForm />
+                {postForm}
               </div>
             </div>
           )}
