@@ -741,7 +741,7 @@ export function TodayCheckin({
               onClick={handleTagsContinue}
               className="px-8 py-3 rounded-xl text-base font-semibold"
             >
-              Klar
+              {(checkinData.tags || []).length > 0 ? 'Klar' : 'Nej, hoppa över'}
               <ChevronRight className="w-4 h-4 ml-1.5" />
             </Button>
           </div>
