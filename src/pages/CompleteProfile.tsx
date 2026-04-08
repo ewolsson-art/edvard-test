@@ -97,9 +97,8 @@ const CompleteProfile = () => {
       console.error("Profile creation error:", profileError);
     }
 
-    if (storedRole && storedRole !== 'patient' && !user?.user_metadata?.role) {
-      await supabase.rpc('assign_initial_role', { _role: storedRole as "patient" | "relative" });
-    }
+    const effectiveRoleForDb = storedRole || user?.user_metadata?.role || 'patient';
+    await supabase.rpc('assign_initial_role', { _role: effectiveRoleForDb as "patient" | "relative" });
 
     localStorage.removeItem("signup_role");
 
