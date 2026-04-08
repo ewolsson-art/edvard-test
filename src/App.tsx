@@ -48,6 +48,7 @@ import CharacteristicDetail from "./pages/CharacteristicDetail";
 
 import Community from "./pages/Community";
 import CommunityThread from "./pages/CommunityThread";
+import Notifications from "./pages/Notifications";
 
 const queryClient = new QueryClient();
 
@@ -166,7 +167,11 @@ const App = () => (
                 <AppLayout><DoctorDashboard /></AppLayout>
               </ProtectedRoute>
             } />
-
+            <Route path="/notiser" element={
+              <ProtectedRoute>
+                <AppLayout><Notifications /></AppLayout>
+              </ProtectedRoute>
+            } />
 
             <Route path="/patient/:patientId" element={
               <ProtectedRoute>

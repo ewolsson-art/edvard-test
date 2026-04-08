@@ -1,4 +1,4 @@
-import { CalendarDays, BarChart3, LogOut, UserCircle, Users, Home, FileText, Settings, MessageCircle } from "lucide-react";
+import { CalendarDays, BarChart3, LogOut, UserCircle, Users, Home, FileText, Settings, MessageCircle, Bell } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { NavLink } from "@/components/NavLink";
 import { useSidebar } from "@/components/ui/sidebar";
@@ -7,6 +7,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useProfile } from "@/hooks/useProfile";
 import { useUserRole } from "@/hooks/useUserRole";
 import { usePendingNotifications } from "@/hooks/usePendingNotifications";
+import { useNotifications } from "@/hooks/useNotifications";
 import { Button } from "@/components/ui/button";
 import { Logo } from "@/components/Logo";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -30,6 +31,7 @@ const patientNavGroups = [
       
       
       { title: "Forum", url: "/forum", icon: MessageCircle },
+      { title: "Notiser", url: "/notiser", icon: Bell },
     ],
   },
   {
@@ -79,6 +81,7 @@ export function AppSidebar() {
   const { firstName, fullName, avatarUrl } = useProfile();
   const { isDoctor, isPatient, isRelative, isLoading: roleLoading } = useUserRole();
   const { hasPending } = usePendingNotifications();
+  const { unreadCount: notifUnread } = useNotifications();
   
   const isMobile = useIsMobile();
   const isCollapsed = state === "collapsed";
@@ -202,6 +205,11 @@ export function AppSidebar() {
                                 <span className="absolute -top-0.5 -right-0.5 flex h-2 w-2" aria-hidden="true">
                                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-destructive opacity-75"></span>
                                   <span className="relative inline-flex rounded-full h-2 w-2 bg-destructive"></span>
+                                </span>
+                              )}
+                              {item.url === '/notiser' && notifUnread > 0 && (
+                                <span className="absolute -top-1 -right-1.5 min-w-[16px] h-4 px-1 flex items-center justify-center rounded-full bg-primary text-[10px] font-bold text-primary-foreground" aria-hidden="true">
+                                  {notifUnread > 9 ? '9+' : notifUnread}
                                 </span>
                               )}
                             </div>
