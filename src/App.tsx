@@ -45,6 +45,7 @@ import ResetPassword from "./pages/ResetPassword";
 import ForgotPassword from "./pages/ForgotPassword";
 import Characteristics from "./pages/Characteristics";
 import CharacteristicDetail from "./pages/CharacteristicDetail";
+import CompleteProfile from "./pages/CompleteProfile";
 
 
 import Community from "./pages/Community";
@@ -93,6 +94,7 @@ const App = () => (
             <Route path="/skapa-konto" element={<Signup />} />
             <Route path="/glomt-losenord" element={<ForgotPassword />} />
             <Route path="/aterstall-losenord" element={<ResetPassword />} />
+            <Route path="/slutfor-profil" element={<CompleteProfile />} />
             <Route path="/onboarding" element={
               <ProtectedRoute skipOnboardingCheck>
                 <Onboarding />
