@@ -63,35 +63,6 @@ const Community = () => {
       .slice(0, 5);
   }, [posts]);
 
-  const postForm = (
-    <div className="bg-card/60 backdrop-blur-sm rounded-xl p-4 space-y-3">
-      <Input
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-        placeholder="Rubrik (valfritt)"
-        className="bg-transparent border border-white/20 focus-visible:ring-0 text-base font-semibold placeholder:text-muted-foreground/40 px-3 h-auto rounded-lg"
-        maxLength={120}
-      />
-      <Textarea value={content} onChange={(e) => setContent(e.target.value)} placeholder="Skriv ditt inlägg..." className="min-h-[160px] bg-transparent border border-white/20 resize-none focus-visible:ring-0 text-[15px] placeholder:text-muted-foreground/50 p-3 rounded-lg" maxLength={2000} />
-      <div className="flex flex-wrap gap-2">
-        {CATEGORIES.map(cat => (
-          <button key={cat.id} onClick={() => setSelectedCategory(cat.id)} className={`text-xs px-3 py-1.5 rounded-full transition-all ${selectedCategory === cat.id ? 'bg-primary/20 text-primary border border-primary/30' : 'bg-white/[0.04] text-muted-foreground hover:bg-white/[0.08] border border-transparent'}`}>
-            {cat.emoji} {cat.label}
-          </button>
-        ))}
-      </div>
-      <div className="flex items-center justify-between pt-1">
-        <div className="flex items-center gap-2">
-          {isAnonymous ? <EyeOff className="h-4 w-4 text-muted-foreground" /> : <Eye className="h-4 w-4 text-muted-foreground" />}
-          <span className="text-xs text-muted-foreground">{isAnonymous ? 'Anonymt' : 'Med namn'}</span>
-          <Switch checked={!isAnonymous} onCheckedChange={(checked) => setIsAnonymous(!checked)} className="scale-75" />
-        </div>
-        <Button size="sm" onClick={handleSubmit} disabled={!content.trim() || isPosting} className="rounded-full gap-2 px-4">
-          <Send className="h-3.5 w-3.5" />Posta inlägg
-        </Button>
-      </div>
-    </div>
-  );
 
   return (
     <div className="min-h-screen">
@@ -241,24 +212,70 @@ const Community = () => {
 
       {/* Fullscreen post overlay (both mobile & desktop) */}
       {user && (desktopFormOpen || mobileFormOpen) && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm"
-          onClick={() => { setDesktopFormOpen(false); setMobileFormOpen(false); }}
-        >
-          <div
-            className="w-full max-w-lg mx-4 bg-card rounded-2xl p-6 space-y-4 animate-in fade-in zoom-in-95 duration-200"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex items-center justify-between">
-              <span className="text-base font-semibold text-foreground">Nytt inlägg</span>
+        <div className="fixed inset-0 z-50 flex flex-col bg-background/95 backdrop-blur-md animate-in fade-in duration-200">
+          {/* Header */}
+          <div className="flex items-center justify-between px-4 py-3 border-b border-border/10">
+            <span className="text-base font-semibold text-foreground">Nytt inlägg</span>
+            <button
+              onClick={() => { setDesktopFormOpen(false); setMobileFormOpen(false); }}
+              className="text-muted-foreground hover:text-destructive transition-colors p-1"
+            >
+              <X className="h-5 w-5" />
+            </button>
+          </div>
+
+          {/* Content area */}
+          <div className="flex-1 flex flex-col max-w-2xl w-full mx-auto p-4 overflow-y-auto">
+            <Input
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              placeholder="Rubrik (valfritt)"
+              className="bg-transparent border border-white/20 focus-visible:ring-0 text-base font-semibold placeholder:text-muted-foreground/40 px-3 h-auto rounded-lg mb-3"
+              maxLength={120}
+            />
+            <Textarea
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+              placeholder="Skriv ditt inlägg..."
+              className="flex-1 min-h-[200px] bg-transparent border border-white/20 resize-none focus-visible:ring-0 text-[15px] placeholder:text-muted-foreground/50 p-3 rounded-lg"
+              maxLength={2000}
+            />
+
+            {/* Category selector — compact */}
+            <div className="mt-3">
               <button
-                onClick={() => { setDesktopFormOpen(false); setMobileFormOpen(false); }}
-                className="text-muted-foreground hover:text-destructive transition-colors"
+                onClick={() => setRulesOpen(prev => !prev)}
+                className="flex items-center gap-2 text-xs text-muted-foreground hover:text-foreground transition-colors"
               >
-                <X className="h-5 w-5" />
+                <span>{CATEGORIES.find(c => c.id === selectedCategory)?.emoji} {CATEGORIES.find(c => c.id === selectedCategory)?.label}</span>
+                <ChevronDown className={`h-3 w-3 transition-transform ${rulesOpen ? 'rotate-180' : ''}`} />
               </button>
+              {rulesOpen && (
+                <div className="flex flex-wrap gap-1.5 mt-2">
+                  {CATEGORIES.map(cat => (
+                    <button
+                      key={cat.id}
+                      onClick={() => { setSelectedCategory(cat.id); setRulesOpen(false); }}
+                      className={`text-xs px-2.5 py-1 rounded-full transition-all ${selectedCategory === cat.id ? 'bg-primary/20 text-primary border border-primary/30' : 'bg-white/[0.04] text-muted-foreground hover:bg-white/[0.08] border border-transparent'}`}
+                    >
+                      {cat.emoji} {cat.label}
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
-            {postForm}
+
+            {/* Footer */}
+            <div className="flex items-center justify-between pt-4 mt-auto">
+              <div className="flex items-center gap-2">
+                {isAnonymous ? <EyeOff className="h-4 w-4 text-muted-foreground" /> : <Eye className="h-4 w-4 text-muted-foreground" />}
+                <span className="text-xs text-muted-foreground">{isAnonymous ? 'Anonymt' : 'Med namn'}</span>
+                <Switch checked={!isAnonymous} onCheckedChange={(checked) => setIsAnonymous(!checked)} className="scale-75" />
+              </div>
+              <Button size="sm" onClick={handleSubmit} disabled={!content.trim() || isPosting} className="rounded-full gap-2 px-4">
+                <Send className="h-3.5 w-3.5" />Posta inlägg
+              </Button>
+            </div>
           </div>
         </div>
       )}
