@@ -306,5 +306,5 @@ export function useCommunityPosts() {
     await fetchPosts();
   };
 
-  return { posts, loading, createPost, createReply, deleteReply, toggleReaction, deletePost };
+  return { posts, loading, createPost, createReply, deleteReply, toggleReaction, deletePost, votePoll };
 }
