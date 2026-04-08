@@ -37,19 +37,22 @@ type Step = "role" | "details" | "submitting";
 const roleInfo = {
   patient: {
     icon: User,
-    title: "Patient",
+    prefix: "Jag är",
+    title: "bipolär",
     description: "Följ ditt mående och dela med din vårdgivare",
     benefits: ["Dagliga incheckningar", "AI-insikter", "Dela med läkare"],
   },
   doctor: {
     icon: Stethoscope,
+    prefix: "",
     title: "Vårdgivare",
     description: "Följ dina patienters mående och välbefinnande",
     benefits: ["Patientöversikt", "Meddelandefunktion", "Trendanalyser"],
   },
   relative: {
     icon: Users,
-    title: "Anhörig",
+    prefix: "Jag är",
+    title: "anhörig",
     description: "Stötta dina nära genom att följa deras resa",
     benefits: ["Följ patienters mående", "Lämna kommentarer", "Få notiser"],
   },
