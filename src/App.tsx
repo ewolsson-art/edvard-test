@@ -45,7 +45,7 @@ import ForgotPassword from "./pages/ForgotPassword";
 import Characteristics from "./pages/Characteristics";
 import CharacteristicDetail from "./pages/CharacteristicDetail";
 
-import BadDay from "./pages/BadDay";
+
 import Community from "./pages/Community";
 import CommunityThread from "./pages/CommunityThread";
 
@@ -134,11 +134,6 @@ const App = () => (
             <Route path="/kannetecken/:moodType" element={
               <ProtectedRoute>
                 <AppLayout><CharacteristicDetail /></AppLayout>
-              </ProtectedRoute>
-            } />
-            <Route path="/dalig-dag" element={
-              <ProtectedRoute>
-                <AppLayout><BadDay /></AppLayout>
               </ProtectedRoute>
             } />
             <Route path="/forum" element={<AppLayout><Community /></AppLayout>} />

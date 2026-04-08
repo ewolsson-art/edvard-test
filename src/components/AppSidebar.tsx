@@ -1,4 +1,4 @@
-import { CalendarDays, BarChart3, LogOut, UserCircle, Users, Home, FileText, Settings, HeartHandshake, MessageCircle } from "lucide-react";
+import { CalendarDays, BarChart3, LogOut, UserCircle, Users, Home, FileText, Settings, MessageCircle } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { NavLink } from "@/components/NavLink";
 import { useSidebar } from "@/components/ui/sidebar";
@@ -28,7 +28,7 @@ const patientNavGroups = [
       { title: "Idag", url: "/", icon: CalendarDays, primary: true },
       { title: "Översikt", url: "/oversikt", icon: BarChart3 },
       
-      { title: "Dålig dag?", url: "/dalig-dag", icon: HeartHandshake },
+      
       { title: "Forum", url: "/forum", icon: MessageCircle },
     ],
   },
