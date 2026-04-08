@@ -123,7 +123,7 @@ const Community = () => {
         {/* Desktop post form */}
         {user ? (
           <div className="hidden md:block">
-            <PostForm />
+            {postForm}
           </div>
         ) : (
           <div className="rounded-2xl bg-card/60 border border-border/40 p-5 space-y-3">
@@ -185,7 +185,7 @@ const Community = () => {
                     <X className="h-5 w-5" />
                   </button>
                 </div>
-                <PostForm />
+                {postForm}
               </div>
             </div>
           )}
