@@ -10,15 +10,13 @@ import { supabase } from '@/integrations/supabase/client';
 import { 
   Loader2, Brain, Moon, Utensils, Dumbbell, Pill, 
   ArrowRight, ArrowLeft, Sparkles, TrendingUp, 
-  Share2, MessageSquare, CheckCircle2, Stethoscope,
-  Heart, Bell, UserPlus
+  Share2, MessageSquare, CheckCircle2,
+  Heart, UserPlus
 } from 'lucide-react';
 import { Logo } from '@/components/Logo';
 import { DarkNightBackground } from '@/components/DarkNightBackground';
-import { DiagnosisStep } from '@/components/onboarding/DiagnosisStep';
 import { MedicationStep, MedicationInput } from '@/components/onboarding/MedicationStep';
 import { CharacteristicsStep, CharacteristicsInput } from '@/components/onboarding/CharacteristicsStep';
-import { NotificationStep, NotificationSettings } from '@/components/onboarding/NotificationStep';
 import { InviteStep, InviteInput } from '@/components/onboarding/InviteStep';
 import { cn } from '@/lib/utils';
 
@@ -74,7 +72,7 @@ const FEATURES = [
   },
 ];
 
-const TOTAL_STEPS = 8;
+const TOTAL_STEPS = 6;
 
 const Onboarding = () => {
   const { toast } = useToast();
@@ -85,7 +83,6 @@ const Onboarding = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   
   // Step data
-  const [selectedDiagnoses, setSelectedDiagnoses] = useState<string[]>([]);
   const [selections, setSelections] = useState({
     include_mood: true,
     include_sleep: true,
@@ -98,12 +95,6 @@ const Onboarding = () => {
     elevated: [],
     stable: [],
     depressed: [],
-  });
-  const [notificationSettings, setNotificationSettings] = useState<NotificationSettings>({
-    checkinEnabled: false,
-    checkinTime: '20:00',
-    medicationEnabled: false,
-    medicationTime: '08:00',
   });
   const [invites, setInvites] = useState<InviteInput>({
     doctors: [],
@@ -133,15 +124,11 @@ const Onboarding = () => {
 
   const getSkipText = () => {
     switch (step) {
-      case 2: return selectedDiagnoses.length === 0 ? 'Hoppa över' : 'Fortsätt';
-      case 4: return selectedMedications.length === 0 ? 'Hoppa över' : 'Fortsätt';
-      case 5: 
-        const totalChars = characteristics.elevated.length + characteristics.stable.length + characteristics.depressed.length;
-        return totalChars === 0 ? 'Hoppa över' : 'Fortsätt';
-      case 6:
-        const anyNotif = notificationSettings.checkinEnabled || notificationSettings.medicationEnabled;
-        return anyNotif ? 'Fortsätt' : 'Hoppa över';
-      case 7:
+      case 3: return selectedMedications.length === 0 ? 'Hoppa över' : 'Fortsätt';
+      case 4: 
+        const totalC = characteristics.elevated.length + characteristics.stable.length + characteristics.depressed.length;
+        return totalC === 0 ? 'Hoppa över' : 'Fortsätt';
+      case 5:
         const anyInvite = invites.doctors.length > 0 || invites.relatives.length > 0;
         return anyInvite ? 'Fortsätt' : 'Hoppa över';
       default: return 'Fortsätt';
@@ -166,16 +153,7 @@ const Onboarding = () => {
       const { error } = await createPreferences(selections);
       if (error) throw new Error('Kunde inte spara preferenser');
 
-      // 2. Save diagnoses
-      if (selectedDiagnoses.length > 0) {
-        const diagnosesToInsert = selectedDiagnoses.map(name => ({
-          user_id: user.id,
-          name: name.trim(),
-        }));
-        await supabase.from('diagnoses').insert(diagnosesToInsert);
-      }
-
-      // 3. Save medications
+      // 2. Save medications
       if (selectedMedications.length > 0) {
         const today = new Date().toISOString().split('T')[0];
         const medicationsToInsert = selectedMedications.map(med => ({
@@ -188,7 +166,7 @@ const Onboarding = () => {
         await supabase.from('medications').insert(medicationsToInsert);
       }
 
-      // 4. Save characteristics
+      // 3. Save characteristics
       const allCharacteristics = [
         ...characteristics.elevated.map(name => ({ user_id: user.id, name, mood_type: 'elevated' })),
         ...characteristics.stable.map(name => ({ user_id: user.id, name, mood_type: 'stable' })),
@@ -196,17 +174,6 @@ const Onboarding = () => {
       ];
       if (allCharacteristics.length > 0) {
         await supabase.from('characteristics').insert(allCharacteristics);
-      }
-
-      // 5. Save notification preferences
-      if (notificationSettings.checkinEnabled || notificationSettings.medicationEnabled) {
-        await supabase.from('notification_preferences').upsert({
-          user_id: user.id,
-          checkin_enabled: notificationSettings.checkinEnabled,
-          checkin_time: notificationSettings.checkinTime,
-          medication_enabled: notificationSettings.medicationEnabled,
-          medication_time: notificationSettings.medicationTime,
-        });
       }
 
       // 6. Create doctor connection requests
@@ -327,43 +294,8 @@ const Onboarding = () => {
             </div>
           )}
 
-          {/* Step 2: Diagnosis */}
+          {/* Step 2: Choose categories */}
           {step === 2 && (
-            <div className="animate-fade-in">
-              <div className="text-center mb-3">
-                <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-primary/10 mb-2">
-                  <Stethoscope className="w-5 h-5 text-primary" />
-                </div>
-                <h1 className="font-display text-xl md:text-2xl font-bold mb-1">
-                  Dina diagnoser
-                </h1>
-                <p className="text-sm text-muted-foreground">
-                  Lägg till dina diagnoser (valfritt)
-                </p>
-              </div>
-
-              <div className="glass-card p-4 mb-4">
-                <DiagnosisStep 
-                  selectedDiagnoses={selectedDiagnoses}
-                  onDiagnosesChange={setSelectedDiagnoses}
-                />
-              </div>
-
-              <div className="flex gap-2">
-                <Button variant="outline" onClick={handleBack} className="flex-1" size="default">
-                  <ArrowLeft className="w-4 h-4 mr-1" />
-                  Tillbaka
-                </Button>
-                <Button onClick={handleNext} className="flex-1" size="default">
-                  {getSkipText()}
-                  <ArrowRight className="w-4 h-4 ml-1" />
-                </Button>
-              </div>
-            </div>
-          )}
-
-          {/* Step 3: Choose categories */}
-          {step === 3 && (
             <div className="animate-fade-in">
               <div className="text-center mb-3">
                 <h1 className="font-display text-xl md:text-2xl font-bold mb-1">
@@ -449,8 +381,8 @@ const Onboarding = () => {
             </div>
           )}
 
-          {/* Step 4: Medications */}
-          {step === 4 && (
+          {/* Step 3: Medications */}
+          {step === 3 && (
             <div className="animate-fade-in">
               <div className="text-center mb-3">
                 <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-primary/10 mb-2">
@@ -484,8 +416,8 @@ const Onboarding = () => {
             </div>
           )}
 
-          {/* Step 5: Characteristics */}
-          {step === 5 && (
+          {/* Step 4: Characteristics */}
+          {step === 4 && (
             <div className="animate-fade-in">
               <div className="text-center mb-3">
                 <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-primary/10 mb-2">
@@ -519,44 +451,8 @@ const Onboarding = () => {
             </div>
           )}
 
-          {/* Step 6: Notifications */}
-          {step === 6 && (
-            <div className="animate-fade-in">
-              <div className="text-center mb-3">
-                <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-primary/10 mb-2">
-                  <Bell className="w-5 h-5 text-primary" />
-                </div>
-                <h1 className="font-display text-xl md:text-2xl font-bold mb-1">
-                  Påminnelser
-                </h1>
-                <p className="text-sm text-muted-foreground">
-                  Få påminnelser för att inte glömma bort att checka in
-                </p>
-              </div>
-
-              <div className="glass-card p-4 mb-4">
-                <NotificationStep 
-                  settings={notificationSettings}
-                  onSettingsChange={setNotificationSettings}
-                  includeMedication={selections.include_medication}
-                />
-              </div>
-
-              <div className="flex gap-2">
-                <Button variant="outline" onClick={handleBack} className="flex-1" size="default">
-                  <ArrowLeft className="w-4 h-4 mr-1" />
-                  Tillbaka
-                </Button>
-                <Button onClick={handleNext} className="flex-1" size="default">
-                  {getSkipText()}
-                  <ArrowRight className="w-4 h-4 ml-1" />
-                </Button>
-              </div>
-            </div>
-          )}
-
-          {/* Step 7: Invite */}
-          {step === 7 && (
+          {/* Step 5: Invite */}
+          {step === 5 && (
             <div className="animate-fade-in">
               <div className="text-center mb-3">
                 <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-primary/10 mb-2">
@@ -590,8 +486,8 @@ const Onboarding = () => {
             </div>
           )}
 
-          {/* Step 8: Confirm & Start */}
-          {step === 8 && (
+          {/* Step 6: Confirm & Start */}
+          {step === 6 && (
             <div className="animate-fade-in">
               <div className="text-center mb-4">
                 <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-green-100 dark:bg-green-900/30 mb-3">
@@ -622,19 +518,6 @@ const Onboarding = () => {
                   </div>
                 </div>
 
-                {/* Diagnoses */}
-                {selectedDiagnoses.length > 0 && (
-                  <div className="glass-card p-3">
-                    <h2 className="font-semibold text-xs mb-2 text-muted-foreground uppercase tracking-wide">Diagnoser</h2>
-                    <div className="flex flex-wrap gap-1.5">
-                      {selectedDiagnoses.map((diagnosis) => (
-                        <span key={diagnosis} className="px-2 py-1 text-xs rounded-full bg-secondary text-secondary-foreground">
-                          {diagnosis}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                )}
 
                 {/* Medications */}
                 {selectedMedications.length > 0 && (
@@ -677,20 +560,6 @@ const Onboarding = () => {
                   </div>
                 )}
 
-                {/* Notifications */}
-                {(notificationSettings.checkinEnabled || notificationSettings.medicationEnabled) && (
-                  <div className="glass-card p-3">
-                    <h2 className="font-semibold text-xs mb-2 text-muted-foreground uppercase tracking-wide">Påminnelser</h2>
-                    <div className="space-y-1">
-                      {notificationSettings.checkinEnabled && (
-                        <p className="text-xs">Incheckning kl {notificationSettings.checkinTime}</p>
-                      )}
-                      {notificationSettings.medicationEnabled && (
-                        <p className="text-xs">Medicin kl {notificationSettings.medicationTime}</p>
-                      )}
-                    </div>
-                  </div>
-                )}
 
                 {/* Invites */}
                 {(invites.doctors.length > 0 || invites.relatives.length > 0) && (
@@ -699,7 +568,7 @@ const Onboarding = () => {
                     <div className="space-y-1">
                       {invites.doctors.map(email => (
                         <p key={email} className="text-xs flex items-center gap-1">
-                          <Stethoscope className="w-3 h-3" /> {email}
+                          <UserPlus className="w-3 h-3" /> {email}
                         </p>
                       ))}
                       {invites.relatives.map(email => (
