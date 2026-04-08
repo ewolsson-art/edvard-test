@@ -30,7 +30,11 @@ const Login = () => {
 
   useEffect(() => {
     if (!loading && user) {
-      navigate("/");
+      if (!user.user_metadata?.profile_completed) {
+        navigate("/slutfor-profil");
+      } else {
+        navigate("/");
+      }
     }
   }, [user, loading, navigate]);
 
