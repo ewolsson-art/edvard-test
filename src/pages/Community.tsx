@@ -111,7 +111,7 @@ const Community = () => {
           <div className="flex-1 max-w-2xl space-y-4 md:space-y-6">
             <div>
               <h1 className="font-display text-3xl font-bold">Forum</h1>
-              <p className="text-sm text-muted-foreground mt-1">Dela tankar och stötta varandra.</p>
+              <p className="text-sm text-muted-foreground mt-1">Läs och dela inlägg från andra användare. Du är alltid anonym om du vill.</p>
             </div>
 
             {/* Rules */}
