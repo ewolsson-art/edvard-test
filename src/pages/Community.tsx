@@ -189,27 +189,13 @@ const Community = () => {
             <div className="sticky top-8 space-y-4">
               {/* Post button + collapsible form */}
               {user && (
-                <div>
-                  {desktopFormOpen ? (
-                    <div className="space-y-3">
-                      {postForm}
-                      <button
-                        onClick={() => setDesktopFormOpen(false)}
-                        className="text-xs text-muted-foreground/50 hover:text-muted-foreground transition-colors"
-                      >
-                        Avbryt
-                      </button>
-                    </div>
-                  ) : (
-                    <Button
-                      onClick={() => setDesktopFormOpen(true)}
-                      className="w-full rounded-xl gap-2"
-                    >
-                      <Plus className="h-4 w-4" />
-                      Posta inlägg
-                    </Button>
-                  )}
-                </div>
+                <Button
+                  onClick={() => setDesktopFormOpen(true)}
+                  className="w-full rounded-xl gap-2"
+                >
+                  <Plus className="h-4 w-4" />
+                  Posta inlägg
+                </Button>
               )}
               <div className="bg-card/40 backdrop-blur-sm rounded-xl border border-border/20 p-4">
                 <div className="flex items-center gap-2 mb-4">
@@ -283,32 +269,38 @@ const Community = () => {
         </div>
       </div>
 
-      {/* Mobile FAB + overlay form */}
-      {user && (
-        <>
-          {mobileFormOpen && (
-            <div className="fixed inset-0 z-50 md:hidden flex items-end justify-center bg-black/60 backdrop-blur-sm" onClick={() => setMobileFormOpen(false)}>
-              <div className="w-full max-w-lg bg-card border-t border-border/30 rounded-t-2xl p-5 space-y-4 animate-in slide-in-from-bottom duration-300" onClick={(e) => e.stopPropagation()}>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm font-semibold text-foreground">Ny tråd</span>
-                  <button onClick={() => setMobileFormOpen(false)} className="text-destructive">
-                    <X className="h-5 w-5" />
-                  </button>
-                </div>
-                {postForm}
-              </div>
+      {/* Fullscreen post overlay (both mobile & desktop) */}
+      {user && (desktopFormOpen || mobileFormOpen) && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-md"
+          onClick={() => { setDesktopFormOpen(false); setMobileFormOpen(false); }}
+        >
+          <div
+            className="w-full max-w-lg mx-4 bg-card border border-border/30 rounded-2xl p-6 space-y-4 animate-in fade-in zoom-in-95 duration-200"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between">
+              <span className="text-base font-semibold text-foreground">Nytt inlägg</span>
+              <button
+                onClick={() => { setDesktopFormOpen(false); setMobileFormOpen(false); }}
+                className="text-muted-foreground hover:text-destructive transition-colors"
+              >
+                <X className="h-5 w-5" />
+              </button>
             </div>
-          )}
+            {postForm}
+          </div>
+        </div>
+      )}
 
-          {!mobileFormOpen && (
-            <button
-              onClick={() => setMobileFormOpen(true)}
-              className="fixed bottom-6 right-6 z-40 md:hidden w-14 h-14 rounded-full bg-yellow-400 hover:bg-yellow-300 text-black shadow-lg shadow-yellow-400/30 flex items-center justify-center transition-all active:scale-95"
-            >
-              <Plus className="h-7 w-7" strokeWidth={2.5} />
-            </button>
-          )}
-        </>
+      {/* Mobile FAB */}
+      {user && !mobileFormOpen && !desktopFormOpen && (
+        <button
+          onClick={() => setMobileFormOpen(true)}
+          className="fixed bottom-6 right-6 z-40 lg:hidden w-14 h-14 rounded-full bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/30 flex items-center justify-center transition-all active:scale-95"
+        >
+          <Plus className="h-7 w-7" strokeWidth={2.5} />
+        </button>
       )}
     </div>
   );
