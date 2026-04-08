@@ -31,7 +31,7 @@ import { DayDetailDialog } from '@/components/DayDetailDialog';
 import { ExerciseTypeDialog } from '@/components/ExerciseTypeDialog';
 import { AIInsights } from '@/components/AIInsights';
 import { OverviewSummary } from '@/components/OverviewSummary';
-import { MoodDistributionBar } from '@/components/MoodDistributionBar';
+
 import { MoodStats as MoodStatsType, ExerciseType, QualityType } from '@/types/mood';
 import { Last30DaysOverview } from '@/components/Last30DaysOverview';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -594,11 +594,8 @@ const Overview = () => {
               />
             )}
 
-            {showMood && (
+            {showMood && sectionView === 'calendar' && (
               <section>
-                
-                {sectionView === 'calendar' ? (
-                  <>
                      {view === 'month' && (
                       <ScrollableMonthsCalendar
                         ref={scrollableCalendarRef}
@@ -617,10 +614,6 @@ const Overview = () => {
                         onNextYear={() => setCurrentYear(prev => prev + 1)}
                         onMonthClick={handleMonthClick} />
                     )}
-                  </>
-                ) : (
-                  <MoodDistributionBar stats={stats} periodLabel={label} />
-                )}
               </section>
             )}
 
