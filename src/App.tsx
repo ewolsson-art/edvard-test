@@ -167,7 +167,11 @@ const App = () => (
                 <AppLayout><DoctorDashboard /></AppLayout>
               </ProtectedRoute>
             } />
-
+            <Route path="/notiser" element={
+              <ProtectedRoute>
+                <AppLayout><Notifications /></AppLayout>
+              </ProtectedRoute>
+            } />
 
             <Route path="/patient/:patientId" element={
               <ProtectedRoute>
