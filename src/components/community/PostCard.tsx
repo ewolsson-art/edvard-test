@@ -28,10 +28,11 @@ interface PostCardProps {
   onDeletePost: (postId: string) => void;
   onCreateReply: (postId: string, content: string, isAnonymous: boolean) => Promise<boolean>;
   onDeleteReply: (replyId: string) => void;
+  onVotePoll?: (postId: string, optionId: string) => void;
   expanded?: boolean;
 }
 
-export const PostCard = ({ post, userId, onToggleReaction, onDeletePost, onCreateReply, onDeleteReply, expanded = false }: PostCardProps) => {
+export const PostCard = ({ post, userId, onToggleReaction, onDeletePost, onCreateReply, onDeleteReply, onVotePoll, expanded = false }: PostCardProps) => {
   const [showReplies, setShowReplies] = useState(expanded);
 
   const [replyContent, setReplyContent] = useState('');
