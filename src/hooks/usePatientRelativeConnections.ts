@@ -87,6 +87,7 @@ export function usePatientRelativeConnections() {
       share_medication: boolean;
       share_comments: boolean;
       share_characteristics: boolean;
+      notify_low_mood: boolean;
     }
   ) => {
     if (!user) return { success: false, error: 'Inte inloggad' };
