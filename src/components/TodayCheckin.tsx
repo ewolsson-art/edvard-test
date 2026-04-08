@@ -763,7 +763,7 @@ export function TodayCheckin({
             </h1>
           </div>
 
-          <div className="grid grid-cols-2 gap-4 max-w-sm">
+          <div className="grid grid-cols-3 gap-3 max-w-md">
             <button
               onClick={() => handleSleepSelect('good')}
               className={cn(
@@ -771,11 +771,24 @@ export function TodayCheckin({
                 checkinData.sleepQuality === 'good' && "selected"
               )}
             >
-              <div className="icon-wrapper !w-14 !h-14">
-                <MoonStar className="w-8 h-8 text-mood-stable" />
+              <div className="icon-wrapper !w-12 !h-12">
+                <MoonStar className="w-7 h-7 text-mood-stable" />
               </div>
-              <span className="font-semibold text-lg">Bra</span>
-              <span className="text-xs text-muted-foreground/50">Jag sov gott</span>
+              <span className="font-semibold text-base">Bra</span>
+              <span className="text-[10px] text-muted-foreground/50">Sov gott</span>
+            </button>
+            <button
+              onClick={() => handleSleepSelect('okay')}
+              className={cn(
+                "checkin-option-card aspect-square",
+                checkinData.sleepQuality === 'okay' && "selected"
+              )}
+            >
+              <div className="icon-wrapper !w-12 !h-12">
+                <Moon className="w-7 h-7 text-mood-somewhat-elevated" />
+              </div>
+              <span className="font-semibold text-base">Helt ok</span>
+              <span className="text-[10px] text-muted-foreground/50">Varken bra eller dåligt</span>
             </button>
             <button
               onClick={() => handleSleepSelect('bad')}
@@ -784,11 +797,11 @@ export function TodayCheckin({
                 checkinData.sleepQuality === 'bad' && "selected"
               )}
             >
-              <div className="icon-wrapper !w-14 !h-14">
-                <CloudMoon className="w-8 h-8 text-mood-depressed" />
+              <div className="icon-wrapper !w-12 !h-12">
+                <CloudMoon className="w-7 h-7 text-mood-depressed" />
               </div>
-              <span className="font-semibold text-lg">Dåligt</span>
-              <span className="text-xs text-muted-foreground/50">Sov oroligt</span>
+              <span className="font-semibold text-base">Dåligt</span>
+              <span className="text-[10px] text-muted-foreground/50">Sov oroligt</span>
             </button>
           </div>
 
