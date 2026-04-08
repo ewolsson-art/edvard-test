@@ -45,6 +45,7 @@ export const RelativeConnectionsSection = () => {
     share_medication: true,
     share_comments: false,
     share_characteristics: false,
+    notify_low_mood: false,
   });
 
   const handleInvite = async () => {
@@ -100,6 +101,7 @@ export const RelativeConnectionsSection = () => {
       share_medication: true,
       share_comments: false,
       share_characteristics: false,
+      notify_low_mood: false,
     });
     setRespondDialogOpen(true);
   };
@@ -159,6 +161,10 @@ export const RelativeConnectionsSection = () => {
     { key: 'share_characteristics', label: 'Kännetecken' },
   ];
 
+  const notificationOptions = [
+    { key: 'notify_low_mood', label: 'Notis vid mycket lågt mående', description: 'Anhörig får en notis om du checkar in som "Mycket låg"' },
+  ];
+
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
@@ -205,6 +211,30 @@ export const RelativeConnectionsSection = () => {
                   {shareOptions.map(({ key, label }) => (
                     <div key={key} className="flex items-center justify-between">
                       <span className="text-sm">{label}</span>
+                      <Switch
+                        checked={shareSettings[key as keyof typeof shareSettings]}
+                        onCheckedChange={(checked) =>
+                          setShareSettings(prev => ({ ...prev, [key]: checked }))
+                        }
+                        disabled={isInviting}
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                <Label className="flex items-center gap-2">
+                  <Bell className="w-4 h-4" />
+                  Notiser
+                </Label>
+                <div className="space-y-3">
+                  {notificationOptions.map(({ key, label, description }) => (
+                    <div key={key} className="flex items-center justify-between">
+                      <div>
+                        <span className="text-sm">{label}</span>
+                        <p className="text-xs text-muted-foreground">{description}</p>
+                      </div>
                       <Switch
                         checked={shareSettings[key as keyof typeof shareSettings]}
                         onCheckedChange={(checked) =>
@@ -299,6 +329,29 @@ export const RelativeConnectionsSection = () => {
               </div>
             </div>
 
+            <div className="space-y-4">
+              <Label className="flex items-center gap-2">
+                <Bell className="w-4 h-4" />
+                Notiser
+              </Label>
+              <div className="space-y-3">
+                {notificationOptions.map(({ key, label, description }) => (
+                  <div key={key} className="flex items-center justify-between">
+                    <div>
+                      <span className="text-sm">{label}</span>
+                      <p className="text-xs text-muted-foreground">{description}</p>
+                    </div>
+                    <Switch
+                      checked={shareSettings[key as keyof typeof shareSettings]}
+                      onCheckedChange={(checked) =>
+                        setShareSettings(prev => ({ ...prev, [key]: checked }))
+                      }
+                      disabled={isResponding}
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
             <div className="flex gap-2">
               <Button 
                 variant="outline" 
@@ -381,6 +434,24 @@ export const RelativeConnectionsSection = () => {
                         />
                       </div>
                     ))}
+                  </div>
+                  <div className="col-span-2 mt-2">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Bell className="w-3 h-3 text-muted-foreground" />
+                      <span className="text-xs font-medium text-muted-foreground">Notiser</span>
+                    </div>
+                    <div className="flex items-center justify-between bg-background rounded-lg px-2 py-1.5">
+                      <div>
+                        <span className="text-xs">Notis vid mycket lågt mående</span>
+                      </div>
+                      <Switch
+                        checked={connection.notify_low_mood as boolean}
+                        onCheckedChange={(checked) =>
+                          updateShareSettings(connection.id, { notify_low_mood: checked })
+                        }
+                        className="scale-75"
+                      />
+                    </div>
                   </div>
                 </div>
               )}

@@ -581,6 +581,7 @@ export type Database = {
           created_at: string
           id: string
           initiated_by: string
+          notify_low_mood: boolean
           patient_id: string
           relative_id: string
           share_characteristics: boolean
@@ -597,6 +598,7 @@ export type Database = {
           created_at?: string
           id?: string
           initiated_by?: string
+          notify_low_mood?: boolean
           patient_id: string
           relative_id: string
           share_characteristics?: boolean
@@ -613,6 +615,7 @@ export type Database = {
           created_at?: string
           id?: string
           initiated_by?: string
+          notify_low_mood?: boolean
           patient_id?: string
           relative_id?: string
           share_characteristics?: boolean
