@@ -555,31 +555,31 @@ const Overview = () => {
               </Tabs>
             )}
 
-            <div className="flex items-center gap-1 p-1.5 bg-muted/50 rounded-xl ml-auto">
+            <div className="flex items-center gap-0.5 p-1 bg-muted/50 rounded-lg ml-auto">
                 <button
                   onClick={() => setSectionView('calendar')}
-                  className={`p-2.5 rounded-lg transition-all ${
+                  className={`p-2 rounded-md transition-all ${
                     sectionView === 'calendar'
                       ? 'bg-background text-foreground shadow-sm'
                       : 'text-muted-foreground hover:text-foreground'
                   }`}
                   aria-label="Kalender"
                 >
-                  <CalendarDays className="w-6 h-6" />
+                  <CalendarDays className="w-5 h-5" />
                 </button>
                 <button
                   onClick={() => {
                     setSectionView('stats');
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                   }}
-                  className={`p-2.5 rounded-lg transition-all ${
+                  className={`p-2 rounded-md transition-all ${
                     sectionView === 'stats'
                       ? 'bg-background text-foreground shadow-sm'
                       : 'text-muted-foreground hover:text-foreground'
                   }`}
                   aria-label="Statistik"
                 >
-                  <BarChart3 className="w-6 h-6" />
+                  <BarChart3 className="w-5 h-5" />
                 </button>
               </div>
           </div>
