@@ -410,8 +410,8 @@ const Onboarding = () => {
             </div>
           )}
 
-          {/* Step 4: Medications */}
-          {step === 4 && (
+          {/* Step 3: Medications */}
+          {step === 3 && (
             <div className="animate-fade-in">
               <div className="text-center mb-3">
                 <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-primary/10 mb-2">
