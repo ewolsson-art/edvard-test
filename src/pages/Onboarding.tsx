@@ -10,15 +10,14 @@ import { supabase } from '@/integrations/supabase/client';
 import { 
   Loader2, Brain, Moon, Utensils, Dumbbell, Pill, 
   ArrowRight, ArrowLeft, Sparkles, TrendingUp, 
-  Share2, MessageSquare, CheckCircle2, Stethoscope,
-  Heart, Bell, UserPlus
+  Share2, MessageSquare, CheckCircle2,
+  Heart, UserPlus
 } from 'lucide-react';
 import { Logo } from '@/components/Logo';
 import { DarkNightBackground } from '@/components/DarkNightBackground';
-import { DiagnosisStep } from '@/components/onboarding/DiagnosisStep';
 import { MedicationStep, MedicationInput } from '@/components/onboarding/MedicationStep';
 import { CharacteristicsStep, CharacteristicsInput } from '@/components/onboarding/CharacteristicsStep';
-import { NotificationStep, NotificationSettings } from '@/components/onboarding/NotificationStep';
+import { InviteStep, InviteInput } from '@/components/onboarding/InviteStep';
 import { InviteStep, InviteInput } from '@/components/onboarding/InviteStep';
 import { cn } from '@/lib/utils';
 
