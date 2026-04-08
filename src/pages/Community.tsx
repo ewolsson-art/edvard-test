@@ -1,6 +1,6 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Send, Eye, EyeOff, MessageCircle, ShieldCheck, ChevronDown, ChevronUp, Plus, X } from 'lucide-react';
+import { useState, useMemo } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { Send, Eye, EyeOff, MessageCircle, ShieldCheck, ChevronDown, ChevronUp, Plus, X, Heart, TrendingUp } from 'lucide-react';
 import { useCommunityPosts } from '@/hooks/useCommunityPosts';
 import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/button';
@@ -8,6 +8,8 @@ import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
 import { Switch } from '@/components/ui/switch';
 import { ThreadListItem } from '@/components/community/ThreadListItem';
+import { formatDistanceToNow } from 'date-fns';
+import { sv } from 'date-fns/locale';
 
 const CATEGORIES = [
   { id: 'general', label: 'Allmänt', emoji: '💬' },
