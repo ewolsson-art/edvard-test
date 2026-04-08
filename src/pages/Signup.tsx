@@ -344,7 +344,7 @@ const Signup = () => {
                     Skapa ditt konto
                   </h1>
                   <p className="mt-1 text-xs text-white/50 text-center">
-                    {role && `Du registrerar dig som ${roleInfo[role].prefix ? roleInfo[role].prefix.toLowerCase() + ' ' : ''}${roleInfo[role].title.toLowerCase()}`}
+                    {role && role in allRoleInfo && `Du registrerar dig som ${allRoleInfo[role as keyof typeof allRoleInfo].prefix ? allRoleInfo[role as keyof typeof allRoleInfo].prefix.toLowerCase() + ' ' : ''}${allRoleInfo[role as keyof typeof allRoleInfo].title.toLowerCase()}`}
                   </p>
                 </div>
 
