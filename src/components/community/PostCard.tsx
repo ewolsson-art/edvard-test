@@ -145,6 +145,50 @@ export const PostCard = ({ post, userId, onToggleReaction, onDeletePost, onCreat
         )}
       </div>
 
+      {/* Poll */}
+      {post.poll_options.length > 0 && (
+        <div className="px-4 pb-3 space-y-1.5">
+          {(() => {
+            const totalVotes = post.poll_options.reduce((s, o) => s + o.vote_count, 0);
+            const hasVoted = !!post.user_voted_option_id;
+            return post.poll_options.map(option => {
+              const pct = totalVotes > 0 ? Math.round((option.vote_count / totalVotes) * 100) : 0;
+              const isSelected = post.user_voted_option_id === option.id;
+              return (
+                <button
+                  key={option.id}
+                  onClick={() => userId && onVotePoll?.(post.id, option.id)}
+                  disabled={!userId}
+                  className={`w-full relative rounded-lg overflow-hidden text-left transition-all ${
+                    isSelected ? 'border border-primary/40' : 'border border-border/30 hover:border-border/50'
+                  } ${!userId ? 'cursor-default' : ''}`}
+                >
+                  {hasVoted && (
+                    <div
+                      className="absolute inset-0 bg-primary/10 transition-all duration-500"
+                      style={{ width: `${pct}%` }}
+                    />
+                  )}
+                  <div className="relative flex items-center justify-between px-3 py-2.5">
+                    <span className={`text-[13px] ${isSelected ? 'font-semibold text-foreground' : 'text-foreground/80'}`}>
+                      {option.option_text}
+                    </span>
+                    {hasVoted && (
+                      <span className="text-[12px] text-muted-foreground/60 font-medium ml-2">{pct}%</span>
+                    )}
+                  </div>
+                </button>
+              );
+            });
+          })()}
+          {post.poll_options.reduce((s, o) => s + o.vote_count, 0) > 0 && (
+            <p className="text-[11px] text-muted-foreground/40 pt-0.5">
+              {post.poll_options.reduce((s, o) => s + o.vote_count, 0)} röster
+            </p>
+          )}
+        </div>
+      )}
+
       {/* Action bar — Instagram layout */}
       <div className="flex items-center justify-between px-4 pb-1">
         <div className="flex items-center gap-4">
