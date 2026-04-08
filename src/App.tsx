@@ -48,6 +48,7 @@ import CharacteristicDetail from "./pages/CharacteristicDetail";
 
 import Community from "./pages/Community";
 import CommunityThread from "./pages/CommunityThread";
+import Notifications from "./pages/Notifications";
 
 const queryClient = new QueryClient();
 

@@ -1,4 +1,4 @@
-import { CalendarDays, BarChart3, LogOut, UserCircle, Users, Home, FileText, Settings, MessageCircle } from "lucide-react";
+import { CalendarDays, BarChart3, LogOut, UserCircle, Users, Home, FileText, Settings, MessageCircle, Bell } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { NavLink } from "@/components/NavLink";
 import { useSidebar } from "@/components/ui/sidebar";
@@ -30,6 +30,7 @@ const patientNavGroups = [
       
       
       { title: "Forum", url: "/forum", icon: MessageCircle },
+      { title: "Notiser", url: "/notiser", icon: Bell },
     ],
   },
   {
