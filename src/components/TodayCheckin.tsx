@@ -625,7 +625,7 @@ export function TodayCheckin({
               onClick={() => setShowComment(showComment === 'mood' ? null : 'mood')}
               className={cn(
                 "p-2 rounded-xl transition-colors",
-                showComment === 'mood' ? "bg-primary/10 text-primary" : "text-muted-foreground/30 hover:text-muted-foreground/60 hover:bg-muted/30"
+                showComment === 'mood' ? "bg-primary/10 text-primary" : "text-muted-foreground/50 hover:text-muted-foreground/80 hover:bg-muted/30"
               )}
               aria-label="Lägg till kommentar"
             >
@@ -747,7 +747,7 @@ export function TodayCheckin({
               onClick={() => setShowComment(showComment === 'sleep' ? null : 'sleep')}
               className={cn(
                 "p-2 rounded-xl transition-colors",
-                showComment === 'sleep' ? "bg-primary/10 text-primary" : "text-muted-foreground/30 hover:text-muted-foreground/60 hover:bg-muted/30"
+                showComment === 'sleep' ? "bg-primary/10 text-primary" : "text-muted-foreground/50 hover:text-muted-foreground/80 hover:bg-muted/30"
               )}
               aria-label="Lägg till kommentar"
             >
@@ -809,7 +809,7 @@ export function TodayCheckin({
               onClick={() => setShowComment(showComment === 'eating' ? null : 'eating')}
               className={cn(
                 "p-2 rounded-xl transition-colors",
-                showComment === 'eating' ? "bg-primary/10 text-primary" : "text-muted-foreground/30 hover:text-muted-foreground/60 hover:bg-muted/30"
+                showComment === 'eating' ? "bg-primary/10 text-primary" : "text-muted-foreground/50 hover:text-muted-foreground/80 hover:bg-muted/30"
               )}
               aria-label="Lägg till kommentar"
             >
@@ -881,7 +881,7 @@ export function TodayCheckin({
               onClick={() => setShowComment(showComment === 'exercise' ? null : 'exercise')}
               className={cn(
                 "p-2 rounded-xl transition-colors",
-                showComment === 'exercise' ? "bg-primary/10 text-primary" : "text-muted-foreground/30 hover:text-muted-foreground/60 hover:bg-muted/30"
+                showComment === 'exercise' ? "bg-primary/10 text-primary" : "text-muted-foreground/50 hover:text-muted-foreground/80 hover:bg-muted/30"
               )}
               aria-label="Lägg till kommentar"
             >
@@ -944,7 +944,7 @@ export function TodayCheckin({
                 onClick={() => setShowSideEffects(!showSideEffects)}
                 className={cn(
                   "p-2 rounded-xl transition-colors",
-                  (showSideEffects || checkinData.medicationSideEffects?.length) ? "bg-amber-500/10 text-amber-500" : "text-muted-foreground/30 hover:text-muted-foreground/60 hover:bg-muted/30"
+                  (showSideEffects || checkinData.medicationSideEffects?.length) ? "bg-amber-500/10 text-amber-500" : "text-muted-foreground/50 hover:text-muted-foreground/80 hover:bg-muted/30"
                 )}
                 aria-label="Rapportera biverkningar"
               >
@@ -954,7 +954,7 @@ export function TodayCheckin({
                 onClick={() => setShowComment(showComment === 'medication' ? null : 'medication')}
                 className={cn(
                   "p-2 rounded-xl transition-colors",
-                  showComment === 'medication' ? "bg-primary/10 text-primary" : "text-muted-foreground/30 hover:text-muted-foreground/60 hover:bg-muted/30"
+                  showComment === 'medication' ? "bg-primary/10 text-primary" : "text-muted-foreground/50 hover:text-muted-foreground/80 hover:bg-muted/30"
                 )}
                 aria-label="Lägg till kommentar"
               >
