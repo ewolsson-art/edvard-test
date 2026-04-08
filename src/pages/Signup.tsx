@@ -42,13 +42,6 @@ const roleInfo = {
     description: "Följ ditt mående och dela med din vårdgivare",
     benefits: ["Dagliga incheckningar", "AI-insikter", "Dela med läkare"],
   },
-  doctor: {
-    icon: Stethoscope,
-    prefix: "",
-    title: "Vårdgivare",
-    description: "Följ dina patienters mående och välbefinnande",
-    benefits: ["Patientöversikt", "Meddelandefunktion", "Trendanalyser"],
-  },
   relative: {
     icon: Users,
     prefix: "Jag är",
@@ -57,6 +50,19 @@ const roleInfo = {
     benefits: ["Följ patienters mående", "Lämna kommentarer", "Få notiser"],
   },
 };
+
+const allRoleInfo = {
+  ...roleInfo,
+  doctor: {
+    icon: Stethoscope,
+    prefix: "",
+    title: "Vårdgivare",
+    description: "Följ dina patienters mående och välbefinnande",
+    benefits: ["Patientöversikt", "Meddelandefunktion", "Trendanalyser"],
+  },
+};
+
+type VisibleRole = "patient" | "relative";
 
 const Signup = () => {
   const [step, setStep] = useState<Step>("role");
