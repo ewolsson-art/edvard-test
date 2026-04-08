@@ -223,6 +223,30 @@ export const RelativeConnectionsSection = () => {
                 </div>
               </div>
 
+              <div className="space-y-4">
+                <Label className="flex items-center gap-2">
+                  <Bell className="w-4 h-4" />
+                  Notiser
+                </Label>
+                <div className="space-y-3">
+                  {notificationOptions.map(({ key, label, description }) => (
+                    <div key={key} className="flex items-center justify-between">
+                      <div>
+                        <span className="text-sm">{label}</span>
+                        <p className="text-xs text-muted-foreground">{description}</p>
+                      </div>
+                      <Switch
+                        checked={shareSettings[key as keyof typeof shareSettings]}
+                        onCheckedChange={(checked) =>
+                          setShareSettings(prev => ({ ...prev, [key]: checked }))
+                        }
+                        disabled={isInviting}
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+
               <Button onClick={handleInvite} disabled={isInviting} className="w-full">
                 {isInviting && <Loader2 className="w-4 h-4 animate-spin mr-2" />}
                 Skicka inbjudan
