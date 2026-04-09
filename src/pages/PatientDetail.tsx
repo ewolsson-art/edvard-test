@@ -72,6 +72,7 @@ const PatientDetail = () => {
           <PatientOverview 
             connection={normalizedConnection as any} 
             onBack={handleBack}
+            hideExtras={isRelative}
           />
         </div>
       </div>
