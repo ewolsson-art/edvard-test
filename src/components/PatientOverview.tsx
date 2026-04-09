@@ -462,28 +462,6 @@ export function PatientOverview({ connection, onBack, hideExtras = false }: Pati
       <div className="space-y-8">
         {connection.share_mood && (
           <section>
-            <div className="mb-6">
-              <div className="flex items-center justify-between">
-                <h3 className="font-display text-2xl font-semibold">Mående</h3>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => {
-                    const today = new Date();
-                    setCurrentWeek(today);
-                    setCurrentMonth(today);
-                    setCurrentYear(today.getFullYear());
-                  }}
-                >
-                  Idag
-                </Button>
-              </div>
-              {isRelativeViewing && view === 'month' && (
-                <p className="text-sm text-muted-foreground mt-2">
-                  Dubbelklicka på ett datum för att lägga till egen anteckning
-                </p>
-              )}
-            </div>
             <div>
               {view === 'week' && (
                 <WeekCalendar
