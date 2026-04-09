@@ -72,11 +72,17 @@ function calculateStreak(entries: { date: string; mood: string }[], currentMood:
   return streak;
 }
 
+const emailSchema = z.string().email({ message: "Ogiltig e-postadress" });
+
 const RelativeDashboard = () => {
   const navigate = useNavigate();
-  const { approvedConnections, isLoading } = useRelativeConnections();
+  const { toast } = useToast();
+  const { approvedConnections, pendingFromRelative, isLoading, requestPatientAccess, cancelRequest } = useRelativeConnections();
   const [patientData, setPatientData] = useState<Record<string, PatientMoodData | null>>({});
   const [dataLoading, setDataLoading] = useState(true);
+  const [requestDialogOpen, setRequestDialogOpen] = useState(false);
+  const [patientEmail, setPatientEmail] = useState('');
+  const [isRequesting, setIsRequesting] = useState(false);
 
   const today = format(new Date(), 'yyyy-MM-dd');
   const weekAgo = format(subDays(new Date(), 7), 'yyyy-MM-dd');
