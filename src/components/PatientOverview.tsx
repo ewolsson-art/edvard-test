@@ -461,21 +461,59 @@ export function PatientOverview({ connection, onBack, hideExtras = false }: Pati
                 const today = format(new Date(), 'yyyy-MM-dd');
                 const todayEntry = getEntryForDate(today);
                 return (
-                  <div className="space-y-4">
+                  <div className="space-y-5">
                     <p className="text-xs text-muted-foreground/40 font-medium uppercase tracking-wider">
                       {format(new Date(), 'd MMMM yyyy', { locale: sv })}
                     </p>
                     {todayEntry ? (
-                      <div className="space-y-3">
-                        <div className="flex items-baseline gap-2">
+                      <div className="space-y-4">
+                        <div>
                           <span className="text-2xl font-semibold text-foreground/80">
                             {MOOD_LABELS[todayEntry.mood]}
                           </span>
                         </div>
+
                         {todayEntry.comment && (
                           <p className="text-sm text-muted-foreground/60 leading-relaxed">
                             "{todayEntry.comment}"
                           </p>
+                        )}
+
+                        <div className="space-y-2 pt-1">
+                          {todayEntry.energyLevel && (
+                            <div className="flex justify-between text-sm">
+                              <span className="text-muted-foreground/50">Energi</span>
+                              <span className="text-foreground/60">{todayEntry.energyLevel === 'low' ? 'Låg' : todayEntry.energyLevel === 'normal' ? 'Normal' : 'Hög'}</span>
+                            </div>
+                          )}
+                          {todayEntry.sleepQuality && (
+                            <div className="flex justify-between text-sm">
+                              <span className="text-muted-foreground/50">Sömn</span>
+                              <span className="text-foreground/60">{todayEntry.sleepQuality === 'good' ? 'Bra' : todayEntry.sleepQuality === 'bad' ? 'Dålig' : 'Helt ok'}</span>
+                            </div>
+                          )}
+                          {todayEntry.eatingQuality && (
+                            <div className="flex justify-between text-sm">
+                              <span className="text-muted-foreground/50">Kost</span>
+                              <span className="text-foreground/60">{todayEntry.eatingQuality === 'good' ? 'Bra' : todayEntry.eatingQuality === 'bad' ? 'Dålig' : 'Helt ok'}</span>
+                            </div>
+                          )}
+                          {todayEntry.exercised !== undefined && (
+                            <div className="flex justify-between text-sm">
+                              <span className="text-muted-foreground/50">Träning</span>
+                              <span className="text-foreground/60">{todayEntry.exercised ? 'Ja' : 'Nej'}</span>
+                            </div>
+                          )}
+                        </div>
+
+                        {todayEntry.tags && todayEntry.tags.length > 0 && (
+                          <div className="flex flex-wrap gap-1.5 pt-1">
+                            {todayEntry.tags.map((tag, i) => (
+                              <span key={i} className="text-xs text-muted-foreground/50 bg-foreground/[0.04] px-2 py-0.5 rounded-full">
+                                {tag}
+                              </span>
+                            ))}
+                          </div>
                         )}
                       </div>
                     ) : (
