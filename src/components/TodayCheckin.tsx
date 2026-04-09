@@ -455,49 +455,16 @@ export function TodayCheckin({
     return (
       <div className="fade-in h-full md:h-auto flex flex-col justify-center px-5 py-8 md:glass-card md:p-10 md:max-h-[calc(100vh-4rem)] md:overflow-y-auto md:border md:bg-card/80 md:rounded-2xl md:shadow-sm">
         
-        {/* Single unified moment */}
         <div className="flex flex-col items-center text-center max-w-sm mx-auto w-full">
           
-          {/* Date */}
-          <p className="text-muted-foreground/40 text-[11px] tracking-[0.2em] uppercase font-medium mb-6">
-            {formattedDate}
-            {!isDisplayToday && <span className="text-primary ml-2">Retroaktiv</span>}
-          </p>
-
-          {/* Checkmark with deep radial glow */}
-          <div className="relative mb-6">
-            {/* Outer ambient glow */}
-            <div 
-              className={cn(
-                "absolute rounded-full",
-                moodDisplay?.colorClass?.replace('text-', 'bg-') || 'bg-mood-stable'
-              )} 
-              style={{ 
-                inset: '-40px',
-                filter: 'blur(50px)',
-                opacity: 0.12,
-                animation: 'fade-in 1.2s ease-out'
-              }} 
-            />
-            {/* Inner focused glow */}
-            <div 
-              className={cn(
-                "absolute rounded-full",
-                moodDisplay?.colorClass?.replace('text-', 'bg-') || 'bg-mood-stable'
-              )} 
-              style={{ 
-                inset: '-16px',
-                filter: 'blur(24px)',
-                opacity: 0.2,
-                animation: 'fade-in 0.8s ease-out'
-              }} 
-            />
+          {/* Minimal checkmark */}
+          <div className="mb-8">
             <div className={cn(
-              "relative w-[72px] h-[72px] rounded-full flex items-center justify-center",
-              "bg-card/80 border border-border/10 backdrop-blur-sm"
+              "w-16 h-16 rounded-full flex items-center justify-center",
+              "border border-border/10"
             )}>
               <Check 
-                className={cn("w-9 h-9", moodDisplay?.colorClass || 'text-mood-stable')} 
+                className={cn("w-8 h-8", moodDisplay?.colorClass || 'text-mood-stable')} 
                 style={{ 
                   animation: 'scale-in 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)',
                   strokeWidth: 2.5
@@ -506,82 +473,61 @@ export function TodayCheckin({
             </div>
           </div>
 
-          {/* Main heading */}
-          <h1 className="font-display text-[24px] md:text-[28px] font-bold text-foreground mb-2">
-            Du har checkat in
+          {/* Simple confirmation */}
+          <h1 className="font-display text-[22px] md:text-[26px] font-semibold text-foreground mb-2">
+            Incheckad
+            {!isDisplayToday && <span className="text-primary text-[16px] ml-2">Retroaktiv</span>}
           </h1>
 
-          {/* Smart follow-up as subtitle */}
+          {/* One calm follow-up line */}
           {followUp && (
-            <p className="text-[15px] text-foreground/60 leading-relaxed mb-1">
-              <span className="mr-1">{followUp.icon}</span>
+            <p className="text-[14px] text-foreground/50 leading-relaxed mb-8">
               {followUp.message}
             </p>
           )}
+          {!followUp && <div className="mb-8" />}
 
-          {/* Streak as hero moment */}
+          {/* Streak as the single hero number */}
           {streakData.currentStreak > 0 && (
-            <div className="mt-7 mb-2">
-              <div className={cn(
-                "flex flex-col items-center",
-                streakData.currentStreak >= 7 ? "text-orange-400" : "text-primary"
-              )}>
-                <div className="flex items-center gap-2.5 mb-1">
-                  <Flame className={cn(
-                    "w-6 h-6",
-                    streakData.currentStreak >= 7 && "animate-pulse"
-                  )} />
-                  <span 
-                    className="text-[44px] md:text-[52px] font-bold tabular-nums leading-none tracking-tight"
-                    style={{ animation: 'scale-in 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 0.2s both' }}
-                  >
-                    {streakData.currentStreak}
-                  </span>
-                </div>
-                <span className="text-[12px] font-medium opacity-50 tracking-[0.05em] uppercase">
-                  {streakData.currentStreak === 1 ? 'dag' : 'dagar'} i rad
-                </span>
-              </div>
-              {streakData.currentStreak > 0 && streakData.currentStreak === streakData.longestStreak && streakData.currentStreak > 1 && (
-                <div 
-                  className="inline-flex items-center gap-1.5 mt-3 px-3 py-1 rounded-full bg-yellow-400/10 border border-yellow-400/15"
-                  style={{ animation: 'scale-in 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.5s both' }}
-                >
-                  <Trophy className="w-3 h-3 text-yellow-400/80" />
-                  <span className="text-[11px] font-semibold text-yellow-400/80">Nytt rekord</span>
-                </div>
-              )}
+            <div className="mb-8">
+              <span 
+                className={cn(
+                  "text-[48px] md:text-[56px] font-bold tabular-nums leading-none tracking-tight",
+                  streakData.currentStreak >= 7 ? "text-orange-400" : "text-primary"
+                )}
+                style={{ animation: 'scale-in 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 0.2s both' }}
+              >
+                {streakData.currentStreak}
+              </span>
+              <p className="text-[12px] font-medium text-foreground/30 tracking-[0.08em] uppercase mt-1">
+                {streakData.currentStreak === 1 ? 'dag' : 'dagar'} i rad
+              </p>
             </div>
           )}
 
-          {/* Divider */}
-          <div className="w-10 h-px bg-border/30 my-5" />
-
-          {/* Inline summary with small icons */}
+          {/* Minimal summary — just dots */}
           <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-[13px]">
             {summaryItems.map((item) => (
               <span key={item.label} className="flex items-center gap-1.5">
-                <span className={cn("w-1.5 h-1.5 rounded-full flex-shrink-0", item.colorClass?.replace('text-', 'bg-') || 'bg-foreground/30')} />
-                <span className="text-foreground/40">{item.label}</span>
-                <span className={cn("font-semibold", item.colorClass || 'text-foreground/70')}>{item.value}</span>
+                <span className="text-foreground/30">{item.label}</span>
+                <span className={cn("font-medium", item.colorClass || 'text-foreground/60')}>{item.value}</span>
               </span>
             ))}
           </div>
 
-          {/* Tags as subtle text */}
+          {/* Tags as quiet text */}
           {tags.length > 0 && (
-            <p className="text-[12px] text-foreground/25 mt-3">
+            <p className="text-[12px] text-foreground/20 mt-3">
               {tags.join(' · ')}
             </p>
           )}
 
-          {/* Custom answers inline */}
+          {/* Custom answers */}
           {customAnswerItems.length > 0 && (
-            <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-[12px] text-foreground/25 mt-2">
+            <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-[12px] text-foreground/20 mt-2">
               {customAnswerItems.map((item, i) => (
-                <span key={i} className="flex items-center gap-1.5">
-                  <span className="w-1 h-1 rounded-full bg-foreground/15 flex-shrink-0" />
-                  {item.question}: <span className="font-medium text-foreground/40">{item.answer}</span>
+                <span key={i}>
+                  {item.question}: <span className="font-medium text-foreground/35">{item.answer}</span>
                 </span>
               ))}
             </div>
@@ -589,12 +535,12 @@ export function TodayCheckin({
 
           {/* Encouragement for low mood */}
           {(todayEntry?.mood === 'depressed' || todayEntry?.mood === 'somewhat_depressed') && (
-            <div className="mt-6 px-5 py-4 rounded-xl border border-primary/10 bg-primary/5">
-              <p className="text-[13px] text-foreground/60 leading-relaxed">
-                <Heart className="w-3.5 h-3.5 inline mr-1.5 text-primary/60 -mt-0.5" />
+            <div className="mt-8 px-5 py-4 rounded-xl border border-primary/10 bg-primary/5">
+              <p className="text-[13px] text-foreground/50 leading-relaxed">
+                <Heart className="w-3.5 h-3.5 inline mr-1.5 text-primary/50 -mt-0.5" />
                 Bättre dagar kommer.
                 {encouragementData.goodDaysCount > 0 && (
-                  <span className="text-foreground/40">
+                  <span className="text-foreground/30">
                     {' '}Du mådde bra för {encouragementData.daysSinceGood ?? '?'} {encouragementData.daysSinceGood === 1 ? 'dag' : 'dagar'} sen.
                   </span>
                 )}
@@ -602,10 +548,10 @@ export function TodayCheckin({
             </div>
           )}
 
-          {/* Edit link - visible but secondary */}
+          {/* Edit — quiet, secondary */}
           <button
             onClick={handleEdit}
-            className="mt-8 text-[13px] text-foreground/40 hover:text-foreground/70 transition-colors duration-200 hover:underline underline-offset-4 decoration-foreground/20 cursor-pointer"
+            className="mt-10 text-[13px] text-foreground/30 hover:text-foreground/60 transition-colors duration-200 cursor-pointer"
           >
             Ändra incheckning
           </button>
