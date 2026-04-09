@@ -434,9 +434,9 @@ export function PatientOverview({ connection, onBack, hideExtras = false }: Pati
               ? "bg-background text-foreground shadow-sm"
               : "text-muted-foreground hover:text-foreground"
           )}
-          aria-label="Statistik"
+          aria-label={showStats ? "Kalender" : "Statistik"}
         >
-          <BarChart3 className="w-5 h-5" />
+          {showStats ? <CalendarDays className="w-5 h-5" /> : <BarChart3 className="w-5 h-5" />}
         </button>
       </div>
 
