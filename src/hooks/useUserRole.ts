@@ -24,7 +24,21 @@ export function useUserRole() {
         .maybeSingle();
 
       if (!error && data) {
-        setRole(data.role as AppRole);
+        const dbRole = data.role as AppRole;
+        // If metadata indicates a different role and it was recently assigned,
+        // trust metadata (handles race where DB trigger set 'patient' but assign_initial_role updated to 'relative')
+        const metaRole = user.user_metadata?.role as AppRole | undefined;
+        if (metaRole && ['patient', 'doctor', 'relative'].includes(metaRole) && dbRole === 'patient' && metaRole !== 'patient') {
+          // Re-fetch once more after a short delay to let the DB catch up
+          const { data: retryData } = await supabase
+            .from('user_roles')
+            .select('role')
+            .eq('user_id', user.id)
+            .maybeSingle();
+          setRole((retryData?.role as AppRole) || metaRole);
+        } else {
+          setRole(dbRole);
+        }
       } else {
         // Fallback to user metadata role if DB hasn't been updated yet
         const metaRole = user.user_metadata?.role as AppRole | undefined;
