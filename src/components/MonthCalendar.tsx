@@ -77,8 +77,8 @@ export function MonthCalendar({
         </div>
       )}
 
-      {/* Month title - Apple style large text */}
-      <h2 className="font-display text-3xl font-bold capitalize mb-4">
+      {/* Month title */}
+      <h2 className="font-display text-2xl font-semibold capitalize mb-3 text-foreground/80">
         {monthName}
       </h2>
 
@@ -92,71 +92,68 @@ export function MonthCalendar({
       </div>
 
       {/* Calendar grid */}
-      <div className="space-y-0">
+      <div>
         {weeks.map((week, wIdx) => (
-          <div key={wIdx}>
-            {/* Week separator line */}
-            {wIdx > 0 && (
-              <div className="border-t border-border/20 my-0" />
-            )}
-            
-            <div className="grid grid-cols-7">
-              {week.map(day => {
-                const dayOfMonth = day.getDate();
-                const mood = isSameMonth(day, currentDate) ? moodData[dayOfMonth] : undefined;
-                const medCount = isSameMonth(day, currentDate) ? medicationData[dayOfMonth] : undefined;
-                const hasRelativeComment = isSameMonth(day, currentDate) && relativeCommentsData[dayOfMonth];
-                const isCurrentMonth = isSameMonth(day, currentDate);
-                const isTodayDate = isToday(day);
-                const isPastDay = isCurrentMonth && !isTodayDate && isBefore(day, startOfDay(new Date()));
-                const showMissed = isPastDay && !mood;
+          <div key={wIdx} className="grid grid-cols-7">
+            {week.map(day => {
+              const dayOfMonth = day.getDate();
+              const mood = isSameMonth(day, currentDate) ? moodData[dayOfMonth] : undefined;
+              const medCount = isSameMonth(day, currentDate) ? medicationData[dayOfMonth] : undefined;
+              const hasRelativeComment = isSameMonth(day, currentDate) && relativeCommentsData[dayOfMonth];
+              const isCurrentMonth = isSameMonth(day, currentDate);
+              const isTodayDate = isToday(day);
+              const isPastDay = isCurrentMonth && !isTodayDate && isBefore(day, startOfDay(new Date()));
+              const showMissed = isPastDay && !mood;
 
-                return (
-                  <button
-                    key={day.toISOString()}
-                    onClick={() => onDayClick?.(day)}
-                    onDoubleClick={() => isCurrentMonth && onDayDoubleClick?.(day)}
-                    disabled={!isCurrentMonth}
-                    title={hasRelativeComment ? relativeCommentsData[dayOfMonth] : undefined}
-                    className={cn(
-                      "relative flex flex-col items-center justify-center py-2 transition-colors rounded-lg",
-                      !isCurrentMonth && "opacity-20",
-                      isCurrentMonth && "hover:bg-muted/30",
-                      !isTodayDate && mood === 'elevated' && "bg-mood-elevated/15",
-                      !isTodayDate && mood === 'stable' && "bg-mood-stable/15",
-                      !isTodayDate && mood === 'depressed' && "bg-mood-depressed/15",
-                      isTodayDate && "bg-primary",
+              return (
+                <button
+                  key={day.toISOString()}
+                  onClick={() => onDayClick?.(day)}
+                  onDoubleClick={() => isCurrentMonth && onDayDoubleClick?.(day)}
+                  disabled={!isCurrentMonth}
+                  title={hasRelativeComment ? relativeCommentsData[dayOfMonth] : undefined}
+                  className={cn(
+                    "relative flex flex-col items-center justify-center py-2.5 transition-colors",
+                    !isCurrentMonth && "opacity-15",
+                    isCurrentMonth && "hover:bg-muted/20",
+                    !isTodayDate && mood === 'elevated' && "bg-mood-elevated/8",
+                    !isTodayDate && mood === 'somewhat_elevated' && "bg-mood-somewhat-elevated/8",
+                    !isTodayDate && mood === 'stable' && "bg-mood-stable/8",
+                    !isTodayDate && mood === 'somewhat_depressed' && "bg-mood-somewhat-depressed/8",
+                    !isTodayDate && mood === 'depressed' && "bg-mood-depressed/8",
+                    isTodayDate && "bg-foreground/10 rounded-md",
+                  )}
+                >
+                  <span className={cn(
+                    "flex items-center justify-center text-sm font-medium leading-none",
+                    isTodayDate && "text-foreground font-semibold",
+                    !isTodayDate && mood === 'elevated' && "text-mood-elevated/70",
+                    !isTodayDate && mood === 'somewhat_elevated' && "text-mood-somewhat-elevated/70",
+                    !isTodayDate && mood === 'stable' && "text-mood-stable/70",
+                    !isTodayDate && mood === 'somewhat_depressed' && "text-mood-somewhat-depressed/70",
+                    !isTodayDate && mood === 'depressed' && "text-mood-depressed/70",
+                    !isTodayDate && !mood && isCurrentMonth && "text-foreground/60",
+                    !isCurrentMonth && "text-muted-foreground"
+                  )}>
+                    {dayOfMonth}
+                  </span>
+
+                  {showMissed && (
+                    <X className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-6 w-6 text-destructive opacity-15" strokeWidth={1.5} />
+                  )}
+
+                  {/* Indicators */}
+                  <div className="flex gap-0.5 mt-0.5 h-2">
+                    {medCount && medCount > 0 && (
+                      <Pill className="h-2 w-2 text-primary/50" />
                     )}
-                  >
-                    <span className={cn(
-                      "flex items-center justify-center text-lg font-medium leading-none",
-                      isTodayDate && "text-primary-foreground font-bold",
-                      !isTodayDate && mood === 'elevated' && "text-mood-elevated",
-                      !isTodayDate && mood === 'stable' && "text-mood-stable",
-                      !isTodayDate && mood === 'depressed' && "text-mood-depressed",
-                      !isTodayDate && !mood && isCurrentMonth && "text-foreground",
-                      !isCurrentMonth && "text-muted-foreground"
-                    )}>
-                      {dayOfMonth}
-                    </span>
-
-                    {showMissed && (
-                      <X className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-8 w-8 text-destructive opacity-30" strokeWidth={2} />
+                    {hasRelativeComment && (
+                      <MessageCircle className="h-2 w-2 text-accent-foreground/50 fill-accent/50" />
                     )}
-
-                    {/* Indicators */}
-                    <div className="flex gap-0.5 mt-0.5 h-2">
-                      {medCount && medCount > 0 && (
-                        <Pill className="h-2 w-2 text-primary" />
-                      )}
-                      {hasRelativeComment && (
-                        <MessageCircle className="h-2 w-2 text-accent-foreground fill-accent" />
-                      )}
-                    </div>
-                  </button>
-                );
-              })}
-            </div>
+                  </div>
+                </button>
+              );
+            })}
           </div>
         ))}
       </div>

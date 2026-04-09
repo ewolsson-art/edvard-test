@@ -405,28 +405,22 @@ export function PatientOverview({ connection, onBack, hideExtras = false }: Pati
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center gap-4">
-        <Button variant="ghost" size="icon" onClick={onBack}>
+      <div className="flex items-center gap-3">
+        <Button variant="ghost" size="icon" onClick={onBack} className="shrink-0">
           <ChevronLeft className="w-5 h-5" />
         </Button>
-        <div className="flex-1">
-          <h2 className="font-display text-2xl font-semibold">{patientName}</h2>
+        <div className="flex-1 min-w-0">
+          <h2 className="font-display text-lg font-semibold">{patientName}</h2>
           {latestMoodEntry && (
-            <div className="flex items-center gap-2 mt-1.5">
-              <span className="text-base">{MOOD_ICONS[latestMoodEntry.mood as MoodType]}</span>
-              <span className="text-sm text-muted-foreground">
-                Senaste incheckning: <span className="font-medium text-foreground/80">{MOOD_LABELS[latestMoodEntry.mood as MoodType]}</span>
-                {latestMoodEntry.date && (
-                  <span className="text-muted-foreground/50"> · {latestMoodEntry.date}</span>
-                )}
-              </span>
-            </div>
+            <p className="text-sm text-muted-foreground/60 mt-0.5">
+              Senaste: {MOOD_LABELS[latestMoodEntry.mood as MoodType]}
+              {latestMoodEntry.date && (
+                <span> · {format(new Date(latestMoodEntry.date), 'd MMM', { locale: sv })}</span>
+              )}
+            </p>
           )}
           {!latestMoodEntry && (
-            <p className="text-sm text-muted-foreground/50 mt-1">Har inte checkat in ännu</p>
-          )}
-          {!hideExtras && connection.patient_email && connection.patient_profile?.first_name && (
-            <p className="text-sm text-muted-foreground mt-1">{connection.patient_email}</p>
+            <p className="text-sm text-muted-foreground/40 mt-0.5">Ingen incheckning ännu</p>
           )}
         </div>
       </div>
