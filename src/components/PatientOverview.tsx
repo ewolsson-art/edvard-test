@@ -541,16 +541,6 @@ export function PatientOverview({ connection, onBack, hideExtras = false }: Pati
         )}
       </div>
 
-      {/* Patient characteristics - for relatives only */}
-      {isRelativeViewing && (
-        <PatientCharacteristics
-          patientId={connection.patient_id}
-          latestMood={latestMoodEntry?.mood as any}
-          isShared={'share_characteristics' in connection && connection.share_characteristics === true}
-          patientName={patientName}
-        />
-      )}
-
       {/* Relative comment dialog */}
       {isRelativeViewing && (
         <RelativeCommentDialog
