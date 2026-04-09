@@ -6,6 +6,7 @@ import { Loader2, Users, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { MOOD_LABELS, MOOD_ICONS, MoodType } from '@/types/mood';
 import { format } from 'date-fns';
+import { sv } from 'date-fns/locale';
 
 interface TodayMood {
   mood: MoodType;
@@ -175,21 +176,23 @@ const RelativeDashboard = () => {
                         <div className="h-4 w-24 bg-foreground/5 rounded animate-pulse mt-1.5" />
                       ) : hasCheckedIn ? (
                         <div className="mt-2 space-y-2">
-                          {/* Mood badge */}
-                          <div className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-xl border ${MOOD_COLORS[todayEntry.mood]}`}>
-                            <span className="text-base">{MOOD_ICONS[todayEntry.mood]}</span>
-                            <span className={`text-sm font-medium ${MOOD_TEXT_COLORS[todayEntry.mood]}`}>
-                              {MOOD_LABELS[todayEntry.mood]}
-                            </span>
+                          {/* Mood badge + timestamp */}
+                          <div className="flex items-center gap-3">
+                            <div className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-xl border ${MOOD_COLORS[todayEntry.mood]}`}>
+                              <span className="text-base">{MOOD_ICONS[todayEntry.mood]}</span>
+                              <span className={`text-sm font-medium ${MOOD_TEXT_COLORS[todayEntry.mood]}`}>
+                                {MOOD_LABELS[todayEntry.mood]}
+                              </span>
+                            </div>
+                            {todayEntry.created_at && (
+                              <span className="text-xs text-muted-foreground/60">
+                                {format(new Date(todayEntry.created_at), 'd MMM, HH:mm', { locale: sv })}
+                              </span>
+                            )}
                           </div>
 
                           {/* Extra data chips */}
                           <div className="flex flex-wrap gap-1.5">
-                            {todayEntry.sleep_quality && connection.share_sleep && (
-                              <span className="text-[11px] bg-foreground/[0.04] text-muted-foreground px-2 py-1 rounded-lg">
-                                Sömn: {QUALITY_MAP[todayEntry.sleep_quality] || todayEntry.sleep_quality}
-                              </span>
-                            )}
                             {todayEntry.eating_quality && connection.share_eating && (
                               <span className="text-[11px] bg-foreground/[0.04] text-muted-foreground px-2 py-1 rounded-lg">
                                 Kost: {QUALITY_MAP[todayEntry.eating_quality] || todayEntry.eating_quality}
@@ -201,13 +204,6 @@ const RelativeDashboard = () => {
                               </span>
                             )}
                           </div>
-
-                          {/* Timestamp */}
-                          {todayEntry.created_at && (
-                            <p className="text-[11px] text-muted-foreground/40">
-                              Checkade in kl. {format(new Date(todayEntry.created_at), 'HH:mm')}
-                            </p>
-                          )}
                         </div>
                       ) : (
                         <p className="text-sm text-muted-foreground/50 mt-1">
