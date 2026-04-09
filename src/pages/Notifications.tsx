@@ -83,7 +83,8 @@ function NotificationItem({ notification, onRead, onDelete, onNavigate, onHandle
 }) {
   const config = getConfig(notification.type);
   const Icon = config.icon;
-  const isConnectionRequest = notification.type === 'connection_request' && !notification.read;
+  const [handled, setHandled] = useState(false);
+  const isConnectionRequest = notification.type === 'connection_request' && !handled;
 
   return (
     <button
@@ -119,7 +120,7 @@ function NotificationItem({ notification, onRead, onDelete, onNavigate, onHandle
           {isConnectionRequest && (
             <ConnectionRequestActions
               notification={notification}
-              onHandled={() => onHandled(notification.id)}
+              onHandled={() => { setHandled(true); onHandled(notification.id); }}
             />
           )}
 
