@@ -6,6 +6,7 @@ import { Loader2, Users, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { MOOD_LABELS, MOOD_ICONS, MoodType } from '@/types/mood';
 import { format } from 'date-fns';
+import { sv } from 'date-fns/locale';
 
 interface TodayMood {
   mood: MoodType;
