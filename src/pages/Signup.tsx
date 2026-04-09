@@ -139,7 +139,7 @@ const Signup = () => {
 
   return (
     <DarkNightBackground>
-      <AuthNavbar />
+      
 
       <div className="flex flex-1 items-center justify-center px-6 pt-16 pb-8" role="main">
         <div className="w-full max-w-sm">
