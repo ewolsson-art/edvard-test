@@ -49,18 +49,10 @@ const CharacteristicDetail = () => {
     deleteCharacteristic,
   } = useCharacteristics();
 
-  const { entries, isLoaded: moodLoaded } = useMoodData();
-  const latestMood = entries.length > 0
-    ? entries.sort((a, b) => b.timestamp - a.timestamp)[0]?.mood
-    : null;
 
   const [newValue, setNewValue] = useState('');
   const [isAdding, setIsAdding] = useState(false);
   const [showInput, setShowInput] = useState(false);
-  const [aiSuggestions, setAiSuggestions] = useState<string[]>([]);
-  const [aiPatterns, setAiPatterns] = useState<string[]>([]);
-  const [isLoadingAi, setIsLoadingAi] = useState(false);
-  const [aiLoaded, setAiLoaded] = useState(false);
 
   if (!config) {
     navigate('/kannetecken');
