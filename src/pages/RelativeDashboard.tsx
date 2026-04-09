@@ -199,7 +199,7 @@ const RelativeDashboard = () => {
                   className="group w-full text-left rounded-2xl border p-5 transition-all duration-200 hover:shadow-[0_0_24px_hsl(var(--primary)/0.06)] hover:border-border/50 hover:scale-[1.01] active:scale-[0.99] bg-card/60 border-border/30 backdrop-blur-sm"
                   onClick={() => navigate(`/patient/${connection.patient_id}`)}
                 >
-                  <div className="flex items-center gap-4">
+                  <div className="flex gap-4">
                     {/* Avatar */}
                     <Avatar className="w-12 h-12 shrink-0 ring-1 ring-white/[0.06]">
                       {connection.patient_profile?.avatar_url ? (
@@ -212,10 +212,7 @@ const RelativeDashboard = () => {
 
                     {/* Content */}
                     <div className="flex-1 min-w-0">
-                      <div className="flex items-center justify-between gap-2">
-                        <h3 className="font-semibold text-base truncate">{name}</h3>
-                        <ChevronRight className="w-4 h-4 text-muted-foreground/30 shrink-0 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:text-muted-foreground/50" />
-                      </div>
+                      <h3 className="font-semibold text-base truncate">{name}</h3>
 
                       {dataLoading ? (
                         <div className="h-4 w-32 bg-foreground/5 rounded animate-pulse mt-2" />
@@ -267,6 +264,9 @@ const RelativeDashboard = () => {
                         </p>
                       )}
                     </div>
+
+                    {/* Chevron centered vertically */}
+                    <ChevronRight className="w-4 h-4 text-muted-foreground/30 shrink-0 self-center transition-transform duration-200 group-hover:translate-x-0.5 group-hover:text-muted-foreground/50" />
                   </div>
                 </button>
               );
