@@ -460,14 +460,46 @@ export function PatientOverview({ connection, onBack, hideExtras = false }: Pati
               {view === 'week' && (() => {
                 const today = format(new Date(), 'yyyy-MM-dd');
                 const todayEntry = getEntryForDate(today);
+                
+                const getMoodColor = (mood: MoodType) => {
+                  if (mood === 'elevated' || mood === 'somewhat_elevated') return 'text-mood-elevated';
+                  if (mood === 'depressed' || mood === 'somewhat_depressed') return 'text-mood-depressed';
+                  return 'text-mood-stable';
+                };
+                
+                const getMoodGlow = (mood: MoodType) => {
+                  if (mood === 'elevated' || mood === 'somewhat_elevated') return 'shadow-[0_0_12px_hsl(var(--mood-elevated)/0.4)]';
+                  if (mood === 'depressed' || mood === 'somewhat_depressed') return 'shadow-[0_0_12px_hsl(var(--mood-depressed)/0.4)]';
+                  return 'shadow-[0_0_12px_hsl(var(--mood-stable)/0.4)]';
+                };
+                
+                const getMoodBg = (mood: MoodType) => {
+                  if (mood === 'elevated' || mood === 'somewhat_elevated') return 'bg-mood-elevated/20';
+                  if (mood === 'depressed' || mood === 'somewhat_depressed') return 'bg-mood-depressed/20';
+                  return 'bg-mood-stable/20';
+                };
+
                 return (
                   <div className="space-y-5">
                     <p className="text-xs text-muted-foreground/40 font-medium uppercase tracking-wider">
                       {format(new Date(), 'd MMMM yyyy', { locale: sv })}
                     </p>
                     {todayEntry ? (
-                      <div className="space-y-4">
-                        <div>
+                      <div className="space-y-5">
+                        {/* Mood indicator */}
+                        <div className="flex items-center gap-4">
+                          <div className={cn(
+                            "w-10 h-10 rounded-full flex items-center justify-center animate-scale-in",
+                            getMoodBg(todayEntry.mood),
+                            getMoodGlow(todayEntry.mood)
+                          )}>
+                            <div className={cn(
+                              "w-4 h-4 rounded-full",
+                              todayEntry.mood === 'elevated' || todayEntry.mood === 'somewhat_elevated' ? 'bg-mood-elevated' :
+                              todayEntry.mood === 'depressed' || todayEntry.mood === 'somewhat_depressed' ? 'bg-mood-depressed' :
+                              'bg-mood-stable'
+                            )} />
+                          </div>
                           <span className="text-2xl font-semibold text-foreground/80">
                             {MOOD_LABELS[todayEntry.mood]}
                           </span>
@@ -484,12 +516,6 @@ export function PatientOverview({ connection, onBack, hideExtras = false }: Pati
                             <div className="flex justify-between text-sm">
                               <span className="text-muted-foreground/50">Energi</span>
                               <span className="text-foreground/60">{todayEntry.energyLevel === 'low' ? 'Låg' : todayEntry.energyLevel === 'normal' ? 'Normal' : 'Hög'}</span>
-                            </div>
-                          )}
-                          {todayEntry.sleepQuality && (
-                            <div className="flex justify-between text-sm">
-                              <span className="text-muted-foreground/50">Sömn</span>
-                              <span className="text-foreground/60">{todayEntry.sleepQuality === 'good' ? 'Bra' : todayEntry.sleepQuality === 'bad' ? 'Dålig' : 'Helt ok'}</span>
                             </div>
                           )}
                           {todayEntry.eatingQuality && (
