@@ -483,7 +483,7 @@ export function PatientOverview({ connection, onBack, hideExtras = false }: Pati
                 return (
                   <div className="space-y-5">
                     <p className="text-xs text-muted-foreground/40 font-medium uppercase tracking-wider">
-                      {format(new Date(), 'd MMMM yyyy', { locale: sv })}
+                      {format(new Date(), 'EEEE d MMMM yyyy', { locale: sv })}
                     </p>
                     {todayEntry ? (
                       <div className="space-y-5">
@@ -501,9 +501,14 @@ export function PatientOverview({ connection, onBack, hideExtras = false }: Pati
                               'bg-mood-stable'
                             )} />
                           </div>
-                          <span className="text-2xl font-semibold text-foreground/80">
-                            {MOOD_LABELS[todayEntry.mood]}
-                          </span>
+                          <div>
+                            <span className="text-2xl font-semibold text-foreground/80">
+                              {MOOD_LABELS[todayEntry.mood]}
+                            </span>
+                            <p className="text-xs text-muted-foreground/40 mt-0.5">
+                              Incheckad {format(new Date(todayEntry.timestamp), 'HH:mm', { locale: sv })}
+                            </p>
+                          </div>
                         </div>
 
                         {todayEntry.comment && (
@@ -544,7 +549,7 @@ export function PatientOverview({ connection, onBack, hideExtras = false }: Pati
                         )}
                       </div>
                     ) : (
-                      <p className="text-sm text-muted-foreground/40">Ingen incheckning idag</p>
+                      <p className="text-sm text-muted-foreground/40">Har inte checkat in idag</p>
                     )}
                   </div>
                 );
