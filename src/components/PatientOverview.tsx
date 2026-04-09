@@ -623,6 +623,8 @@ export function PatientOverview({ connection, onBack, hideExtras = false }: Pati
           </div>
         )}
       </div>
+        </>
+      )}
 
       {/* Relative comment dialog */}
       {isRelativeViewing && (
