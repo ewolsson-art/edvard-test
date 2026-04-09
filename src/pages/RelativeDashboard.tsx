@@ -204,23 +204,70 @@ const RelativeDashboard = () => {
           </p>
         </header>
 
-        {approvedConnections.length === 0 ? (
+        {/* Pending requests */}
+        {pendingFromRelative.length > 0 && (
+          <div className="space-y-1">
+            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-2">
+              Väntande förfrågningar
+            </p>
+            {pendingFromRelative.map((connection) => (
+              <div
+                key={connection.id}
+                className="flex items-center justify-between py-3 px-4 rounded-xl bg-foreground/[0.03]"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-full bg-foreground/[0.06] flex items-center justify-center">
+                    <span className="text-sm font-semibold text-muted-foreground">
+                      {getPatientInitial(connection)}
+                    </span>
+                  </div>
+                  <div>
+                    <span className="text-sm font-medium">{getPatientName(connection)}</span>
+                    <p className="text-xs text-muted-foreground">Väntar på svar</p>
+                  </div>
+                </div>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  className="text-destructive hover:text-destructive h-8 w-8 p-0"
+                  onClick={() => cancelRequest(connection.id)}
+                >
+                  <X className="w-4 h-4" />
+                </Button>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {approvedConnections.length === 0 && pendingFromRelative.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-16 space-y-4">
-            <div className="w-16 h-16 rounded-2xl bg-muted/30 flex items-center justify-center">
-              <Users className="w-8 h-8 text-muted-foreground/40" />
+            <div className="w-14 h-14 rounded-full bg-foreground/[0.04] flex items-center justify-center">
+              <Users className="w-7 h-7 text-muted-foreground/60" />
             </div>
-            <div className="text-center space-y-1">
-              <h3 className="text-lg font-medium">Inga personer ännu</h3>
-              <p className="text-sm text-muted-foreground max-w-xs">
-                Gå till Följer-sidan för att begära åtkomst till någon du vill följa.
+            <div className="text-center space-y-1.5">
+              <p className="text-base font-medium text-muted-foreground">Inga personer ännu</p>
+              <p className="text-sm text-muted-foreground/60 max-w-[260px]">
+                Begär åtkomst till någon du bryr dig om för att följa deras mående
               </p>
             </div>
-            <button
-              onClick={() => navigate('/foljer')}
-              className="inline-flex items-center gap-2 text-sm text-primary hover:text-primary/80 transition-colors font-medium"
+            <Button
+              onClick={() => setRequestDialogOpen(true)}
+              className="gap-2 mt-2 h-11 px-6 text-sm font-semibold shadow-[0_0_20px_hsl(var(--primary)/0.15)]"
             >
-              Gå till Följer
-            </button>
+              <UserPlus className="w-4 h-4" />
+              Begär åtkomst
+            </Button>
+          </div>
+        ) : approvedConnections.length === 0 && pendingFromRelative.length > 0 ? (
+          <div className="flex justify-center pt-2">
+            <Button
+              variant="outline"
+              onClick={() => setRequestDialogOpen(true)}
+              className="gap-2"
+            >
+              <UserPlus className="w-4 h-4" />
+              Begär åtkomst till fler
+            </Button>
           </div>
         ) : (
           <div className="space-y-3">
