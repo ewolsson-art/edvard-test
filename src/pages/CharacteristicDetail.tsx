@@ -1,10 +1,12 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Plus, X, Zap, Cloud, Sun, ChevronLeft } from 'lucide-react';
+import { Plus, X, Zap, Cloud, Sun, ChevronLeft, Sparkles, Loader2, Info, Check } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { useCharacteristics } from '@/hooks/useCharacteristics';
 import { useMoodData } from '@/hooks/useMoodData';
 import { cn } from '@/lib/utils';
+import { supabase } from '@/integrations/supabase/client';
+import { useToast } from '@/hooks/use-toast';
 
 const MOOD_CONFIG = {
   uppvarvad: {
@@ -36,9 +38,15 @@ const MOOD_CONFIG = {
   },
 };
 
+interface AISuggestion {
+  name: string;
+  reason: string;
+}
+
 const CharacteristicDetail = () => {
   const { moodType } = useParams<{ moodType: string }>();
   const navigate = useNavigate();
+  const { toast } = useToast();
   const config = moodType ? MOOD_CONFIG[moodType as keyof typeof MOOD_CONFIG] : null;
 
   const {
@@ -50,7 +58,6 @@ const CharacteristicDetail = () => {
     deleteCharacteristic,
   } = useCharacteristics();
 
-
   const { entries, isLoaded: moodLoaded } = useMoodData();
   const latestMood = entries.length > 0
     ? entries.sort((a, b) => b.timestamp - a.timestamp)[0]?.mood
@@ -59,6 +66,13 @@ const CharacteristicDetail = () => {
   const [newValue, setNewValue] = useState('');
   const [isAdding, setIsAdding] = useState(false);
   const [showInput, setShowInput] = useState(false);
+
+  // AI insights state
+  const [aiSuggestions, setAiSuggestions] = useState<AISuggestion[]>([]);
+  const [aiLoading, setAiLoading] = useState(false);
+  const [aiError, setAiError] = useState<string | null>(null);
+  const [aiLoaded, setAiLoaded] = useState(false);
+  const [addedSuggestions, setAddedSuggestions] = useState<Set<string>>(new Set());
 
   if (!config) {
     navigate('/kannetecken');
@@ -82,6 +96,39 @@ const CharacteristicDetail = () => {
     setIsAdding(false);
   };
 
+  const handleFetchAI = async () => {
+    setAiLoading(true);
+    setAiError(null);
+    try {
+      const { data, error } = await supabase.functions.invoke('suggest-characteristics', {
+        body: { moodType: config.type },
+      });
+
+      if (error) throw error;
+
+      if (data?.suggestions && data.suggestions.length > 0) {
+        setAiSuggestions(data.suggestions);
+      } else {
+        setAiSuggestions([]);
+        setAiError(data?.message || 'Inga förslag just nu. Fortsätt checka in dagligen.');
+      }
+      setAiLoaded(true);
+    } catch (e) {
+      console.error('AI suggestions error:', e);
+      setAiError('Kunde inte hämta förslag just nu. Försök igen senare.');
+      setAiLoaded(true);
+    } finally {
+      setAiLoading(false);
+    }
+  };
+
+  const handleAddSuggestion = async (suggestion: AISuggestion) => {
+    const success = await addCharacteristic(suggestion.name, config.type);
+    if (success) {
+      setAddedSuggestions(prev => new Set(prev).add(suggestion.name));
+      toast({ title: `"${suggestion.name}" tillagt` });
+    }
+  };
 
   if (isLoading || !moodLoaded) {
     return (
@@ -125,7 +172,7 @@ const CharacteristicDetail = () => {
           </p>
         </div>
 
-        {/* Dina kännetecken – primary section */}
+        {/* Dina kännetecken */}
         <div className="mb-10">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-[13px] font-medium text-foreground/30 uppercase tracking-wide">
@@ -198,7 +245,106 @@ const CharacteristicDetail = () => {
           )}
         </div>
 
+        {/* AI Insights Section */}
+        <div className="mb-10">
+          <div className="flex items-center gap-2 mb-3">
+            <Sparkles className="w-4 h-4 text-primary/60" />
+            <h2 className="text-[13px] font-medium text-foreground/30 uppercase tracking-wide">
+              AI-förslag
+            </h2>
+          </div>
 
+          {!aiLoaded && !aiLoading && (
+            <div className="rounded-2xl bg-foreground/[0.02] border border-foreground/[0.05] p-5">
+              <p className="text-[13px] text-foreground/40 mb-4">
+                Analysera dina incheckningar för att hitta mönster som kan vara kännetecken för den här perioden.
+              </p>
+              <button
+                onClick={handleFetchAI}
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-foreground/[0.05] hover:bg-foreground/[0.08] text-[13px] font-medium text-foreground/50 hover:text-foreground/70 transition-all duration-200"
+              >
+                <Sparkles className="w-3.5 h-3.5" />
+                Analysera
+              </button>
+            </div>
+          )}
+
+          {aiLoading && (
+            <div className="rounded-2xl bg-foreground/[0.02] border border-foreground/[0.05] p-6 flex items-center gap-3">
+              <Loader2 className="w-4 h-4 animate-spin text-foreground/30" />
+              <span className="text-[13px] text-foreground/30">Analyserar dina incheckningar...</span>
+            </div>
+          )}
+
+          {aiLoaded && aiError && (
+            <div className="rounded-2xl bg-foreground/[0.02] border border-foreground/[0.05] p-5">
+              <p className="text-[13px] text-foreground/35">{aiError}</p>
+            </div>
+          )}
+
+          {aiLoaded && aiSuggestions.length > 0 && (
+            <div className="space-y-3">
+              {/* Disclaimer */}
+              <div className="flex items-start gap-2 px-1 mb-1">
+                <Info className="w-3.5 h-3.5 text-foreground/20 flex-shrink-0 mt-0.5" />
+                <p className="text-[11px] text-foreground/25 leading-relaxed">
+                  Baserat på vad du valt vid steg 2 i dina incheckningar. Dessa förslag stämmer inte nödvändigtvis – det är mönster AI hittat i din data.
+                </p>
+              </div>
+
+              {/* Suggestions */}
+              <div className="space-y-1.5">
+                {aiSuggestions.map((suggestion, i) => {
+                  const isAdded = addedSuggestions.has(suggestion.name);
+                  return (
+                    <div
+                      key={i}
+                      className={cn(
+                        "flex items-center gap-3 rounded-xl px-4 py-3 transition-all duration-200",
+                        isAdded
+                          ? "bg-foreground/[0.02]"
+                          : "bg-foreground/[0.03] hover:bg-foreground/[0.05]"
+                      )}
+                    >
+                      <div className="flex-1 min-w-0">
+                        <p className={cn(
+                          "text-[13px] font-medium",
+                          isAdded ? "text-foreground/30 line-through" : "text-foreground/60"
+                        )}>
+                          {suggestion.name}
+                        </p>
+                        {suggestion.reason && (
+                          <p className="text-[11px] text-foreground/20 mt-0.5 line-clamp-1">
+                            {suggestion.reason}
+                          </p>
+                        )}
+                      </div>
+                      {isAdded ? (
+                        <Check className="w-4 h-4 text-foreground/20 flex-shrink-0" />
+                      ) : (
+                        <button
+                          onClick={() => handleAddSuggestion(suggestion)}
+                          className="flex-shrink-0 w-7 h-7 rounded-full bg-primary/10 hover:bg-primary/20 flex items-center justify-center transition-colors"
+                          aria-label={`Lägg till ${suggestion.name}`}
+                        >
+                          <Plus className="w-3.5 h-3.5 text-primary" />
+                        </button>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* Re-analyze */}
+              <button
+                onClick={handleFetchAI}
+                className="text-[11px] text-foreground/20 hover:text-foreground/40 transition-colors mt-2"
+              >
+                Analysera igen
+              </button>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
