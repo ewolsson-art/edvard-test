@@ -195,13 +195,26 @@ const RelativeDashboard = () => {
   return (
     <div className="p-5 md:p-8 pb-24">
       <div className="max-w-2xl md:mx-0 space-y-5">
-        <header className="mb-1">
-          <h1 className="font-display text-3xl md:text-4xl font-bold mb-1">
-            Hem
-          </h1>
-          <p className="text-sm text-muted-foreground">
-            Översikt över hur dina närstående mår idag
-          </p>
+        <header className="flex items-start justify-between mb-1">
+          <div>
+            <h1 className="font-display text-3xl md:text-4xl font-bold mb-1">
+              Hem
+            </h1>
+            <p className="text-sm text-muted-foreground">
+              Översikt över hur dina närstående mår idag
+            </p>
+          </div>
+          {approvedConnections.length > 0 && (
+            <Button
+              size="sm"
+              variant="outline"
+              className="gap-1.5 shrink-0 mt-1"
+              onClick={() => setRequestDialogOpen(true)}
+            >
+              <UserPlus className="h-4 w-4" />
+              Begär åtkomst
+            </Button>
+          )}
         </header>
 
         {/* Pending requests */}
