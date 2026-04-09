@@ -77,8 +77,8 @@ export function MonthCalendar({
         </div>
       )}
 
-      {/* Month title - Apple style large text */}
-      <h2 className="font-display text-3xl font-bold capitalize mb-4">
+      {/* Month title */}
+      <h2 className="font-display text-2xl font-semibold capitalize mb-3 text-foreground/80">
         {monthName}
       </h2>
 
