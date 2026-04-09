@@ -4,6 +4,7 @@ import { useRelativeConnections, PatientConnection } from '@/hooks/useRelativeCo
 import { supabase } from '@/integrations/supabase/client';
 import { Loader2, Users, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { MOOD_LABELS, MOOD_ICONS, MoodType } from '@/types/mood';
 import { format, isToday, isYesterday } from 'date-fns';
 import { sv } from 'date-fns/locale';
@@ -167,11 +168,14 @@ const RelativeDashboard = () => {
                 >
                   <div className="flex items-center gap-4">
                     {/* Avatar */}
-                    <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-                      <span className="text-lg font-semibold text-primary">
+                    <Avatar className="w-12 h-12 shrink-0">
+                      {connection.patient_profile?.avatar_url ? (
+                        <AvatarImage src={connection.patient_profile.avatar_url} alt={name} className="object-cover" />
+                      ) : null}
+                      <AvatarFallback className="bg-primary/10 text-primary text-lg font-semibold">
                         {getPatientInitial(connection)}
-                      </span>
-                    </div>
+                      </AvatarFallback>
+                    </Avatar>
 
                     {/* Content */}
                     <div className="flex-1 min-w-0">
