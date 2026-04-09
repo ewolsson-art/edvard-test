@@ -549,7 +549,7 @@ export function PatientOverview({ connection, onBack, hideExtras = false }: Pati
                         )}
                       </div>
                     ) : (
-                      <p className="text-sm text-muted-foreground/40">Ingen incheckning idag</p>
+                      <p className="text-sm text-muted-foreground/40">Har inte checkat in idag</p>
                     )}
                   </div>
                 );
