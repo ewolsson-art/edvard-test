@@ -455,103 +455,167 @@ export function TodayCheckin({
     return (
       <div className="fade-in h-full md:h-auto flex flex-col justify-center px-5 py-10 md:py-16 md:px-8">
         
-        <div className="max-w-md w-full">
+        <div className="max-w-[720px] w-full">
           
-          {/* Top line — checkmark + label */}
-          <div className="flex items-center gap-2.5 mb-8">
-            <Check 
-              className={cn("w-5 h-5", moodDisplay?.colorClass || 'text-mood-stable')} 
-              style={{ 
-                animation: 'scale-in 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)',
-                strokeWidth: 3
-              }} 
-            />
-            <span className="text-[13px] font-medium uppercase tracking-wider text-foreground/40">
-              Incheckad
-              {!isDisplayToday && <span className="text-primary ml-1.5">· Retroaktiv</span>}
-            </span>
-          </div>
+          {/* Desktop: 2-column / Mobile: stack */}
+          <div className="grid grid-cols-1 md:grid-cols-[1fr_240px] gap-10 md:gap-14">
+            
+            {/* LEFT — Hero column */}
+            <div>
+              {/* Top label */}
+              <div className="flex items-center gap-2.5 mb-6">
+                <Check 
+                  className={cn("w-5 h-5", moodDisplay?.colorClass || 'text-mood-stable')} 
+                  style={{ 
+                    animation: 'scale-in 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)',
+                    strokeWidth: 3
+                  }} 
+                />
+                <span className="text-[13px] font-medium uppercase tracking-wider text-foreground/40">
+                  Incheckad
+                  {!isDisplayToday && <span className="text-primary ml-1.5">· Retroaktiv</span>}
+                </span>
+              </div>
 
-          {/* Streak — the hero */}
-          {streakData.currentStreak > 0 && (
-            <div className="mb-8 relative">
-              <span 
-                className="text-[72px] md:text-[96px] font-bold tabular-nums leading-none tracking-tighter text-foreground"
-                style={{ 
-                  animation: 'scale-in 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 0.15s both',
-                  textShadow: `0 0 80px hsl(var(--primary) / 0.15)`
-                }}
-              >
-                {streakData.currentStreak}
-              </span>
-              <p className="text-[13px] font-medium text-foreground/25 mt-1 tracking-wide">
-                {streakData.currentStreak === 1 ? 'dag' : 'dagar'} i rad
-              </p>
-              {streakData.longestStreak > streakData.currentStreak && (
-                <p className="text-[11px] text-foreground/15 mt-1">
-                  Längsta: {streakData.longestStreak} dagar
+              {/* Streak — THE hero */}
+              {streakData.currentStreak > 0 && (
+                <div className="mb-6">
+                  <span 
+                    className="text-[88px] md:text-[112px] font-semibold tabular-nums leading-[0.85] tracking-tighter text-foreground"
+                    style={{ 
+                      animation: 'scale-in 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 0.15s both',
+                      textShadow: `0 0 100px hsl(var(--primary) / 0.12)`
+                    }}
+                  >
+                    {streakData.currentStreak}
+                  </span>
+                  <p className="text-[13px] text-foreground/30 mt-2 tracking-wide">
+                    {streakData.currentStreak === 1 ? 'dag' : 'dagar'} i rad
+                  </p>
+                </div>
+              )}
+
+              {/* Follow-up message */}
+              {followUp && (
+                <p className="text-[15px] text-foreground/45 leading-relaxed mb-6 max-w-[360px]">
+                  {followUp.message}
                 </p>
               )}
-            </div>
-          )}
 
-          {/* Follow-up message */}
-          {followUp && (
-            <p className="text-[15px] text-foreground/50 leading-relaxed mb-8 max-w-[320px]">
-              {followUp.message}
-            </p>
-          )}
-
-          {/* Status summary — horizontal, left-aligned */}
-          <div className="flex flex-wrap items-center gap-x-3 gap-y-2 text-[14px]">
-            {summaryItems.map((item, i) => (
-              <span key={item.label} className="flex items-center gap-1">
-                {i > 0 && <span className="text-foreground/10 mr-1">·</span>}
-                <span className={cn("font-medium", item.colorClass || 'text-foreground/50')}>{item.value}</span>
-              </span>
-            ))}
-          </div>
-
-          {/* Tags */}
-          {tags.length > 0 && (
-            <p className="text-[12px] text-foreground/20 mt-3">
-              {tags.join(' · ')}
-            </p>
-          )}
-
-          {/* Custom answers */}
-          {customAnswerItems.length > 0 && (
-            <div className="flex flex-wrap items-start gap-x-4 gap-y-1 text-[12px] text-foreground/20 mt-3">
-              {customAnswerItems.map((item, i) => (
-                <span key={i}>
-                  {item.question}: <span className="font-medium text-foreground/35">{item.answer}</span>
-                </span>
-              ))}
-            </div>
-          )}
-
-          {/* Encouragement for low mood */}
-          {(todayEntry?.mood === 'depressed' || todayEntry?.mood === 'somewhat_depressed') && (
-            <div className="mt-8 py-4 border-l-2 border-primary/20 pl-4">
-              <p className="text-[13px] text-foreground/50 leading-relaxed">
-                <Heart className="w-3.5 h-3.5 inline mr-1.5 text-primary/40 -mt-0.5" />
-                Bättre dagar kommer.
-                {encouragementData.goodDaysCount > 0 && (
-                  <span className="text-foreground/30">
-                    {' '}Du mådde bra för {encouragementData.daysSinceGood ?? '?'} {encouragementData.daysSinceGood === 1 ? 'dag' : 'dagar'} sen.
+              {/* Status summary */}
+              <div className="flex flex-wrap items-center gap-x-3 gap-y-2 text-[14px]">
+                {summaryItems.map((item, i) => (
+                  <span key={item.label} className="flex items-center gap-1">
+                    {i > 0 && <span className="text-foreground/10 mr-1">·</span>}
+                    <span className={cn("font-medium", item.colorClass || 'text-foreground/50')}>{item.value}</span>
                   </span>
-                )}
-              </p>
-            </div>
-          )}
+                ))}
+              </div>
 
-          {/* Edit */}
-          <button
-            onClick={handleEdit}
-            className="mt-10 text-[13px] text-foreground/20 hover:text-foreground/45 transition-colors duration-200 cursor-pointer"
-          >
-            Ändra incheckning
-          </button>
+              {/* Tags */}
+              {tags.length > 0 && (
+                <p className="text-[12px] text-foreground/20 mt-3">
+                  {tags.join(' · ')}
+                </p>
+              )}
+
+              {/* Custom answers */}
+              {customAnswerItems.length > 0 && (
+                <div className="flex flex-wrap items-start gap-x-4 gap-y-1 text-[12px] text-foreground/20 mt-3">
+                  {customAnswerItems.map((item, i) => (
+                    <span key={i}>
+                      {item.question}: <span className="font-medium text-foreground/35">{item.answer}</span>
+                    </span>
+                  ))}
+                </div>
+              )}
+
+              {/* Encouragement for low mood */}
+              {(todayEntry?.mood === 'depressed' || todayEntry?.mood === 'somewhat_depressed') && (
+                <div className="mt-8 py-4 border-l-2 border-primary/20 pl-4">
+                  <p className="text-[13px] text-foreground/50 leading-relaxed">
+                    <Heart className="w-3.5 h-3.5 inline mr-1.5 text-primary/40 -mt-0.5" />
+                    Bättre dagar kommer.
+                    {encouragementData.goodDaysCount > 0 && (
+                      <span className="text-foreground/30">
+                        {' '}Du mådde bra för {encouragementData.daysSinceGood ?? '?'} {encouragementData.daysSinceGood === 1 ? 'dag' : 'dagar'} sen.
+                      </span>
+                    )}
+                  </p>
+                </div>
+              )}
+
+              {/* Edit */}
+              <button
+                onClick={handleEdit}
+                className="mt-10 text-[13px] text-foreground/20 hover:text-foreground/40 transition-colors duration-200 cursor-pointer"
+              >
+                Ändra incheckning
+              </button>
+            </div>
+
+            {/* RIGHT — Secondary context (desktop only) */}
+            <div className="hidden md:flex flex-col gap-6 pt-2 border-l border-foreground/[0.06] pl-8">
+              {/* Last check-in */}
+              {todayEntry && (
+                <div>
+                  <p className="text-[11px] font-medium uppercase tracking-wider text-foreground/25 mb-1.5">
+                    Senaste incheckning
+                  </p>
+                  <p className="text-[14px] text-foreground/60 font-medium">
+                    {format(new Date(todayEntry.created_at), "d MMMM", { locale: sv })}
+                  </p>
+                  <p className="text-[12px] text-foreground/30 mt-0.5">
+                    kl. {format(new Date(todayEntry.created_at), "HH:mm")}
+                  </p>
+                </div>
+              )}
+
+              {/* Longest streak */}
+              {streakData.longestStreak > 0 && (
+                <div>
+                  <p className="text-[11px] font-medium uppercase tracking-wider text-foreground/25 mb-1.5">
+                    Längsta streak
+                  </p>
+                  <p className="text-[14px] text-foreground/60 font-medium">
+                    {streakData.longestStreak} dagar
+                  </p>
+                  {streakData.currentStreak >= streakData.longestStreak && (
+                    <p className="text-[11px] text-primary/60 mt-0.5 font-medium">
+                      🔥 Nytt rekord!
+                    </p>
+                  )}
+                </div>
+              )}
+
+              {/* Mood for context */}
+              {todayEntry && moodDisplay && (
+                <div>
+                  <p className="text-[11px] font-medium uppercase tracking-wider text-foreground/25 mb-1.5">
+                    Dagens mående
+                  </p>
+                  <div className="flex items-center gap-2">
+                    <MoodIcon className={cn("w-4 h-4", moodDisplay.colorClass)} />
+                    <span className={cn("text-[14px] font-medium", moodDisplay.colorClass)}>
+                      {MOOD_LABELS[todayEntry.mood]}
+                    </span>
+                  </div>
+                </div>
+              )}
+
+              {/* Energy level */}
+              {todayEntry?.energyLevel && (
+                <div>
+                  <p className="text-[11px] font-medium uppercase tracking-wider text-foreground/25 mb-1.5">
+                    Energi
+                  </p>
+                  <p className="text-[14px] text-foreground/60 font-medium">
+                    {ENERGY_LABELS[todayEntry.energyLevel]}
+                  </p>
+                </div>
+              )}
+            </div>
+          </div>
         </div>
       </div>
     );
