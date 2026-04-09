@@ -5,8 +5,16 @@ import { supabase } from '@/integrations/supabase/client';
 import { Loader2, Users, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { MOOD_LABELS, MOOD_ICONS, MoodType } from '@/types/mood';
-import { format } from 'date-fns';
+import { format, isToday, isYesterday } from 'date-fns';
 import { sv } from 'date-fns/locale';
+
+const formatCheckinTime = (dateStr: string) => {
+  const d = new Date(dateStr);
+  const time = format(d, 'HH:mm');
+  if (isToday(d)) return `Idag, ${time}`;
+  if (isYesterday(d)) return `Igår, ${time}`;
+  return format(d, 'd MMM, HH:mm', { locale: sv });
+};
 
 interface TodayMood {
   mood: MoodType;
