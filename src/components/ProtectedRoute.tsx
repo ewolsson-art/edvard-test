@@ -14,7 +14,7 @@ interface ProtectedRouteProps {
 export function ProtectedRoute({ children, skipOnboardingCheck = false }: ProtectedRouteProps) {
   const { user, loading: authLoading } = useAuth();
   const { needsOnboarding, loading: prefsLoading } = useUserPreferences();
-  const { isDoctor, isRelative, isLoading: roleLoading } = useUserRole();
+  const { role, isDoctor, isRelative, isLoading: roleLoading } = useUserRole();
   const { profile, isLoading: profileLoading } = useProfile();
   const location = useLocation();
 
