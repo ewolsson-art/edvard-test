@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { useRelativeConnections, PatientConnection } from '@/hooks/useRelativeConnections';
 import { supabase } from '@/integrations/supabase/client';
-import { Loader2, Users, ChevronRight, Plus } from 'lucide-react';
+import { Loader2, Users, ChevronRight } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { MOOD_LABELS, MOOD_ICONS, MoodType } from '@/types/mood';
 import { format, isToday, isYesterday, subDays } from 'date-fns';
