@@ -153,7 +153,7 @@ const Notifications = () => {
   };
 
   const handleConnectionHandled = (notificationId: string) => {
-    markAsRead(notificationId);
+    deleteNotification(notificationId);
   };
 
   if (isLoading) {
