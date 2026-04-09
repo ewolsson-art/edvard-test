@@ -21,25 +21,36 @@ const RelativeOnboarding = () => {
 
   const finishOnboarding = async () => {
     setIsSubmitting(true);
-    const { error } = await createPreferences({
-      include_mood: false,
-      include_sleep: false,
-      include_eating: false,
-      include_exercise: false,
-      include_medication: false,
-    });
+    try {
+      const { error } = await createPreferences({
+        include_mood: false,
+        include_sleep: false,
+        include_eating: false,
+        include_exercise: false,
+        include_medication: false,
+      });
 
-    if (error) {
+      if (error) {
+        console.error('Onboarding preferences error:', error);
+        toast({
+          title: 'Något gick fel',
+          description: 'Kunde inte spara dina inställningar. Försök igen.',
+          variant: 'destructive',
+        });
+        setIsSubmitting(false);
+        return;
+      }
+
+      window.location.href = '/anhorig';
+    } catch (err) {
+      console.error('Onboarding error:', err);
       toast({
         title: 'Något gick fel',
         description: 'Kunde inte spara dina inställningar. Försök igen.',
         variant: 'destructive',
       });
       setIsSubmitting(false);
-      return;
     }
-
-    window.location.href = '/anhorig';
   };
 
   const handleSendRequest = async () => {
