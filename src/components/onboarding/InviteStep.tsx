@@ -161,7 +161,7 @@ export const InviteStep = ({ invites, onInvitesChange }: InviteStepProps) => {
             value={relativeEmail}
             onChange={(e) => setRelativeEmail(e.target.value)}
             onKeyDown={(e) => handleKeyDown('relative', e)}
-            placeholder="anhorig@exempel.se"
+            placeholder="anhörig@exempel.se"
             className="h-8 text-xs flex-1"
           />
           <Button

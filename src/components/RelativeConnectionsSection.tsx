@@ -115,15 +115,15 @@ export const RelativeConnectionsSection = () => {
     if (connection.relative_email) {
       return connection.relative_email;
     }
-    return 'Okand anhorig';
+    return 'Okänd anhörig';
   };
 
   const getStatusLabel = (status: string, initiatedBy: string) => {
     if (status === 'pending') {
-      return initiatedBy === 'relative' ? 'Vantar pa ditt svar' : 'Vantar pa svar';
+      return initiatedBy === 'relative' ? 'Väntar på ditt svar' : 'Väntar på svar';
     }
     switch (status) {
-      case 'approved': return 'Godkand';
+      case 'approved': return 'Godkänd';
       case 'rejected': return 'Avvisad';
       default: return status;
     }
@@ -170,7 +170,7 @@ export const RelativeConnectionsSection = () => {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Users className="w-5 h-5 text-primary" />
-          <h3 className="text-lg font-semibold">Mina anhoriga</h3>
+          <h3 className="text-lg font-semibold">Mina anhöriga</h3>
           {pendingFromRelatives.length > 0 && (
             <Badge variant="destructive" className="h-5 px-1.5 text-xs">
               {pendingFromRelatives.length}
@@ -186,19 +186,19 @@ export const RelativeConnectionsSection = () => {
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>Bjud in en anhorig</DialogTitle>
+              <DialogTitle>Bjud in en anhörig</DialogTitle>
               <DialogDescription>
-                Ange den anhorigas e-postadress och valj vilken data du vill dela.
+                Ange den anhörigas e-postadress och välj vilken data du vill dela.
               </DialogDescription>
             </DialogHeader>
             
             <div className="space-y-6 pt-4">
               <div className="space-y-2">
-                <Label htmlFor="relativeEmail">Anhorigs e-post</Label>
+                <Label htmlFor="relativeEmail">Anhörigs e-post</Label>
                 <Input
                   id="relativeEmail"
                   type="email"
-                  placeholder="anhorig@example.com"
+                  placeholder="anhörig@example.com"
                   value={relativeEmail}
                   onChange={(e) => setRelativeEmail(e.target.value)}
                   disabled={isInviting}
@@ -206,7 +206,7 @@ export const RelativeConnectionsSection = () => {
               </div>
 
               <div className="space-y-4">
-                <Label>Dela foljande data</Label>
+                <Label>Dela följande data</Label>
                 <div className="space-y-3">
                   {shareOptions.map(({ key, label }) => (
                     <div key={key} className="flex items-center justify-between">
@@ -256,13 +256,13 @@ export const RelativeConnectionsSection = () => {
         </Dialog>
       </div>
 
-      <p className="text-xs text-muted-foreground">Hantera vilka anhoriga som har tillgang till din data</p>
+      <p className="text-xs text-muted-foreground">Hantera vilka anhöriga som har tillgång till din data</p>
 
       {pendingFromRelatives.length > 0 && (
         <div className="space-y-2">
           <div className="flex items-center gap-2 text-sm font-medium text-blue-600 dark:text-blue-400">
             <Bell className="w-4 h-4" />
-            Inkommande forfragningar
+            Inkommande förfrågningar
           </div>
           {pendingFromRelatives.map((connection) => (
             <div key={connection.id} className="p-4 rounded-xl border-2 border-blue-200 dark:border-blue-800 bg-blue-50/50 dark:bg-blue-950/20">
@@ -292,7 +292,7 @@ export const RelativeConnectionsSection = () => {
                     onClick={() => openRespondDialog(connection.id)}
                   >
                     <Check className="w-4 h-4" />
-                    Godkann
+                    Godkänn
                   </Button>
                 </div>
               </div>
@@ -304,15 +304,15 @@ export const RelativeConnectionsSection = () => {
       <Dialog open={respondDialogOpen} onOpenChange={setRespondDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Godkann atkomst</DialogTitle>
+            <DialogTitle>Godkänn åtkomst</DialogTitle>
             <DialogDescription>
-              Valj vilken data du vill dela med {selectedRequestData ? getRelativeName(selectedRequestData) : 'anhorig'}.
+              Välj vilken data du vill dela med {selectedRequestData ? getRelativeName(selectedRequestData) : 'anhörig'}.
             </DialogDescription>
           </DialogHeader>
           
           <div className="space-y-6 pt-4">
             <div className="space-y-4">
-              <Label>Dela foljande data</Label>
+              <Label>Dela följande data</Label>
               <div className="space-y-3">
                 {shareOptions.map(({ key, label }) => (
                   <div key={key} className="flex items-center justify-between">
@@ -367,7 +367,7 @@ export const RelativeConnectionsSection = () => {
                 className="flex-1"
               >
                 {isResponding && <Loader2 className="w-4 h-4 animate-spin mr-2" />}
-                Godkann
+                Godkänn
               </Button>
             </div>
           </div>
@@ -377,14 +377,14 @@ export const RelativeConnectionsSection = () => {
       {connections.filter(c => !(c.status === 'pending' && c.initiated_by === 'relative')).length === 0 && pendingFromRelatives.length === 0 ? (
         <div className="text-center py-6 bg-muted/50 rounded-xl">
           <Users className="w-8 h-8 text-muted-foreground mx-auto mb-2" />
-          <p className="text-sm text-muted-foreground">Inga anhoriga kopplade annu</p>
+          <p className="text-sm text-muted-foreground">Inga anhöriga kopplade ännu</p>
           <Button 
             onClick={() => setInviteDialogOpen(true)} 
             variant="link" 
             size="sm"
             className="mt-2"
           >
-            Bjud in din forsta anhoriga
+            Bjud in din första anhöriga
           </Button>
         </div>
       ) : (
