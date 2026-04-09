@@ -29,7 +29,7 @@ import { RelativeCommentDialog } from '@/components/RelativeCommentDialog';
 import { PatientAIInsights } from '@/components/PatientAIInsights';
 import { PatientCharacteristics } from '@/components/PatientCharacteristics';
 import { MoodStats as MoodStatsType, ExerciseType, QualityType } from '@/types/mood';
-import { Loader2, ChevronLeft, Radio, Pill, Check, X, Moon, Utensils, Dumbbell, Stethoscope, BarChart3 } from 'lucide-react';
+import { Loader2, ChevronLeft, Radio, Pill, Check, X, Moon, Utensils, Dumbbell, Stethoscope, BarChart3, CalendarDays } from 'lucide-react';
 import { OverviewSummary } from '@/components/OverviewSummary';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -434,9 +434,9 @@ export function PatientOverview({ connection, onBack, hideExtras = false }: Pati
               ? "bg-background text-foreground shadow-sm"
               : "text-muted-foreground hover:text-foreground"
           )}
-          aria-label="Statistik"
+          aria-label={showStats ? "Kalender" : "Statistik"}
         >
-          <BarChart3 className="w-5 h-5" />
+          {showStats ? <CalendarDays className="w-5 h-5" /> : <BarChart3 className="w-5 h-5" />}
         </button>
       </div>
 
