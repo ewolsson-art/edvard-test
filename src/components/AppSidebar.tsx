@@ -125,7 +125,7 @@ export function AppSidebar() {
     return location.pathname.startsWith(url);
   };
 
-  const exactEndRoutes = ['/', '/lakare', '/anhorig', '/foljer'];
+  
 
   return (
     <Sidebar collapsible="icon" className="border-r border-border/20" aria-label="Huvudnavigering">
@@ -185,7 +185,7 @@ export function AppSidebar() {
                       <SidebarMenuButton asChild tooltip={item.title} role="menuitem">
                         <NavLink 
                           to={item.url} 
-                          end={item.url === '/' || item.url === '/lakare' || item.url === '/anhorig'}
+                          end={item.url === '/' || item.url === '/lakare' || item.url === '/anhorig' || item.url === '/foljer'}
                           className={`group relative flex items-center gap-4 rounded-xl transition-all duration-300 ${
                             isPrimary ? 'px-4 py-3.5' : 'px-4 py-3'
                           } ${
