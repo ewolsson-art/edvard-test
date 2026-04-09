@@ -190,13 +190,10 @@ const CharacteristicDetail = () => {
           ) : (
             <button
               onClick={() => setShowInput(true)}
-              className={cn(
-                "inline-flex items-center gap-1.5 text-[13px] transition-all duration-200 mt-1",
-                "text-foreground/25 hover:text-foreground/45"
-              )}
+              className="mt-3 w-10 h-10 rounded-full bg-primary flex items-center justify-center shadow-[0_4px_16px_hsl(45_85%_55%/0.3)] hover:shadow-[0_6px_24px_hsl(45_85%_55%/0.45)] hover:scale-105 active:scale-95 transition-all duration-200"
+              aria-label="Lägg till kännetecken"
             >
-              <Plus className="w-3.5 h-3.5" />
-              {characteristics.length === 0 ? 'Lägg till ditt första kännetecken' : 'Lägg till kännetecken'}
+              <Plus className="w-5 h-5 text-primary-foreground" />
             </button>
           )}
         </div>
