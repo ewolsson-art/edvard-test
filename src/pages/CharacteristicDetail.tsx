@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Plus, X, Zap, Cloud, Sun, ChevronLeft } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { useCharacteristics } from '@/hooks/useCharacteristics';
+import { useMoodData } from '@/hooks/useMoodData';
 import { cn } from '@/lib/utils';
 
 const MOOD_CONFIG = {
@@ -49,6 +50,11 @@ const CharacteristicDetail = () => {
     deleteCharacteristic,
   } = useCharacteristics();
 
+
+  const { entries, isLoaded: moodLoaded } = useMoodData();
+  const latestMood = entries.length > 0
+    ? entries.sort((a, b) => b.timestamp - a.timestamp)[0]?.mood
+    : null;
 
   const [newValue, setNewValue] = useState('');
   const [isAdding, setIsAdding] = useState(false);
