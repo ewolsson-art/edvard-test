@@ -118,6 +118,11 @@ const App = () => (
                 <AppLayout><RelativeDashboard /></AppLayout>
               </ProtectedRoute>
             } />
+            <Route path="/foljer" element={
+              <ProtectedRoute>
+                <AppLayout><Following /></AppLayout>
+              </ProtectedRoute>
+            } />
             <Route path="/anhorig-rapporter" element={
               <ProtectedRoute>
                 <AppLayout><RelativeReports /></AppLayout>

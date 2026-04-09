@@ -125,6 +125,8 @@ export function AppSidebar() {
     return location.pathname.startsWith(url);
   };
 
+  const exactEndRoutes = ['/', '/lakare', '/anhorig', '/foljer'];
+
   return (
     <Sidebar collapsible="icon" className="border-r border-border/20" aria-label="Huvudnavigering">
       <SidebarContent className="pt-8 pb-4 bg-sidebar" role="navigation">
