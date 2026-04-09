@@ -170,13 +170,12 @@ export const RelativePatientConnectionsSection = () => {
       {/* Only pending, no approved — show smaller CTA below */}
       {hasPending && !hasData && (
         <div className="flex justify-center pt-2">
-          <Button 
-            variant="outline"
+        <Button 
             onClick={() => setRequestDialogOpen(true)} 
-            className="gap-2"
+            className="gap-2 rounded-full bg-[hsl(45,85%,55%)] hover:bg-[hsl(45,85%,50%)] text-black font-semibold shadow-[0_0_20px_hsl(45,85%,55%,0.15)]"
           >
             <UserPlus className="w-4 h-4" />
-            Begär åtkomst till fler
+            Följ fler personer
           </Button>
         </div>
       )}
