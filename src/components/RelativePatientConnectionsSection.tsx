@@ -94,20 +94,18 @@ export const RelativePatientConnectionsSection = () => {
 
   return (
     <div className="space-y-6">
-      {/* Header — only show top-right CTA when there's existing data */}
-      <div className="flex items-center justify-between">
-        {hasData && (
+      {/* Yellow CTA — top right, shown when there are pending or approved connections */}
+      {(hasPending || hasData) && (
+        <div className="flex justify-end">
           <Button 
-            size="sm" 
-            variant="outline" 
-            className="gap-1.5"
-            onClick={() => setRequestDialogOpen(true)}
+            onClick={() => setRequestDialogOpen(true)} 
+            className="gap-2 rounded-full bg-[hsl(45,85%,55%)] hover:bg-[hsl(45,85%,50%)] text-black font-semibold shadow-[0_0_20px_hsl(45,85%,55%,0.15)]"
           >
-            <UserPlus className="h-4 w-4" />
-            Begär åtkomst
+            <UserPlus className="w-4 h-4" />
+            Följ fler personer
           </Button>
-        )}
-      </div>
+        </div>
+      )}
 
       {/* Pending requests — subtle list style */}
       {hasPending && (
@@ -141,41 +139,6 @@ export const RelativePatientConnectionsSection = () => {
               </Button>
             </div>
           ))}
-        </div>
-      )}
-
-      {/* Empty state — the hero moment */}
-      {isEmpty && (
-        <div className="flex flex-col items-center justify-center py-16 space-y-4">
-          <div className="w-14 h-14 rounded-full bg-foreground/[0.04] flex items-center justify-center">
-            <Users className="w-7 h-7 text-muted-foreground/60" />
-          </div>
-          <div className="text-center space-y-1.5">
-            <p className="text-base font-medium text-muted-foreground">Inga kopplingar ännu</p>
-            <p className="text-sm text-muted-foreground/60 max-w-[260px]">
-              Begär åtkomst till någon du bryr dig om för att följa deras mående
-            </p>
-          </div>
-          <Button 
-            onClick={() => setRequestDialogOpen(true)} 
-            className="gap-2 mt-2 h-11 px-6 text-sm font-semibold shadow-[0_0_20px_hsl(var(--primary)/0.15)]"
-          >
-            <UserPlus className="w-4 h-4" />
-            Begär åtkomst
-          </Button>
-        </div>
-      )}
-
-      {/* Only pending, no approved — show smaller CTA below */}
-      {hasPending && !hasData && (
-        <div className="flex justify-center pt-2">
-        <Button 
-            onClick={() => setRequestDialogOpen(true)} 
-            className="gap-2 rounded-full bg-[hsl(45,85%,55%)] hover:bg-[hsl(45,85%,50%)] text-black font-semibold shadow-[0_0_20px_hsl(45,85%,55%,0.15)]"
-          >
-            <UserPlus className="w-4 h-4" />
-            Följ fler personer
-          </Button>
         </div>
       )}
 
