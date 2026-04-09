@@ -2,11 +2,10 @@ import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { useRelativeConnections, PatientConnection } from '@/hooks/useRelativeConnections';
 import { supabase } from '@/integrations/supabase/client';
-import { Loader2, Users, ChevronRight } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Loader2, Users, ChevronRight, Plus } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { MOOD_LABELS, MOOD_ICONS, MoodType } from '@/types/mood';
-import { format, isToday, isYesterday } from 'date-fns';
+import { format, isToday, isYesterday, subDays } from 'date-fns';
 import { sv } from 'date-fns/locale';
 
 const formatCheckinTime = (dateStr: string) => {
@@ -17,12 +16,12 @@ const formatCheckinTime = (dateStr: string) => {
   return format(d, 'd MMM, HH:mm', { locale: sv });
 };
 
-interface TodayMood {
+interface PatientMoodData {
   mood: MoodType;
-  sleep_quality?: string | null;
   eating_quality?: string | null;
   exercised?: boolean | null;
   created_at?: string;
+  streak?: number;
 }
 
 const MOOD_COLORS: Record<MoodType, string> = {
@@ -47,22 +46,37 @@ const QUALITY_MAP: Record<string, string> = {
   bad: 'Dåligt',
 };
 
+function calculateStreak(entries: { date: string; mood: string }[], currentMood: string): number {
+  let streak = 1;
+  const sorted = [...entries].sort((a, b) => b.date.localeCompare(a.date));
+  // Start from most recent (today), count consecutive same mood
+  for (let i = 1; i < sorted.length; i++) {
+    if (sorted[i].mood === currentMood) {
+      streak++;
+    } else {
+      break;
+    }
+  }
+  return streak;
+}
+
 const RelativeDashboard = () => {
   const navigate = useNavigate();
   const { approvedConnections, isLoading } = useRelativeConnections();
-  const [todayMoods, setTodayMoods] = useState<Record<string, TodayMood | null>>({});
-  const [moodsLoading, setMoodsLoading] = useState(true);
+  const [patientData, setPatientData] = useState<Record<string, PatientMoodData | null>>({});
+  const [dataLoading, setDataLoading] = useState(true);
 
   const today = format(new Date(), 'yyyy-MM-dd');
+  const weekAgo = format(subDays(new Date(), 7), 'yyyy-MM-dd');
 
   useEffect(() => {
-    const fetchTodayMoods = async () => {
+    const fetchData = async () => {
       if (approvedConnections.length === 0) {
-        setMoodsLoading(false);
+        setDataLoading(false);
         return;
       }
 
-      const results: Record<string, TodayMood | null> = {};
+      const results: Record<string, PatientMoodData | null> = {};
 
       await Promise.all(
         approvedConnections.map(async (conn) => {
@@ -70,27 +84,47 @@ const RelativeDashboard = () => {
             results[conn.patient_id] = null;
             return;
           }
-          const { data } = await supabase
-            .from('mood_entries')
-            .select('mood, sleep_quality, eating_quality, exercised, created_at')
-            .eq('user_id', conn.patient_id)
-            .eq('date', today)
-            .maybeSingle();
 
-          results[conn.patient_id] = data
-            ? { mood: data.mood as MoodType, sleep_quality: data.sleep_quality, eating_quality: data.eating_quality, exercised: data.exercised, created_at: data.created_at }
-            : null;
+          // Fetch last 7 days of entries for streak calculation
+          const { data: entries } = await supabase
+            .from('mood_entries')
+            .select('mood, eating_quality, exercised, created_at, date')
+            .eq('user_id', conn.patient_id)
+            .gte('date', weekAgo)
+            .lte('date', today)
+            .order('date', { ascending: false });
+
+          if (!entries || entries.length === 0) {
+            results[conn.patient_id] = null;
+            return;
+          }
+
+          const todayEntry = entries.find(e => e.date === today);
+          if (!todayEntry) {
+            results[conn.patient_id] = null;
+            return;
+          }
+
+          const streak = calculateStreak(entries, todayEntry.mood);
+
+          results[conn.patient_id] = {
+            mood: todayEntry.mood as MoodType,
+            eating_quality: todayEntry.eating_quality,
+            exercised: todayEntry.exercised,
+            created_at: todayEntry.created_at,
+            streak,
+          };
         })
       );
 
-      setTodayMoods(results);
-      setMoodsLoading(false);
+      setPatientData(results);
+      setDataLoading(false);
     };
 
     if (!isLoading) {
-      fetchTodayMoods();
+      fetchData();
     }
-  }, [approvedConnections, isLoading, today]);
+  }, [approvedConnections, isLoading, today, weekAgo]);
 
   if (isLoading) {
     return (
@@ -124,12 +158,12 @@ const RelativeDashboard = () => {
 
   return (
     <div className="p-5 md:p-8 pb-24">
-      <div className="max-w-3xl md:mx-0 space-y-8">
-        <header>
-          <h1 className="font-display text-3xl md:text-4xl font-bold mb-2">
+      <div className="max-w-2xl md:mx-0 space-y-5">
+        <header className="mb-1">
+          <h1 className="font-display text-3xl md:text-4xl font-bold mb-1">
             Hem
           </h1>
-          <p className="text-muted-foreground">
+          <p className="text-sm text-muted-foreground">
             Översikt över hur dina närstående mår idag
           </p>
         </header>
@@ -145,30 +179,30 @@ const RelativeDashboard = () => {
                 Gå till Följer-sidan för att begära åtkomst till någon du vill följa.
               </p>
             </div>
-            <Button
-              variant="outline"
-              className="rounded-xl"
+            <button
               onClick={() => navigate('/foljer')}
+              className="inline-flex items-center gap-2 text-sm text-primary hover:text-primary/80 transition-colors font-medium"
             >
-              Gå till Följer
-            </Button>
+              <Plus className="w-4 h-4" />
+              Lägg till person
+            </button>
           </div>
         ) : (
           <div className="space-y-3">
             {approvedConnections.map((connection) => {
-              const todayEntry = todayMoods[connection.patient_id];
-              const hasCheckedIn = todayEntry !== null && todayEntry !== undefined;
+              const entry = patientData[connection.patient_id];
+              const hasCheckedIn = entry !== null && entry !== undefined;
               const name = getPatientName(connection);
 
               return (
                 <button
                   key={connection.id}
-                  className="w-full text-left rounded-2xl border p-5 transition-all hover:shadow-md active:scale-[0.99] bg-card/60 border-border/30"
+                  className="group w-full text-left rounded-2xl border p-5 transition-all duration-200 hover:shadow-[0_0_24px_hsl(var(--primary)/0.06)] hover:border-border/50 hover:scale-[1.01] active:scale-[0.99] bg-card/60 border-border/30 backdrop-blur-sm"
                   onClick={() => navigate(`/patient/${connection.patient_id}`)}
                 >
                   <div className="flex items-center gap-4">
                     {/* Avatar */}
-                    <Avatar className="w-12 h-12 shrink-0">
+                    <Avatar className="w-12 h-12 shrink-0 ring-1 ring-white/[0.06]">
                       {connection.patient_profile?.avatar_url ? (
                         <AvatarImage src={connection.patient_profile.avatar_url} alt={name} className="object-cover" />
                       ) : null}
@@ -181,44 +215,55 @@ const RelativeDashboard = () => {
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between gap-2">
                         <h3 className="font-semibold text-base truncate">{name}</h3>
-                        <ChevronRight className="w-4 h-4 text-muted-foreground/40 shrink-0" />
+                        <ChevronRight className="w-4 h-4 text-muted-foreground/30 shrink-0 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:text-muted-foreground/50" />
                       </div>
 
-                      {moodsLoading ? (
-                        <div className="h-4 w-24 bg-foreground/5 rounded animate-pulse mt-1.5" />
+                      {dataLoading ? (
+                        <div className="h-4 w-32 bg-foreground/5 rounded animate-pulse mt-2" />
                       ) : hasCheckedIn ? (
                         <div className="mt-2 space-y-2">
-                          {/* Mood badge + timestamp */}
-                          <div className="flex items-center gap-3">
-                            <div className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-xl border ${MOOD_COLORS[todayEntry.mood]}`}>
-                              <span className="text-base">{MOOD_ICONS[todayEntry.mood]}</span>
-                              <span className={`text-sm font-medium ${MOOD_TEXT_COLORS[todayEntry.mood]}`}>
-                                {MOOD_LABELS[todayEntry.mood]}
+                          {/* Mood badge + streak + timestamp */}
+                          <div className="flex items-center gap-2.5 flex-wrap">
+                            <div className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg border ${MOOD_COLORS[entry.mood]}`}>
+                              <span className="text-sm">{MOOD_ICONS[entry.mood]}</span>
+                              <span className={`text-xs font-semibold ${MOOD_TEXT_COLORS[entry.mood]}`}>
+                                {MOOD_LABELS[entry.mood]}
                               </span>
                             </div>
-                            {todayEntry.created_at && (
-                              <span className="text-xs text-muted-foreground/60">
-                                {formatCheckinTime(todayEntry.created_at)}
+                            {entry.streak && entry.streak >= 2 && (
+                              <span className="text-[11px] text-muted-foreground/50 font-medium">
+                                {entry.streak} dagar i rad
+                              </span>
+                            )}
+                            <span className="text-[11px] text-muted-foreground/35">
+                              ·
+                            </span>
+                            {entry.created_at && (
+                              <span className="text-[11px] text-muted-foreground/40">
+                                {formatCheckinTime(entry.created_at)}
                               </span>
                             )}
                           </div>
 
                           {/* Extra data chips */}
-                          <div className="flex flex-wrap gap-1.5">
-                            {todayEntry.eating_quality && connection.share_eating && (
-                              <span className="text-[11px] bg-foreground/[0.04] text-muted-foreground px-2 py-1 rounded-lg">
-                                Kost: {QUALITY_MAP[todayEntry.eating_quality] || todayEntry.eating_quality}
-                              </span>
-                            )}
-                            {todayEntry.exercised !== null && todayEntry.exercised !== undefined && connection.share_exercise && (
-                              <span className="text-[11px] bg-foreground/[0.04] text-muted-foreground px-2 py-1 rounded-lg">
-                                Träning: {todayEntry.exercised ? 'Ja' : 'Nej'}
-                              </span>
-                            )}
-                          </div>
+                          {((entry.eating_quality && connection.share_eating) || 
+                            (entry.exercised !== null && entry.exercised !== undefined && connection.share_exercise)) && (
+                            <div className="flex flex-wrap gap-1.5">
+                              {entry.eating_quality && connection.share_eating && (
+                                <span className="text-[11px] bg-foreground/[0.04] text-muted-foreground/60 px-2 py-0.5 rounded-md">
+                                  Kost: {QUALITY_MAP[entry.eating_quality] || entry.eating_quality}
+                                </span>
+                              )}
+                              {entry.exercised !== null && entry.exercised !== undefined && connection.share_exercise && (
+                                <span className="text-[11px] bg-foreground/[0.04] text-muted-foreground/60 px-2 py-0.5 rounded-md">
+                                  Träning: {entry.exercised ? 'Ja ✓' : 'Nej'}
+                                </span>
+                              )}
+                            </div>
+                          )}
                         </div>
                       ) : (
-                        <p className="text-sm text-muted-foreground/50 mt-1">
+                        <p className="text-sm text-muted-foreground/40 mt-1.5">
                           Har inte checkat in idag ännu
                         </p>
                       )}
@@ -227,6 +272,15 @@ const RelativeDashboard = () => {
                 </button>
               );
             })}
+
+            {/* Subtle CTA */}
+            <button
+              onClick={() => navigate('/foljer')}
+              className="w-full flex items-center justify-center gap-2 py-3 rounded-2xl text-sm text-muted-foreground/40 hover:text-muted-foreground/60 hover:bg-foreground/[0.02] transition-all duration-200"
+            >
+              <Plus className="w-4 h-4" />
+              Lägg till fler personer
+            </button>
           </div>
         )}
       </div>
