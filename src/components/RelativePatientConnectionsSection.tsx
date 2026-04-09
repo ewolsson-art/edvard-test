@@ -96,7 +96,6 @@ export const RelativePatientConnectionsSection = () => {
     <div className="space-y-6">
       {/* Header — only show top-right CTA when there's existing data */}
       <div className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold">Personer du följer</h3>
         {hasData && (
           <Button 
             size="sm" 
