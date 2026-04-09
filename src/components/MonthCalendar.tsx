@@ -58,15 +58,21 @@ export function MonthCalendar({
   return (
     <div className="fade-in">
       {/* Navigation */}
-      {!hideNavigation && (
-        <div className="flex items-center gap-3 mb-4">
+      {/* Month title with navigation */}
+      <div className="flex items-center gap-3 mb-3">
+        {!hideNavigation && (
           <button
             onClick={onPrevMonth}
-            className="flex items-center gap-1 text-primary hover:opacity-70 transition-opacity"
+            className="text-primary hover:opacity-70 transition-opacity"
             aria-label="Föregående månad"
           >
             <ChevronLeft className="w-5 h-5" />
           </button>
+        )}
+        <h2 className="font-display text-2xl font-semibold capitalize text-foreground/80">
+          {monthName}
+        </h2>
+        {!hideNavigation && (
           <button
             onClick={onNextMonth}
             className="text-primary hover:opacity-70 transition-opacity rotate-180"
@@ -74,13 +80,8 @@ export function MonthCalendar({
           >
             <ChevronLeft className="w-5 h-5" />
           </button>
-        </div>
-      )}
-
-      {/* Month title */}
-      <h2 className="font-display text-2xl font-semibold capitalize mb-3 text-foreground/80">
-        {monthName}
-      </h2>
+        )}
+      </div>
 
       {/* Weekday headers */}
       <div className="grid grid-cols-7 mb-1">
