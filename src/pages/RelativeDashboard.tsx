@@ -76,7 +76,7 @@ const RelativeDashboard = () => {
     if (connection.patient_email) {
       return connection.patient_email;
     }
-    return 'Patient';
+    return 'Användare';
   };
 
   const getPatientInitial = (connection: PatientConnection) => {
@@ -86,7 +86,7 @@ const RelativeDashboard = () => {
     if (connection.patient_email) {
       return connection.patient_email[0].toUpperCase();
     }
-    return 'P';
+    return 'A';
   };
 
   return (

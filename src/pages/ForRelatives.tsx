@@ -109,7 +109,7 @@ const ForRelatives = () => {
                 <div>
                   <h3 className="text-xl font-semibold mb-2">Skapa ett anhörigkonto</h3>
                   <p className="text-muted-foreground">
-                    Registrera dig och ange att du är anhörig till en patient.
+                    Registrera dig och ange att du är anhörig.
                   </p>
                 </div>
               </div>

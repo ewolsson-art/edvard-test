@@ -25,7 +25,7 @@ const DoctorHome = () => {
     if (connection.patient_email) {
       return connection.patient_email;
     }
-    return 'Patient';
+    return 'Användare';
   };
 
   const getPatientInitial = (connection: PatientConnection) => {
@@ -35,7 +35,7 @@ const DoctorHome = () => {
     if (connection.patient_email) {
       return connection.patient_email[0].toUpperCase();
     }
-    return 'P';
+    return 'A';
   };
 
   if (isLoading) {
@@ -70,7 +70,7 @@ const DoctorHome = () => {
                   {approvedConnections.length}
                 </p>
                 <p className="text-muted-foreground text-sm">
-                  {approvedConnections.length === 1 ? 'Aktiv patient' : 'Aktiva patienter'}
+                  {approvedConnections.length === 1 ? 'Aktiv användare' : 'Aktiva användare'}
                 </p>
               </div>
             </div>
@@ -140,15 +140,15 @@ const DoctorHome = () => {
         <section>
           <div className="flex items-center gap-3 mb-6">
             <UserCheck className="w-6 h-6 text-primary" />
-            <h2 className="font-display text-2xl font-semibold">Mina patienter</h2>
+            <h2 className="font-display text-2xl font-semibold">Mina användare</h2>
           </div>
 
           {approvedConnections.length === 0 ? (
             <div className="glass-card p-12 text-center">
               <Users className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-              <h3 className="text-lg font-medium mb-2">Inga patienter ännu</h3>
+              <h3 className="text-lg font-medium mb-2">Inga användare ännu</h3>
               <p className="text-muted-foreground">
-                När patienter bjuder in dig kommer de att visas här.
+                När användare bjuder in dig kommer de att visas här.
               </p>
             </div>
           ) : (
@@ -204,10 +204,10 @@ const DoctorHome = () => {
         <div className="glass-card p-6 bg-muted/30">
           <h3 className="font-medium mb-2">Hur det fungerar</h3>
           <ul className="text-sm text-muted-foreground space-y-2">
-            <li>• Patienter bjuder in dig genom att ange din e-postadress</li>
+            <li>• Användare bjuder in dig genom att ange din e-postadress</li>
             <li>• Du godkänner eller avvisar förfrågningar ovan</li>
-            <li>• När en koppling är godkänd kan du se patientens delade data</li>
-            <li>• Patienten styr vilken data som delas med dig</li>
+            <li>• När en koppling är godkänd kan du se den delade datan</li>
+            <li>• Användaren styr vilken data som delas med dig</li>
           </ul>
         </div>
       </div>

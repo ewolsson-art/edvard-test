@@ -69,7 +69,7 @@ export const RelativePatientConnectionsSection = () => {
     if (connection.patient_email) {
       return connection.patient_email;
     }
-    return 'Okänd patient';
+    return 'Okänd användare';
   };
 
   const getPatientInitial = (connection: typeof approvedConnections[0]) => {

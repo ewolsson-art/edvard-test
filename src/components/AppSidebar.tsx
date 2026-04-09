@@ -46,7 +46,7 @@ const doctorNavGroups = [
     label: "Översikt",
     items: [
       { title: "Hem", url: "/lakare", icon: Home, primary: true },
-      { title: "Mina patienter", url: "/mina-patienter", icon: Users },
+      { title: "Mina användare", url: "/mina-patienter", icon: Users },
     ],
   },
   {

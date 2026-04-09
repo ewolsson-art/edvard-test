@@ -88,7 +88,7 @@ export function PatientAIInsights({ entries, stats, periodLabel, view, patientNa
     if (summaryData.totalDaysWithData < 3) {
       toast({
         title: "Inte tillräckligt med data",
-        description: "Patienten behöver minst 3 dagars incheckningar för att generera insikter.",
+        description: "Det behövs minst 3 dagars incheckningar för att generera insikter.",
         variant: "destructive",
       });
       return;
@@ -186,7 +186,7 @@ export function PatientAIInsights({ entries, stats, periodLabel, view, patientNa
           {isLoading && (
             <div className="flex flex-col items-center justify-center py-8 gap-3">
               <Loader2 className="w-8 h-8 animate-spin text-primary" />
-              <p className="text-muted-foreground">Analyserar patientens mönster...</p>
+              <p className="text-muted-foreground">Analyserar mönster...</p>
             </div>
           )}
 

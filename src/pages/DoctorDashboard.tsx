@@ -79,7 +79,7 @@ const DoctorDashboard = () => {
     if (connection.patient_email) {
       return connection.patient_email;
     }
-    return 'Patient';
+    return 'Användare';
   };
 
   const getPatientInitial = (connection: PatientConnection) => {
@@ -89,7 +89,7 @@ const DoctorDashboard = () => {
     if (connection.patient_email) {
       return connection.patient_email[0].toUpperCase();
     }
-    return 'P';
+    return 'A';
   };
 
   return (
@@ -98,10 +98,10 @@ const DoctorDashboard = () => {
         <header className="flex items-start justify-between">
           <div>
             <h1 className="font-display text-3xl md:text-4xl font-bold mb-2">
-              Mina patienter
+              Mina användare
             </h1>
             <p className="text-muted-foreground">
-              Se översikt över dina patienters mående
+              Se översikt över dina användares mående
             </p>
           </div>
           <Dialog open={requestDialogOpen} onOpenChange={setRequestDialogOpen}>
@@ -113,19 +113,19 @@ const DoctorDashboard = () => {
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>
-                <DialogTitle>Begär åtkomst till patient</DialogTitle>
+                <DialogTitle>Begär åtkomst till användare</DialogTitle>
                 <DialogDescription>
-                  Ange patientens e-postadress för att skicka en förfrågan om att få tillgång till deras data.
+                  Ange användarens e-postadress för att skicka en förfrågan om att få tillgång till deras data.
                 </DialogDescription>
               </DialogHeader>
               
               <div className="space-y-6 pt-4">
                 <div className="space-y-2">
-                  <Label htmlFor="patientEmail">Patientens e-post</Label>
+                  <Label htmlFor="patientEmail">Användarens e-post</Label>
                   <Input
                     id="patientEmail"
                     type="email"
-                    placeholder="patient@example.com"
+                    placeholder="namn@example.com"
                     value={patientEmail}
                     onChange={(e) => setPatientEmail(e.target.value)}
                     disabled={isRequesting}
@@ -133,7 +133,7 @@ const DoctorDashboard = () => {
                 </div>
 
                 <p className="text-sm text-muted-foreground">
-                  Patienten kommer att kunna godkänna eller avvisa din förfrågan och välja vilken data som ska delas med dig.
+                  Användaren kommer att kunna godkänna eller avvisa din förfrågan och välja vilken data som ska delas med dig.
                 </p>
 
                 <Button onClick={handleRequestAccess} disabled={isRequesting} className="w-full gap-2">
@@ -222,7 +222,7 @@ const DoctorDashboard = () => {
                         <p className="text-sm text-muted-foreground">{connection.patient_email}</p>
                       )}
                       <p className="text-sm text-blue-600 dark:text-blue-400">
-                        Väntar på patientens svar
+                        Väntar på svar
                       </p>
                     </div>
                     <Button
@@ -245,15 +245,15 @@ const DoctorDashboard = () => {
         <section>
           <div className="flex items-center gap-3 mb-6">
             <UserCheck className="w-6 h-6 text-primary" />
-            <h2 className="font-display text-2xl font-semibold">Godkända patienter</h2>
+            <h2 className="font-display text-2xl font-semibold">Godkända användare</h2>
           </div>
 
           {approvedConnections.length === 0 ? (
             <div className="glass-card p-12 text-center">
               <Users className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-              <h3 className="text-lg font-medium mb-2">Inga patienter ännu</h3>
+              <h3 className="text-lg font-medium mb-2">Inga användare ännu</h3>
               <p className="text-muted-foreground mb-4">
-                Begär åtkomst till patienter eller vänta på att de bjuder in dig.
+                Begär åtkomst till användare eller vänta på att de bjuder in dig.
               </p>
               <Button onClick={() => setRequestDialogOpen(true)} variant="outline" className="gap-2">
                 <UserPlus className="w-4 h-4" />

@@ -16,7 +16,7 @@ export const PatientCharacteristics = ({
   patientId, 
   latestMood, 
   isShared,
-  patientName = 'Patienten'
+  patientName = 'Användaren'
 }: PatientCharacteristicsProps) => {
   const { elevatedCharacteristics, depressedCharacteristics, stableCharacteristics, isLoading } = usePatientCharacteristics(patientId);
 

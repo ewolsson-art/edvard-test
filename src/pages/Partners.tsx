@@ -10,7 +10,7 @@ const Partners = () => {
     {
       icon: Building2,
       title: 'Vårdorganisationer',
-      description: 'Integrera plattformen i er verksamhet för att ge patienterna bättre verktyg och er bättre insikt.',
+      description: 'Integrera plattformen i er verksamhet för att ge användarna bättre verktyg och er bättre insikt.',
     },
     {
       icon: GraduationCap,
@@ -19,7 +19,7 @@ const Partners = () => {
     },
     {
       icon: Heart,
-      title: 'Patientorganisationer',
+      title: 'Brukarorganisationer',
       description: 'Erbjud era medlemmar ett modernt verktyg för att hantera sitt mående.',
     },
   ];
@@ -89,9 +89,9 @@ const Partners = () => {
               </div>
               <div className="glass-card p-6">
                 <Heart className="w-8 h-8 text-primary mb-3" />
-                <h3 className="font-semibold mb-2">Patientfokus</h3>
+                <h3 className="font-semibold mb-2">Användarfokus</h3>
                 <p className="text-muted-foreground text-sm">
-                  Allt vi gör utgår från patientens behov och integritet.
+                  Allt vi gör utgår från användarens behov och integritet.
                 </p>
               </div>
             </div>

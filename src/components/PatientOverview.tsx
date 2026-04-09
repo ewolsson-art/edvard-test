@@ -91,7 +91,7 @@ export function PatientOverview({ connection, onBack }: PatientOverviewProps) {
         .filter(Boolean)
         .join(' ');
     }
-    return connection.patient_email || 'Patient';
+    return connection.patient_email || 'Användare';
   }, [connection]);
 
   // Week data
@@ -735,7 +735,7 @@ export function PatientOverview({ connection, onBack }: PatientOverviewProps) {
         {/* No data shared message */}
         {!connection.share_mood && !connection.share_sleep && !connection.share_eating && !connection.share_exercise && !connection.share_medication && (
           <div className="text-center py-8 text-muted-foreground">
-            <p>Patienten delar ingen data med dig.</p>
+            <p>Användaren delar ingen data med dig.</p>
           </div>
         )}
       </div>

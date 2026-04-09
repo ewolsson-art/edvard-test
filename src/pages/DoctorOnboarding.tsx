@@ -14,31 +14,31 @@ import { cn } from '@/lib/utils';
 const DOCTOR_FEATURES = [
   {
     icon: Users,
-    title: 'Hantera patienter',
-    description: 'Ta emot kopplingsförfrågningar och hantera dina patientkontakter',
+    title: 'Hantera användare',
+    description: 'Ta emot kopplingsförfrågningar och hantera dina kontakter',
   },
   {
     icon: TrendingUp,
     title: 'Realtidsöversikt',
-    description: 'Se patienternas mående, sömn, kost och träning visualiserat',
+    description: 'Se mående, sömn, kost och träning visualiserat',
   },
   {
     icon: MessageSquare,
     title: 'Säker kommunikation',
-    description: 'Chatta direkt med dina patienter i en säker miljö',
+    description: 'Chatta direkt med dina användare i en säker miljö',
   },
   {
     icon: Shield,
-    title: 'Patientkontroll',
-    description: 'Patienter bestämmer själva vilken data de delar med dig',
+    title: 'Användarkontroll',
+    description: 'Användare bestämmer själva vilken data de delar med dig',
   },
 ];
 
 const WORKFLOW_STEPS = [
   {
     number: '1',
-    title: 'Patient bjuder in dig',
-    description: 'Patienten anger din e-postadress i sin app',
+    title: 'Användaren bjuder in dig',
+    description: 'Användaren anger din e-postadress i sin app',
   },
   {
     number: '2',
@@ -47,7 +47,7 @@ const WORKFLOW_STEPS = [
   },
   {
     number: '3',
-    title: 'Följ patientens mående',
+    title: 'Följ användarens mående',
     description: 'Se statistik och trender i realtid',
   },
 ];
@@ -145,7 +145,7 @@ const DoctorOnboarding = () => {
                   Välkommen, vårdgivare!
                 </h1>
                 <p className="text-sm text-muted-foreground max-w-md mx-auto">
-                  Friendly hjälper dig följa dina patienters mående mellan besöken
+                  Friendly hjälper dig följa dina användares mående mellan besöken
                 </p>
               </div>
 
@@ -187,7 +187,7 @@ const DoctorOnboarding = () => {
                   Så fungerar det
                 </h1>
                 <p className="text-sm text-muted-foreground">
-                  Enkelt att komma igång med dina patienter
+                  Enkelt att komma igång med dina användare
                 </p>
               </div>
 
@@ -212,7 +212,7 @@ const DoctorOnboarding = () => {
                 <div className="flex items-start gap-2">
                   <Bell className="w-4 h-4 text-primary mt-0.5 shrink-0" />
                   <div>
-                    <p className="text-xs font-medium">Dina patienter hittar dig via e-post</p>
+                    <p className="text-xs font-medium">Dina användare hittar dig via e-post</p>
                     <p className="text-xs text-muted-foreground">
                       De anger samma e-postadress som du registrerade dig med
                     </p>
@@ -264,7 +264,7 @@ const DoctorOnboarding = () => {
                     <div className="w-5 h-5 rounded-full bg-primary/10 flex items-center justify-center shrink-0 mt-0.5">
                       <span className="text-[10px] font-bold text-primary">1</span>
                     </div>
-                    <p className="text-xs">Ge din e-postadress till patienter som vill koppla sig</p>
+                    <p className="text-xs">Ge din e-postadress till användare som vill koppla sig</p>
                   </li>
                   <li className="flex items-start gap-2">
                     <div className="w-5 h-5 rounded-full bg-primary/10 flex items-center justify-center shrink-0 mt-0.5">
@@ -276,7 +276,7 @@ const DoctorOnboarding = () => {
                     <div className="w-5 h-5 rounded-full bg-primary/10 flex items-center justify-center shrink-0 mt-0.5">
                       <span className="text-[10px] font-bold text-primary">3</span>
                     </div>
-                    <p className="text-xs">Aktivera chatt för att kommunicera direkt med patienten</p>
+                    <p className="text-xs">Aktivera chatt för att kommunicera direkt med användaren</p>
                   </li>
                 </ul>
               </div>
@@ -285,7 +285,7 @@ const DoctorOnboarding = () => {
                 <div className="flex items-start gap-2">
                   <Eye className="w-4 h-4 text-primary mt-0.5 shrink-0" />
                   <p className="text-xs text-muted-foreground">
-                    <span className="font-medium text-foreground">Integritet i fokus:</span> Du kan bara se data som patienten aktivt valt att dela med dig.
+                    <span className="font-medium text-foreground">Integritet i fokus:</span> Du kan bara se data som användaren aktivt valt att dela med dig.
                   </p>
                 </div>
               </div>
