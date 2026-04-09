@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MOOD_LABELS, MOOD_ICONS, MoodType } from '@/types/mood';
 import { cn } from '@/lib/utils';
@@ -29,7 +29,8 @@ import { RelativeCommentDialog } from '@/components/RelativeCommentDialog';
 import { PatientAIInsights } from '@/components/PatientAIInsights';
 import { PatientCharacteristics } from '@/components/PatientCharacteristics';
 import { MoodStats as MoodStatsType, ExerciseType, QualityType } from '@/types/mood';
-import { Loader2, ChevronLeft, Radio, Pill, Check, X, Moon, Utensils, Dumbbell, Stethoscope } from 'lucide-react';
+import { Loader2, ChevronLeft, Radio, Pill, Check, X, Moon, Utensils, Dumbbell, Stethoscope, BarChart3 } from 'lucide-react';
+import { OverviewSummary } from '@/components/OverviewSummary';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 
@@ -46,6 +47,7 @@ type ViewType = 'week' | 'month' | 'year';
 export function PatientOverview({ connection, onBack, hideExtras = false }: PatientOverviewProps) {
   const navigate = useNavigate();
   const [view, setView] = useState<ViewType>('month');
+  const [showStats, setShowStats] = useState(false);
   const [currentWeek, setCurrentWeek] = useState(new Date());
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
