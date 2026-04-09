@@ -201,6 +201,13 @@ const RelativeDashboard = () => {
                               </span>
                             )}
                           </div>
+
+                          {/* Timestamp */}
+                          {todayEntry.created_at && (
+                            <p className="text-[11px] text-muted-foreground/40">
+                              Checkade in kl. {format(new Date(todayEntry.created_at), 'HH:mm')}
+                            </p>
+                          )}
                         </div>
                       ) : (
                         <p className="text-sm text-muted-foreground/50 mt-1">
