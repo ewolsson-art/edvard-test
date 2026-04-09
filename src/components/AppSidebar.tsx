@@ -1,4 +1,5 @@
-import { CalendarDays, BarChart3, LogOut, UserCircle, Users, Home, FileText, Settings, MessageCircle, Bell, Sparkles } from "lucide-react";
+import { useState } from "react";
+import { CalendarDays, BarChart3, LogOut, UserCircle, Users, Home, FileText, Settings, MessageCircle, Bell, Sparkles, Loader2 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { NavLink } from "@/components/NavLink";
 import { useSidebar } from "@/components/ui/sidebar";
@@ -86,6 +87,7 @@ export function AppSidebar() {
   
   const isMobile = useIsMobile();
   const isCollapsed = state === "collapsed";
+  const [signingOut, setSigningOut] = useState(false);
 
   // Don't determine nav until role is loaded to prevent sidebar flash
   if (roleLoading) {
@@ -110,6 +112,8 @@ export function AppSidebar() {
   };
 
   const handleSignOut = async () => {
+    if (signingOut) return;
+    setSigningOut(true);
     await signOut();
   };
 
@@ -256,21 +260,23 @@ export function AppSidebar() {
             variant="ghost"
             size="sm"
             onClick={handleSignOut}
+            disabled={signingOut}
             className="w-full gap-3 justify-start px-4 py-3 rounded-xl text-white/30 hover:text-destructive hover:bg-destructive/5 transition-all duration-300"
             aria-label="Logga ut från ditt konto"
           >
-            <LogOut className="h-[18px] w-[18px]" strokeWidth={1.5} aria-hidden="true" />
-            <span className="text-[13px] font-normal">Logga ut</span>
+            {signingOut ? <Loader2 className="h-[18px] w-[18px] animate-spin" strokeWidth={1.5} /> : <LogOut className="h-[18px] w-[18px]" strokeWidth={1.5} aria-hidden="true" />}
+            <span className="text-[13px] font-normal">{signingOut ? 'Loggar ut...' : 'Logga ut'}</span>
           </Button>
         ) : (
           <Button
             variant="ghost"
             size="icon"
             onClick={handleSignOut}
+            disabled={signingOut}
             className="w-full h-10 rounded-xl text-white/30 hover:text-destructive hover:bg-destructive/5 transition-all duration-300"
             aria-label="Logga ut från ditt konto"
           >
-            <LogOut className="h-[18px] w-[18px]" strokeWidth={1.5} aria-hidden="true" />
+            {signingOut ? <Loader2 className="h-[18px] w-[18px] animate-spin" strokeWidth={1.5} /> : <LogOut className="h-[18px] w-[18px]" strokeWidth={1.5} aria-hidden="true" />}
           </Button>
         )}
       </SidebarFooter>
