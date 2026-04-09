@@ -501,9 +501,14 @@ export function PatientOverview({ connection, onBack, hideExtras = false }: Pati
                               'bg-mood-stable'
                             )} />
                           </div>
-                          <span className="text-2xl font-semibold text-foreground/80">
-                            {MOOD_LABELS[todayEntry.mood]}
-                          </span>
+                          <div>
+                            <span className="text-2xl font-semibold text-foreground/80">
+                              {MOOD_LABELS[todayEntry.mood]}
+                            </span>
+                            <p className="text-xs text-muted-foreground/40 mt-0.5">
+                              Incheckad {format(new Date(todayEntry.timestamp), 'HH:mm', { locale: sv })}
+                            </p>
+                          </div>
                         </div>
 
                         {todayEntry.comment && (
