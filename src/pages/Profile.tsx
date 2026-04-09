@@ -162,7 +162,7 @@ const Profile = () => {
     return <SubPage title="Delegater" onBack={() => setView('main')}><DelegatesSection /></SubPage>;
   }
   if (view === 'relative-patients') {
-    return <SubPage title="Mina närstående" onBack={() => setView('main')}><RelativePatientConnectionsSection /></SubPage>;
+    return <SubPage title="Personer du följer" onBack={() => setView('main')}><RelativePatientConnectionsSection /></SubPage>;
   }
   if (view === 'characteristics') {
     return (
@@ -235,7 +235,7 @@ const Profile = () => {
         {/* Relative sections */}
         {isRelative && (
           <SettingsGroup label="Kopplingar">
-            <SettingsRow icon={Heart} label="Mina närstående" description="Patienter du följer" onClick={() => setView('relative-patients')} />
+            <SettingsRow icon={Heart} label="Personer du följer" description="Hantera dina kopplingar" onClick={() => setView('relative-patients')} />
           </SettingsGroup>
         )}
       </div>

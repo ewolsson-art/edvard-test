@@ -97,7 +97,7 @@ export const RelativePatientConnectionsSection = () => {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Users className="w-5 h-5 text-primary" />
-          <h3 className="text-lg font-semibold">Mina närstående</h3>
+          <h3 className="text-lg font-semibold">Personer du följer</h3>
           {totalPending > 0 && (
             <Badge variant="secondary" className="h-5 px-1.5 text-xs">
               {totalPending}
