@@ -194,7 +194,7 @@ const RelativeDashboard = () => {
                             </div>
                             {todayEntry.created_at && (
                               <span className="text-xs text-muted-foreground/60">
-                                {format(new Date(todayEntry.created_at), 'd MMM, HH:mm', { locale: sv })}
+                                {formatCheckinTime(todayEntry.created_at)}
                               </span>
                             )}
                           </div>
