@@ -33,6 +33,7 @@ import DoctorOnboarding from "./pages/DoctorOnboarding";
 import RelativeOnboarding from "./pages/RelativeOnboarding";
 import RelativeDashboard from "./pages/RelativeDashboard";
 import RelativeReports from "./pages/RelativeReports";
+import Following from "./pages/Following";
 import Profile from "./pages/Profile";
 import DoctorHome from "./pages/DoctorHome";
 import DoctorDashboard from "./pages/DoctorDashboard";
