@@ -25,6 +25,12 @@ export function useUserRole() {
 
       if (!error && data) {
         setRole(data.role as AppRole);
+      } else {
+        // Fallback to user metadata role if DB hasn't been updated yet
+        const metaRole = user.user_metadata?.role as AppRole | undefined;
+        if (metaRole && ['patient', 'doctor', 'relative'].includes(metaRole)) {
+          setRole(metaRole);
+        }
       }
       setIsLoading(false);
     };
