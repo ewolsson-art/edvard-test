@@ -504,9 +504,11 @@ export function PatientOverview({ connection, onBack, hideExtras = false }: Pati
                 />
               )}
             </div>
-            <div className="mt-6">
-              <MoodStats stats={stats} periodLabel={label} />
-            </div>
+            {view !== 'week' && (
+              <div className="mt-6">
+                <MoodStats stats={stats} periodLabel={label} />
+              </div>
+            )}
           </section>
         )}
 
