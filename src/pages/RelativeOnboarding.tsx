@@ -120,7 +120,7 @@ const RelativeOnboarding = () => {
               <button
                 onClick={handleSendRequest}
                 disabled={isSending || sent || !email}
-                className="shrink-0 h-10 px-4 rounded-lg bg-primary/20 text-primary hover:bg-primary/30 transition-colors disabled:opacity-40 flex items-center gap-1.5 text-sm font-medium"
+                className="shrink-0 h-10 px-4 rounded-lg bg-[hsl(45_85%_55%)] text-[hsl(230_30%_5%)] hover:bg-[hsl(45_85%_65%)] transition-colors disabled:opacity-40 flex items-center gap-1.5 text-sm font-semibold"
               >
                 {isSending ? (
                   <Loader2 className="w-4 h-4 animate-spin" />
