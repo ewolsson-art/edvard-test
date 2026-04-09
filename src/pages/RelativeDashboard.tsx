@@ -279,7 +279,7 @@ const RelativeDashboard = () => {
               className="gap-2"
             >
               <UserPlus className="w-4 h-4" />
-              Begär åtkomst till fler
+              Följ fler personer
             </Button>
           </div>
         ) : (
