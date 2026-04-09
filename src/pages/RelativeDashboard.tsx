@@ -2,8 +2,20 @@ import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { useRelativeConnections, PatientConnection } from '@/hooks/useRelativeConnections';
 import { supabase } from '@/integrations/supabase/client';
-import { Loader2, Users, ChevronRight } from 'lucide-react';
+import { Loader2, Users, ChevronRight, UserPlus, X, Send } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { useToast } from '@/hooks/use-toast';
+import { z } from 'zod';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 import { MOOD_LABELS, MOOD_ICONS, MoodType } from '@/types/mood';
 import { format, isToday, isYesterday, subDays } from 'date-fns';
 import { sv } from 'date-fns/locale';
