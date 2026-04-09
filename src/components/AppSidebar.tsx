@@ -63,6 +63,7 @@ const relativeNavGroups = [
     label: "Översikt",
     items: [
       { title: "Hem", url: "/anhorig", icon: Home, primary: true },
+      { title: "Följer", url: "/foljer", icon: Users },
       { title: "Forum", url: "/forum", icon: MessageCircle },
       { title: "Notiser", url: "/notiser", icon: Bell },
     ],
@@ -124,6 +125,8 @@ export function AppSidebar() {
     return location.pathname.startsWith(url);
   };
 
+  
+
   return (
     <Sidebar collapsible="icon" className="border-r border-border/20" aria-label="Huvudnavigering">
       <SidebarContent className="pt-8 pb-4 bg-sidebar" role="navigation">
@@ -182,7 +185,7 @@ export function AppSidebar() {
                       <SidebarMenuButton asChild tooltip={item.title} role="menuitem">
                         <NavLink 
                           to={item.url} 
-                          end={item.url === '/' || item.url === '/lakare' || item.url === '/anhorig'}
+                          end={item.url === '/' || item.url === '/lakare' || item.url === '/anhorig' || item.url === '/foljer'}
                           className={`group relative flex items-center gap-4 rounded-xl transition-all duration-300 ${
                             isPrimary ? 'px-4 py-3.5' : 'px-4 py-3'
                           } ${
