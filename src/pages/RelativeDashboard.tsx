@@ -2,8 +2,20 @@ import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { useRelativeConnections, PatientConnection } from '@/hooks/useRelativeConnections';
 import { supabase } from '@/integrations/supabase/client';
-import { Loader2, Users, ChevronRight } from 'lucide-react';
+import { Loader2, Users, ChevronRight, UserPlus, X, Send } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { useToast } from '@/hooks/use-toast';
+import { z } from 'zod';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 import { MOOD_LABELS, MOOD_ICONS, MoodType } from '@/types/mood';
 import { format, isToday, isYesterday, subDays } from 'date-fns';
 import { sv } from 'date-fns/locale';
@@ -60,11 +72,17 @@ function calculateStreak(entries: { date: string; mood: string }[], currentMood:
   return streak;
 }
 
+const emailSchema = z.string().email({ message: "Ogiltig e-postadress" });
+
 const RelativeDashboard = () => {
   const navigate = useNavigate();
-  const { approvedConnections, isLoading } = useRelativeConnections();
+  const { toast } = useToast();
+  const { approvedConnections, pendingFromRelative, isLoading, requestPatientAccess, cancelRequest } = useRelativeConnections();
   const [patientData, setPatientData] = useState<Record<string, PatientMoodData | null>>({});
   const [dataLoading, setDataLoading] = useState(true);
+  const [requestDialogOpen, setRequestDialogOpen] = useState(false);
+  const [patientEmail, setPatientEmail] = useState('');
+  const [isRequesting, setIsRequesting] = useState(false);
 
   const today = format(new Date(), 'yyyy-MM-dd');
   const weekAgo = format(subDays(new Date(), 7), 'yyyy-MM-dd');
@@ -134,6 +152,24 @@ const RelativeDashboard = () => {
     );
   }
 
+  const handleRequestAccess = async () => {
+    const result = emailSchema.safeParse(patientEmail);
+    if (!result.success) {
+      toast({ title: "Ogiltig e-postadress", variant: "destructive" });
+      return;
+    }
+    setIsRequesting(true);
+    const { success, error } = await requestPatientAccess(patientEmail);
+    setIsRequesting(false);
+    if (success) {
+      setPatientEmail('');
+      setRequestDialogOpen(false);
+    } else if (error) {
+      toast({ title: "Kunde inte skicka förfrågan", description: error, variant: "destructive" });
+    }
+  };
+
+
   const getPatientName = (connection: PatientConnection) => {
     if (connection.patient_profile?.first_name || connection.patient_profile?.last_name) {
       return [connection.patient_profile.first_name, connection.patient_profile.last_name]
@@ -159,32 +195,92 @@ const RelativeDashboard = () => {
   return (
     <div className="p-5 md:p-8 pb-24">
       <div className="max-w-2xl md:mx-0 space-y-5">
-        <header className="mb-1">
-          <h1 className="font-display text-3xl md:text-4xl font-bold mb-1">
-            Hem
-          </h1>
-          <p className="text-sm text-muted-foreground">
-            Översikt över hur dina närstående mår idag
-          </p>
+        <header className="flex items-start justify-between mb-1">
+          <div>
+            <h1 className="font-display text-3xl md:text-4xl font-bold mb-1">
+              Hem
+            </h1>
+            <p className="text-sm text-muted-foreground">
+              Översikt över hur dina närstående mår idag
+            </p>
+          </div>
+          {approvedConnections.length > 0 && (
+            <Button
+              size="sm"
+              variant="outline"
+              className="gap-1.5 shrink-0 mt-1"
+              onClick={() => setRequestDialogOpen(true)}
+            >
+              <UserPlus className="h-4 w-4" />
+              Begär åtkomst
+            </Button>
+          )}
         </header>
 
-        {approvedConnections.length === 0 ? (
+        {/* Pending requests */}
+        {pendingFromRelative.length > 0 && (
+          <div className="space-y-1">
+            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-2">
+              Väntande förfrågningar
+            </p>
+            {pendingFromRelative.map((connection) => (
+              <div
+                key={connection.id}
+                className="flex items-center justify-between py-3 px-4 rounded-xl bg-foreground/[0.03]"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-full bg-foreground/[0.06] flex items-center justify-center">
+                    <span className="text-sm font-semibold text-muted-foreground">
+                      {getPatientInitial(connection)}
+                    </span>
+                  </div>
+                  <div>
+                    <span className="text-sm font-medium">{getPatientName(connection)}</span>
+                    <p className="text-xs text-muted-foreground">Väntar på svar</p>
+                  </div>
+                </div>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  className="text-destructive hover:text-destructive h-8 w-8 p-0"
+                  onClick={() => cancelRequest(connection.id)}
+                >
+                  <X className="w-4 h-4" />
+                </Button>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {approvedConnections.length === 0 && pendingFromRelative.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-16 space-y-4">
-            <div className="w-16 h-16 rounded-2xl bg-muted/30 flex items-center justify-center">
-              <Users className="w-8 h-8 text-muted-foreground/40" />
+            <div className="w-14 h-14 rounded-full bg-foreground/[0.04] flex items-center justify-center">
+              <Users className="w-7 h-7 text-muted-foreground/60" />
             </div>
-            <div className="text-center space-y-1">
-              <h3 className="text-lg font-medium">Inga personer ännu</h3>
-              <p className="text-sm text-muted-foreground max-w-xs">
-                Gå till Följer-sidan för att begära åtkomst till någon du vill följa.
+            <div className="text-center space-y-1.5">
+              <p className="text-base font-medium text-muted-foreground">Inga personer ännu</p>
+              <p className="text-sm text-muted-foreground/60 max-w-[260px]">
+                Begär åtkomst till någon du bryr dig om för att följa deras mående
               </p>
             </div>
-            <button
-              onClick={() => navigate('/foljer')}
-              className="inline-flex items-center gap-2 text-sm text-primary hover:text-primary/80 transition-colors font-medium"
+            <Button
+              onClick={() => setRequestDialogOpen(true)}
+              className="gap-2 mt-2 h-11 px-6 text-sm font-semibold shadow-[0_0_20px_hsl(var(--primary)/0.15)]"
             >
-              Gå till Följer
-            </button>
+              <UserPlus className="w-4 h-4" />
+              Begär åtkomst
+            </Button>
+          </div>
+        ) : approvedConnections.length === 0 && pendingFromRelative.length > 0 ? (
+          <div className="flex justify-center pt-2">
+            <Button
+              variant="outline"
+              onClick={() => setRequestDialogOpen(true)}
+              className="gap-2"
+            >
+              <UserPlus className="w-4 h-4" />
+              Begär åtkomst till fler
+            </Button>
           </div>
         ) : (
           <div className="space-y-3">
@@ -266,6 +362,41 @@ const RelativeDashboard = () => {
 
           </div>
         )}
+        {/* Request dialog */}
+        <Dialog open={requestDialogOpen} onOpenChange={setRequestDialogOpen}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Begär åtkomst</DialogTitle>
+              <DialogDescription>
+                Ange e-postadressen till personen du vill följa för att skicka en förfrågan.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="space-y-6 pt-4">
+              <div className="space-y-2">
+                <Label htmlFor="patientEmail">E-postadress</Label>
+                <Input
+                  id="patientEmail"
+                  type="email"
+                  placeholder="namn@example.com"
+                  value={patientEmail}
+                  onChange={(e) => setPatientEmail(e.target.value)}
+                  disabled={isRequesting}
+                />
+              </div>
+              <p className="text-sm text-muted-foreground">
+                Personen kommer att kunna godkänna eller avvisa din förfrågan och välja vilken data du får se.
+              </p>
+              <Button onClick={handleRequestAccess} disabled={isRequesting} className="w-full gap-2">
+                {isRequesting ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  <Send className="w-4 h-4" />
+                )}
+                Skicka förfrågan
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   );
