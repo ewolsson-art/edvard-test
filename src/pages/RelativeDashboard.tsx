@@ -152,6 +152,24 @@ const RelativeDashboard = () => {
     );
   }
 
+  const handleRequestAccess = async () => {
+    const result = emailSchema.safeParse(patientEmail);
+    if (!result.success) {
+      toast({ title: "Ogiltig e-postadress", variant: "destructive" });
+      return;
+    }
+    setIsRequesting(true);
+    const { success, error } = await requestPatientAccess(patientEmail);
+    setIsRequesting(false);
+    if (success) {
+      setPatientEmail('');
+      setRequestDialogOpen(false);
+    } else if (error) {
+      toast({ title: "Kunde inte skicka förfrågan", description: error, variant: "destructive" });
+    }
+  };
+
+
   const getPatientName = (connection: PatientConnection) => {
     if (connection.patient_profile?.first_name || connection.patient_profile?.last_name) {
       return [connection.patient_profile.first_name, connection.patient_profile.last_name]
