@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MOOD_LABELS, MOOD_ICONS, MoodType } from '@/types/mood';
 import { cn } from '@/lib/utils';
@@ -29,7 +29,8 @@ import { RelativeCommentDialog } from '@/components/RelativeCommentDialog';
 import { PatientAIInsights } from '@/components/PatientAIInsights';
 import { PatientCharacteristics } from '@/components/PatientCharacteristics';
 import { MoodStats as MoodStatsType, ExerciseType, QualityType } from '@/types/mood';
-import { Loader2, ChevronLeft, Radio, Pill, Check, X, Moon, Utensils, Dumbbell, Stethoscope } from 'lucide-react';
+import { Loader2, ChevronLeft, Radio, Pill, Check, X, Moon, Utensils, Dumbbell, Stethoscope, BarChart3 } from 'lucide-react';
+import { OverviewSummary } from '@/components/OverviewSummary';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 
@@ -46,6 +47,7 @@ type ViewType = 'week' | 'month' | 'year';
 export function PatientOverview({ connection, onBack, hideExtras = false }: PatientOverviewProps) {
   const navigate = useNavigate();
   const [view, setView] = useState<ViewType>('month');
+  const [showStats, setShowStats] = useState(false);
   const [currentWeek, setCurrentWeek] = useState(new Date());
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
@@ -424,6 +426,18 @@ export function PatientOverview({ connection, onBack, hideExtras = false }: Pati
             <p className="text-sm text-muted-foreground/40 mt-0.5">Ingen incheckning ännu</p>
           )}
         </div>
+        <button
+          onClick={() => setShowStats(!showStats)}
+          className={cn(
+            "p-2 rounded-md transition-all shrink-0",
+            showStats
+              ? "bg-background text-foreground shadow-sm"
+              : "text-muted-foreground hover:text-foreground"
+          )}
+          aria-label="Statistik"
+        >
+          <BarChart3 className="w-5 h-5" />
+        </button>
       </div>
 
       {!hideExtras && diagnoses.length > 0 && (
@@ -442,16 +456,29 @@ export function PatientOverview({ connection, onBack, hideExtras = false }: Pati
         </div>
       )}
 
+      {/* Stats view */}
+      {showStats && (
+        <OverviewSummary
+          stats={stats}
+          entries={entries}
+          periodLabel={label}
+          sleepBadDays={0}
+          showSleep={false}
+        />
+      )}
+
       {/* View tabs */}
-      <div className="flex items-center gap-4">
-        <Tabs value={view} onValueChange={(v) => setView(v as ViewType)} className="flex-1 max-w-md">
-          <TabsList className="grid w-full grid-cols-3">
-            <TabsTrigger value="week">Idag</TabsTrigger>
-            <TabsTrigger value="month">Månad</TabsTrigger>
-            <TabsTrigger value="year">År</TabsTrigger>
-          </TabsList>
-        </Tabs>
-      </div>
+      {!showStats && (
+        <>
+        <div className="flex items-center gap-4">
+          <Tabs value={view} onValueChange={(v) => setView(v as ViewType)} className="flex-1 max-w-md">
+            <TabsList className="grid w-full grid-cols-3">
+              <TabsTrigger value="week">Idag</TabsTrigger>
+              <TabsTrigger value="month">Månad</TabsTrigger>
+              <TabsTrigger value="year">År</TabsTrigger>
+            </TabsList>
+          </Tabs>
+        </div>
 
       {/* Stats and calendars based on what's shared */}
       <div className="space-y-8">
@@ -596,6 +623,8 @@ export function PatientOverview({ connection, onBack, hideExtras = false }: Pati
           </div>
         )}
       </div>
+        </>
+      )}
 
       {/* Relative comment dialog */}
       {isRelativeViewing && (
