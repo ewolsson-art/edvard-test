@@ -30,23 +30,20 @@ serve(async (req) => {
       });
     }
 
-    // Map mood types for query
     const moodValues = moodType === "elevated"
       ? ["elevated", "somewhat_elevated"]
       : moodType === "depressed"
       ? ["depressed", "somewhat_depressed"]
       : ["stable"];
 
-    // Get entries with comments for this mood type
     const { data: entries } = await supabase
       .from("mood_entries")
-      .select("mood, comment, sleep_comment, eating_comment, exercise_comment, medication_comment, energy_level, sleep_quality, eating_quality, exercised, date")
+      .select("mood, comment, sleep_comment, eating_comment, exercise_comment, medication_comment, energy_level, sleep_quality, eating_quality, exercised, tags, date")
       .eq("user_id", user.id)
       .in("mood", moodValues)
       .order("date", { ascending: false })
-      .limit(100);
+      .limit(200);
 
-    // Get existing characteristics to avoid duplicates
     const { data: existing } = await supabase
       .from("characteristics")
       .select("name")
@@ -55,7 +52,25 @@ serve(async (req) => {
 
     const existingNames = (existing || []).map(c => c.name.toLowerCase());
 
-    // Collect all comments
+    // Collect tags and their frequency
+    const tagCounts: Record<string, number> = {};
+    (entries || []).forEach(e => {
+      if (e.tags && Array.isArray(e.tags)) {
+        for (const tag of e.tags) {
+          const normalized = tag.toLowerCase().trim();
+          if (!existingNames.includes(normalized)) {
+            tagCounts[normalized] = (tagCounts[normalized] || 0) + 1;
+          }
+        }
+      }
+    });
+
+    const frequentTags = Object.entries(tagCounts)
+      .filter(([_, count]) => count >= 2)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 10);
+
+    // Collect comments
     const comments: string[] = [];
     (entries || []).forEach(e => {
       if (e.comment) comments.push(e.comment);
@@ -85,8 +100,11 @@ serve(async (req) => {
       if (energyLow / totalEntries > 0.5) patterns.push("Har ofta låg energi");
     }
 
-    if (comments.length === 0 && patterns.length === 0) {
-      return new Response(JSON.stringify({ suggestions: [] }), {
+    if (comments.length === 0 && patterns.length === 0 && frequentTags.length === 0) {
+      return new Response(JSON.stringify({ 
+        suggestions: [],
+        message: "Inte tillräckligt med data ännu. Fortsätt checka in dagligen."
+      }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
@@ -98,10 +116,15 @@ serve(async (req) => {
       : moodType === "depressed" ? "nedstämd/sänkt"
       : "stabil";
 
-    const prompt = `Analysera dessa dagboksanteckningar och beteendemönster från en person med bipolär sjukdom under ${moodLabel} perioder.
+    const tagSection = frequentTags.length > 0
+      ? `\nVANLIGASTE TAGGARNA (valda vid incheckning steg 2):\n${frequentTags.map(([tag, count]) => `- "${tag}" (${count} gånger)`).join("\n")}`
+      : "";
+
+    const prompt = `Analysera denna data från en persons dagliga incheckningar under ${moodLabel} perioder (${totalEntries} incheckningar totalt).
+${tagSection}
 
 KOMMENTARER (${comments.length} st):
-${comments.slice(0, 30).join("\n")}
+${comments.slice(0, 25).join("\n")}
 
 BETEENDEMÖNSTER:
 ${patterns.join("\n") || "Inga tydliga mönster ännu."}
@@ -109,9 +132,12 @@ ${patterns.join("\n") || "Inga tydliga mönster ännu."}
 REDAN SPARADE KÄNNETECKEN (ignorera dessa):
 ${existingNames.join(", ") || "Inga"}
 
-Ge 3-6 korta förslag på kännetecken som beskriver hur personen är under ${moodLabel} perioder. Varje förslag ska vara 1-4 ord. Basera på verkliga mönster i datan - inte generella antaganden.
+Baserat på taggarna och kommentarerna ovan, föreslå 3-5 korta kännetecken som beskriver hur personen brukar vara under ${moodLabel} perioder.
+Prioritera taggar som valts ofta – de visar tydligt beteende.
+Varje förslag ska vara 1-4 ord, på svenska.
+Inkludera en kort förklaring till varje förslag.
 
-Svara ENBART med en JSON-array av strängar, t.ex.: ["Sover lite", "Mer social"]`;
+Svara ENBART med JSON: [{"name": "...", "reason": "Baserat på att du valde X i Y incheckningar"}]`;
 
     const aiResponse = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
@@ -122,23 +148,22 @@ Svara ENBART med en JSON-array av strängar, t.ex.: ["Sover lite", "Mer social"]
       body: JSON.stringify({
         model: "google/gemini-3-flash-preview",
         messages: [
-          { role: "system", content: "Du är en klinisk assistent som analyserar dagboksdata för bipolär sjukdom. Svara alltid på svenska. Svara ENBART med en JSON-array av strängar." },
+          { role: "system", content: "Du är en hälsoanalytiker som hjälper användare förstå sina beteendemönster. Svara alltid på svenska. Svara ENBART med JSON." },
           { role: "user", content: prompt },
         ],
+        max_tokens: 500,
       }),
     });
 
     if (!aiResponse.ok) {
       if (aiResponse.status === 429) {
-        return new Response(JSON.stringify({ error: "Rate limit exceeded" }), {
-          status: 429,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        return new Response(JSON.stringify({ error: "För många förfrågningar. Försök igen om en stund." }), {
+          status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
       if (aiResponse.status === 402) {
-        return new Response(JSON.stringify({ error: "Payment required" }), {
-          status: 402,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        return new Response(JSON.stringify({ error: "AI-krediter slut." }), {
+          status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
       throw new Error("AI gateway error");
@@ -147,21 +172,26 @@ Svara ENBART med en JSON-array av strängar, t.ex.: ["Sover lite", "Mer social"]
     const aiData = await aiResponse.json();
     const content = aiData.choices?.[0]?.message?.content || "[]";
 
-    // Parse JSON from response (handle markdown code blocks)
-    let suggestions: string[] = [];
+    let suggestions: { name: string; reason: string }[] = [];
     try {
       const cleaned = content.replace(/```json?\n?/g, "").replace(/```/g, "").trim();
-      suggestions = JSON.parse(cleaned);
+      const parsed = JSON.parse(cleaned);
+      // Handle both formats: array of strings or array of objects
+      suggestions = parsed.map((s: any) => 
+        typeof s === 'string' 
+          ? { name: s, reason: '' } 
+          : { name: s.name || s, reason: s.reason || '' }
+      );
     } catch {
       suggestions = [];
     }
 
     // Filter out existing
     suggestions = suggestions.filter(
-      (s: string) => typeof s === "string" && s.length > 0 && !existingNames.includes(s.toLowerCase())
+      s => typeof s.name === "string" && s.name.length > 0 && !existingNames.includes(s.name.toLowerCase())
     );
 
-    return new Response(JSON.stringify({ suggestions, patternsFound: patterns }), {
+    return new Response(JSON.stringify({ suggestions, totalEntries }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   } catch (e) {
