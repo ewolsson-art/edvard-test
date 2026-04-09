@@ -1,12 +1,9 @@
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Plus, X, Zap, Cloud, Sun, ChevronLeft, Sparkles, Loader2 } from 'lucide-react';
+import { Plus, X, Zap, Cloud, Sun, ChevronLeft } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { useCharacteristics } from '@/hooks/useCharacteristics';
-import { useMoodData } from '@/hooks/useMoodData';
-import { useAuth } from '@/hooks/useAuth';
-import { supabase } from '@/integrations/supabase/client';
-import { useToast } from '@/hooks/use-toast';
+import { cn } from '@/lib/utils';
 import { cn } from '@/lib/utils';
 
 const MOOD_CONFIG = {
