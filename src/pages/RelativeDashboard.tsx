@@ -362,6 +362,41 @@ const RelativeDashboard = () => {
 
           </div>
         )}
+        {/* Request dialog */}
+        <Dialog open={requestDialogOpen} onOpenChange={setRequestDialogOpen}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Begär åtkomst</DialogTitle>
+              <DialogDescription>
+                Ange e-postadressen till personen du vill följa för att skicka en förfrågan.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="space-y-6 pt-4">
+              <div className="space-y-2">
+                <Label htmlFor="patientEmail">E-postadress</Label>
+                <Input
+                  id="patientEmail"
+                  type="email"
+                  placeholder="namn@example.com"
+                  value={patientEmail}
+                  onChange={(e) => setPatientEmail(e.target.value)}
+                  disabled={isRequesting}
+                />
+              </div>
+              <p className="text-sm text-muted-foreground">
+                Personen kommer att kunna godkänna eller avvisa din förfrågan och välja vilken data du får se.
+              </p>
+              <Button onClick={handleRequestAccess} disabled={isRequesting} className="w-full gap-2">
+                {isRequesting ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  <Send className="w-4 h-4" />
+                )}
+                Skicka förfrågan
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   );
