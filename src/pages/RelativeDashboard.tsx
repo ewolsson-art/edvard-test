@@ -274,9 +274,8 @@ const RelativeDashboard = () => {
         ) : approvedConnections.length === 0 && pendingFromRelative.length > 0 ? (
           <div className="flex justify-center pt-2">
             <Button
-              variant="outline"
               onClick={() => setRequestDialogOpen(true)}
-              className="gap-2"
+              className="gap-2 rounded-full bg-[hsl(45,85%,55%)] hover:bg-[hsl(45,85%,50%)] text-black font-semibold shadow-[0_0_20px_hsl(45,85%,55%,0.15)]"
             >
               <UserPlus className="w-4 h-4" />
               Följ fler personer
