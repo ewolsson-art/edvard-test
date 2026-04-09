@@ -72,44 +72,10 @@ const CharacteristicDetail = () => {
     if (success) {
       setNewValue('');
       setShowInput(false);
-      setAiSuggestions(prev => prev.filter(s => s.toLowerCase() !== newValue.trim().toLowerCase()));
     }
     setIsAdding(false);
   };
 
-  const handleAddSuggestion = async (suggestion: string) => {
-    const success = await addCharacteristic(suggestion, config.type);
-    if (success) {
-      setAiSuggestions(prev => prev.filter(s => s !== suggestion));
-    }
-  };
-
-  const handleDismissSuggestion = (suggestion: string) => {
-    setAiSuggestions(prev => prev.filter(s => s !== suggestion));
-  };
-
-  const loadAiSuggestions = async () => {
-    if (!user) return;
-    setIsLoadingAi(true);
-    try {
-      const { data, error } = await supabase.functions.invoke('suggest-characteristics', {
-        body: { moodType: config.type },
-      });
-      if (error) throw error;
-      setAiSuggestions(data.suggestions || []);
-      setAiPatterns(data.patternsFound || []);
-      setAiLoaded(true);
-    } catch (error: any) {
-      console.error('Error loading AI suggestions:', error);
-      toast({
-        title: 'Kunde inte hämta förslag',
-        description: 'Försök igen senare.',
-        variant: 'destructive',
-      });
-    } finally {
-      setIsLoadingAi(false);
-    }
-  };
 
   if (isLoading || !moodLoaded) {
     return (
