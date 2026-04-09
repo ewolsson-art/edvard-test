@@ -453,148 +453,100 @@ export function TodayCheckin({
       .map(q => ({ question: q.question_text, answer: customAnswersState[q.id] === 'yes' ? 'Ja' : 'Nej' }));
 
     return (
-      <div className="fade-in h-full md:h-auto flex flex-col justify-center px-5 py-10 md:py-16 md:px-8">
-        
-        <div className="max-w-[720px] w-full">
-          
-          <div className="grid grid-cols-1 md:grid-cols-[1fr_200px] gap-10 md:gap-20">
-            
-            {/* LEFT — Hero */}
-            <div>
-              {/* Label */}
-              <div className="flex items-center gap-2.5 mb-10">
-                <Check 
-                  className={cn("w-4.5 h-4.5", moodDisplay?.colorClass || 'text-mood-stable')} 
-                  style={{ 
-                    animation: 'scale-in 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)',
-                    strokeWidth: 3
-                  }} 
-                />
-                <span className="text-[12px] font-medium uppercase tracking-widest text-foreground/35">
-                  Incheckad
-                  {!isDisplayToday && <span className="text-primary ml-1.5">· Retroaktiv</span>}
-                </span>
-              </div>
-
-              {/* Streak */}
-              {streakData.currentStreak > 0 && (
-                <div className="mb-8">
-                  <span 
-                    className="text-[96px] md:text-[120px] font-bold tabular-nums leading-[0.8] tracking-tighter text-foreground"
-                    style={{ 
-                      animation: 'scale-in 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 0.15s both',
-                      textShadow: `0 0 120px hsl(var(--primary) / 0.08)`
-                    }}
-                  >
-                    {streakData.currentStreak}
-                  </span>
-                  <p className="text-[12px] text-foreground/20 mt-2 tracking-wide">
-                    {streakData.currentStreak === 1 ? 'dag' : 'dagar'} i rad
-                  </p>
-                </div>
-              )}
-
-              {/* Status summary */}
-              <div className="flex flex-wrap items-center gap-x-3 gap-y-2 text-[14px] mb-5">
-                {summaryItems.map((item, i) => (
-                  <span key={item.label} className="flex items-center gap-1">
-                    {i > 0 && <span className="text-foreground/10 mr-1">·</span>}
-                    <span className={cn("font-medium", item.colorClass || 'text-foreground/50')}>{item.value}</span>
-                  </span>
-                ))}
-              </div>
-
-              {/* Follow-up */}
-              {followUp && (
-                <p className="text-[14px] text-foreground/35 leading-relaxed max-w-[340px]">
-                  {followUp.message}
-                </p>
-              )}
-
-              {/* Tags */}
-              {tags.length > 0 && (
-                <p className="text-[12px] text-foreground/18 mt-4">
-                  {tags.join(' · ')}
-                </p>
-              )}
-
-              {/* Custom answers */}
-              {customAnswerItems.length > 0 && (
-                <div className="flex flex-wrap items-start gap-x-4 gap-y-1 text-[12px] text-foreground/18 mt-3">
-                  {customAnswerItems.map((item, i) => (
-                    <span key={i}>
-                      {item.question}: <span className="font-medium text-foreground/30">{item.answer}</span>
-                    </span>
-                  ))}
-                </div>
-              )}
-
-              {/* Encouragement for low mood */}
-              {(todayEntry?.mood === 'depressed' || todayEntry?.mood === 'somewhat_depressed') && (
-                <div className="mt-8 py-4 border-l-2 border-primary/15 pl-4">
-                  <p className="text-[13px] text-foreground/40 leading-relaxed">
-                    <Heart className="w-3.5 h-3.5 inline mr-1.5 text-primary/30 -mt-0.5" />
-                    Bättre dagar kommer.
-                    {encouragementData.goodDaysCount > 0 && (
-                      <span className="text-foreground/25">
-                        {' '}Du mådde bra för {encouragementData.daysSinceGood ?? '?'} {encouragementData.daysSinceGood === 1 ? 'dag' : 'dagar'} sen.
-                      </span>
-                    )}
-                  </p>
-                </div>
-              )}
-
-              {/* Edit */}
-              <button
-                onClick={handleEdit}
-                className="mt-12 text-[13px] text-foreground/30 hover:text-foreground/50 transition-colors duration-200 cursor-pointer underline underline-offset-4 decoration-foreground/10 hover:decoration-foreground/30"
-              >
-                Ändra incheckning
-              </button>
-            </div>
-
-            {/* RIGHT — Context (desktop) */}
-            <div className="hidden md:flex flex-col gap-7 pt-[72px]">
-              {todayEntry && (
-                <div>
-                  <p className="text-[11px] text-foreground/20 mb-1">Senaste</p>
-                  <p className="text-[14px] text-foreground/50">
-                    {format(new Date(todayEntry.timestamp), "d MMM", { locale: sv })} · {format(new Date(todayEntry.timestamp), "HH:mm")}
-                  </p>
-                </div>
-              )}
-
-              {streakData.longestStreak > 0 && (
-                <div>
-                  <p className="text-[11px] text-foreground/20 mb-1">Längsta streak</p>
-                  <p className="text-[14px] text-foreground/50">
-                    {streakData.longestStreak} dagar
-                    {streakData.currentStreak >= streakData.longestStreak && (
-                      <span className="text-primary/50 ml-1.5 text-[12px]">Nytt rekord</span>
-                    )}
-                  </p>
-                </div>
-              )}
-
-              {todayEntry && moodDisplay && (
-                <div>
-                  <p className="text-[11px] text-foreground/20 mb-1">Mående idag</p>
-                  <p className={cn("text-[14px] font-medium", moodDisplay.colorClass)}>
-                    {MOOD_LABELS[todayEntry.mood]}
-                  </p>
-                </div>
-              )}
-
-              {todayEntry?.energyLevel && (
-                <div>
-                  <p className="text-[11px] text-foreground/20 mb-1">Energi</p>
-                  <p className="text-[14px] text-foreground/50">
-                    {ENERGY_LABELS[todayEntry.energyLevel]}
-                  </p>
-                </div>
-              )}
-            </div>
+      <div className="fade-in h-full md:h-auto flex flex-col justify-center px-5 pt-12 pb-4 md:pt-4 overflow-hidden md:overflow-y-auto md:glass-card md:p-12 md:max-h-[calc(100vh-4rem)] md:border md:bg-card/80 md:rounded-2xl md:shadow-sm">
+        <div className="flex flex-col flex-1 justify-center">
+          {/* Label */}
+          <div className="flex items-center gap-2.5 mb-8">
+            <Check 
+              className={cn("w-4.5 h-4.5", moodDisplay?.colorClass || 'text-mood-stable')} 
+              style={{ 
+                animation: 'scale-in 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)',
+                strokeWidth: 3
+              }} 
+            />
+            <span className="text-[12px] font-medium uppercase tracking-widest text-foreground/35">
+              Incheckad
+              {!isDisplayToday && <span className="text-primary ml-1.5">· Retroaktiv</span>}
+            </span>
           </div>
+
+          {/* Streak */}
+          {streakData.currentStreak > 0 && (
+            <div className="mb-6">
+              <span 
+                className="text-[72px] md:text-[88px] font-bold tabular-nums leading-[0.85] tracking-tighter text-foreground"
+                style={{ 
+                  animation: 'scale-in 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 0.15s both',
+                }}
+              >
+                {streakData.currentStreak}
+              </span>
+              <p className="text-[12px] text-foreground/20 mt-2 tracking-wide">
+                {streakData.currentStreak === 1 ? 'dag' : 'dagar'} i rad
+                {streakData.longestStreak > 0 && streakData.currentStreak >= streakData.longestStreak && (
+                  <span className="text-primary/40 ml-2">Nytt rekord</span>
+                )}
+              </p>
+            </div>
+          )}
+
+          {/* Status summary */}
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-2 text-[14px] mb-4">
+            {summaryItems.map((item, i) => (
+              <span key={item.label} className="flex items-center gap-1">
+                {i > 0 && <span className="text-foreground/10 mr-1">·</span>}
+                <span className={cn("font-medium", item.colorClass || 'text-foreground/50')}>{item.value}</span>
+              </span>
+            ))}
+          </div>
+
+          {/* Follow-up */}
+          {followUp && (
+            <p className="text-[14px] text-foreground/35 leading-relaxed max-w-[340px] mb-2">
+              {followUp.message}
+            </p>
+          )}
+
+          {/* Tags */}
+          {tags.length > 0 && (
+            <p className="text-[12px] text-foreground/18 mt-3">
+              {tags.join(' · ')}
+            </p>
+          )}
+
+          {/* Custom answers */}
+          {customAnswerItems.length > 0 && (
+            <div className="flex flex-wrap items-start gap-x-4 gap-y-1 text-[12px] text-foreground/18 mt-3">
+              {customAnswerItems.map((item, i) => (
+                <span key={i}>
+                  {item.question}: <span className="font-medium text-foreground/30">{item.answer}</span>
+                </span>
+              ))}
+            </div>
+          )}
+
+          {/* Encouragement for low mood */}
+          {(todayEntry?.mood === 'depressed' || todayEntry?.mood === 'somewhat_depressed') && (
+            <div className="mt-6 py-4 border-l-2 border-primary/15 pl-4">
+              <p className="text-[13px] text-foreground/40 leading-relaxed">
+                <Heart className="w-3.5 h-3.5 inline mr-1.5 text-primary/30 -mt-0.5" />
+                Bättre dagar kommer.
+                {encouragementData.goodDaysCount > 0 && (
+                  <span className="text-foreground/25">
+                    {' '}Du mådde bra för {encouragementData.daysSinceGood ?? '?'} {encouragementData.daysSinceGood === 1 ? 'dag' : 'dagar'} sen.
+                  </span>
+                )}
+              </p>
+            </div>
+          )}
+
+          {/* Edit */}
+          <button
+            onClick={handleEdit}
+            className="mt-10 text-[13px] text-foreground/30 hover:text-foreground/50 transition-colors duration-200 cursor-pointer underline underline-offset-4 decoration-foreground/10 hover:decoration-foreground/30"
+          >
+            Ändra incheckning
+          </button>
         </div>
       </div>
     );
