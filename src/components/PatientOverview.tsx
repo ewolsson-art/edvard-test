@@ -484,7 +484,7 @@ export function PatientOverview({ connection, onBack, hideExtras = false }: Pati
                 </p>
               )}
             </div>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div>
               {view === 'week' && (
                 <WeekCalendar
                   weekDays={weekDays}
@@ -514,9 +514,9 @@ export function PatientOverview({ connection, onBack, hideExtras = false }: Pati
                   onMonthClick={handleMonthClick}
                 />
               )}
-              <div className="lg:self-start">
-                <MoodStats stats={stats} periodLabel={label} />
-              </div>
+            </div>
+            <div className="mt-6">
+              <MoodStats stats={stats} periodLabel={label} />
             </div>
           </section>
         )}
