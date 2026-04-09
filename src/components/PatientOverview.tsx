@@ -457,16 +457,33 @@ export function PatientOverview({ connection, onBack, hideExtras = false }: Pati
         {connection.share_mood && (
           <section>
             <div>
-              {view === 'week' && (
-                <WeekCalendar
-                  weekDays={weekDays}
-                  weekLabel={weekLabel}
-                  getEntryForDate={getEntryForDate}
-                  getMedicationsTakenOnDate={() => []}
-                  onPrevWeek={handlePrevWeek}
-                  onNextWeek={handleNextWeek}
-                />
-              )}
+              {view === 'week' && (() => {
+                const today = format(new Date(), 'yyyy-MM-dd');
+                const todayEntry = getEntryForDate(today);
+                return (
+                  <div className="space-y-4">
+                    <p className="text-xs text-muted-foreground/40 font-medium uppercase tracking-wider">
+                      {format(new Date(), 'd MMMM yyyy', { locale: sv })}
+                    </p>
+                    {todayEntry ? (
+                      <div className="space-y-3">
+                        <div className="flex items-baseline gap-2">
+                          <span className="text-2xl font-semibold text-foreground/80">
+                            {MOOD_LABELS[todayEntry.mood]}
+                          </span>
+                        </div>
+                        {todayEntry.comment && (
+                          <p className="text-sm text-muted-foreground/60 leading-relaxed">
+                            "{todayEntry.comment}"
+                          </p>
+                        )}
+                      </div>
+                    ) : (
+                      <p className="text-sm text-muted-foreground/40">Ingen incheckning idag</p>
+                    )}
+                  </div>
+                );
+              })()}
               {view === 'month' && (
                 <MonthCalendar
                   currentDate={currentMonth}
