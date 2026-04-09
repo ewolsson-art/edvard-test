@@ -20,6 +20,7 @@ export interface PatientConnection {
   patient_profile?: {
     first_name: string | null;
     last_name: string | null;
+    avatar_url: string | null;
   };
   patient_email?: string;
 }
@@ -48,7 +49,7 @@ export function useRelativeConnections() {
           // Fetch profile
           const { data: profile } = await supabase
             .from('profiles')
-            .select('first_name, last_name')
+            .select('first_name, last_name, avatar_url')
             .eq('user_id', conn.patient_id)
             .maybeSingle();
 
