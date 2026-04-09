@@ -12,6 +12,7 @@ import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { NotificationSchedulerProvider } from "@/components/NotificationSchedulerProvider";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
+import HowItWorksPage from "./pages/HowItWorks";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Overview from "./pages/Overview";
@@ -83,6 +84,7 @@ const App = () => (
             <div className="min-h-screen" role="application" aria-label="Friendly - Moodtracker">
             <Routes>
             <Route path="/auth" element={<Auth />} />
+            <Route path="/sa-funkar-det" element={<HowItWorksPage />} />
             <Route path="/om-oss" element={<AboutUs />} />
             <Route path="/for-patienter" element={<ForPatients />} />
             <Route path="/for-vardgivare" element={<ForCaregivers />} />
