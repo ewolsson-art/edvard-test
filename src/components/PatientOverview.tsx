@@ -36,11 +36,12 @@ import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 interface PatientOverviewProps {
   connection: PatientConnection;
   onBack: () => void;
+  hideExtras?: boolean;
 }
 
 type ViewType = 'week' | 'month' | 'year';
 
-export function PatientOverview({ connection, onBack }: PatientOverviewProps) {
+export function PatientOverview({ connection, onBack, hideExtras = false }: PatientOverviewProps) {
   const navigate = useNavigate();
   const [view, setView] = useState<ViewType>('month');
   const [currentWeek, setCurrentWeek] = useState(new Date());
@@ -423,20 +424,21 @@ export function PatientOverview({ connection, onBack }: PatientOverviewProps) {
               />
             )}
           </div>
-          {connection.patient_email && connection.patient_profile?.first_name && (
+          {!hideExtras && connection.patient_email && connection.patient_profile?.first_name && (
             <p className="text-sm text-muted-foreground">{connection.patient_email}</p>
           )}
         </div>
-        <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2 text-sm text-primary">
-            <Radio className="w-4 h-4 animate-pulse" />
-            <span>Live</span>
+        {!hideExtras && (
+          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 text-sm text-primary">
+              <Radio className="w-4 h-4 animate-pulse" />
+              <span>Live</span>
+            </div>
           </div>
-        </div>
+        )}
       </div>
 
-      {/* Diagnoses section */}
-      {diagnoses.length > 0 && (
+      {!hideExtras && diagnoses.length > 0 && (
         <div className="glass-card p-4">
           <div className="flex items-center gap-3 mb-3">
             <Stethoscope className="w-5 h-5 text-primary" />
