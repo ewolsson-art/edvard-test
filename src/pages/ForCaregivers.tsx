@@ -10,22 +10,22 @@ const ForCaregivers = () => {
     {
       icon: Activity,
       title: 'Realtidsinsikter',
-      description: 'Se patientens mående i realtid utan att vänta på nästa besök.',
+      description: 'Se användarens mående i realtid utan att vänta på nästa besök.',
     },
     {
       icon: FileText,
       title: 'Automatiska rapporter',
-      description: 'Generera detaljerade rapporter inför patientmöten.',
+      description: 'Generera detaljerade rapporter inför möten.',
     },
     {
       icon: MessageSquare,
       title: 'Säker kommunikation',
-      description: 'Chatta med patienter på ett GDPR-säkert sätt.',
+      description: 'Chatta med användare på ett GDPR-säkert sätt.',
     },
     {
       icon: Users,
       title: 'Delegera uppgifter',
-      description: 'Låt kollegor hjälpa till med att följa upp patienter.',
+      description: 'Låt kollegor hjälpa till med att följa upp användare.',
     },
     {
       icon: Clock,
@@ -34,8 +34,8 @@ const ForCaregivers = () => {
     },
     {
       icon: Shield,
-      title: 'Patientkontroll',
-      description: 'Patienten bestämmer alltid vilken data som delas.',
+      title: 'Användarkontroll',
+      description: 'Användaren bestämmer alltid vilken data som delas.',
     },
   ];
 
@@ -51,7 +51,7 @@ const ForCaregivers = () => {
               För <span className="text-primary">vårdgivare</span>
             </h1>
             <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto">
-              Få bättre insikt i dina patienters mående mellan besöken och förbättra vårdkvaliteten.
+              Få bättre insikt i dina användares mående mellan besöken och förbättra vårdkvaliteten.
             </p>
           </div>
         </section>
@@ -95,9 +95,9 @@ const ForCaregivers = () => {
                   2
                 </div>
                 <div>
-                  <h3 className="text-xl font-semibold mb-2">Bjud in eller ta emot patienter</h3>
+                  <h3 className="text-xl font-semibold mb-2">Bjud in eller ta emot användare</h3>
                   <p className="text-muted-foreground">
-                    Skicka inbjudningar till patienter eller acceptera förfrågningar från dem.
+                    Skicka inbjudningar till användare eller acceptera förfrågningar från dem.
                   </p>
                 </div>
               </div>
@@ -106,7 +106,7 @@ const ForCaregivers = () => {
                   3
                 </div>
                 <div>
-                  <h3 className="text-xl font-semibold mb-2">Följ patienternas mående</h3>
+                  <h3 className="text-xl font-semibold mb-2">Följ användares mående</h3>
                   <p className="text-muted-foreground">
                     Se dagliga incheckningar, mönster och trender i en överskådlig dashboard.
                   </p>
@@ -130,7 +130,7 @@ const ForCaregivers = () => {
         {/* CTA Section */}
         <section className="py-16 px-4 md:px-8">
           <div className="max-w-2xl mx-auto text-center">
-            <h2 className="text-2xl font-display font-semibold mb-4">Förbättra vården för dina patienter</h2>
+            <h2 className="text-2xl font-display font-semibold mb-4">Förbättra vården för dina användare</h2>
             <p className="text-muted-foreground mb-6">
               Skapa ett vårdgivarkonto och börja använda plattformen idag.
             </p>

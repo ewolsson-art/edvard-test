@@ -48,7 +48,7 @@ const ForPatients = () => {
         <section className="py-16 px-4 md:px-8 bg-gradient-to-br from-background via-primary/5 to-background">
           <div className="max-w-4xl mx-auto text-center">
             <h1 className="text-4xl md:text-5xl font-display font-bold mb-6">
-              För <span className="text-primary">patienter</span>
+              För <span className="text-primary">användare</span>
             </h1>
             <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto">
               Ta kontroll över ditt mående med ett verktyg designat för dig som lever med bipolär sjukdom.

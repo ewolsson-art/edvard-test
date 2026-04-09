@@ -99,7 +99,7 @@ export function LandingFooter() {
               Om oss
             </Link>
             <Link to="/for-patienter" className="text-sm text-white/50 hover:text-white transition-colors">
-              För patienter
+              För användare
             </Link>
           </div>
         </div>

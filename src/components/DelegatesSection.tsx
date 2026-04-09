@@ -98,7 +98,7 @@ export function DelegatesSection() {
             </DialogHeader>
             <div className="space-y-4 py-4">
               <p className="text-sm text-muted-foreground">
-                Lägg till en assistent eller sköterska som kan hantera patientmeddelanden åt dig.
+                Lägg till en assistent eller sköterska som kan hantera meddelanden åt dig.
                 Om personen inte har ett konto ännu aktiveras ombudet automatiskt när de registrerar sig.
               </p>
               
@@ -168,7 +168,7 @@ export function DelegatesSection() {
         <div className="text-center py-8 text-muted-foreground">
           <Users className="w-10 h-10 mx-auto mb-3 opacity-30" />
           <p>Du har inga ombud ännu.</p>
-          <p className="text-sm">Lägg till en assistent eller sköterska för att dela patientmeddelanden.</p>
+          <p className="text-sm">Lägg till en assistent eller sköterska för att dela meddelanden.</p>
         </div>
       ) : (
         <div className="space-y-3">
@@ -228,7 +228,7 @@ export function DelegatesSection() {
                     <AlertDialogHeader>
                       <AlertDialogTitle>Ta bort ombud?</AlertDialogTitle>
                       <AlertDialogDescription>
-                        {delegate.delegate_name || delegate.delegate_email} kommer inte längre kunna se eller svara på patientmeddelanden.
+                        {delegate.delegate_name || delegate.delegate_email} kommer inte längre kunna se eller svara på meddelanden.
                       </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>

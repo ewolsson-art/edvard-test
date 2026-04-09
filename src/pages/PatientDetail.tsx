@@ -48,8 +48,8 @@ const PatientDetail = () => {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <h2 className="text-xl font-semibold mb-2">Patient hittades inte</h2>
-          <p className="text-muted-foreground">Patienten finns inte eller är inte kopplad till dig.</p>
+          <h2 className="text-xl font-semibold mb-2">Användare hittades inte</h2>
+          <p className="text-muted-foreground">Användaren finns inte eller är inte kopplad till dig.</p>
         </div>
       </div>
     );

@@ -77,7 +77,7 @@ const AboutUs = () => {
                 spåra mediciner och dela relevant information med vårdteamet – allt på användarens villkor.
               </p>
               <p className="text-muted-foreground">
-                Idag är vi stolta över att erbjuda en plattform som används av patienter, läkare och anhöriga 
+                Idag är vi stolta över att erbjuda en plattform som används av användare, läkare och anhöriga 
                 för att tillsammans skapa bättre förutsättningar för god psykisk hälsa.
               </p>
             </div>
@@ -89,7 +89,7 @@ const AboutUs = () => {
           <div className="max-w-2xl mx-auto text-center">
             <h2 className="text-2xl font-display font-semibold mb-4">Vill du veta mer?</h2>
             <p className="text-muted-foreground mb-6">
-              Skapa ett konto idag och upptäck hur vi kan hjälpa dig eller dina patienter.
+              Skapa ett konto idag och upptäck hur vi kan hjälpa dig.
             </p>
             <Button onClick={() => navigate('/skapa-konto')} size="lg" className="gap-2">
               Kom igång gratis
