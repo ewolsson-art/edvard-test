@@ -62,13 +62,13 @@ const RelativeDashboard = () => {
           }
           const { data } = await supabase
             .from('mood_entries')
-            .select('mood, sleep_quality, eating_quality, exercised')
+            .select('mood, sleep_quality, eating_quality, exercised, created_at')
             .eq('user_id', conn.patient_id)
             .eq('date', today)
             .maybeSingle();
 
           results[conn.patient_id] = data
-            ? { mood: data.mood as MoodType, sleep_quality: data.sleep_quality, eating_quality: data.eating_quality, exercised: data.exercised }
+            ? { mood: data.mood as MoodType, sleep_quality: data.sleep_quality, eating_quality: data.eating_quality, exercised: data.exercised, created_at: data.created_at }
             : null;
         })
       );
