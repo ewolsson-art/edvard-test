@@ -796,13 +796,13 @@ export function TodayCheckin({
           {renderCommentSection('mood')}
 
           <div className="flex justify-center mt-auto pt-4">
-            <Button
+            <button
               onClick={handleTagsContinue}
-              className="px-8 py-3 rounded-xl text-base font-semibold"
+              className="px-10 py-3.5 rounded-full bg-[hsl(45_85%_55%)] text-[hsl(225_30%_7%)] font-bold text-base tracking-wide shadow-[0_4px_24px_hsl(45_85%_55%/0.35)] hover:shadow-[0_8px_32px_hsl(45_85%_55%/0.5)] hover:bg-[hsl(45_85%_62%)] hover:scale-105 active:scale-[0.98] transition-all duration-200 inline-flex items-center gap-1.5"
             >
               {(checkinData.tags || []).length > 0 ? 'Klar' : 'Nej, hoppa över'}
-              <ChevronRight className="w-4 h-4 ml-1.5" />
-            </Button>
+              <ChevronRight className="w-4 h-4" />
+            </button>
           </div>
         </div>
       )}
