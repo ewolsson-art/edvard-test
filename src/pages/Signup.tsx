@@ -159,6 +159,10 @@ const Signup = () => {
           {/* Step 1: Role */}
           {step === "role" && (
             <div className="animate-fade-in">
+              <Link to="/" className="flex items-center gap-1.5 text-sm text-white/30 hover:text-white/60 mb-8 transition-colors">
+                <ArrowLeft className="h-4 w-4" />
+                Tillbaka
+              </Link>
               <h1 className="text-2xl md:text-3xl font-bold text-white font-display tracking-tight">
                 Vem är du?
               </h1>
