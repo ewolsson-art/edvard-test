@@ -4,7 +4,6 @@ import { Plus, X, Zap, Cloud, Sun, ChevronLeft } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { useCharacteristics } from '@/hooks/useCharacteristics';
 import { cn } from '@/lib/utils';
-import { cn } from '@/lib/utils';
 
 const MOOD_CONFIG = {
   uppvarvad: {
@@ -39,8 +38,6 @@ const MOOD_CONFIG = {
 const CharacteristicDetail = () => {
   const { moodType } = useParams<{ moodType: string }>();
   const navigate = useNavigate();
-  const { user } = useAuth();
-  const { toast } = useToast();
   const config = moodType ? MOOD_CONFIG[moodType as keyof typeof MOOD_CONFIG] : null;
 
   const {
