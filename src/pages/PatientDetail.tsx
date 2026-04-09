@@ -67,14 +67,12 @@ const PatientDetail = () => {
 
   return (
     <div className="p-5 md:p-8 pb-24">
-      <div className="max-w-4xl mx-auto">
-        <div className="glass-card p-6">
-          <PatientOverview 
-            connection={normalizedConnection as any} 
-            onBack={handleBack}
-            hideExtras={isRelative}
-          />
-        </div>
+      <div className="max-w-2xl md:mx-0">
+        <PatientOverview 
+          connection={normalizedConnection as any} 
+          onBack={handleBack}
+          hideExtras={isRelative}
+        />
       </div>
     </div>
   );
