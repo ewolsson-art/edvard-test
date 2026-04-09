@@ -1,0 +1,1 @@
+DROP POLICY IF EXISTS "Deny public access to user_preferences" ON public.user_preferences;
