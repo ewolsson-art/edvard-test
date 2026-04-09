@@ -118,9 +118,10 @@ function NotificationItem({ notification, onRead, onDelete, onNavigate, onHandle
           )}
 
           {isConnectionRequest && (
-            <ConnectionRequestActions
-              notification={notification}
-              onHandled={() => onHandled(notification.id)}
+             <ConnectionRequestActions
+               notification={notification}
+               onHandled={() => { setHandled(true); onHandled(notification.id); }}
+             />
             />
           )}
 
