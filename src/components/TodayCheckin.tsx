@@ -563,10 +563,10 @@ export function TodayCheckin({
                     Senaste incheckning
                   </p>
                   <p className="text-[14px] text-foreground/60 font-medium">
-                    {format(new Date(todayEntry.created_at), "d MMMM", { locale: sv })}
+                    {format(new Date(todayEntry.timestamp), "d MMMM", { locale: sv })}
                   </p>
                   <p className="text-[12px] text-foreground/30 mt-0.5">
-                    kl. {format(new Date(todayEntry.created_at), "HH:mm")}
+                    kl. {format(new Date(todayEntry.timestamp), "HH:mm")}
                   </p>
                 </div>
               )}
