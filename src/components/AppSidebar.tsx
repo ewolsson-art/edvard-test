@@ -87,6 +87,7 @@ export function AppSidebar() {
   
   const isMobile = useIsMobile();
   const isCollapsed = state === "collapsed";
+  const [signingOut, setSigningOut] = useState(false);
 
   // Don't determine nav until role is loaded to prevent sidebar flash
   if (roleLoading) {
@@ -110,7 +111,6 @@ export function AppSidebar() {
     return 'U';
   };
 
-  const [signingOut, setSigningOut] = useState(false);
   const handleSignOut = async () => {
     if (signingOut) return;
     setSigningOut(true);
