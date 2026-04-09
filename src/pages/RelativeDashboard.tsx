@@ -12,6 +12,7 @@ interface TodayMood {
   sleep_quality?: string | null;
   eating_quality?: string | null;
   exercised?: boolean | null;
+  created_at?: string;
 }
 
 const MOOD_COLORS: Record<MoodType, string> = {
