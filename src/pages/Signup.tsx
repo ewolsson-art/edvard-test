@@ -313,13 +313,6 @@ const Signup = () => {
                   </div>
                 )}
 
-                <button
-                  type="button"
-                  onClick={() => setContactMethod(contactMethod === "email" ? "phone" : "email")}
-                  className="mt-3 text-xs text-white/25 hover:text-white/50 transition-colors"
-                >
-                  {contactMethod === "email" ? "Använd telefonnummer istället" : "Använd e-post istället"}
-                </button>
               </div>
 
               <Button
