@@ -183,8 +183,7 @@ const RelativeDashboard = () => {
               onClick={() => navigate('/foljer')}
               className="inline-flex items-center gap-2 text-sm text-primary hover:text-primary/80 transition-colors font-medium"
             >
-              <Plus className="w-4 h-4" />
-              Lägg till person
+              Gå till Följer
             </button>
           </div>
         ) : (
