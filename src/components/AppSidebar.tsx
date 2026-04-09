@@ -109,7 +109,10 @@ export function AppSidebar() {
     return 'U';
   };
 
+  const [signingOut, setSigningOut] = useState(false);
   const handleSignOut = async () => {
+    if (signingOut) return;
+    setSigningOut(true);
     await signOut();
   };
 
