@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { useRelativeConnections, PatientConnection } from '@/hooks/useRelativeConnections';
 import { supabase } from '@/integrations/supabase/client';
-import { Loader2, Users, ChevronRight, Plus } from 'lucide-react';
+import { Loader2, Users, ChevronRight } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { MOOD_LABELS, MOOD_ICONS, MoodType } from '@/types/mood';
 import { format, isToday, isYesterday, subDays } from 'date-fns';
@@ -183,8 +183,7 @@ const RelativeDashboard = () => {
               onClick={() => navigate('/foljer')}
               className="inline-flex items-center gap-2 text-sm text-primary hover:text-primary/80 transition-colors font-medium"
             >
-              <Plus className="w-4 h-4" />
-              Lägg till person
+              Gå till Följer
             </button>
           </div>
         ) : (
@@ -273,14 +272,6 @@ const RelativeDashboard = () => {
               );
             })}
 
-            {/* Subtle CTA */}
-            <button
-              onClick={() => navigate('/foljer')}
-              className="w-full flex items-center justify-center gap-2 py-3 rounded-2xl text-sm text-muted-foreground/40 hover:text-muted-foreground/60 hover:bg-foreground/[0.02] transition-all duration-200"
-            >
-              <Plus className="w-4 h-4" />
-              Lägg till fler personer
-            </button>
           </div>
         )}
       </div>
