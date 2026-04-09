@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { MOOD_LABELS, MOOD_ICONS, MoodType } from '@/types/mood';
 import { format, startOfMonth, endOfMonth, eachDayOfInterval, subMonths, addMonths, startOfWeek, endOfWeek, addWeeks, subWeeks } from 'date-fns';
 import { sv } from 'date-fns/locale';
 import { usePatientMoodData } from '@/hooks/usePatientMoodData';
@@ -409,33 +410,25 @@ export function PatientOverview({ connection, onBack, hideExtras = false }: Pati
           <ChevronLeft className="w-5 h-5" />
         </Button>
         <div className="flex-1">
-          <div className="flex items-center gap-3">
-            <h2 className="font-display text-2xl font-semibold">{patientName}</h2>
-            {latestMoodEntry && (
-              <div 
-                className={`w-4 h-4 rounded-full ring-2 ring-offset-2 ring-offset-background ${
-                  latestMoodEntry.mood === 'elevated' 
-                    ? 'bg-mood-elevated ring-mood-elevated/30' 
-                    : latestMoodEntry.mood === 'stable' 
-                      ? 'bg-mood-stable ring-mood-stable/30' 
-                      : 'bg-mood-depressed ring-mood-depressed/30'
-                }`}
-                title={`Senaste mående: ${latestMoodEntry.mood === 'elevated' ? 'Uppvarvad' : latestMoodEntry.mood === 'stable' ? 'Stabil' : 'Nedstämd'}`}
-              />
-            )}
-          </div>
+          <h2 className="font-display text-2xl font-semibold">{patientName}</h2>
+          {latestMoodEntry && (
+            <div className="flex items-center gap-2 mt-1.5">
+              <span className="text-base">{MOOD_ICONS[latestMoodEntry.mood as MoodType]}</span>
+              <span className="text-sm text-muted-foreground">
+                Senaste incheckning: <span className="font-medium text-foreground/80">{MOOD_LABELS[latestMoodEntry.mood as MoodType]}</span>
+                {latestMoodEntry.date && (
+                  <span className="text-muted-foreground/50"> · {latestMoodEntry.date}</span>
+                )}
+              </span>
+            </div>
+          )}
+          {!latestMoodEntry && (
+            <p className="text-sm text-muted-foreground/50 mt-1">Har inte checkat in ännu</p>
+          )}
           {!hideExtras && connection.patient_email && connection.patient_profile?.first_name && (
-            <p className="text-sm text-muted-foreground">{connection.patient_email}</p>
+            <p className="text-sm text-muted-foreground mt-1">{connection.patient_email}</p>
           )}
         </div>
-        {!hideExtras && (
-          <div className="flex items-center gap-3">
-            <div className="flex items-center gap-2 text-sm text-primary">
-              <Radio className="w-4 h-4 animate-pulse" />
-              <span>Live</span>
-            </div>
-          </div>
-        )}
       </div>
 
       {!hideExtras && diagnoses.length > 0 && (
