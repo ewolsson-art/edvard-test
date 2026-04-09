@@ -12,7 +12,10 @@ export const CharacteristicsSharingSection = () => {
   
   const [updatingId, setUpdatingId] = useState<string | null>(null);
 
-  const approvedConnections = connections.filter(c => c.status === 'approved');
+  const approvedConnections = connections.filter(c => 
+    c.status === 'approved' && 
+    (c.relative_profile?.first_name || c.relative_profile?.last_name || c.relative_email)
+  );
 
   const handleToggleSharing = async (connectionId: string, currentValue: boolean) => {
     setUpdatingId(connectionId);
