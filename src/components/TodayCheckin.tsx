@@ -412,7 +412,7 @@ export function TodayCheckin({
 
 
   // Show complete state
-  if (isCheckinComplete && !isEditing) {
+  if (isCheckinComplete && !isEditing && currentStep !== 'success-animation') {
     const moodDisplay = todayEntry ? getMoodDisplay(todayEntry.mood) : null;
     const MoodIcon = moodDisplay?.icon || Sun;
     const followUp = todayEntry ? getSmartFollowUp(todayEntry.mood, todayEntry.energyLevel) : null;
