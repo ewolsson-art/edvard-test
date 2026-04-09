@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MOOD_LABELS, MOOD_ICONS, MoodType } from '@/types/mood';
+import { cn } from '@/lib/utils';
 import { format, startOfMonth, endOfMonth, eachDayOfInterval, subMonths, addMonths, startOfWeek, endOfWeek, addWeeks, subWeeks } from 'date-fns';
 import { sv } from 'date-fns/locale';
 import { usePatientMoodData } from '@/hooks/usePatientMoodData';
