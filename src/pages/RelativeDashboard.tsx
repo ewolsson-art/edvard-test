@@ -1,63 +1,11 @@
-import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useRelativeConnections, PatientConnection } from '@/hooks/useRelativeConnections';
+import { Loader2, Users, Eye } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Loader2, Users, UserCheck, Eye, UserPlus, Send, X } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
-import { z } from 'zod';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog';
-
-const emailSchema = z.string().email({ message: "Ogiltig e-postadress" });
 
 const RelativeDashboard = () => {
   const navigate = useNavigate();
-  const { toast } = useToast();
-  const { 
-    approvedConnections, 
-    pendingFromRelative,
-    isLoading, 
-    requestPatientAccess,
-    cancelRequest,
-  } = useRelativeConnections();
-
-  const [requestDialogOpen, setRequestDialogOpen] = useState(false);
-  const [patientEmail, setPatientEmail] = useState('');
-  const [isRequesting, setIsRequesting] = useState(false);
-
-  const handleRequestAccess = async () => {
-    const result = emailSchema.safeParse(patientEmail);
-    if (!result.success) {
-      toast({
-        title: "Ogiltig e-postadress",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    setIsRequesting(true);
-    const { success, error } = await requestPatientAccess(patientEmail);
-    setIsRequesting(false);
-
-    if (success) {
-      setPatientEmail('');
-      setRequestDialogOpen(false);
-    } else if (error) {
-      toast({
-        title: "Kunde inte skicka förfrågan",
-        description: error,
-        variant: "destructive",
-      });
-    }
-  };
+  const { approvedConnections, isLoading } = useRelativeConnections();
 
   if (isLoading) {
     return (
@@ -92,168 +40,81 @@ const RelativeDashboard = () => {
   return (
     <div className="p-5 md:p-8 pb-24">
       <div className="max-w-6xl mx-auto space-y-8">
-        <header className="flex items-start justify-between">
-          <div>
-            <h1 className="font-display text-3xl md:text-4xl font-bold mb-2">
-              Mina närstående
-            </h1>
-            <p className="text-muted-foreground">
-              Se översikt över dina närståendes mående
-            </p>
-          </div>
-          <Dialog open={requestDialogOpen} onOpenChange={setRequestDialogOpen}>
-            <DialogTrigger asChild>
-              <Button className="gap-2">
-                <UserPlus className="w-4 h-4" />
-                Begär åtkomst
-              </Button>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>Begär åtkomst till närstående</DialogTitle>
-                <DialogDescription>
-                  Ange din närståendes e-postadress för att skicka en förfrågan om att få se deras data.
-                </DialogDescription>
-              </DialogHeader>
-              
-              <div className="space-y-6 pt-4">
-                <div className="space-y-2">
-                  <Label htmlFor="patientEmail">Närståendes e-post</Label>
-                  <Input
-                    id="patientEmail"
-                    type="email"
-                    placeholder="narstående@example.com"
-                    value={patientEmail}
-                    onChange={(e) => setPatientEmail(e.target.value)}
-                    disabled={isRequesting}
-                  />
-                </div>
-
-                <p className="text-sm text-muted-foreground">
-                  Din närstående kommer att kunna godkänna eller avvisa din förfrågan och välja vilken data du får se.
-                </p>
-
-                <Button onClick={handleRequestAccess} disabled={isRequesting} className="w-full gap-2">
-                  {isRequesting ? (
-                    <Loader2 className="w-4 h-4 animate-spin" />
-                  ) : (
-                    <Send className="w-4 h-4" />
-                  )}
-                  Skicka förfrågan
-                </Button>
-              </div>
-            </DialogContent>
-          </Dialog>
+        <header>
+          <h1 className="font-display text-3xl md:text-4xl font-bold mb-2">
+            Personer du följer
+          </h1>
+          <p className="text-muted-foreground">
+            Se översikt över deras mående
+          </p>
         </header>
 
-        {/* Pending requests sent by relative */}
-        {pendingFromRelative.length > 0 && (
-          <section className="glass-card p-6 border-2 border-blue-200 dark:border-blue-800">
-            <div className="flex items-center gap-3 mb-4">
-              <Send className="w-5 h-5 text-blue-500" />
-              <h2 className="font-display text-xl font-semibold">Skickade förfrågningar</h2>
-              <span className="bg-blue-500/20 text-blue-700 dark:text-blue-400 text-xs font-medium px-2 py-1 rounded-full">
-                {pendingFromRelative.length}
-              </span>
+        {approvedConnections.length === 0 ? (
+          <div className="flex flex-col items-center justify-center py-16 space-y-4">
+            <div className="w-16 h-16 rounded-2xl bg-muted/30 flex items-center justify-center">
+              <Users className="w-8 h-8 text-muted-foreground/40" />
             </div>
-            <div className="space-y-3">
-              {pendingFromRelative.map((connection) => {
-                const hasName = connection.patient_profile?.first_name || connection.patient_profile?.last_name;
-                return (
-                  <div
-                    key={connection.id}
-                    className="flex items-center justify-between p-4 bg-blue-50/50 dark:bg-blue-950/20 rounded-lg"
-                  >
-                    <div>
-                      <p className="font-medium">{getPatientName(connection)}</p>
-                      {hasName && connection.patient_email && (
-                        <p className="text-sm text-muted-foreground">{connection.patient_email}</p>
-                      )}
-                      <p className="text-sm text-blue-600 dark:text-blue-400">
-                        Väntar på svar
-                      </p>
-                    </div>
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      className="gap-1"
-                      onClick={() => cancelRequest(connection.id)}
-                    >
-                      <X className="w-4 h-4" />
-                      Avbryt
-                    </Button>
-                  </div>
-                );
-              })}
-            </div>
-          </section>
-        )}
-
-        <section>
-
-          {approvedConnections.length === 0 ? (
-            <div className="glass-card p-12 text-center">
-              <Users className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-              <h3 className="text-lg font-medium mb-2">Inga närstående ännu</h3>
-              <p className="text-muted-foreground mb-4">
-                Begär åtkomst till en närstående eller vänta på att de bjuder in dig.
+            <div className="text-center space-y-1">
+              <h3 className="text-lg font-medium">Inga personer ännu</h3>
+              <p className="text-sm text-muted-foreground max-w-xs">
+                Gå till din profil för att begära åtkomst till någon du vill följa.
               </p>
-              <Button onClick={() => setRequestDialogOpen(true)} variant="outline" className="gap-2">
-                <UserPlus className="w-4 h-4" />
-                Begär åtkomst
-              </Button>
             </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {approvedConnections.map((connection) => (
-                <div
-                  key={connection.id}
-                  className="glass-card p-6 cursor-pointer transition-all hover:shadow-lg"
-                  onClick={() => navigate(`/patient/${connection.patient_id}`)}
-                >
-                  <div className="flex items-start justify-between mb-4">
-                    <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
-                      <span className="text-lg font-semibold text-primary">
-                        {getPatientInitial(connection)}
-                      </span>
-                    </div>
-                    <Button size="sm" variant="ghost">
-                      <Eye className="w-4 h-4 mr-1" />
-                      Visa
-                    </Button>
+            <Button
+              variant="outline"
+              className="rounded-xl"
+              onClick={() => navigate('/profil')}
+            >
+              Gå till profil
+            </Button>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {approvedConnections.map((connection) => (
+              <div
+                key={connection.id}
+                className="glass-card p-6 cursor-pointer transition-all hover:shadow-lg rounded-2xl"
+                onClick={() => navigate(`/patient/${connection.patient_id}`)}
+              >
+                <div className="flex items-start justify-between mb-4">
+                  <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
+                    <span className="text-lg font-semibold text-primary">
+                      {getPatientInitial(connection)}
+                    </span>
                   </div>
-                  <h3 className="font-semibold mb-1">{getPatientName(connection)}</h3>
-                  {connection.patient_email && connection.patient_profile?.first_name && (
-                    <p className="text-xs text-muted-foreground mb-1 truncate">{connection.patient_email}</p>
-                  )}
-                  <p className="text-sm text-muted-foreground mb-3">
-                    Kopplad sedan {new Date(connection.created_at).toLocaleDateString('sv-SE')}
-                  </p>
-                  <div className="flex flex-wrap gap-1">
-                    {connection.share_mood && (
-                      <span className="text-xs bg-primary/10 text-primary px-2 py-0.5 rounded">Mående</span>
-                    )}
-                    {connection.share_sleep && (
-                      <span className="text-xs bg-primary/10 text-primary px-2 py-0.5 rounded">Sömn</span>
-                    )}
-                    {connection.share_eating && (
-                      <span className="text-xs bg-primary/10 text-primary px-2 py-0.5 rounded">Kost</span>
-                    )}
-                    {connection.share_exercise && (
-                      <span className="text-xs bg-primary/10 text-primary px-2 py-0.5 rounded">Träning</span>
-                    )}
-                    {connection.share_medication && (
-                      <span className="text-xs bg-primary/10 text-primary px-2 py-0.5 rounded">Medicin</span>
-                    )}
-                    {connection.share_characteristics && (
-                      <span className="text-xs bg-primary/10 text-primary px-2 py-0.5 rounded">Kännetecken</span>
-                    )}
-                  </div>
+                  <Button size="sm" variant="ghost">
+                    <Eye className="w-4 h-4 mr-1" />
+                    Visa
+                  </Button>
                 </div>
-              ))}
-            </div>
-          )}
-        </section>
+                <h3 className="font-semibold mb-1">{getPatientName(connection)}</h3>
+                <p className="text-sm text-muted-foreground mb-3">
+                  Kopplad sedan {new Date(connection.created_at).toLocaleDateString('sv-SE')}
+                </p>
+                <div className="flex flex-wrap gap-1">
+                  {connection.share_mood && (
+                    <span className="text-xs bg-primary/10 text-primary px-2 py-0.5 rounded">Mående</span>
+                  )}
+                  {connection.share_sleep && (
+                    <span className="text-xs bg-primary/10 text-primary px-2 py-0.5 rounded">Sömn</span>
+                  )}
+                  {connection.share_eating && (
+                    <span className="text-xs bg-primary/10 text-primary px-2 py-0.5 rounded">Kost</span>
+                  )}
+                  {connection.share_exercise && (
+                    <span className="text-xs bg-primary/10 text-primary px-2 py-0.5 rounded">Träning</span>
+                  )}
+                  {connection.share_medication && (
+                    <span className="text-xs bg-primary/10 text-primary px-2 py-0.5 rounded">Medicin</span>
+                  )}
+                  {connection.share_characteristics && (
+                    <span className="text-xs bg-primary/10 text-primary px-2 py-0.5 rounded">Kännetecken</span>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
