@@ -12,7 +12,7 @@ interface NavItem {
 
 const navItems: NavItem[] = [
   { label: 'Om oss', href: '/om-oss' },
-  { label: 'Så funkar det', href: '/auth#hur-det-funkar' },
+  { label: 'Så funkar det', href: '/sa-funkar-det' },
 ];
 
 export function AuthNavbar() {
