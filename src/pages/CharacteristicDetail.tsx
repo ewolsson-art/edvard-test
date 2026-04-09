@@ -77,7 +77,7 @@ const CharacteristicDetail = () => {
   };
 
 
-  if (isLoading || !moodLoaded) {
+  if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
@@ -86,7 +86,7 @@ const CharacteristicDetail = () => {
   }
 
   const Icon = config.icon;
-  const isActive = latestMood === config.type;
+  const isActive = false;
 
   return (
     <div className="p-5 md:p-8 pb-24">
