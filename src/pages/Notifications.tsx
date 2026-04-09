@@ -1,29 +1,89 @@
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { formatDistanceToNow } from 'date-fns';
 import { sv } from 'date-fns/locale';
-import { Bell, Heart, MessageCircle, UserPlus, UserCheck, Check, Trash2 } from 'lucide-react';
+import { Bell, Heart, MessageCircle, UserPlus, UserCheck, Check, Trash2, AlertTriangle, Loader2 } from 'lucide-react';
 import { useNotifications, AppNotification } from '@/hooks/useNotifications';
 import { Button } from '@/components/ui/button';
+import { supabase } from '@/integrations/supabase/client';
+import { useToast } from '@/hooks/use-toast';
 
 const TYPE_CONFIG: Record<string, { icon: typeof Bell; colorClass: string; bgClass: string }> = {
   forum_reply: { icon: MessageCircle, colorClass: 'text-blue-400', bgClass: 'bg-blue-400/10' },
   forum_like: { icon: Heart, colorClass: 'text-red-400', bgClass: 'bg-red-400/10' },
   connection_request: { icon: UserPlus, colorClass: 'text-primary', bgClass: 'bg-primary/10' },
   connection_approved: { icon: UserCheck, colorClass: 'text-mood-stable', bgClass: 'bg-mood-stable/10' },
+  low_mood_alert: { icon: AlertTriangle, colorClass: 'text-amber-400', bgClass: 'bg-amber-400/10' },
 };
 
 function getConfig(type: string) {
   return TYPE_CONFIG[type] || { icon: Bell, colorClass: 'text-muted-foreground', bgClass: 'bg-muted/20' };
 }
 
-function NotificationItem({ notification, onRead, onDelete, onNavigate }: {
+function ConnectionRequestActions({ notification, onHandled }: {
+  notification: AppNotification;
+  onHandled: () => void;
+}) {
+  const [isLoading, setIsLoading] = useState(false);
+  const { toast } = useToast();
+
+  const handleRespond = async (approved: boolean, e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!notification.reference_id) return;
+    setIsLoading(true);
+
+    const table = notification.reference_type === 'doctor_connection'
+      ? 'patient_doctor_connections'
+      : 'patient_relative_connections';
+
+    const { error } = await supabase
+      .from(table)
+      .update({ status: approved ? 'approved' : 'rejected' })
+      .eq('id', notification.reference_id);
+
+    setIsLoading(false);
+
+    if (error) {
+      toast({ title: 'Kunde inte uppdatera', variant: 'destructive' });
+    } else {
+      toast({ title: approved ? 'Förfrågan godkänd' : 'Förfrågan avvisad' });
+      onHandled();
+    }
+  };
+
+  return (
+    <div className="flex gap-2 mt-3" onClick={e => e.stopPropagation()}>
+      <Button
+        size="sm"
+        variant="outline"
+        className="h-8 text-xs rounded-xl flex-1"
+        disabled={isLoading}
+        onClick={(e) => handleRespond(false, e)}
+      >
+        Avvisa
+      </Button>
+      <Button
+        size="sm"
+        className="h-8 text-xs rounded-xl flex-1"
+        disabled={isLoading}
+        onClick={(e) => handleRespond(true, e)}
+      >
+        {isLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : 'Godkänn'}
+      </Button>
+    </div>
+  );
+}
+
+function NotificationItem({ notification, onRead, onDelete, onNavigate, onHandled }: {
   notification: AppNotification;
   onRead: (id: string) => void;
   onDelete: (id: string) => void;
   onNavigate: (n: AppNotification) => void;
+  onHandled: (id: string) => void;
 }) {
   const config = getConfig(notification.type);
   const Icon = config.icon;
+  const isConnectionRequest = notification.type === 'connection_request' && !notification.read;
 
   return (
     <button
@@ -55,6 +115,14 @@ function NotificationItem({ notification, onRead, onDelete, onNavigate }: {
           {notification.body && (
             <p className="text-xs text-muted-foreground/60 mt-1 line-clamp-1">{notification.body}</p>
           )}
+
+          {isConnectionRequest && (
+            <ConnectionRequestActions
+              notification={notification}
+              onHandled={() => onHandled(notification.id)}
+            />
+          )}
+
           <div className="flex items-center justify-between mt-2">
             <span className="text-[11px] text-muted-foreground/40">
               {formatDistanceToNow(new Date(notification.created_at), { addSuffix: true, locale: sv })}
@@ -79,9 +147,12 @@ const Notifications = () => {
   const handleNavigate = (n: AppNotification) => {
     if (n.reference_type === 'community_post' && n.reference_id) {
       navigate(`/forum/${n.reference_id}`);
-    } else if (n.reference_type === 'doctor_connection' || n.reference_type === 'relative_connection') {
-      navigate('/profil');
     }
+    // Connection requests are handled inline — no redirect needed
+  };
+
+  const handleConnectionHandled = (notificationId: string) => {
+    markAsRead(notificationId);
   };
 
   if (isLoading) {
@@ -129,6 +200,7 @@ const Notifications = () => {
               onRead={markAsRead}
               onDelete={deleteNotification}
               onNavigate={handleNavigate}
+              onHandled={handleConnectionHandled}
             />
           ))}
         </div>
