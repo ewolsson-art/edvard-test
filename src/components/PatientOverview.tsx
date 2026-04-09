@@ -456,16 +456,29 @@ export function PatientOverview({ connection, onBack, hideExtras = false }: Pati
         </div>
       )}
 
+      {/* Stats view */}
+      {showStats && (
+        <OverviewSummary
+          stats={stats}
+          entries={entries}
+          periodLabel={label}
+          sleepBadDays={0}
+          showSleep={false}
+        />
+      )}
+
       {/* View tabs */}
-      <div className="flex items-center gap-4">
-        <Tabs value={view} onValueChange={(v) => setView(v as ViewType)} className="flex-1 max-w-md">
-          <TabsList className="grid w-full grid-cols-3">
-            <TabsTrigger value="week">Idag</TabsTrigger>
-            <TabsTrigger value="month">Månad</TabsTrigger>
-            <TabsTrigger value="year">År</TabsTrigger>
-          </TabsList>
-        </Tabs>
-      </div>
+      {!showStats && (
+        <>
+        <div className="flex items-center gap-4">
+          <Tabs value={view} onValueChange={(v) => setView(v as ViewType)} className="flex-1 max-w-md">
+            <TabsList className="grid w-full grid-cols-3">
+              <TabsTrigger value="week">Idag</TabsTrigger>
+              <TabsTrigger value="month">Månad</TabsTrigger>
+              <TabsTrigger value="year">År</TabsTrigger>
+            </TabsList>
+          </Tabs>
+        </div>
 
       {/* Stats and calendars based on what's shared */}
       <div className="space-y-8">
