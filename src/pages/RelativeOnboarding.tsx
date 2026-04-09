@@ -65,11 +65,12 @@ const RelativeOnboarding = () => {
     setIsSending(false);
 
     if (success) {
-      setSent(true);
       toast({
         title: 'Förfrågan skickad!',
-        description: 'En inbjudan har skickats. Du kan lägga till fler personer senare.',
+        description: 'En inbjudan har skickats.',
       });
+      // Save preferences and redirect to dashboard
+      await finishOnboarding();
     } else {
       toast({
         title: 'Något gick fel',
