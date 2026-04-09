@@ -426,6 +426,18 @@ export function PatientOverview({ connection, onBack, hideExtras = false }: Pati
             <p className="text-sm text-muted-foreground/40 mt-0.5">Ingen incheckning ännu</p>
           )}
         </div>
+        <button
+          onClick={() => setShowStats(!showStats)}
+          className={cn(
+            "p-2 rounded-md transition-all shrink-0",
+            showStats
+              ? "bg-background text-foreground shadow-sm"
+              : "text-muted-foreground hover:text-foreground"
+          )}
+          aria-label="Statistik"
+        >
+          <BarChart3 className="w-5 h-5" />
+        </button>
       </div>
 
       {!hideExtras && diagnoses.length > 0 && (
