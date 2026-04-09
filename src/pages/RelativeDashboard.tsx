@@ -218,7 +218,7 @@ const RelativeDashboard = () => {
                         <div className="h-4 w-32 bg-foreground/5 rounded animate-pulse mt-2" />
                       ) : hasCheckedIn ? (
                         <div className="mt-2 space-y-2">
-                          {/* Mood badge + streak + timestamp */}
+                          {/* Mood badge + timestamp */}
                           <div className="flex items-center gap-2.5 flex-wrap">
                             <div className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg border ${MOOD_COLORS[entry.mood]}`}>
                               <span className="text-sm">{MOOD_ICONS[entry.mood]}</span>
@@ -226,20 +226,12 @@ const RelativeDashboard = () => {
                                 {MOOD_LABELS[entry.mood]}
                               </span>
                             </div>
-                            {entry.streak && entry.streak >= 2 && (
-                              <span className="text-[11px] text-muted-foreground/50 font-medium">
-                                {entry.streak} dagar i rad
-                              </span>
-                            )}
-                            <span className="text-[11px] text-muted-foreground/35">
-                              ·
-                            </span>
-                            {entry.created_at && (
-                              <span className="text-[11px] text-muted-foreground/40">
-                                {formatCheckinTime(entry.created_at)}
-                              </span>
-                            )}
                           </div>
+                          {entry.created_at && (
+                            <p className="text-[11px] text-muted-foreground/40">
+                              Checkade in {formatCheckinTime(entry.created_at).toLowerCase()}
+                            </p>
+                          )}
 
                           {/* Extra data chips */}
                           {((entry.eating_quality && connection.share_eating) || 
