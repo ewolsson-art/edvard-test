@@ -63,7 +63,6 @@ const relativeNavGroups = [
     label: "Översikt",
     items: [
       { title: "Hem", url: "/anhorig", icon: Home, primary: true },
-      { title: "Följer", url: "/foljer", icon: Users },
       { title: "Forum", url: "/forum", icon: MessageCircle },
       { title: "Notiser", url: "/notiser", icon: Bell },
     ],
