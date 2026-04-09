@@ -87,6 +87,19 @@ export function AppSidebar() {
   const isMobile = useIsMobile();
   const isCollapsed = state === "collapsed";
 
+  // Don't determine nav until role is loaded to prevent sidebar flash
+  if (roleLoading) {
+    return (
+      <Sidebar collapsible="icon" className="border-r border-border/20" aria-label="Huvudnavigering">
+        <SidebarContent className="pt-8 pb-4 bg-sidebar" role="navigation">
+          <div className="px-6 animate-pulse">
+            <div className="h-10 w-10 rounded-full bg-white/[0.06]" />
+          </div>
+        </SidebarContent>
+      </Sidebar>
+    );
+  }
+
   const navGroups = isDoctor ? doctorNavGroups : isRelative ? relativeNavGroups : patientNavGroups;
   const homeUrl = isDoctor ? "/lakare" : isRelative ? "/anhorig" : "/";
 
