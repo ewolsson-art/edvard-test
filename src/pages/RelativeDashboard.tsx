@@ -12,6 +12,7 @@ interface TodayMood {
   sleep_quality?: string | null;
   eating_quality?: string | null;
   exercised?: boolean | null;
+  created_at?: string;
 }
 
 const MOOD_COLORS: Record<MoodType, string> = {
@@ -61,13 +62,13 @@ const RelativeDashboard = () => {
           }
           const { data } = await supabase
             .from('mood_entries')
-            .select('mood, sleep_quality, eating_quality, exercised')
+            .select('mood, sleep_quality, eating_quality, exercised, created_at')
             .eq('user_id', conn.patient_id)
             .eq('date', today)
             .maybeSingle();
 
           results[conn.patient_id] = data
-            ? { mood: data.mood as MoodType, sleep_quality: data.sleep_quality, eating_quality: data.eating_quality, exercised: data.exercised }
+            ? { mood: data.mood as MoodType, sleep_quality: data.sleep_quality, eating_quality: data.eating_quality, exercised: data.exercised, created_at: data.created_at }
             : null;
         })
       );
@@ -200,6 +201,13 @@ const RelativeDashboard = () => {
                               </span>
                             )}
                           </div>
+
+                          {/* Timestamp */}
+                          {todayEntry.created_at && (
+                            <p className="text-[11px] text-muted-foreground/40">
+                              Checkade in kl. {format(new Date(todayEntry.created_at), 'HH:mm')}
+                            </p>
+                          )}
                         </div>
                       ) : (
                         <p className="text-sm text-muted-foreground/50 mt-1">
