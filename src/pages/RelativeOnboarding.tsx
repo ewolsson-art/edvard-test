@@ -97,7 +97,7 @@ const RelativeOnboarding = () => {
             Välkommen som anhörig
           </h1>
           <p className="text-sm text-muted-foreground mb-10">
-            Följ hur dina närstående mår – med deras samtycke
+            Stötta någon du bryr dig om genom att följa deras mående
           </p>
 
           {/* Invite section */}
