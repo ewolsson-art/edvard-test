@@ -261,64 +261,100 @@ const Community = () => {
               className="bg-transparent border border-white/20 focus-visible:ring-0 text-base font-semibold placeholder:text-muted-foreground/40 px-3 h-auto rounded-lg mb-3"
               maxLength={120}
             />
-            <Textarea
-              value={content}
-              onChange={(e) => setContent(e.target.value)}
-              placeholder="Skriv ditt inlägg..."
-              className="flex-1 min-h-[200px] bg-transparent border border-white/20 resize-none focus-visible:ring-0 text-[15px] placeholder:text-muted-foreground/50 p-3 rounded-lg"
-              maxLength={2000}
-            />
+            {/* Combined text area with inline tools */}
+            <div className="flex-1 flex flex-col border border-white/20 rounded-lg overflow-hidden min-h-[200px]">
+              <Textarea
+                value={content}
+                onChange={(e) => setContent(e.target.value)}
+                placeholder="Skriv ditt inlägg..."
+                className="flex-1 min-h-[160px] bg-transparent border-0 resize-none focus-visible:ring-0 text-[15px] placeholder:text-muted-foreground/50 p-3"
+                maxLength={2000}
+              />
 
-            {/* Image preview */}
-            {imagePreview && (
-              <div className="relative mt-3 rounded-lg overflow-hidden border border-white/20 max-h-60">
-                <img src={imagePreview} alt="Förhandsvisning" className="w-full h-full object-cover max-h-60" />
+              {/* Image preview inside textarea area */}
+              {imagePreview && (
+                <div className="relative mx-3 mb-3 rounded-lg overflow-hidden border border-white/20 max-h-48">
+                  <img src={imagePreview} alt="Förhandsvisning" className="w-full h-full object-cover max-h-48" />
+                  <button
+                    onClick={clearImage}
+                    className="absolute top-2 right-2 bg-black/60 text-white rounded-full p-1 hover:bg-black/80 transition-colors"
+                  >
+                    <X className="h-4 w-4" />
+                  </button>
+                </div>
+              )}
+
+              {/* Poll options inside textarea area */}
+              {pollMode && (
+                <div className="mx-3 mb-3 space-y-2">
+                  <span className="text-xs font-medium text-muted-foreground">Omröstningsalternativ</span>
+                  {pollOptions.map((opt, i) => (
+                    <div key={i} className="flex items-center gap-2">
+                      <Input
+                        value={opt}
+                        onChange={(e) => {
+                          const next = [...pollOptions];
+                          next[i] = e.target.value;
+                          setPollOptions(next);
+                        }}
+                        placeholder={`Alternativ ${i + 1}`}
+                        className="bg-transparent border border-white/20 focus-visible:ring-0 text-sm placeholder:text-muted-foreground/40 h-9 rounded-lg"
+                        maxLength={100}
+                      />
+                      {pollOptions.length > 2 && (
+                        <button
+                          onClick={() => setPollOptions(pollOptions.filter((_, idx) => idx !== i))}
+                          className="text-muted-foreground/50 hover:text-destructive transition-colors shrink-0"
+                        >
+                          <Minus className="h-4 w-4" />
+                        </button>
+                      )}
+                    </div>
+                  ))}
+                  {pollOptions.length < 6 && (
+                    <button
+                      onClick={() => setPollOptions([...pollOptions, ''])}
+                      className="text-xs text-primary hover:text-primary/80 transition-colors flex items-center gap-1"
+                    >
+                      <Plus className="h-3 w-3" /> Lägg till alternativ
+                    </button>
+                  )}
+                </div>
+              )}
+
+              {/* Inline toolbar inside textarea */}
+              <div className="flex items-center gap-1 px-2 py-2 border-t border-white/10">
+                <input
+                  ref={imageInputRef}
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageSelect}
+                  className="hidden"
+                />
                 <button
-                  onClick={clearImage}
-                  className="absolute top-2 right-2 bg-black/60 text-white rounded-full p-1 hover:bg-black/80 transition-colors"
+                  onClick={() => imageInputRef.current?.click()}
+                  className="p-2.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-white/[0.05] transition-all"
+                  title="Lägg till bild"
                 >
-                  <X className="h-4 w-4" />
+                  <ImagePlus className="h-6 w-6" />
+                </button>
+                <button
+                  onClick={() => setPollMode(!pollMode)}
+                  className={`p-2.5 rounded-lg transition-all ${pollMode ? 'text-primary bg-primary/10' : 'text-muted-foreground hover:text-foreground hover:bg-white/[0.05]'}`}
+                  title="Lägg till omröstning"
+                >
+                  <BarChart3 className="h-6 w-6" />
+                </button>
+                <button
+                  onClick={() => setIsAnonymous(!isAnonymous)}
+                  className={`p-2.5 rounded-lg transition-all flex items-center gap-2 ${isAnonymous ? 'text-primary bg-primary/10' : 'text-muted-foreground hover:text-foreground hover:bg-white/[0.05]'}`}
+                  title={isAnonymous ? 'Anonymt läge på' : 'Anonymt läge av'}
+                >
+                  {isAnonymous ? <EyeOff className="h-6 w-6" /> : <Eye className="h-6 w-6" />}
+                  <span className="text-xs font-medium">{isAnonymous ? 'Anonymt' : 'Med namn'}</span>
                 </button>
               </div>
-            )}
-
-            {/* Poll options */}
-            {pollMode && (
-              <div className="mt-3 space-y-2">
-                <span className="text-xs font-medium text-muted-foreground">Omröstningsalternativ</span>
-                {pollOptions.map((opt, i) => (
-                  <div key={i} className="flex items-center gap-2">
-                    <Input
-                      value={opt}
-                      onChange={(e) => {
-                        const next = [...pollOptions];
-                        next[i] = e.target.value;
-                        setPollOptions(next);
-                      }}
-                      placeholder={`Alternativ ${i + 1}`}
-                      className="bg-transparent border border-white/20 focus-visible:ring-0 text-sm placeholder:text-muted-foreground/40 h-9 rounded-lg"
-                      maxLength={100}
-                    />
-                    {pollOptions.length > 2 && (
-                      <button
-                        onClick={() => setPollOptions(pollOptions.filter((_, idx) => idx !== i))}
-                        className="text-muted-foreground/50 hover:text-destructive transition-colors shrink-0"
-                      >
-                        <Minus className="h-4 w-4" />
-                      </button>
-                    )}
-                  </div>
-                ))}
-                {pollOptions.length < 6 && (
-                  <button
-                    onClick={() => setPollOptions([...pollOptions, ''])}
-                    className="text-xs text-primary hover:text-primary/80 transition-colors flex items-center gap-1"
-                  >
-                    <Plus className="h-3 w-3" /> Lägg till alternativ
-                  </button>
-                )}
-              </div>
-            )}
+            </div>
 
             {/* Category selector — compact */}
             <div className="mt-3">
@@ -344,39 +380,16 @@ const Community = () => {
               )}
             </div>
 
-            {/* Footer */}
-            <div className="flex items-center justify-between pt-4 mt-auto">
-              <div className="flex items-center gap-3">
-                <input
-                  ref={imageInputRef}
-                  type="file"
-                  accept="image/*"
-                  onChange={handleImageSelect}
-                  className="hidden"
-                />
-                <button
-                  onClick={() => imageInputRef.current?.click()}
-                  className="text-muted-foreground hover:text-foreground transition-colors"
-                  title="Lägg till bild"
-                >
-                  <ImagePlus className="h-5 w-5" />
-                </button>
-                <button
-                  onClick={() => setPollMode(!pollMode)}
-                  className={`transition-colors ${pollMode ? 'text-primary' : 'text-muted-foreground hover:text-foreground'}`}
-                  title="Lägg till omröstning"
-                >
-                  <BarChart3 className="h-5 w-5" />
-                </button>
-                <div className="flex items-center gap-2">
-                  {isAnonymous ? <EyeOff className="h-4 w-4 text-muted-foreground" /> : <Eye className="h-4 w-4 text-muted-foreground" />}
-                  <span className="text-xs text-muted-foreground">{isAnonymous ? 'Anonymt' : 'Med namn'}</span>
-                  <Switch checked={!isAnonymous} onCheckedChange={(checked) => setIsAnonymous(!checked)} className="scale-75" />
-                </div>
-              </div>
-              <Button size="sm" onClick={handleSubmit} disabled={!content.trim() || isPosting} className="rounded-full gap-2 px-4">
-                <Send className="h-3.5 w-3.5" />Posta inlägg
-              </Button>
+            {/* Post button */}
+            <div className="flex justify-end pt-4 mt-auto">
+              <button
+                onClick={handleSubmit}
+                disabled={!content.trim() || isPosting}
+                className="px-6 py-2.5 rounded-full bg-[hsl(45_85%_55%)] text-[hsl(225_30%_7%)] font-bold text-sm tracking-wide shadow-[0_4px_24px_hsl(45_85%_55%/0.35)] hover:shadow-[0_8px_32px_hsl(45_85%_55%/0.5)] hover:bg-[hsl(45_85%_62%)] hover:scale-105 active:scale-[0.98] transition-all duration-200 disabled:opacity-40 disabled:hover:scale-100 disabled:hover:shadow-none inline-flex items-center gap-2"
+              >
+                <Send className="h-4 w-4" />
+                Posta inlägg
+              </button>
             </div>
           </div>
         </div>
