@@ -138,33 +138,36 @@ const RelativeOnboarding = () => {
             )}
           </div>
 
-          {/* Divider */}
-          <div className="flex items-center gap-3 my-6">
-            <div className="flex-1 h-px bg-white/10" />
-            <span className="text-xs text-white/30">eller</span>
-            <div className="flex-1 h-px bg-white/10" />
-          </div>
+          {/* Divider & Skip - hidden when typing, show Utforska after sent */}
+          {(!email || sent) && (
+            <>
+              <div className="flex items-center gap-3 my-6">
+                <div className="flex-1 h-px bg-white/10" />
+                <span className="text-xs text-white/30">{sent ? '' : 'eller'}</span>
+                <div className="flex-1 h-px bg-white/10" />
+              </div>
 
-          {/* Skip / Continue */}
-          <button
-            onClick={finishOnboarding}
-            disabled={isSubmitting}
-            className="w-full h-14 rounded-2xl text-[15px] font-semibold bg-[hsl(45_85%_55%)] text-[hsl(230_30%_5%)] hover:bg-[hsl(45_85%_65%)] shadow-[0_4px_20px_-4px_hsl(45_85%_55%/0.4)] hover:shadow-[0_6px_28px_-4px_hsl(45_85%_55%/0.5)] transition-all duration-300 flex items-center justify-center gap-2 group disabled:opacity-50"
-          >
-            {isSubmitting ? (
-              <Loader2 className="w-5 h-5 animate-spin" />
-            ) : sent ? (
-              <>
-                Utforska
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </>
-            ) : (
-              <>
-                Hoppa över – gör det sen
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </>
-            )}
-          </button>
+              <button
+                onClick={finishOnboarding}
+                disabled={isSubmitting}
+                className="w-full h-14 rounded-2xl text-[15px] font-semibold bg-[hsl(45_85%_55%)] text-[hsl(230_30%_5%)] hover:bg-[hsl(45_85%_65%)] shadow-[0_4px_20px_-4px_hsl(45_85%_55%/0.4)] hover:shadow-[0_6px_28px_-4px_hsl(45_85%_55%/0.5)] transition-all duration-300 flex items-center justify-center gap-2 group disabled:opacity-50"
+              >
+                {isSubmitting ? (
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                ) : sent ? (
+                  <>
+                    Utforska
+                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  </>
+                ) : (
+                  <>
+                    Hoppa över – gör det sen
+                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  </>
+                )}
+              </button>
+            </>
+          )}
         </div>
       </main>
     </DarkNightBackground>
