@@ -199,7 +199,7 @@ const RelativeDashboard = () => {
                   className="group w-full text-left rounded-2xl border p-5 transition-all duration-200 hover:shadow-[0_0_24px_hsl(var(--primary)/0.06)] hover:border-border/50 hover:scale-[1.01] active:scale-[0.99] bg-card/60 border-border/30 backdrop-blur-sm"
                   onClick={() => navigate(`/patient/${connection.patient_id}`)}
                 >
-                  <div className="flex items-center gap-4">
+                  <div className="flex gap-4">
                     {/* Avatar */}
                     <Avatar className="w-12 h-12 shrink-0 ring-1 ring-white/[0.06]">
                       {connection.patient_profile?.avatar_url ? (
