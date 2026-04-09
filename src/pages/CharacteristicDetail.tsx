@@ -1,12 +1,9 @@
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Plus, X, Zap, Cloud, Sun, ChevronLeft, Sparkles, Loader2 } from 'lucide-react';
+import { Plus, X, Zap, Cloud, Sun, ChevronLeft } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { useCharacteristics } from '@/hooks/useCharacteristics';
 import { useMoodData } from '@/hooks/useMoodData';
-import { useAuth } from '@/hooks/useAuth';
-import { supabase } from '@/integrations/supabase/client';
-import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 
 const MOOD_CONFIG = {
@@ -42,8 +39,6 @@ const MOOD_CONFIG = {
 const CharacteristicDetail = () => {
   const { moodType } = useParams<{ moodType: string }>();
   const navigate = useNavigate();
-  const { user } = useAuth();
-  const { toast } = useToast();
   const config = moodType ? MOOD_CONFIG[moodType as keyof typeof MOOD_CONFIG] : null;
 
   const {
@@ -55,6 +50,7 @@ const CharacteristicDetail = () => {
     deleteCharacteristic,
   } = useCharacteristics();
 
+
   const { entries, isLoaded: moodLoaded } = useMoodData();
   const latestMood = entries.length > 0
     ? entries.sort((a, b) => b.timestamp - a.timestamp)[0]?.mood
@@ -63,10 +59,6 @@ const CharacteristicDetail = () => {
   const [newValue, setNewValue] = useState('');
   const [isAdding, setIsAdding] = useState(false);
   const [showInput, setShowInput] = useState(false);
-  const [aiSuggestions, setAiSuggestions] = useState<string[]>([]);
-  const [aiPatterns, setAiPatterns] = useState<string[]>([]);
-  const [isLoadingAi, setIsLoadingAi] = useState(false);
-  const [aiLoaded, setAiLoaded] = useState(false);
 
   if (!config) {
     navigate('/kannetecken');
@@ -86,44 +78,10 @@ const CharacteristicDetail = () => {
     if (success) {
       setNewValue('');
       setShowInput(false);
-      setAiSuggestions(prev => prev.filter(s => s.toLowerCase() !== newValue.trim().toLowerCase()));
     }
     setIsAdding(false);
   };
 
-  const handleAddSuggestion = async (suggestion: string) => {
-    const success = await addCharacteristic(suggestion, config.type);
-    if (success) {
-      setAiSuggestions(prev => prev.filter(s => s !== suggestion));
-    }
-  };
-
-  const handleDismissSuggestion = (suggestion: string) => {
-    setAiSuggestions(prev => prev.filter(s => s !== suggestion));
-  };
-
-  const loadAiSuggestions = async () => {
-    if (!user) return;
-    setIsLoadingAi(true);
-    try {
-      const { data, error } = await supabase.functions.invoke('suggest-characteristics', {
-        body: { moodType: config.type },
-      });
-      if (error) throw error;
-      setAiSuggestions(data.suggestions || []);
-      setAiPatterns(data.patternsFound || []);
-      setAiLoaded(true);
-    } catch (error: any) {
-      console.error('Error loading AI suggestions:', error);
-      toast({
-        title: 'Kunde inte hämta förslag',
-        description: 'Försök igen senare.',
-        variant: 'destructive',
-      });
-    } finally {
-      setIsLoadingAi(false);
-    }
-  };
 
   if (isLoading || !moodLoaded) {
     return (
@@ -243,71 +201,6 @@ const CharacteristicDetail = () => {
           )}
         </div>
 
-        {/* AI suggestions – secondary, inline */}
-        <div className="mb-8 pt-2">
-          <div className="flex items-center gap-2 mb-3">
-            <Sparkles className="w-3.5 h-3.5 text-foreground/20" />
-            <h2 className="text-[13px] font-medium text-foreground/30 uppercase tracking-wide">
-              AI-förslag
-            </h2>
-          </div>
-
-          {!aiLoaded && !isLoadingAi ? (
-            <div className="flex flex-col gap-1.5">
-              <p className="text-[13px] text-foreground/25">Analysera dina dagboksanteckningar för att hitta mönster</p>
-              <button
-                onClick={loadAiSuggestions}
-                className="inline-flex items-center gap-1.5 text-[13px] font-medium text-primary hover:text-primary/80 transition-all duration-200 w-fit"
-              >
-                <Sparkles className="w-3 h-3" />
-                Analysera
-              </button>
-            </div>
-          ) : isLoadingAi ? (
-            <div className="flex items-center gap-2 py-2">
-              <Loader2 className="w-3.5 h-3.5 animate-spin text-foreground/20" />
-              <p className="text-[13px] text-foreground/20">Analyserar…</p>
-            </div>
-          ) : aiSuggestions.length > 0 ? (
-            <div>
-              {aiPatterns.length > 0 && (
-                <div className="mb-3 space-y-0.5">
-                  {aiPatterns.map((p, i) => (
-                    <p key={i} className="text-[11px] text-foreground/20 flex items-center gap-1.5">
-                      <span className="w-1 h-1 rounded-full bg-foreground/15" />
-                      {p}
-                    </p>
-                  ))}
-                </div>
-              )}
-              <div className="flex flex-wrap gap-2">
-                {aiSuggestions.map((suggestion) => (
-                  <span key={suggestion} className="inline-flex items-center gap-1">
-                    <button
-                      onClick={() => handleAddSuggestion(suggestion)}
-                      className="text-[13px] px-3 py-1.5 rounded-full bg-foreground/[0.04] border border-foreground/[0.06] text-foreground/30 hover:text-foreground/50 hover:bg-foreground/[0.06] transition-all"
-                    >
-                      + {suggestion}
-                    </button>
-                    <button
-                      onClick={() => handleDismissSuggestion(suggestion)}
-                      className="p-0.5 text-foreground/15 hover:text-foreground/30 transition-colors"
-                      aria-label={`Avfärda ${suggestion}`}
-                    >
-                      <X className="w-2.5 h-2.5" />
-                    </button>
-                  </span>
-                ))}
-              </div>
-            </div>
-          ) : (
-            <p className="text-[13px] text-foreground/20">
-              {entries.length < 5
-                ? "Du behöver fler incheckningar för att få förslag."
-                : "Inga nya förslag just nu."}
-            </p>
-          )}
-        </div>
 
       </div>
     </div>
