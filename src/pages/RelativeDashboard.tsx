@@ -273,14 +273,6 @@ const RelativeDashboard = () => {
               );
             })}
 
-            {/* Subtle CTA */}
-            <button
-              onClick={() => navigate('/foljer')}
-              className="w-full flex items-center justify-center gap-2 py-3 rounded-2xl text-sm text-muted-foreground/40 hover:text-muted-foreground/60 hover:bg-foreground/[0.02] transition-all duration-200"
-            >
-              <Plus className="w-4 h-4" />
-              Lägg till fler personer
-            </button>
           </div>
         )}
       </div>
