@@ -66,7 +66,7 @@ const PatientDetail = () => {
   };
 
   return (
-    <div className="py-8 px-4 md:px-8">
+    <div className="p-5 md:p-8 pb-24">
       <div className="max-w-4xl mx-auto">
         <div className="glass-card p-6">
           <PatientOverview 

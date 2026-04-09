@@ -185,7 +185,7 @@ const Profile = () => {
 
   return (
     <div className="p-5 md:p-8 pb-24">
-      <div className="max-w-2xl mx-auto">
+      <div className="max-w-2xl mx-auto md:mx-0">
         <h1 className="font-display text-3xl font-bold mb-2">Min profil</h1>
         <p className="text-sm text-muted-foreground mb-8">Hantera din profil och medicinsk information.</p>
 
