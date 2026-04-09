@@ -453,55 +453,61 @@ export function TodayCheckin({
       .map(q => ({ question: q.question_text, answer: customAnswersState[q.id] === 'yes' ? 'Ja' : 'Nej' }));
 
     return (
-      <div className="fade-in h-full md:h-auto flex flex-col justify-center px-5 py-8 md:glass-card md:p-10 md:max-h-[calc(100vh-4rem)] md:overflow-y-auto md:border md:bg-card/80 md:rounded-2xl md:shadow-sm">
+      <div className="fade-in h-full md:h-auto flex flex-col justify-center px-5 py-10 md:py-16 md:px-8">
         
-        <div className="flex flex-col items-center text-center max-w-sm mx-auto w-full">
+        <div className="max-w-md w-full">
           
-          {/* Bare checkmark — no circle */}
-          <div className="mb-5">
+          {/* Top line — checkmark + label */}
+          <div className="flex items-center gap-2.5 mb-8">
             <Check 
-              className={cn("w-9 h-9", moodDisplay?.colorClass || 'text-mood-stable')} 
+              className={cn("w-5 h-5", moodDisplay?.colorClass || 'text-mood-stable')} 
               style={{ 
                 animation: 'scale-in 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)',
-                strokeWidth: 2.5
+                strokeWidth: 3
               }} 
             />
+            <span className="text-[13px] font-medium uppercase tracking-wider text-foreground/40">
+              Incheckad
+              {!isDisplayToday && <span className="text-primary ml-1.5">· Retroaktiv</span>}
+            </span>
           </div>
 
-          {/* Confirmation */}
-          <h1 className="font-display text-[22px] md:text-[26px] font-semibold text-foreground">
-            Incheckad
-            {!isDisplayToday && <span className="text-primary text-[15px] ml-2">Retroaktiv</span>}
-          </h1>
+          {/* Streak — the hero */}
+          {streakData.currentStreak > 0 && (
+            <div className="mb-8 relative">
+              <span 
+                className="text-[72px] md:text-[96px] font-bold tabular-nums leading-none tracking-tighter text-foreground"
+                style={{ 
+                  animation: 'scale-in 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 0.15s both',
+                  textShadow: `0 0 80px hsl(var(--primary) / 0.15)`
+                }}
+              >
+                {streakData.currentStreak}
+              </span>
+              <p className="text-[13px] font-medium text-foreground/25 mt-1 tracking-wide">
+                {streakData.currentStreak === 1 ? 'dag' : 'dagar'} i rad
+              </p>
+              {streakData.longestStreak > streakData.currentStreak && (
+                <p className="text-[11px] text-foreground/15 mt-1">
+                  Längsta: {streakData.longestStreak} dagar
+                </p>
+              )}
+            </div>
+          )}
 
-          {/* Calm follow-up — tight to heading */}
+          {/* Follow-up message */}
           {followUp && (
-            <p className="text-[14px] text-foreground/45 leading-relaxed mt-2">
+            <p className="text-[15px] text-foreground/50 leading-relaxed mb-8 max-w-[320px]">
               {followUp.message}
             </p>
           )}
 
-          {/* Streak — secondary, warm not loud */}
-          {streakData.currentStreak > 0 && (
-            <div className="mt-7">
-              <span 
-                className="text-[40px] md:text-[46px] font-bold tabular-nums leading-none tracking-tight text-foreground/70"
-                style={{ animation: 'scale-in 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 0.2s both' }}
-              >
-                {streakData.currentStreak}
-              </span>
-              <p className="text-[12px] font-medium text-foreground/25 mt-1">
-                {streakData.currentStreak === 1 ? 'dag' : 'dagar'} i rad
-              </p>
-            </div>
-          )}
-
-          {/* Status summary — slightly more present */}
-          <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-2 text-[14px] mt-7">
+          {/* Status summary — horizontal, left-aligned */}
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-2 text-[14px]">
             {summaryItems.map((item, i) => (
               <span key={item.label} className="flex items-center gap-1">
-                {i > 0 && <span className="text-foreground/15 mr-2">·</span>}
-                <span className={cn("font-medium", item.colorClass || 'text-foreground/60')}>{item.value}</span>
+                {i > 0 && <span className="text-foreground/10 mr-1">·</span>}
+                <span className={cn("font-medium", item.colorClass || 'text-foreground/50')}>{item.value}</span>
               </span>
             ))}
           </div>
@@ -515,7 +521,7 @@ export function TodayCheckin({
 
           {/* Custom answers */}
           {customAnswerItems.length > 0 && (
-            <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-[12px] text-foreground/20 mt-2">
+            <div className="flex flex-wrap items-start gap-x-4 gap-y-1 text-[12px] text-foreground/20 mt-3">
               {customAnswerItems.map((item, i) => (
                 <span key={i}>
                   {item.question}: <span className="font-medium text-foreground/35">{item.answer}</span>
@@ -526,9 +532,9 @@ export function TodayCheckin({
 
           {/* Encouragement for low mood */}
           {(todayEntry?.mood === 'depressed' || todayEntry?.mood === 'somewhat_depressed') && (
-            <div className="mt-7 px-5 py-4 rounded-xl border border-primary/10 bg-primary/5">
+            <div className="mt-8 py-4 border-l-2 border-primary/20 pl-4">
               <p className="text-[13px] text-foreground/50 leading-relaxed">
-                <Heart className="w-3.5 h-3.5 inline mr-1.5 text-primary/50 -mt-0.5" />
+                <Heart className="w-3.5 h-3.5 inline mr-1.5 text-primary/40 -mt-0.5" />
                 Bättre dagar kommer.
                 {encouragementData.goodDaysCount > 0 && (
                   <span className="text-foreground/30">
@@ -542,7 +548,7 @@ export function TodayCheckin({
           {/* Edit */}
           <button
             onClick={handleEdit}
-            className="mt-9 text-[13px] text-foreground/25 hover:text-foreground/50 transition-colors duration-200 cursor-pointer"
+            className="mt-10 text-[13px] text-foreground/20 hover:text-foreground/45 transition-colors duration-200 cursor-pointer"
           >
             Ändra incheckning
           </button>
