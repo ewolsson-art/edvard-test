@@ -483,7 +483,7 @@ export function PatientOverview({ connection, onBack, hideExtras = false }: Pati
                 return (
                   <div className="space-y-5">
                     <p className="text-xs text-muted-foreground/40 font-medium uppercase tracking-wider">
-                      {format(new Date(), 'd MMMM yyyy', { locale: sv })}
+                      {format(new Date(), 'EEEE d MMMM yyyy', { locale: sv })}
                     </p>
                     {todayEntry ? (
                       <div className="space-y-5">
