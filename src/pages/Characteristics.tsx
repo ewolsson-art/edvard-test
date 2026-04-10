@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Zap, Cloud, Sun, ChevronRight, Sparkles } from 'lucide-react';
 import { useCharacteristics } from '@/hooks/useCharacteristics';
 import { useMoodData } from '@/hooks/useMoodData';
 import { cn } from '@/lib/utils';
