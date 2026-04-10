@@ -245,10 +245,13 @@ const RelativeOnboarding = () => {
                   <button
                     onClick={finishOnboarding}
                     disabled={isSubmitting}
-                    className="w-full h-14 rounded-2xl text-[15px] font-semibold bg-[hsl(45_85%_55%)] text-[hsl(230_30%_5%)] hover:bg-[hsl(45_85%_65%)] shadow-[0_4px_20px_-4px_hsl(45_85%_55%/0.4)] hover:shadow-[0_6px_28px_-4px_hsl(45_85%_55%/0.5)] transition-all duration-300 flex items-center justify-center gap-2 group disabled:opacity-50"
+                    className={sent
+                      ? "w-full h-14 rounded-2xl text-[15px] font-semibold bg-[hsl(45_85%_55%)] text-[hsl(230_30%_5%)] hover:bg-[hsl(45_85%_65%)] shadow-[0_4px_20px_-4px_hsl(45_85%_55%/0.4)] transition-all duration-300 flex items-center justify-center gap-2 group disabled:opacity-50"
+                      : "text-sm text-white/30 hover:text-white/50 transition-colors flex items-center justify-center gap-1.5 mx-auto py-2 disabled:opacity-50"
+                    }
                   >
                     {isSubmitting ? (
-                      <Loader2 className="w-5 h-5 animate-spin" />
+                      <Loader2 className="w-4 h-4 animate-spin" />
                     ) : sent ? (
                       <>
                         Utforska
@@ -257,7 +260,7 @@ const RelativeOnboarding = () => {
                     ) : (
                       <>
                         Hoppa över – gör det sen
-                        <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                        <ArrowRight className="w-3.5 h-3.5" />
                       </>
                     )}
                   </button>
