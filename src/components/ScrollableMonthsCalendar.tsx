@@ -4,13 +4,13 @@ import { MonthCalendar } from './MonthCalendar';
 import { SleepMonthCalendar } from './SleepMonthCalendar';
 import { EatingMonthCalendar } from './EatingMonthCalendar';
 import { ExerciseMonthCalendar } from './ExerciseMonthCalendar';
-import { MoodType, ExerciseType, QualityType } from '@/types/mood';
+import { MoodType, MoodEntry, ExerciseType, QualityType } from '@/types/mood';
 
 interface ScrollableMonthsCalendarProps {
   year: number;
   type: 'mood' | 'sleep' | 'eating' | 'exercise';
   getEntryForDate: (dateStr: string) => MoodEntry | undefined;
-  getMedicationsTakenOnDate?: (dateStr: string) => string[];
+  getMedicationsTakenOnDate?: (dateStr: string) => unknown[];
   getEntriesForMonth?: (year: number, month: number) => Record<number, MoodType>;
   onDayClick?: (date: Date) => void;
 }
