@@ -46,8 +46,8 @@ const Profile = () => {
     if (profile) {
       setFirstName(profile.first_name || '');
       setLastName(profile.last_name || '');
-      setClinicName(profile.clinic_name || '');
-      setHospitalName(profile.hospital_name || '');
+      setClinicName((profile as Record<string, string | null>).clinic_name || '');
+      setHospitalName((profile as Record<string, string | null>).hospital_name || '');
     }
   }, [profile]);
 
@@ -67,7 +67,8 @@ const Profile = () => {
     if (!user) return;
     setIsSaving(true);
     try {
-      const profileData: Record<string, unknown> = {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const profileData: any = {
         user_id: user.id,
         first_name: firstName.trim() || null,
         last_name: lastName.trim() || null,

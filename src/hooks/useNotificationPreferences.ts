@@ -10,7 +10,7 @@ export interface NotificationPreferences {
   checkin_time: string;
   medication_enabled: boolean;
   medication_time: string;
-  push_subscription: Record<string, unknown> | null;
+  push_subscription: unknown;
   created_at: string;
   updated_at: string;
 }
