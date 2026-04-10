@@ -145,8 +145,7 @@ export default function Insights() {
       if (data?.error) { setError(data.message || 'Något gick fel.'); return; }
       setStructured(data.structured);
       setStats(data.stats);
-    } catch (e: any) {
-      console.error(e);
+    } catch (e: unknown) {
       setError('Kunde inte generera insikter. Försök igen.');
     } finally {
       setLoading(false);

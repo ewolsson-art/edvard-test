@@ -36,7 +36,7 @@ export function useMoodData() {
         const formattedEntries: MoodEntry[] = (data || []).map(entry => ({
           date: entry.date,
           mood: normalizeMoodType(entry.mood),
-          energyLevel: (entry as any).energy_level as EnergyType | undefined,
+          energyLevel: entry.energy_level as EnergyType | undefined,
           comment: entry.comment || undefined,
           sleepQuality: entry.sleep_quality as QualityType | undefined,
           sleepComment: entry.sleep_comment || undefined,
@@ -61,8 +61,7 @@ export function useMoodData() {
   const saveCheckin = useCallback(async (date: string, data: CheckinData) => {
     if (!user) return;
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const upsertData: any = {
+    const upsertData: Record<string, unknown> = {
       user_id: user.id,
       date,
       mood: data.mood,

@@ -29,7 +29,7 @@ export function FullscreenComment({ title, placeholder, value, onChange, onClose
       return;
     }
 
-    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    const SpeechRecognition = (window as unknown as Record<string, unknown>).SpeechRecognition || (window as unknown as Record<string, unknown>).webkitSpeechRecognition;
     if (!SpeechRecognition) {
       return;
     }
@@ -41,7 +41,7 @@ export function FullscreenComment({ title, placeholder, value, onChange, onClose
 
     let finalTranscript = value || '';
 
-    rec.onresult = (event: any) => {
+    rec.onresult = (event: SpeechRecognitionEvent) => {
       let interim = '';
       for (let i = event.resultIndex; i < event.results.length; i++) {
         const transcript = event.results[i][0].transcript;

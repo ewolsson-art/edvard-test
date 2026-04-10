@@ -46,8 +46,8 @@ const Profile = () => {
     if (profile) {
       setFirstName(profile.first_name || '');
       setLastName(profile.last_name || '');
-      setClinicName((profile as any).clinic_name || '');
-      setHospitalName((profile as any).hospital_name || '');
+      setClinicName(profile.clinic_name || '');
+      setHospitalName(profile.hospital_name || '');
     }
   }, [profile]);
 
@@ -67,7 +67,7 @@ const Profile = () => {
     if (!user) return;
     setIsSaving(true);
     try {
-      const profileData: any = {
+      const profileData: Record<string, unknown> = {
         user_id: user.id,
         first_name: firstName.trim() || null,
         last_name: lastName.trim() || null,

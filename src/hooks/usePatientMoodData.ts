@@ -63,7 +63,7 @@ export function usePatientMoodData({ patientId }: UsePatientMoodDataProps) {
           filter: `user_id=eq.${patientId}`,
         },
         (payload) => {
-          console.log('Realtime mood update:', payload);
+          
           
           if (payload.eventType === 'INSERT' || payload.eventType === 'UPDATE') {
             const newEntry: MoodEntry = {
