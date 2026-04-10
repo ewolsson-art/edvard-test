@@ -249,7 +249,7 @@ const Onboarding = () => {
           {step === 1 && (
             <div className="animate-fade-in">
               <h1 className="text-2xl md:text-3xl font-bold text-white font-display tracking-tight">
-                Välkommen till Friendly
+                Första steget till bättre insikt börjar här
               </h1>
               <p className="mt-2 text-sm text-white/40">
                 Din personliga stämningsdagbok för att förstå och följa ditt mående
