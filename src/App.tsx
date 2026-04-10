@@ -81,6 +81,7 @@ const App = () => (
           <Sonner />
           <BrowserRouter>
             <div className="min-h-screen" role="application" aria-label="Friendly - Moodtracker">
+            <Suspense fallback={<div className="min-h-screen bg-background" />}>
             <Routes>
             <Route path="/auth" element={<Auth />} />
             <Route path="/sa-funkar-det" element={<HowItWorksPage />} />
