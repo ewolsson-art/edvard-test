@@ -55,23 +55,6 @@ const CHECKIN_OPTIONS = [
   },
 ];
 
-const FEATURES = [
-  {
-    icon: TrendingUp,
-    title: 'Statistik & insikter',
-    description: 'Se trender i ditt mående med tydliga grafer',
-  },
-  {
-    icon: Share2,
-    title: 'Dela med din läkare',
-    description: 'Bjud in din läkare för att dela din data',
-  },
-  {
-    icon: MessageSquare,
-    title: 'AI-assistent',
-    description: 'Chatta med vår AI för att reflektera',
-  },
-];
 
 const TOTAL_STEPS = 6;
 
