@@ -187,7 +187,7 @@ const Onboarding = () => {
     }
   };
 
-  const totalChars = characteristics.elevated.length + characteristics.stable.length + characteristics.depressed.length;
+  
 
   return (
     <DarkNightBackground>
@@ -360,40 +360,9 @@ const Onboarding = () => {
             </div>
           )}
 
-          {/* Step 4: Characteristics */}
+
+          {/* Step 4: Invite */}
           {step === 4 && (
-            <div className="animate-fade-in">
-              <h1 className="text-2xl md:text-3xl font-bold text-white font-display tracking-tight">
-                Dina kännetecken
-              </h1>
-              <p className="mt-2 text-sm text-white/40">
-                Hur märker du och andra att du mår på ett visst sätt?
-              </p>
-
-              <div className="mt-6">
-                <CharacteristicsStep 
-                  characteristics={characteristics}
-                  onCharacteristicsChange={setCharacteristics}
-                />
-              </div>
-
-              <div className="flex gap-3 mt-6">
-                <button onClick={handleBack} className="h-12 px-5 rounded-2xl text-sm font-medium text-white/50 hover:text-white/80 bg-white/[0.04] ring-1 ring-white/[0.08] hover:bg-white/[0.06] transition-all">
-                  <ArrowLeft className="w-4 h-4" />
-                </button>
-                <Button 
-                  onClick={handleNext} 
-                  className="flex-1 h-12 rounded-2xl text-[15px] font-semibold bg-[hsl(45_85%_55%)] text-[hsl(230_30%_5%)] hover:bg-[hsl(45_85%_65%)] shadow-[0_4px_20px_-4px_hsl(45_85%_55%/0.4)] transition-all duration-300"
-                >
-                  {getSkipText()}
-                  <ArrowRight className="w-4 h-4 ml-1" />
-                </Button>
-              </div>
-            </div>
-          )}
-
-          {/* Step 5: Invite */}
-          {step === 5 && (
             <div className="animate-fade-in">
               <h1 className="text-2xl md:text-3xl font-bold text-white font-display tracking-tight">
                 Bjud in
@@ -424,8 +393,8 @@ const Onboarding = () => {
             </div>
           )}
 
-          {/* Step 6: Confirm & Start */}
-          {step === 6 && (
+          {/* Step 5: Confirm & Start */}
+          {step === 5 && (
             <div className="animate-fade-in">
               <h1 className="text-2xl md:text-3xl font-bold text-white font-display tracking-tight">
                 Allt är redo!
@@ -465,32 +434,6 @@ const Onboarding = () => {
                   </div>
                 )}
 
-                {/* Characteristics */}
-                {totalChars > 0 && (
-                  <div className="p-3 rounded-2xl bg-white/[0.04] ring-1 ring-white/[0.08]">
-                    <h2 className="font-semibold text-[11px] mb-2 text-white/30 uppercase tracking-wide">Kännetecken</h2>
-                    <div className="space-y-1.5">
-                      {characteristics.elevated.length > 0 && (
-                        <div className="flex items-center gap-2">
-                          <span className="text-[10px] text-amber-500/80 font-medium w-16">Uppvarvad:</span>
-                          <span className="text-xs text-white/40">{characteristics.elevated.join(', ')}</span>
-                        </div>
-                      )}
-                      {characteristics.stable.length > 0 && (
-                        <div className="flex items-center gap-2">
-                          <span className="text-[10px] text-emerald-500/80 font-medium w-16">Stabil:</span>
-                          <span className="text-xs text-white/40">{characteristics.stable.join(', ')}</span>
-                        </div>
-                      )}
-                      {characteristics.depressed.length > 0 && (
-                        <div className="flex items-center gap-2">
-                          <span className="text-[10px] text-red-400/80 font-medium w-16">Nedstämd:</span>
-                          <span className="text-xs text-white/40">{characteristics.depressed.join(', ')}</span>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                )}
 
                 {/* Invites */}
                 {(invites.doctors.length > 0 || invites.relatives.length > 0) && (
