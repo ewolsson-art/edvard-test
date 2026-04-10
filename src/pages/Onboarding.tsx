@@ -247,43 +247,29 @@ const Onboarding = () => {
         <div className="w-full max-w-sm">
           {/* Step 1: Welcome */}
           {step === 1 && (
-            <div className="animate-fade-in">
-              <h1 className="text-2xl md:text-3xl font-bold text-white font-display tracking-tight">
-                Första steget till bättre insikt börjar här
-              </h1>
-              <p className="mt-2 text-sm text-white/40">
-                Din personliga stämningsdagbok för att förstå och följa ditt mående
-              </p>
-
-              <div className="mt-8 space-y-4">
-                {FEATURES.map((feature, index) => {
-                  const Icon = feature.icon;
-                  return (
-                    <div key={index} className="flex items-start gap-3">
-                      <div className="p-2 rounded-xl bg-white/[0.04] shrink-0">
-                        <Icon className="w-4 h-4 text-[hsl(45_85%_55%)]" />
-                      </div>
-                      <div>
-                        <h3 className="font-medium text-sm text-white">{feature.title}</h3>
-                        <p className="text-xs text-white/40">{feature.description}</p>
-                      </div>
-                    </div>
-                  );
-                })}
+            <div className="animate-fade-in flex flex-col items-center text-center pt-4">
+              <div className="mb-6 animate-scale-in">
+                <TurtleLogo size="hero" animated className="w-32 h-32 md:w-40 md:h-40 drop-shadow-[0_8px_32px_hsl(45_85%_55%/0.2)]" />
               </div>
 
-              <p className="mt-6 text-xs text-white/30 text-center">
-                <span className="text-white/50 font-medium">Skapad av och för personer med bipolär sjukdom</span>
-                {' '}i samråd med läkare och experter
+              <h1 className="text-2xl md:text-3xl font-bold text-white font-display tracking-tight leading-snug">
+                Första steget till bättre insikt börjar här
+              </h1>
+              <p className="mt-3 text-sm text-white/50 max-w-xs">
+                Toddy hjälper dig förstå ditt mående — dag för dag, i din egen takt 🐢
               </p>
 
               <Button 
                 onClick={handleNext} 
-                className="w-full h-12 rounded-2xl text-[15px] font-semibold bg-[hsl(45_85%_55%)] text-[hsl(230_30%_5%)] hover:bg-[hsl(45_85%_65%)] shadow-[0_4px_20px_-4px_hsl(45_85%_55%/0.4)] hover:shadow-[0_6px_28px_-4px_hsl(45_85%_55%/0.5)] transition-all duration-300 mt-6"
+                className="w-full h-14 rounded-2xl text-base font-semibold bg-[hsl(45_85%_55%)] text-[hsl(230_30%_5%)] hover:bg-[hsl(45_85%_65%)] shadow-[0_4px_20px_-4px_hsl(45_85%_55%/0.4)] hover:shadow-[0_6px_28px_-4px_hsl(45_85%_55%/0.5)] hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 mt-8"
               >
-                Kom igång
-                <ArrowRight className="w-4 h-4 ml-2" />
+                Sätt igång
+                <ArrowRight className="w-5 h-5 ml-2" />
               </Button>
+
+              <p className="mt-6 text-[11px] text-white/25">
+                Skapad för personer med bipolär sjukdom · i samråd med läkare
+              </p>
             </div>
           )}
 
