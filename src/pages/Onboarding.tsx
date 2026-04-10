@@ -416,7 +416,7 @@ const Onboarding = () => {
                 Bjud in
               </h1>
               <p className="mt-2 text-sm text-white/40">
-                Dela din data med läkare eller anhöriga
+                Helt valfritt — dela din data med läkare eller anhöriga om du vill
               </p>
 
               <div className="mt-6">

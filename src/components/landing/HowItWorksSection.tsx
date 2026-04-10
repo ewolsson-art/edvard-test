@@ -12,7 +12,7 @@ const steps = [
   },
   {
     icon: Share2,
-    title: "Dela valfri data med läkare och anhöriga",
+    title: "Dela — om du vill — med läkare och anhöriga",
   },
 ];
 
@@ -83,7 +83,6 @@ function IntroBlock() {
       </h2>
       <p className="text-base sm:text-lg md:text-xl text-white/70 leading-relaxed max-w-xl mx-auto">
         Toddy är din interaktiva och personliga stämningsdagbok som ger dig bättre koll på ditt mående
-        och delar valfri data med läkare och anhöriga
       </p>
     </div>
   );
