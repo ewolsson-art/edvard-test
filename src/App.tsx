@@ -1,3 +1,4 @@
+import { lazy, Suspense } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -10,49 +11,46 @@ import { SkipToContent } from "@/components/SkipToContent";
 import { AuthProvider } from "@/hooks/useAuth";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { NotificationSchedulerProvider } from "@/components/NotificationSchedulerProvider";
-import Index from "./pages/Index";
-import Auth from "./pages/Auth";
-import HowItWorksPage from "./pages/HowItWorks";
-import Login from "./pages/Login";
-import Signup from "./pages/Signup";
-import Overview from "./pages/Overview";
-import Settings from "./pages/Settings";
 
-
-import Medications from "./pages/Medications";
-import AboutUs from "./pages/AboutUs";
-import ForPatients from "./pages/ForPatients";
-import ForCaregivers from "./pages/ForCaregivers";
-import ForRelatives from "./pages/ForRelatives";
-import Partners from "./pages/Partners";
-import PrivacyPolicy from "./pages/PrivacyPolicy";
-import TermsOfService from "./pages/TermsOfService";
-
-import Onboarding from "./pages/Onboarding";
-import DoctorOnboarding from "./pages/DoctorOnboarding";
-import RelativeOnboarding from "./pages/RelativeOnboarding";
-import RelativeDashboard from "./pages/RelativeDashboard";
-import RelativeReports from "./pages/RelativeReports";
-import Following from "./pages/Following";
-import Profile from "./pages/Profile";
-import DoctorHome from "./pages/DoctorHome";
-import DoctorDashboard from "./pages/DoctorDashboard";
-
-import PatientDetail from "./pages/PatientDetail";
-import ManageConnections from "./pages/ManageConnections";
-import NotFound from "./pages/NotFound";
-import SharedReport from "./pages/SharedReport";
-import Reports from "./pages/Reports";
-import ResetPassword from "./pages/ResetPassword";
-import ForgotPassword from "./pages/ForgotPassword";
-import Characteristics from "./pages/Characteristics";
-import CharacteristicDetail from "./pages/CharacteristicDetail";
-import CompleteProfile from "./pages/CompleteProfile";
-
-
-import Community from "./pages/Community";
-import CommunityThread from "./pages/CommunityThread";
-import Notifications from "./pages/Notifications";
+const Index = lazy(() => import("./pages/Index"));
+const Auth = lazy(() => import("./pages/Auth"));
+const HowItWorksPage = lazy(() => import("./pages/HowItWorks"));
+const Login = lazy(() => import("./pages/Login"));
+const Signup = lazy(() => import("./pages/Signup"));
+const Overview = lazy(() => import("./pages/Overview"));
+const Settings = lazy(() => import("./pages/Settings"));
+const Medications = lazy(() => import("./pages/Medications"));
+const AboutUs = lazy(() => import("./pages/AboutUs"));
+const ForPatients = lazy(() => import("./pages/ForPatients"));
+const ForCaregivers = lazy(() => import("./pages/ForCaregivers"));
+const ForRelatives = lazy(() => import("./pages/ForRelatives"));
+const Partners = lazy(() => import("./pages/Partners"));
+const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy"));
+const TermsOfService = lazy(() => import("./pages/TermsOfService"));
+const Onboarding = lazy(() => import("./pages/Onboarding"));
+const DoctorOnboarding = lazy(() => import("./pages/DoctorOnboarding"));
+const RelativeOnboarding = lazy(() => import("./pages/RelativeOnboarding"));
+const RelativeDashboard = lazy(() => import("./pages/RelativeDashboard"));
+const RelativeReports = lazy(() => import("./pages/RelativeReports"));
+const Following = lazy(() => import("./pages/Following"));
+const Profile = lazy(() => import("./pages/Profile"));
+const DoctorHome = lazy(() => import("./pages/DoctorHome"));
+const DoctorDashboard = lazy(() => import("./pages/DoctorDashboard"));
+const PatientDetail = lazy(() => import("./pages/PatientDetail"));
+const ManageConnections = lazy(() => import("./pages/ManageConnections"));
+const NotFound = lazy(() => import("./pages/NotFound"));
+const SharedReport = lazy(() => import("./pages/SharedReport"));
+const Reports = lazy(() => import("./pages/Reports"));
+const ResetPassword = lazy(() => import("./pages/ResetPassword"));
+const ForgotPassword = lazy(() => import("./pages/ForgotPassword"));
+const Characteristics = lazy(() => import("./pages/Characteristics"));
+const CharacteristicDetail = lazy(() => import("./pages/CharacteristicDetail"));
+const CompleteProfile = lazy(() => import("./pages/CompleteProfile"));
+const Community = lazy(() => import("./pages/Community"));
+const CommunityThread = lazy(() => import("./pages/CommunityThread"));
+const Notifications = lazy(() => import("./pages/Notifications"));
+const Insights = lazy(() => import("./pages/Insights"));
+const BadDay = lazy(() => import("./pages/BadDay"));
 
 const queryClient = new QueryClient();
 
@@ -83,6 +81,7 @@ const App = () => (
           <Sonner />
           <BrowserRouter>
             <div className="min-h-screen" role="application" aria-label="Friendly - Moodtracker">
+            <Suspense fallback={<div className="min-h-screen bg-background" />}>
             <Routes>
             <Route path="/auth" element={<Auth />} />
             <Route path="/sa-funkar-det" element={<HowItWorksPage />} />
@@ -210,6 +209,7 @@ const App = () => (
               <Route path="/rapport/:shareKey" element={<SharedReport />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
+            </Suspense>
             </div>
           </BrowserRouter>
         </NotificationSchedulerProvider>
