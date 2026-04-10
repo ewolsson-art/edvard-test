@@ -46,8 +46,9 @@ const Profile = () => {
     if (profile) {
       setFirstName(profile.first_name || '');
       setLastName(profile.last_name || '');
-      setClinicName((profile as Record<string, string | null>).clinic_name || '');
-      setHospitalName((profile as Record<string, string | null>).hospital_name || '');
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      setClinicName((profile as any).clinic_name || '');
+      setHospitalName((profile as any).hospital_name || '');
     }
   }, [profile]);
 
