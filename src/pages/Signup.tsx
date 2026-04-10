@@ -297,7 +297,6 @@ const Signup = () => {
                       className="pl-12 h-14 bg-white/[0.04] border-0 ring-1 ring-white/[0.08] rounded-2xl text-white placeholder:text-white/20 focus:ring-2 focus:ring-[hsl(45_85%_55%/0.5)] focus:bg-white/[0.06] transition-all text-base"
                       disabled={isSubmitting}
                       onKeyDown={(e) => e.key === "Enter" && handleSendOtp()}
-                      autoFocus
                     />
                   </div>
                 ) : (
