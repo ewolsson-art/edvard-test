@@ -540,31 +540,33 @@ const Overview = () => {
   const showMedication = preferences?.include_medication !== false && activeMedications.length > 0;
 
    return (
-    <div className="pb-24" style={{ overflowX: 'clip' }}>
-      <div className="max-w-6xl mx-auto space-y-6">
-        <header className="sticky top-12 sm:top-14 md:top-0 z-20 bg-background pt-5 px-5 md:pt-8 md:px-8 pb-3 -mx-5 md:-mx-8">
-          <div className="flex items-baseline justify-between mb-2">
-            <h1 className="font-display text-3xl font-bold">Översikt</h1>
-            <div className="flex items-center gap-4">
-              {sectionView === 'calendar' && (
-                <button
-                  onClick={() => {
-                    const now = new Date();
-                    setCurrentYear(now.getFullYear());
-                    setCurrentMonth(new Date(now.getFullYear(), now.getMonth(), 1));
-                    setTimeout(() => {
-                      scrollableCalendarRef.current?.scrollToToday();
-                    }, 50);
-                  }}
-                  className="text-sm font-semibold text-primary px-3 py-1 rounded-full border border-primary/30 bg-primary/5 hover:bg-primary/10 transition-colors"
-                >
-                  Idag
-                </button>
-              )}
-              <span className="text-xl font-semibold text-muted-foreground">{currentYear}</span>
+    <div className="p-5 md:p-8 pb-24" style={{ overflowX: 'clip' }}>
+      <div className="max-w-2xl mx-auto md:mx-0 space-y-6">
+        <header className="sticky top-12 sm:top-14 md:top-0 z-20 bg-background pb-3 -mt-5 pt-5 md:-mt-8 md:pt-8 -mx-5 px-5 md:-mx-8 md:px-8">
+          <div className="mb-2">
+            <div className="flex items-baseline justify-between mb-1">
+              <h1 className="font-display text-2xl font-bold text-foreground">Översikt</h1>
+              <div className="flex items-center gap-4">
+                {sectionView === 'calendar' && (
+                  <button
+                    onClick={() => {
+                      const now = new Date();
+                      setCurrentYear(now.getFullYear());
+                      setCurrentMonth(new Date(now.getFullYear(), now.getMonth(), 1));
+                      setTimeout(() => {
+                        scrollableCalendarRef.current?.scrollToToday();
+                      }, 50);
+                    }}
+                    className="text-sm font-semibold text-primary px-3 py-1 rounded-full border border-primary/30 bg-primary/5 hover:bg-primary/10 transition-colors"
+                  >
+                    Idag
+                  </button>
+                )}
+                <span className="text-xl font-semibold text-muted-foreground">{currentYear}</span>
+              </div>
             </div>
+            <p className="text-[13px] text-foreground/30">Se dina mönster och trender över tid.</p>
           </div>
-          <p className="text-sm text-muted-foreground mb-5">Se dina mönster och trender över tid.</p>
           
           <div className="flex items-center gap-3">
             {sectionView === 'calendar' && (
@@ -621,7 +623,7 @@ const Overview = () => {
           </div>
         </header>
 
-        <div className="px-5 md:px-8 space-y-6">
+        <div className="space-y-6">
             {/* Summary Card - only in stats view */}
             {sectionView === 'stats' && (
               <OverviewSummary
