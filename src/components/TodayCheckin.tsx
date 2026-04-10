@@ -982,108 +982,118 @@ export function TodayCheckin({
             </h1>
           </div>
 
-          {/* Direct medication checklist */}
+          {/* Medication yes/no */}
           {hasMedications ? (
-            <div className="max-w-md space-y-2.5">
-              {/* Quick toggle: mark all */}
-              {activeMedications.length > 1 && (
-                <button
-                  onClick={() => {
-                    const allTaken = medicationsTakenToday.length === activeMedications.length;
-                    activeMedications.forEach(med => {
-                      onToggleMedication(med.id, !allTaken);
-                    });
-                  }}
-                  className={cn(
-                    "w-full flex items-center justify-center gap-2 py-2 rounded-xl text-sm font-medium transition-all",
-                    medicationsTakenToday.length === activeMedications.length
-                      ? "text-mood-stable bg-mood-stable/10"
-                      : "text-muted-foreground/60 hover:text-foreground hover:bg-muted/30"
-                  )}
-                >
-                  {medicationsTakenToday.length === activeMedications.length ? (
-                    <>
-                      <CheckCircle2 className="w-4 h-4" />
-                      Alla tagna!
-                    </>
-                  ) : (
-                    <>
-                      <Check className="w-4 h-4" />
-                      Markera alla
-                    </>
-                  )}
-                </button>
-              )}
+            <div className="max-w-md space-y-4">
+              {/* Ja / Nej buttons */}
+              {(() => {
+                const allTaken = medicationsTakenToday.length === activeMedications.length;
+                const noneTaken = medicationsTakenToday.length === 0;
+                const answeredNo = !allTaken && checkinData.medicationComment !== undefined && checkinData.medicationComment !== null;
+                const showDetails = !noneTaken && !allTaken; // partial state
 
-              {/* Individual medications */}
-              {activeMedications.map(med => {
-                const isTaken = medicationsTakenToday.includes(med.id);
                 return (
-                  <button
-                    key={med.id}
-                    onClick={() => onToggleMedication(med.id, !isTaken)}
-                    className={cn(
-                      "w-full flex items-center gap-4 p-4 rounded-2xl border transition-all text-left",
-                      "active:scale-[0.98]",
-                    isTaken 
-                        ? "border-mood-stable/20 bg-mood-stable/5" 
-                        : "border-border/30 bg-card/20 hover:border-muted-foreground/20"
-                    )}
-                  >
-                    <div className={cn(
-                      "w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 transition-all",
-                      isTaken ? "bg-mood-stable text-white" : "bg-muted/30 border border-border/50"
-                    )}>
-                      {isTaken && <Check className="w-4 h-4" />}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className={cn(
-                        "font-medium text-[15px] transition-colors",
-                        isTaken ? "text-foreground" : "text-foreground/70"
-                      )}>
-                        {med.name}
-                      </p>
-                      <p className="text-xs text-muted-foreground/50 mt-0.5">{med.dosage}</p>
-                    </div>
-                    {isTaken && (
-                      <span className="text-xs text-mood-stable/80 font-medium flex-shrink-0">Tagen ✓</span>
-                    )}
-                  </button>
-                );
-              })}
-
-              {/* Missed medication reason */}
-              {medicationsTakenToday.length < activeMedications.length && medicationsTakenToday.length > 0 && (
-                <div className="pt-3">
-                  <p className="text-xs text-muted-foreground/50 mb-2">Anledning till missad dos?</p>
-                  <div className="flex flex-wrap gap-2">
-                    {[
-                      { id: 'forgot', label: 'Glömde' },
-                      { id: 'side_effects', label: 'Biverkningar' },
-                      { id: 'out_of_stock', label: 'Slut på medicin' },
-                      { id: 'choice', label: 'Ville inte' },
-                    ].map(reason => (
+                  <>
+                    <div className="flex gap-3">
                       <button
-                        key={reason.id}
                         onClick={() => {
-                          setCheckinData(prev => ({
-                            ...prev,
-                            medicationComment: prev.medicationComment === reason.label ? '' : reason.label,
-                          }));
+                          activeMedications.forEach(med => onToggleMedication(med.id, true));
+                          setCheckinData(prev => ({ ...prev, medicationComment: '' }));
                         }}
                         className={cn(
-                          "px-3 py-1.5 rounded-full text-xs border transition-all",
-                          checkinData.medicationComment === reason.label
-                            ? "border-primary/40 bg-primary/10 text-primary"
-                            : "border-border/30 text-muted-foreground/60 hover:border-muted-foreground/40"
+                          "flex-1 py-4 rounded-2xl border text-base font-semibold transition-all active:scale-[0.97]",
+                          allTaken
+                            ? "border-mood-stable/30 bg-mood-stable/10 text-mood-stable"
+                            : "border-border/30 bg-card/20 text-muted-foreground/70 hover:border-muted-foreground/30"
                         )}
                       >
-                        {reason.label}
+                        {allTaken && <Check className="w-4 h-4 inline mr-2" />}
+                        Ja
                       </button>
-                    ))}
-                  </div>
-                </div>
-              )}
+                      <button
+                        onClick={() => {
+                          activeMedications.forEach(med => onToggleMedication(med.id, false));
+                          setCheckinData(prev => ({ ...prev, medicationComment: prev.medicationComment || '' }));
+                        }}
+                        className={cn(
+                          "flex-1 py-4 rounded-2xl border text-base font-semibold transition-all active:scale-[0.97]",
+                          noneTaken && answeredNo
+                            ? "border-red-500/30 bg-red-500/10 text-red-400"
+                            : "border-border/30 bg-card/20 text-muted-foreground/70 hover:border-muted-foreground/30"
+                        )}
+                      >
+                        Nej
+                      </button>
+                    </div>
+
+                    {/* Show individual meds if multiple and user said no */}
+                    {noneTaken && answeredNo && activeMedications.length > 1 && (
+                      <div className="space-y-2 pt-2">
+                        <p className="text-xs text-muted-foreground/50">Tog du några av dem?</p>
+                        {activeMedications.map(med => {
+                          const isTaken = medicationsTakenToday.includes(med.id);
+                          return (
+                            <button
+                              key={med.id}
+                              onClick={() => onToggleMedication(med.id, !isTaken)}
+                              className={cn(
+                                "w-full flex items-center gap-4 p-3.5 rounded-xl border transition-all text-left active:scale-[0.98]",
+                                isTaken 
+                                  ? "border-mood-stable/20 bg-mood-stable/5" 
+                                  : "border-border/30 bg-card/20 hover:border-muted-foreground/20"
+                              )}
+                            >
+                              <div className={cn(
+                                "w-6 h-6 rounded-lg flex items-center justify-center flex-shrink-0 transition-all",
+                                isTaken ? "bg-mood-stable text-white" : "bg-muted/30 border border-border/50"
+                              )}>
+                                {isTaken && <Check className="w-3.5 h-3.5" />}
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <p className="font-medium text-sm">{med.name}</p>
+                                <p className="text-xs text-muted-foreground/50">{med.dosage}</p>
+                              </div>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    )}
+
+                    {/* Missed reason */}
+                    {(noneTaken && answeredNo) || showDetails ? (
+                      <div className="pt-2">
+                        <p className="text-xs text-muted-foreground/50 mb-2">Anledning?</p>
+                        <div className="flex flex-wrap gap-2">
+                          {[
+                            { id: 'forgot', label: 'Glömde' },
+                            { id: 'side_effects', label: 'Biverkningar' },
+                            { id: 'out_of_stock', label: 'Slut på medicin' },
+                            { id: 'choice', label: 'Ville inte' },
+                          ].map(reason => (
+                            <button
+                              key={reason.id}
+                              onClick={() => {
+                                setCheckinData(prev => ({
+                                  ...prev,
+                                  medicationComment: prev.medicationComment === reason.label ? '' : reason.label,
+                                }));
+                              }}
+                              className={cn(
+                                "px-3 py-1.5 rounded-full text-xs border transition-all",
+                                checkinData.medicationComment === reason.label
+                                  ? "border-primary/40 bg-primary/10 text-primary"
+                                  : "border-border/30 text-muted-foreground/60 hover:border-muted-foreground/40"
+                              )}
+                            >
+                              {reason.label}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    ) : null}
+                  </>
+                );
+              })()}
             </div>
           ) : (
             <div className="max-w-md py-4">
