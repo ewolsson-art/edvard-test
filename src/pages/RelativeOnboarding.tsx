@@ -3,7 +3,7 @@ import { z } from 'zod';
 import { useUserPreferences } from '@/hooks/useUserPreferences';
 import { useRelativeConnections } from '@/hooks/useRelativeConnections';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Users, ArrowRight, UserPlus, Send, CheckCircle2, UserCheck } from 'lucide-react';
+import { Loader2, Users, ArrowRight, UserPlus, Send, CheckCircle2, UserCheck, Share2, AlertCircle } from 'lucide-react';
 import { Logo } from '@/components/Logo';
 import { DarkNightBackground } from '@/components/DarkNightBackground';
 import { Input } from '@/components/ui/input';
@@ -20,6 +20,7 @@ const RelativeOnboarding = () => {
   const [isSending, setIsSending] = useState(false);
   const [sent, setSent] = useState(false);
   const [acceptingId, setAcceptingId] = useState<string | null>(null);
+  const [notFoundEmail, setNotFoundEmail] = useState<string | null>(null);
 
   const finishOnboarding = async () => {
     setIsSubmitting(true);
@@ -79,8 +80,9 @@ const RelativeOnboarding = () => {
       return;
     }
 
+    setNotFoundEmail(null);
     setIsSending(true);
-    const { success, error } = await requestPatientAccess(email);
+    const { success, error, notFound } = await requestPatientAccess(email);
     setIsSending(false);
 
     if (success) {
@@ -89,12 +91,30 @@ const RelativeOnboarding = () => {
         description: 'En inbjudan har skickats.',
       });
       await finishOnboarding();
+    } else if (notFound) {
+      setNotFoundEmail(email);
     } else {
       toast({
         title: 'Något gick fel',
         description: error || 'Kunde inte skicka förfrågan.',
         variant: 'destructive',
       });
+    }
+  };
+
+  const handleShareInvite = async () => {
+    const shareUrl = `${window.location.origin}/skapa-konto`;
+    const shareText = `Hej! Jag vill följa ditt mående via Toddy. Skapa ett konto här:`;
+
+    if (navigator.share) {
+      try {
+        await navigator.share({ title: 'Bjud in till Toddy', text: shareText, url: shareUrl });
+      } catch {
+        // User cancelled
+      }
+    } else {
+      await navigator.clipboard.writeText(`${shareText} ${shareUrl}`);
+      toast({ title: 'Länk kopierad!' });
     }
   };
 
@@ -178,7 +198,6 @@ const RelativeOnboarding = () => {
                 })}
               </div>
 
-              {/* Skip option */}
               <button
                 onClick={finishOnboarding}
                 disabled={isSubmitting}
@@ -190,6 +209,56 @@ const RelativeOnboarding = () => {
                   <>
                     Fortsätt
                     <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  </>
+                )}
+              </button>
+            </div>
+          ) : notFoundEmail ? (
+            /* User not found state */
+            <div className="text-left animate-fade-in">
+              <div className="p-5 rounded-2xl bg-white/[0.04] ring-1 ring-white/[0.08] mb-6">
+                <div className="flex items-start gap-3 mb-3">
+                  <AlertCircle className="w-5 h-5 text-[hsl(45_85%_55%)] shrink-0 mt-0.5" />
+                  <div>
+                    <p className="text-sm font-medium text-white">
+                      Ingen användare hittades
+                    </p>
+                    <p className="text-xs text-white/40 mt-1">
+                      Det finns inget konto kopplat till <span className="text-white/60">{notFoundEmail}</span>
+                    </p>
+                  </div>
+                </div>
+
+                <p className="text-sm text-white/50 mt-4 mb-4">
+                  Har du skrivit in rätt? I så fall kan du bjuda in personen att börja använda Toddy.
+                </p>
+
+                <button
+                  onClick={handleShareInvite}
+                  className="w-full h-12 rounded-xl bg-[hsl(45_85%_55%)] text-[hsl(230_30%_5%)] hover:bg-[hsl(45_85%_65%)] transition-colors flex items-center justify-center gap-2 text-sm font-semibold"
+                >
+                  <Share2 className="w-4 h-4" />
+                  Dela inbjudningslänk
+                </button>
+              </div>
+
+              <button
+                onClick={() => { setNotFoundEmail(null); setEmail(''); }}
+                className="text-sm text-white/30 hover:text-white/50 transition-colors flex items-center justify-center gap-1.5 mx-auto mb-6"
+              >
+                <ArrowRight className="w-3.5 h-3.5 rotate-180" />
+                Prova en annan e-post
+              </button>
+
+              <button
+                onClick={finishOnboarding}
+                disabled={isSubmitting}
+                className="text-sm text-white/30 hover:text-white/50 transition-colors flex items-center justify-center gap-1.5 mx-auto py-2 disabled:opacity-50"
+              >
+                {isSubmitting ? <Loader2 className="w-4 h-4 animate-spin" /> : (
+                  <>
+                    Hoppa över – gör det sen
+                    <ArrowRight className="w-3.5 h-3.5" />
                   </>
                 )}
               </button>
