@@ -209,6 +209,7 @@ const App = () => (
               <Route path="/rapport/:shareKey" element={<SharedReport />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
+            </Suspense>
             </div>
           </BrowserRouter>
         </NotificationSchedulerProvider>
