@@ -148,10 +148,18 @@ const App = () => (
                 <AppLayout><CharacteristicDetail /></AppLayout>
               </ProtectedRoute>
             } />
-            <Route path="/forum" element={<AppLayout><Community /></AppLayout>} />
-            <Route path="/community" element={<AppLayout><Community /></AppLayout>} />
-            <Route path="/forum/:threadId" element={<AppLayout><CommunityThread /></AppLayout>} />
-            <Route path="/community/:threadId" element={<AppLayout><CommunityThread /></AppLayout>} />
+            <Route path="/community" element={<Navigate to="/forum" replace />} />
+            <Route path="/community/:threadId" element={<Navigate to="/forum/:threadId" replace />} />
+            <Route path="/forum" element={
+              <ProtectedRoute>
+                <AppLayout><Community /></AppLayout>
+              </ProtectedRoute>
+            } />
+            <Route path="/forum/:threadId" element={
+              <ProtectedRoute>
+                <AppLayout><CommunityThread /></AppLayout>
+              </ProtectedRoute>
+            } />
 
             <Route path="/mediciner" element={
               <ProtectedRoute>
