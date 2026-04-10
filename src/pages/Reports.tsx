@@ -13,7 +13,7 @@ import { Label } from '@/components/ui/label';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { cn } from '@/lib/utils';
-import jsPDF from 'jspdf';
+
 
 interface ReportData {
   mood: {
@@ -197,9 +197,10 @@ const Reports = () => {
     setReportGenerated(true);
   };
 
-  const handleExportPDF = () => {
+  const handleExportPDF = async () => {
     if (!reportData) return;
 
+    const { default: jsPDF } = await import('jspdf');
     const doc = new jsPDF();
     const pageWidth = doc.internal.pageSize.getWidth();
     const margin = 20;
