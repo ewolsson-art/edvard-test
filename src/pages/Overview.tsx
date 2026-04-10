@@ -623,7 +623,7 @@ const Overview = () => {
           </div>
         </header>
 
-        <div className="px-5 md:px-8 space-y-6">
+        <div className="space-y-6">
             {/* Summary Card - only in stats view */}
             {sectionView === 'stats' && (
               <OverviewSummary
