@@ -84,7 +84,7 @@ export function useRelativeConnections() {
       .rpc('get_patient_id_by_email', { patient_email: patientEmail });
 
     if (patientError || !patientId) {
-      return { success: false, error: 'Kunde inte hitta patient med denna e-post' };
+      return { success: false, error: 'Kunde inte hitta patient med denna e-post', notFound: true };
     }
 
     // Check if connection already exists
