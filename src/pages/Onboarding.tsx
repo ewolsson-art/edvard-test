@@ -56,7 +56,7 @@ const CHECKIN_OPTIONS = [
 ];
 
 
-const TOTAL_STEPS = 6;
+const TOTAL_STEPS = 5;
 
 const Onboarding = () => {
   const { toast } = useToast();
