@@ -17,7 +17,7 @@ import { Logo } from '@/components/Logo';
 import { TurtleLogo } from '@/components/TurtleLogo';
 import { DarkNightBackground } from '@/components/DarkNightBackground';
 import { MedicationStep, MedicationInput } from '@/components/onboarding/MedicationStep';
-import { CharacteristicsStep, CharacteristicsInput } from '@/components/onboarding/CharacteristicsStep';
+import { InviteStep, InviteInput } from '@/components/onboarding/InviteStep';
 import { InviteStep, InviteInput } from '@/components/onboarding/InviteStep';
 import { cn } from '@/lib/utils';
 
