@@ -13,7 +13,7 @@ import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { cn } from '@/lib/utils';
-import jsPDF from 'jspdf';
+
 import { Loader2 } from 'lucide-react';
 
 interface ReportData {
@@ -225,10 +225,11 @@ const RelativeReports = () => {
     setReportGenerated(true);
   };
 
-  const handleExportPDF = () => {
+  const handleExportPDF = async () => {
     if (!reportData || !selectedConnection) return;
 
     const patientName = getPatientName(selectedConnection);
+    const { default: jsPDF } = await import('jspdf');
     const doc = new jsPDF();
     const pageWidth = doc.internal.pageSize.getWidth();
     const margin = 20;
