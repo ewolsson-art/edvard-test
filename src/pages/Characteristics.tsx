@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Zap, Cloud, Sun, ChevronRight, Sparkles } from 'lucide-react';
 import { useCharacteristics } from '@/hooks/useCharacteristics';
@@ -41,6 +42,10 @@ const moodCards = [
 
 const Characteristics = () => {
   const navigate = useNavigate();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   const {
     elevatedCharacteristics,
     depressedCharacteristics,
