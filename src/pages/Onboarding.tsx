@@ -75,11 +75,6 @@ const Onboarding = () => {
     include_medication: true,
   });
   const [selectedMedications, setSelectedMedications] = useState<MedicationInput[]>([]);
-  const [characteristics, setCharacteristics] = useState<CharacteristicsInput>({
-    elevated: [],
-    stable: [],
-    depressed: [],
-  });
   const [invites, setInvites] = useState<InviteInput>({
     doctors: [],
     relatives: [],
@@ -109,10 +104,7 @@ const Onboarding = () => {
   const getSkipText = () => {
     switch (step) {
       case 3: return selectedMedications.length === 0 ? 'Hoppa över' : 'Fortsätt';
-      case 4: 
-        const totalC = characteristics.elevated.length + characteristics.stable.length + characteristics.depressed.length;
-        return totalC === 0 ? 'Hoppa över' : 'Fortsätt';
-      case 5:
+      case 4:
         const anyInvite = invites.doctors.length > 0 || invites.relatives.length > 0;
         return anyInvite ? 'Fortsätt' : 'Hoppa över';
       default: return 'Fortsätt';
@@ -150,17 +142,8 @@ const Onboarding = () => {
         await supabase.from('medications').insert(medicationsToInsert);
       }
 
-      // 3. Save characteristics
-      const allCharacteristics = [
-        ...characteristics.elevated.map(name => ({ user_id: user.id, name, mood_type: 'elevated' })),
-        ...characteristics.stable.map(name => ({ user_id: user.id, name, mood_type: 'stable' })),
-        ...characteristics.depressed.map(name => ({ user_id: user.id, name, mood_type: 'depressed' })),
-      ];
-      if (allCharacteristics.length > 0) {
-        await supabase.from('characteristics').insert(allCharacteristics);
-      }
 
-      // 6. Create doctor connection requests
+      // 3. Create doctor connection requests
       for (const doctorEmail of invites.doctors) {
         const { data: doctorId } = await supabase.rpc('get_doctor_id_by_email', { doctor_email: doctorEmail });
         if (doctorId) {
