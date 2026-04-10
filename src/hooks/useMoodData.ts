@@ -36,7 +36,7 @@ export function useMoodData() {
         const formattedEntries: MoodEntry[] = (data || []).map(entry => ({
           date: entry.date,
           mood: normalizeMoodType(entry.mood),
-          energyLevel: (entry as any).energy_level as EnergyType | undefined,
+          energyLevel: entry.energy_level as EnergyType | undefined,
           comment: entry.comment || undefined,
           sleepQuality: entry.sleep_quality as QualityType | undefined,
           sleepComment: entry.sleep_comment || undefined,

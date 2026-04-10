@@ -29,6 +29,7 @@ export function FullscreenComment({ title, placeholder, value, onChange, onClose
       return;
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
     if (!SpeechRecognition) {
       return;
@@ -41,6 +42,7 @@ export function FullscreenComment({ title, placeholder, value, onChange, onClose
 
     let finalTranscript = value || '';
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     rec.onresult = (event: any) => {
       let interim = '';
       for (let i = event.resultIndex; i < event.results.length; i++) {

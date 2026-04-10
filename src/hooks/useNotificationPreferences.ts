@@ -10,6 +10,7 @@ export interface NotificationPreferences {
   checkin_time: string;
   medication_enabled: boolean;
   medication_time: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   push_subscription: any;
   created_at: string;
   updated_at: string;

@@ -46,6 +46,7 @@ const Profile = () => {
     if (profile) {
       setFirstName(profile.first_name || '');
       setLastName(profile.last_name || '');
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       setClinicName((profile as any).clinic_name || '');
       setHospitalName((profile as any).hospital_name || '');
     }
@@ -67,6 +68,7 @@ const Profile = () => {
     if (!user) return;
     setIsSaving(true);
     try {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const profileData: any = {
         user_id: user.id,
         first_name: firstName.trim() || null,

@@ -4,13 +4,13 @@ import { MonthCalendar } from './MonthCalendar';
 import { SleepMonthCalendar } from './SleepMonthCalendar';
 import { EatingMonthCalendar } from './EatingMonthCalendar';
 import { ExerciseMonthCalendar } from './ExerciseMonthCalendar';
-import { MoodType, ExerciseType, QualityType } from '@/types/mood';
+import { MoodType, MoodEntry, ExerciseType, QualityType } from '@/types/mood';
 
 interface ScrollableMonthsCalendarProps {
   year: number;
   type: 'mood' | 'sleep' | 'eating' | 'exercise';
-  getEntryForDate: (dateStr: string) => any;
-  getMedicationsTakenOnDate?: (dateStr: string) => any[];
+  getEntryForDate: (dateStr: string) => MoodEntry | undefined;
+  getMedicationsTakenOnDate?: (dateStr: string) => unknown[];
   getEntriesForMonth?: (year: number, month: number) => Record<number, MoodType>;
   onDayClick?: (date: Date) => void;
 }
@@ -108,35 +108,35 @@ export const ScrollableMonthsCalendar = forwardRef<ScrollableMonthsCalendarRef, 
         const isCurrentMonth = year === currentYear && i === currentMonth;
         return (
           <div key={i} ref={isCurrentMonth ? currentMonthRef : undefined}>
-            {type === 'mood' && (
+            {type === 'mood' && 'moodData' in data && (
               <MonthCalendar
                 currentDate={data.monthDate}
-                moodData={(data as any).moodData || {}}
-                medicationData={(data as any).medicationData || {}}
+                moodData={data.moodData}
+                medicationData={'medicationData' in data ? data.medicationData : {}}
                 hideNavigation
                 onDayClick={onDayClick}
               />
             )}
-            {type === 'sleep' && (
+            {type === 'sleep' && 'sleepData' in data && (
               <SleepMonthCalendar
                 currentDate={data.monthDate}
-                sleepData={(data as any).sleepData || {}}
+                sleepData={data.sleepData}
                 hideNavigation
                 onDayClick={onDayClick}
               />
             )}
-            {type === 'eating' && (
+            {type === 'eating' && 'eatingData' in data && (
               <EatingMonthCalendar
                 currentDate={data.monthDate}
-                eatingData={(data as any).eatingData || {}}
+                eatingData={data.eatingData}
                 hideNavigation
                 onDayClick={onDayClick}
               />
             )}
-            {type === 'exercise' && (
+            {type === 'exercise' && 'exerciseData' in data && (
               <ExerciseMonthCalendar
                 currentDate={data.monthDate}
-                exerciseData={(data as any).exerciseData || {}}
+                exerciseData={data.exerciseData}
                 hideNavigation
                 onDayClick={onDayClick}
               />
