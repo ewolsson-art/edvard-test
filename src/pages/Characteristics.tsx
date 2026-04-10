@@ -42,6 +42,10 @@ const moodCards = [
 
 const Characteristics = () => {
   const navigate = useNavigate();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   const {
     elevatedCharacteristics,
     depressedCharacteristics,
