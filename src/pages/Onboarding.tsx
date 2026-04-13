@@ -68,10 +68,10 @@ const Onboarding = () => {
   // Step data
   const [selections, setSelections] = useState({
     include_mood: true,
-    include_sleep: true,
-    include_eating: true,
-    include_exercise: true,
-    include_medication: true,
+    include_sleep: false,
+    include_eating: false,
+    include_exercise: false,
+    include_medication: false,
   });
   const [selectedMedications, setSelectedMedications] = useState<MedicationInput[]>([]);
   const [invites, setInvites] = useState<InviteInput>({
