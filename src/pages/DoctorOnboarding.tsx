@@ -102,7 +102,7 @@ const DoctorOnboarding = () => {
     }
 
     toast({
-      title: 'Välkommen till Friendly!',
+      title: 'Välkommen till Toddy!',
       description: 'Din läkardashboard är nu redo.',
     });
     
@@ -145,7 +145,7 @@ const DoctorOnboarding = () => {
                   Välkommen, vårdgivare!
                 </h1>
                 <p className="text-sm text-muted-foreground max-w-md mx-auto">
-                  Friendly hjälper dig följa dina användares mående mellan besöken
+                  Toddy hjälper dig följa dina användares mående mellan besöken
                 </p>
               </div>
 
