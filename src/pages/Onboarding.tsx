@@ -54,7 +54,7 @@ const CHECKIN_OPTIONS = [
 ];
 
 
-const TOTAL_STEPS = 4;
+const TOTAL_STEPS = 3;
 
 const Onboarding = () => {
   const { toast } = useToast();
@@ -84,31 +84,23 @@ const Onboarding = () => {
   const hasAnySelection = Object.values(selections).some(Boolean);
 
   const handleNext = () => {
-    let next = step + 1;
-    // Skip medication step (3) if user didn't select medication tracking
-    if (next === 3 && !selections.include_medication) {
-      next = 4;
+    if (step === 2 && !selections.include_medication) {
+      // No medication step, submit directly
+      handleSubmit();
+      return;
     }
+    const next = step + 1;
     if (next <= TOTAL_STEPS) {
       setStep(next);
     }
   };
 
   const handleBack = () => {
-    let prev = step - 1;
-    // Skip medication step (3) going back if user didn't select medication tracking
-    if (prev === 3 && !selections.include_medication) {
-      prev = 2;
-    }
-    if (prev >= 1) {
-      setStep(prev);
+    if (step > 1) {
+      setStep(prev => prev - 1);
     }
   };
 
-  const getSkipText = () => {
-    if (step === 3) return selectedMedications.length === 0 ? 'Hoppa över' : 'Fortsätt';
-    return 'Fortsätt';
-  };
 
   const handleSubmit = async () => {
     if (!hasAnySelection) {
@@ -162,7 +154,7 @@ const Onboarding = () => {
   };
 
   const actualTotalSteps = selections.include_medication ? TOTAL_STEPS : TOTAL_STEPS - 1;
-  const actualStep = step <= 2 ? step : (selections.include_medication ? step : step - 1);
+  const actualStep = step;
 
   return (
     <DarkNightBackground>
@@ -294,10 +286,13 @@ const Onboarding = () => {
                 <Button 
                   onClick={handleNext} 
                   className="flex-1 h-12 rounded-2xl text-[15px] font-semibold bg-[hsl(45_85%_55%)] text-[hsl(230_30%_5%)] hover:bg-[hsl(45_85%_65%)] shadow-[0_4px_20px_-4px_hsl(45_85%_55%/0.4)] transition-all duration-300" 
-                  disabled={!hasAnySelection}
+                  disabled={!hasAnySelection || isSubmitting}
                 >
-                  Fortsätt
-                  <ArrowRight className="w-4 h-4 ml-1" />
+                  {isSubmitting ? (
+                    <Loader2 className="w-4 h-4 animate-spin mr-1" />
+                  ) : null}
+                  {selections.include_medication ? 'Fortsätt' : 'Starta min dagbok'}
+                  {!isSubmitting && <ArrowRight className="w-4 h-4 ml-1" />}
                 </Button>
               </div>
             </div>
@@ -325,72 +320,8 @@ const Onboarding = () => {
                   <ArrowLeft className="w-4 h-4" />
                 </button>
                 <Button 
-                  onClick={handleNext} 
-                  className="flex-1 h-12 rounded-2xl text-[15px] font-semibold bg-[hsl(45_85%_55%)] text-[hsl(230_30%_5%)] hover:bg-[hsl(45_85%_65%)] shadow-[0_4px_20px_-4px_hsl(45_85%_55%/0.4)] transition-all duration-300"
-                >
-                  {getSkipText()}
-                  <ArrowRight className="w-4 h-4 ml-1" />
-                </Button>
-              </div>
-            </div>
-          )}
-
-
-          {/* Step 4: Confirm & Start */}
-          {step === 4 && (
-            <div className="animate-fade-in">
-              <h1 className="text-2xl md:text-3xl font-bold text-white font-display tracking-tight">
-                Allt är redo!
-              </h1>
-              <p className="mt-2 text-sm text-white/40">
-                Här är en sammanfattning
-              </p>
-
-              <div className="mt-6 space-y-3">
-                {/* Checkin categories */}
-                <div className="p-3 rounded-2xl bg-white/[0.04] ring-1 ring-white/[0.08]">
-                  <h2 className="font-semibold text-[11px] mb-2 text-white/30 uppercase tracking-wide">Din incheckning</h2>
-                  <div className="flex flex-wrap gap-1.5">
-                    {CHECKIN_OPTIONS.filter(opt => selections[opt.id as keyof typeof selections]).map((option) => {
-                      const Icon = option.icon;
-                      return (
-                        <div key={option.id} className="flex items-center gap-1.5 px-2 py-1 rounded-xl bg-[hsl(45_85%_55%/0.08)] ring-1 ring-[hsl(45_85%_55%/0.15)]">
-                          <Icon className="w-3 h-3 text-[hsl(45_85%_55%)]" />
-                          <span className="text-xs font-medium text-white/80">{option.label}</span>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                {/* Medications */}
-                {selectedMedications.length > 0 && (
-                  <div className="p-3 rounded-2xl bg-white/[0.04] ring-1 ring-white/[0.08]">
-                    <h2 className="font-semibold text-[11px] mb-2 text-white/30 uppercase tracking-wide">Mediciner</h2>
-                    <div className="flex flex-wrap gap-1.5">
-                      {selectedMedications.map((med) => (
-                        <span key={med.name} className="px-2 py-1 text-xs rounded-xl bg-white/[0.06] text-white/70 ring-1 ring-white/[0.08]">
-                          {med.name}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-
-              </div>
-
-              <p className="mt-4 text-xs text-white/20 text-center">
-                Checka in varje dag, gärna vid samma tid • Din data är privat och säker
-              </p>
-
-              <div className="flex gap-3 mt-6">
-                <button onClick={handleBack} className="h-12 px-5 rounded-2xl text-sm font-medium text-white/50 hover:text-white/80 bg-white/[0.04] ring-1 ring-white/[0.08] hover:bg-white/[0.06] transition-all">
-                  <ArrowLeft className="w-4 h-4" />
-                </button>
-                <Button 
                   onClick={handleSubmit} 
-                  className="flex-1 h-12 rounded-2xl text-[15px] font-semibold bg-[hsl(45_85%_55%)] text-[hsl(230_30%_5%)] hover:bg-[hsl(45_85%_65%)] shadow-[0_4px_20px_-4px_hsl(45_85%_55%/0.4)] hover:shadow-[0_6px_28px_-4px_hsl(45_85%_55%/0.5)] transition-all duration-300" 
+                  className="flex-1 h-12 rounded-2xl text-[15px] font-semibold bg-[hsl(45_85%_55%)] text-[hsl(230_30%_5%)] hover:bg-[hsl(45_85%_65%)] shadow-[0_4px_20px_-4px_hsl(45_85%_55%/0.4)] transition-all duration-300"
                   disabled={isSubmitting}
                 >
                   {isSubmitting ? (
@@ -398,11 +329,13 @@ const Onboarding = () => {
                   ) : (
                     <Sparkles className="w-4 h-4 mr-1" />
                   )}
-                  Starta min dagbok
+                  {selectedMedications.length === 0 ? 'Hoppa över och starta' : 'Starta min dagbok'}
+                  <ArrowRight className="w-4 h-4 ml-1" />
                 </Button>
               </div>
             </div>
           )}
+
         </div>
       </main>
     </DarkNightBackground>
