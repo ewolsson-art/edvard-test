@@ -19,16 +19,16 @@ const TermsOfService = () => {
           <section className="mb-8">
             <h2 className="text-xl font-semibold text-foreground mb-4">1. Godkännande av villkor</h2>
             <p className="text-muted-foreground leading-relaxed">
-              Genom att använda Friendly ("Tjänsten") godkänner du dessa användarvillkor. 
+              Genom att använda Toddy ("Tjänsten") godkänner du dessa användarvillkor. 
               Om du inte godkänner villkoren, vänligen avstå från att använda Tjänsten. 
-              Friendly tillhandahålls av Friendly AB.
+              Toddy tillhandahålls av Toddy AB.
             </p>
           </section>
 
           <section className="mb-8">
             <h2 className="text-xl font-semibold text-foreground mb-4">2. Tjänstens syfte</h2>
             <p className="text-muted-foreground leading-relaxed">
-              Friendly är ett digitalt verktyg för att hjälpa användare att följa och 
+              Toddy är ett digitalt verktyg för att hjälpa användare att följa och 
               förstå sitt mående över tid. Tjänsten är utformad som ett komplement till, 
               inte en ersättning för, professionell medicinsk rådgivning, diagnos eller 
               behandling.
@@ -38,7 +38,7 @@ const TermsOfService = () => {
           <section className="mb-8">
             <h2 className="text-xl font-semibold text-foreground mb-4">3. Medicinskt ansvarsfriskrivning</h2>
             <p className="text-muted-foreground leading-relaxed mb-4">
-              <strong>Viktigt:</strong> Friendly är inte en medicinsk tjänst och ersätter 
+              <strong>Viktigt:</strong> Toddy är inte en medicinsk tjänst och ersätter 
               inte professionell vård.
             </p>
             <ul className="list-disc list-inside text-muted-foreground space-y-2">
@@ -90,7 +90,7 @@ const TermsOfService = () => {
             <h2 className="text-xl font-semibold text-foreground mb-4">7. Immateriella rättigheter</h2>
             <p className="text-muted-foreground leading-relaxed">
               Tjänsten och allt innehåll, inklusive men inte begränsat till design, logotyper, 
-              text och programvara, tillhör Friendly AB och är skyddat av upphovsrätt och 
+              text och programvara, tillhör Toddy AB och är skyddat av upphovsrätt och 
               andra immateriella rättigheter. Du får inte kopiera, modifiera eller distribuera 
               något av detta utan vårt skriftliga godkännande.
             </p>
@@ -148,7 +148,7 @@ const TermsOfService = () => {
       {/* Footer */}
       <footer className="py-3 px-4 border-t border-border/40 bg-background">
         <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-muted-foreground">
-          <span>© 2025 Friendly. Alla rättigheter förbehållna.</span>
+          <span>© 2025 Toddy. Alla rättigheter förbehållna.</span>
           <div className="flex items-center gap-4">
             <Link to="/integritet" className="hover:text-foreground transition-colors">
               Integritetspolicy
