@@ -139,6 +139,13 @@ export type Database = {
             referencedRelation: "community_posts"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "community_reactions_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "community_posts_safe"
+            referencedColumns: ["id"]
+          },
         ]
       }
       community_replies: {
@@ -178,6 +185,13 @@ export type Database = {
             columns: ["post_id"]
             isOneToOne: false
             referencedRelation: "community_posts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "community_replies_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "community_posts_safe"
             referencedColumns: ["id"]
           },
         ]
@@ -660,6 +674,13 @@ export type Database = {
             referencedRelation: "community_posts"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "poll_options_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "community_posts_safe"
+            referencedColumns: ["id"]
+          },
         ]
       }
       poll_votes: {
@@ -855,7 +876,99 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      community_posts_safe: {
+        Row: {
+          anonymous_name: string | null
+          category: string | null
+          content: string | null
+          created_at: string | null
+          id: string | null
+          image_url: string | null
+          is_anonymous: boolean | null
+          real_user_id: string | null
+          title: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          anonymous_name?: string | null
+          category?: string | null
+          content?: string | null
+          created_at?: string | null
+          id?: string | null
+          image_url?: string | null
+          is_anonymous?: boolean | null
+          real_user_id?: never
+          title?: string | null
+          updated_at?: string | null
+          user_id?: never
+        }
+        Update: {
+          anonymous_name?: string | null
+          category?: string | null
+          content?: string | null
+          created_at?: string | null
+          id?: string | null
+          image_url?: string | null
+          is_anonymous?: boolean | null
+          real_user_id?: never
+          title?: string | null
+          updated_at?: string | null
+          user_id?: never
+        }
+        Relationships: []
+      }
+      community_replies_safe: {
+        Row: {
+          anonymous_name: string | null
+          content: string | null
+          created_at: string | null
+          id: string | null
+          is_anonymous: boolean | null
+          post_id: string | null
+          real_user_id: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          anonymous_name?: string | null
+          content?: string | null
+          created_at?: string | null
+          id?: string | null
+          is_anonymous?: boolean | null
+          post_id?: string | null
+          real_user_id?: never
+          updated_at?: string | null
+          user_id?: never
+        }
+        Update: {
+          anonymous_name?: string | null
+          content?: string | null
+          created_at?: string | null
+          id?: string | null
+          is_anonymous?: boolean | null
+          post_id?: string | null
+          real_user_id?: never
+          updated_at?: string | null
+          user_id?: never
+        }
+        Relationships: [
+          {
+            foreignKeyName: "community_replies_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "community_posts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "community_replies_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "community_posts_safe"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Functions: {
       assign_initial_role: {
