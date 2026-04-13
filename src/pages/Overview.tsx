@@ -682,19 +682,6 @@ const Overview = () => {
             )}
           </div>
 
-          {/* Desktop sidebar with stats */}
-          {sectionView === 'calendar' && (
-            <aside className="hidden lg:block w-72 shrink-0 space-y-4 pt-2">
-              <OverviewSummary
-                stats={stats}
-                entries={entries}
-                periodLabel={label}
-                sleepBadDays={0}
-                showSleep={false}
-              />
-              <LessonsFromPast entries={entries} characteristics={characteristics} />
-            </aside>
-          )}
 
 
         <DayDetailDialog
