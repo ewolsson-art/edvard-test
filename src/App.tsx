@@ -12,6 +12,18 @@ import { AuthProvider } from "@/hooks/useAuth";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { NotificationSchedulerProvider } from "@/components/NotificationSchedulerProvider";
 
+// Preload critical dashboard chunks on idle
+const preloadDashboard = () => {
+  import("./pages/Index");
+  import("./hooks/useMoodData");
+  import("./hooks/useMedications");
+};
+if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
+  (window as any).requestIdleCallback(preloadDashboard);
+} else {
+  setTimeout(preloadDashboard, 2000);
+}
+
 const Index = lazy(() => import("./pages/Index"));
 const Auth = lazy(() => import("./pages/Auth"));
 const HowItWorksPage = lazy(() => import("./pages/HowItWorks"));
@@ -52,7 +64,16 @@ const Notifications = lazy(() => import("./pages/Notifications"));
 const Insights = lazy(() => import("./pages/Insights"));
 const BadDay = lazy(() => import("./pages/BadDay"));
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 5 * 60 * 1000,   // 5 min — avoid refetching on every navigation
+      gcTime: 30 * 60 * 1000,     // 30 min — keep cached data in memory longer
+      refetchOnWindowFocus: false, // Don't refetch when switching tabs
+      retry: 1,                   // Retry once on failure
+    },
+  },
+});
 
 const AppLayout = ({ children }: { children: React.ReactNode }) => (
   <SidebarProvider>
