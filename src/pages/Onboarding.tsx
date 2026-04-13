@@ -144,6 +144,8 @@ const Onboarding = () => {
           frequency: timingToFrequency[med.timing || 'morning'] || 'daily',
         }));
         await supabase.from('medications').insert(medicationsToInsert);
+        // Invalidate medications cache so TodayCheckin picks them up
+        await queryClient.invalidateQueries({ queryKey: ['medications'] });
       }
 
 
