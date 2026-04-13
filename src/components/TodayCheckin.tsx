@@ -1174,19 +1174,23 @@ export function TodayCheckin({
 
             {isLastStep('medication') ? (
               <Button onClick={handleComplete} className="w-full mt-4 py-6 text-base font-semibold gap-2">
-                {medicationsTakenToday.length === 0 && activeMedications.length > 0
-                  ? 'Hoppa över'
-                  : medicationsTakenToday.length < activeMedications.length
-                    ? 'Fortsätt ändå'
-                    : 'Klar ✓'}
+                {activeMedications.length === 0
+                  ? 'Fortsätt'
+                  : medicationsTakenToday.length === 0
+                    ? 'Hoppa över'
+                    : medicationsTakenToday.length < activeMedications.length
+                      ? 'Fortsätt ändå'
+                      : 'Klar ✓'}
               </Button>
             ) : (
               <Button onClick={() => navigateStep(getNextStep('medication') as Step)} className="w-full mt-4 py-6 text-base font-semibold gap-2">
-                {medicationsTakenToday.length === 0 && activeMedications.length > 0
-                  ? 'Hoppa över'
-                  : medicationsTakenToday.length < activeMedications.length
-                    ? 'Fortsätt ändå'
-                    : 'Fortsätt'}
+                {activeMedications.length === 0
+                  ? 'Fortsätt'
+                  : medicationsTakenToday.length === 0
+                    ? 'Hoppa över'
+                    : medicationsTakenToday.length < activeMedications.length
+                      ? 'Fortsätt ändå'
+                      : 'Fortsätt'}
                 <ChevronRight className="w-4 h-4" />
               </Button>
             )}
