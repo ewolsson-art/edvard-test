@@ -17,6 +17,8 @@ import { StreakBadge } from '@/components/StreakBadge';
 import { CelebrationAnimation } from '@/components/CelebrationAnimation';
 import { FullscreenComment } from '@/components/FullscreenComment';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { SwipeMoodSelector } from '@/components/SwipeMoodSelector';
+import { MilestoneInfo } from '@/hooks/useStreak';
 
 interface StreakData {
   currentStreak: number;
