@@ -1186,7 +1186,7 @@ export function TodayCheckin({
                 {activeMedications.length === 0
                   ? 'Fortsätt'
                   : medicationsTakenToday.length === activeMedications.length
-                    ? activeMedications.length === 1 ? 'Ja, jag har tagit den' : 'Ja, jag har tagit dem'
+                    ? 'Ja'
                     : medicationsTakenToday.length === 0
                       ? 'Nej'
                       : 'Inte alla'}
@@ -1196,7 +1196,7 @@ export function TodayCheckin({
                 {activeMedications.length === 0
                   ? 'Fortsätt'
                   : medicationsTakenToday.length === activeMedications.length
-                    ? activeMedications.length === 1 ? 'Ja, jag har tagit den' : 'Ja, jag har tagit dem'
+                    ? 'Ja'
                     : medicationsTakenToday.length === 0
                       ? 'Nej'
                       : 'Inte alla'}
