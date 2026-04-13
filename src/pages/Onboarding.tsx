@@ -29,6 +29,12 @@ const CHECKIN_OPTIONS = [
     recommended: true,
   },
   {
+    id: 'include_medication',
+    label: 'Medicin',
+    description: 'Loggning för dina mediciner',
+    icon: Pill,
+  },
+  {
     id: 'include_sleep',
     label: 'Sömn',
     description: 'Håll koll på din sömnkvalitet',
@@ -45,12 +51,6 @@ const CHECKIN_OPTIONS = [
     label: 'Träning',
     description: 'Logga din fysiska aktivitet',
     icon: Dumbbell,
-  },
-  {
-    id: 'include_medication',
-    label: 'Medicin',
-    description: 'Loggning för dina mediciner',
-    icon: Pill,
   },
 ];
 
