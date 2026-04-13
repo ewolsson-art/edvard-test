@@ -286,10 +286,13 @@ const Onboarding = () => {
                 <Button 
                   onClick={handleNext} 
                   className="flex-1 h-12 rounded-2xl text-[15px] font-semibold bg-[hsl(45_85%_55%)] text-[hsl(230_30%_5%)] hover:bg-[hsl(45_85%_65%)] shadow-[0_4px_20px_-4px_hsl(45_85%_55%/0.4)] transition-all duration-300" 
-                  disabled={!hasAnySelection}
+                  disabled={!hasAnySelection || isSubmitting}
                 >
-                  Fortsätt
-                  <ArrowRight className="w-4 h-4 ml-1" />
+                  {isSubmitting ? (
+                    <Loader2 className="w-4 h-4 animate-spin mr-1" />
+                  ) : null}
+                  {selections.include_medication ? 'Fortsätt' : 'Starta min dagbok'}
+                  {!isSubmitting && <ArrowRight className="w-4 h-4 ml-1" />}
                 </Button>
               </div>
             </div>
