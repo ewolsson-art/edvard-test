@@ -39,7 +39,7 @@ import { MoodStats as MoodStatsType, ExerciseType, QualityType } from '@/types/m
 import { Last30DaysOverview } from '@/components/Last30DaysOverview';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Dumbbell, Moon, Utensils } from 'lucide-react';
-type ViewType = 'month' | 'year';
+type ViewType = 'week' | 'month' | 'year';
 
 const Overview = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -64,7 +64,7 @@ const Overview = () => {
       };
     }
     return {
-      view: (viewParam || 'month') as ViewType,
+      view: (viewParam || 'week') as ViewType,
       month: new Date(),
       year: new Date().getFullYear(),
     };
@@ -574,6 +574,7 @@ const Overview = () => {
             {sectionView === 'calendar' && (
               <Tabs value={view} onValueChange={handleViewChange} className="flex-1">
                 <TabsList className="inline-flex w-full h-9 bg-muted/80 p-0.5 rounded-full gap-0">
+                  <TabsTrigger value="week" className="flex-1 text-xs font-semibold px-2 py-1 rounded-full data-[state=active]:bg-muted-foreground/30 data-[state=active]:text-foreground data-[state=active]:shadow-none">V</TabsTrigger>
                   <TabsTrigger value="month" className="flex-1 text-xs font-semibold px-2 py-1 rounded-full data-[state=active]:bg-muted-foreground/30 data-[state=active]:text-foreground data-[state=active]:shadow-none">M</TabsTrigger>
                   <TabsTrigger value="year" className="flex-1 text-xs font-semibold px-2 py-1 rounded-full data-[state=active]:bg-muted-foreground/30 data-[state=active]:text-foreground data-[state=active]:shadow-none">ÅR</TabsTrigger>
                 </TabsList>
@@ -630,6 +631,17 @@ const Overview = () => {
           <div className="flex-1 min-w-0 space-y-6">
             {showMood && sectionView === 'calendar' && (
               <section>
+                     {view === 'week' && (
+                       <WeekCalendar
+                         weekDays={weekDays}
+                         getEntryForDate={getEntryForDate}
+                         getMedicationsTakenOnDate={getMedicationsTakenOnDate}
+                         onPrevWeek={() => setCurrentWeek(prev => subWeeks(prev, 1))}
+                         onNextWeek={() => setCurrentWeek(prev => addWeeks(prev, 1))}
+                         weekLabel={weekLabel}
+                         onDayClick={handleDayClick}
+                       />
+                     )}
                      {view === 'month' && (
                       <ScrollableMonthsCalendar
                         ref={scrollableCalendarRef}
