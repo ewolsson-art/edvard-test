@@ -213,6 +213,15 @@ export function TodayCheckin({
   const [checkinData, setCheckinData] = useState<CheckinData>({});
   const [customAnswersState, setCustomAnswersState] = useState<Record<string, string>>(initialCustomAnswers);
 
+  // Auto-mark all medications as taken when entering medication step for the first time
+  const hasPrefilled = useRef(false);
+  useEffect(() => {
+    if (currentStep === 'medication' && activeMedications.length > 0 && medicationsTakenToday.length === 0 && !hasPrefilled.current) {
+      hasPrefilled.current = true;
+      activeMedications.forEach(med => onToggleMedication(med.id, true));
+    }
+  }, [currentStep, activeMedications, medicationsTakenToday.length, onToggleMedication]);
+
   // Scroll comment area into view when shown
   useEffect(() => {
     if (showComment && commentRef.current) {
@@ -1177,7 +1186,7 @@ export function TodayCheckin({
                 {activeMedications.length === 0
                   ? 'Fortsätt'
                   : medicationsTakenToday.length === activeMedications.length
-                    ? activeMedications.length === 1 ? 'Ja, jag har tagit den' : 'Ja, jag har tagit dem'
+                    ? 'Ja'
                     : medicationsTakenToday.length === 0
                       ? 'Nej'
                       : 'Inte alla'}
@@ -1187,7 +1196,7 @@ export function TodayCheckin({
                 {activeMedications.length === 0
                   ? 'Fortsätt'
                   : medicationsTakenToday.length === activeMedications.length
-                    ? activeMedications.length === 1 ? 'Ja, jag har tagit den' : 'Ja, jag har tagit dem'
+                    ? 'Ja'
                     : medicationsTakenToday.length === 0
                       ? 'Nej'
                       : 'Inte alla'}
