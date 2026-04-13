@@ -39,7 +39,7 @@ import { MoodStats as MoodStatsType, ExerciseType, QualityType } from '@/types/m
 import { Last30DaysOverview } from '@/components/Last30DaysOverview';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Dumbbell, Moon, Utensils } from 'lucide-react';
-type ViewType = 'month' | 'year';
+type ViewType = 'week' | 'month' | 'year';
 
 const Overview = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -64,7 +64,7 @@ const Overview = () => {
       };
     }
     return {
-      view: (viewParam || 'month') as ViewType,
+      view: (viewParam || 'week') as ViewType,
       month: new Date(),
       year: new Date().getFullYear(),
     };
@@ -496,13 +496,15 @@ const Overview = () => {
 
   // Calculate sleep bad days for summary
   const sleepBadDays = useMemo(() => {
+     if (view === 'week') return weekSleepStats.bad;
      if (view === 'month') return monthSleepStats.bad;
      if (view === 'year') return yearSleepStats.bad;
      return 0;
   }, [view, weekSleepStats, monthSleepStats, yearSleepStats]);
 
   const medPercentage = useMemo(() => {
-     const ms = view === 'month' ? monthMedicationStats 
+     const ms = view === 'week' ? weekMedicationStats
+       : view === 'month' ? monthMedicationStats 
        : view === 'year' ? yearMedicationStats : null;
     if (!ms || ms.totalDays === 0) return 0;
     return Math.round((ms.taken / ms.totalDays) * 100);
@@ -526,6 +528,7 @@ const Overview = () => {
       label: 'Senaste 30 dagarna'
     };
     switch (view) {
+       case 'week': return { stats: weekStats, exerciseStats: weekExerciseStats, sleepStats: weekSleepStats, eatingStats: weekEatingStats, medicationStats: weekMedicationStats, label: weekLabel };
        case 'month': return { stats: monthStats, exerciseStats: monthExerciseStats, sleepStats: monthSleepStats, eatingStats: monthEatingStats, medicationStats: monthMedicationStats, label: monthLabel };
        case 'year': return { stats: yearStats, exerciseStats: yearExerciseStats, sleepStats: yearSleepStats, eatingStats: yearEatingStats, medicationStats: yearMedicationStats, label: `${currentYear}` };
       default: return emptyStats;
@@ -574,6 +577,7 @@ const Overview = () => {
             {sectionView === 'calendar' && (
               <Tabs value={view} onValueChange={handleViewChange} className="flex-1">
                 <TabsList className="inline-flex w-full h-9 bg-muted/80 p-0.5 rounded-full gap-0">
+                  <TabsTrigger value="week" className="flex-1 text-xs font-semibold px-2 py-1 rounded-full data-[state=active]:bg-muted-foreground/30 data-[state=active]:text-foreground data-[state=active]:shadow-none">V</TabsTrigger>
                   <TabsTrigger value="month" className="flex-1 text-xs font-semibold px-2 py-1 rounded-full data-[state=active]:bg-muted-foreground/30 data-[state=active]:text-foreground data-[state=active]:shadow-none">M</TabsTrigger>
                   <TabsTrigger value="year" className="flex-1 text-xs font-semibold px-2 py-1 rounded-full data-[state=active]:bg-muted-foreground/30 data-[state=active]:text-foreground data-[state=active]:shadow-none">ÅR</TabsTrigger>
                 </TabsList>
@@ -630,6 +634,17 @@ const Overview = () => {
           <div className="flex-1 min-w-0 space-y-6">
             {showMood && sectionView === 'calendar' && (
               <section>
+                     {view === 'week' && (
+                       <WeekCalendar
+                         weekDays={weekDays}
+                         getEntryForDate={getEntryForDate}
+                         getMedicationsTakenOnDate={getMedicationsTakenOnDate}
+                         onPrevWeek={() => setCurrentWeek(prev => subWeeks(prev, 1))}
+                         onNextWeek={() => setCurrentWeek(prev => addWeeks(prev, 1))}
+                         weekLabel={weekLabel}
+                         onDayClick={handleDayClick}
+                       />
+                     )}
                      {view === 'month' && (
                       <ScrollableMonthsCalendar
                         ref={scrollableCalendarRef}
