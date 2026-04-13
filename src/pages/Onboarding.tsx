@@ -55,7 +55,7 @@ const CHECKIN_OPTIONS = [
 ];
 
 
-const TOTAL_STEPS = 5;
+const TOTAL_STEPS = 4;
 
 const Onboarding = () => {
   const { toast } = useToast();
@@ -111,13 +111,8 @@ const Onboarding = () => {
   };
 
   const getSkipText = () => {
-    switch (step) {
-      case 3: return selectedMedications.length === 0 ? 'Hoppa över' : 'Fortsätt';
-      case 4:
-        const anyInvite = invites.doctors.length > 0 || invites.relatives.length > 0;
-        return anyInvite ? 'Fortsätt' : 'Hoppa över';
-      default: return 'Fortsätt';
-    }
+    if (step === 3) return selectedMedications.length === 0 ? 'Hoppa över' : 'Fortsätt';
+    return 'Fortsätt';
   };
 
   const handleSubmit = async () => {
@@ -371,40 +366,8 @@ const Onboarding = () => {
           )}
 
 
-          {/* Step 4: Invite */}
+          {/* Step 4: Confirm & Start */}
           {step === 4 && (
-            <div className="animate-fade-in">
-              <h1 className="text-2xl md:text-3xl font-bold text-white font-display tracking-tight">
-                Bjud in
-              </h1>
-              <p className="mt-2 text-sm text-white/40">
-                Helt valfritt — dela din data med läkare eller anhöriga om du vill
-              </p>
-
-              <div className="mt-6">
-                <InviteStep 
-                  invites={invites}
-                  onInvitesChange={setInvites}
-                />
-              </div>
-
-              <div className="flex gap-3 mt-6">
-                <button onClick={handleBack} className="h-12 px-5 rounded-2xl text-sm font-medium text-white/50 hover:text-white/80 bg-white/[0.04] ring-1 ring-white/[0.08] hover:bg-white/[0.06] transition-all">
-                  <ArrowLeft className="w-4 h-4" />
-                </button>
-                <Button 
-                  onClick={handleNext} 
-                  className="flex-1 h-12 rounded-2xl text-[15px] font-semibold bg-[hsl(45_85%_55%)] text-[hsl(230_30%_5%)] hover:bg-[hsl(45_85%_65%)] shadow-[0_4px_20px_-4px_hsl(45_85%_55%/0.4)] transition-all duration-300"
-                >
-                  {getSkipText()}
-                  <ArrowRight className="w-4 h-4 ml-1" />
-                </Button>
-              </div>
-            </div>
-          )}
-
-          {/* Step 5: Confirm & Start */}
-          {step === 5 && (
             <div className="animate-fade-in">
               <h1 className="text-2xl md:text-3xl font-bold text-white font-display tracking-tight">
                 Allt är redo!
@@ -445,24 +408,6 @@ const Onboarding = () => {
                 )}
 
 
-                {/* Invites */}
-                {(invites.doctors.length > 0 || invites.relatives.length > 0) && (
-                  <div className="p-3 rounded-2xl bg-white/[0.04] ring-1 ring-white/[0.08]">
-                    <h2 className="font-semibold text-[11px] mb-2 text-white/30 uppercase tracking-wide">Inbjudningar</h2>
-                    <div className="space-y-1">
-                      {invites.doctors.map(email => (
-                        <p key={email} className="text-xs flex items-center gap-1 text-white/50">
-                          <UserPlus className="w-3 h-3" /> {email}
-                        </p>
-                      ))}
-                      {invites.relatives.map(email => (
-                        <p key={email} className="text-xs flex items-center gap-1 text-white/50">
-                          <UserPlus className="w-3 h-3" /> {email}
-                        </p>
-                      ))}
-                    </div>
-                  </div>
-                )}
               </div>
 
               <p className="mt-4 text-xs text-white/20 text-center">
