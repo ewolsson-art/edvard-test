@@ -1,8 +1,9 @@
 import { format, isToday, isBefore, startOfDay } from 'date-fns';
 import { sv } from 'date-fns/locale';
-import { ChevronLeft, ChevronRight, Pill, X } from 'lucide-react';
-import { MoodEntry, MOOD_ICONS } from '@/types/mood';
+import { ChevronLeft, Pill, X } from 'lucide-react';
+import { MoodEntry, MOOD_LABELS, MoodType } from '@/types/mood';
 import { cn } from '@/lib/utils';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
 interface WeekCalendarProps {
   weekDays: Date[];
@@ -15,6 +16,8 @@ interface WeekCalendarProps {
   onDayDoubleClick?: (date: Date) => void;
 }
 
+const weekDayHeaders = ['M', 'T', 'O', 'T', 'F', 'L', 'S'];
+
 export function WeekCalendar({
   weekDays,
   weekLabel,
@@ -26,43 +29,39 @@ export function WeekCalendar({
   onDayDoubleClick,
 }: WeekCalendarProps) {
   return (
-    <div className="glass-card p-6 fade-in">
-      <div className="flex items-center justify-between mb-6">
+    <div className="fade-in">
+      {/* Header matching month view style */}
+      <div className="flex items-center gap-3 mb-4">
         <button
           onClick={onPrevWeek}
-          className="p-2 rounded-lg hover:bg-muted transition-colors"
+          className="text-primary hover:opacity-70 transition-opacity"
           aria-label="Föregående vecka"
         >
           <ChevronLeft className="w-5 h-5" />
         </button>
-
-        <h3 className="font-display text-xl font-semibold">
+        <h2 className="font-display text-2xl font-semibold text-foreground/80">
           {weekLabel}
-        </h3>
-
+        </h2>
         <button
           onClick={onNextWeek}
-          className="p-2 rounded-lg hover:bg-muted transition-colors"
+          className="text-primary hover:opacity-70 transition-opacity rotate-180"
           aria-label="Nästa vecka"
         >
-          <ChevronRight className="w-5 h-5" />
+          <ChevronLeft className="w-5 h-5" />
         </button>
       </div>
 
-      {/* Week day headers */}
-      <div className="grid grid-cols-7 gap-2 mb-2">
-        {weekDays.map((day) => (
-          <div
-            key={day.toISOString()}
-            className="text-center text-xs font-medium text-muted-foreground py-2"
-          >
-            {format(day, 'EEE', { locale: sv })}
+      {/* Weekday headers */}
+      <div className="grid grid-cols-7 mb-1">
+        {weekDayHeaders.map((day, i) => (
+          <div key={i} className="text-center text-sm font-semibold text-muted-foreground py-2">
+            {day}
           </div>
         ))}
       </div>
 
       {/* Day cells */}
-      <div className="grid grid-cols-7 gap-2">
+      <div className="grid grid-cols-7">
         {weekDays.map((day) => {
           const dateStr = format(day, 'yyyy-MM-dd');
           const entry = getEntryForDate(dateStr);
@@ -71,35 +70,69 @@ export function WeekCalendar({
           const hasMeds = medicationsTaken.length > 0;
           const isPastDay = !isTodayDate && isBefore(day, startOfDay(new Date()));
           const showMissed = isPastDay && !entry;
+          const mood = entry?.mood as MoodType | undefined;
 
-          return (
+          const tooltipText = mood
+            ? `${format(day, 'd MMMM', { locale: sv })} — ${MOOD_LABELS[mood]}`
+            : showMissed
+              ? `${format(day, 'd MMMM', { locale: sv })} — Ej registrerad`
+              : undefined;
+
+          const dayButton = (
             <button
               key={day.toISOString()}
               onClick={() => onDayClick?.(day)}
               onDoubleClick={() => onDayDoubleClick?.(day)}
               className={cn(
-                "calendar-day relative cursor-pointer",
-                !entry && "calendar-day-empty",
-                entry?.mood === 'elevated' && "calendar-day-elevated",
-                entry?.mood === 'stable' && "calendar-day-stable",
-                entry?.mood === 'depressed' && "calendar-day-depressed",
-                isTodayDate && "calendar-day-today"
+                "relative flex flex-col items-center justify-center py-4 transition-all duration-150",
+                "hover:bg-muted/30 hover:scale-110 hover:z-10 hover:rounded-md",
+                !isTodayDate && mood === 'elevated' && "bg-mood-elevated/8",
+                !isTodayDate && mood === 'somewhat_elevated' && "bg-mood-somewhat-elevated/8",
+                !isTodayDate && mood === 'stable' && "bg-mood-stable/8",
+                !isTodayDate && mood === 'somewhat_depressed' && "bg-mood-somewhat-depressed/8",
+                !isTodayDate && mood === 'depressed' && "bg-mood-depressed/8",
+                showMissed && "bg-muted-foreground/10",
+                isTodayDate && "bg-foreground/10 rounded-md",
               )}
             >
-              {format(day, 'd')}
+              <span className={cn(
+                "flex items-center justify-center text-base font-medium leading-none",
+                isTodayDate && "text-foreground font-bold text-lg",
+                !isTodayDate && mood === 'elevated' && "text-mood-elevated",
+                !isTodayDate && mood === 'somewhat_elevated' && "text-mood-somewhat-elevated",
+                !isTodayDate && mood === 'stable' && "text-mood-stable",
+                !isTodayDate && mood === 'somewhat_depressed' && "text-mood-somewhat-depressed",
+                !isTodayDate && mood === 'depressed' && "text-mood-depressed",
+                !isTodayDate && !mood && "text-foreground/60",
+              )}>
+                {format(day, 'd')}
+              </span>
+
               {showMissed && (
-                <X className="absolute inset-0 m-auto h-full w-full p-1.5 text-destructive opacity-40" strokeWidth={2.5} />
+                <X className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-8 w-8 text-muted-foreground opacity-25" strokeWidth={1.5} />
               )}
-              {hasMeds && (
-                <span className="absolute -bottom-0.5 left-1/2 -translate-x-1/2">
-                  <Pill className="h-2.5 w-2.5 text-primary" />
-                </span>
-              )}
+
+              {/* Indicators */}
+              <div className="flex gap-1 mt-1 h-3">
+                {hasMeds && (
+                  <Pill className="h-3 w-3 text-primary/50" />
+                )}
+              </div>
             </button>
           );
+
+          if (tooltipText) {
+            return (
+              <Tooltip key={day.toISOString()} delayDuration={300}>
+                <TooltipTrigger asChild>{dayButton}</TooltipTrigger>
+                <TooltipContent side="top" className="text-xs">{tooltipText}</TooltipContent>
+              </Tooltip>
+            );
+          }
+
+          return dayButton;
         })}
       </div>
-
     </div>
   );
 }
