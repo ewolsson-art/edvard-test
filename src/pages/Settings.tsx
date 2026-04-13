@@ -189,6 +189,14 @@ const Settings = () => {
     );
   }
 
+  if (view === 'export') {
+    return (
+      <SubPage title="Exportera din data" onBack={() => setView('main')}>
+        <GDPRExport />
+      </SubPage>
+    );
+  }
+
   if (view === 'delete') {
     return (
       <SubPage title="Radera konto" onBack={() => setView('main')}>
@@ -231,6 +239,7 @@ const Settings = () => {
         {/* Account section */}
         <SettingsGroup label="Konto och säkerhet">
           <SettingsRow icon={Lock} label="Byt lösenord" onClick={() => setView('password')} />
+          <SettingsRow icon={Download} label="Exportera din data" description="GDPR — ladda ner all din data" onClick={() => setView('export')} />
           <SettingsRow icon={Trash2} label="Radera konto" destructive onClick={() => setView('delete')} />
         </SettingsGroup>
       </div>
