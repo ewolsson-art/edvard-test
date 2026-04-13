@@ -81,26 +81,6 @@ const HowItWorks = () => {
           </div>
         </section>
 
-        {/* Features */}
-        <section className="px-5 md:px-8 pb-16 md:pb-24 border-t border-white/[0.04] pt-16 md:pt-24">
-          <div className="max-w-4xl mx-auto">
-            <h2 className="text-2xl md:text-3xl font-display font-bold text-white text-center mb-10 md:mb-16">
-              Mer om Toddy
-            </h2>
-            <div className="space-y-6 md:space-y-0 md:grid md:grid-cols-3 md:gap-10">
-              {features.map((feature) => (
-                <div key={feature.title} className="flex flex-col items-center text-center">
-                  <div className="w-14 h-14 rounded-xl bg-white/[0.04] ring-1 ring-white/[0.06] flex items-center justify-center mb-4">
-                    <feature.icon className="w-6 h-6 text-[hsl(45_85%_55%)]" />
-                  </div>
-                  <h3 className="text-base font-semibold text-white mb-1.5">{feature.title}</h3>
-                  <p className="text-sm text-white/40 leading-relaxed max-w-xs">{feature.description}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
         {/* CTA */}
         <section className="px-5 md:px-8 pb-20 md:pb-28">
           <div className="max-w-md mx-auto text-center">
