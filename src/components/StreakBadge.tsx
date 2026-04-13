@@ -1,5 +1,6 @@
-import { Flame, Trophy } from 'lucide-react';
+import { Flame, Trophy, Target } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { MilestoneInfo, MILESTONES } from '@/hooks/useStreak';
 import {
   Tooltip,
   TooltipContent,
@@ -11,14 +12,27 @@ interface StreakBadgeProps {
   currentStreak: number;
   longestStreak: number;
   hasCheckedInToday: boolean;
+  milestone?: MilestoneInfo;
   className?: string;
   variant?: 'default' | 'compact';
 }
+
+const MILESTONE_EMOJI: Record<number, string> = {
+  3: '🌱',
+  7: '🔥',
+  14: '⭐',
+  30: '🏆',
+  60: '💎',
+  90: '👑',
+  180: '🦸',
+  365: '🐢',
+};
 
 export function StreakBadge({ 
   currentStreak, 
   longestStreak, 
   hasCheckedInToday,
+  milestone,
   className,
   variant = 'default'
 }: StreakBadgeProps) {
@@ -50,8 +64,16 @@ export function StreakBadge({
               <span>{currentStreak} 🔥</span>
             </div>
           </TooltipTrigger>
-          <TooltipContent>
-            <p>Du har checkat in {currentStreak} {currentStreak === 1 ? 'dag' : 'dagar'} i rad!</p>
+          <TooltipContent className="space-y-1">
+            <p className="font-semibold">
+              {currentStreak} {currentStreak === 1 ? 'dag' : 'dagar'} i rad!
+            </p>
+            {milestone?.next && milestone.daysUntilNext && (
+              <p className="text-xs text-muted-foreground flex items-center gap-1">
+                <Target className="w-3 h-3" />
+                {milestone.daysUntilNext} {milestone.daysUntilNext === 1 ? 'dag' : 'dagar'} till {MILESTONE_EMOJI[milestone.next]} {milestone.next}-dagars streak
+              </p>
+            )}
             {longestStreak > currentStreak && (
               <p className="text-xs text-muted-foreground">Ditt bästa: {longestStreak} dagar</p>
             )}
@@ -61,6 +83,7 @@ export function StreakBadge({
     );
   }
 
+  // Default variant with milestone progress
   return (
     <div className={cn(
       "rounded-xl px-4 py-3",
@@ -94,13 +117,24 @@ export function StreakBadge({
               </span>
             )}
           </div>
+          {/* Milestone progress */}
+          {milestone?.next && milestone.daysUntilNext != null && (
+            <div className="mt-1.5 flex items-center gap-2">
+              <div className="flex-1 h-1 rounded-full bg-foreground/5 overflow-hidden">
+                <div 
+                  className="h-full rounded-full bg-primary/40 transition-all duration-500"
+                  style={{ 
+                    width: `${((milestone.next - milestone.daysUntilNext) / milestone.next) * 100}%` 
+                  }}
+                />
+              </div>
+              <span className="text-[10px] text-muted-foreground/50 flex-shrink-0">
+                {MILESTONE_EMOJI[milestone.next]} {milestone.daysUntilNext} kvar
+              </span>
+            </div>
+          )}
         </div>
       </div>
-      {isOnFire && (
-        <p className="text-xs text-orange-600/80 dark:text-orange-400/80 mt-2 text-center">
-          🔥 Du är on fire!
-        </p>
-      )}
     </div>
   );
 }
