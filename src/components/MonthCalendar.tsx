@@ -60,7 +60,7 @@ export function MonthCalendar({
     <div className="fade-in">
       {/* Navigation */}
       {/* Month title with navigation */}
-      <div className="flex items-center gap-3 mb-3">
+      <div className="flex items-center gap-3 mb-4">
         {!hideNavigation && (
           <button
             onClick={onPrevMonth}
@@ -87,7 +87,7 @@ export function MonthCalendar({
       {/* Weekday headers */}
       <div className="grid grid-cols-7 mb-1">
         {weekDays.map((day, i) => (
-          <div key={i} className="text-center text-xs font-medium text-muted-foreground py-1.5">
+          <div key={i} className="text-center text-sm font-semibold text-muted-foreground py-2">
             {day}
           </div>
         ))}
