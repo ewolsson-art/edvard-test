@@ -142,31 +142,6 @@ const Onboarding = () => {
       }
 
 
-      // 3. Create doctor connection requests
-      for (const doctorEmail of invites.doctors) {
-        const { data: doctorId } = await supabase.rpc('get_doctor_id_by_email', { doctor_email: doctorEmail });
-        if (doctorId) {
-          await supabase.from('patient_doctor_connections').insert({
-            patient_id: user.id,
-            doctor_id: doctorId,
-            initiated_by: 'patient',
-            status: 'pending',
-          });
-        }
-      }
-
-      // 7. Create relative connection requests
-      for (const relativeEmail of invites.relatives) {
-        const { data: relativeId } = await supabase.rpc('get_relative_id_by_email', { relative_email: relativeEmail });
-        if (relativeId) {
-          await supabase.from('patient_relative_connections').insert({
-            patient_id: user.id,
-            relative_id: relativeId,
-            initiated_by: 'patient',
-            status: 'pending',
-          });
-        }
-      }
 
       toast({
         title: 'Välkommen till Friendly!',
