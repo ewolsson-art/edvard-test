@@ -103,7 +103,7 @@ export const ScrollableMonthsCalendar = forwardRef<ScrollableMonthsCalendarRef, 
   }, [year, type, getEntryForDate, getMedicationsTakenOnDate, getEntriesForMonth]);
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-10">
       {months.map((data, i) => {
         const isCurrentMonth = year === currentYear && i === currentMonth;
         return (

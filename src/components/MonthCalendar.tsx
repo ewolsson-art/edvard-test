@@ -60,7 +60,7 @@ export function MonthCalendar({
     <div className="fade-in">
       {/* Navigation */}
       {/* Month title with navigation */}
-      <div className="flex items-center gap-3 mb-3">
+      <div className="flex items-center gap-3 mb-4">
         {!hideNavigation && (
           <button
             onClick={onPrevMonth}
@@ -87,7 +87,7 @@ export function MonthCalendar({
       {/* Weekday headers */}
       <div className="grid grid-cols-7 mb-1">
         {weekDays.map((day, i) => (
-          <div key={i} className="text-center text-xs font-medium text-muted-foreground py-1.5">
+          <div key={i} className="text-center text-sm font-semibold text-muted-foreground py-2">
             {day}
           </div>
         ))}
@@ -120,7 +120,7 @@ export function MonthCalendar({
                   onDoubleClick={() => isCurrentMonth && onDayDoubleClick?.(day)}
                   disabled={!isCurrentMonth}
                   className={cn(
-                    "relative flex flex-col items-center justify-center py-2.5 transition-all duration-150",
+                    "relative flex flex-col items-center justify-center py-4 transition-all duration-150",
                     !isCurrentMonth && "opacity-15",
                     isCurrentMonth && "hover:bg-muted/30 hover:scale-110 hover:z-10 hover:rounded-md",
                     !isTodayDate && mood === 'elevated' && "bg-mood-elevated/8",
@@ -128,17 +128,18 @@ export function MonthCalendar({
                     !isTodayDate && mood === 'stable' && "bg-mood-stable/8",
                     !isTodayDate && mood === 'somewhat_depressed' && "bg-mood-somewhat-depressed/8",
                     !isTodayDate && mood === 'depressed' && "bg-mood-depressed/8",
+                    showMissed && "bg-muted-foreground/10",
                     isTodayDate && "bg-foreground/10 rounded-md",
                   )}
                 >
                   <span className={cn(
-                    "flex items-center justify-center text-sm font-medium leading-none",
-                    isTodayDate && "text-foreground font-semibold",
-                    !isTodayDate && mood === 'elevated' && "text-mood-elevated/70",
-                    !isTodayDate && mood === 'somewhat_elevated' && "text-mood-somewhat-elevated/70",
-                    !isTodayDate && mood === 'stable' && "text-mood-stable/70",
-                    !isTodayDate && mood === 'somewhat_depressed' && "text-mood-somewhat-depressed/70",
-                    !isTodayDate && mood === 'depressed' && "text-mood-depressed/70",
+                    "flex items-center justify-center text-base font-medium leading-none",
+                    isTodayDate && "text-foreground font-bold text-lg",
+                    !isTodayDate && mood === 'elevated' && "text-mood-elevated",
+                    !isTodayDate && mood === 'somewhat_elevated' && "text-mood-somewhat-elevated",
+                    !isTodayDate && mood === 'stable' && "text-mood-stable",
+                    !isTodayDate && mood === 'somewhat_depressed' && "text-mood-somewhat-depressed",
+                    !isTodayDate && mood === 'depressed' && "text-mood-depressed",
                     !isTodayDate && !mood && isCurrentMonth && "text-foreground/60",
                     !isCurrentMonth && "text-muted-foreground"
                   )}>
@@ -146,16 +147,16 @@ export function MonthCalendar({
                   </span>
 
                   {showMissed && (
-                    <X className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-6 w-6 text-destructive opacity-15" strokeWidth={1.5} />
+                    <X className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-8 w-8 text-muted-foreground opacity-25" strokeWidth={1.5} />
                   )}
 
                   {/* Indicators */}
-                  <div className="flex gap-0.5 mt-0.5 h-2">
+                  <div className="flex gap-1 mt-1 h-3">
                     {medCount && medCount > 0 && (
-                      <Pill className="h-2 w-2 text-primary/50" />
+                      <Pill className="h-3 w-3 text-primary/50" />
                     )}
                     {hasRelativeComment && (
-                      <MessageCircle className="h-2 w-2 text-accent-foreground/50 fill-accent/50" />
+                      <MessageCircle className="h-3 w-3 text-accent-foreground/50 fill-accent/50" />
                     )}
                   </div>
                 </button>
