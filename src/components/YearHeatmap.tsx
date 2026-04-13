@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, memo } from 'react';
 import { format, startOfMonth, endOfMonth, eachDayOfInterval, getDay, isToday } from 'date-fns';
 import { sv } from 'date-fns/locale';
 import { ChevronLeft } from 'lucide-react';
@@ -23,7 +23,7 @@ const monthNames = [
 
 const dayHeaders = ['M', 'T', 'O', 'T', 'F', 'L', 'S'];
 
-export function YearHeatmap({ year, entries, medicationDates = [], onPrevYear, onNextYear, onMonthClick }: YearHeatmapProps) {
+export const YearHeatmap = memo(function YearHeatmap({ year, entries, medicationDates = [], onPrevYear, onNextYear, onMonthClick }: YearHeatmapProps) {
   const moodMap = useMemo(() => {
     const map: Record<string, MoodType> = {};
     entries.forEach(entry => {
@@ -172,4 +172,4 @@ export function YearHeatmap({ year, entries, medicationDates = [], onPrevYear, o
       </div>
     </div>
   );
-}
+});
