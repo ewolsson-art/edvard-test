@@ -11,13 +11,12 @@ import {
   Loader2, Brain, Moon, Utensils, Dumbbell, Pill, 
   ArrowRight, ArrowLeft, Sparkles, TrendingUp, 
   Share2, MessageSquare, CheckCircle2,
-  Heart, UserPlus
+  Heart
 } from 'lucide-react';
 import { Logo } from '@/components/Logo';
 import { TurtleLogo } from '@/components/TurtleLogo';
 import { DarkNightBackground } from '@/components/DarkNightBackground';
 import { MedicationStep, MedicationInput } from '@/components/onboarding/MedicationStep';
-import { InviteStep, InviteInput } from '@/components/onboarding/InviteStep';
 import { cn } from '@/lib/utils';
 
 const CHECKIN_OPTIONS = [
@@ -74,10 +73,6 @@ const Onboarding = () => {
     include_medication: false,
   });
   const [selectedMedications, setSelectedMedications] = useState<MedicationInput[]>([]);
-  const [invites, setInvites] = useState<InviteInput>({
-    doctors: [],
-    relatives: [],
-  });
 
   const handleToggle = (id: string) => {
     setSelections(prev => ({
