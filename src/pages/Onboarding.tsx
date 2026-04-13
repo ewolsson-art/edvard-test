@@ -6,6 +6,7 @@ import { Label } from '@/components/ui/label';
 import { useUserPreferences } from '@/hooks/useUserPreferences';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
+import { useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { 
   Loader2, Brain, Moon, Utensils, Dumbbell, Pill, 
@@ -61,6 +62,7 @@ const Onboarding = () => {
   const { user } = useAuth();
   const { createPreferences } = useUserPreferences();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const [step, setStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   
@@ -142,6 +144,8 @@ const Onboarding = () => {
           frequency: timingToFrequency[med.timing || 'morning'] || 'daily',
         }));
         await supabase.from('medications').insert(medicationsToInsert);
+        // Invalidate medications cache so TodayCheckin picks them up
+        await queryClient.invalidateQueries({ queryKey: ['medications'] });
       }
 
 
