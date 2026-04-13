@@ -56,6 +56,22 @@ export function useNotifications() {
       }, (payload) => {
         setNotifications(prev => [payload.new as AppNotification, ...prev]);
       })
+      .on('postgres_changes', {
+        event: 'DELETE',
+        schema: 'public',
+        table: 'notifications',
+        filter: `user_id=eq.${user.id}`,
+      }, (payload) => {
+        setNotifications(prev => prev.filter(n => n.id !== (payload.old as any).id));
+      })
+      .on('postgres_changes', {
+        event: 'UPDATE',
+        schema: 'public',
+        table: 'notifications',
+        filter: `user_id=eq.${user.id}`,
+      }, (payload) => {
+        setNotifications(prev => prev.map(n => n.id === (payload.new as any).id ? payload.new as AppNotification : n));
+      })
       .subscribe();
 
     return () => { supabase.removeChannel(channel); };
