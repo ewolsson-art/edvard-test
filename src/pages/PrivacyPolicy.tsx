@@ -19,7 +19,7 @@ const PrivacyPolicy = () => {
           <section className="mb-8">
             <h2 className="text-xl font-semibold text-foreground mb-4">1. Introduktion</h2>
             <p className="text-muted-foreground leading-relaxed">
-              Friendly ("vi", "oss", "vår") värnar om din integritet. Denna integritetspolicy 
+              Toddy ("vi", "oss", "vår") värnar om din integritet. Denna integritetspolicy 
               förklarar hur vi samlar in, använder, lagrar och skyddar dina personuppgifter 
               när du använder vår tjänst för mående-uppföljning.
             </p>
@@ -118,7 +118,7 @@ const PrivacyPolicy = () => {
       {/* Footer */}
       <footer className="py-3 px-4 border-t border-border/40 bg-background">
         <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-muted-foreground">
-          <span>© 2025 Friendly. Alla rättigheter förbehållna.</span>
+          <span>© 2025 Toddy. Alla rättigheter förbehållna.</span>
           <div className="flex items-center gap-4">
             <span className="text-foreground">Integritetspolicy</span>
             <Link to="/villkor" className="hover:text-foreground transition-colors">

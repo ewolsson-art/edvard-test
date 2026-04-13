@@ -80,7 +80,7 @@ const App = () => (
           <Toaster />
           <Sonner />
           <BrowserRouter>
-            <div className="min-h-screen" role="application" aria-label="Friendly - Moodtracker">
+            <div className="min-h-screen" role="application" aria-label="Toddy - Moodtracker">
             <Suspense fallback={<div className="min-h-screen bg-background" />}>
             <Routes>
             <Route path="/auth" element={<Auth />} />

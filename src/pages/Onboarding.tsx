@@ -142,7 +142,7 @@ const Onboarding = () => {
 
 
       toast({
-        title: 'Välkommen till Friendly!',
+        title: 'Välkommen till Toddy!',
         description: 'Din dagbok är nu redo att använda.',
       });
       
