@@ -89,14 +89,24 @@ const Onboarding = () => {
   const hasAnySelection = Object.values(selections).some(Boolean);
 
   const handleNext = () => {
-    if (step < TOTAL_STEPS) {
-      setStep(prev => prev + 1);
+    let next = step + 1;
+    // Skip medication step (3) if user didn't select medication tracking
+    if (next === 3 && !selections.include_medication) {
+      next = 4;
+    }
+    if (next <= TOTAL_STEPS) {
+      setStep(next);
     }
   };
 
   const handleBack = () => {
-    if (step > 1) {
-      setStep(prev => prev - 1);
+    let prev = step - 1;
+    // Skip medication step (3) going back if user didn't select medication tracking
+    if (prev === 3 && !selections.include_medication) {
+      prev = 2;
+    }
+    if (prev >= 1) {
+      setStep(prev);
     }
   };
 
