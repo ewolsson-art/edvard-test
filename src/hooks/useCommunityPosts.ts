@@ -98,10 +98,22 @@ export function useCommunityPosts() {
       .from('poll_votes')
       .select('option_id, user_id');
 
+    // Mask user_id on anonymous posts/replies to prevent identity leaks
+    const safePosts = (postsData || []).map(p => ({
+      ...p,
+      user_id: p.is_anonymous && p.user_id !== user?.id ? '00000000-0000-0000-0000-000000000000' : p.user_id,
+      _real_user_id: p.user_id,
+    }));
+    const safeReplies = (repliesData || []).map(r => ({
+      ...r,
+      user_id: r.is_anonymous && r.user_id !== user?.id ? '00000000-0000-0000-0000-000000000000' : r.user_id,
+      _real_user_id: r.user_id,
+    }));
+
     // Fetch profile names for non-anonymous posts and replies
     const allUserIds = new Set<string>();
-    (postsData || []).filter(p => !p.is_anonymous).forEach(p => allUserIds.add(p.user_id));
-    (repliesData || []).filter(r => !r.is_anonymous).forEach(r => allUserIds.add(r.user_id));
+    safePosts.filter(p => !p.is_anonymous).forEach(p => allUserIds.add(p.user_id));
+    safeReplies.filter(r => !r.is_anonymous).forEach(r => allUserIds.add(r.user_id));
     const nonAnonUserIds = [...allUserIds];
 
     let profileMap: Record<string, string> = {};
@@ -116,14 +128,20 @@ export function useCommunityPosts() {
       });
     }
 
-    const enrichedPosts: CommunityPost[] = (postsData || []).map(post => {
+    const enrichedPosts: CommunityPost[] = safePosts.map(post => {
       const postReactions = (reactions || []).filter(r => r.post_id === post.id);
-      const postReplies: CommunityReply[] = (repliesData || [])
+      const postReplies: CommunityReply[] = safeReplies
         .filter(r => r.post_id === post.id)
         .map(r => ({
-          ...r,
+          id: r.id,
+          post_id: r.post_id,
+          user_id: r.user_id,
+          content: r.content,
+          is_anonymous: r.is_anonymous,
+          anonymous_name: r.anonymous_name,
+          created_at: r.created_at,
           author_name: r.is_anonymous
-            ? (r.anonymous_name || getAnonymousName(r.user_id, post.id))
+            ? (r.anonymous_name || getAnonymousName(r._real_user_id, post.id))
             : (profileMap[r.user_id] || 'Användare'),
         }));
 
@@ -141,9 +159,18 @@ export function useCommunityPosts() {
         : null;
 
       return {
-        ...post,
+        id: post.id,
+        user_id: post.user_id,
+        title: post.title,
+        content: post.content,
+        category: post.category,
+        is_anonymous: post.is_anonymous,
+        anonymous_name: post.anonymous_name,
+        image_url: post.image_url,
+        created_at: post.created_at,
+        updated_at: post.updated_at,
         author_name: post.is_anonymous 
-          ? (post.anonymous_name || getAnonymousName(post.user_id))
+          ? (post.anonymous_name || getAnonymousName(post._real_user_id))
           : (profileMap[post.user_id] || 'Användare'),
         reaction_count: postReactions.length,
         user_has_reacted: user ? postReactions.some(r => r.user_id === user.id) : false,

@@ -21,10 +21,11 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
-import { Loader2, Save, Trash2, AlertTriangle, Brain, Moon, Utensils, Dumbbell, Pill, ChevronRight, Bell, Lock, Settings as SettingsIcon } from 'lucide-react';
+import { Loader2, Save, Trash2, AlertTriangle, Brain, Moon, Utensils, Dumbbell, Pill, ChevronRight, Bell, Lock, Settings as SettingsIcon, Download } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { NotificationSettings } from '@/components/NotificationSettings';
 import { ChangePasswordSection } from '@/components/ChangePasswordSection';
+import { GDPRExport } from '@/components/GDPRExport';
 
 
 const CHECKIN_OPTIONS = [
@@ -35,7 +36,7 @@ const CHECKIN_OPTIONS = [
   { id: 'include_medication', label: 'Medicin', description: 'Om du tagit din medicin', icon: Pill },
 ];
 
-type SettingsView = 'main' | 'checkin' | 'custom-questions' | 'notifications' | 'password' | 'delete';
+type SettingsView = 'main' | 'checkin' | 'custom-questions' | 'notifications' | 'password' | 'delete' | 'export';
 
 const Settings = () => {
   const { user, signOut } = useAuth();
@@ -188,6 +189,14 @@ const Settings = () => {
     );
   }
 
+  if (view === 'export') {
+    return (
+      <SubPage title="Exportera din data" onBack={() => setView('main')}>
+        <GDPRExport />
+      </SubPage>
+    );
+  }
+
   if (view === 'delete') {
     return (
       <SubPage title="Radera konto" onBack={() => setView('main')}>
@@ -230,6 +239,7 @@ const Settings = () => {
         {/* Account section */}
         <SettingsGroup label="Konto och säkerhet">
           <SettingsRow icon={Lock} label="Byt lösenord" onClick={() => setView('password')} />
+          <SettingsRow icon={Download} label="Exportera din data" description="GDPR — ladda ner all din data" onClick={() => setView('export')} />
           <SettingsRow icon={Trash2} label="Radera konto" destructive onClick={() => setView('delete')} />
         </SettingsGroup>
       </div>
