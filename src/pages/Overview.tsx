@@ -496,13 +496,15 @@ const Overview = () => {
 
   // Calculate sleep bad days for summary
   const sleepBadDays = useMemo(() => {
+     if (view === 'week') return weekSleepStats.bad;
      if (view === 'month') return monthSleepStats.bad;
      if (view === 'year') return yearSleepStats.bad;
      return 0;
   }, [view, weekSleepStats, monthSleepStats, yearSleepStats]);
 
   const medPercentage = useMemo(() => {
-     const ms = view === 'month' ? monthMedicationStats 
+     const ms = view === 'week' ? weekMedicationStats
+       : view === 'month' ? monthMedicationStats 
        : view === 'year' ? yearMedicationStats : null;
     if (!ms || ms.totalDays === 0) return 0;
     return Math.round((ms.taken / ms.totalDays) * 100);
