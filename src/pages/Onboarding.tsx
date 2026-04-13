@@ -62,6 +62,7 @@ const Onboarding = () => {
   const { user } = useAuth();
   const { createPreferences } = useUserPreferences();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const [step, setStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   
