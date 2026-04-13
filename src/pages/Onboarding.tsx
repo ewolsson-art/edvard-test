@@ -196,7 +196,8 @@ const Onboarding = () => {
     }
   };
 
-  
+  const actualTotalSteps = selections.include_medication ? TOTAL_STEPS : TOTAL_STEPS - 1;
+  const actualStep = step <= 2 ? step : (selections.include_medication ? step : step - 1);
 
   return (
     <DarkNightBackground>
@@ -206,13 +207,13 @@ const Onboarding = () => {
           <div className="flex items-center justify-between mb-2">
             <Logo className="[&_span]:!bg-none [&_span]:!text-white" />
             <span className="text-xs text-white/50 font-medium">
-              Steg {step} av {TOTAL_STEPS}
+              Steg {actualStep} av {actualTotalSteps}
             </span>
           </div>
           <div className="h-1 bg-white/10 rounded-full overflow-hidden">
             <div 
               className="h-full bg-[hsl(45_85%_55%)] rounded-full transition-all duration-500 ease-out"
-              style={{ width: `${(step / TOTAL_STEPS) * 100}%` }}
+              style={{ width: `${(actualStep / actualTotalSteps) * 100}%` }}
             />
           </div>
         </div>
