@@ -19,9 +19,9 @@ const COMMON_MEDICATIONS = [
 ];
 
 const TIMING_OPTIONS = [
-  { id: 'morning', label: 'Morgon', icon: '🌅' },
-  { id: 'evening', label: 'Kväll', icon: '🌙' },
-  { id: 'both', label: 'Morgon & kväll', icon: '🔄' },
+  { id: 'morning', label: 'Bara morgon', icon: '🌅' },
+  { id: 'evening', label: 'Bara kväll', icon: '🌙' },
+  { id: 'both', label: 'Både morgon & kväll', icon: '🔄' },
   { id: 'as_needed', label: 'Vid behov', icon: '💊' },
 ];
 
