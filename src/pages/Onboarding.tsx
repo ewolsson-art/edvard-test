@@ -101,10 +101,6 @@ const Onboarding = () => {
     }
   };
 
-  const getSkipText = () => {
-    if (step === 3) return selectedMedications.length === 0 ? 'Hoppa över' : 'Fortsätt';
-    return 'Fortsätt';
-  };
 
   const handleSubmit = async () => {
     if (!hasAnySelection) {
@@ -158,7 +154,7 @@ const Onboarding = () => {
   };
 
   const actualTotalSteps = selections.include_medication ? TOTAL_STEPS : TOTAL_STEPS - 1;
-  const actualStep = step <= 2 ? step : (selections.include_medication ? step : step - 1);
+  const actualStep = step;
 
   return (
     <DarkNightBackground>
