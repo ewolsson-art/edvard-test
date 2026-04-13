@@ -1272,7 +1272,10 @@ export function TodayCheckin({
       {/* Success Animation */}
       {currentStep === 'success-animation' && (
         <div className="flex-1 flex items-center justify-center min-h-[400px]">
-          <CelebrationAnimation />
+          <CelebrationAnimation 
+            streak={streakData.currentStreak}
+            milestone={streakData.milestone}
+          />
         </div>
       )}
 
