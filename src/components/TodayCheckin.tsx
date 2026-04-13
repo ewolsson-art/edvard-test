@@ -25,6 +25,7 @@ interface StreakData {
   longestStreak: number;
   hasCheckedInToday: boolean;
   lastCheckinDate: string | null;
+  milestone?: MilestoneInfo;
 }
 
 interface TodayCheckinProps {
