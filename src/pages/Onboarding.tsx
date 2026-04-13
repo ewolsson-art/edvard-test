@@ -89,14 +89,24 @@ const Onboarding = () => {
   const hasAnySelection = Object.values(selections).some(Boolean);
 
   const handleNext = () => {
-    if (step < TOTAL_STEPS) {
-      setStep(prev => prev + 1);
+    let next = step + 1;
+    // Skip medication step (3) if user didn't select medication tracking
+    if (next === 3 && !selections.include_medication) {
+      next = 4;
+    }
+    if (next <= TOTAL_STEPS) {
+      setStep(next);
     }
   };
 
   const handleBack = () => {
-    if (step > 1) {
-      setStep(prev => prev - 1);
+    let prev = step - 1;
+    // Skip medication step (3) going back if user didn't select medication tracking
+    if (prev === 3 && !selections.include_medication) {
+      prev = 2;
+    }
+    if (prev >= 1) {
+      setStep(prev);
     }
   };
 
@@ -186,7 +196,8 @@ const Onboarding = () => {
     }
   };
 
-  
+  const actualTotalSteps = selections.include_medication ? TOTAL_STEPS : TOTAL_STEPS - 1;
+  const actualStep = step <= 2 ? step : (selections.include_medication ? step : step - 1);
 
   return (
     <DarkNightBackground>
@@ -196,13 +207,13 @@ const Onboarding = () => {
           <div className="flex items-center justify-between mb-2">
             <Logo className="[&_span]:!bg-none [&_span]:!text-white" />
             <span className="text-xs text-white/50 font-medium">
-              Steg {step} av {TOTAL_STEPS}
+              Steg {actualStep} av {actualTotalSteps}
             </span>
           </div>
           <div className="h-1 bg-white/10 rounded-full overflow-hidden">
             <div 
               className="h-full bg-[hsl(45_85%_55%)] rounded-full transition-all duration-500 ease-out"
-              style={{ width: `${(step / TOTAL_STEPS) * 100}%` }}
+              style={{ width: `${(actualStep / actualTotalSteps) * 100}%` }}
             />
           </div>
         </div>
