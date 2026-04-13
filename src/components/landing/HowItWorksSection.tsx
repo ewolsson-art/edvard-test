@@ -12,7 +12,7 @@ const steps = [
   },
   {
     icon: Share2,
-    title: "Dela — om du vill — med läkare och anhöriga",
+    title: "Låt din familj eller läkare följa dig",
   },
 ];
 
