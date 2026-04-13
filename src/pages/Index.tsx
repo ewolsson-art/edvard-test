@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { AnimatedPage } from '@/components/AnimatedPage';
 import { format, isToday, parseISO } from 'date-fns';
 import { useSearchParams } from 'react-router-dom';
 import { useMoodData } from '@/hooks/useMoodData';
@@ -84,7 +85,7 @@ const Index = () => {
   }
 
   return (
-    <div className="fixed inset-0 md:relative md:h-screen flex items-center justify-center md:py-4 md:px-5 overflow-hidden">
+    <AnimatedPage className="fixed inset-0 md:relative md:h-screen flex items-center justify-center md:py-4 md:px-5 overflow-hidden">
       <div className="w-full h-full md:h-auto md:max-w-xl relative">
         <TodayCheckin
           todayEntry={selectedEntry} 
@@ -103,7 +104,7 @@ const Index = () => {
           onSelectDate={(date) => { setSelectedDate(date); setSearchParams(isToday(date) ? {} : { date: format(date, 'yyyy-MM-dd') }); }}
         />
       </div>
-    </div>
+    </AnimatedPage>
   );
 };
 
