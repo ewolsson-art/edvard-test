@@ -1066,7 +1066,7 @@ export function TodayCheckin({
               })}
 
               {/* Missed medication reason */}
-              {medicationsTakenToday.length < activeMedications.length && medicationsTakenToday.length > 0 && (
+              {medicationsTakenToday.length < activeMedications.length && (
                 <div className="pt-3">
                   <p className="text-xs text-muted-foreground/50 mb-2">Anledning till missad dos?</p>
                   <div className="flex flex-wrap gap-2">
