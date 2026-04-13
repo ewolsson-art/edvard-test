@@ -120,6 +120,11 @@ const Onboarding = () => {
       const { error } = await createPreferences(selections);
       if (error) throw new Error('Kunde inte spara preferenser');
 
+      // 2. Mark profile as completed so we skip the complete-profile step
+      await supabase.auth.updateUser({
+        data: { profile_completed: true },
+      });
+
       // 2. Save medications
       if (selectedMedications.length > 0) {
         const today = new Date().toISOString().split('T')[0];
