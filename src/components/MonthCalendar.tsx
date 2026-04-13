@@ -2,8 +2,9 @@ import { useMemo } from 'react';
 import { format, startOfMonth, endOfMonth, startOfWeek, endOfWeek, eachDayOfInterval, isSameMonth, isToday, isBefore, startOfDay } from 'date-fns';
 import { sv } from 'date-fns/locale';
 import { ChevronLeft, Pill, MessageCircle, X } from 'lucide-react';
-import { MoodType } from '@/types/mood';
+import { MoodType, MOOD_LABELS } from '@/types/mood';
 import { cn } from '@/lib/utils';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
 interface MonthCalendarProps {
   currentDate: Date;
@@ -106,17 +107,22 @@ export function MonthCalendar({
               const isPastDay = isCurrentMonth && !isTodayDate && isBefore(day, startOfDay(new Date()));
               const showMissed = isPastDay && !mood;
 
-              return (
+              const tooltipText = mood
+                ? `${format(day, 'd MMMM', { locale: sv })} — ${MOOD_LABELS[mood]}`
+                : showMissed
+                  ? `${format(day, 'd MMMM', { locale: sv })} — Ej registrerad`
+                  : undefined;
+
+              const dayButton = (
                 <button
                   key={day.toISOString()}
                   onClick={() => onDayClick?.(day)}
                   onDoubleClick={() => isCurrentMonth && onDayDoubleClick?.(day)}
                   disabled={!isCurrentMonth}
-                  title={hasRelativeComment ? relativeCommentsData[dayOfMonth] : undefined}
                   className={cn(
-                    "relative flex flex-col items-center justify-center py-2.5 transition-colors",
+                    "relative flex flex-col items-center justify-center py-2.5 transition-all duration-150",
                     !isCurrentMonth && "opacity-15",
-                    isCurrentMonth && "hover:bg-muted/20",
+                    isCurrentMonth && "hover:bg-muted/30 hover:scale-110 hover:z-10 hover:rounded-md",
                     !isTodayDate && mood === 'elevated' && "bg-mood-elevated/8",
                     !isTodayDate && mood === 'somewhat_elevated' && "bg-mood-somewhat-elevated/8",
                     !isTodayDate && mood === 'stable' && "bg-mood-stable/8",
@@ -154,6 +160,17 @@ export function MonthCalendar({
                   </div>
                 </button>
               );
+
+              if (tooltipText && isCurrentMonth) {
+                return (
+                  <Tooltip key={day.toISOString()} delayDuration={300}>
+                    <TooltipTrigger asChild>{dayButton}</TooltipTrigger>
+                    <TooltipContent side="top" className="text-xs">{tooltipText}</TooltipContent>
+                  </Tooltip>
+                );
+              }
+
+              return dayButton;
             })}
           </div>
         ))}

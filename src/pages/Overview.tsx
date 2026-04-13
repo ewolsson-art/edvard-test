@@ -1,5 +1,6 @@
 import { useState, useMemo, useCallback, useRef, useEffect } from 'react';
 import { CalendarDays, BarChart3 } from 'lucide-react';
+import { AnimatedPage } from '@/components/AnimatedPage';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { format, startOfWeek, endOfWeek, addWeeks, subWeeks, eachDayOfInterval, addMonths, subMonths, startOfMonth, endOfMonth, isBefore, startOfDay, isToday } from 'date-fns';
 import { sv } from 'date-fns/locale';
@@ -540,8 +541,9 @@ const Overview = () => {
   const showMedication = preferences?.include_medication !== false && activeMedications.length > 0;
 
    return (
+    <AnimatedPage>
     <div className="p-5 md:p-8 pb-24" style={{ overflowX: 'clip' }}>
-      <div className="max-w-2xl mx-auto md:mx-0 space-y-6">
+      <div className="max-w-2xl lg:max-w-5xl mx-auto md:mx-0 space-y-6">
         <header className="sticky top-12 sm:top-14 md:top-0 z-20 bg-background pb-3 -mt-5 pt-5 md:-mt-8 md:pt-8 -mx-5 px-5 md:-mx-8 md:px-8">
           <div className="mb-2">
             <div className="flex items-baseline justify-between mb-1">
@@ -623,22 +625,9 @@ const Overview = () => {
           </div>
         </header>
 
-        <div className="space-y-6">
-            {/* Summary Card - only in stats view */}
-            {sectionView === 'stats' && (
-              <OverviewSummary
-                stats={stats}
-                entries={entries}
-                periodLabel={label}
-                sleepBadDays={0}
-                showSleep={false}
-              />
-            )}
-
-            {sectionView === 'stats' && (
-              <LessonsFromPast entries={entries} characteristics={characteristics} />
-            )}
-
+        <div className="lg:flex lg:gap-8">
+          {/* Main calendar area */}
+          <div className="flex-1 min-w-0 space-y-6">
             {showMood && sectionView === 'calendar' && (
               <section>
                      {view === 'month' && (
@@ -662,6 +651,36 @@ const Overview = () => {
               </section>
             )}
 
+            {/* Summary Card - only in stats view */}
+            {sectionView === 'stats' && (
+              <OverviewSummary
+                stats={stats}
+                entries={entries}
+                periodLabel={label}
+                sleepBadDays={0}
+                showSleep={false}
+              />
+            )}
+
+            {sectionView === 'stats' && (
+              <LessonsFromPast entries={entries} characteristics={characteristics} />
+            )}
+          </div>
+
+          {/* Desktop sidebar with stats */}
+          {sectionView === 'calendar' && (
+            <aside className="hidden lg:block w-72 shrink-0 space-y-4 pt-2">
+              <OverviewSummary
+                stats={stats}
+                entries={entries}
+                periodLabel={label}
+                sleepBadDays={0}
+                showSleep={false}
+              />
+              <LessonsFromPast entries={entries} characteristics={characteristics} />
+            </aside>
+          )}
+
 
         <DayDetailDialog
           open={dialogOpen}
@@ -681,6 +700,7 @@ const Overview = () => {
         </div>
       </div>
     </div>
+    </AnimatedPage>
   );
 };
 
