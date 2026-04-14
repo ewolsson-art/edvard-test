@@ -18,6 +18,7 @@ import { Logo } from '@/components/Logo';
 import { TurtleLogo } from '@/components/TurtleLogo';
 import { DarkNightBackground } from '@/components/DarkNightBackground';
 import { MedicationStep, MedicationInput } from '@/components/onboarding/MedicationStep';
+import { DiagnosisStep } from '@/components/onboarding/DiagnosisStep';
 import { cn } from '@/lib/utils';
 
 const CHECKIN_OPTIONS = [
@@ -55,7 +56,7 @@ const CHECKIN_OPTIONS = [
 ];
 
 
-const TOTAL_STEPS = 3;
+const TOTAL_STEPS = 4;
 
 const Onboarding = () => {
   const { toast } = useToast();
@@ -75,6 +76,7 @@ const Onboarding = () => {
     include_medication: false,
   });
   const [selectedMedications, setSelectedMedications] = useState<MedicationInput[]>([]);
+  const [selectedDiagnoses, setSelectedDiagnoses] = useState<string[]>([]);
 
   const handleToggle = (id: string) => {
     setSelections(prev => ({
