@@ -9,7 +9,7 @@ export interface MoodEntry {
   mood: MoodType;
   energyLevel?: EnergyType;
   comment?: string;
-  sleepQuality?: QualityType;
+  sleepQuality?: SleepQualityType;
   sleepComment?: string;
   eatingQuality?: QualityType;
   eatingComment?: string;
@@ -26,7 +26,7 @@ export interface CheckinData {
   mood?: MoodType;
   energyLevel?: EnergyType;
   moodComment?: string;
-  sleepQuality?: QualityType;
+  sleepQuality?: SleepQualityType;
   sleepComment?: string;
   eatingQuality?: QualityType;
   eatingComment?: string;
