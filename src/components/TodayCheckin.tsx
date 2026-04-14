@@ -293,11 +293,16 @@ export function TodayCheckin({
 
   const handleSleepSelect = (quality: QualityType) => {
     setCheckinData(prev => ({ ...prev, sleepQuality: quality }));
-    const nextStep = getNextStep('sleep');
-    if (nextStep === 'success-animation') {
-      handleCompleteWithData({ ...checkinData, sleepQuality: quality });
-    } else {
-      navigateStep(nextStep);
+  };
+
+  const handleSleepContinue = () => {
+    if (checkinData.sleepQuality) {
+      const nextStep = getNextStep('sleep');
+      if (nextStep === 'success-animation') {
+        handleCompleteWithData(checkinData);
+      } else {
+        navigateStep(nextStep);
+      }
     }
   };
 
