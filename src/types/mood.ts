@@ -71,9 +71,9 @@ export const ENERGY_LABELS: Record<EnergyType, string> = {
 };
 
 export const QUALITY_LABELS: Record<QualityType, string> = {
-  good: 'Bra',
-  okay: 'Helt ok',
-  bad: 'Dåligt',
+  good: 'Bra och lagom mycket',
+  okay: 'Ovanligt lite',
+  bad: 'Ovanligt mycket',
 };
 
 export const EXERCISE_TYPE_LABELS: Record<ExerciseType, string> = {
