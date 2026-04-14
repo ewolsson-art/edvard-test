@@ -729,7 +729,7 @@ export function TodayCheckin({
           <div className="mb-8">
             <p className="text-muted-foreground/50 text-[13px] tracking-wide capitalize mb-1.5">{formattedDate}</p>
             <h1 className="font-display text-[28px] sm:text-3xl font-bold tracking-tight">
-              Hur har du sovit?
+              Hur mycket har du sovit?
             </h1>
           </div>
 
@@ -743,8 +743,8 @@ export function TodayCheckin({
             >
               <MoonStar className="w-6 h-6 sm:w-7 sm:h-7 text-white/90 flex-shrink-0 transition-transform duration-300 group-hover:scale-110" />
               <div className="flex-1 min-w-0">
-                <span className="font-semibold text-[15px] sm:text-base text-white block">Bra</span>
-                <span className="text-xs text-white/60 block">Sov gott</span>
+                <span className="font-semibold text-[15px] sm:text-base text-white block">Bra och lagom mycket</span>
+                <span className="text-xs text-white/60 block">Sov bra och tillräckligt</span>
               </div>
               <ChevronRight className="w-5 h-5 text-white/30 group-hover:text-white/60 transition-opacity flex-shrink-0" />
             </button>
@@ -757,8 +757,8 @@ export function TodayCheckin({
             >
               <Moon className="w-6 h-6 sm:w-7 sm:h-7 text-white/90 flex-shrink-0 transition-transform duration-300 group-hover:scale-110" />
               <div className="flex-1 min-w-0">
-                <span className="font-semibold text-[15px] sm:text-base text-white block">Helt ok</span>
-                <span className="text-xs text-white/60 block">Varken bra eller dåligt</span>
+                <span className="font-semibold text-[15px] sm:text-base text-white block">Ovanligt lite</span>
+                <span className="text-xs text-white/60 block">Sov mindre än vanligt</span>
               </div>
               <ChevronRight className="w-5 h-5 text-white/30 group-hover:text-white/60 transition-opacity flex-shrink-0" />
             </button>
@@ -771,8 +771,8 @@ export function TodayCheckin({
             >
               <CloudMoon className="w-6 h-6 sm:w-7 sm:h-7 text-white/90 flex-shrink-0 transition-transform duration-300 group-hover:scale-110" />
               <div className="flex-1 min-w-0">
-                <span className="font-semibold text-[15px] sm:text-base text-white block">Dåligt</span>
-                <span className="text-xs text-white/60 block">Sov oroligt</span>
+                <span className="font-semibold text-[15px] sm:text-base text-white block">Ovanligt mycket</span>
+                <span className="text-xs text-white/60 block">Sov mer än vanligt</span>
               </div>
               <ChevronRight className="w-5 h-5 text-white/30 group-hover:text-white/60 transition-opacity flex-shrink-0" />
             </button>
