@@ -349,6 +349,10 @@
     @apply transition-all duration-200 ease-out;
   }
 
+  .calendar-day-severe-elevated {
+    @apply bg-[hsl(var(--mood-severe-elevated))] text-white;
+  }
+
   .calendar-day-elevated {
     @apply bg-mood-elevated text-white;
   }
@@ -367,6 +371,10 @@
 
   .calendar-day-depressed {
     @apply bg-mood-depressed text-white;
+  }
+
+  .calendar-day-severe-depressed {
+    @apply bg-[hsl(var(--mood-severe-depressed))] text-white;
   }
 
   .calendar-day-empty {

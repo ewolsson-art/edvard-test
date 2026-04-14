@@ -63,6 +63,9 @@ export default {
           ring: "hsl(var(--sidebar-ring))",
         },
         mood: {
+          "severe-elevated": "hsl(var(--mood-severe-elevated))",
+          "severe-elevated-light": "hsl(var(--mood-severe-elevated-light))",
+          "severe-elevated-foreground": "hsl(var(--mood-severe-elevated-foreground))",
           elevated: "hsl(var(--mood-elevated))",
           "elevated-light": "hsl(var(--mood-elevated-light))",
           "elevated-foreground": "hsl(var(--mood-elevated-foreground))",
@@ -78,6 +81,9 @@ export default {
           depressed: "hsl(var(--mood-depressed))",
           "depressed-light": "hsl(var(--mood-depressed-light))",
           "depressed-foreground": "hsl(var(--mood-depressed-foreground))",
+          "severe-depressed": "hsl(var(--mood-severe-depressed))",
+          "severe-depressed-light": "hsl(var(--mood-severe-depressed-light))",
+          "severe-depressed-foreground": "hsl(var(--mood-severe-depressed-foreground))",
         },
         energy: {
           low: "hsl(var(--mood-somewhat-depressed))",
