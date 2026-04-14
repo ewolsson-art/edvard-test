@@ -547,7 +547,7 @@ const Overview = () => {
     <AnimatedPage>
     <div className="p-5 md:p-8 pb-24" style={{ overflowX: 'clip' }}>
       <div className="max-w-2xl lg:max-w-5xl mx-auto md:mx-0 space-y-6">
-        <header className="sticky top-12 sm:top-14 md:top-0 z-20 bg-background pb-3 -mt-5 pt-5 md:-mt-8 md:pt-8 -mx-5 px-5 md:-mx-8 md:px-8">
+        <header className="sticky top-12 sm:top-14 md:top-0 z-20 bg-background pb-4 -mt-5 pt-5 md:-mt-8 md:pt-8 -mx-5 px-5 md:-mx-8 md:px-8 after:content-[''] after:absolute after:inset-x-0 after:-bottom-1 after:h-2 after:bg-gradient-to-b after:from-background after:to-transparent">
           <div className="mb-2">
             <div className="flex items-baseline justify-between mb-1">
               <h1 className="font-display text-2xl font-bold text-foreground">Översikt</h1>
