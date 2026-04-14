@@ -18,6 +18,7 @@ import { Logo } from '@/components/Logo';
 import { TurtleLogo } from '@/components/TurtleLogo';
 import { DarkNightBackground } from '@/components/DarkNightBackground';
 import { MedicationStep, MedicationInput } from '@/components/onboarding/MedicationStep';
+import { DiagnosisStep } from '@/components/onboarding/DiagnosisStep';
 import { cn } from '@/lib/utils';
 
 const CHECKIN_OPTIONS = [
@@ -55,7 +56,7 @@ const CHECKIN_OPTIONS = [
 ];
 
 
-const TOTAL_STEPS = 3;
+const TOTAL_STEPS = 4;
 
 const Onboarding = () => {
   const { toast } = useToast();
@@ -75,6 +76,7 @@ const Onboarding = () => {
     include_medication: false,
   });
   const [selectedMedications, setSelectedMedications] = useState<MedicationInput[]>([]);
+  const [selectedDiagnoses, setSelectedDiagnoses] = useState<string[]>([]);
 
   const handleToggle = (id: string) => {
     setSelections(prev => ({
@@ -86,7 +88,7 @@ const Onboarding = () => {
   const hasAnySelection = Object.values(selections).some(Boolean);
 
   const handleNext = () => {
-    if (step === 2 && !selections.include_medication) {
+    if (step === 3 && !selections.include_medication) {
       // No medication step, submit directly
       handleSubmit();
       return;
@@ -127,7 +129,16 @@ const Onboarding = () => {
         data: { profile_completed: true },
       });
 
-      // 2. Save medications
+      // 2. Save diagnoses
+      if (selectedDiagnoses.length > 0) {
+        const diagnosesToInsert = selectedDiagnoses.map(name => ({
+          user_id: user.id,
+          name,
+        }));
+        await supabase.from('diagnoses').insert(diagnosesToInsert);
+      }
+
+      // 3. Save medications
       if (selectedMedications.length > 0) {
         const today = new Date().toISOString().split('T')[0];
         const timingToFrequency: Record<string, string> = {
@@ -144,7 +155,6 @@ const Onboarding = () => {
           frequency: timingToFrequency[med.timing || 'morning'] || 'daily',
         }));
         await supabase.from('medications').insert(medicationsToInsert);
-        // Invalidate medications cache so TodayCheckin picks them up
         await queryClient.invalidateQueries({ queryKey: ['medications'] });
       }
 
@@ -222,8 +232,44 @@ const Onboarding = () => {
             </div>
           )}
 
-          {/* Step 2: Choose categories */}
+          {/* Step 2: Diagnosis */}
           {step === 2 && (
+            <div className="animate-fade-in">
+              <h1 className="text-2xl md:text-3xl font-bold text-white font-display tracking-tight">
+                Din diagnos
+              </h1>
+              <p className="mt-2 text-sm text-white/40">
+                Anpassa appen utifrån din diagnos (valfritt)
+              </p>
+
+              <div className="mt-6 max-h-[50vh] overflow-y-auto [&_input]:bg-white/[0.06] [&_input]:border-white/[0.1] [&_input]:text-white [&_input]:placeholder:text-white/30 [&_button]:text-white/70 [&_.text-muted-foreground]:text-white/40 [&_.text-primary]:text-[hsl(45_85%_55%)] [&_.bg-popover]:bg-[hsl(230_30%_12%)] [&_.border-border]:border-white/10 [&_.hover\\:bg-muted]:hover:bg-white/[0.06] [&_.bg-card]:bg-white/[0.04] [&_.border-border]:border-white/10">
+                <DiagnosisStep
+                  selectedDiagnoses={selectedDiagnoses}
+                  onDiagnosesChange={setSelectedDiagnoses}
+                />
+              </div>
+
+              <p className="text-xs text-white/20 text-center mt-3">
+                Detta anpassar etiketter och taggar i din dagbok
+              </p>
+
+              <div className="flex gap-3 mt-6">
+                <button onClick={handleBack} className="h-12 px-5 rounded-2xl text-sm font-medium text-white/50 hover:text-white/80 bg-white/[0.04] ring-1 ring-white/[0.08] hover:bg-white/[0.06] transition-all">
+                  <ArrowLeft className="w-4 h-4" />
+                </button>
+                <Button 
+                  onClick={handleNext} 
+                  className="flex-1 h-12 rounded-2xl text-[15px] font-semibold bg-[hsl(45_85%_55%)] text-[hsl(230_30%_5%)] hover:bg-[hsl(45_85%_65%)] shadow-[0_4px_20px_-4px_hsl(45_85%_55%/0.4)] transition-all duration-300" 
+                >
+                  {selectedDiagnoses.length === 0 ? 'Hoppa över' : 'Fortsätt'}
+                  <ArrowRight className="w-4 h-4 ml-1" />
+                </Button>
+              </div>
+            </div>
+          )}
+
+          {/* Step 3: Choose categories */}
+          {step === 3 && (
             <div className="animate-fade-in">
               <h1 className="text-2xl md:text-3xl font-bold text-white font-display tracking-tight">
                 Skapa din incheckning
@@ -313,8 +359,8 @@ const Onboarding = () => {
             </div>
           )}
 
-          {/* Step 3: Medications */}
-          {step === 3 && (
+          {/* Step 4: Medications */}
+          {step === 4 && (
             <div className="animate-fade-in">
               <h1 className="text-2xl md:text-3xl font-bold text-white font-display tracking-tight">
                 Dina mediciner

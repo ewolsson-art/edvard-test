@@ -1,21 +1,26 @@
-import { MoodStats as MoodStatsType, MOOD_LABELS } from '@/types/mood';
+import { MoodStats as MoodStatsType, MoodType } from '@/types/mood';
+import { useDiagnosisConfig } from '@/hooks/useDiagnosisConfig';
 import { cn } from '@/lib/utils';
 
 interface MoodDistributionBarProps {
   stats: MoodStatsType;
   periodLabel: string;
+  customLabels?: Record<MoodType, string>;
 }
 
-const segments = [
-  { key: 'elevated' as const, colorClass: 'bg-mood-elevated', label: MOOD_LABELS.elevated },
-  { key: 'somewhat_elevated' as const, colorClass: 'bg-mood-somewhat-elevated', label: MOOD_LABELS.somewhat_elevated },
-  { key: 'stable' as const, colorClass: 'bg-mood-stable', label: MOOD_LABELS.stable },
-  { key: 'somewhat_depressed' as const, colorClass: 'bg-mood-somewhat-depressed', label: MOOD_LABELS.somewhat_depressed },
-  { key: 'depressed' as const, colorClass: 'bg-mood-depressed', label: MOOD_LABELS.depressed },
-  { key: 'unregistered' as const, colorClass: 'bg-muted-foreground/25', label: 'Ej registrerat' },
-];
+export function MoodDistributionBar({ stats, periodLabel, customLabels }: MoodDistributionBarProps) {
+  const { moodLabels } = useDiagnosisConfig();
+  const labels = customLabels || moodLabels;
 
-export function MoodDistributionBar({ stats, periodLabel }: MoodDistributionBarProps) {
+  const segments = [
+    { key: 'elevated' as const, colorClass: 'bg-mood-elevated', label: labels.elevated },
+    { key: 'somewhat_elevated' as const, colorClass: 'bg-mood-somewhat-elevated', label: labels.somewhat_elevated },
+    { key: 'stable' as const, colorClass: 'bg-mood-stable', label: labels.stable },
+    { key: 'somewhat_depressed' as const, colorClass: 'bg-mood-somewhat-depressed', label: labels.somewhat_depressed },
+    { key: 'depressed' as const, colorClass: 'bg-mood-depressed', label: labels.depressed },
+    { key: 'unregistered' as const, colorClass: 'bg-muted-foreground/25', label: 'Ej registrerat' },
+  ];
+
   const totalDays = stats.totalDays || 1;
   
   const data = segments.map(seg => ({

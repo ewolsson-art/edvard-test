@@ -5,6 +5,7 @@ import { Flame, Zap, Sun, Cloud, CloudRain, MessageSquarePlus, CheckCircle2, Pil
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { MoodType, MoodEntry, MOOD_LABELS, ENERGY_LABELS, QualityType, QUALITY_LABELS, CheckinData, EnergyType } from '@/types/mood';
+import { useDiagnosisConfig } from '@/hooks/useDiagnosisConfig';
 import { Medication } from '@/types/medication';
 import { UserPreferences } from '@/hooks/useUserPreferences';
 import { CustomQuestion } from '@/hooks/useCustomCheckinQuestions';
@@ -44,7 +45,8 @@ interface TodayCheckinProps {
   onSelectDate?: (date: Date) => void;
 }
 
-const moodButtons: { mood: MoodType; icon: typeof Zap; label: string; sublabel: string; cssClass: string }[] = [
+// Static fallback mood buttons (will be overridden by diagnosis config)
+const defaultMoodButtons: { mood: MoodType; icon: typeof Zap; label: string; sublabel: string; cssClass: string }[] = [
   { mood: 'elevated', icon: Flame, label: 'Mycket upp', sublabel: 'Rastlös, racing thoughts', cssClass: 'mood-btn-elevated' },
   { mood: 'somewhat_elevated', icon: Zap, label: 'Upp', sublabel: 'Energisk, positiv', cssClass: 'mood-btn-somewhat-elevated' },
   { mood: 'stable', icon: Sun, label: 'Stabil', sublabel: 'Balanserad, lugn', cssClass: 'mood-btn-stable' },
@@ -52,71 +54,21 @@ const moodButtons: { mood: MoodType; icon: typeof Zap; label: string; sublabel: 
   { mood: 'depressed', icon: CloudRain, label: 'Mycket låg', sublabel: 'Väldigt tungt idag', cssClass: 'mood-btn-depressed' },
 ];
 
-const MOOD_TAGS: Record<MoodType, { value: string; label: string; emoji: string }[]> = {
-  elevated: [
-    { value: 'racing thoughts', label: 'Racing thoughts', emoji: '💭' },
-    { value: 'rastlöshet', label: 'Rastlös', emoji: '🦶' },
-    { value: 'impulsivitet', label: 'Impulsiv', emoji: '⚡' },
-    { value: 'eufori', label: 'Euforisk', emoji: '✨' },
-    { value: 'irritabilitet', label: 'Irriterad', emoji: '😤' },
-    { value: 'sömnsvårigheter', label: 'Sover lite', emoji: '🌙' },
-    { value: 'storslagna planer', label: 'Storslagna planer', emoji: '🏔️' },
-    { value: 'pratar mycket', label: 'Pratar mycket', emoji: '🗣️' },
-    { value: 'spenderar mycket', label: 'Spenderar mycket', emoji: '💸' },
-    { value: 'distraherbar', label: 'Distraherbar', emoji: '🦋' },
-  ],
-  somewhat_elevated: [
-    { value: 'energisk', label: 'Energisk', emoji: '🔋' },
-    { value: 'kreativ', label: 'Kreativ', emoji: '🎨' },
-    { value: 'produktiv', label: 'Produktiv', emoji: '🚀' },
-    { value: 'social', label: 'Social', emoji: '👥' },
-    { value: 'rastlöshet', label: 'Rastlös', emoji: '🦶' },
-    { value: 'irritabilitet', label: 'Irriterad', emoji: '😤' },
-    { value: 'sömnsvårigheter', label: 'Sömnsvårt', emoji: '🌙' },
-    { value: 'stress', label: 'Stress', emoji: '😓' },
-    { value: 'otålig', label: 'Otålig', emoji: '⏳' },
-    { value: 'impulsivitet', label: 'Impulsiv', emoji: '⚡' },
-  ],
-  stable: [
-    { value: 'lugn', label: 'Lugn', emoji: '🧘' },
-    { value: 'fokuserad', label: 'Fokuserad', emoji: '🎯' },
-    { value: 'tacksam', label: 'Tacksam', emoji: '🙏' },
-    { value: 'nöjd', label: 'Nöjd', emoji: '😊' },
-    { value: 'balanserad', label: 'Balanserad', emoji: '⚖️' },
-    { value: 'social', label: 'Social', emoji: '👥' },
-    { value: 'motiverad', label: 'Motiverad', emoji: '💪' },
-    { value: 'trött', label: 'Trött', emoji: '😴' },
-    { value: 'stress', label: 'Stress', emoji: '😓' },
-    { value: 'ångest', label: 'Ångest', emoji: '😰' },
-  ],
-  somewhat_depressed: [
-    { value: 'trött', label: 'Trött', emoji: '😴' },
-    { value: 'ångest', label: 'Ångest', emoji: '😰' },
-    { value: 'orolig', label: 'Orolig', emoji: '😟' },
-    { value: 'koncentrationssvårigheter', label: 'Fokussvårt', emoji: '🧠' },
-    { value: 'social tillbakadragning', label: 'Isolerar mig', emoji: '🚪' },
-    { value: 'gråtmild', label: 'Gråtmild', emoji: '😢' },
-    { value: 'irritabilitet', label: 'Irriterad', emoji: '😤' },
-    { value: 'aptitförändringar', label: 'Aptitlös', emoji: '🍽️' },
-    { value: 'sömnsvårigheter', label: 'Sömnsvårt', emoji: '🌙' },
-    { value: 'energilös', label: 'Energilös', emoji: '🪫' },
-  ],
-  depressed: [
-    { value: 'hopplöshet', label: 'Hopplös', emoji: '🌑' },
-    { value: 'tomhet', label: 'Tom inuti', emoji: '🫥' },
-    { value: 'ångest', label: 'Ångest', emoji: '😰' },
-    { value: 'gråtmild', label: 'Gråtmild', emoji: '😢' },
-    { value: 'social tillbakadragning', label: 'Isolerar mig', emoji: '🚪' },
-    { value: 'skuldkänslor', label: 'Skuldkänslor', emoji: '😞' },
-    { value: 'värdelöshet', label: 'Värdelös', emoji: '💔' },
-    { value: 'koncentrationssvårigheter', label: 'Fokussvårt', emoji: '🧠' },
-    { value: 'sömnsvårigheter', label: 'Sömnsvårt', emoji: '🌙' },
-    { value: 'energilös', label: 'Orkar inte', emoji: '🪫' },
-  ],
+const moodIcons: Record<MoodType, typeof Zap> = {
+  elevated: Flame,
+  somewhat_elevated: Zap,
+  stable: Sun,
+  somewhat_depressed: Cloud,
+  depressed: CloudRain,
 };
 
-// All unique tags for display in summaries
-const ALL_TAG_OPTIONS = Object.values(MOOD_TAGS).flat().filter((t, i, arr) => arr.findIndex(a => a.value === t.value) === i);
+const moodCssClasses: Record<MoodType, string> = {
+  elevated: 'mood-btn-elevated',
+  somewhat_elevated: 'mood-btn-somewhat-elevated',
+  stable: 'mood-btn-stable',
+  somewhat_depressed: 'mood-btn-somewhat-depressed',
+  depressed: 'mood-btn-depressed',
+};
 
 // Smart follow-up messages based on mood + energy combination
 function getSmartFollowUp(mood: MoodType, energy?: EnergyType): { message: string; icon: string } | null {
@@ -159,6 +111,25 @@ export function TodayCheckin({
   selectedDate: selectedDateProp,
   onSelectDate,
 }: TodayCheckinProps) {
+  const { moodLabels, moodSublabels, moodTags: diagnosisMoodTags } = useDiagnosisConfig();
+  
+  const moodButtons = useMemo(() => {
+    const moods: MoodType[] = ['elevated', 'somewhat_elevated', 'stable', 'somewhat_depressed', 'depressed'];
+    return moods.map(mood => ({
+      mood,
+      icon: moodIcons[mood],
+      label: moodLabels[mood],
+      sublabel: moodSublabels[mood],
+      cssClass: moodCssClasses[mood],
+    }));
+  }, [moodLabels, moodSublabels]);
+
+  const MOOD_TAGS = diagnosisMoodTags;
+  const ALL_TAG_OPTIONS = useMemo(() => 
+    Object.values(MOOD_TAGS).flat().filter((t, i, arr) => arr.findIndex(a => a.value === t.value) === i),
+    [MOOD_TAGS]
+  );
+
   const displayDate = selectedDateProp || new Date();
   const isDisplayToday = isToday(displayDate);
   const isDisplayYesterday = isYesterday(displayDate);
@@ -441,7 +412,7 @@ export function TodayCheckin({
     // Build inline summary items
     const summaryItems: { label: string; value: string; colorClass?: string }[] = [];
     if (todayEntry) {
-      summaryItems.push({ label: 'Mående', value: MOOD_LABELS[todayEntry.mood], colorClass: moodDisplay?.colorClass });
+      summaryItems.push({ label: 'Mående', value: moodLabels[todayEntry.mood], colorClass: moodDisplay?.colorClass });
     }
     if (preferences?.include_sleep && todayEntry?.sleepQuality) {
       summaryItems.push({ 

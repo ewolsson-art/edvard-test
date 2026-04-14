@@ -1,7 +1,8 @@
 import { format, isToday, isBefore, startOfDay } from 'date-fns';
 import { sv } from 'date-fns/locale';
 import { ChevronLeft, Pill, X } from 'lucide-react';
-import { MoodEntry, MOOD_LABELS, MoodType } from '@/types/mood';
+import { MoodEntry, MoodType } from '@/types/mood';
+import { useDiagnosisConfig } from '@/hooks/useDiagnosisConfig';
 import { cn } from '@/lib/utils';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
@@ -28,6 +29,7 @@ export function WeekCalendar({
   onDayClick,
   onDayDoubleClick,
 }: WeekCalendarProps) {
+  const { moodLabels } = useDiagnosisConfig();
   return (
     <div className="fade-in">
       {/* Header matching month view style */}
@@ -73,7 +75,7 @@ export function WeekCalendar({
           const mood = entry?.mood as MoodType | undefined;
 
           const tooltipText = mood
-            ? `${format(day, 'd MMMM', { locale: sv })} — ${MOOD_LABELS[mood]}`
+            ? `${format(day, 'd MMMM', { locale: sv })} — ${moodLabels[mood]}`
             : showMissed
               ? `${format(day, 'd MMMM', { locale: sv })} — Ej registrerad`
               : undefined;

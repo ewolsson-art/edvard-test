@@ -1,7 +1,8 @@
 import { format } from 'date-fns';
 import { sv } from 'date-fns/locale';
 import { Zap, Sun, CloudRain, Moon, Utensils, Dumbbell, Pill, MessageSquare, ThumbsUp, ThumbsDown, Check, X } from 'lucide-react';
-import { MoodEntry, MoodType, MOOD_LABELS, QUALITY_LABELS, EXERCISE_TYPE_LABELS } from '@/types/mood';
+import { MoodEntry, MoodType, QUALITY_LABELS, EXERCISE_TYPE_LABELS } from '@/types/mood';
+import { useDiagnosisConfig } from '@/hooks/useDiagnosisConfig';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
@@ -21,6 +22,7 @@ export function DayDetailDialog({
   entry,
   medicationsTaken = [],
 }: DayDetailDialogProps) {
+  const { moodLabels } = useDiagnosisConfig();
   if (!date) return null;
 
   const formattedDate = format(date, "EEEE d MMMM yyyy", { locale: sv });
@@ -70,7 +72,7 @@ export function DayDetailDialog({
                 {getMoodIcon(entry.mood)}
                 <div>
                   <p className="text-sm text-muted-foreground">Mående</p>
-                  <p className="font-medium">{MOOD_LABELS[entry.mood]}</p>
+                  <p className="font-medium">{moodLabels[entry.mood]}</p>
                 </div>
               </div>
               {entry.comment && (

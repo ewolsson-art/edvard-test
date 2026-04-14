@@ -2,7 +2,8 @@ import { useMemo } from 'react';
 import { format, startOfMonth, endOfMonth, startOfWeek, endOfWeek, eachDayOfInterval, isSameMonth, isToday, isBefore, startOfDay } from 'date-fns';
 import { sv } from 'date-fns/locale';
 import { ChevronLeft, Pill, MessageCircle, X } from 'lucide-react';
-import { MoodType, MOOD_LABELS } from '@/types/mood';
+import { MoodType } from '@/types/mood';
+import { useDiagnosisConfig } from '@/hooks/useDiagnosisConfig';
 import { cn } from '@/lib/utils';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
@@ -31,6 +32,7 @@ export function MonthCalendar({
   onDayDoubleClick,
   hideNavigation = false,
 }: MonthCalendarProps) {
+  const { moodLabels } = useDiagnosisConfig();
   const days = useMemo(() => {
     const start = startOfWeek(startOfMonth(currentDate), { weekStartsOn: 1 });
     const end = endOfWeek(endOfMonth(currentDate), { weekStartsOn: 1 });
@@ -108,7 +110,7 @@ export function MonthCalendar({
               const showMissed = isPastDay && !mood;
 
               const tooltipText = mood
-                ? `${format(day, 'd MMMM', { locale: sv })} — ${MOOD_LABELS[mood]}`
+                ? `${format(day, 'd MMMM', { locale: sv })} — ${moodLabels[mood]}`
                 : showMissed
                   ? `${format(day, 'd MMMM', { locale: sv })} — Ej registrerad`
                   : undefined;
