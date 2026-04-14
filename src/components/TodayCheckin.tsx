@@ -744,50 +744,26 @@ export function TodayCheckin({
             </h1>
           </div>
 
-          <div className="flex flex-col gap-3.5 max-w-md">
-            <button
-              onClick={() => handleSleepSelect('good')}
-              className={cn(
-                "rounded-2xl flex items-center gap-4 px-5 py-[14px] text-left group transition-all bg-emerald-500/90 hover:bg-emerald-500",
-                checkinData.sleepQuality === 'good' && "ring-3 ring-offset-2 ring-offset-background scale-[1.01]"
-              )}
-            >
-              <MoonStar className="w-6 h-6 sm:w-7 sm:h-7 text-white/90 flex-shrink-0 transition-transform duration-300 group-hover:scale-110" />
-              <div className="flex-1 min-w-0">
-                <span className="font-semibold text-[15px] sm:text-base text-white block">Bra och lagom mycket</span>
-                <span className="text-xs text-white/60 block">Sov bra och tillräckligt</span>
-              </div>
-              <ChevronRight className="w-5 h-5 text-white/30 group-hover:text-white/60 transition-opacity flex-shrink-0" />
-            </button>
-            <button
-              onClick={() => handleSleepSelect('okay')}
-              className={cn(
-                "rounded-2xl flex items-center gap-4 px-5 py-[14px] text-left group transition-all bg-amber-500/90 hover:bg-amber-500",
-                checkinData.sleepQuality === 'okay' && "ring-3 ring-offset-2 ring-offset-background scale-[1.01]"
-              )}
-            >
-              <Moon className="w-6 h-6 sm:w-7 sm:h-7 text-white/90 flex-shrink-0 transition-transform duration-300 group-hover:scale-110" />
-              <div className="flex-1 min-w-0">
-                <span className="font-semibold text-[15px] sm:text-base text-white block">Ovanligt lite</span>
-                <span className="text-xs text-white/60 block">Sov mindre än vanligt</span>
-              </div>
-              <ChevronRight className="w-5 h-5 text-white/30 group-hover:text-white/60 transition-opacity flex-shrink-0" />
-            </button>
-            <button
-              onClick={() => handleSleepSelect('bad')}
-              className={cn(
-                "rounded-2xl flex items-center gap-4 px-5 py-[14px] text-left group transition-all bg-rose-500/90 hover:bg-rose-500",
-                checkinData.sleepQuality === 'bad' && "ring-3 ring-offset-2 ring-offset-background scale-[1.01]"
-              )}
-            >
-              <CloudMoon className="w-6 h-6 sm:w-7 sm:h-7 text-white/90 flex-shrink-0 transition-transform duration-300 group-hover:scale-110" />
-              <div className="flex-1 min-w-0">
-                <span className="font-semibold text-[15px] sm:text-base text-white block">Ovanligt mycket</span>
-                <span className="text-xs text-white/60 block">Sov mer än vanligt</span>
-              </div>
-              <ChevronRight className="w-5 h-5 text-white/30 group-hover:text-white/60 transition-opacity flex-shrink-0" />
-            </button>
+          {/* Sleep slider */}
+          <div className="flex-1 flex flex-col justify-center">
+            <VerticalScaleSlider<QualityType>
+              options={sleepSliderOptions}
+              value={checkinData.sleepQuality}
+              onSelect={handleSleepSelect}
+            />
           </div>
+
+          {checkinData.sleepQuality && (
+            <div className="flex justify-center pt-4 pb-2">
+              <button
+                onClick={handleSleepContinue}
+                className="px-10 py-3.5 rounded-full bg-[hsl(45_85%_55%)] text-[hsl(225_30%_7%)] font-bold text-base tracking-wide shadow-[0_4px_24px_hsl(45_85%_55%/0.35)] hover:shadow-[0_8px_32px_hsl(45_85%_55%/0.5)] hover:bg-[hsl(45_85%_62%)] hover:scale-105 active:scale-[0.98] transition-all duration-200 inline-flex items-center gap-1.5"
+              >
+                Fortsätt
+                <ChevronRight className="w-4 h-4" />
+              </button>
+            </div>
+          )}
 
           {renderCommentSection('sleep')}
         </div>
