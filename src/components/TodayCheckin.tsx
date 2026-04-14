@@ -111,6 +111,25 @@ export function TodayCheckin({
   selectedDate: selectedDateProp,
   onSelectDate,
 }: TodayCheckinProps) {
+  const { moodLabels, moodSublabels, moodTags: diagnosisMoodTags } = useDiagnosisConfig();
+  
+  const moodButtons = useMemo(() => {
+    const moods: MoodType[] = ['elevated', 'somewhat_elevated', 'stable', 'somewhat_depressed', 'depressed'];
+    return moods.map(mood => ({
+      mood,
+      icon: moodIcons[mood],
+      label: moodLabels[mood],
+      sublabel: moodSublabels[mood],
+      cssClass: moodCssClasses[mood],
+    }));
+  }, [moodLabels, moodSublabels]);
+
+  const MOOD_TAGS = diagnosisMoodTags;
+  const ALL_TAG_OPTIONS = useMemo(() => 
+    Object.values(MOOD_TAGS).flat().filter((t, i, arr) => arr.findIndex(a => a.value === t.value) === i),
+    [MOOD_TAGS]
+  );
+
   const displayDate = selectedDateProp || new Date();
   const isDisplayToday = isToday(displayDate);
   const isDisplayYesterday = isYesterday(displayDate);
