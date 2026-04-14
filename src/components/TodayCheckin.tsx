@@ -17,7 +17,6 @@ import { StreakBadge } from '@/components/StreakBadge';
 import { CelebrationAnimation } from '@/components/CelebrationAnimation';
 import { FullscreenComment } from '@/components/FullscreenComment';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { SwipeMoodSelector } from '@/components/SwipeMoodSelector';
 import { MilestoneInfo } from '@/hooks/useStreak';
 
 interface StreakData {
@@ -579,42 +578,33 @@ export function TodayCheckin({
             </h1>
           </div>
 
-          {/* Swipe mood selector on mobile, buttons on desktop */}
-          {isMobile ? (
-            <div className="flex-1 flex flex-col justify-center -mt-4">
-              <SwipeMoodSelector 
-                onSelect={handleMoodSelect}
-                initialMood={checkinData.mood as MoodType | undefined}
-              />
-            </div>
-          ) : (
-            <div className="flex flex-col gap-3.5 max-w-md">
-              {moodButtons.map(({ mood, icon: Icon, label, sublabel, cssClass }) => {
-                const isStable = mood === 'stable';
-                return (
-                  <button
-                    key={mood}
-                    onClick={() => handleMoodSelect(mood)}
-                    className={cn(
-                      "mood-btn rounded-2xl flex items-center gap-4 px-5 text-left group transition-all",
-                      isStable ? "py-[18px]" : "py-[14px]",
-                      cssClass,
-                      checkinData.mood === mood && "ring-3 ring-offset-2 ring-offset-background scale-[1.01]"
-                    )}
-                  >
-                    <div className="relative flex-shrink-0">
-                      <Icon className={cn("relative z-10 transition-transform duration-300 group-hover:scale-110", isStable ? "w-7 h-7 sm:w-8 sm:h-8" : "w-6 h-6 sm:w-7 sm:h-7")} />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <span className={cn("font-semibold block", isStable ? "text-base sm:text-[17px]" : "text-[15px] sm:text-base")}>{label}</span>
-                      <span className="text-xs opacity-60 block">{sublabel}</span>
-                    </div>
-                    <ChevronRight className="w-5 h-5 opacity-30 group-hover:opacity-60 transition-opacity flex-shrink-0" />
-                  </button>
-                );
-              })}
-            </div>
-          )}
+          {/* Mood buttons */}
+          <div className="flex flex-col gap-3.5 max-w-md">
+            {moodButtons.map(({ mood, icon: Icon, label, sublabel, cssClass }) => {
+              const isStable = mood === 'stable';
+              return (
+                <button
+                  key={mood}
+                  onClick={() => handleMoodSelect(mood)}
+                  className={cn(
+                    "mood-btn rounded-2xl flex items-center gap-4 px-5 text-left group transition-all",
+                    isStable ? "py-[18px]" : "py-[14px]",
+                    cssClass,
+                    checkinData.mood === mood && "ring-3 ring-offset-2 ring-offset-background scale-[1.01]"
+                  )}
+                >
+                  <div className="relative flex-shrink-0">
+                    <Icon className={cn("relative z-10 transition-transform duration-300 group-hover:scale-110", isStable ? "w-7 h-7 sm:w-8 sm:h-8" : "w-6 h-6 sm:w-7 sm:h-7")} />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <span className={cn("font-semibold block", isStable ? "text-base sm:text-[17px]" : "text-[15px] sm:text-base")}>{label}</span>
+                    <span className="text-xs opacity-60 block">{sublabel}</span>
+                  </div>
+                  <ChevronRight className="w-5 h-5 opacity-30 group-hover:opacity-60 transition-opacity flex-shrink-0" />
+                </button>
+              );
+            })}
+          </div>
         </div>
       )}
 
