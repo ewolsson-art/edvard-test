@@ -476,8 +476,8 @@ export function TodayCheckin({
         <div className="flex flex-col items-center text-center">
           {/* Streak number + turtle side by side */}
           <div className="flex items-center gap-4 mb-8" style={{ animation: 'scale-in 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)' }}>
-            <div className="w-20 h-20 md:w-24 md:h-24 flex items-center justify-center">
-              <TurtleLogo size="lg" animated={false} className="drop-shadow-[0_0_20px_hsl(45_85%_55%/0.2)] scale-[1.6] md:scale-[1.8]" />
+            <div className="w-28 h-28 md:w-36 md:h-36 flex items-center justify-center">
+              <TurtleLogo size="lg" animated={false} className="drop-shadow-[0_0_20px_hsl(45_85%_55%/0.2)] scale-[2.4] md:scale-[3]" />
             </div>
             {streakData.currentStreak > 0 && (
               <div className="text-left">
