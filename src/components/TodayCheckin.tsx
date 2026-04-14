@@ -412,7 +412,7 @@ export function TodayCheckin({
     // Build inline summary items
     const summaryItems: { label: string; value: string; colorClass?: string }[] = [];
     if (todayEntry) {
-      summaryItems.push({ label: 'Mående', value: MOOD_LABELS[todayEntry.mood], colorClass: moodDisplay?.colorClass });
+      summaryItems.push({ label: 'Mående', value: moodLabels[todayEntry.mood], colorClass: moodDisplay?.colorClass });
     }
     if (preferences?.include_sleep && todayEntry?.sleepQuality) {
       summaryItems.push({ 
