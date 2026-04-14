@@ -76,16 +76,16 @@ const moodCssClasses: Record<MoodType, string> = {
 
 // Smart follow-up messages based on mood + energy combination
 function getSmartFollowUp(mood: MoodType, energy?: EnergyType): { message: string; icon: string } | null {
-  if (mood === 'depressed' && energy === 'high') {
+  if ((mood === 'severe_depressed' || mood === 'depressed') && energy === 'high') {
     return { message: 'Hög energi + lågt humör kan tyda på ångest. Försök andas lugnt.', icon: '💙' };
   }
-  if (mood === 'depressed' || mood === 'somewhat_depressed') {
+  if (mood === 'severe_depressed' || mood === 'depressed' || mood === 'somewhat_depressed') {
     return { message: 'Det är tufft just nu. Kom ihåg att bättre dagar kommer.', icon: '💛' };
   }
-  if (mood === 'elevated' && energy === 'high') {
+  if ((mood === 'severe_elevated' || mood === 'elevated') && energy === 'high') {
     return { message: 'Mycket hög energi + humör – känner du igen detta mönster?', icon: '⚠️' };
   }
-  if (mood === 'elevated') {
+  if (mood === 'severe_elevated' || mood === 'elevated') {
     return { message: 'Håll koll på sömnen och försök sakta ner lite.', icon: '🧘' };
   }
   if (mood === 'somewhat_elevated' && energy === 'high') {
