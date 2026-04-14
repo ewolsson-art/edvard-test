@@ -492,7 +492,7 @@ export function TodayCheckin({
           </div>
 
           {/* Encouragement for low mood */}
-          {(todayEntry?.mood === 'depressed' || todayEntry?.mood === 'somewhat_depressed') && (
+          {(todayEntry?.mood === 'severe_depressed' || todayEntry?.mood === 'depressed' || todayEntry?.mood === 'somewhat_depressed') && (
             <p className="text-[13px] text-foreground/35 leading-relaxed max-w-[280px] mb-8">
               <Heart className="w-3.5 h-3.5 inline mr-1.5 text-primary/30 -mt-0.5" />
               Bättre dagar kommer.
