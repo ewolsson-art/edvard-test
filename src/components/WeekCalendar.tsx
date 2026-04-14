@@ -31,20 +31,20 @@ export function WeekCalendar({
   return (
     <div className="fade-in">
       {/* Header matching month view style */}
-      <div className="flex items-center gap-3 mb-4">
+      <div className="flex items-center gap-2 mb-4">
         <button
           onClick={onPrevWeek}
-          className="text-primary hover:opacity-70 transition-opacity"
+          className="text-primary hover:opacity-70 transition-opacity flex-shrink-0"
           aria-label="Föregående vecka"
         >
           <ChevronLeft className="w-5 h-5" />
         </button>
-        <h2 className="font-display text-2xl font-semibold text-foreground/80">
+        <h2 className="font-display text-lg sm:text-2xl font-semibold text-foreground/80 truncate">
           {weekLabel}
         </h2>
         <button
           onClick={onNextWeek}
-          className="text-primary hover:opacity-70 transition-opacity rotate-180"
+          className="text-primary hover:opacity-70 transition-opacity rotate-180 flex-shrink-0"
           aria-label="Nästa vecka"
         >
           <ChevronLeft className="w-5 h-5" />
