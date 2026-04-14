@@ -729,7 +729,7 @@ export function TodayCheckin({
           <div className="mb-8">
             <p className="text-muted-foreground/50 text-[13px] tracking-wide capitalize mb-1.5">{formattedDate}</p>
             <h1 className="font-display text-[28px] sm:text-3xl font-bold tracking-tight">
-              Hur har du sovit?
+              Hur mycket har du sovit?
             </h1>
           </div>
 
