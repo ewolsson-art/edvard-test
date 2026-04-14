@@ -13,11 +13,13 @@ export function MoodDistributionBar({ stats, periodLabel, customLabels }: MoodDi
   const labels = customLabels || moodLabels;
 
   const segments = [
+    { key: 'severe_elevated' as const, colorClass: 'bg-[hsl(var(--mood-severe-elevated))]', label: labels.severe_elevated },
     { key: 'elevated' as const, colorClass: 'bg-mood-elevated', label: labels.elevated },
     { key: 'somewhat_elevated' as const, colorClass: 'bg-mood-somewhat-elevated', label: labels.somewhat_elevated },
     { key: 'stable' as const, colorClass: 'bg-mood-stable', label: labels.stable },
     { key: 'somewhat_depressed' as const, colorClass: 'bg-mood-somewhat-depressed', label: labels.somewhat_depressed },
     { key: 'depressed' as const, colorClass: 'bg-mood-depressed', label: labels.depressed },
+    { key: 'severe_depressed' as const, colorClass: 'bg-[hsl(var(--mood-severe-depressed))]', label: labels.severe_depressed },
     { key: 'unregistered' as const, colorClass: 'bg-muted-foreground/25', label: 'Ej registrerat' },
   ];
 
