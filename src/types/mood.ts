@@ -1,7 +1,7 @@
 export type MoodType = 'severe_depressed' | 'depressed' | 'somewhat_depressed' | 'stable' | 'somewhat_elevated' | 'elevated' | 'severe_elevated';
 export type EnergyType = 'low' | 'normal' | 'high';
 export type QualityType = 'good' | 'okay' | 'bad';
-export type SleepQualityType = 'very_good' | 'good' | 'okay' | 'little' | 'very_little';
+export type SleepQualityType = 'very_good' | 'good' | 'okay' | 'little' | 'very_little' | 'bad';
 export type ExerciseType = 'chest' | 'shoulders' | 'back' | 'legs';
 
 export interface MoodEntry {
