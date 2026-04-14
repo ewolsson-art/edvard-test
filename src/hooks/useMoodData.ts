@@ -21,7 +21,7 @@ async function fetchMoodEntries(userId: string): Promise<MoodEntry[]> {
     mood: normalizeMoodType(entry.mood),
     energyLevel: entry.energy_level as EnergyType | undefined,
     comment: entry.comment || undefined,
-    sleepQuality: normalizeSleepQuality(entry.sleep_quality) as SleepQualityType | undefined,
+    sleepQuality: (entry.sleep_quality as SleepQualityType) || undefined,
     sleepComment: entry.sleep_comment || undefined,
     eatingQuality: entry.eating_quality as QualityType | undefined,
     eatingComment: entry.eating_comment || undefined,

@@ -89,6 +89,7 @@ export const SLEEP_QUALITY_LABELS: Record<SleepQualityType, string> = {
   okay: 'Helt okej',
   little: 'Ovanligt lite',
   very_little: 'Nästan ingenting',
+  bad: 'Ovanligt lite', // Legacy backwards compat
 };
 
 export const EXERCISE_TYPE_LABELS: Record<ExerciseType, string> = {
