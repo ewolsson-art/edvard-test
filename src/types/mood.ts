@@ -83,6 +83,14 @@ export const QUALITY_LABELS: Record<QualityType, string> = {
   bad: 'Ovanligt mycket',
 };
 
+export const SLEEP_QUALITY_LABELS: Record<SleepQualityType, string> = {
+  very_good: 'Djup och lugn sömn',
+  good: 'Bra och lagom mycket',
+  okay: 'Helt okej',
+  little: 'Ovanligt lite',
+  very_little: 'Nästan ingenting',
+};
+
 export const EXERCISE_TYPE_LABELS: Record<ExerciseType, string> = {
   chest: 'Bröst',
   shoulders: 'Axlar',
