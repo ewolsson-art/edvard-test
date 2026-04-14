@@ -22,6 +22,7 @@ export function DayDetailDialog({
   entry,
   medicationsTaken = [],
 }: DayDetailDialogProps) {
+  const { moodLabels } = useDiagnosisConfig();
   if (!date) return null;
 
   const formattedDate = format(date, "EEEE d MMMM yyyy", { locale: sv });
@@ -71,7 +72,7 @@ export function DayDetailDialog({
                 {getMoodIcon(entry.mood)}
                 <div>
                   <p className="text-sm text-muted-foreground">Mående</p>
-                  <p className="font-medium">{MOOD_LABELS[entry.mood]}</p>
+                  <p className="font-medium">{moodLabels[entry.mood]}</p>
                 </div>
               </div>
               {entry.comment && (

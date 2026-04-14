@@ -29,6 +29,7 @@ export function WeekCalendar({
   onDayClick,
   onDayDoubleClick,
 }: WeekCalendarProps) {
+  const { moodLabels } = useDiagnosisConfig();
   return (
     <div className="fade-in">
       {/* Header matching month view style */}
@@ -74,7 +75,7 @@ export function WeekCalendar({
           const mood = entry?.mood as MoodType | undefined;
 
           const tooltipText = mood
-            ? `${format(day, 'd MMMM', { locale: sv })} — ${MOOD_LABELS[mood]}`
+            ? `${format(day, 'd MMMM', { locale: sv })} — ${moodLabels[mood]}`
             : showMissed
               ? `${format(day, 'd MMMM', { locale: sv })} — Ej registrerad`
               : undefined;
