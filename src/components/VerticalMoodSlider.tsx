@@ -178,7 +178,7 @@ export function VerticalMoodSlider({ options, value, onSelect }: VerticalMoodSli
               <div
                 key={opt.mood}
                 className="absolute left-1/2 -translate-x-1/2 -translate-y-1/2 transition-all duration-200"
-                style={{ top: `calc(8px + ${percent}% * (1 - 16px / 100%))`, top: `calc(8px + (100% - 16px) * ${i / (stepCount - 1)})` }}
+                style={{ top: `calc(8px + (100% - 16px) * ${i / (stepCount - 1)})` }}
               >
                 <div
                   className={cn(
