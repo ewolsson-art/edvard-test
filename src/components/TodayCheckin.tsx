@@ -55,19 +55,23 @@ const defaultMoodButtons: { mood: MoodType; icon: typeof Zap; label: string; sub
 ];
 
 const moodIcons: Record<MoodType, typeof Zap> = {
+  severe_elevated: Flame,
   elevated: Flame,
   somewhat_elevated: Zap,
   stable: Sun,
   somewhat_depressed: Cloud,
   depressed: CloudRain,
+  severe_depressed: CloudRain,
 };
 
 const moodCssClasses: Record<MoodType, string> = {
+  severe_elevated: 'mood-btn-severe-elevated',
   elevated: 'mood-btn-elevated',
   somewhat_elevated: 'mood-btn-somewhat-elevated',
   stable: 'mood-btn-stable',
   somewhat_depressed: 'mood-btn-somewhat-depressed',
   depressed: 'mood-btn-depressed',
+  severe_depressed: 'mood-btn-severe-depressed',
 };
 
 // Smart follow-up messages based on mood + energy combination
@@ -114,7 +118,7 @@ export function TodayCheckin({
   const { moodLabels, moodSublabels, moodTags: diagnosisMoodTags } = useDiagnosisConfig();
   
   const moodButtons = useMemo(() => {
-    const moods: MoodType[] = ['elevated', 'somewhat_elevated', 'stable', 'somewhat_depressed', 'depressed'];
+    const moods: MoodType[] = ['severe_elevated', 'elevated', 'somewhat_elevated', 'stable', 'somewhat_depressed', 'depressed', 'severe_depressed'];
     return moods.map(mood => ({
       mood,
       icon: moodIcons[mood],
@@ -393,11 +397,13 @@ export function TodayCheckin({
   // Helper to get mood icon and color for summary
   const getMoodDisplay = (mood: MoodType) => {
     const config: Record<MoodType, { icon: typeof Zap; colorClass: string; bgClass: string; borderClass: string }> = {
+      severe_elevated: { icon: Flame, colorClass: 'text-mood-severe-elevated', bgClass: 'bg-mood-severe-elevated/10', borderClass: 'border-mood-severe-elevated/20' },
       elevated: { icon: Flame, colorClass: 'text-mood-elevated', bgClass: 'bg-mood-elevated/10', borderClass: 'border-mood-elevated/20' },
       somewhat_elevated: { icon: Zap, colorClass: 'text-mood-somewhat-elevated', bgClass: 'bg-mood-somewhat-elevated/10', borderClass: 'border-mood-somewhat-elevated/20' },
       stable: { icon: Sun, colorClass: 'text-mood-stable', bgClass: 'bg-mood-stable/10', borderClass: 'border-mood-stable/20' },
       somewhat_depressed: { icon: Cloud, colorClass: 'text-mood-somewhat-depressed', bgClass: 'bg-mood-somewhat-depressed/10', borderClass: 'border-mood-somewhat-depressed/20' },
       depressed: { icon: CloudRain, colorClass: 'text-mood-depressed', bgClass: 'bg-mood-depressed/10', borderClass: 'border-mood-depressed/20' },
+      severe_depressed: { icon: CloudRain, colorClass: 'text-mood-severe-depressed', bgClass: 'bg-mood-severe-depressed/10', borderClass: 'border-mood-severe-depressed/20' },
     };
     return config[mood];
   };

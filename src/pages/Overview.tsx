@@ -524,7 +524,7 @@ const Overview = () => {
 
   const getStatsForView = () => {
     const emptyStats = {
-      stats: { elevated: 0, somewhat_elevated: 0, stable: 0, somewhat_depressed: 0, depressed: 0, unregistered: 0, total: 0, totalDays: 0 },
+      stats: { severe_elevated: 0, elevated: 0, somewhat_elevated: 0, stable: 0, somewhat_depressed: 0, depressed: 0, severe_depressed: 0, unregistered: 0, total: 0, totalDays: 0 },
       exerciseStats: { exercised: 0, notExercised: 0, unregistered: 0, total: 0, totalDays: 0 },
       sleepStats: { good: 0, bad: 0, unregistered: 0, total: 0, totalDays: 0 },
       eatingStats: { good: 0, bad: 0, unregistered: 0, total: 0, totalDays: 0 },
