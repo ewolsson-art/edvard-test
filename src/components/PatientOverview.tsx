@@ -81,6 +81,9 @@ export function PatientOverview({ connection, onBack, hideExtras = false }: Pati
     patientId: isRelativeViewing ? connection.patient_id : null,
   });
 
+  const patientDiagnosisConfig = useMemo(() => getPatientDiagnosisConfig(diagnoses), [diagnoses]);
+  const MOOD_LABELS = patientDiagnosisConfig.moodLabels;
+
   const isLoaded = moodLoaded && medsLoaded && !diagnosesLoading;
 
   // Get most recent mood entry
