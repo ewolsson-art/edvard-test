@@ -264,7 +264,12 @@ export function TodayCheckin({
 
   const handleMoodSelect = (mood: MoodType) => {
     setCheckinData(prev => ({ ...prev, mood }));
-    navigateStep('tags');
+  };
+
+  const handleMoodContinue = () => {
+    if (checkinData.mood) {
+      navigateStep('tags');
+    }
   };
 
   const handleTagToggle = (tag: string) => {
