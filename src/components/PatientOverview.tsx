@@ -498,20 +498,20 @@ export function PatientOverview({ connection, onBack, hideExtras = false }: Pati
                 const todayEntry = getEntryForDate(today);
                 
                 const getMoodColor = (mood: MoodType) => {
-                  if (mood === 'elevated' || mood === 'somewhat_elevated') return 'text-mood-elevated';
-                  if (mood === 'depressed' || mood === 'somewhat_depressed') return 'text-mood-depressed';
+                  if (mood === 'severe_elevated' || mood === 'elevated' || mood === 'somewhat_elevated') return 'text-mood-elevated';
+                  if (mood === 'severe_depressed' || mood === 'depressed' || mood === 'somewhat_depressed') return 'text-mood-depressed';
                   return 'text-mood-stable';
                 };
                 
                 const getMoodGlow = (mood: MoodType) => {
-                  if (mood === 'elevated' || mood === 'somewhat_elevated') return 'shadow-[0_0_12px_hsl(var(--mood-elevated)/0.4)]';
-                  if (mood === 'depressed' || mood === 'somewhat_depressed') return 'shadow-[0_0_12px_hsl(var(--mood-depressed)/0.4)]';
+                  if (mood === 'severe_elevated' || mood === 'elevated' || mood === 'somewhat_elevated') return 'shadow-[0_0_12px_hsl(var(--mood-elevated)/0.4)]';
+                  if (mood === 'severe_depressed' || mood === 'depressed' || mood === 'somewhat_depressed') return 'shadow-[0_0_12px_hsl(var(--mood-depressed)/0.4)]';
                   return 'shadow-[0_0_12px_hsl(var(--mood-stable)/0.4)]';
                 };
                 
                 const getMoodBg = (mood: MoodType) => {
-                  if (mood === 'elevated' || mood === 'somewhat_elevated') return 'bg-mood-elevated/20';
-                  if (mood === 'depressed' || mood === 'somewhat_depressed') return 'bg-mood-depressed/20';
+                  if (mood === 'severe_elevated' || mood === 'elevated' || mood === 'somewhat_elevated') return 'bg-mood-elevated/20';
+                  if (mood === 'severe_depressed' || mood === 'depressed' || mood === 'somewhat_depressed') return 'bg-mood-depressed/20';
                   return 'bg-mood-stable/20';
                 };
 
