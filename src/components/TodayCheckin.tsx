@@ -444,7 +444,7 @@ export function TodayCheckin({
       summaryItems.push({ 
         label: 'Sömn', 
         value: QUALITY_LABELS[todayEntry.sleepQuality],
-        colorClass: todayEntry.sleepQuality === 'good' ? 'text-mood-stable' : todayEntry.sleepQuality === 'bad' ? 'text-mood-depressed' : 'text-primary'
+        colorClass: (todayEntry.sleepQuality === 'good' || todayEntry.sleepQuality === 'very_good') ? 'text-mood-stable' : (todayEntry.sleepQuality === 'little' || todayEntry.sleepQuality === 'very_little' || todayEntry.sleepQuality === 'bad') ? 'text-mood-depressed' : 'text-primary'
       });
     }
     if (preferences?.include_eating && todayEntry?.eatingQuality) {
