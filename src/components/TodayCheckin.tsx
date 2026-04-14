@@ -264,7 +264,12 @@ export function TodayCheckin({
 
   const handleMoodSelect = (mood: MoodType) => {
     setCheckinData(prev => ({ ...prev, mood }));
-    navigateStep('tags');
+  };
+
+  const handleMoodContinue = () => {
+    if (checkinData.mood) {
+      navigateStep('tags');
+    }
   };
 
   const handleTagToggle = (tag: string) => {
@@ -564,6 +569,18 @@ export function TodayCheckin({
               onSelect={handleMoodSelect}
             />
           </div>
+
+          {checkinData.mood && (
+            <div className="flex justify-center pt-4 pb-2">
+              <button
+                onClick={handleMoodContinue}
+                className="px-10 py-3.5 rounded-full bg-[hsl(45_85%_55%)] text-[hsl(225_30%_7%)] font-bold text-base tracking-wide shadow-[0_4px_24px_hsl(45_85%_55%/0.35)] hover:shadow-[0_8px_32px_hsl(45_85%_55%/0.5)] hover:bg-[hsl(45_85%_62%)] hover:scale-105 active:scale-[0.98] transition-all duration-200 inline-flex items-center gap-1.5"
+              >
+                Fortsätt
+                <ChevronRight className="w-4 h-4" />
+              </button>
+            </div>
+          )}
         </div>
       )}
 
