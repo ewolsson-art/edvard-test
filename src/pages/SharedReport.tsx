@@ -11,7 +11,7 @@ import { SleepStats, SleepStatsType } from '@/components/SleepStats';
 import { EatingStats, EatingStatsType } from '@/components/EatingStats';
 import { ExerciseStats, ExerciseStatsType } from '@/components/ExerciseStats';
 import { Logo } from '@/components/Logo';
-import { MOOD_LABELS, MoodType, MoodStats as MoodStatsType } from '@/types/mood';
+import { MOOD_LABELS as DEFAULT_MOOD_LABELS, MoodType, MoodStats as MoodStatsType } from '@/types/mood';
 
 interface SharedReportData {
   id: string;
@@ -198,7 +198,7 @@ const SharedReport = () => {
                                 {format(new Date(entry.date), 'd MMM', { locale: sv })}
                               </span>
                               <span className="text-sm text-muted-foreground">
-                                {MOOD_LABELS[entry.mood as MoodType]}
+                                {DEFAULT_MOOD_LABELS[entry.mood as MoodType]}
                               </span>
                             </div>
                             {entry.comment && (

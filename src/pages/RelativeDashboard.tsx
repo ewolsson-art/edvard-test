@@ -16,7 +16,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { MOOD_LABELS, MOOD_ICONS, MoodType } from '@/types/mood';
+import { MOOD_LABELS as DEFAULT_MOOD_LABELS, MOOD_ICONS, MoodType } from '@/types/mood';
 import { format, isToday, isYesterday, subDays } from 'date-fns';
 import { sv } from 'date-fns/locale';
 
@@ -308,7 +308,7 @@ const RelativeDashboard = () => {
                             <div className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg border ${MOOD_COLORS[entry.mood]}`}>
                               <span className="text-sm">{MOOD_ICONS[entry.mood]}</span>
                               <span className={`text-xs font-semibold ${MOOD_TEXT_COLORS[entry.mood]}`}>
-                                {MOOD_LABELS[entry.mood]}
+                                {DEFAULT_MOOD_LABELS[entry.mood]}
                               </span>
                             </div>
                           </div>
