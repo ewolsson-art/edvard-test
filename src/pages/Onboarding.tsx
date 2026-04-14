@@ -129,7 +129,16 @@ const Onboarding = () => {
         data: { profile_completed: true },
       });
 
-      // 2. Save medications
+      // 2. Save diagnoses
+      if (selectedDiagnoses.length > 0) {
+        const diagnosesToInsert = selectedDiagnoses.map(name => ({
+          user_id: user.id,
+          name,
+        }));
+        await supabase.from('diagnoses').insert(diagnosesToInsert);
+      }
+
+      // 3. Save medications
       if (selectedMedications.length > 0) {
         const today = new Date().toISOString().split('T')[0];
         const timingToFrequency: Record<string, string> = {
@@ -146,7 +155,6 @@ const Onboarding = () => {
           frequency: timingToFrequency[med.timing || 'morning'] || 'daily',
         }));
         await supabase.from('medications').insert(medicationsToInsert);
-        // Invalidate medications cache so TodayCheckin picks them up
         await queryClient.invalidateQueries({ queryKey: ['medications'] });
       }
 
