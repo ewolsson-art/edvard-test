@@ -12,11 +12,13 @@ export function MoodStats({ stats, periodLabel, customLabels }: MoodStatsProps) 
   const labels = customLabels || moodLabels;
 
   const statRows = [
+    { key: 'severe_elevated', count: stats.severe_elevated, label: labels.severe_elevated },
     { key: 'elevated', count: stats.elevated, label: labels.elevated },
     { key: 'somewhat_elevated', count: stats.somewhat_elevated, label: labels.somewhat_elevated },
     { key: 'stable', count: stats.stable, label: labels.stable },
     { key: 'somewhat_depressed', count: stats.somewhat_depressed, label: labels.somewhat_depressed },
     { key: 'depressed', count: stats.depressed, label: labels.depressed },
+    { key: 'severe_depressed', count: stats.severe_depressed, label: labels.severe_depressed },
     { key: 'unregistered', count: stats.unregistered, label: 'Ej registrerat' },
   ];
 

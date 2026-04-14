@@ -137,9 +137,11 @@ export const YearHeatmap = memo(function YearHeatmap({ year, entries, medication
                           <span className={cn(
                             "flex items-center justify-center text-[10px] w-5 h-5 rounded-full leading-none",
                             isTodayDate && "bg-primary text-primary-foreground font-bold",
-                            !isTodayDate && mood === 'elevated' && "text-mood-elevated font-medium",
+                            !isTodayDate && (mood === 'severe_elevated' || mood === 'elevated') && "text-mood-elevated font-medium",
+                            !isTodayDate && mood === 'somewhat_elevated' && "text-mood-somewhat-elevated font-medium",
                             !isTodayDate && mood === 'stable' && "text-mood-stable font-medium",
-                            !isTodayDate && mood === 'depressed' && "text-mood-depressed font-medium",
+                            !isTodayDate && mood === 'somewhat_depressed' && "text-mood-somewhat-depressed font-medium",
+                            !isTodayDate && (mood === 'depressed' || mood === 'severe_depressed') && "text-mood-depressed font-medium",
                             !isTodayDate && !mood && "text-muted-foreground/70"
                           )}>
                             {day.getDate()}

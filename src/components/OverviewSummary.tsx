@@ -11,9 +11,9 @@ interface OverviewSummaryProps {
 }
 
 const MOOD_GROUPS = [
-  { key: 'elevated', label: 'Uppvarvad', icon: Flame, moods: ['elevated', 'somewhat_elevated'], colorClass: 'text-mood-elevated', bgClass: 'bg-mood-elevated/10', barClass: 'bg-mood-elevated', borderClass: 'border-mood-elevated/30' },
+  { key: 'elevated', label: 'Uppvarvad', icon: Flame, moods: ['severe_elevated', 'elevated', 'somewhat_elevated'], colorClass: 'text-mood-elevated', bgClass: 'bg-mood-elevated/10', barClass: 'bg-mood-elevated', borderClass: 'border-mood-elevated/30' },
   { key: 'stable', label: 'Stabil', icon: Sun, moods: ['stable'], colorClass: 'text-mood-stable', bgClass: 'bg-mood-stable/10', barClass: 'bg-mood-stable', borderClass: 'border-mood-stable/30' },
-  { key: 'depressed', label: 'Nedstämd', icon: CloudRain, moods: ['depressed', 'somewhat_depressed'], colorClass: 'text-mood-depressed', bgClass: 'bg-mood-depressed/10', barClass: 'bg-mood-depressed', borderClass: 'border-mood-depressed/30' },
+  { key: 'depressed', label: 'Nedstämd', icon: CloudRain, moods: ['somewhat_depressed', 'depressed', 'severe_depressed'], colorClass: 'text-mood-depressed', bgClass: 'bg-mood-depressed/10', barClass: 'bg-mood-depressed', borderClass: 'border-mood-depressed/30' },
 ];
 
 function findGroup(mood: string) {

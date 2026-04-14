@@ -1,4 +1,4 @@
-export type MoodType = 'depressed' | 'somewhat_depressed' | 'stable' | 'somewhat_elevated' | 'elevated';
+export type MoodType = 'severe_depressed' | 'depressed' | 'somewhat_depressed' | 'stable' | 'somewhat_elevated' | 'elevated' | 'severe_elevated';
 export type EnergyType = 'low' | 'normal' | 'high';
 export type QualityType = 'good' | 'okay' | 'bad';
 export type ExerciseType = 'chest' | 'shoulders' | 'back' | 'legs';
@@ -38,30 +38,36 @@ export interface CheckinData {
 }
 
 export interface MoodStats {
+  severe_elevated: number;
   elevated: number;
   somewhat_elevated: number;
   stable: number;
   somewhat_depressed: number;
   depressed: number;
+  severe_depressed: number;
   unregistered: number;
   total: number;
   totalDays: number;
 }
 
 export const MOOD_LABELS: Record<MoodType, string> = {
-  elevated: 'Mycket upp',
-  somewhat_elevated: 'Upp',
-  stable: 'Stabil',
-  somewhat_depressed: 'Låg',
-  depressed: 'Mycket låg',
+  severe_elevated: 'Svår uppvarvning',
+  elevated: 'Måttlig uppvarvning',
+  somewhat_elevated: 'Lindrig uppvarvning',
+  stable: 'Normalt stämningsläge',
+  somewhat_depressed: 'Lindrig nedstämdhet',
+  depressed: 'Måttlig nedstämdhet',
+  severe_depressed: 'Svår nedstämdhet',
 };
 
 export const MOOD_ICONS: Record<MoodType, string> = {
-  elevated: '🔥',
-  somewhat_elevated: '⚡',
+  severe_elevated: '🔥',
+  elevated: '⚡',
+  somewhat_elevated: '🌤️',
   stable: '☀️',
   somewhat_depressed: '🌥️',
   depressed: '🌧️',
+  severe_depressed: '🌑',
 };
 
 export const ENERGY_LABELS: Record<EnergyType, string> = {
@@ -90,14 +96,22 @@ export const EXERCISE_TYPE_EMOJIS: Record<ExerciseType, string> = {
   legs: '🦵',
 };
 
-// Map legacy 3-level mood types to new 5-level system
+// All valid mood types in order from highest to lowest
+export const MOOD_ORDER: MoodType[] = [
+  'severe_elevated', 'elevated', 'somewhat_elevated', 'stable',
+  'somewhat_depressed', 'depressed', 'severe_depressed',
+];
+
+// Map legacy mood types to new 7-level system
 export function normalizeMoodType(mood: string): MoodType {
   switch (mood) {
+    case 'severe_elevated': return 'severe_elevated';
     case 'elevated': return 'elevated';
     case 'somewhat_elevated': return 'somewhat_elevated';
     case 'stable': return 'stable';
     case 'somewhat_depressed': return 'somewhat_depressed';
     case 'depressed': return 'depressed';
+    case 'severe_depressed': return 'severe_depressed';
     default: return 'stable';
   }
 }

@@ -117,19 +117,21 @@ export function PatientOverview({ connection, onBack, hideExtras = false }: Pati
 
   // Week stats
   const weekStats = useMemo((): MoodStatsType => {
-    let elevated = 0, somewhat_elevated = 0, stable = 0, somewhat_depressed = 0, depressed = 0;
+    let severe_elevated = 0, elevated = 0, somewhat_elevated = 0, stable = 0, somewhat_depressed = 0, depressed = 0, severe_depressed = 0;
     weekDays.forEach(day => {
       const entry = getEntryForDate(format(day, 'yyyy-MM-dd'));
-      if (entry?.mood === 'elevated') elevated++;
+      if (entry?.mood === 'severe_elevated') severe_elevated++;
+      else if (entry?.mood === 'elevated') elevated++;
       else if (entry?.mood === 'somewhat_elevated') somewhat_elevated++;
       else if (entry?.mood === 'stable') stable++;
       else if (entry?.mood === 'somewhat_depressed') somewhat_depressed++;
       else if (entry?.mood === 'depressed') depressed++;
+      else if (entry?.mood === 'severe_depressed') severe_depressed++;
     });
-    const total = elevated + somewhat_elevated + stable + somewhat_depressed + depressed;
+    const total = severe_elevated + elevated + somewhat_elevated + stable + somewhat_depressed + depressed + severe_depressed;
     const totalDays = weekDays.length;
     const unregistered = totalDays - total;
-    return { elevated, somewhat_elevated, stable, somewhat_depressed, depressed, unregistered, total, totalDays };
+    return { severe_elevated, elevated, somewhat_elevated, stable, somewhat_depressed, depressed, severe_depressed, unregistered, total, totalDays };
   }, [weekDays, getEntryForDate]);
 
   const weekExerciseStats = useMemo((): ExerciseStatsType => {
@@ -177,19 +179,21 @@ export function PatientOverview({ connection, onBack, hideExtras = false }: Pati
   }, [currentMonth, getEntriesForMonth]);
 
   const monthStats = useMemo((): MoodStatsType => {
-    let elevated = 0, somewhat_elevated = 0, stable = 0, somewhat_depressed = 0, depressed = 0;
+    let severe_elevated = 0, elevated = 0, somewhat_elevated = 0, stable = 0, somewhat_depressed = 0, depressed = 0, severe_depressed = 0;
     Object.values(monthMoodData).forEach(mood => {
-      if (mood === 'elevated') elevated++;
+      if (mood === 'severe_elevated') severe_elevated++;
+      else if (mood === 'elevated') elevated++;
       else if (mood === 'somewhat_elevated') somewhat_elevated++;
       else if (mood === 'stable') stable++;
       else if (mood === 'somewhat_depressed') somewhat_depressed++;
       else if (mood === 'depressed') depressed++;
+      else if (mood === 'severe_depressed') severe_depressed++;
     });
-    const total = elevated + somewhat_elevated + stable + somewhat_depressed + depressed;
+    const total = severe_elevated + elevated + somewhat_elevated + stable + somewhat_depressed + depressed + severe_depressed;
     const end = endOfMonth(currentMonth);
     const totalDays = end.getDate();
     const unregistered = totalDays - total;
-    return { elevated, somewhat_elevated, stable, somewhat_depressed, depressed, unregistered, total, totalDays };
+    return { severe_elevated, elevated, somewhat_elevated, stable, somewhat_depressed, depressed, severe_depressed, unregistered, total, totalDays };
   }, [monthMoodData, currentMonth]);
 
   const monthExerciseStats = useMemo((): ExerciseStatsType => {
@@ -494,20 +498,20 @@ export function PatientOverview({ connection, onBack, hideExtras = false }: Pati
                 const todayEntry = getEntryForDate(today);
                 
                 const getMoodColor = (mood: MoodType) => {
-                  if (mood === 'elevated' || mood === 'somewhat_elevated') return 'text-mood-elevated';
-                  if (mood === 'depressed' || mood === 'somewhat_depressed') return 'text-mood-depressed';
+                  if (mood === 'severe_elevated' || mood === 'elevated' || mood === 'somewhat_elevated') return 'text-mood-elevated';
+                  if (mood === 'severe_depressed' || mood === 'depressed' || mood === 'somewhat_depressed') return 'text-mood-depressed';
                   return 'text-mood-stable';
                 };
                 
                 const getMoodGlow = (mood: MoodType) => {
-                  if (mood === 'elevated' || mood === 'somewhat_elevated') return 'shadow-[0_0_12px_hsl(var(--mood-elevated)/0.4)]';
-                  if (mood === 'depressed' || mood === 'somewhat_depressed') return 'shadow-[0_0_12px_hsl(var(--mood-depressed)/0.4)]';
+                  if (mood === 'severe_elevated' || mood === 'elevated' || mood === 'somewhat_elevated') return 'shadow-[0_0_12px_hsl(var(--mood-elevated)/0.4)]';
+                  if (mood === 'severe_depressed' || mood === 'depressed' || mood === 'somewhat_depressed') return 'shadow-[0_0_12px_hsl(var(--mood-depressed)/0.4)]';
                   return 'shadow-[0_0_12px_hsl(var(--mood-stable)/0.4)]';
                 };
                 
                 const getMoodBg = (mood: MoodType) => {
-                  if (mood === 'elevated' || mood === 'somewhat_elevated') return 'bg-mood-elevated/20';
-                  if (mood === 'depressed' || mood === 'somewhat_depressed') return 'bg-mood-depressed/20';
+                  if (mood === 'severe_elevated' || mood === 'elevated' || mood === 'somewhat_elevated') return 'bg-mood-elevated/20';
+                  if (mood === 'severe_depressed' || mood === 'depressed' || mood === 'somewhat_depressed') return 'bg-mood-depressed/20';
                   return 'bg-mood-stable/20';
                 };
 

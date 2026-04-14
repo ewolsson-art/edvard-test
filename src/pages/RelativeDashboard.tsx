@@ -37,19 +37,23 @@ interface PatientMoodData {
 }
 
 const MOOD_COLORS: Record<MoodType, string> = {
+  severe_elevated: 'bg-mood-severe-elevated/15 border-mood-severe-elevated/30',
   elevated: 'bg-mood-elevated/15 border-mood-elevated/30',
   somewhat_elevated: 'bg-mood-somewhat-elevated/15 border-mood-somewhat-elevated/30',
   stable: 'bg-mood-stable/15 border-mood-stable/30',
   somewhat_depressed: 'bg-mood-somewhat-depressed/15 border-mood-somewhat-depressed/30',
   depressed: 'bg-mood-depressed/15 border-mood-depressed/30',
+  severe_depressed: 'bg-mood-severe-depressed/15 border-mood-severe-depressed/30',
 };
 
 const MOOD_TEXT_COLORS: Record<MoodType, string> = {
+  severe_elevated: 'text-mood-severe-elevated',
   elevated: 'text-mood-elevated',
   somewhat_elevated: 'text-mood-somewhat-elevated',
   stable: 'text-mood-stable',
   somewhat_depressed: 'text-mood-somewhat-depressed',
   depressed: 'text-mood-depressed',
+  severe_depressed: 'text-mood-severe-depressed',
 };
 
 const QUALITY_MAP: Record<string, string> = {

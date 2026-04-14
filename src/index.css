@@ -93,7 +93,11 @@
 
     --radius: 0.75rem;
 
-    /* Mood colors */
+    /* Mood colors - 7 levels */
+    --mood-severe-elevated: 15 90% 48%;
+    --mood-severe-elevated-light: 15 90% 95%;
+    --mood-severe-elevated-foreground: 15 90% 25%;
+
     --mood-elevated: 38 92% 50%;
     --mood-elevated-light: 38 92% 95%;
     --mood-elevated-foreground: 38 92% 25%;
@@ -113,6 +117,10 @@
     --mood-depressed: 350 60% 52%;
     --mood-depressed-light: 350 40% 94%;
     --mood-depressed-foreground: 350 60% 28%;
+
+    --mood-severe-depressed: 280 50% 35%;
+    --mood-severe-depressed-light: 280 40% 94%;
+    --mood-severe-depressed-foreground: 280 50% 28%;
 
     /* Sidebar - light */
     --sidebar-background: 40 25% 96%;
@@ -147,6 +155,9 @@
     --input: 225 20% 22%;
     --ring: 45 85% 55%;
 
+    --mood-severe-elevated: 15 80% 52%;
+    --mood-severe-elevated-light: 15 40% 18%;
+    --mood-severe-elevated-foreground: 15 80% 85%;
     --mood-elevated: 38 85% 55%;
     --mood-elevated-light: 38 40% 18%;
     --mood-elevated-foreground: 38 85% 85%;
@@ -162,6 +173,9 @@
     --mood-depressed: 350 55% 48%;
     --mood-depressed-light: 350 25% 18%;
     --mood-depressed-foreground: 350 55% 82%;
+    --mood-severe-depressed: 280 45% 38%;
+    --mood-severe-depressed-light: 280 25% 16%;
+    --mood-severe-depressed-foreground: 280 45% 82%;
 
     --sidebar-background: 230 30% 5%;
     --sidebar-foreground: 0 0% 90%;
@@ -238,6 +252,12 @@
     @apply opacity-100;
   }
 
+  .mood-btn-severe-elevated {
+    background: linear-gradient(145deg, hsl(var(--mood-severe-elevated)) 0%, hsl(15 80% 40%) 100%);
+    @apply text-white shadow-lg shadow-[hsl(var(--mood-severe-elevated)/0.2)];
+    @apply hover:shadow-xl hover:shadow-[hsl(var(--mood-severe-elevated)/0.3)];
+  }
+
   .mood-btn-elevated {
     background: linear-gradient(145deg, hsl(var(--mood-elevated)) 0%, hsl(38 85% 45%) 100%);
     @apply text-white shadow-lg shadow-mood-elevated/20;
@@ -271,6 +291,12 @@
     @apply text-white shadow-lg shadow-mood-depressed/20;
     @apply hover:shadow-xl hover:shadow-mood-depressed/30;
     @apply focus:ring-mood-depressed;
+  }
+
+  .mood-btn-severe-depressed {
+    background: linear-gradient(145deg, hsl(var(--mood-severe-depressed)) 0%, hsl(280 45% 28%) 100%);
+    @apply text-white shadow-lg shadow-[hsl(var(--mood-severe-depressed)/0.2)];
+    @apply hover:shadow-xl hover:shadow-[hsl(var(--mood-severe-depressed)/0.3)];
   }
 
   /* Modern checkin card styles */
@@ -323,6 +349,10 @@
     @apply transition-all duration-200 ease-out;
   }
 
+  .calendar-day-severe-elevated {
+    @apply bg-[hsl(var(--mood-severe-elevated))] text-white;
+  }
+
   .calendar-day-elevated {
     @apply bg-mood-elevated text-white;
   }
@@ -341,6 +371,10 @@
 
   .calendar-day-depressed {
     @apply bg-mood-depressed text-white;
+  }
+
+  .calendar-day-severe-depressed {
+    @apply bg-[hsl(var(--mood-severe-depressed))] text-white;
   }
 
   .calendar-day-empty {

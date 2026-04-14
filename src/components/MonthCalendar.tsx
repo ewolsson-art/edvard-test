@@ -125,11 +125,13 @@ export function MonthCalendar({
                     "relative flex flex-col items-center justify-center py-4 transition-all duration-150",
                     !isCurrentMonth && "opacity-15",
                     isCurrentMonth && "hover:bg-muted/30 hover:scale-110 hover:z-10 hover:rounded-md",
+                    !isTodayDate && mood === 'severe_elevated' && "bg-[hsl(var(--mood-severe-elevated)/0.08)]",
                     !isTodayDate && mood === 'elevated' && "bg-mood-elevated/8",
                     !isTodayDate && mood === 'somewhat_elevated' && "bg-mood-somewhat-elevated/8",
                     !isTodayDate && mood === 'stable' && "bg-mood-stable/8",
                     !isTodayDate && mood === 'somewhat_depressed' && "bg-mood-somewhat-depressed/8",
                     !isTodayDate && mood === 'depressed' && "bg-mood-depressed/8",
+                    !isTodayDate && mood === 'severe_depressed' && "bg-[hsl(var(--mood-severe-depressed)/0.08)]",
                     showMissed && "bg-muted-foreground/10",
                     isTodayDate && "bg-foreground/10 rounded-md",
                   )}
@@ -137,11 +139,13 @@ export function MonthCalendar({
                   <span className={cn(
                     "flex items-center justify-center text-base font-medium leading-none",
                     isTodayDate && "text-foreground font-bold text-lg",
+                    !isTodayDate && mood === 'severe_elevated' && "text-[hsl(var(--mood-severe-elevated))]",
                     !isTodayDate && mood === 'elevated' && "text-mood-elevated",
                     !isTodayDate && mood === 'somewhat_elevated' && "text-mood-somewhat-elevated",
                     !isTodayDate && mood === 'stable' && "text-mood-stable",
                     !isTodayDate && mood === 'somewhat_depressed' && "text-mood-somewhat-depressed",
                     !isTodayDate && mood === 'depressed' && "text-mood-depressed",
+                    !isTodayDate && mood === 'severe_depressed' && "text-[hsl(var(--mood-severe-depressed))]",
                     !isTodayDate && !mood && isCurrentMonth && "text-foreground/60",
                     !isCurrentMonth && "text-muted-foreground"
                   )}>

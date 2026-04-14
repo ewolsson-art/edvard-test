@@ -66,8 +66,8 @@ export function Last30DaysOverview({
       if (entry?.mood) {
         moodStats.total++;
         if (entry.mood === 'stable') moodStats.neutral = (moodStats.neutral || 0) + 1;
-        else if (entry.mood === 'elevated') moodStats.positive++;
-        else if (entry.mood === 'depressed') moodStats.negative++;
+        else if (entry.mood === 'severe_elevated' || entry.mood === 'elevated') moodStats.positive++;
+        else if (entry.mood === 'severe_depressed' || entry.mood === 'depressed') moodStats.negative++;
       }
 
       // Sleep
@@ -127,9 +127,13 @@ export function Last30DaysOverview({
 
   const getMoodColor = (mood: MoodType) => {
     switch (mood) {
+      case 'severe_elevated': return 'bg-[hsl(var(--mood-severe-elevated))]';
       case 'elevated': return 'bg-mood-elevated';
+      case 'somewhat_elevated': return 'bg-mood-somewhat-elevated';
       case 'stable': return 'bg-mood-stable';
+      case 'somewhat_depressed': return 'bg-mood-somewhat-depressed';
       case 'depressed': return 'bg-mood-depressed';
+      case 'severe_depressed': return 'bg-[hsl(var(--mood-severe-depressed))]';
       default: return 'bg-muted';
     }
   };
