@@ -77,10 +77,13 @@ export const ENERGY_LABELS: Record<EnergyType, string> = {
   high: 'Hög',
 };
 
-export const QUALITY_LABELS: Record<QualityType, string> = {
+export const QUALITY_LABELS: Record<string, string> = {
   good: 'Bra och lagom mycket',
   okay: 'Ovanligt lite',
   bad: 'Ovanligt mycket',
+  very_good: 'Djup och lugn sömn',
+  little: 'Ovanligt lite',
+  very_little: 'Nästan ingenting',
 };
 
 export const SLEEP_QUALITY_LABELS: Record<SleepQualityType, string> = {
