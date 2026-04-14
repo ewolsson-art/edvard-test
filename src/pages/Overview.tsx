@@ -35,7 +35,7 @@ import { OverviewSummary } from '@/components/OverviewSummary';
 import { LessonsFromPast } from '@/components/LessonsFromPast';
 import { useCharacteristics } from '@/hooks/useCharacteristics';
 
-import { MoodStats as MoodStatsType, ExerciseType, QualityType } from '@/types/mood';
+import { MoodStats as MoodStatsType, ExerciseType, QualityType, SleepQualityType } from '@/types/mood';
 import { Last30DaysOverview } from '@/components/Last30DaysOverview';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Dumbbell, Moon, Utensils } from 'lucide-react';

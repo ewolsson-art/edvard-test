@@ -4,7 +4,7 @@ import { MonthCalendar } from './MonthCalendar';
 import { SleepMonthCalendar } from './SleepMonthCalendar';
 import { EatingMonthCalendar } from './EatingMonthCalendar';
 import { ExerciseMonthCalendar } from './ExerciseMonthCalendar';
-import { MoodType, MoodEntry, ExerciseType, QualityType } from '@/types/mood';
+import { MoodType, MoodEntry, ExerciseType, QualityType, SleepQualityType } from '@/types/mood';
 
 interface ScrollableMonthsCalendarProps {
   year: number;
