@@ -18,6 +18,7 @@ import { StreakBadge } from '@/components/StreakBadge';
 import { CelebrationAnimation } from '@/components/CelebrationAnimation';
 import { VerticalMoodSlider } from '@/components/VerticalMoodSlider';
 import { VerticalScaleSlider, ScaleOption } from '@/components/VerticalScaleSlider';
+import { TurtleLogo } from '@/components/TurtleLogo';
 import { FullscreenComment } from '@/components/FullscreenComment';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { MilestoneInfo } from '@/hooks/useStreak';
