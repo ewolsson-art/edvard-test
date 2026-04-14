@@ -16,6 +16,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Progress } from '@/components/ui/progress';
 import { StreakBadge } from '@/components/StreakBadge';
 import { CelebrationAnimation } from '@/components/CelebrationAnimation';
+import { VerticalMoodSlider } from '@/components/VerticalMoodSlider';
 import { FullscreenComment } from '@/components/FullscreenComment';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { MilestoneInfo } from '@/hooks/useStreak';
