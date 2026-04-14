@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { MoodEntry, MoodType, MoodStats, QualityType, ExerciseType } from '@/types/mood';
+import { MoodEntry, MoodType, MoodStats, QualityType, ExerciseType, SleepQualityType } from '@/types/mood';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 

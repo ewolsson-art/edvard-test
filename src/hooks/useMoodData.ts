@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { MoodEntry, MoodType, MoodStats, CheckinData, QualityType, ExerciseType, EnergyType, normalizeMoodType } from '@/types/mood';
+import { MoodEntry, MoodType, MoodStats, CheckinData, QualityType, ExerciseType, EnergyType, SleepQualityType, normalizeMoodType } from '@/types/mood';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';

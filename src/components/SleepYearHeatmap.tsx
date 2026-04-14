@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react';
 import { format, eachDayOfInterval, startOfMonth, endOfMonth, startOfWeek, endOfWeek, isSameMonth, isToday, getWeek } from 'date-fns';
 import { sv } from 'date-fns/locale';
 import { ChevronLeft, ChevronRight, MoonStar, Moon } from 'lucide-react';
-import { MoodEntry, QualityType } from '@/types/mood';
+import { MoodEntry, SleepQualityType } from '@/types/mood';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 
@@ -25,7 +25,7 @@ export function SleepYearHeatmap({ year, entries, onPrevYear, onNextYear, onMont
   const [showSecondHalf, setShowSecondHalf] = useState(false);
   
   const sleepMap = useMemo(() => {
-    const map: Record<string, QualityType> = {};
+    const map: Record<string, SleepQualityType> = {};
     entries.forEach(entry => {
       if (entry.sleepQuality) {
         map[entry.date] = entry.sleepQuality;
