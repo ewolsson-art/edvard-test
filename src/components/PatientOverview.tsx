@@ -264,7 +264,7 @@ export function PatientOverview({ connection, onBack, hideExtras = false }: Pati
   }, [currentMonth, getEntryForDate]);
 
   const monthSleepData = useMemo(() => {
-    const result: Record<number, QualityType> = {};
+    const result: Record<number, SleepQualityType> = {};
     const start = startOfMonth(currentMonth);
     const end = endOfMonth(currentMonth);
     const days = eachDayOfInterval({ start, end });

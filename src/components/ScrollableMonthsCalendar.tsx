@@ -73,7 +73,7 @@ export const ScrollableMonthsCalendar = forwardRef<ScrollableMonthsCalendarRef, 
       }
 
       if (type === 'sleep') {
-        const sleepData: Record<number, QualityType> = {};
+        const sleepData: Record<number, SleepQualityType> = {};
         days.forEach(day => {
           const entry = getEntryForDate(format(day, 'yyyy-MM-dd'));
           if (entry?.sleepQuality) sleepData[day.getDate()] = entry.sleepQuality;
