@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useRef, KeyboardEvent } from 'react';
+import { useState, useEffect, useMemo, useRef, KeyboardEvent, useCallback } from 'react';
 import { format, differenceInDays, parseISO, isToday, isYesterday } from 'date-fns';
 import { sv } from 'date-fns/locale';
 import { Flame, Zap, Sun, Cloud, CloudRain, MessageSquarePlus, CheckCircle2, Pill, Pencil, Moon, MoonStar, CloudMoon, Utensils, Dumbbell, ThumbsUp, ThumbsDown, Check, X, ChevronRight, ChevronLeft, Heart, AlertTriangle, HelpCircle, CalendarIcon, Plus, Trophy } from 'lucide-react';
