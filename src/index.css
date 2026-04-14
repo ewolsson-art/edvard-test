@@ -252,6 +252,12 @@
     @apply opacity-100;
   }
 
+  .mood-btn-severe-elevated {
+    background: linear-gradient(145deg, hsl(var(--mood-severe-elevated)) 0%, hsl(15 80% 40%) 100%);
+    @apply text-white shadow-lg shadow-[hsl(var(--mood-severe-elevated)/0.2)];
+    @apply hover:shadow-xl hover:shadow-[hsl(var(--mood-severe-elevated)/0.3)];
+  }
+
   .mood-btn-elevated {
     background: linear-gradient(145deg, hsl(var(--mood-elevated)) 0%, hsl(38 85% 45%) 100%);
     @apply text-white shadow-lg shadow-mood-elevated/20;
@@ -285,6 +291,12 @@
     @apply text-white shadow-lg shadow-mood-depressed/20;
     @apply hover:shadow-xl hover:shadow-mood-depressed/30;
     @apply focus:ring-mood-depressed;
+  }
+
+  .mood-btn-severe-depressed {
+    background: linear-gradient(145deg, hsl(var(--mood-severe-depressed)) 0%, hsl(280 45% 28%) 100%);
+    @apply text-white shadow-lg shadow-[hsl(var(--mood-severe-depressed)/0.2)];
+    @apply hover:shadow-xl hover:shadow-[hsl(var(--mood-severe-depressed)/0.3)];
   }
 
   /* Modern checkin card styles */
