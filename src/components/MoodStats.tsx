@@ -1,17 +1,22 @@
-import { MoodStats as MoodStatsType, MOOD_LABELS } from '@/types/mood';
+import { MoodStats as MoodStatsType, MoodType } from '@/types/mood';
+import { useDiagnosisConfig } from '@/hooks/useDiagnosisConfig';
 
 interface MoodStatsProps {
   stats: MoodStatsType;
   periodLabel: string;
+  customLabels?: Record<MoodType, string>;
 }
 
-export function MoodStats({ stats, periodLabel }: MoodStatsProps) {
+export function MoodStats({ stats, periodLabel, customLabels }: MoodStatsProps) {
+  const { moodLabels } = useDiagnosisConfig();
+  const labels = customLabels || moodLabels;
+
   const statRows = [
-    { key: 'elevated', count: stats.elevated, label: MOOD_LABELS.elevated },
-    { key: 'somewhat_elevated', count: stats.somewhat_elevated, label: MOOD_LABELS.somewhat_elevated },
-    { key: 'stable', count: stats.stable, label: MOOD_LABELS.stable },
-    { key: 'somewhat_depressed', count: stats.somewhat_depressed, label: MOOD_LABELS.somewhat_depressed },
-    { key: 'depressed', count: stats.depressed, label: MOOD_LABELS.depressed },
+    { key: 'elevated', count: stats.elevated, label: labels.elevated },
+    { key: 'somewhat_elevated', count: stats.somewhat_elevated, label: labels.somewhat_elevated },
+    { key: 'stable', count: stats.stable, label: labels.stable },
+    { key: 'somewhat_depressed', count: stats.somewhat_depressed, label: labels.somewhat_depressed },
+    { key: 'depressed', count: stats.depressed, label: labels.depressed },
     { key: 'unregistered', count: stats.unregistered, label: 'Ej registrerat' },
   ];
 
