@@ -1,7 +1,8 @@
 import { format } from 'date-fns';
 import { sv } from 'date-fns/locale';
 import { Zap, Sun, CloudRain, Moon, Utensils, Dumbbell, Pill, MessageSquare, ThumbsUp, ThumbsDown, Check, X } from 'lucide-react';
-import { MoodEntry, MoodType, MOOD_LABELS, QUALITY_LABELS, EXERCISE_TYPE_LABELS } from '@/types/mood';
+import { MoodEntry, MoodType, QUALITY_LABELS, EXERCISE_TYPE_LABELS } from '@/types/mood';
+import { useDiagnosisConfig } from '@/hooks/useDiagnosisConfig';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';

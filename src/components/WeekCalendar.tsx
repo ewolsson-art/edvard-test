@@ -1,7 +1,8 @@
 import { format, isToday, isBefore, startOfDay } from 'date-fns';
 import { sv } from 'date-fns/locale';
 import { ChevronLeft, Pill, X } from 'lucide-react';
-import { MoodEntry, MOOD_LABELS, MoodType } from '@/types/mood';
+import { MoodEntry, MoodType } from '@/types/mood';
+import { useDiagnosisConfig } from '@/hooks/useDiagnosisConfig';
 import { cn } from '@/lib/utils';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
