@@ -18,6 +18,7 @@ import { StreakBadge } from '@/components/StreakBadge';
 import { CelebrationAnimation } from '@/components/CelebrationAnimation';
 import { VerticalMoodSlider } from '@/components/VerticalMoodSlider';
 import { VerticalScaleSlider, ScaleOption } from '@/components/VerticalScaleSlider';
+import { TurtleLogo } from '@/components/TurtleLogo';
 import { FullscreenComment } from '@/components/FullscreenComment';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { MilestoneInfo } from '@/hooks/useStreak';
@@ -473,20 +474,12 @@ export function TodayCheckin({
     return (
       <div className="fade-in h-full md:h-auto flex flex-col items-center justify-center px-5 py-16">
         <div className="flex flex-col items-center text-center">
-          {/* Checkmark */}
+          {/* Turtle mascot */}
           <div 
             className="relative mb-10"
             style={{ animation: 'scale-in 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)' }}
           >
-            <div className={cn(
-              "w-12 h-12 rounded-full flex items-center justify-center",
-              moodDisplay?.bgClass || 'bg-mood-stable/10'
-            )}>
-              <Check 
-                className={cn("w-6 h-6", moodDisplay?.colorClass || 'text-mood-stable')} 
-                style={{ strokeWidth: 2.5 }} 
-              />
-            </div>
+            <TurtleLogo size="lg" animated className="drop-shadow-[0_0_20px_hsl(45_85%_55%/0.2)]" />
           </div>
 
           {/* Streak number — the hero */}
