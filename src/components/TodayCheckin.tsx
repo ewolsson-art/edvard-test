@@ -474,25 +474,22 @@ export function TodayCheckin({
     return (
       <div className="fade-in h-full md:h-auto flex flex-col items-center justify-center px-5 py-16">
         <div className="flex flex-col items-center text-center">
-          {/* Turtle mascot */}
-          <div 
-            className="relative mb-10"
-            style={{ animation: 'scale-in 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)' }}
-          >
-            <TurtleLogo size="lg" animated className="drop-shadow-[0_0_20px_hsl(45_85%_55%/0.2)]" />
-          </div>
-
-          {/* Streak number — the hero */}
-          {streakData.currentStreak > 0 && (
-            <div className="mb-8" style={{ animation: 'scale-in 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 0.1s both' }}>
-              <span className="text-[88px] md:text-[112px] font-bold tabular-nums leading-[0.8] tracking-tighter text-foreground block">
-                {streakData.currentStreak}
-              </span>
-              <p className="text-[13px] text-foreground/20 mt-3 tracking-wide">
-                {streakData.currentStreak === 1 ? 'dag' : 'dagar'} i rad
-              </p>
+          {/* Streak number + turtle side by side */}
+          <div className="flex items-center gap-4 mb-8" style={{ animation: 'scale-in 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)' }}>
+            <div className="w-20 h-20 md:w-24 md:h-24 flex items-center justify-center">
+              <TurtleLogo size="lg" animated className="drop-shadow-[0_0_20px_hsl(45_85%_55%/0.2)] scale-[1.6] md:scale-[1.8]" />
             </div>
-          )}
+            {streakData.currentStreak > 0 && (
+              <div className="text-left">
+                <span className="text-[88px] md:text-[112px] font-bold tabular-nums leading-[0.8] tracking-tighter text-foreground block">
+                  {streakData.currentStreak}
+                </span>
+                <p className="text-[13px] text-foreground/20 mt-3 tracking-wide">
+                  {streakData.currentStreak === 1 ? 'dag' : 'dagar'} i rad
+                </p>
+              </div>
+            )}
+          </div>
 
           {/* Status */}
           <div className="flex items-center gap-x-2 text-[14px] mb-10">
