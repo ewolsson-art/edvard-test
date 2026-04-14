@@ -56,33 +56,33 @@ function getMoodLabels(type: DiagnosisType): Record<MoodType, string> {
   switch (type) {
     case 'bipolar_1':
       return {
-        severe_elevated: 'Svår mani',
-        elevated: 'Måttlig mani',
-        somewhat_elevated: 'Lindrig hypomani',
+        severe_elevated: 'Svårt uppvarvad',
+        elevated: 'Måttligt uppvarvad',
+        somewhat_elevated: 'Lindrigt uppvarvad',
         stable: 'Normalt stämningsläge',
         somewhat_depressed: 'Lindrig nedstämdhet',
-        depressed: 'Måttlig depression',
-        severe_depressed: 'Svår depression',
+        depressed: 'Måttlig nedstämdhet',
+        severe_depressed: 'Svår nedstämdhet',
       };
     case 'bipolar_2':
       return {
-        severe_elevated: 'Svår hypomani',
-        elevated: 'Måttlig hypomani',
-        somewhat_elevated: 'Lindrig hypomani',
+        severe_elevated: 'Svårt uppvarvad',
+        elevated: 'Måttligt uppvarvad',
+        somewhat_elevated: 'Lindrigt uppvarvad',
         stable: 'Normalt stämningsläge',
         somewhat_depressed: 'Lindrig nedstämdhet',
-        depressed: 'Måttlig depression',
-        severe_depressed: 'Svår depression',
+        depressed: 'Måttlig nedstämdhet',
+        severe_depressed: 'Svår nedstämdhet',
       };
     case 'cyclothymia':
       return {
-        severe_elevated: 'Svårt förhöjt',
-        elevated: 'Måttligt förhöjt',
-        somewhat_elevated: 'Lindrigt förhöjt',
+        severe_elevated: 'Svårt uppvarvad',
+        elevated: 'Måttligt uppvarvad',
+        somewhat_elevated: 'Lindrigt uppvarvad',
         stable: 'Normalt stämningsläge',
-        somewhat_depressed: 'Lindrigt sänkt',
-        depressed: 'Måttligt sänkt',
-        severe_depressed: 'Svårt sänkt',
+        somewhat_depressed: 'Lindrig nedstämdhet',
+        depressed: 'Måttlig nedstämdhet',
+        severe_depressed: 'Svår nedstämdhet',
       };
     case 'depression':
       return {
@@ -91,14 +91,14 @@ function getMoodLabels(type: DiagnosisType): Record<MoodType, string> {
         somewhat_elevated: 'Lite bättre',
         stable: 'Normalt stämningsläge',
         somewhat_depressed: 'Lindrig nedstämdhet',
-        depressed: 'Måttlig depression',
-        severe_depressed: 'Svår depression',
+        depressed: 'Måttlig nedstämdhet',
+        severe_depressed: 'Svår nedstämdhet',
       };
     default:
       return {
-        severe_elevated: 'Svår uppvarvning',
-        elevated: 'Måttlig uppvarvning',
-        somewhat_elevated: 'Lindrig uppvarvning',
+        severe_elevated: 'Svårt uppvarvad',
+        elevated: 'Måttligt uppvarvad',
+        somewhat_elevated: 'Lindrigt uppvarvad',
         stable: 'Normalt stämningsläge',
         somewhat_depressed: 'Lindrig nedstämdhet',
         depressed: 'Måttlig nedstämdhet',
