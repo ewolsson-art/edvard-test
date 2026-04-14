@@ -4,7 +4,7 @@ import { MonthCalendar } from './MonthCalendar';
 import { SleepMonthCalendar } from './SleepMonthCalendar';
 import { EatingMonthCalendar } from './EatingMonthCalendar';
 import { ExerciseMonthCalendar } from './ExerciseMonthCalendar';
-import { MoodType, MoodEntry, ExerciseType, QualityType, SleepQualityType } from '@/types/mood';
+import { MoodType, MoodEntry, ExerciseType, QualityType } from '@/types/mood';
 
 interface ScrollableMonthsCalendarProps {
   year: number;
@@ -73,7 +73,7 @@ export const ScrollableMonthsCalendar = forwardRef<ScrollableMonthsCalendarRef, 
       }
 
       if (type === 'sleep') {
-        const sleepData: Record<number, SleepQualityType> = {};
+        const sleepData: Record<number, QualityType> = {};
         days.forEach(day => {
           const entry = getEntryForDate(format(day, 'yyyy-MM-dd'));
           if (entry?.sleepQuality) sleepData[day.getDate()] = entry.sleepQuality;

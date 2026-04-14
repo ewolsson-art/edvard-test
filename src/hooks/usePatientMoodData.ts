@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { MoodEntry, MoodType, MoodStats, QualityType, ExerciseType, SleepQualityType } from '@/types/mood';
+import { MoodEntry, MoodType, MoodStats, QualityType, ExerciseType } from '@/types/mood';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 
@@ -35,7 +35,7 @@ export function usePatientMoodData({ patientId }: UsePatientMoodDataProps) {
           date: entry.date,
           mood: entry.mood as MoodType,
           comment: entry.comment || undefined,
-          sleepQuality: entry.sleep_quality as SleepQualityType | undefined,
+          sleepQuality: entry.sleep_quality as QualityType | undefined,
           sleepComment: entry.sleep_comment || undefined,
           eatingQuality: entry.eating_quality as QualityType | undefined,
           eatingComment: entry.eating_comment || undefined,
@@ -70,7 +70,7 @@ export function usePatientMoodData({ patientId }: UsePatientMoodDataProps) {
               date: payload.new.date,
               mood: payload.new.mood as MoodType,
               comment: payload.new.comment || undefined,
-              sleepQuality: payload.new.sleep_quality as SleepQualityType | undefined,
+              sleepQuality: payload.new.sleep_quality as QualityType | undefined,
               sleepComment: payload.new.sleep_comment || undefined,
               eatingQuality: payload.new.eating_quality as QualityType | undefined,
               eatingComment: payload.new.eating_comment || undefined,

@@ -29,7 +29,7 @@ import { YearHeatmap } from '@/components/YearHeatmap';
 import { RelativeCommentDialog } from '@/components/RelativeCommentDialog';
 import { PatientAIInsights } from '@/components/PatientAIInsights';
 import { PatientCharacteristics } from '@/components/PatientCharacteristics';
-import { MoodStats as MoodStatsType, ExerciseType, QualityType, SleepQualityType } from '@/types/mood';
+import { MoodStats as MoodStatsType, ExerciseType, QualityType } from '@/types/mood';
 import { Loader2, ChevronLeft, Radio, Pill, Check, X, Moon, Utensils, Dumbbell, Stethoscope, BarChart3, CalendarDays } from 'lucide-react';
 import { OverviewSummary } from '@/components/OverviewSummary';
 import { Button } from '@/components/ui/button';
@@ -264,7 +264,7 @@ export function PatientOverview({ connection, onBack, hideExtras = false }: Pati
   }, [currentMonth, getEntryForDate]);
 
   const monthSleepData = useMemo(() => {
-    const result: Record<number, SleepQualityType> = {};
+    const result: Record<number, QualityType> = {};
     const start = startOfMonth(currentMonth);
     const end = endOfMonth(currentMonth);
     const days = eachDayOfInterval({ start, end });
