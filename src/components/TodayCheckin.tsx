@@ -564,6 +564,7 @@ export function TodayCheckin({
               onSelect={handleMoodSelect}
             />
           </div>
+        </div>
       )}
 
       {/* Step: Tags */}
