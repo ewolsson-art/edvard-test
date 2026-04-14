@@ -1,6 +1,7 @@
 export type MoodType = 'severe_depressed' | 'depressed' | 'somewhat_depressed' | 'stable' | 'somewhat_elevated' | 'elevated' | 'severe_elevated';
 export type EnergyType = 'low' | 'normal' | 'high';
-export type QualityType = 'good' | 'okay' | 'bad';
+export type QualityType = 'good' | 'okay' | 'bad' | 'very_good' | 'little' | 'very_little';
+export type SleepQualityType = 'very_good' | 'good' | 'okay' | 'little' | 'very_little' | 'bad';
 export type ExerciseType = 'chest' | 'shoulders' | 'back' | 'legs';
 
 export interface MoodEntry {
@@ -76,10 +77,22 @@ export const ENERGY_LABELS: Record<EnergyType, string> = {
   high: 'Hög',
 };
 
-export const QUALITY_LABELS: Record<QualityType, string> = {
+export const QUALITY_LABELS: Record<string, string> = {
   good: 'Bra och lagom mycket',
   okay: 'Ovanligt lite',
   bad: 'Ovanligt mycket',
+  very_good: 'Djup och lugn sömn',
+  little: 'Ovanligt lite',
+  very_little: 'Nästan ingenting',
+};
+
+export const SLEEP_QUALITY_LABELS: Record<SleepQualityType, string> = {
+  very_good: 'Djup och lugn sömn',
+  good: 'Bra och lagom mycket',
+  okay: 'Helt okej',
+  little: 'Ovanligt lite',
+  very_little: 'Nästan ingenting',
+  bad: 'Ovanligt lite', // Legacy backwards compat
 };
 
 export const EXERCISE_TYPE_LABELS: Record<ExerciseType, string> = {
