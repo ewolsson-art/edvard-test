@@ -131,7 +131,9 @@ export function TodayCheckin({
   selectedDate: selectedDateProp,
   onSelectDate,
 }: TodayCheckinProps) {
+  const { t } = useTranslation();
   const { moodLabels, moodSublabels, moodTags: diagnosisMoodTags } = useDiagnosisConfig();
+  const sleepSliderOptions = useSleepSliderOptions();
   
   const moodButtons = useMemo(() => {
     const moods: MoodType[] = ['severe_elevated', 'elevated', 'somewhat_elevated', 'stable', 'somewhat_depressed', 'depressed', 'severe_depressed'];
@@ -146,7 +148,7 @@ export function TodayCheckin({
 
   const MOOD_TAGS = diagnosisMoodTags;
   const ALL_TAG_OPTIONS = useMemo(() => 
-    Object.values(MOOD_TAGS).flat().filter((t, i, arr) => arr.findIndex(a => a.value === t.value) === i),
+    Object.values(MOOD_TAGS).flat().filter((tag, i, arr) => arr.findIndex(a => a.value === tag.value) === i),
     [MOOD_TAGS]
   );
 
@@ -154,9 +156,9 @@ export function TodayCheckin({
   const isDisplayToday = isToday(displayDate);
   const isDisplayYesterday = isYesterday(displayDate);
   const formattedDate = isDisplayToday 
-    ? 'Idag' 
+    ? t('common.today') 
     : isDisplayYesterday 
-      ? 'Igår' 
+      ? t('common.yesterday') 
       : format(displayDate, "EEEE d MMMM", { locale: sv });
 
   // Build dynamic steps based on preferences
