@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { format } from 'date-fns';
-import { sv } from 'date-fns/locale';
+import { sv, enUS } from 'date-fns/locale';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
@@ -16,110 +16,56 @@ interface RelativeCommentDialogProps {
   onDelete?: (date: string) => Promise<boolean>;
 }
 
-export function RelativeCommentDialog({
-  open,
-  onOpenChange,
-  date,
-  existingComment,
-  onSave,
-  onDelete,
-}: RelativeCommentDialogProps) {
-  const { t } = useTranslation();
+export function RelativeCommentDialog({ open, onOpenChange, date, existingComment, onSave, onDelete }: RelativeCommentDialogProps) {
+  const { t, i18n } = useTranslation();
   const [comment, setComment] = useState('');
   const [isSaving, setIsSaving] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const locale = i18n.language === 'sv' ? sv : enUS;
 
   useEffect(() => {
-    if (open) {
-      setComment(existingComment || '');
-    }
+    if (open) setComment(existingComment || '');
   }, [open, existingComment]);
 
   const handleSave = async () => {
     if (!date || !comment.trim()) return;
-
     setIsSaving(true);
     const success = await onSave(format(date, 'yyyy-MM-dd'), comment.trim());
     setIsSaving(false);
-
-    if (success) {
-      onOpenChange(false);
-    }
+    if (success) onOpenChange(false);
   };
 
   const handleDelete = async () => {
     if (!date || !onDelete) return;
-
     setIsDeleting(true);
     const success = await onDelete(format(date, 'yyyy-MM-dd'));
     setIsDeleting(false);
-
-    if (success) {
-      onOpenChange(false);
-    }
+    if (success) onOpenChange(false);
   };
 
-  const formattedDate = date ? format(date, 'EEEE d MMMM yyyy', { locale: sv }) : '';
+  const formattedDate = date ? format(date, 'EEEE d MMMM yyyy', { locale }) : '';
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Egen anteckning</DialogTitle>
-          <DialogDescription className="capitalize">
-            {formattedDate}
-          </DialogDescription>
+          <DialogTitle>{t('relativeComment.ownNote')}</DialogTitle>
+          <DialogDescription className="capitalize">{formattedDate}</DialogDescription>
         </DialogHeader>
-
         <div className="space-y-4">
-          <Textarea
-            value={comment}
-            onChange={(e) => setComment(e.target.value)}
-            placeholder="Skriv din observation om dagen, t.ex. 'Ringde och verkade ledsen' eller 'Hade en bra dag tillsammans'..."
-            className="min-h-[120px]"
-          />
-          <p className="text-xs text-muted-foreground">
-            Denna anteckning är bara synlig för dig.
-          </p>
+          <Textarea value={comment} onChange={(e) => setComment(e.target.value)} placeholder={t('relativeComment.placeholder')} className="min-h-[120px]" />
+          <p className="text-xs text-muted-foreground">{t('relativeComment.onlyVisibleToYou')}</p>
         </div>
-
         <DialogFooter className="flex-col sm:flex-row gap-2">
           {existingComment && onDelete && (
-            <Button
-              variant="destructive"
-              onClick={handleDelete}
-              disabled={isDeleting || isSaving}
-              className="w-full sm:w-auto"
-            >
-              {isDeleting ? (
-                <Loader2 className="w-4 h-4 animate-spin" />
-              ) : (
-                <>
-                  <Trash2 className="w-4 h-4 mr-2" />
-                  Ta bort
-                </>
-              )}
+            <Button variant="destructive" onClick={handleDelete} disabled={isDeleting || isSaving} className="w-full sm:w-auto">
+              {isDeleting ? <Loader2 className="w-4 h-4 animate-spin" /> : <><Trash2 className="w-4 h-4 mr-2" />{t('relativeComment.deleteNote')}</>}
             </Button>
           )}
           <div className="flex gap-2 w-full sm:w-auto sm:ml-auto">
-            <Button
-              variant="outline"
-              onClick={() => onOpenChange(false)}
-              disabled={isSaving || isDeleting}
-              className="flex-1 sm:flex-none"
-            >
-              Avbryt
-            </Button>
-            <Button
-              onClick={handleSave}
-              disabled={!comment.trim() || isSaving || isDeleting}
-              className="flex-1 sm:flex-none"
-            >
-              {isSaving ? (
-                <Loader2 className="w-4 h-4 animate-spin" />
-              ) : (
-                'Spara'
-              )}
+            <Button variant="outline" onClick={() => onOpenChange(false)} disabled={isSaving || isDeleting} className="flex-1 sm:flex-none">{t('common.cancel')}</Button>
+            <Button onClick={handleSave} disabled={!comment.trim() || isSaving || isDeleting} className="flex-1 sm:flex-none">
+              {isSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : t('common.save')}
             </Button>
           </div>
         </DialogFooter>

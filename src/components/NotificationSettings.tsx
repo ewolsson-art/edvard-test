@@ -24,7 +24,6 @@ export function NotificationSettings() {
   const [medicationTime, setMedicationTime] = useState('08:00');
   const [isSaving, setIsSaving] = useState(false);
 
-  // Sync local state with preferences
   useEffect(() => {
     if (preferences) {
       setCheckinEnabled(preferences.checkin_enabled);
@@ -37,9 +36,8 @@ export function NotificationSettings() {
   const handleEnableNotifications = async () => {
     const granted = await requestPermission();
     if (granted) {
-      // Show a test notification
-      new Notification('Påminnelser aktiverade', {
-        body: 'Du kommer nu få påminnelser om incheckning och mediciner.',
+      new Notification(t('notificationSettings.notificationsEnabled'), {
+        body: t('notificationSettings.notificationsEnabledBody'),
         icon: '/favicon.ico',
       });
     }
@@ -47,23 +45,16 @@ export function NotificationSettings() {
 
   const handleSave = async () => {
     setIsSaving(true);
-    
-    // Request permission if enabling notifications
     if ((checkinEnabled || medicationEnabled) && permissionStatus !== 'granted') {
       const granted = await requestPermission();
-      if (!granted) {
-        setIsSaving(false);
-        return;
-      }
+      if (!granted) { setIsSaving(false); return; }
     }
-
     await updatePreferences({
       checkin_enabled: checkinEnabled,
       checkin_time: checkinTime + ':00',
       medication_enabled: medicationEnabled,
       medication_time: medicationTime + ':00',
     });
-
     setIsSaving(false);
   };
 
@@ -93,121 +84,68 @@ export function NotificationSettings() {
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Bell className="h-5 w-5" />
-          Påminnelser
+          {t('notificationSettings.reminders')}
         </CardTitle>
-        <CardDescription>
-          Få dagliga påminnelser om att checka in och ta dina mediciner
-        </CardDescription>
+        <CardDescription>{t('notificationSettings.reminderDesc')}</CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
         {!notificationsSupported ? (
           <div className="flex items-center gap-3 p-4 bg-muted rounded-lg">
             <BellOff className="h-5 w-5 text-muted-foreground" />
-            <p className="text-sm text-muted-foreground">
-              Din webbläsare stöder inte push-notiser.
-            </p>
+            <p className="text-sm text-muted-foreground">{t('notificationSettings.notSupported')}</p>
           </div>
         ) : permissionStatus === 'denied' ? (
           <div className="flex items-center gap-3 p-4 bg-destructive/10 rounded-lg">
             <BellOff className="h-5 w-5 text-destructive" />
-            <p className="text-sm text-destructive">
-              Du har blockerat notiser. Ändra i webbläsarens inställningar för att aktivera påminnelser.
-            </p>
+            <p className="text-sm text-destructive">{t('notificationSettings.blocked')}</p>
           </div>
         ) : permissionStatus !== 'granted' ? (
           <div className="flex items-center justify-between gap-4 p-4 bg-muted rounded-lg">
             <div className="flex items-center gap-3">
               <Bell className="h-5 w-5 text-muted-foreground" />
-              <p className="text-sm">
-                Aktivera notiser för att få påminnelser
-              </p>
+              <p className="text-sm">{t('notificationSettings.enableNotifications')}</p>
             </div>
-            <Button onClick={handleEnableNotifications} size="sm">
-              Aktivera
-            </Button>
+            <Button onClick={handleEnableNotifications} size="sm">{t('notificationSettings.enable')}</Button>
           </div>
         ) : null}
 
-        {/* Check-in reminder */}
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div className="space-y-0.5">
-              <Label htmlFor="checkin-enabled" className="text-base">
-                Daglig incheckning
-              </Label>
-              <p className="text-sm text-muted-foreground">
-                Påminn mig att registrera mitt mående
-              </p>
+              <Label htmlFor="checkin-enabled" className="text-base">{t('notificationSettings.dailyCheckin')}</Label>
+              <p className="text-sm text-muted-foreground">{t('notificationSettings.dailyCheckinDesc')}</p>
             </div>
-            <Switch
-              id="checkin-enabled"
-              checked={checkinEnabled}
-              onCheckedChange={setCheckinEnabled}
-              disabled={permissionStatus === 'denied'}
-            />
+            <Switch id="checkin-enabled" checked={checkinEnabled} onCheckedChange={setCheckinEnabled} disabled={permissionStatus === 'denied'} />
           </div>
-          
           {checkinEnabled && (
             <div className="flex items-center gap-3 pl-1">
               <Clock className="h-4 w-4 text-muted-foreground" />
-              <Label htmlFor="checkin-time" className="text-sm text-muted-foreground">
-                Tid:
-              </Label>
-              <Input
-                id="checkin-time"
-                type="time"
-                value={checkinTime}
-                onChange={(e) => setCheckinTime(e.target.value)}
-                className="w-32"
-              />
+              <Label htmlFor="checkin-time" className="text-sm text-muted-foreground">{t('notificationSettings.time')}</Label>
+              <Input id="checkin-time" type="time" value={checkinTime} onChange={(e) => setCheckinTime(e.target.value)} className="w-32" />
             </div>
           )}
         </div>
 
-        {/* Medication reminder */}
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div className="space-y-0.5">
-              <Label htmlFor="medication-enabled" className="text-base">
-                Medicinpåminnelse
-              </Label>
-              <p className="text-sm text-muted-foreground">
-                Påminn mig att ta mina mediciner
-              </p>
+              <Label htmlFor="medication-enabled" className="text-base">{t('notificationSettings.medicationReminder')}</Label>
+              <p className="text-sm text-muted-foreground">{t('notificationSettings.medicationReminderDesc')}</p>
             </div>
-            <Switch
-              id="medication-enabled"
-              checked={medicationEnabled}
-              onCheckedChange={setMedicationEnabled}
-              disabled={permissionStatus === 'denied'}
-            />
+            <Switch id="medication-enabled" checked={medicationEnabled} onCheckedChange={setMedicationEnabled} disabled={permissionStatus === 'denied'} />
           </div>
-          
           {medicationEnabled && (
             <div className="flex items-center gap-3 pl-1">
               <Clock className="h-4 w-4 text-muted-foreground" />
-              <Label htmlFor="medication-time" className="text-sm text-muted-foreground">
-                Tid:
-              </Label>
-              <Input
-                id="medication-time"
-                type="time"
-                value={medicationTime}
-                onChange={(e) => setMedicationTime(e.target.value)}
-                className="w-32"
-              />
+              <Label htmlFor="medication-time" className="text-sm text-muted-foreground">{t('notificationSettings.time')}</Label>
+              <Input id="medication-time" type="time" value={medicationTime} onChange={(e) => setMedicationTime(e.target.value)} className="w-32" />
             </div>
           )}
         </div>
 
-        {/* Save button */}
         {hasChanges && (
-          <Button 
-            onClick={handleSave} 
-            disabled={isSaving}
-            className="w-full"
-          >
-            {isSaving ? 'Sparar...' : 'Spara inställningar'}
+          <Button onClick={handleSave} disabled={isSaving} className="w-full">
+            {isSaving ? t('notificationSettings.saving') : t('notificationSettings.saveSettings')}
           </Button>
         )}
       </CardContent>

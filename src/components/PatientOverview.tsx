@@ -47,6 +47,7 @@ interface PatientOverviewProps {
 type ViewType = 'week' | 'month' | 'year';
 
 export function PatientOverview({ connection, onBack, hideExtras = false }: PatientOverviewProps) {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [view, setView] = useState<ViewType>('month');
   const [showStats, setShowStats] = useState(false);
@@ -101,8 +102,8 @@ export function PatientOverview({ connection, onBack, hideExtras = false }: Pati
         .filter(Boolean)
         .join(' ');
     }
-    return connection.patient_email || 'Användare';
-  }, [connection]);
+    return connection.patient_email || t('patientOverview.noCheckinYet');
+  }, [connection, t]);
 
   // Week data
   const weekDays = useMemo(() => {
@@ -346,7 +347,6 @@ export function PatientOverview({ connection, onBack, hideExtras = false }: Pati
 
   // Helper to get stats for current view
   const getStatsForView = () => {
-  const { t } = useTranslation();
     switch (view) {
       case 'week': return {
         stats: weekStats,
@@ -433,7 +433,7 @@ export function PatientOverview({ connection, onBack, hideExtras = false }: Pati
             </p>
           )}
           {!latestMoodEntry && (
-            <p className="text-sm text-muted-foreground/40 mt-0.5">Ingen incheckning ännu</p>
+            <p className="text-sm text-muted-foreground/40 mt-0.5">{t('patientOverview.noCheckinYet')}</p>
           )}
         </div>
         <button
@@ -454,7 +454,7 @@ export function PatientOverview({ connection, onBack, hideExtras = false }: Pati
         <div className="glass-card p-4">
           <div className="flex items-center gap-3 mb-3">
             <Stethoscope className="w-5 h-5 text-primary" />
-            <h3 className="font-medium">Diagnoser</h3>
+            <h3 className="font-medium">{t('patientOverview.diagnoses')}</h3>
           </div>
           <div className="flex flex-wrap gap-2">
             {diagnoses.map((diagnosis) => (
@@ -483,9 +483,9 @@ export function PatientOverview({ connection, onBack, hideExtras = false }: Pati
         <div className="flex items-center gap-4">
           <Tabs value={view} onValueChange={(v) => setView(v as ViewType)} className="flex-1 max-w-md">
             <TabsList className="grid w-full grid-cols-3">
-              <TabsTrigger value="week">Idag</TabsTrigger>
-              <TabsTrigger value="month">Månad</TabsTrigger>
-              <TabsTrigger value="year">År</TabsTrigger>
+              <TabsTrigger value="week">{t('patientOverview.today')}</TabsTrigger>
+              <TabsTrigger value="month">{t('patientOverview.month')}</TabsTrigger>
+              <TabsTrigger value="year">{t('patientOverview.year')}</TabsTrigger>
             </TabsList>
           </Tabs>
         </div>
@@ -557,20 +557,20 @@ export function PatientOverview({ connection, onBack, hideExtras = false }: Pati
                         <div className="space-y-2 pt-1">
                           {todayEntry.energyLevel && (
                             <div className="flex justify-between text-sm">
-                              <span className="text-muted-foreground/50">Energi</span>
-                              <span className="text-foreground/60">{todayEntry.energyLevel === 'low' ? 'Låg' : todayEntry.energyLevel === 'normal' ? 'Normal' : 'Hög'}</span>
+                              <span className="text-muted-foreground/50">{t('patientOverview.energy')}</span>
+                              <span className="text-foreground/60">{todayEntry.energyLevel === 'low' ? t('patientOverview.low') : todayEntry.energyLevel === 'normal' ? t('patientOverview.normal') : t('patientOverview.high')}</span>
                             </div>
                           )}
                           {todayEntry.eatingQuality && (
                             <div className="flex justify-between text-sm">
-                              <span className="text-muted-foreground/50">Kost</span>
-                              <span className="text-foreground/60">{todayEntry.eatingQuality === 'good' ? 'Bra' : todayEntry.eatingQuality === 'bad' ? 'Dålig' : 'Helt ok'}</span>
+                              <span className="text-muted-foreground/50">{t('patientOverview.diet')}</span>
+                              <span className="text-foreground/60">{todayEntry.eatingQuality === 'good' ? t('patientOverview.good') : todayEntry.eatingQuality === 'bad' ? t('patientOverview.bad') : t('patientOverview.ok')}</span>
                             </div>
                           )}
                           {todayEntry.exercised !== undefined && (
                             <div className="flex justify-between text-sm">
-                              <span className="text-muted-foreground/50">Träning</span>
-                              <span className="text-foreground/60">{todayEntry.exercised ? 'Ja' : 'Nej'}</span>
+                              <span className="text-muted-foreground/50">{t('patientOverview.exercise')}</span>
+                              <span className="text-foreground/60">{todayEntry.exercised ? t('patientOverview.yesLabel') : t('patientOverview.noLabel')}</span>
                             </div>
                           )}
                         </div>
@@ -586,7 +586,7 @@ export function PatientOverview({ connection, onBack, hideExtras = false }: Pati
                         )}
                       </div>
                     ) : (
-                      <p className="text-sm text-muted-foreground/40">Har inte checkat in idag</p>
+                      <p className="text-sm text-muted-foreground/40">{t('patientOverview.notCheckedInToday')}</p>
                     )}
                   </div>
                 );
@@ -629,7 +629,7 @@ export function PatientOverview({ connection, onBack, hideExtras = false }: Pati
         {/* No data shared message */}
         {!connection.share_mood && !connection.share_sleep && !connection.share_eating && !connection.share_exercise && !connection.share_medication && (
           <div className="text-center py-8 text-muted-foreground">
-            <p>Användaren delar ingen data med dig.</p>
+            <p>{t('patientOverview.noDataShared')}</p>
           </div>
         )}
       </div>

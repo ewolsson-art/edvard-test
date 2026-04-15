@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { cn } from '@/lib/utils';
 import { TurtleLogo } from '@/components/TurtleLogo';
 import { MilestoneInfo, MILESTONES } from '@/hooks/useStreak';
@@ -20,38 +20,32 @@ const CONFETTI_COLORS = [
   'hsl(20 90% 60%)',
 ];
 
-const MILESTONE_CONFIG: Record<number, { emoji: string; title: string; subtitle: string }> = {
-  3: { emoji: '🌱', title: 'Tre i rad!', subtitle: 'Du har byggt en bra vana' },
-  7: { emoji: '🔥', title: 'En hel vecka!', subtitle: 'Du brinner för det här' },
-  14: { emoji: '⭐', title: 'Två veckor!', subtitle: 'Du är en stjärna' },
-  30: { emoji: '🏆', title: 'En hel månad!', subtitle: 'Imponerande disciplin' },
-  60: { emoji: '💎', title: '60 dagar!', subtitle: 'Du är en diamant' },
-  90: { emoji: '👑', title: '90 dagar!', subtitle: 'Absolut kungligt' },
-  180: { emoji: '🦸', title: 'Halvår!', subtitle: 'Du är en superhjälte' },
-  365: { emoji: '🐢', title: 'ETT HELT ÅR!', subtitle: 'Otroligt. Steg för steg.' },
-};
-
-const DEFAULT_MESSAGES = [
-  'Snyggt jobbat!',
-  'Du är grym!',
-  'Bra gjort!',
-  'Fantastiskt!',
-  'Stark insats!',
-  'Imponerande!',
-];
-
-const DEFAULT_SUB_MESSAGES = [
-  'Varje dag räknas',
-  'Du bygger bra vanor',
-  'Steg för steg framåt',
-  'Fortsätt så här',
-];
-
 export function CelebrationAnimation({ className, streak = 0, milestone }: CelebrationAnimationProps) {
   const { t } = useTranslation();
   const [phase, setPhase] = useState(0);
   
   const isMilestone = milestone?.isNewMilestone && streak > 0;
+
+  const MILESTONE_CONFIG: Record<number, { emoji: string; title: string; subtitle: string }> = useMemo(() => ({
+    3: { emoji: '🌱', title: t('celebration.milestone3Title'), subtitle: t('celebration.milestone3Sub') },
+    7: { emoji: '🔥', title: t('celebration.milestone7Title'), subtitle: t('celebration.milestone7Sub') },
+    14: { emoji: '⭐', title: t('celebration.milestone14Title'), subtitle: t('celebration.milestone14Sub') },
+    30: { emoji: '🏆', title: t('celebration.milestone30Title'), subtitle: t('celebration.milestone30Sub') },
+    60: { emoji: '💎', title: t('celebration.milestone60Title'), subtitle: t('celebration.milestone60Sub') },
+    90: { emoji: '👑', title: t('celebration.milestone90Title'), subtitle: t('celebration.milestone90Sub') },
+    180: { emoji: '🦸', title: t('celebration.milestone180Title'), subtitle: t('celebration.milestone180Sub') },
+    365: { emoji: '🐢', title: t('celebration.milestone365Title'), subtitle: t('celebration.milestone365Sub') },
+  }), [t]);
+
+  const DEFAULT_MESSAGES = useMemo(() => [
+    t('celebration.msg1'), t('celebration.msg2'), t('celebration.msg3'),
+    t('celebration.msg4'), t('celebration.msg5'), t('celebration.msg6'),
+  ], [t]);
+
+  const DEFAULT_SUB_MESSAGES = useMemo(() => [
+    t('celebration.sub1'), t('celebration.sub2'), t('celebration.sub3'), t('celebration.sub4'),
+  ], [t]);
+
   const milestoneConfig = isMilestone ? MILESTONE_CONFIG[streak] : null;
   
   const [message] = useState(() => 
@@ -72,7 +66,6 @@ export function CelebrationAnimation({ className, streak = 0, milestone }: Celeb
 
   return (
     <div className={cn("relative flex flex-col items-center justify-center py-8 overflow-hidden", className)}>
-      {/* Confetti burst */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         {Array.from({ length: confettiCount }).map((_, i) => (
           <div
@@ -91,7 +84,6 @@ export function CelebrationAnimation({ className, streak = 0, milestone }: Celeb
         ))}
       </div>
 
-      {/* Ripple rings */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
         <div className="celebration-ring" style={{ '--ring-delay': '0s', '--ring-size': '140px' } as React.CSSProperties} />
         <div className="celebration-ring" style={{ '--ring-delay': '0.2s', '--ring-size': '220px' } as React.CSSProperties} />
@@ -100,7 +92,6 @@ export function CelebrationAnimation({ className, streak = 0, milestone }: Celeb
         )}
       </div>
 
-      {/* Main visual — milestone emoji or turtle */}
       <div className={cn(
         "relative z-10 transition-all duration-700",
         phase >= 1 ? "scale-100 opacity-100 translate-y-0" : "scale-0 opacity-0 translate-y-8"
@@ -127,7 +118,6 @@ export function CelebrationAnimation({ className, streak = 0, milestone }: Celeb
         )}
       </div>
 
-      {/* Streak counter for milestones */}
       {isMilestone && phase >= 2 && (
         <div className={cn(
           "relative z-10 mt-2 transition-all duration-500",
@@ -136,11 +126,10 @@ export function CelebrationAnimation({ className, streak = 0, milestone }: Celeb
           <span className="text-5xl font-bold tabular-nums tracking-tighter text-foreground">
             {streak}
           </span>
-          <span className="text-lg text-muted-foreground/50 ml-1">dagar</span>
+          <span className="text-lg text-muted-foreground/50 ml-1">{t('celebration.daysLabel')}</span>
         </div>
       )}
 
-      {/* Message */}
       <div className={cn(
         "relative z-10 mt-6 text-center transition-all duration-700",
         phase >= 2 ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"
@@ -153,7 +142,6 @@ export function CelebrationAnimation({ className, streak = 0, milestone }: Celeb
         </p>
       </div>
 
-      {/* Sub message */}
       <div className={cn(
         "relative z-10 mt-3 text-center transition-all duration-700",
         phase >= 3 ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"
@@ -163,7 +151,6 @@ export function CelebrationAnimation({ className, streak = 0, milestone }: Celeb
         </p>
       </div>
 
-      {/* Milestone badges earned */}
       {isMilestone && phase >= 3 && milestone?.reached && (
         <div className={cn(
           "relative z-10 mt-6 flex items-center gap-2 transition-all duration-500",
