@@ -90,24 +90,25 @@ const moodCssClasses: Record<MoodType, string> = {
 };
 
 // Smart follow-up messages based on mood + energy combination
-function getSmartFollowUp(mood: MoodType, energy?: EnergyType): { message: string; icon: string } | null {
+function getSmartFollowUp(mood: MoodType, energy?: EnergyType, t?: (key: string) => string): { message: string; icon: string } | null {
+  const tr = t || ((k: string) => k);
   if ((mood === 'severe_depressed' || mood === 'depressed') && energy === 'high') {
-    return { message: 'Hög energi + lågt humör kan tyda på ångest. Försök andas lugnt.', icon: '💙' };
+    return { message: tr('checkin.highEnergyLow'), icon: '💙' };
   }
   if (mood === 'severe_depressed' || mood === 'depressed' || mood === 'somewhat_depressed') {
-    return { message: 'Det är tufft just nu. Kom ihåg att bättre dagar kommer.', icon: '💛' };
+    return { message: tr('checkin.toughNow'), icon: '💛' };
   }
   if ((mood === 'severe_elevated' || mood === 'elevated') && energy === 'high') {
-    return { message: 'Mycket hög energi + humör – känner du igen detta mönster?', icon: '⚠️' };
+    return { message: tr('checkin.veryHighEnergy'), icon: '⚠️' };
   }
   if (mood === 'severe_elevated' || mood === 'elevated') {
-    return { message: 'Håll koll på sömnen och försök sakta ner lite.', icon: '🧘' };
+    return { message: tr('checkin.watchSleep'), icon: '🧘' };
   }
   if (mood === 'somewhat_elevated' && energy === 'high') {
-    return { message: 'Du verkar ha en bra dag! Njut av den.', icon: '✨' };
+    return { message: tr('checkin.goodDay'), icon: '✨' };
   }
   if (mood === 'stable') {
-    return { message: 'Bra att höra! Stabilitet är styrka.', icon: '☀️' };
+    return { message: tr('checkin.goodToHear'), icon: '☀️' };
   }
   return null;
 }
