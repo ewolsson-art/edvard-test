@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
+import { useTranslation } from "react-i18next";
 import { Loader2 } from "lucide-react";
 import { AuthNavbar } from "@/components/AuthNavbar";
 import { TurtleLogo } from "@/components/TurtleLogo";
@@ -11,6 +12,7 @@ import { NightCityscape } from "@/components/NightCityscape";
 const Auth = () => {
   const { user, loading } = useAuth();
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (!loading && user) {
@@ -39,18 +41,18 @@ const Auth = () => {
             <div className="flex items-end gap-6 md:gap-10 animate-fade-in">
               <div className="space-y-3 md:space-y-6 max-w-xl">
                 <h1 className="text-[1.75rem] sm:text-4xl md:text-5xl lg:text-6xl font-display font-bold text-white leading-[1.15] tracking-tight drop-shadow-lg">
-                  Följ ditt mående med{" "}
-                  <span className="text-[hsl(45_85%_55%)]">bättre insikt</span>
+                  {t('landing.heroTitle')}{" "}
+                  <span className="text-[hsl(45_85%_55%)]">{t('landing.heroHighlight')}</span>
                 </h1>
                 <p className="text-[0.95rem] sm:text-lg md:text-xl text-white/80 leading-relaxed">
-                  Din interaktiva och personliga stämningsdagbok
+                  {t('landing.heroSubtitle')}
                 </p>
                 <div className="flex flex-col gap-3 pt-2 md:pt-4">
                   <button
                     className="px-10 md:px-14 py-3.5 md:py-4 rounded-full bg-[hsl(45_85%_55%)] text-[hsl(225_30%_7%)] font-bold text-base md:text-lg tracking-wide shadow-[0_4px_24px_hsl(45_85%_55%/0.35)] hover:shadow-[0_8px_32px_hsl(45_85%_55%/0.5)] hover:bg-[hsl(45_85%_62%)] hover:scale-105 active:scale-[0.98] transition-all duration-200 w-fit"
                     onClick={() => navigate("/skapa-konto")}
                   >
-                    Kom igång
+                    {t('nav.getStarted')}
                   </button>
                 </div>
               </div>

@@ -119,6 +119,7 @@ export function AuthNavbar() {
                 {item.label}
               </button>
             ))}
+            <LanguageSwitcher variant="navbar" className="!text-white/50 !px-0" />
           </div>
         </div>
       )}
