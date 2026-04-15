@@ -284,7 +284,6 @@ export function TodayCheckin({
   };
 
   const handleMoodContinue = () => {
-  const { t } = useTranslation();
     if (checkinData.mood) {
       navigateStep('tags');
     }
