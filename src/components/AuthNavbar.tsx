@@ -58,7 +58,7 @@ export function AuthNavbar() {
             </div>
 
             {/* Mobile menu button */}
-            <div className="lg:hidden">
+            <div className="md:hidden">
               <Button
                 variant="ghost"
                 size="icon"
