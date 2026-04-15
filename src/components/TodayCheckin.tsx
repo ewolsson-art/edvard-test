@@ -546,7 +546,7 @@ export function TodayCheckin({
             {isEditing ? (
               <Button variant="ghost" size="sm" onClick={() => setIsEditing(false)} className="gap-1.5 text-destructive hover:text-destructive hover:bg-destructive/10 -ml-2">
                 <X className="w-4 h-4" />
-                Avbryt
+                {t('checkin.cancel')}
               </Button>
             ) : <div />}
           </div>
@@ -568,7 +568,7 @@ export function TodayCheckin({
               )}
             </div>
             <h1 className="font-display text-[28px] sm:text-3xl md:text-3xl font-bold leading-tight tracking-tight">
-              {isDisplayToday ? 'Hur känns det idag?' : 'Hur mådde du?'}
+              {isDisplayToday ? t('checkin.howAreYouToday') : t('checkin.howDidYouFeel')}
             </h1>
           </div>
 
@@ -587,7 +587,7 @@ export function TodayCheckin({
                 onClick={handleMoodContinue}
                 className="px-10 py-3.5 rounded-full bg-[hsl(45_85%_55%)] text-[hsl(225_30%_7%)] font-bold text-base tracking-wide shadow-[0_4px_24px_hsl(45_85%_55%/0.35)] hover:shadow-[0_8px_32px_hsl(45_85%_55%/0.5)] hover:bg-[hsl(45_85%_62%)] hover:scale-105 active:scale-[0.98] transition-all duration-200 inline-flex items-center gap-1.5"
               >
-                Fortsätt
+                {t('common.continue')}
                 <ChevronRight className="w-4 h-4" />
               </button>
             </div>
@@ -602,7 +602,7 @@ export function TodayCheckin({
           <div className="flex items-center justify-between h-10 mb-6">
             <Button variant="ghost" size="sm" onClick={goBack} className="gap-1.5 text-muted-foreground/50 -ml-2">
               <ChevronLeft className="w-4 h-4" />
-              Tillbaka
+              {t('common.back')}
             </Button>
             <button
               onClick={() => setShowComment(showComment === 'mood' ? null : 'mood')}
@@ -610,7 +610,7 @@ export function TodayCheckin({
                 "p-2 rounded-xl transition-colors",
                 showComment === 'mood' ? "bg-primary/10 text-primary" : "text-muted-foreground/50 hover:text-muted-foreground/80 hover:bg-muted/30"
               )}
-              aria-label="Lägg till kommentar"
+              aria-label={t('checkin.addComment')}
             >
               <MessageSquarePlus className="w-5 h-5" />
             </button>
@@ -620,7 +620,7 @@ export function TodayCheckin({
           <div className="mb-10">
             <p className="text-muted-foreground/30 text-[11px] tracking-[0.15em] uppercase font-medium mb-3">{formattedDate}</p>
             <h1 className="font-display text-[28px] sm:text-3xl font-bold tracking-tight">
-              Något särskilt idag?
+              {t('checkin.anythingSpecial')}
             </h1>
           </div>
 
@@ -668,14 +668,14 @@ export function TodayCheckin({
                 className="px-4 py-2.5 rounded-full border border-dashed border-border/30 text-sm font-medium text-muted-foreground/40 hover:text-muted-foreground/60 hover:border-border/50 transition-all"
               >
                 <Plus className="w-3.5 h-3.5 mr-1.5 inline" />
-                Lägg till egen
+                {t('checkin.addOwn')}
               </button>
             ) : (
               <div className="w-full mt-2 flex items-center gap-2 max-w-xs">
                 <input
                   type="text"
                   autoFocus
-                  placeholder="Skriv en egen tagg..."
+                  placeholder={t('checkin.writeTag')}
                   className="flex-1 px-4 py-2.5 rounded-full border border-primary/30 bg-white/[0.03] text-base text-foreground placeholder:text-muted-foreground/30 focus:outline-none focus:border-primary/40 focus:ring-1 focus:ring-primary/20 transition-all"
                   maxLength={30}
                   onKeyDown={(e: KeyboardEvent<HTMLInputElement>) => {
@@ -713,7 +713,7 @@ export function TodayCheckin({
               onClick={handleTagsContinue}
               className="px-10 py-3.5 rounded-full bg-[hsl(45_85%_55%)] text-[hsl(225_30%_7%)] font-bold text-base tracking-wide shadow-[0_4px_24px_hsl(45_85%_55%/0.35)] hover:shadow-[0_8px_32px_hsl(45_85%_55%/0.5)] hover:bg-[hsl(45_85%_62%)] hover:scale-105 active:scale-[0.98] transition-all duration-200 inline-flex items-center gap-1.5"
             >
-              {(checkinData.tags || []).length > 0 ? 'Klar' : 'Nej, hoppa över'}
+              {(checkinData.tags || []).length > 0 ? t('checkin.done') : t('checkin.skipIt')}
               <ChevronRight className="w-4 h-4" />
             </button>
           </div>
