@@ -106,7 +106,13 @@
   "landing": {
     "heroTitle": "Track your mood with",
     "heroHighlight": "better insight",
-    "heroSubtitle": "Your interactive and personal mood diary"
+    "heroSubtitle": "Your interactive and personal mood diary",
+    "sectionTitle": "Created by and for people with bipolar disorder",
+    "sectionSubtitle": "Toddy is your interactive and personal mood diary that helps you keep track of how you feel",
+    "step1": "Make daily check-ins",
+    "step2": "Discover your own patterns",
+    "step3": "Let your family or doctor follow you",
+    "getStarted": "Get started"
   },
   "auth": {
     "welcomeBack": "Welcome back",
@@ -911,5 +917,13 @@
     "talkative": "Very talkative",
     "lessSleep": "Sleeping less",
     "energetic": "Energetic"
+  },
+  "footer": {
+    "tagline": "Your personal mood diary – created by and for people with bipolar disorder.",
+    "privacyPolicy": "Privacy Policy",
+    "termsOfService": "Terms of Service",
+    "aboutUs": "About us",
+    "forUsers": "For users",
+    "allRightsReserved": "All rights reserved."
   }
 }
