@@ -38,8 +38,8 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
-import {
 import { useTranslation } from 'react-i18next';
+import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,

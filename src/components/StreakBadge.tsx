@@ -1,8 +1,8 @@
 import { Flame, Trophy, Target } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { MilestoneInfo, MILESTONES } from '@/hooks/useStreak';
-import {
 import { useTranslation } from 'react-i18next';
+import {
   Tooltip,
   TooltipContent,
   TooltipProvider,

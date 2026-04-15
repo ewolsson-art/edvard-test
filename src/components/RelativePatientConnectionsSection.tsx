@@ -6,8 +6,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Loader2, UserPlus, Users, X, Send, Eye } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import {
 import { useTranslation } from 'react-i18next';
+import {
   Dialog,
   DialogContent,
   DialogDescription,
