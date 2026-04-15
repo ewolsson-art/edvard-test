@@ -1202,5 +1202,22 @@
     "contactTitle": "Intresserad av samarbete?",
     "contactDescription": "Vi vill gärna höra från dig. Berätta om din organisation och hur du tror att vi kan samarbeta.",
     "contactButton": "Kontakta oss"
+  },
+  "howItWorksPage": {
+    "heroTitle": "Så funkar Toddy",
+    "heroSubtitle": "Tre enkla steg till bättre koll på ditt mående",
+    "step1Title": "Checka in dagligen",
+    "step1Desc": "Logga ditt mående, sömn, kost, träning och medicin på under en minut. Det är enkelt, snabbt och helt på dina villkor.",
+    "step2Title": "Upptäck dina mönster",
+    "step2Desc": "Toddy analyserar dina incheckningar och visar trender över tid — så att du kan förstå vad som påverkar just dig.",
+    "step3Title": "Dela med vården och nära",
+    "step3Desc": "Välj själv vilken data du vill dela med läkare och anhöriga. Du har alltid full kontroll.",
+    "featureAI": "AI-drivna insikter",
+    "featureAIDesc": "Få personliga observationer baserade på dina mönster — helt utan att dela data med tredje part.",
+    "featureData": "Din data, dina regler",
+    "featureDataDesc": "All data krypteras och lagras säkert. Du bestämmer alltid vem som ser vad.",
+    "featureReminders": "Smarta påminnelser",
+    "featureRemindersDesc": "Anpassningsbara notiser hjälper dig hålla rutinen utan att det blir påträngande.",
+    "cta": "Kom igång"
   }
 }
