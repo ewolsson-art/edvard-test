@@ -46,13 +46,14 @@ export function AuthNavbar() {
                 onClick={() => navigate("/skapa-konto")}
                 className="px-4 py-2 text-sm font-medium text-white/70 hover:text-white hover:bg-white/10 rounded-lg transition-all duration-200"
               >
-                Kom igång
+                {t('nav.getStarted')}
               </button>
+              <LanguageSwitcher variant="navbar" />
               <button
                 onClick={() => navigate("/logga-in")}
                 className="ml-2 px-5 py-2 text-sm font-semibold text-white/80 border border-white/25 rounded-full hover:bg-white hover:text-[hsl(225_30%_7%)] hover:border-white transition-all duration-200"
               >
-                Logga in
+                {t('nav.login')}
               </button>
             </div>
 
@@ -83,7 +84,7 @@ export function AuthNavbar() {
             <button
               onClick={() => setIsMobileMenuOpen(false)}
               className="text-white/60 hover:text-white transition-colors"
-              aria-label="Stäng meny"
+              aria-label={t('nav.closeMenu')}
             >
               <X className="h-7 w-7" />
             </button>
@@ -96,13 +97,13 @@ export function AuthNavbar() {
                 onClick={() => { setIsMobileMenuOpen(false); navigate('/logga-in'); }}
                 className="block text-left text-3xl font-bold text-white tracking-tight hover:text-white/80 transition-colors"
               >
-                Logga in
+                {t('nav.login')}
               </button>
               <button
                 onClick={() => { setIsMobileMenuOpen(false); navigate('/skapa-konto'); }}
                 className="block text-left text-3xl font-bold text-white tracking-tight hover:text-white/80 transition-colors"
               >
-                Skapa konto
+                {t('nav.createAccount')}
               </button>
             </div>
           </div>
