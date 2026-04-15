@@ -5,6 +5,7 @@ import { Check, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { CalendarHeader } from './CalendarHeader';
 import {
+import { useTranslation } from 'react-i18next';
   Popover,
   PopoverContent,
   PopoverTrigger,
@@ -33,6 +34,7 @@ export function MedicationMonthCalendar({
   onNextMonth,
   onDayClick 
 }: MedicationMonthCalendarProps) {
+  const { t } = useTranslation();
   const [openPopover, setOpenPopover] = useState<number | null>(null);
 
   const days = useMemo(() => {

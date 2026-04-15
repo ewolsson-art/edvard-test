@@ -8,6 +8,7 @@ import { Switch } from '@/components/ui/switch';
 import { Loader2, UserPlus, Users, Trash2, Settings } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import {
+import { useTranslation } from 'react-i18next';
   Dialog,
   DialogContent,
   DialogDescription,
@@ -19,6 +20,7 @@ import {
 const emailSchema = z.string().email({ message: "Ogiltig e-postadress" });
 
 const ManageConnections = () => {
+  const { t } = useTranslation();
   const { connections, isLoading, inviteDoctor, updateShareSettings, removeConnection } = usePatientConnections();
   const { toast } = useToast();
   

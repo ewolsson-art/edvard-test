@@ -10,6 +10,7 @@ import { DarkNightBackground } from '@/components/DarkNightBackground';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { cn } from '@/lib/utils';
+import { useTranslation } from 'react-i18next';
 
 const DOCTOR_FEATURES = [
   {
@@ -55,6 +56,7 @@ const WORKFLOW_STEPS = [
 const TOTAL_STEPS = 3;
 
 const DoctorOnboarding = () => {
+  const { t } = useTranslation();
   const { toast } = useToast();
   const { user } = useAuth();
   const [step, setStep] = useState(1);

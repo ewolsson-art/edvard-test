@@ -5,6 +5,7 @@ import {
   Heart, Sun, TrendingUp, Clock, Shield, Sparkles, ArrowUpRight, Phone, ExternalLink
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useTranslation } from 'react-i18next';
 
 interface EncouragingStat {
   icon: typeof Heart;

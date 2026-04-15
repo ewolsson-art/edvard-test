@@ -36,6 +36,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useTranslation } from 'react-i18next';
 
 interface PatientOverviewProps {
   connection: PatientConnection;
@@ -345,6 +346,7 @@ export function PatientOverview({ connection, onBack, hideExtras = false }: Pati
 
   // Helper to get stats for current view
   const getStatsForView = () => {
+  const { t } = useTranslation();
     switch (view) {
       case 'week': return {
         stats: weekStats,

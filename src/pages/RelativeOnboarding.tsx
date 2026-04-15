@@ -8,10 +8,12 @@ import { Logo } from '@/components/Logo';
 import { DarkNightBackground } from '@/components/DarkNightBackground';
 import { Input } from '@/components/ui/input';
 import { supabase } from '@/integrations/supabase/client';
+import { useTranslation } from 'react-i18next';
 
 const emailSchema = z.string().email({ message: "Ogiltig e-postadress" });
 
 const RelativeOnboarding = () => {
+  const { t } = useTranslation();
   const { toast } = useToast();
   const { createPreferences } = useUserPreferences();
   const { requestPatientAccess, pendingFromPatients, isLoading, refetch } = useRelativeConnections();

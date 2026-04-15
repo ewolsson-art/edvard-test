@@ -3,8 +3,10 @@ import { ArrowLeft, MessageCircle } from 'lucide-react';
 import { useCommunityPosts } from '@/hooks/useCommunityPosts';
 import { useAuth } from '@/hooks/useAuth';
 import { PostCard } from '@/components/community/PostCard';
+import { useTranslation } from 'react-i18next';
 
 const CommunityThread = () => {
+  const { t } = useTranslation();
   const { threadId } = useParams<{ threadId: string }>();
   const navigate = useNavigate();
   const { user } = useAuth();

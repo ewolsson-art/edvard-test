@@ -1,5 +1,6 @@
  import { Moon, Dumbbell, Utensils, Brain } from 'lucide-react';
  import { cn } from '@/lib/utils';
+import { useTranslation } from 'react-i18next';
  
  interface RiskIndicatorProps {
    type: 'sleep' | 'exercise' | 'eating' | 'mood';
@@ -20,6 +21,7 @@
    const Icon = icons[type];
    
    const getRiskColor = (level: number) => {
+  const { t } = useTranslation();
      if (level >= 60) return 'bg-red-500';
      if (level >= 30) return 'bg-amber-500';
      return 'bg-emerald-500';

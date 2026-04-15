@@ -2,6 +2,7 @@ import { useState, useRef, useCallback, useEffect } from 'react';
 import { MoodType } from '@/types/mood';
 import { cn } from '@/lib/utils';
 import { Flame, Zap, Sun, Cloud, CloudRain } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 interface MoodOption {
   mood: MoodType;
@@ -78,6 +79,7 @@ export function VerticalMoodSlider({ options, value, onSelect }: VerticalMoodSli
   }, [isDragging, activeIndex, onSelect, options]);
 
   const handleStepClick = (index: number) => {
+  const { t } = useTranslation();
     setActiveIndex(index);
     onSelect(options[index].mood);
   };

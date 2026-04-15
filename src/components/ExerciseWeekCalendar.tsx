@@ -4,6 +4,7 @@ import { Check, X } from 'lucide-react';
 import { ExerciseType, EXERCISE_TYPE_LABELS, EXERCISE_TYPE_EMOJIS } from '@/types/mood';
 import { cn } from '@/lib/utils';
 import { CalendarHeader } from './CalendarHeader';
+import { useTranslation } from 'react-i18next';
 
 interface ExerciseWeekCalendarProps {
   weekDays: Date[];
@@ -22,6 +23,7 @@ export function ExerciseWeekCalendar({
   onNextWeek,
   onDayClick,
 }: ExerciseWeekCalendarProps) {
+  const { t } = useTranslation();
   return (
     <div className="glass-card p-6 fade-in">
       <CalendarHeader

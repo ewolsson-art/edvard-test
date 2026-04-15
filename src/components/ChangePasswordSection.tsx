@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Loader2, Lock, Eye, EyeOff } from 'lucide-react';
 import { z } from 'zod';
+import { useTranslation } from 'react-i18next';
 
 const passwordSchema = z.object({
   newPassword: z.string().min(6, { message: "Lösenordet måste vara minst 6 tecken" }),
@@ -16,6 +17,7 @@ const passwordSchema = z.object({
 });
 
 export const ChangePasswordSection = () => {
+  const { t } = useTranslation();
   const { toast } = useToast();
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');

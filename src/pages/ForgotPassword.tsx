@@ -12,7 +12,7 @@ import { AuthNavbar } from "@/components/AuthNavbar";
 import { DarkNightBackground } from "@/components/DarkNightBackground";
 
 const emailSchema = z.object({
-  email: z.string().email("Ogiltig e-postadress"),
+  email: z.string().email(),
 });
 
 const ForgotPassword = () => {
@@ -21,6 +21,7 @@ const ForgotPassword = () => {
   const [isSuccess, setIsSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const { toast } = useToast();
+  const { t } = useTranslation();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -43,7 +44,7 @@ const ForgotPassword = () => {
 
       if (resetError) {
         toast({
-          title: "Kunde inte skicka återställningslänk",
+          title: t("auth.couldNotSendReset"),
           description: resetError.message,
           variant: "destructive",
         });
@@ -74,10 +75,10 @@ const ForgotPassword = () => {
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <h2 className="text-xl font-semibold text-white">Kolla din e-post</h2>
+                  <h2 className="text-xl font-semibold text-white">{t("auth.emailSentTitle")}</h2>
                   <p className="text-white/60">
-                    Vi har skickat en återställningslänk till <strong className="text-white">{email}</strong>. 
-                    Klicka på länken i mailet för att välja ett nytt lösenord.
+                    {t("auth.emailSentDesc")} <strong className="text-white">{email}</strong>. 
+                    
                   </p>
                 </div>
                 <div className="pt-4 space-y-3">
@@ -89,11 +90,11 @@ const ForgotPassword = () => {
                       setEmail("");
                     }}
                   >
-                    Försök med annan e-post
+                    {t("auth.sendAgain")}
                   </Button>
                   <Link to="/logga-in" className="block">
                     <Button className="w-full bg-[hsl(45_85%_55%)] text-[hsl(230_30%_5%)] hover:bg-[hsl(45_85%_65%)]">
-                      Tillbaka till inloggning
+                      {t("common.back")}
                     </Button>
                   </Link>
                 </div>
@@ -105,7 +106,7 @@ const ForgotPassword = () => {
                     Glömt lösenord?
                   </h1>
                   <p className="mt-2 text-white/60">
-                    Ange din e-postadress så skickar vi en återställningslänk
+                    {t("auth.forgotPasswordDesc")}
                   </p>
                 </div>
 
@@ -119,7 +120,7 @@ const ForgotPassword = () => {
                       <Input
                         id="email"
                         type="email"
-                        placeholder="din@email.se"
+                        placeholder={t("auth.emailPlaceholder")}
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         className={`pl-10 h-12 bg-white/5 border-white/15 rounded-xl text-white placeholder:text-white/30 focus:ring-2 focus:ring-[hsl(260_60%_72%/0.3)] transition-all ${error ? 'border-red-400/60' : ''}`}
@@ -137,7 +138,7 @@ const ForgotPassword = () => {
                     {isSubmitting ? (
                       <Loader2 className="h-5 w-5 animate-spin" />
                     ) : (
-                      "Skicka återställningslänk"
+                      t("auth.sendResetLink")
                     )}
                   </Button>
                 </form>

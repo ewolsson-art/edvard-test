@@ -5,6 +5,7 @@ import { Moon, MoonStar } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { CalendarHeader } from './CalendarHeader';
 import { QualityType } from '@/types/mood';
+import { useTranslation } from 'react-i18next';
 
 interface SleepMonthCalendarProps {
   currentDate: Date;
@@ -25,6 +26,7 @@ export function SleepMonthCalendar({
   onDayClick,
   hideNavigation = false,
 }: SleepMonthCalendarProps) {
+  const { t } = useTranslation();
   const days = useMemo(() => {
     const start = startOfWeek(startOfMonth(currentDate), { weekStartsOn: 1 });
     const end = endOfWeek(endOfMonth(currentDate), { weekStartsOn: 1 });

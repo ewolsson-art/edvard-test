@@ -4,6 +4,7 @@ import { Moon, MoonStar } from 'lucide-react';
 import { QualityType } from '@/types/mood';
 import { cn } from '@/lib/utils';
 import { CalendarHeader } from './CalendarHeader';
+import { useTranslation } from 'react-i18next';
 
 interface SleepWeekCalendarProps {
   weekDays: Date[];
@@ -22,6 +23,7 @@ export function SleepWeekCalendar({
   onNextWeek,
   onDayClick,
 }: SleepWeekCalendarProps) {
+  const { t } = useTranslation();
   return (
     <div className="glass-card p-6 fade-in">
       <CalendarHeader

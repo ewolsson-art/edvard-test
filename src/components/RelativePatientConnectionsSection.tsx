@@ -7,6 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Loader2, UserPlus, Users, X, Send, Eye } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import {
+import { useTranslation } from 'react-i18next';
   Dialog,
   DialogContent,
   DialogDescription,
@@ -17,6 +18,7 @@ import {
 const emailSchema = z.string().email({ message: "Ogiltig e-postadress" });
 
 export const RelativePatientConnectionsSection = () => {
+  const { t } = useTranslation();
   const { 
     approvedConnections,
     pendingFromPatients,

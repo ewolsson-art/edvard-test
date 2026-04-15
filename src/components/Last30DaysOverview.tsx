@@ -4,6 +4,7 @@ import { sv } from 'date-fns/locale';
 import { MoodEntry, MoodType, QualityType, MOOD_ICONS } from '@/types/mood';
 import { cn } from '@/lib/utils';
 import { TrendingUp, TrendingDown, Minus, Moon, Utensils, Dumbbell, Pill, Calendar, X } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 interface Last30DaysOverviewProps {
   entries: MoodEntry[];
@@ -126,6 +127,7 @@ export function Last30DaysOverview({
   const showMedication = preferences?.include_medication !== false && activeMedicationsCount > 0;
 
   const getMoodColor = (mood: MoodType) => {
+  const { t } = useTranslation();
     switch (mood) {
       case 'severe_elevated': return 'bg-[hsl(var(--mood-severe-elevated))]';
       case 'elevated': return 'bg-mood-elevated';

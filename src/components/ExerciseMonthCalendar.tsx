@@ -5,6 +5,7 @@ import { Check, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { ExerciseType, EXERCISE_TYPE_LABELS, EXERCISE_TYPE_EMOJIS } from '@/types/mood';
 import { CalendarHeader } from './CalendarHeader';
+import { useTranslation } from 'react-i18next';
 
 interface ExerciseMonthCalendarProps {
   currentDate: Date;
@@ -25,6 +26,7 @@ export function ExerciseMonthCalendar({
   onDayClick,
   hideNavigation = false,
 }: ExerciseMonthCalendarProps) {
+  const { t } = useTranslation();
   const days = useMemo(() => {
     const start = startOfWeek(startOfMonth(currentDate), { weekStartsOn: 1 });
     const end = endOfWeek(endOfMonth(currentDate), { weekStartsOn: 1 });

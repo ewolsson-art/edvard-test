@@ -3,6 +3,7 @@ import { Bell, BellOff, Clock } from 'lucide-react';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
+import { useTranslation } from 'react-i18next';
 
 export interface NotificationSettings {
   checkinEnabled: boolean;
@@ -23,6 +24,7 @@ const TIME_OPTIONS = [
 ];
 
 export const NotificationStep = ({ settings, onSettingsChange, includeMedication }: NotificationStepProps) => {
+  const { t } = useTranslation();
   const handleToggle = (field: 'checkinEnabled' | 'medicationEnabled') => {
     onSettingsChange({
       ...settings,

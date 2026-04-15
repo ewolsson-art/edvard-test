@@ -5,6 +5,7 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { MoodEntry, QualityType } from '@/types/mood';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
+import { useTranslation } from 'react-i18next';
 
 interface EatingYearHeatmapProps {
   year: number;
@@ -22,6 +23,7 @@ const months = [
 const weekDays = ['M', 'T', 'O', 'T', 'F', 'L', 'S'];
 
 export function EatingYearHeatmap({ year, entries, onPrevYear, onNextYear, onMonthClick }: EatingYearHeatmapProps) {
+  const { t } = useTranslation();
   const [showSecondHalf, setShowSecondHalf] = useState(false);
   
   const eatingMap = useMemo(() => {

@@ -8,6 +8,7 @@
  import { RecommendationCard } from './RecommendationCard';
  import { WeeklyComparisonChart } from './WeeklyComparisonChart';
  import ReactMarkdown from 'react-markdown';
+import { useTranslation } from 'react-i18next';
  
  interface StructuredInsight {
    summary: {
@@ -56,6 +57,7 @@
    onGenerate,
    patternsDetected 
  }: VisualInsightsProps) {
+  const { t } = useTranslation();
    const [showFullText, setShowFullText] = useState(false);
  
    if (isLoading) {

@@ -5,6 +5,7 @@ import { SleepMonthCalendar } from './SleepMonthCalendar';
 import { EatingMonthCalendar } from './EatingMonthCalendar';
 import { ExerciseMonthCalendar } from './ExerciseMonthCalendar';
 import { MoodType, MoodEntry, ExerciseType, QualityType } from '@/types/mood';
+import { useTranslation } from 'react-i18next';
 
 interface ScrollableMonthsCalendarProps {
   year: number;

@@ -3,6 +3,7 @@ import { DarkNightBackground } from "@/components/DarkNightBackground";
 import { LandingFooter } from "@/components/landing/LandingFooter";
 import { CalendarCheck, BarChart3, Share2, Brain, Shield, Bell, ArrowRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from 'react-i18next';
 
 const steps = [
   {
@@ -44,6 +45,7 @@ const features = [
 ];
 
 const HowItWorks = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
 
   return (

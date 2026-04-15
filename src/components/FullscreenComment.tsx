@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { ChevronLeft, Mic, MicOff, Send } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { useTranslation } from 'react-i18next';
 
 interface FullscreenCommentProps {
   title: string;
@@ -22,6 +23,7 @@ export function FullscreenComment({ title, placeholder, value, onChange, onClose
   }, []);
 
   const toggleVoiceRecording = () => {
+  const { t } = useTranslation();
     if (isRecording && recognition) {
       recognition.stop();
       setIsRecording(false);

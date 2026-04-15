@@ -3,8 +3,10 @@ import { useProfile } from '@/hooks/useProfile';
 import { useDoctorConnections, PatientConnection } from '@/hooks/useDoctorConnections';
 import { Button } from '@/components/ui/button';
 import { Users, Clock, UserCheck, Eye, Loader2 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const DoctorHome = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { firstName } = useProfile();
   const { approvedConnections, pendingConnections, isLoading, updateConnectionStatus } = useDoctorConnections();

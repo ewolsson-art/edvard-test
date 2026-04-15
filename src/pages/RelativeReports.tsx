@@ -15,6 +15,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { cn } from '@/lib/utils';
 
 import { Loader2 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 interface ReportData {
   mood: {
@@ -60,6 +61,7 @@ interface ReportData {
 }
 
 const RelativeReports = () => {
+  const { t } = useTranslation();
   const today = new Date();
   const defaultStart = startOfMonth(subMonths(today, 1));
   const defaultEnd = endOfMonth(subMonths(today, 1));

@@ -16,10 +16,12 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
+import { useTranslation } from 'react-i18next';
 
 const emailSchema = z.string().email({ message: "Ogiltig e-postadress" });
 
 export const RelativeConnectionsSection = () => {
+  const { t } = useTranslation();
   const { 
     connections, 
     pendingFromRelatives,

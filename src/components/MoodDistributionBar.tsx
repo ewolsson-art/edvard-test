@@ -1,6 +1,7 @@
 import { MoodStats as MoodStatsType, MoodType } from '@/types/mood';
 import { useDiagnosisConfig } from '@/hooks/useDiagnosisConfig';
 import { cn } from '@/lib/utils';
+import { useTranslation } from 'react-i18next';
 
 interface MoodDistributionBarProps {
   stats: MoodStatsType;
@@ -9,6 +10,7 @@ interface MoodDistributionBarProps {
 }
 
 export function MoodDistributionBar({ stats, periodLabel, customLabels }: MoodDistributionBarProps) {
+  const { t } = useTranslation();
   const { moodLabels } = useDiagnosisConfig();
   const labels = customLabels || moodLabels;
 

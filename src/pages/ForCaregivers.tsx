@@ -2,8 +2,10 @@ import { AuthNavbar } from '@/components/AuthNavbar';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 import { Activity, Users, FileText, MessageSquare, Clock, Shield, ArrowRight } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const ForCaregivers = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
 
   const benefits = [

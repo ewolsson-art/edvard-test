@@ -4,6 +4,7 @@ import { sv } from 'date-fns/locale';
 import { ChevronLeft } from 'lucide-react';
 import { MoodEntry, MoodType } from '@/types/mood';
 import { cn } from '@/lib/utils';
+import { useTranslation } from 'react-i18next';
 
 interface YearHeatmapProps {
   year: number;

@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { TurtleLogo } from "@/components/TurtleLogo";
+import { useTranslation } from 'react-i18next';
 
 function FooterSkyline() {
   return (
@@ -68,6 +69,7 @@ function FooterSkyline() {
 }
 
 export function LandingFooter() {
+  const { t } = useTranslation();
   return (
     <footer className="relative z-10 bg-[hsl(225_30%_5%)] pt-20 pb-6 overflow-hidden">
       {/* Illustration backdrop */}

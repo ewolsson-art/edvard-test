@@ -10,10 +10,11 @@ import { useToast } from "@/hooks/use-toast";
 import { AuthNavbar } from "@/components/AuthNavbar";
 import { DarkNightBackground } from "@/components/DarkNightBackground";
 import { Eye, EyeOff, ArrowRight, Loader2, Mail, CheckCircle2 } from "lucide-react";
+import { useTranslation } from 'react-i18next';
 
 const loginSchema = z.object({
-  email: z.string().email("Ogiltig e-postadress"),
-  password: z.string().min(6, "Lösenordet måste vara minst 6 tecken"),
+  email: z.string().email(),
+  password: z.string().min(6),
 });
 
 const Login = () => {
@@ -26,6 +27,7 @@ const Login = () => {
   const isVerified = searchParams.get("verified") === "true";
 
   const { user, loading, signIn } = useAuth();
+  const { t } = useTranslation();
   const { profile, isLoading: profileLoading } = useProfile();
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -69,14 +71,14 @@ const Login = () => {
     const { error } = await signIn(email, password);
 
     if (error) {
-      let errorMessage = "Ett fel uppstod vid inloggning";
+      let errorMessage = t("auth.loginError");
       if (error.message.includes("Invalid login credentials")) {
-        errorMessage = "Fel e-postadress eller lösenord";
+        errorMessage = t("auth.wrongCredentials");
       } else if (error.message.includes("Email not confirmed")) {
-        errorMessage = "Vänligen bekräfta din e-postadress innan du loggar in";
+        errorMessage = t("auth.confirmEmailFirst");
       }
       toast({
-        title: "Inloggning misslyckades",
+        title: t("auth.loginFailed"),
         description: errorMessage,
         variant: "destructive",
       });
@@ -101,14 +103,14 @@ const Login = () => {
         <div className="w-full max-w-sm">
 
           <h1 className="text-2xl md:text-3xl font-bold text-white font-display tracking-tight animate-fade-in">
-            Välkommen tillbaka
+            {t("auth.welcomeBack")}
           </h1>
 
           {isVerified && (
             <div className="mt-4 p-4 rounded-2xl bg-[hsl(45_85%_55%/0.08)] ring-1 ring-[hsl(45_85%_55%/0.2)] flex items-center gap-3 animate-fade-in">
               <CheckCircle2 className="h-5 w-5 text-[hsl(45_85%_55%)] flex-shrink-0" />
               <p className="text-sm text-white/70">
-                Din e-post är verifierad. Logga in för att fortsätta.
+                {t("auth.emailVerified")}
               </p>
             </div>
           )}
@@ -119,7 +121,7 @@ const Login = () => {
               type="button"
               onClick={async () => {
                 const result = await lovable.auth.signInWithOAuth("google", { redirect_uri: window.location.origin });
-                if (result.error) toast({ title: "Något gick fel", variant: "destructive" });
+                if (result.error) toast({ title: t("common.somethingWrong"), variant: "destructive" });
               }}
               className="w-full h-14 rounded-2xl bg-white/[0.10] ring-1 ring-white/[0.12] hover:ring-white/[0.24] hover:bg-white/[0.14] hover:shadow-[0_4px_20px_-4px_rgba(255,255,255,0.08)] text-white text-[15px] font-semibold flex items-center justify-center gap-3 transition-all duration-300"
             >
@@ -130,7 +132,7 @@ const Login = () => {
                 <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
                 <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
               </svg>
-              Fortsätt med Google
+              {t("auth.continueWithGoogle")}
             </button>
             <button
               type="button"
@@ -143,14 +145,14 @@ const Login = () => {
               <svg className="h-[22px] w-[22px]" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M17.05 20.28c-.98.95-2.05.88-3.08.4-1.09-.5-2.08-.48-3.24 0-1.44.62-2.2.44-3.06-.4C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/>
               </svg>
-              Fortsätt med Apple
+              {t("auth.continueWithApple")}
             </button>
           </div>
 
           {/* Divider */}
           <div className="flex items-center gap-4 my-8 animate-fade-in">
             <div className="flex-1 h-px bg-white/[0.06]" />
-            <span className="text-[11px] text-white/20 uppercase tracking-wider font-medium">eller</span>
+            <span className="text-[11px] text-white/20 uppercase tracking-wider font-medium">{t("common.or")}</span>
             <div className="flex-1 h-px bg-white/[0.06]" />
           </div>
 
@@ -162,7 +164,7 @@ const Login = () => {
                 <Input
                   id="email"
                   type="email"
-                  placeholder="din@email.se"
+                  placeholder={t("auth.emailPlaceholder")}
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className={`pl-12 h-14 bg-white/[0.04] border-0 ring-1 ring-white/[0.08] rounded-2xl text-white placeholder:text-white/20 focus:ring-2 focus:ring-[hsl(45_85%_55%/0.5)] focus:bg-white/[0.06] transition-all text-base ${validationErrors.email ? 'ring-red-400/40' : ''}`}
@@ -179,7 +181,7 @@ const Login = () => {
                 <Input
                   id="password"
                   type={showPassword ? "text" : "password"}
-                  placeholder="Lösenord"
+                  placeholder={t("auth.passwordPlaceholder")}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className={`h-14 bg-white/[0.04] border-0 ring-1 ring-white/[0.08] rounded-2xl pr-12 pl-4 text-white placeholder:text-white/20 focus:ring-2 focus:ring-[hsl(45_85%_55%/0.5)] focus:bg-white/[0.06] transition-all text-base ${validationErrors.password ? 'ring-red-400/40' : ''}`}
@@ -201,7 +203,7 @@ const Login = () => {
                   to="/glomt-losenord"
                   className="text-xs text-white/25 hover:text-white/50 transition-colors"
                 >
-                  Glömt lösenord?
+                  {t("auth.forgotPassword")}
                 </Link>
               </div>
             </div>
@@ -215,7 +217,7 @@ const Login = () => {
                 <Loader2 className="h-5 w-5 animate-spin" />
               ) : (
                 <>
-                  Logga in
+                  {t("auth.logIn")}
                   <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
                 </>
               )}
@@ -227,7 +229,7 @@ const Login = () => {
               to="/skapa-konto"
               className="text-sm text-white/30 hover:text-white/60 transition-colors"
             >
-              Har du inget konto? <span className="text-[hsl(45_85%_55%)] font-medium">Skapa ett</span>
+              {t("auth.noAccount")} <span className="text-[hsl(45_85%_55%)] font-medium">Skapa ett</span>
             </Link>
           </div>
         </div>

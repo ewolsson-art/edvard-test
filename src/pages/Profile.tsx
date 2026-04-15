@@ -20,6 +20,7 @@ import { RelativePatientConnectionsSection } from '@/components/RelativePatientC
 import { AvatarUpload } from '@/components/AvatarUpload';
 import { CharacteristicsSharingSection } from '@/components/CharacteristicsSharingSection';
 import { useCharacteristics } from '@/hooks/useCharacteristics';
+import { useTranslation } from 'react-i18next';
 
 const profileSchema = z.object({
   firstName: z.string().trim().max(50, { message: "Max 50 tecken" }).optional(),
@@ -29,6 +30,7 @@ const profileSchema = z.object({
 type ProfileView = 'main' | 'edit' | 'medications' | 'doctors' | 'relatives' | 'diagnoses' | 'delegates' | 'relative-patients' | 'characteristics' | 'reports';
 
 const Profile = () => {
+  const { t } = useTranslation();
   const { user } = useAuth();
   const { profile, isLoading: profileLoading, avatarUrl, updateAvatarUrl } = useProfile();
   const { isDoctor, isRelative, isPatient, isLoading: roleLoading } = useUserRole();

@@ -5,6 +5,7 @@ import { MoodEntry, MoodStats as MoodStatsType } from '@/types/mood';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { VisualInsights } from './insights/VisualInsights';
+import { useTranslation } from 'react-i18next';
 
 interface AIInsightsProps {
   entries: MoodEntry[];
@@ -46,6 +47,7 @@ interface StructuredInsight {
 }
 
 export function AIInsights({ entries, stats, periodLabel, view }: AIInsightsProps) {
+  const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState(false);
   const [insights, setInsights] = useState<string | null>(null);
   const [structured, setStructured] = useState<StructuredInsight | null>(null);

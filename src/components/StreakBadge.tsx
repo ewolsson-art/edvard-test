@@ -2,6 +2,7 @@ import { Flame, Trophy, Target } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { MilestoneInfo, MILESTONES } from '@/hooks/useStreak';
 import {
+import { useTranslation } from 'react-i18next';
   Tooltip,
   TooltipContent,
   TooltipProvider,
@@ -36,6 +37,7 @@ export function StreakBadge({
   className,
   variant = 'default'
 }: StreakBadgeProps) {
+  const { t } = useTranslation();
   const isOnFire = currentStreak >= 7;
   const isNewRecord = currentStreak > 0 && currentStreak === longestStreak;
 

@@ -1,6 +1,8 @@
 import { RelativePatientConnectionsSection } from '@/components/RelativePatientConnectionsSection';
+import { useTranslation } from 'react-i18next';
 
 const Following = () => {
+  const { t } = useTranslation();
   return (
     <div className="p-5 md:p-8 pb-24">
       <div className="max-w-2xl md:mx-0">

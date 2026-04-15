@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
+import { useTranslation } from 'react-i18next';
 
 const COMMON_DIAGNOSES = [
   'Bipolär sjukdom typ 1',
@@ -28,6 +29,7 @@ interface DiagnosisStepProps {
 }
 
 export const DiagnosisStep = ({ selectedDiagnoses, onDiagnosesChange }: DiagnosisStepProps) => {
+  const { t } = useTranslation();
   const [searchQuery, setSearchQuery] = useState('');
   const [showSuggestions, setShowSuggestions] = useState(false);
 

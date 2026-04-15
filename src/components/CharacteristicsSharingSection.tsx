@@ -2,8 +2,10 @@ import { useState } from 'react';
 import { usePatientRelativeConnections } from '@/hooks/usePatientRelativeConnections';
 import { Switch } from '@/components/ui/switch';
 import { Loader2 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 export const CharacteristicsSharingSection = () => {
+  const { t } = useTranslation();
   const { 
     connections, 
     isLoading, 

@@ -3,6 +3,7 @@ import { Plus, X, TrendingUp, Sun, TrendingDown } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
+import { useTranslation } from 'react-i18next';
 
 const SUGGESTIONS = {
   elevated: ['Pratar mycket', 'Sover mindre', 'Rastlös', 'Impulsiv', 'Irriterad', 'Energisk'],
@@ -54,6 +55,7 @@ const MOOD_CONFIG = {
 };
 
 export const CharacteristicsStep = ({ characteristics, onCharacteristicsChange }: CharacteristicsStepProps) => {
+  const { t } = useTranslation();
   const [inputs, setInputs] = useState<Record<MoodType, string>>({
     elevated: '',
     stable: '',

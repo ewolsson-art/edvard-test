@@ -9,19 +9,21 @@ import { useToast } from "@/hooks/use-toast";
 import { Loader2, Lock, CheckCircle, ArrowLeft } from "lucide-react";
 import { Logo } from "@/components/Logo";
 import { DarkNightBackground } from "@/components/DarkNightBackground";
+import { useTranslation } from 'react-i18next';
 
 const passwordSchema = z.object({
   password: z
     .string()
-    .min(6, { message: "Lösenordet måste vara minst 6 tecken" })
+    .min(6, { message: "Password must be at least 6 characters" })
     .max(100),
   confirmPassword: z.string(),
 }).refine((data) => data.password === data.confirmPassword, {
-  message: "Lösenorden matchar inte",
+  message: "Passwords don't match",
   path: ["confirmPassword"],
 });
 
 const ResetPassword = () => {
+  const { t } = useTranslation();
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -35,8 +37,8 @@ const ResetPassword = () => {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) {
         toast({
-          title: "Ogiltig eller utgången länk",
-          description: "Begär en ny återställningslänk.",
+          title: t("auth.invalidOrExpiredLink"),
+          description: t("auth.requestNewLink"),
           variant: "destructive",
         });
         navigate("/auth");
@@ -67,15 +69,15 @@ const ResetPassword = () => {
       
       if (error) {
         toast({
-          title: "Kunde inte uppdatera lösenord",
+          title: t("auth.couldNotUpdatePassword"),
           description: error.message,
           variant: "destructive",
         });
       } else {
         setIsSuccess(true);
         toast({
-          title: "Lösenord uppdaterat!",
-          description: "Du kan nu logga in med ditt nya lösenord.",
+          title: t("auth.passwordUpdated"),
+          description: t("auth.passwordUpdatedDesc"),
         });
       }
     } finally {
@@ -102,24 +104,24 @@ const ResetPassword = () => {
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <h2 className="text-xl font-semibold text-white">Lösenord uppdaterat!</h2>
+                  <h2 className="text-xl font-semibold text-white">{t("auth.passwordUpdated")}</h2>
                   <p className="text-white/60">
-                    Ditt lösenord har ändrats. Du kan nu logga in med ditt nya lösenord.
+                    {t("auth.passwordUpdatedDesc")}
                   </p>
                 </div>
                 <Button
                   className="w-full bg-[hsl(45_85%_55%)] text-[hsl(230_30%_5%)] hover:bg-[hsl(45_85%_65%)]"
                   onClick={() => navigate("/auth")}
                 >
-                  Gå till inloggning
+                  {t("auth.logIn")}
                 </Button>
               </div>
             ) : (
               <>
                 <div className="text-center mb-6">
-                  <h2 className="text-xl font-semibold mb-2 text-white">Välj nytt lösenord</h2>
+                  <h2 className="text-xl font-semibold mb-2 text-white">{t("auth.resetPasswordTitle")}</h2>
                   <p className="text-sm text-white/60">
-                    Ange ditt nya lösenord nedan
+                    {t("auth.resetPasswordDesc")}
                   </p>
                 </div>
 
@@ -168,7 +170,7 @@ const ResetPassword = () => {
                     disabled={isSubmitting}
                   >
                     {isSubmitting && <Loader2 className="w-4 h-4 animate-spin mr-2" />}
-                    Uppdatera lösenord
+                    {t("auth.updatePassword")}
                   </Button>
                 </form>
 
@@ -179,7 +181,7 @@ const ResetPassword = () => {
                     className="text-sm text-white/60 hover:text-white transition-colors inline-flex items-center gap-1"
                   >
                     <ArrowLeft className="w-3 h-3" />
-                    Tillbaka till inloggning
+                    {t("common.back")}
                   </button>
                 </div>
               </>

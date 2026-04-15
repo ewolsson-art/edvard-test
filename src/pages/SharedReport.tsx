@@ -12,6 +12,7 @@ import { EatingStats, EatingStatsType } from '@/components/EatingStats';
 import { ExerciseStats, ExerciseStatsType } from '@/components/ExerciseStats';
 import { Logo } from '@/components/Logo';
 import { MOOD_LABELS as DEFAULT_MOOD_LABELS, MoodType, MoodStats as MoodStatsType } from '@/types/mood';
+import { useTranslation } from 'react-i18next';
 
 interface SharedReportData {
   id: string;
@@ -46,6 +47,7 @@ interface SharedReportData {
 }
 
 const SharedReport = () => {
+  const { t } = useTranslation();
   const { shareKey } = useParams<{ shareKey: string }>();
   const [report, setReport] = useState<SharedReportData | null>(null);
   const [loading, setLoading] = useState(true);
