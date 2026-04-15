@@ -16,7 +16,7 @@ const profileSchema = z.object({
   password: z.string().min(6),
   confirmPassword: z.string(),
 }).refine((data) => data.password === data.confirmPassword, {
-  message: "Passwords don't match",
+  message: "auth.passwordsMustMatch",
   path: ["confirmPassword"],
 });
 

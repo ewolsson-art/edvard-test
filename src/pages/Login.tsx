@@ -138,7 +138,7 @@ const Login = () => {
               type="button"
               onClick={async () => {
                 const result = await lovable.auth.signInWithOAuth("apple", { redirect_uri: window.location.origin });
-                if (result.error) toast({ title: "Något gick fel", variant: "destructive" });
+                if (result.error) toast({ title: t("common.somethingWrong"), variant: "destructive" });
               }}
               className="w-full h-14 rounded-2xl bg-white/[0.10] ring-1 ring-white/[0.12] hover:ring-white/[0.24] hover:bg-white/[0.14] hover:shadow-[0_4px_20px_-4px_rgba(255,255,255,0.08)] text-white text-[15px] font-semibold flex items-center justify-center gap-3 transition-all duration-300"
             >
@@ -229,7 +229,7 @@ const Login = () => {
               to="/skapa-konto"
               className="text-sm text-white/30 hover:text-white/60 transition-colors"
             >
-              {t("auth.noAccount")} <span className="text-[hsl(45_85%_55%)] font-medium">Skapa ett</span>
+              {t("auth.noAccount")} <span className="text-[hsl(45_85%_55%)] font-medium">{t("auth.createOne")}</span>
             </Link>
           </div>
         </div>

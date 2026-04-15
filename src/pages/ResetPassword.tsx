@@ -14,11 +14,11 @@ import { useTranslation } from 'react-i18next';
 const passwordSchema = z.object({
   password: z
     .string()
-    .min(6, { message: "Password must be at least 6 characters" })
+    .min(6, { message: "auth.passwordMinLengthMsg" })
     .max(100),
   confirmPassword: z.string(),
 }).refine((data) => data.password === data.confirmPassword, {
-  message: "Passwords don't match",
+  message: "auth.passwordsMustMatch",
   path: ["confirmPassword"],
 });
 
@@ -128,7 +128,7 @@ const ResetPassword = () => {
                 <form onSubmit={handleSubmit} className="space-y-5">
                   <div className="space-y-2">
                     <Label htmlFor="password" className="text-sm font-medium text-white/80">
-                      Nytt lösenord
+                      {t("auth.newPasswordLabel")}
                     </Label>
                     <div className="relative">
                       <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40" />
@@ -142,12 +142,12 @@ const ResetPassword = () => {
                         disabled={isSubmitting}
                       />
                     </div>
-                    {errors.password && <p className="text-sm text-red-400">{errors.password}</p>}
+                    {errors.password && <p className="text-sm text-red-400">{t(errors.password)}</p>}
                   </div>
 
                   <div className="space-y-2">
                     <Label htmlFor="confirmPassword" className="text-sm font-medium text-white/80">
-                      Bekräfta lösenord
+                      {t("auth.confirmPasswordLabel")}
                     </Label>
                     <div className="relative">
                       <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40" />
@@ -161,7 +161,7 @@ const ResetPassword = () => {
                         disabled={isSubmitting}
                       />
                     </div>
-                    {errors.confirmPassword && <p className="text-sm text-red-400">{errors.confirmPassword}</p>}
+                    {errors.confirmPassword && <p className="text-sm text-red-400">{t(errors.confirmPassword)}</p>}
                   </div>
 
                   <Button
