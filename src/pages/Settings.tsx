@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { useUserPreferences } from '@/hooks/useUserPreferences';
 import { useUserRole } from '@/hooks/useUserRole';
+import { useTranslation } from 'react-i18next';
 
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
@@ -21,11 +22,12 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
-import { Loader2, Save, Trash2, AlertTriangle, Brain, Moon, Utensils, Dumbbell, Pill, ChevronRight, Bell, Lock, Settings as SettingsIcon, Download } from 'lucide-react';
+import { Loader2, Save, Trash2, AlertTriangle, Brain, Moon, Utensils, Dumbbell, Pill, ChevronRight, Bell, Lock, Settings as SettingsIcon, Download, Globe } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { NotificationSettings } from '@/components/NotificationSettings';
 import { ChangePasswordSection } from '@/components/ChangePasswordSection';
 import { GDPRExport } from '@/components/GDPRExport';
+import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 
 
 const CHECKIN_OPTIONS = [
@@ -42,6 +44,7 @@ const Settings = () => {
   const { user, signOut } = useAuth();
   const { isPatient, isLoading: roleLoading } = useUserRole();
   const { preferences, loading: preferencesLoading, updatePreferences } = useUserPreferences();
+  const { t } = useTranslation();
   
   const { toast } = useToast();
   const navigate = useNavigate();
