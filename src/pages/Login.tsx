@@ -152,7 +152,7 @@ const Login = () => {
           {/* Divider */}
           <div className="flex items-center gap-4 my-8 animate-fade-in">
             <div className="flex-1 h-px bg-white/[0.06]" />
-            <span className="text-[11px] text-white/20 uppercase tracking-wider font-medium">eller</span>
+            <span className="text-[11px] text-white/20 uppercase tracking-wider font-medium">{t("common.or")}</span>
             <div className="flex-1 h-px bg-white/[0.06]" />
           </div>
 
@@ -217,7 +217,7 @@ const Login = () => {
                 <Loader2 className="h-5 w-5 animate-spin" />
               ) : (
                 <>
-                  Logga in
+                  {t("auth.logIn")}
                   <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
                 </>
               )}

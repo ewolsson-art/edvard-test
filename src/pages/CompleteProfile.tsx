@@ -9,17 +9,19 @@ import { useToast } from "@/hooks/use-toast";
 import { DarkNightBackground } from "@/components/DarkNightBackground";
 import { Loader2, Eye, EyeOff, Lock, Sparkles } from "lucide-react";
 import { z } from "zod";
+import { useTranslation } from 'react-i18next';
 
 const profileSchema = z.object({
-  username: z.string().min(1, "Namn krävs").max(50, "Max 50 tecken"),
-  password: z.string().min(6, "Lösenordet måste vara minst 6 tecken"),
+  username: z.string().min(1).max(50),
+  password: z.string().min(6),
   confirmPassword: z.string(),
 }).refine((data) => data.password === data.confirmPassword, {
-  message: "Lösenorden matchar inte",
+  message: "Passwords don't match",
   path: ["confirmPassword"],
 });
 
 const CompleteProfile = () => {
+  const { t } = useTranslation();
   const { user, loading } = useAuth();
   const { profile, isLoading: profileLoading } = useProfile();
   const navigate = useNavigate();
@@ -95,7 +97,7 @@ const CompleteProfile = () => {
 
     if (updateError) {
       toast({
-        title: "Något gick fel",
+        title: t("common.somethingWrong"),
         description: updateError.message,
         variant: "destructive",
       });
@@ -121,8 +123,8 @@ const CompleteProfile = () => {
     localStorage.removeItem("signup_role");
 
     toast({
-      title: "Profil sparad!",
-      description: "Välkommen till Toddy",
+      title: t("profile.saved"),
+      description: t("auth.welcomeToToddy"),
     });
 
     // Redirect based on role
@@ -150,17 +152,17 @@ const CompleteProfile = () => {
         <div className="w-full max-w-sm">
 
           <h1 className="text-2xl md:text-3xl font-bold text-white font-display tracking-tight animate-fade-in">
-            Slutför din profil
+            {t("auth.completeProfile")}
           </h1>
           <p className="mt-2 text-sm text-white/40 animate-fade-in">
-            Välj ett användarnamn och lösenord
+            {t("auth.chooseHowToStart")}
           </p>
 
           <form onSubmit={handleSubmit} className="mt-8 space-y-4 animate-fade-in">
             <div className="space-y-1.5">
               <Input
                 id="username"
-                placeholder="Ditt namn eller valfritt användarnamn"
+                placeholder={t("auth.yourName")}
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 className={`h-14 bg-white/[0.04] border-0 ring-1 ring-white/[0.08] rounded-2xl text-white placeholder:text-white/20 focus:ring-2 focus:ring-[hsl(45_85%_55%/0.5)] focus:bg-white/[0.06] transition-all text-base px-4 ${validationErrors.username ? 'ring-red-400/40' : ''}`}
@@ -176,7 +178,7 @@ const CompleteProfile = () => {
                 <Input
                   id="password"
                   type={showPassword ? "text" : "password"}
-                  placeholder="Lösenord (minst 6 tecken)"
+                  placeholder={t("auth.passwordMinLengthLabel")}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className={`pl-12 pr-12 h-14 bg-white/[0.04] border-0 ring-1 ring-white/[0.08] rounded-2xl text-white placeholder:text-white/20 focus:ring-2 focus:ring-[hsl(45_85%_55%/0.5)] focus:bg-white/[0.06] transition-all text-base ${validationErrors.password ? 'ring-red-400/40' : ''}`}
@@ -197,7 +199,7 @@ const CompleteProfile = () => {
                   <Input
                     id="confirmPassword"
                     type={showConfirmPassword ? "text" : "password"}
-                    placeholder="Bekräfta lösenord"
+                    placeholder={t("auth.confirmNewPassword")}
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     className={`pl-12 pr-12 h-14 bg-white/[0.04] border-0 ring-1 ring-white/[0.08] rounded-2xl text-white placeholder:text-white/20 focus:ring-2 focus:ring-[hsl(45_85%_55%/0.5)] focus:bg-white/[0.06] transition-all text-base ${validationErrors.confirmPassword ? 'ring-red-400/40' : ''}`}
@@ -222,7 +224,7 @@ const CompleteProfile = () => {
               ) : (
                 <>
                   <Sparkles className="h-4 w-4 mr-2" />
-                  Spara och fortsätt
+                  {t("common.save")}
                 </>
               )}
             </Button>
