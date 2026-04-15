@@ -49,13 +49,16 @@ interface TodayCheckinProps {
   onSelectDate?: (date: Date) => void;
 }
 
-const sleepSliderOptions: ScaleOption<QualityType>[] = [
-  { value: 'very_good', label: 'Djup och lugn sömn', sublabel: 'Sov riktigt bra', icon: MoonStar, color: '160 70% 40%' },
-  { value: 'good', label: 'Bra och lagom mycket', sublabel: 'Sov bra och tillräckligt', icon: MoonStar, color: '150 55% 48%' },
-  { value: 'okay', label: 'Helt okej', sublabel: 'Varken bra eller dåligt', icon: Moon, color: '45 70% 50%' },
-  { value: 'little', label: 'Ovanligt lite', sublabel: 'Sov mindre än vanligt', icon: CloudMoon, color: '25 70% 50%' },
-  { value: 'very_little', label: 'Nästan ingenting', sublabel: 'Var i princip vaken', icon: CloudMoon, color: '0 65% 50%' },
-];
+const useSleepSliderOptions = () => {
+  const { t } = useTranslation();
+  return useMemo((): ScaleOption<QualityType>[] => [
+    { value: 'very_good', label: t('checkin.deepCalm'), sublabel: t('checkin.deepCalmSub'), icon: MoonStar, color: '160 70% 40%' },
+    { value: 'good', label: t('checkin.goodEnough'), sublabel: t('checkin.goodEnoughSub'), icon: MoonStar, color: '150 55% 48%' },
+    { value: 'okay', label: t('checkin.justOkay'), sublabel: t('checkin.justOkaySub'), icon: Moon, color: '45 70% 50%' },
+    { value: 'little', label: t('checkin.unusuallyLittle'), sublabel: t('checkin.unusuallyLittleSub'), icon: CloudMoon, color: '25 70% 50%' },
+    { value: 'very_little', label: t('checkin.almostNothing'), sublabel: t('checkin.almostNothingSub'), icon: CloudMoon, color: '0 65% 50%' },
+  ], [t]);
+};
 
 // Static fallback mood buttons (will be overridden by diagnosis config)
 const defaultMoodButtons: { mood: MoodType; icon: typeof Zap; label: string; sublabel: string; cssClass: string }[] = [
