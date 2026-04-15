@@ -32,7 +32,7 @@ export function AuthNavbar() {
             </div>
 
             {/* Desktop navigation - right aligned */}
-            <div className="hidden lg:flex items-center gap-1 ml-auto">
+            <div className="hidden md:flex items-center gap-1 ml-auto">
               {navItems.map((item) => (
                 <button
                   key={item.href}
@@ -58,7 +58,7 @@ export function AuthNavbar() {
             </div>
 
             {/* Mobile menu button */}
-            <div className="lg:hidden">
+            <div className="md:hidden">
               <Button
                 variant="ghost"
                 size="icon"
@@ -78,7 +78,7 @@ export function AuthNavbar() {
 
       {/* Mobile menu - fullscreen overlay inspired by Residy */}
       {isMobileMenuOpen && (
-        <div className="lg:hidden fixed inset-0 z-[9999] bg-black flex flex-col">
+        <div className="md:hidden fixed inset-0 z-[9999] bg-black flex flex-col">
           {/* Close button top-right */}
           <div className="flex items-center justify-end h-16 px-5">
             <button
