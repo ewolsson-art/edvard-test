@@ -26,53 +26,53 @@ import {
 
 const patientNavGroups = [
   {
-    label: "Dagligt",
+    labelKey: "sidebar.daily",
     items: [
-      { title: "Idag", url: "/", icon: CalendarDays, primary: true },
-      { title: "Översikt", url: "/oversikt", icon: BarChart3 },
-      { title: "Kännetecken", url: "/kannetecken", icon: Sparkles },
-      { title: "Forum", url: "/forum", icon: MessageCircle },
-      { title: "Notiser", url: "/notiser", icon: Bell },
+      { titleKey: "sidebar.today", url: "/", icon: CalendarDays, primary: true },
+      { titleKey: "sidebar.overview", url: "/oversikt", icon: BarChart3 },
+      { titleKey: "sidebar.characteristics", url: "/kannetecken", icon: Sparkles },
+      { titleKey: "sidebar.forum", url: "/forum", icon: MessageCircle },
+      { titleKey: "sidebar.notifications", url: "/notiser", icon: Bell },
     ],
   },
   {
-    label: "Konto",
+    labelKey: "sidebar.account",
     items: [
-      { title: "Inställningar", url: "/installningar", icon: Settings },
+      { titleKey: "sidebar.settings", url: "/installningar", icon: Settings },
     ],
   },
 ];
 
 const doctorNavGroups = [
   {
-    label: "Översikt",
+    labelKey: "sidebar.overview",
     items: [
-      { title: "Hem", url: "/lakare", icon: Home, primary: true },
-      { title: "Mina användare", url: "/mina-patienter", icon: Users },
+      { titleKey: "sidebar.home", url: "/lakare", icon: Home, primary: true },
+      { titleKey: "sidebar.myUsers", url: "/mina-patienter", icon: Users },
     ],
   },
   {
-    label: "Konto",
+    labelKey: "sidebar.account",
     items: [
-      { title: "Min profil", url: "/profil", icon: UserCircle },
+      { titleKey: "sidebar.myProfile", url: "/profil", icon: UserCircle },
     ],
   },
 ];
 
 const relativeNavGroups = [
   {
-    label: "Översikt",
+    labelKey: "sidebar.overview",
     items: [
-      { title: "Hem", url: "/anhorig", icon: Home, primary: true },
-      { title: "Forum", url: "/forum", icon: MessageCircle },
-      { title: "Notiser", url: "/notiser", icon: Bell },
+      { titleKey: "sidebar.home", url: "/anhorig", icon: Home, primary: true },
+      { titleKey: "sidebar.forum", url: "/forum", icon: MessageCircle },
+      { titleKey: "sidebar.notifications", url: "/notiser", icon: Bell },
     ],
   },
   {
-    label: "Konto",
+    labelKey: "sidebar.account",
     items: [
-      { title: "Min profil", url: "/profil", icon: UserCircle },
-      { title: "Inställningar", url: "/installningar", icon: Settings },
+      { titleKey: "sidebar.myProfile", url: "/profil", icon: UserCircle },
+      { titleKey: "sidebar.settings", url: "/installningar", icon: Settings },
     ],
   },
 ];
