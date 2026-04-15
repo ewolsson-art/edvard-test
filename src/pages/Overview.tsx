@@ -444,19 +444,10 @@ const Overview = () => {
   }, [logs, currentYear]);
 
   const handleDayClick = useCallback((date: Date) => {
-    const dateStr = format(date, 'yyyy-MM-dd');
-    const entry = getEntryForDate(dateStr);
-    const isPast = isBefore(date, startOfDay(new Date()));
-    const isTodayDate = isToday(date);
-    // Missed day → navigate to retroactive check-in
-    if (!entry && (isPast || isTodayDate)) {
-      navigate(`/?date=${dateStr}`);
-      return;
-    }
-    // Otherwise open detail dialog
+    // Always open detail dialog — it handles edit/add actions
     setSelectedDate(date);
     setDialogOpen(true);
-  }, [getEntryForDate, navigate]);
+  }, []);
 
   const handleExerciseDayClick = (date: Date) => {
     const entry = getEntryForDate(format(date, 'yyyy-MM-dd'));
