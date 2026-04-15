@@ -2,20 +2,8 @@ import { CalendarCheck, BarChart3, Share2 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from 'react-i18next';
 
-const steps = [
-  {
-    icon: CalendarCheck,
-    title: "Gör dagliga in-checkningar",
-  },
-  {
-    icon: BarChart3,
-    title: "Upptäck just dina mönster",
-  },
-  {
-    icon: Share2,
-    title: "Låt din familj eller läkare följa dig",
-  },
-];
+const stepIcons = [CalendarCheck, BarChart3, Share2];
+const stepKeys = ['landing.step1', 'landing.step2', 'landing.step3'];
 
 function useInView(threshold = 0.15) {
   const ref = useRef<HTMLDivElement>(null);
@@ -37,6 +25,11 @@ export function HowItWorksSection() {
   const { t } = useTranslation();
   const { ref, visible } = useInView(0.1);
 
+  const steps = stepKeys.map((key, i) => ({
+    icon: stepIcons[i],
+    title: t(key),
+  }));
+
   return (
     <section className="relative z-10 bg-[hsl(225_30%_7%)] py-14 md:py-32 px-5 md:px-8 overflow-hidden">
       <div className="max-w-5xl mx-auto">
@@ -46,14 +39,14 @@ export function HowItWorksSection() {
           {/* Desktop: horizontal */}
           <div className="hidden md:flex items-start justify-center gap-16">
             {steps.map((step, i) => (
-              <StepCard key={step.title} step={step} index={i} visible={visible} />
+              <StepCard key={i} step={step} index={i} visible={visible} />
             ))}
           </div>
 
           {/* Mobile: vertical */}
           <div className="flex md:hidden flex-col items-center gap-8">
             {steps.map((step, i) => (
-              <div key={step.title} className="w-full">
+              <div key={i} className="w-full">
                 <StepCard step={step} index={i} visible={visible} />
               </div>
             ))}
@@ -65,7 +58,7 @@ export function HowItWorksSection() {
             href="/skapa-konto"
             className="px-10 py-3.5 rounded-full bg-[hsl(45_85%_55%)] text-[hsl(225_30%_7%)] font-semibold text-base tracking-wide shadow-[0_4px_20px_hsl(260_60%_72%/0.3)] hover:shadow-[0_6px_28px_hsl(260_60%_72%/0.45)] hover:scale-105 active:scale-[0.98] transition-all duration-200"
           >
-            Kom igång
+            {t('landing.getStarted')}
           </a>
         </div>
       </div>
@@ -74,6 +67,7 @@ export function HowItWorksSection() {
 }
 
 function IntroBlock() {
+  const { t } = useTranslation();
   const { ref, visible } = useInView();
   return (
     <div
@@ -81,16 +75,16 @@ function IntroBlock() {
       className={`text-center max-w-2xl mx-auto transition-all duration-700 ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}
     >
       <h2 className="text-2xl sm:text-3xl md:text-4xl font-display font-bold text-white mb-6">
-        Skapad av och för människor med bipolär sjukdom
+        {t('landing.sectionTitle')}
       </h2>
       <p className="text-base sm:text-lg md:text-xl text-white/70 leading-relaxed max-w-xl mx-auto">
-        Toddy är din interaktiva och personliga stämningsdagbok som ger dig bättre koll på ditt mående
+        {t('landing.sectionSubtitle')}
       </p>
     </div>
   );
 }
 
-function StepCard({ step, index, visible }: { step: typeof steps[number]; index: number; visible: boolean }) {
+function StepCard({ step, index, visible }: { step: { icon: any; title: string }; index: number; visible: boolean }) {
   const delay = index * 200;
 
   return (
@@ -98,13 +92,11 @@ function StepCard({ step, index, visible }: { step: typeof steps[number]; index:
       className={`relative flex flex-col items-center text-center flex-1 max-w-xs mx-auto transition-all duration-700 ease-out ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}
       style={{ transitionDelay: `${delay}ms` }}
     >
-      {/* Glow ring */}
       <div
         className={`absolute w-20 h-20 rounded-full bg-[hsl(260_60%_72%/0.06)] blur-xl transition-all duration-1000 ${visible ? "scale-100 opacity-100" : "scale-50 opacity-0"}`}
         style={{ transitionDelay: `${delay + 100}ms` }}
       />
 
-      {/* Icon with number */}
       <div className="flex-shrink-0 w-20 h-20 md:w-24 md:h-24 rounded-2xl bg-[hsl(260_60%_72%/0.10)] border border-[hsl(260_60%_72%/0.18)] flex items-center justify-center relative mb-6 z-10">
         <step.icon className="w-9 h-9 md:w-11 md:h-11 text-[hsl(45_85%_55%)]" />
         <span className="absolute -top-3 -left-3 w-8 h-8 rounded-full bg-[hsl(45_85%_55%)] text-[hsl(225_30%_7%)] text-sm font-bold flex items-center justify-center shadow-lg">
