@@ -727,7 +727,7 @@ export function TodayCheckin({
           <div className="flex items-center justify-between h-10 mb-6">
             <Button variant="ghost" size="sm" onClick={goBack} className="gap-1.5 text-muted-foreground/50 -ml-2">
               <ChevronLeft className="w-4 h-4" />
-              Tillbaka
+              {t('common.back')}
             </Button>
             <button
               onClick={() => setShowComment(showComment === 'sleep' ? null : 'sleep')}
@@ -735,7 +735,7 @@ export function TodayCheckin({
                 "p-2 rounded-xl transition-colors",
                 showComment === 'sleep' ? "bg-primary/10 text-primary" : "text-muted-foreground/50 hover:text-muted-foreground/80 hover:bg-muted/30"
               )}
-              aria-label="Lägg till kommentar"
+              aria-label={t('checkin.addComment')}
             >
               <MessageSquarePlus className="w-5 h-5" />
             </button>
@@ -745,7 +745,7 @@ export function TodayCheckin({
           <div className="mb-8">
             <p className="text-muted-foreground/50 text-[13px] tracking-wide capitalize mb-1.5">{formattedDate}</p>
             <h1 className="font-display text-[28px] sm:text-3xl font-bold tracking-tight">
-              Hur mycket har du sovit?
+              {t('checkin.howDidYouSleep')}
             </h1>
           </div>
 
@@ -764,7 +764,7 @@ export function TodayCheckin({
                 onClick={handleSleepContinue}
                 className="px-10 py-3.5 rounded-full bg-[hsl(45_85%_55%)] text-[hsl(225_30%_7%)] font-bold text-base tracking-wide shadow-[0_4px_24px_hsl(45_85%_55%/0.35)] hover:shadow-[0_8px_32px_hsl(45_85%_55%/0.5)] hover:bg-[hsl(45_85%_62%)] hover:scale-105 active:scale-[0.98] transition-all duration-200 inline-flex items-center gap-1.5"
               >
-                Fortsätt
+                {t('common.continue')}
                 <ChevronRight className="w-4 h-4" />
               </button>
             </div>
@@ -781,7 +781,7 @@ export function TodayCheckin({
           <div className="flex items-center justify-between h-10 mb-6">
             <Button variant="ghost" size="sm" onClick={goBack} className="gap-1.5 text-muted-foreground/50 -ml-2">
               <ChevronLeft className="w-4 h-4" />
-              Tillbaka
+              {t('common.back')}
             </Button>
             <button
               onClick={() => setShowComment(showComment === 'eating' ? null : 'eating')}
@@ -789,7 +789,7 @@ export function TodayCheckin({
                 "p-2 rounded-xl transition-colors",
                 showComment === 'eating' ? "bg-primary/10 text-primary" : "text-muted-foreground/50 hover:text-muted-foreground/80 hover:bg-muted/30"
               )}
-              aria-label="Lägg till kommentar"
+              aria-label={t('checkin.addComment')}
             >
               <MessageSquarePlus className="w-5 h-5" />
             </button>
@@ -799,7 +799,7 @@ export function TodayCheckin({
           <div className="mb-8">
             <p className="text-muted-foreground/50 text-[13px] tracking-wide capitalize mb-1.5">{formattedDate}</p>
             <h1 className="font-display text-[28px] sm:text-3xl font-bold tracking-tight">
-              Hur har du ätit?
+              {t('checkin.howDidYouEat')}
             </h1>
           </div>
 
@@ -813,8 +813,8 @@ export function TodayCheckin({
             >
               <ThumbsUp className="w-6 h-6 sm:w-7 sm:h-7 text-white/90 flex-shrink-0 transition-transform duration-300 group-hover:scale-110" />
               <div className="flex-1 min-w-0">
-                <span className="font-semibold text-[15px] sm:text-base text-white block">Bra</span>
-                <span className="text-xs text-white/60 block">Ätit bra idag</span>
+                <span className="font-semibold text-[15px] sm:text-base text-white block">{t('checkin.goodEating')}</span>
+                <span className="text-xs text-white/60 block">{t('checkin.goodEatingDesc')}</span>
               </div>
               <ChevronRight className="w-5 h-5 text-white/30 group-hover:text-white/60 transition-opacity flex-shrink-0" />
             </button>
@@ -827,8 +827,8 @@ export function TodayCheckin({
             >
               <Utensils className="w-6 h-6 sm:w-7 sm:h-7 text-white/90 flex-shrink-0 transition-transform duration-300 group-hover:scale-110" />
               <div className="flex-1 min-w-0">
-                <span className="font-semibold text-[15px] sm:text-base text-white block">Ok</span>
-                <span className="text-xs text-white/60 block">Varken bra eller dåligt</span>
+                <span className="font-semibold text-[15px] sm:text-base text-white block">{t('checkin.okEating')}</span>
+                <span className="text-xs text-white/60 block">{t('checkin.okEatingDesc')}</span>
               </div>
               <ChevronRight className="w-5 h-5 text-white/30 group-hover:text-white/60 transition-opacity flex-shrink-0" />
             </button>
@@ -841,8 +841,8 @@ export function TodayCheckin({
             >
               <ThumbsDown className="w-6 h-6 sm:w-7 sm:h-7 text-white/90 flex-shrink-0 transition-transform duration-300 group-hover:scale-110" />
               <div className="flex-1 min-w-0">
-                <span className="font-semibold text-[15px] sm:text-base text-white block">Dåligt</span>
-                <span className="text-xs text-white/60 block">Ätit dåligt</span>
+                <span className="font-semibold text-[15px] sm:text-base text-white block">{t('checkin.badEating')}</span>
+                <span className="text-xs text-white/60 block">{t('checkin.badEatingDesc')}</span>
               </div>
               <ChevronRight className="w-5 h-5 text-white/30 group-hover:text-white/60 transition-opacity flex-shrink-0" />
             </button>
@@ -859,7 +859,7 @@ export function TodayCheckin({
           <div className="flex items-center justify-between h-10 mb-6">
             <Button variant="ghost" size="sm" onClick={goBack} className="gap-1.5 text-muted-foreground/50 -ml-2">
               <ChevronLeft className="w-4 h-4" />
-              Tillbaka
+              {t('common.back')}
             </Button>
             <button
               onClick={() => setShowComment(showComment === 'exercise' ? null : 'exercise')}
@@ -867,7 +867,7 @@ export function TodayCheckin({
                 "p-2 rounded-xl transition-colors",
                 showComment === 'exercise' ? "bg-primary/10 text-primary" : "text-muted-foreground/50 hover:text-muted-foreground/80 hover:bg-muted/30"
               )}
-              aria-label="Lägg till kommentar"
+              aria-label={t('checkin.addComment')}
             >
               <MessageSquarePlus className="w-5 h-5" />
             </button>
@@ -877,7 +877,7 @@ export function TodayCheckin({
           <div className="mb-8">
             <p className="text-muted-foreground/50 text-[13px] tracking-wide capitalize mb-1.5">{formattedDate}</p>
             <h1 className="font-display text-[28px] sm:text-3xl font-bold tracking-tight">
-              Har du tränat?
+              {t('checkin.didYouExercise')}
             </h1>
           </div>
 
@@ -891,8 +891,8 @@ export function TodayCheckin({
             >
               <Check className="w-6 h-6 sm:w-7 sm:h-7 text-white/90 flex-shrink-0 transition-transform duration-300 group-hover:scale-110" />
               <div className="flex-1 min-w-0">
-                <span className="font-semibold text-[15px] sm:text-base text-white block">Ja</span>
-                <span className="text-xs text-white/60 block">Jag har tränat</span>
+                <span className="font-semibold text-[15px] sm:text-base text-white block">{t('common.yes')}</span>
+                <span className="text-xs text-white/60 block">{t('checkin.iExercised')}</span>
               </div>
               <ChevronRight className="w-5 h-5 text-white/30 group-hover:text-white/60 transition-opacity flex-shrink-0" />
             </button>
@@ -905,8 +905,8 @@ export function TodayCheckin({
             >
               <X className="w-6 h-6 sm:w-7 sm:h-7 text-muted-foreground flex-shrink-0 transition-transform duration-300 group-hover:scale-110" />
               <div className="flex-1 min-w-0">
-                <span className="font-semibold text-[15px] sm:text-base block">Nej</span>
-                <span className="text-xs text-muted-foreground/60 block">Vilodag</span>
+                <span className="font-semibold text-[15px] sm:text-base block">{t('common.no')}</span>
+                <span className="text-xs text-muted-foreground/60 block">{t('checkin.restDay')}</span>
               </div>
               <ChevronRight className="w-5 h-5 text-muted-foreground/30 group-hover:text-muted-foreground/60 transition-opacity flex-shrink-0" />
             </button>
@@ -923,7 +923,7 @@ export function TodayCheckin({
           <div className="flex items-center justify-between h-10 mb-6">
             <Button variant="ghost" size="sm" onClick={goBack} className="gap-1.5 text-muted-foreground/50 -ml-2">
               <ChevronLeft className="w-4 h-4" />
-              Tillbaka
+              {t('common.back')}
             </Button>
             <div className="flex items-center gap-0.5">
               <button
@@ -932,7 +932,7 @@ export function TodayCheckin({
                   "p-2 rounded-xl transition-colors",
                   (showSideEffects || checkinData.medicationSideEffects?.length) ? "bg-amber-500/10 text-amber-500" : "text-muted-foreground/50 hover:text-muted-foreground/80 hover:bg-muted/30"
                 )}
-                aria-label="Rapportera biverkningar"
+                aria-label={t('checkin.reportSideEffects')}
               >
                 <AlertTriangle className="w-5 h-5" />
               </button>
@@ -942,7 +942,7 @@ export function TodayCheckin({
                   "p-2 rounded-xl transition-colors",
                   showComment === 'medication' ? "bg-primary/10 text-primary" : "text-muted-foreground/50 hover:text-muted-foreground/80 hover:bg-muted/30"
                 )}
-                aria-label="Lägg till kommentar"
+                aria-label={t('checkin.addComment')}
               >
                 <MessageSquarePlus className="w-5 h-5" />
               </button>
@@ -953,7 +953,7 @@ export function TodayCheckin({
           <div className="mb-8">
             <p className="text-muted-foreground/50 text-[13px] tracking-wide capitalize mb-1.5">{formattedDate}</p>
             <h1 className="font-display text-[28px] sm:text-3xl font-bold tracking-tight">
-              Har du tagit din medicin?
+              {t('checkin.haveYouTakenMedicine')}
             </h1>
           </div>
 
@@ -979,12 +979,12 @@ export function TodayCheckin({
                   {medicationsTakenToday.length === activeMedications.length ? (
                     <>
                       <CheckCircle2 className="w-4 h-4" />
-                      Alla tagna!
+                      {t('checkin.allTaken')}
                     </>
                   ) : (
                     <>
                       <Check className="w-4 h-4" />
-                      Markera alla
+                      {t('checkin.markAll')}
                     </>
                   )}
                 </button>
@@ -1021,7 +1021,7 @@ export function TodayCheckin({
                       <p className="text-xs text-muted-foreground/50 mt-0.5">{med.dosage}</p>
                     </div>
                     {isTaken && (
-                      <span className="text-xs text-mood-stable/80 font-medium flex-shrink-0">Tagen ✓</span>
+                      <span className="text-xs text-mood-stable/80 font-medium flex-shrink-0">{t('checkin.takenCheck')}</span>
                     )}
                   </button>
                 );
@@ -1030,13 +1030,13 @@ export function TodayCheckin({
               {/* Missed medication reason */}
               {medicationsTakenToday.length < activeMedications.length && (
                 <div className="pt-3">
-                  <p className="text-xs text-muted-foreground/50 mb-2">Anledning till missad dos?</p>
+                  <p className="text-xs text-muted-foreground/50 mb-2">{t('checkin.missedDoseReason')}</p>
                   <div className="flex flex-wrap gap-2">
                     {[
-                      { id: 'forgot', label: 'Glömde' },
-                      { id: 'side_effects', label: 'Biverkningar' },
-                      { id: 'out_of_stock', label: 'Slut på medicin' },
-                      { id: 'choice', label: 'Ville inte' },
+                      { id: 'forgot', label: t('checkin.forgot') },
+                      { id: 'side_effects', label: t('checkin.sideEffectsReason') },
+                      { id: 'out_of_stock', label: t('checkin.outOfStock') },
+                      { id: 'choice', label: t('checkin.didntWantTo') },
                     ].map(reason => (
                       <button
                         key={reason.id}
@@ -1063,7 +1063,7 @@ export function TodayCheckin({
           ) : (
             <div className="max-w-md py-4">
               <p className="text-sm text-muted-foreground/50">
-                Du har inga aktiva mediciner registrerade.
+                {t('checkin.noActiveMeds')}
               </p>
             </div>
           )}
@@ -1073,18 +1073,18 @@ export function TodayCheckin({
             {showSideEffects && (
               <div className="space-y-2 pt-3 border-t border-border/30">
                 <p className="text-sm font-medium text-amber-500/80">
-                  Vilka biverkningar har du upplevt?
+                  {t('checkin.whichSideEffects')}
                 </p>
                 <div className="grid grid-cols-2 gap-2">
                   {[
-                    { id: 'nausea', label: 'Illamående' },
-                    { id: 'headache', label: 'Huvudvärk' },
-                    { id: 'dizziness', label: 'Yrsel' },
-                    { id: 'fatigue', label: 'Trötthet' },
-                    { id: 'insomnia', label: 'Sömnproblem' },
-                    { id: 'appetite', label: 'Aptitförändringar' },
-                    { id: 'mood_changes', label: 'Humörförändringar' },
-                    { id: 'other', label: 'Annat' },
+                    { id: 'nausea', label: t('checkin.nausea') },
+                    { id: 'headache', label: t('checkin.headache') },
+                    { id: 'dizziness', label: t('checkin.dizziness') },
+                    { id: 'fatigue', label: t('checkin.fatigue') },
+                    { id: 'insomnia', label: t('checkin.sleepProblems') },
+                    { id: 'appetite', label: t('checkin.appetiteChanges') },
+                    { id: 'mood_changes', label: t('checkin.moodChanges') },
+                    { id: 'other', label: t('checkin.other') },
                   ].map(effect => (
                     <button
                       key={effect.id}
@@ -1129,7 +1129,7 @@ export function TodayCheckin({
                   ))}
                 </div>
                 <span className="text-xs text-muted-foreground/50">
-                  {medicationsTakenToday.length} av {activeMedications.length} tagna
+                  {t('checkin.takenCount', { count: medicationsTakenToday.length, total: activeMedications.length })}
                 </span>
               </div>
             )}
@@ -1137,22 +1137,22 @@ export function TodayCheckin({
             {isLastStep('medication') ? (
               <Button onClick={handleComplete} className="w-full mt-4 py-6 text-base font-semibold gap-2">
                 {activeMedications.length === 0
-                  ? 'Fortsätt'
+                  ? t('common.continue')
                   : medicationsTakenToday.length === activeMedications.length
-                    ? 'Ja'
+                    ? t('common.yes')
                     : medicationsTakenToday.length === 0
-                      ? 'Nej'
-                      : 'Inte alla'}
+                      ? t('common.no')
+                      : t('checkin.notAll')}
               </Button>
             ) : (
               <Button onClick={() => navigateStep(getNextStep('medication') as Step)} className="w-full mt-4 py-6 text-base font-semibold gap-2">
                 {activeMedications.length === 0
-                  ? 'Fortsätt'
+                  ? t('common.continue')
                   : medicationsTakenToday.length === activeMedications.length
-                    ? 'Ja'
+                    ? t('common.yes')
                     : medicationsTakenToday.length === 0
-                      ? 'Nej'
-                      : 'Inte alla'}
+                      ? t('common.no')
+                      : t('checkin.notAll')}
                 <ChevronRight className="w-4 h-4" />
               </Button>
             )}
@@ -1167,7 +1167,7 @@ export function TodayCheckin({
           <div className="flex items-center justify-between h-10 mb-6">
             <Button variant="ghost" size="sm" onClick={goBack} className="gap-1.5 text-muted-foreground/50 -ml-2">
               <ChevronLeft className="w-4 h-4" />
-              Tillbaka
+              {t('common.back')}
             </Button>
             <div />
           </div>
@@ -1176,7 +1176,7 @@ export function TodayCheckin({
           <div className="mb-8">
             <p className="text-muted-foreground/50 text-[13px] tracking-wide capitalize mb-1.5">{formattedDate}</p>
             <h1 className="font-display text-[28px] sm:text-3xl font-bold tracking-tight">
-              Egna frågor
+              {t('checkin.customQuestions')}
             </h1>
           </div>
 
@@ -1195,7 +1195,7 @@ export function TodayCheckin({
                       )}
                     >
                       <Check className="w-6 h-6 text-mood-stable" />
-                      <span className="font-semibold">Ja</span>
+                      <span className="font-semibold">{t('common.yes')}</span>
                     </button>
                     <button
                       onClick={() => setCustomAnswersState(prev => ({ ...prev, [q.id]: 'no' }))}
@@ -1205,7 +1205,7 @@ export function TodayCheckin({
                       )}
                     >
                       <X className="w-6 h-6 text-muted-foreground" />
-                      <span className="font-semibold">Nej</span>
+                      <span className="font-semibold">{t('common.no')}</span>
                     </button>
                   </div>
                 </div>
@@ -1219,7 +1219,7 @@ export function TodayCheckin({
               const answeredQ = Object.keys(customAnswersState).length;
               const allAnswered = answeredQ >= totalQ;
               const noneAnswered = answeredQ === 0;
-              const label = allAnswered ? 'Klar ✓' : noneAnswered ? 'Hoppa över' : 'Fortsätt ändå';
+              const label = allAnswered ? t('checkin.done') + ' ✓' : noneAnswered ? t('checkin.skipIt') : t('checkin.continueAnyway');
               return (
                 <Button onClick={async () => {
                   if (onSaveCustomAnswers) {
