@@ -32,7 +32,7 @@ export function AuthNavbar() {
             </div>
 
             {/* Desktop navigation - right aligned */}
-            <div className="hidden lg:flex items-center gap-1 ml-auto">
+            <div className="hidden md:flex items-center gap-1 ml-auto">
               {navItems.map((item) => (
                 <button
                   key={item.href}
