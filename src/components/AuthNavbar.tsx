@@ -1,43 +1,25 @@
 import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { Logo } from '@/components/Logo';
 import { Button } from '@/components/ui/button';
+import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 import { Menu, X } from 'lucide-react';
-import { cn } from '@/lib/utils';
-
-interface NavItem {
-  label: string;
-  href: string;
-}
-
-const navItems: NavItem[] = [
-  { label: 'Om oss', href: '/om-oss' },
-  { label: 'Så funkar det', href: '/sa-funkar-det' },
-];
 
 export function AuthNavbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
-  const location = useLocation();
+  const { t } = useTranslation();
+
+  const navItems = [
+    { label: t('nav.aboutUs'), href: '/om-oss' },
+    { label: t('nav.howItWorks'), href: '/sa-funkar-det' },
+  ];
 
   const handleNavClick = (href: string) => {
     setIsMobileMenuOpen(false);
     navigate(href);
   };
-
-  const handleLoginClick = () => {
-    setIsMobileMenuOpen(false);
-    navigate('/logga-in');
-  };
-
-  const handleSignupClick = () => {
-    setIsMobileMenuOpen(false);
-    navigate('/skapa-konto');
-  };
-
-  // Check current mode from URL
-  const searchParams = new URLSearchParams(location.search);
-  const currentMode = searchParams.get('mode');
 
   return (
     <>
@@ -64,13 +46,14 @@ export function AuthNavbar() {
                 onClick={() => navigate("/skapa-konto")}
                 className="px-4 py-2 text-sm font-medium text-white/70 hover:text-white hover:bg-white/10 rounded-lg transition-all duration-200"
               >
-                Kom igång
+                {t('nav.getStarted')}
               </button>
+              <LanguageSwitcher variant="navbar" />
               <button
                 onClick={() => navigate("/logga-in")}
                 className="ml-2 px-5 py-2 text-sm font-semibold text-white/80 border border-white/25 rounded-full hover:bg-white hover:text-[hsl(225_30%_7%)] hover:border-white transition-all duration-200"
               >
-                Logga in
+                {t('nav.login')}
               </button>
             </div>
 
@@ -101,7 +84,7 @@ export function AuthNavbar() {
             <button
               onClick={() => setIsMobileMenuOpen(false)}
               className="text-white/60 hover:text-white transition-colors"
-              aria-label="Stäng meny"
+              aria-label={t('nav.closeMenu')}
             >
               <X className="h-7 w-7" />
             </button>
@@ -114,13 +97,13 @@ export function AuthNavbar() {
                 onClick={() => { setIsMobileMenuOpen(false); navigate('/logga-in'); }}
                 className="block text-left text-3xl font-bold text-white tracking-tight hover:text-white/80 transition-colors"
               >
-                Logga in
+                {t('nav.login')}
               </button>
               <button
                 onClick={() => { setIsMobileMenuOpen(false); navigate('/skapa-konto'); }}
                 className="block text-left text-3xl font-bold text-white tracking-tight hover:text-white/80 transition-colors"
               >
-                Skapa konto
+                {t('nav.createAccount')}
               </button>
             </div>
           </div>
@@ -136,6 +119,7 @@ export function AuthNavbar() {
                 {item.label}
               </button>
             ))}
+            <LanguageSwitcher variant="navbar" className="!text-white/50 !px-0" />
           </div>
         </div>
       )}

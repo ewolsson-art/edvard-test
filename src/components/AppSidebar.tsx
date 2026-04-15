@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { CalendarDays, BarChart3, LogOut, UserCircle, Users, Home, FileText, Settings, MessageCircle, Bell, Sparkles, Loader2 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { NavLink } from "@/components/NavLink";
 import { useSidebar } from "@/components/ui/sidebar";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -25,53 +26,53 @@ import {
 
 const patientNavGroups = [
   {
-    label: "Dagligt",
+    labelKey: "sidebar.daily",
     items: [
-      { title: "Idag", url: "/", icon: CalendarDays, primary: true },
-      { title: "Översikt", url: "/oversikt", icon: BarChart3 },
-      { title: "Kännetecken", url: "/kannetecken", icon: Sparkles },
-      { title: "Forum", url: "/forum", icon: MessageCircle },
-      { title: "Notiser", url: "/notiser", icon: Bell },
+      { titleKey: "sidebar.today", url: "/", icon: CalendarDays, primary: true },
+      { titleKey: "sidebar.overview", url: "/oversikt", icon: BarChart3 },
+      { titleKey: "sidebar.characteristics", url: "/kannetecken", icon: Sparkles },
+      { titleKey: "sidebar.forum", url: "/forum", icon: MessageCircle },
+      { titleKey: "sidebar.notifications", url: "/notiser", icon: Bell },
     ],
   },
   {
-    label: "Konto",
+    labelKey: "sidebar.account",
     items: [
-      { title: "Inställningar", url: "/installningar", icon: Settings },
+      { titleKey: "sidebar.settings", url: "/installningar", icon: Settings },
     ],
   },
 ];
 
 const doctorNavGroups = [
   {
-    label: "Översikt",
+    labelKey: "sidebar.overview",
     items: [
-      { title: "Hem", url: "/lakare", icon: Home, primary: true },
-      { title: "Mina användare", url: "/mina-patienter", icon: Users },
+      { titleKey: "sidebar.home", url: "/lakare", icon: Home, primary: true },
+      { titleKey: "sidebar.myUsers", url: "/mina-patienter", icon: Users },
     ],
   },
   {
-    label: "Konto",
+    labelKey: "sidebar.account",
     items: [
-      { title: "Min profil", url: "/profil", icon: UserCircle },
+      { titleKey: "sidebar.myProfile", url: "/profil", icon: UserCircle },
     ],
   },
 ];
 
 const relativeNavGroups = [
   {
-    label: "Översikt",
+    labelKey: "sidebar.overview",
     items: [
-      { title: "Hem", url: "/anhorig", icon: Home, primary: true },
-      { title: "Forum", url: "/forum", icon: MessageCircle },
-      { title: "Notiser", url: "/notiser", icon: Bell },
+      { titleKey: "sidebar.home", url: "/anhorig", icon: Home, primary: true },
+      { titleKey: "sidebar.forum", url: "/forum", icon: MessageCircle },
+      { titleKey: "sidebar.notifications", url: "/notiser", icon: Bell },
     ],
   },
   {
-    label: "Konto",
+    labelKey: "sidebar.account",
     items: [
-      { title: "Min profil", url: "/profil", icon: UserCircle },
-      { title: "Inställningar", url: "/installningar", icon: Settings },
+      { titleKey: "sidebar.myProfile", url: "/profil", icon: UserCircle },
+      { titleKey: "sidebar.settings", url: "/installningar", icon: Settings },
     ],
   },
 ];
@@ -84,6 +85,7 @@ export function AppSidebar() {
   const { isDoctor, isPatient, isRelative, isLoading: roleLoading } = useUserRole();
   const { hasPending } = usePendingNotifications();
   const { unreadCount: notifUnread } = useNotifications();
+  const { t } = useTranslation();
   
   const isMobile = useIsMobile();
   const isCollapsed = state === "collapsed";
@@ -167,21 +169,21 @@ export function AppSidebar() {
         )}
 
         {navGroups.map((group, gi) => (
-          <SidebarGroup key={group.label} className={gi > 0 ? 'mt-8' : ''}>
+          <SidebarGroup key={group.labelKey} className={gi > 0 ? 'mt-8' : ''}>
             {!isCollapsed && (
               <div className="px-6 mb-4">
-                <span className="text-[11px] font-medium uppercase tracking-[0.12em] text-white/25">{group.label}</span>
+                <span className="text-[11px] font-medium uppercase tracking-[0.12em] text-white/25">{t(group.labelKey)}</span>
               </div>
             )}
             <SidebarGroupContent>
-              <SidebarMenu className="space-y-2.5 px-3" role="menubar" aria-label={group.label}>
+              <SidebarMenu className="space-y-2.5 px-3" role="menubar" aria-label={t(group.labelKey)}>
                 {group.items.map((item) => {
                   const active = isActive(item.url);
                   const isPrimary = 'primary' in item && item.primary;
                   
                   return (
-                    <SidebarMenuItem key={item.title} role="none">
-                      <SidebarMenuButton asChild tooltip={item.title} role="menuitem">
+                    <SidebarMenuItem key={item.titleKey} role="none">
+                      <SidebarMenuButton asChild tooltip={t(item.titleKey)} role="menuitem">
                         <NavLink 
                           to={item.url} 
                           end={item.url === '/' || item.url === '/lakare' || item.url === '/anhorig' || item.url === '/foljer'}
@@ -195,7 +197,7 @@ export function AppSidebar() {
                                 : 'text-white/35 hover:text-white/55 hover:bg-white/[0.03]'
                           }`}
                           activeClassName="bg-white/[0.08] text-white backdrop-blur-sm"
-                          aria-label={item.url === '/profil' && hasPending ? `${item.title} - Du har nya notifikationer` : item.title}
+                          aria-label={item.url === '/profil' && hasPending ? `${t(item.titleKey)} - Du har nya notifikationer` : t(item.titleKey)}
                           aria-current={active ? "page" : undefined}
                           onClick={() => { if (isMobile) setOpenMobile(false); }}
                         >
@@ -242,7 +244,7 @@ export function AppSidebar() {
                                   ? 'text-[15px] font-medium' 
                                   : 'text-[14px] font-normal'
                             }`}>
-                              {item.title}
+                              {t(item.titleKey)}
                             </span>
                           )}
                         </NavLink>
@@ -267,7 +269,7 @@ export function AppSidebar() {
             aria-label="Logga ut från ditt konto"
           >
             {signingOut ? <Loader2 className="h-[18px] w-[18px] animate-spin" strokeWidth={1.5} /> : <LogOut className="h-[18px] w-[18px]" strokeWidth={1.5} aria-hidden="true" />}
-            <span className="text-[13px] font-normal">{signingOut ? 'Loggar ut...' : 'Logga ut'}</span>
+            <span className="text-[13px] font-normal">{signingOut ? t('sidebar.signingOut') : t('sidebar.signOut')}</span>
           </Button>
         ) : (
           <Button

@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { useUserPreferences } from '@/hooks/useUserPreferences';
 import { useUserRole } from '@/hooks/useUserRole';
+import { useTranslation } from 'react-i18next';
 
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
@@ -21,11 +22,12 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
-import { Loader2, Save, Trash2, AlertTriangle, Brain, Moon, Utensils, Dumbbell, Pill, ChevronRight, Bell, Lock, Settings as SettingsIcon, Download } from 'lucide-react';
+import { Loader2, Save, Trash2, AlertTriangle, Brain, Moon, Utensils, Dumbbell, Pill, ChevronRight, Bell, Lock, Settings as SettingsIcon, Download, Globe } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { NotificationSettings } from '@/components/NotificationSettings';
 import { ChangePasswordSection } from '@/components/ChangePasswordSection';
 import { GDPRExport } from '@/components/GDPRExport';
+import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 
 
 const CHECKIN_OPTIONS = [
@@ -42,6 +44,7 @@ const Settings = () => {
   const { user, signOut } = useAuth();
   const { isPatient, isLoading: roleLoading } = useUserRole();
   const { preferences, loading: preferencesLoading, updatePreferences } = useUserPreferences();
+  const { t } = useTranslation();
   
   const { toast } = useToast();
   const navigate = useNavigate();
@@ -225,22 +228,27 @@ const Settings = () => {
   return (
     <div className="p-5 md:p-8 pb-24">
         <div className="max-w-2xl mx-auto md:mx-0">
-        <h1 className="font-display text-2xl font-bold mb-1">Inställningar</h1>
-        <p className="text-[13px] text-foreground/30 mb-10">Anpassa appen efter dina behov</p>
+        <h1 className="font-display text-2xl font-bold mb-1">{t('settings.title')}</h1>
+        <p className="text-[13px] text-foreground/30 mb-10">{t('settings.subtitle')}</p>
+
+        {/* General section */}
+        <SettingsGroup label={t('settings.general')}>
+          <LanguageSwitcher variant="settings" />
+        </SettingsGroup>
 
         {/* Check-in section */}
         {isPatient && (
-          <SettingsGroup label="Din check-in">
-            <SettingsRow icon={SettingsIcon} label="Anpassa check-in" description="Välj kategorier och egna frågor" onClick={() => setView('checkin')} />
-            <SettingsRow icon={Bell} label="Notiser" description="Påminnelser och push" onClick={() => setView('notifications')} />
+          <SettingsGroup label={t('settings.yourCheckin')}>
+            <SettingsRow icon={SettingsIcon} label={t('settings.customizeCheckin')} description={t('settings.chooseCategories')} onClick={() => setView('checkin')} />
+            <SettingsRow icon={Bell} label={t('settings.notificationsLabel')} description={t('settings.notificationsDesc')} onClick={() => setView('notifications')} />
           </SettingsGroup>
         )}
 
         {/* Account section */}
-        <SettingsGroup label="Konto och säkerhet">
-          <SettingsRow icon={Lock} label="Byt lösenord" onClick={() => setView('password')} />
-          <SettingsRow icon={Download} label="Exportera din data" description="GDPR — ladda ner all din data" onClick={() => setView('export')} />
-          <SettingsRow icon={Trash2} label="Radera konto" destructive onClick={() => setView('delete')} />
+        <SettingsGroup label={t('settings.accountSecurity')}>
+          <SettingsRow icon={Lock} label={t('settings.changePassword')} onClick={() => setView('password')} />
+          <SettingsRow icon={Download} label={t('settings.exportData')} description={t('settings.exportDesc')} onClick={() => setView('export')} />
+          <SettingsRow icon={Trash2} label={t('settings.deleteAccount')} destructive onClick={() => setView('delete')} />
         </SettingsGroup>
       </div>
     </div>
