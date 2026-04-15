@@ -22,13 +22,6 @@ import { CharacteristicsSharingSection } from '@/components/CharacteristicsShari
 import { useCharacteristics } from '@/hooks/useCharacteristics';
 import { useTranslation } from 'react-i18next';
 
-const profileSchema = z.object({
-  firstName: z.string().trim().max(50, { message: "Max 50 tecken" }).optional(),
-  lastName: z.string().trim().max(50, { message: "Max 50 tecken" }).optional(),
-});
-
-type ProfileView = 'main' | 'edit' | 'medications' | 'doctors' | 'relatives' | 'diagnoses' | 'delegates' | 'relative-patients' | 'characteristics' | 'reports';
-
 const Profile = () => {
   const { t } = useTranslation();
   const { user } = useAuth();
@@ -56,6 +49,10 @@ const Profile = () => {
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
+    const profileSchema = z.object({
+      firstName: z.string().trim().max(50, { message: t('profile.maxChars') }).optional(),
+      lastName: z.string().trim().max(50, { message: t('profile.maxChars') }).optional(),
+    });
     const result = profileSchema.safeParse({ firstName, lastName });
     if (!result.success) {
       const fieldErrors: { firstName?: string; lastName?: string } = {};
@@ -82,9 +79,9 @@ const Profile = () => {
       }
       const { error } = await supabase.from('profiles').upsert(profileData, { onConflict: 'user_id' });
       if (error) {
-        toast({ title: "Kunde inte spara", description: "Försök igen.", variant: "destructive" });
+        toast({ title: t('profile.couldNotSave'), description: t('common.tryAgain'), variant: "destructive" });
       } else {
-        toast({ title: "Profil uppdaterad!" });
+        toast({ title: t('profile.saved') });
       }
     } finally {
       setIsSaving(false);
@@ -102,48 +99,48 @@ const Profile = () => {
   // Sub-views
   if (view === 'edit') {
     return (
-      <SubPage title="Redigera profil" onBack={() => setView('main')}>
+      <SubPage title={t('profile.editProfile')} onBack={() => setView('main')}>
         <div className="flex justify-center pb-6">
           <AvatarUpload currentAvatarUrl={avatarUrl} onAvatarChange={updateAvatarUrl} firstName={firstName} lastName={lastName} />
         </div>
         <form onSubmit={handleSave} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="firstName">Förnamn</Label>
+            <Label htmlFor="firstName">{t('profile.firstName')}</Label>
             <div className="relative">
               <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-              <Input id="firstName" type="text" placeholder="Ditt förnamn" value={firstName} onChange={(e) => setFirstName(e.target.value)} className="pl-10" disabled={isSaving} />
+              <Input id="firstName" type="text" placeholder={t('profile.yourFirstName')} value={firstName} onChange={(e) => setFirstName(e.target.value)} className="pl-10" disabled={isSaving} />
             </div>
             {errors.firstName && <p className="text-sm text-destructive">{errors.firstName}</p>}
           </div>
           <div className="space-y-2">
-            <Label htmlFor="lastName">Efternamn</Label>
+            <Label htmlFor="lastName">{t('profile.lastName')}</Label>
             <div className="relative">
               <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-              <Input id="lastName" type="text" placeholder="Ditt efternamn" value={lastName} onChange={(e) => setLastName(e.target.value)} className="pl-10" disabled={isSaving} />
+              <Input id="lastName" type="text" placeholder={t('profile.yourLastName')} value={lastName} onChange={(e) => setLastName(e.target.value)} className="pl-10" disabled={isSaving} />
             </div>
             {errors.lastName && <p className="text-sm text-destructive">{errors.lastName}</p>}
           </div>
           {isDoctor && (
             <>
               <div className="space-y-2">
-                <Label htmlFor="clinicName">Mottagning</Label>
+                <Label htmlFor="clinicName">{t('profile.clinic')}</Label>
                 <div className="relative">
                   <Building2 className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                  <Input id="clinicName" type="text" placeholder="Namn på mottagning" value={clinicName} onChange={(e) => setClinicName(e.target.value)} className="pl-10" disabled={isSaving} />
+                  <Input id="clinicName" type="text" placeholder={t('profile.clinicName')} value={clinicName} onChange={(e) => setClinicName(e.target.value)} className="pl-10" disabled={isSaving} />
                 </div>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="hospitalName">Sjukhus</Label>
+                <Label htmlFor="hospitalName">{t('profile.hospital')}</Label>
                 <div className="relative">
                   <Hospital className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                  <Input id="hospitalName" type="text" placeholder="Namn på sjukhus" value={hospitalName} onChange={(e) => setHospitalName(e.target.value)} className="pl-10" disabled={isSaving} />
+                  <Input id="hospitalName" type="text" placeholder={t('profile.hospitalName')} value={hospitalName} onChange={(e) => setHospitalName(e.target.value)} className="pl-10" disabled={isSaving} />
                 </div>
               </div>
             </>
           )}
           <Button type="submit" disabled={isSaving} className="w-full gap-2 mt-2">
             {isSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
-            Spara ändringar
+            {t('profile.saveChanges')}
           </Button>
         </form>
       </SubPage>
@@ -151,26 +148,26 @@ const Profile = () => {
   }
 
   if (view === 'medications') {
-    return <SubPage title="Mediciner" onBack={() => setView('main')}><MedicationsSection /></SubPage>;
+    return <SubPage title={t('profile.medications')} onBack={() => setView('main')}><MedicationsSection /></SubPage>;
   }
   if (view === 'doctors') {
-    return <SubPage title="Vårdgivare" onBack={() => setView('main')}><DoctorConnectionsSection /></SubPage>;
+    return <SubPage title={t('profile.caregivers')} onBack={() => setView('main')}><DoctorConnectionsSection /></SubPage>;
   }
   if (view === 'relatives') {
-    return <SubPage title="Anhöriga" onBack={() => setView('main')}><RelativeConnectionsSection /></SubPage>;
+    return <SubPage title={t('profile.relatives')} onBack={() => setView('main')}><RelativeConnectionsSection /></SubPage>;
   }
   if (view === 'diagnoses') {
-    return <SubPage title="Diagnoser" onBack={() => setView('main')}><DiagnosesSection /></SubPage>;
+    return <SubPage title={t('profile.diagnoses')} onBack={() => setView('main')}><DiagnosesSection /></SubPage>;
   }
   if (view === 'delegates') {
-    return <SubPage title="Delegater" onBack={() => setView('main')}><DelegatesSection /></SubPage>;
+    return <SubPage title={t('profile.delegates')} onBack={() => setView('main')}><DelegatesSection /></SubPage>;
   }
   if (view === 'relative-patients') {
-    return <SubPage title="Personer du följer" onBack={() => setView('main')}><RelativePatientConnectionsSection /></SubPage>;
+    return <SubPage title={t('profile.peopleYouFollow')} onBack={() => setView('main')}><RelativePatientConnectionsSection /></SubPage>;
   }
   if (view === 'characteristics') {
     return (
-      <SubPage title="Kännetecken" onBack={() => setView('main')}>
+      <SubPage title={t('profile.characteristics')} onBack={() => setView('main')}>
         <CharacteristicsInlineView />
         <div className="mt-8">
           <CharacteristicsSharingSection />
@@ -180,18 +177,18 @@ const Profile = () => {
   }
   if (view === 'reports') {
     const Reports = require('./Reports').default;
-    return <SubPage title="Rapporter" onBack={() => setView('main')}><Reports /></SubPage>;
+    return <SubPage title={t('profile.reports')} onBack={() => setView('main')}><Reports /></SubPage>;
   }
 
   // Main profile view
-  const displayName = [profile?.first_name, profile?.last_name].filter(Boolean).join(' ') || 'Användare';
-  const roleLabel = isDoctor ? 'Läkare' : isRelative ? 'Anhörig' : 'Patient';
+  const displayName = [profile?.first_name, profile?.last_name].filter(Boolean).join(' ') || t('profile.user');
+  const roleLabel = isDoctor ? t('profile.roleDoctor') : isRelative ? t('profile.roleRelative') : t('profile.rolePatient');
 
   return (
     <div className="p-5 md:p-8 pb-24">
       <div className="max-w-2xl mx-auto md:mx-0">
-        <h1 className="font-display text-3xl font-bold mb-2">Min profil</h1>
-        <p className="text-sm text-muted-foreground mb-8">Hantera din profil och medicinsk information.</p>
+        <h1 className="font-display text-3xl font-bold mb-2">{t('profile.title')}</h1>
+        <p className="text-sm text-muted-foreground mb-8">{t('profile.subtitle')}</p>
 
         {/* Profile header card */}
         <button
@@ -215,31 +212,31 @@ const Profile = () => {
 
         {/* Patient sections */}
         {isPatient && (
-          <SettingsGroup label="Medicinsk information">
-            <SettingsRow icon={Pill} label="Mediciner" description="Hantera dina mediciner" onClick={() => setView('medications')} />
-            <SettingsRow icon={ClipboardList} label="Diagnoser" description="Dina registrerade diagnoser" onClick={() => setView('diagnoses')} />
-            <SettingsRow icon={FileText} label="Rapporter" description="Skapa och dela rapporter" onClick={() => setView('reports')} />
+          <SettingsGroup label={t('profile.medicalInfo')}>
+            <SettingsRow icon={Pill} label={t('profile.medications')} description={t('profile.manageMeds')} onClick={() => setView('medications')} />
+            <SettingsRow icon={ClipboardList} label={t('profile.diagnoses')} description={t('profile.yourDiagnoses')} onClick={() => setView('diagnoses')} />
+            <SettingsRow icon={FileText} label={t('profile.reports')} description={t('profile.createShareReports')} onClick={() => setView('reports')} />
           </SettingsGroup>
         )}
 
         {isPatient && (
-          <SettingsGroup label="Kopplingar">
-            <SettingsRow icon={Stethoscope} label="Vårdgivare" description="Kopplade läkare" onClick={() => setView('doctors')} />
-            <SettingsRow icon={Heart} label="Anhöriga" description="Kopplade närstående" onClick={() => setView('relatives')} />
+          <SettingsGroup label={t('profile.connectionsLabel')}>
+            <SettingsRow icon={Stethoscope} label={t('profile.caregivers')} description={t('profile.connectedDoctors')} onClick={() => setView('doctors')} />
+            <SettingsRow icon={Heart} label={t('profile.relatives')} description={t('profile.connectedRelatives')} onClick={() => setView('relatives')} />
           </SettingsGroup>
         )}
 
         {/* Doctor sections */}
         {isDoctor && (
-          <SettingsGroup label="Hantera">
-            <SettingsRow icon={UserPlus} label="Delegater" description="Hantera dina delegater" onClick={() => setView('delegates')} />
+          <SettingsGroup label={t('profile.manage')}>
+            <SettingsRow icon={UserPlus} label={t('profile.delegates')} description={t('profile.manageDelegates')} onClick={() => setView('delegates')} />
           </SettingsGroup>
         )}
 
         {/* Relative sections */}
         {isRelative && (
-          <SettingsGroup label="Kopplingar">
-            <SettingsRow icon={Heart} label="Personer du följer" description="Hantera dina kopplingar" onClick={() => setView('relative-patients')} />
+          <SettingsGroup label={t('profile.connectionsLabel')}>
+            <SettingsRow icon={Heart} label={t('profile.peopleYouFollow')} description={t('profile.manageConnections')} onClick={() => setView('relative-patients')} />
           </SettingsGroup>
         )}
       </div>
@@ -247,9 +244,12 @@ const Profile = () => {
   );
 };
 
+type ProfileView = 'main' | 'edit' | 'medications' | 'doctors' | 'relatives' | 'diagnoses' | 'delegates' | 'relative-patients' | 'characteristics' | 'reports';
+
 /* ── Characteristics inline view ── */
 
 function CharacteristicsInlineView() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { elevatedCharacteristics, depressedCharacteristics, stableCharacteristics, isLoading } = useCharacteristics();
 
@@ -258,9 +258,9 @@ function CharacteristicsInlineView() {
   }
 
   const sections = [
-    { type: 'elevated', title: 'Uppvarvad', chars: elevatedCharacteristics, icon: Zap, badgeClass: 'bg-amber-500/10 text-amber-700 dark:text-amber-300 border border-amber-500/20', iconBg: 'bg-amber-100 dark:bg-amber-900/30', iconColor: 'text-amber-600 dark:text-amber-400', slug: 'uppvarvad' },
-    { type: 'stable', title: 'Stabil', chars: stableCharacteristics, icon: Sun, badgeClass: 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border border-emerald-500/20', iconBg: 'bg-emerald-100 dark:bg-emerald-900/30', iconColor: 'text-emerald-600 dark:text-emerald-400', slug: 'stabil' },
-    { type: 'depressed', title: 'Nedstämd', chars: depressedCharacteristics, icon: Cloud, badgeClass: 'bg-rose-500/10 text-rose-700 dark:text-rose-300 border border-rose-500/20', iconBg: 'bg-rose-100 dark:bg-rose-900/30', iconColor: 'text-rose-600 dark:text-rose-400', slug: 'nedstamd' },
+    { type: 'elevated', title: t('characteristics.elevated'), chars: elevatedCharacteristics, icon: Zap, badgeClass: 'bg-amber-500/10 text-amber-700 dark:text-amber-300 border border-amber-500/20', iconBg: 'bg-amber-100 dark:bg-amber-900/30', iconColor: 'text-amber-600 dark:text-amber-400', slug: 'uppvarvad' },
+    { type: 'stable', title: t('characteristics.stable'), chars: stableCharacteristics, icon: Sun, badgeClass: 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border border-emerald-500/20', iconBg: 'bg-emerald-100 dark:bg-emerald-900/30', iconColor: 'text-emerald-600 dark:text-emerald-400', slug: 'stabil' },
+    { type: 'depressed', title: t('characteristics.depressed'), chars: depressedCharacteristics, icon: Cloud, badgeClass: 'bg-rose-500/10 text-rose-700 dark:text-rose-300 border border-rose-500/20', iconBg: 'bg-rose-100 dark:bg-rose-900/30', iconColor: 'text-rose-600 dark:text-rose-400', slug: 'nedstamd' },
   ];
 
   return (
@@ -286,7 +286,7 @@ function CharacteristicsInlineView() {
                   {s.chars.length > 3 && <span className="text-xs text-muted-foreground self-center">+{s.chars.length - 3}</span>}
                 </div>
               ) : (
-                <p className="text-xs text-muted-foreground mt-0.5">Inga tillagda ännu</p>
+                <p className="text-xs text-muted-foreground mt-0.5">{t('profile.noneAddedYet')}</p>
               )}
             </div>
             <ChevronRight className="w-4 h-4 text-muted-foreground/50 flex-shrink-0" />
@@ -300,11 +300,12 @@ function CharacteristicsInlineView() {
 /* ── Reusable sub-components ── */
 
 function SubPage({ title, onBack, children }: { title: string; onBack: () => void; children: React.ReactNode }) {
+  const { t } = useTranslation();
   return (
     <div className="p-5 md:p-8 pb-24 animate-fade-in">
       <div className="max-w-2xl mx-auto md:mx-0">
         <div className="flex items-center gap-3 mb-6">
-          <button onClick={onBack} className="p-2 -ml-2 rounded-lg hover:bg-muted transition-colors" aria-label="Tillbaka">
+          <button onClick={onBack} className="p-2 -ml-2 rounded-lg hover:bg-muted transition-colors" aria-label={t('common.back')}>
             <ChevronRight className="w-5 h-5 rotate-180 text-foreground" />
           </button>
           <h1 className="font-display text-xl font-bold">{title}</h1>
