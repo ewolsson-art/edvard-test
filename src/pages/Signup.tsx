@@ -23,7 +23,7 @@ const roleInfo = {
   },
   relative: {
     icon: Users,
-    prefix: "Jag är",
+    prefix: "auth.iAm",
     title: "auth.relative",
     description: "auth.supportCloseOnes",
   },
@@ -104,7 +104,7 @@ const Signup = () => {
     });
     if (result.error) {
       toast({
-        title: "Något gick fel",
+        title: t("common.somethingWrong"),
         description: result.error.message || t("auth.loginError"),
         variant: "destructive",
       });
@@ -161,9 +161,9 @@ const Signup = () => {
           {/* Step 1: Role */}
           {step === "role" && (
             <div className="animate-fade-in">
-              <Link to="/" className="flex items-center gap-1.5 text-sm text-white/30 hover:text-white/60 mb-8 transition-colors">
-                <ArrowLeft className="h-4 w-4" />
-                Tillbaka
+               <Link to="/" className="flex items-center gap-1.5 text-sm text-white/30 hover:text-white/60 mb-8 transition-colors">
+                 <ArrowLeft className="h-4 w-4" />
+                 {t("common.back")}
               </Link>
               <h1 className="text-2xl md:text-3xl font-bold text-white font-display tracking-tight">
                 {t("auth.whoAreYou")}
@@ -200,12 +200,12 @@ const Signup = () => {
                           <Icon className="h-5 w-5" />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <span className="text-[11px] font-medium text-white/30 uppercase tracking-wider">{info.prefix}</span>
+                          <span className="text-[11px] font-medium text-white/30 uppercase tracking-wider">{t(info.prefix)}</span>
                           <h3 className={cn(
                             "text-lg font-semibold capitalize -mt-0.5 transition-colors",
                             isSelected ? "text-white" : "text-white/70"
                           )}>
-                            {info.title}
+                             {t(info.title)}
                           </h3>
                         </div>
                         <div className={cn(
@@ -219,7 +219,7 @@ const Signup = () => {
                           )}
                         </div>
                       </div>
-                      <p className="mt-1.5 ml-15 text-xs text-white/30 pl-[60px]">{info.description}</p>
+                      <p className="mt-1.5 ml-15 text-xs text-white/30 pl-[60px]">{t(info.description)}</p>
                     </button>
                   );
                 })}
@@ -230,7 +230,7 @@ const Signup = () => {
                 disabled={!role}
                 className="w-full h-12 rounded-2xl text-[15px] font-semibold bg-[hsl(45_85%_55%)] text-[hsl(230_30%_5%)] hover:bg-[hsl(45_85%_65%)] shadow-[0_4px_20px_-4px_hsl(45_85%_55%/0.4)] hover:shadow-[0_6px_28px_-4px_hsl(45_85%_55%/0.5)] transition-all duration-300 mt-8 group disabled:opacity-30 disabled:shadow-none"
               >
-                Fortsätt
+                {t("common.continue")}
                 <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
               </Button>
             </div>
@@ -241,7 +241,7 @@ const Signup = () => {
             <div className="animate-fade-in">
               <button onClick={() => setStep("role")} className="flex items-center gap-1.5 text-sm text-white/30 hover:text-white/60 mb-8 transition-colors">
                 <ArrowLeft className="h-4 w-4" />
-                Tillbaka
+                {t("common.back")}
               </button>
 
               <h1 className="text-2xl md:text-3xl font-bold text-white font-display tracking-tight">
@@ -281,7 +281,7 @@ const Signup = () => {
               {/* Divider */}
               <div className="flex items-center gap-4 my-8">
                 <div className="flex-1 h-px bg-white/[0.06]" />
-                <span className="text-[11px] text-white/20 uppercase tracking-wider font-medium">eller</span>
+                <span className="text-[11px] text-white/20 uppercase tracking-wider font-medium">{t("common.or")}</span>
                 <div className="flex-1 h-px bg-white/[0.06]" />
               </div>
 
@@ -329,7 +329,7 @@ const Signup = () => {
                   <Loader2 className="h-5 w-5 animate-spin" />
                 ) : (
                   <>
-                    Skicka kod
+                    {t("auth.sendCode")}
                     <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
                   </>
                 )}
@@ -342,16 +342,16 @@ const Signup = () => {
             <div className="animate-fade-in">
               <button onClick={() => setStep("contact")} className="flex items-center gap-1.5 text-sm text-white/30 hover:text-white/60 mb-8 transition-colors">
                 <ArrowLeft className="h-4 w-4" />
-                Tillbaka
+                {t("common.back")}
               </button>
 
               <div className="flex flex-col items-center">
                 <div className="h-16 w-16 rounded-2xl bg-[hsl(45_85%_55%/0.1)] flex items-center justify-center mb-6">
                   <Smartphone className="h-7 w-7 text-[hsl(45_85%_55%)]" />
                 </div>
-                <h1 className="text-2xl font-bold text-white font-display tracking-tight">Ange koden</h1>
+                <h1 className="text-2xl font-bold text-white font-display tracking-tight">{t("auth.enterTheCode")}</h1>
                 <p className="mt-2 text-sm text-white/40 text-center">
-                  Vi skickade en kod till <span className="text-white/70">{phone}</span>
+                  {t("auth.weSentCodeTo")} <span className="text-white/70">{phone}</span>
                 </p>
               </div>
 
@@ -373,7 +373,7 @@ const Signup = () => {
                 disabled={isSubmitting || otpCode.length < 6}
                 className="w-full h-12 rounded-2xl text-[15px] font-semibold bg-[hsl(45_85%_55%)] text-[hsl(230_30%_5%)] hover:bg-[hsl(45_85%_65%)] shadow-[0_4px_20px_-4px_hsl(45_85%_55%/0.4)] transition-all duration-300 mt-6 disabled:opacity-30 disabled:shadow-none"
               >
-                {isSubmitting ? <Loader2 className="h-5 w-5 animate-spin" /> : "Verifiera"}
+                {isSubmitting ? <Loader2 className="h-5 w-5 animate-spin" /> : t("auth.verify")}
               </Button>
             </div>
           )}
@@ -387,18 +387,18 @@ const Signup = () => {
                 </div>
               </div>
 
-              <h2 className="text-2xl font-bold text-white font-display tracking-tight">Kolla din e-post</h2>
+              <h2 className="text-2xl font-bold text-white font-display tracking-tight">{t("auth.checkYourEmail")}</h2>
               <p className="mt-3 text-sm text-white/40 leading-relaxed">
-                Vi har skickat en verifieringslänk till<br />
+                {t("auth.weSentVerificationTo")}<br />
                 <span className="text-white/70">{email}</span>
               </p>
               <p className="mt-2 text-xs text-white/20">
-                Kolla även skräpposten
+                {t("auth.checkSpam")}
               </p>
 
               <Link to="/logga-in" className="block mt-8">
                 <Button variant="outline" className="w-full h-12 rounded-2xl border-0 ring-1 ring-white/[0.08] text-white/60 hover:text-white hover:bg-white/[0.06] transition-all">
-                  Tillbaka till inloggning
+                   {t("auth.backToLogin")}
                 </Button>
               </Link>
             </div>
@@ -408,7 +408,7 @@ const Signup = () => {
           {(step === "role" || step === "contact") && (
             <div className="mt-8 text-center">
               <Link to="/logga-in" className="text-sm text-white/30 hover:text-white/60 transition-colors">
-                Har du redan ett konto? <span className="text-[hsl(45_85%_55%)] font-medium">Logga in</span>
+                {t("auth.hasAccount")} <span className="text-[hsl(45_85%_55%)] font-medium">{t("auth.logIn")}</span>
               </Link>
             </div>
           )}

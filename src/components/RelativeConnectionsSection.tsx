@@ -18,7 +18,7 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { useTranslation } from 'react-i18next';
 
-const emailSchema = z.string().email({ message: "Ogiltig e-postadress" });
+const emailSchema = z.string().email();
 
 export const RelativeConnectionsSection = () => {
   const { t } = useTranslation();
@@ -54,7 +54,7 @@ export const RelativeConnectionsSection = () => {
     const result = emailSchema.safeParse(relativeEmail);
     if (!result.success) {
       toast({
-        title: "Ogiltig e-postadress",
+        title: t("relativeConnections.invalidEmail"),
         variant: "destructive",
       });
       return;
@@ -69,7 +69,7 @@ export const RelativeConnectionsSection = () => {
       setInviteDialogOpen(false);
     } else if (error) {
       toast({
-        title: "Kunde inte bjuda in",
+        title: t("relativeConnections.couldNotInvite"),
         description: error,
         variant: "destructive",
       });
@@ -117,19 +117,19 @@ export const RelativeConnectionsSection = () => {
     if (connection.relative_email) {
       return connection.relative_email;
     }
-    return 'Okänd anhörig';
+    return t("relativeConnections.unknownRelative");
   };
 
-  const getStatusLabel = (status: string, initiatedBy: string) => {
-    if (status === 'pending') {
-      return initiatedBy === 'relative' ? 'Väntar på ditt svar' : 'Väntar på svar';
-    }
-    switch (status) {
-      case 'approved': return 'Godkänd';
-      case 'rejected': return 'Avvisad';
-      default: return status;
-    }
-  };
+   const getStatusLabel = (status: string, initiatedBy: string) => {
+     if (status === 'pending') {
+       return initiatedBy === 'relative' ? t("relativeConnections.waitingForYourResponse") : t("relativeConnections.waitingForResponse");
+     }
+     switch (status) {
+       case 'approved': return t("relativeConnections.approved");
+       case 'rejected': return t("relativeConnections.rejected");
+       default: return status;
+     }
+   };
 
   const getStatusColor = (status: string, initiatedBy: string) => {
     if (status === 'pending' && initiatedBy === 'relative') {
@@ -153,26 +153,26 @@ export const RelativeConnectionsSection = () => {
     );
   }
 
-  const shareOptions = [
-    { key: 'share_mood', label: 'Mående' },
-    { key: 'share_sleep', label: 'Sömn' },
-    { key: 'share_eating', label: 'Kost' },
-    { key: 'share_exercise', label: 'Träning' },
-    { key: 'share_medication', label: 'Mediciner' },
-    { key: 'share_comments', label: 'Kommentarer' },
-    { key: 'share_characteristics', label: 'Kännetecken' },
-  ];
+   const shareOptions = [
+     { key: 'share_mood', label: t("relativeConnections.mood") },
+     { key: 'share_sleep', label: t("relativeConnections.sleep") },
+     { key: 'share_eating', label: t("relativeConnections.eating") },
+     { key: 'share_exercise', label: t("relativeConnections.exercise") },
+     { key: 'share_medication', label: t("relativeConnections.medication") },
+     { key: 'share_comments', label: t("relativeConnections.comments") },
+     { key: 'share_characteristics', label: t("relativeConnections.characteristics") },
+   ];
 
-  const notificationOptions = [
-    { key: 'notify_low_mood', label: 'Notis vid mycket lågt mående', description: 'Anhörig får en notis om du checkar in som "Mycket låg"' },
-  ];
+   const notificationOptions = [
+     { key: 'notify_low_mood', label: t("relativeConnections.notifyLowMood"), description: t("relativeConnections.notifyLowMoodDesc") },
+   ];
 
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Users className="w-5 h-5 text-primary" />
-          <h3 className="text-lg font-semibold">Mina anhöriga</h3>
+          <h3 className="text-lg font-semibold">{t("relativeConnections.myRelatives")}</h3>
           {pendingFromRelatives.length > 0 && (
             <Badge variant="destructive" className="h-5 px-1.5 text-xs">
               {pendingFromRelatives.length}
@@ -183,20 +183,20 @@ export const RelativeConnectionsSection = () => {
           <DialogTrigger asChild>
             <Button size="sm" variant="outline" className="gap-1">
               <UserPlus className="h-4 w-4" />
-              Bjud in
+               {t("relativeConnections.invite")}
             </Button>
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>Bjud in en anhörig</DialogTitle>
-              <DialogDescription>
-                Ange den anhörigas e-postadress och välj vilken data du vill dela.
-              </DialogDescription>
+               <DialogTitle>{t("relativeConnections.inviteRelative")}</DialogTitle>
+               <DialogDescription>
+                 {t("relativeConnections.inviteDesc")}
+               </DialogDescription>
             </DialogHeader>
             
             <div className="space-y-6 pt-4">
               <div className="space-y-2">
-                <Label htmlFor="relativeEmail">Anhörigs e-post</Label>
+                <Label htmlFor="relativeEmail">{t("relativeConnections.relativeEmail")}</Label>
                 <Input
                   id="relativeEmail"
                   type="email"
@@ -208,7 +208,7 @@ export const RelativeConnectionsSection = () => {
               </div>
 
               <div className="space-y-4">
-                <Label>Dela följande data</Label>
+                 <Label>{t("relativeConnections.shareFollowingData")}</Label>
                 <div className="space-y-3">
                   {shareOptions.map(({ key, label }) => (
                     <div key={key} className="flex items-center justify-between">
@@ -226,9 +226,9 @@ export const RelativeConnectionsSection = () => {
               </div>
 
               <div className="space-y-4">
-                <Label className="flex items-center gap-2">
-                  <Bell className="w-4 h-4" />
-                  Notiser
+                 <Label className="flex items-center gap-2">
+                   <Bell className="w-4 h-4" />
+                   {t("relativeConnections.notifications")}
                 </Label>
                 <div className="space-y-3">
                   {notificationOptions.map(({ key, label, description }) => (
@@ -251,20 +251,20 @@ export const RelativeConnectionsSection = () => {
 
               <Button onClick={handleInvite} disabled={isInviting} className="w-full">
                 {isInviting && <Loader2 className="w-4 h-4 animate-spin mr-2" />}
-                Skicka inbjudan
+                {t("relativeConnections.sendInvitation")}
               </Button>
             </div>
           </DialogContent>
         </Dialog>
       </div>
 
-      <p className="text-xs text-muted-foreground">Hantera vilka anhöriga som har tillgång till din data</p>
+      <p className="text-xs text-muted-foreground">{t("relativeConnections.manageAccess")}</p>
 
       {pendingFromRelatives.length > 0 && (
         <div className="space-y-2">
           <div className="flex items-center gap-2 text-sm font-medium text-blue-600 dark:text-blue-400">
             <Bell className="w-4 h-4" />
-            Inkommande förfrågningar
+            {t("relativeConnections.incomingRequests")}
           </div>
           {pendingFromRelatives.map((connection) => (
             <div key={connection.id} className="p-4 rounded-xl border-2 border-blue-200 dark:border-blue-800 bg-blue-50/50 dark:bg-blue-950/20">
@@ -275,7 +275,7 @@ export const RelativeConnectionsSection = () => {
                   </div>
                   <div>
                     <h4 className="font-medium text-sm">{getRelativeName(connection)}</h4>
-                    <p className="text-xs text-blue-600 dark:text-blue-400">Vill se din data</p>
+                    <p className="text-xs text-blue-600 dark:text-blue-400">{t("relativeConnections.wantsToSeeData")}</p>
                   </div>
                 </div>
                 <div className="flex gap-2">
@@ -286,7 +286,7 @@ export const RelativeConnectionsSection = () => {
                     onClick={() => removeConnection(connection.id)}
                   >
                     <X className="w-4 h-4" />
-                    Avvisa
+                     {t("relativeConnections.reject")}
                   </Button>
                   <Button
                     size="sm"
@@ -294,7 +294,7 @@ export const RelativeConnectionsSection = () => {
                     onClick={() => openRespondDialog(connection.id)}
                   >
                     <Check className="w-4 h-4" />
-                    Godkänn
+                     {t("relativeConnections.approve")}
                   </Button>
                 </div>
               </div>
@@ -306,15 +306,15 @@ export const RelativeConnectionsSection = () => {
       <Dialog open={respondDialogOpen} onOpenChange={setRespondDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Godkänn åtkomst</DialogTitle>
-            <DialogDescription>
-              Välj vilken data du vill dela med {selectedRequestData ? getRelativeName(selectedRequestData) : 'anhörig'}.
+             <DialogTitle>{t("relativeConnections.approveAccess")}</DialogTitle>
+             <DialogDescription>
+               {t("relativeConnections.approveAccessDesc")} {selectedRequestData ? getRelativeName(selectedRequestData) : t("relativeConnections.theRelative")}.
             </DialogDescription>
           </DialogHeader>
           
           <div className="space-y-6 pt-4">
             <div className="space-y-4">
-              <Label>Dela följande data</Label>
+              <Label>{t("relativeConnections.shareFollowingData")}</Label>
               <div className="space-y-3">
                 {shareOptions.map(({ key, label }) => (
                   <div key={key} className="flex items-center justify-between">
@@ -332,9 +332,9 @@ export const RelativeConnectionsSection = () => {
             </div>
 
             <div className="space-y-4">
-              <Label className="flex items-center gap-2">
-                <Bell className="w-4 h-4" />
-                Notiser
+               <Label className="flex items-center gap-2">
+                 <Bell className="w-4 h-4" />
+                 {t("relativeConnections.notifications")}
               </Label>
               <div className="space-y-3">
                 {notificationOptions.map(({ key, label, description }) => (
@@ -361,7 +361,7 @@ export const RelativeConnectionsSection = () => {
                 disabled={isResponding}
                 className="flex-1"
               >
-                Avvisa
+                {t("relativeConnections.reject")}
               </Button>
               <Button 
                 onClick={() => handleRespondToRequest(true)} 
@@ -369,7 +369,7 @@ export const RelativeConnectionsSection = () => {
                 className="flex-1"
               >
                 {isResponding && <Loader2 className="w-4 h-4 animate-spin mr-2" />}
-                Godkänn
+                {t("relativeConnections.approve")}
               </Button>
             </div>
           </div>
@@ -379,14 +379,14 @@ export const RelativeConnectionsSection = () => {
       {connections.filter(c => !(c.status === 'pending' && c.initiated_by === 'relative')).length === 0 && pendingFromRelatives.length === 0 ? (
         <div className="text-center py-6 bg-muted/50 rounded-xl">
           <Users className="w-8 h-8 text-muted-foreground mx-auto mb-2" />
-          <p className="text-sm text-muted-foreground">Inga anhöriga kopplade ännu</p>
-          <Button 
-            onClick={() => setInviteDialogOpen(true)} 
-            variant="link" 
-            size="sm"
-            className="mt-2"
-          >
-            Bjud in din första anhöriga
+           <p className="text-sm text-muted-foreground">{t("relativeConnections.noRelativesYet")}</p>
+           <Button 
+             onClick={() => setInviteDialogOpen(true)} 
+             variant="link" 
+             size="sm"
+             className="mt-2"
+           >
+             {t("relativeConnections.inviteFirstRelative")}
           </Button>
         </div>
       ) : (
@@ -421,7 +421,7 @@ export const RelativeConnectionsSection = () => {
                 <div className="border-t pt-3">
                   <div className="flex items-center gap-2 mb-2">
                     <Settings className="w-3 h-3 text-muted-foreground" />
-                    <span className="text-xs font-medium text-muted-foreground">Delad data</span>
+                    <span className="text-xs font-medium text-muted-foreground">{t("relativeConnections.sharedData")}</span>
                   </div>
                   <div className="grid grid-cols-2 gap-2">
                     {shareOptions.map(({ key, label }) => (
@@ -440,11 +440,11 @@ export const RelativeConnectionsSection = () => {
                   <div className="col-span-2 mt-2">
                     <div className="flex items-center gap-2 mb-2">
                       <Bell className="w-3 h-3 text-muted-foreground" />
-                      <span className="text-xs font-medium text-muted-foreground">Notiser</span>
+                      <span className="text-xs font-medium text-muted-foreground">{t("relativeConnections.notifications")}</span>
                     </div>
                     <div className="flex items-center justify-between bg-background rounded-lg px-2 py-1.5">
                       <div>
-                        <span className="text-xs">Notis vid mycket lågt mående</span>
+                        <span className="text-xs">{t("relativeConnections.lowMoodNotification")}</span>
                       </div>
                       <Switch
                         checked={connection.notify_low_mood as boolean}
