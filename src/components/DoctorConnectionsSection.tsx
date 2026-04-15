@@ -18,7 +18,7 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { useTranslation } from 'react-i18next';
 
-const emailSchema = z.string().email({ message: "Ogiltig e-postadress" });
+const emailSchema = z.string().email();
 
 export const DoctorConnectionsSection = () => {
   const { t } = useTranslation();
@@ -53,7 +53,7 @@ export const DoctorConnectionsSection = () => {
     const result = emailSchema.safeParse(doctorEmail);
     if (!result.success) {
       toast({
-        title: "Ogiltig e-postadress",
+        title: t("doctorConnections.invalidEmail"),
         variant: "destructive",
       });
       return;
@@ -68,7 +68,7 @@ export const DoctorConnectionsSection = () => {
       setInviteDialogOpen(false);
     } else if (error) {
       toast({
-        title: "Kunde inte bjuda in",
+        title: t("doctorConnections.couldNotInvite"),
         description: error,
         variant: "destructive",
       });
@@ -115,19 +115,19 @@ export const DoctorConnectionsSection = () => {
     if (connection.doctor_email) {
       return connection.doctor_email;
     }
-    return 'Okänd läkare';
+    return t("doctorConnections.unknownDoctor");
   };
 
-  const getStatusLabel = (status: string, initiatedBy: string) => {
-    if (status === 'pending') {
-      return initiatedBy === 'doctor' ? 'Väntar på ditt svar' : 'Väntar på svar';
-    }
-    switch (status) {
-      case 'approved': return 'Godkänd';
-      case 'rejected': return 'Avvisad';
-      default: return status;
-    }
-  };
+   const getStatusLabel = (status: string, initiatedBy: string) => {
+     if (status === 'pending') {
+       return initiatedBy === 'doctor' ? t("doctorConnections.waitingForYourResponse") : t("doctorConnections.waitingForResponse");
+     }
+     switch (status) {
+       case 'approved': return t("doctorConnections.approved");
+       case 'rejected': return t("doctorConnections.rejected");
+       default: return status;
+     }
+   };
 
   const getStatusColor = (status: string, initiatedBy: string) => {
     if (status === 'pending' && initiatedBy === 'doctor') {
@@ -156,7 +156,7 @@ export const DoctorConnectionsSection = () => {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Stethoscope className="w-5 h-5 text-primary" />
-          <h3 className="text-lg font-semibold">Mina läkare</h3>
+          <h3 className="text-lg font-semibold">{t("doctorConnections.myDoctors")}</h3>
           {pendingFromDoctors.length > 0 && (
             <Badge variant="destructive" className="h-5 px-1.5 text-xs">
               {pendingFromDoctors.length}
@@ -167,20 +167,20 @@ export const DoctorConnectionsSection = () => {
           <DialogTrigger asChild>
             <Button size="sm" variant="outline" className="gap-1">
               <UserPlus className="h-4 w-4" />
-              Bjud in
+               {t("doctorConnections.invite")}
             </Button>
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>Bjud in en läkare</DialogTitle>
-              <DialogDescription>
-                Ange läkarens e-postadress och välj vilken data du vill dela.
-              </DialogDescription>
+               <DialogTitle>{t("doctorConnections.inviteDoctor")}</DialogTitle>
+               <DialogDescription>
+                 {t("doctorConnections.inviteDesc")}
+               </DialogDescription>
             </DialogHeader>
             
             <div className="space-y-6 pt-4">
               <div className="space-y-2">
-                <Label htmlFor="doctorEmail">Läkarens e-post</Label>
+                <Label htmlFor="doctorEmail">{t("doctorConnections.doctorEmail")}</Label>
                 <Input
                   id="doctorEmail"
                   type="email"
@@ -192,17 +192,17 @@ export const DoctorConnectionsSection = () => {
               </div>
 
               <div className="space-y-4">
-                <Label>Dela följande data</Label>
-                <div className="space-y-3">
-                  {[
-                    { key: 'share_mood', label: 'Mående' },
-                    { key: 'share_sleep', label: 'Sömn' },
-                    { key: 'share_eating', label: 'Kost' },
-                    { key: 'share_exercise', label: 'Träning' },
-                    { key: 'share_medication', label: 'Mediciner' },
-                    { key: 'share_comments', label: 'Kommentarer' },
-                    { key: 'share_ai_insights', label: 'AI-insikter' },
-                  ].map(({ key, label }) => (
+                 <Label>{t("doctorConnections.shareFollowingData")}</Label>
+                 <div className="space-y-3">
+                   {[
+                     { key: 'share_mood', label: t("doctorConnections.mood") },
+                     { key: 'share_sleep', label: t("doctorConnections.sleep") },
+                     { key: 'share_eating', label: t("doctorConnections.eating") },
+                     { key: 'share_exercise', label: t("doctorConnections.exercise") },
+                     { key: 'share_medication', label: t("doctorConnections.medication") },
+                     { key: 'share_comments', label: t("doctorConnections.comments") },
+                     { key: 'share_ai_insights', label: t("doctorConnections.aiInsights") },
+                   ].map(({ key, label }) => (
                     <div key={key} className="flex items-center justify-between">
                       <span className="text-sm">{label}</span>
                       <Switch
@@ -219,21 +219,21 @@ export const DoctorConnectionsSection = () => {
 
               <Button onClick={handleInvite} disabled={isInviting} className="w-full">
                 {isInviting && <Loader2 className="w-4 h-4 animate-spin mr-2" />}
-                Skicka inbjudan
+                {t("doctorConnections.sendInvitation")}
               </Button>
             </div>
           </DialogContent>
         </Dialog>
       </div>
 
-      <p className="text-xs text-muted-foreground">Hantera vilka läkare som har tillgång till din data</p>
+      <p className="text-xs text-muted-foreground">{t("doctorConnections.manageAccess")}</p>
 
       {/* Pending requests from doctors */}
       {pendingFromDoctors.length > 0 && (
         <div className="space-y-2">
           <div className="flex items-center gap-2 text-sm font-medium text-blue-600 dark:text-blue-400">
             <Bell className="w-4 h-4" />
-            Inkommande förfrågningar
+            {t("doctorConnections.incomingRequests")}
           </div>
           {pendingFromDoctors.map((connection) => (
             <div key={connection.id} className="p-4 rounded-xl border-2 border-blue-200 dark:border-blue-800 bg-blue-50/50 dark:bg-blue-950/20">
@@ -247,7 +247,7 @@ export const DoctorConnectionsSection = () => {
                     {connection.doctor_profile?.clinic_name && (
                       <p className="text-xs text-muted-foreground">{connection.doctor_profile.clinic_name}</p>
                     )}
-                    <p className="text-xs text-blue-600 dark:text-blue-400">Vill ha tillgång till din data</p>
+                    <p className="text-xs text-blue-600 dark:text-blue-400">{t("doctorConnections.wantsAccess")}</p>
                   </div>
                 </div>
                 <div className="flex gap-2">
@@ -258,7 +258,7 @@ export const DoctorConnectionsSection = () => {
                     onClick={() => removeConnection(connection.id)}
                   >
                     <X className="w-4 h-4" />
-                    Avvisa
+                     {t("doctorConnections.reject")}
                   </Button>
                   <Button
                     size="sm"
@@ -266,7 +266,7 @@ export const DoctorConnectionsSection = () => {
                     onClick={() => openRespondDialog(connection.id)}
                   >
                     <Check className="w-4 h-4" />
-                    Godkänn
+                     {t("doctorConnections.approve")}
                   </Button>
                 </div>
               </div>
@@ -279,25 +279,25 @@ export const DoctorConnectionsSection = () => {
       <Dialog open={respondDialogOpen} onOpenChange={setRespondDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Godkänn åtkomst</DialogTitle>
-            <DialogDescription>
-              Välj vilken data du vill dela med {selectedRequestData ? getDoctorName(selectedRequestData) : 'läkaren'}.
+             <DialogTitle>{t("doctorConnections.approveAccess")}</DialogTitle>
+             <DialogDescription>
+               {t("doctorConnections.approveAccessDesc")} {selectedRequestData ? getDoctorName(selectedRequestData) : t("doctorConnections.theDoctor")}.
             </DialogDescription>
           </DialogHeader>
           
           <div className="space-y-6 pt-4">
             <div className="space-y-4">
-              <Label>Dela följande data</Label>
-              <div className="space-y-3">
-                {[
-                  { key: 'share_mood', label: 'Mående' },
-                  { key: 'share_sleep', label: 'Sömn' },
-                  { key: 'share_eating', label: 'Kost' },
-                  { key: 'share_exercise', label: 'Träning' },
-                  { key: 'share_medication', label: 'Mediciner' },
-                  { key: 'share_comments', label: 'Kommentarer' },
-                  { key: 'share_ai_insights', label: 'AI-insikter' },
-                ].map(({ key, label }) => (
+               <Label>{t("doctorConnections.shareFollowingData")}</Label>
+               <div className="space-y-3">
+                 {[
+                   { key: 'share_mood', label: t("doctorConnections.mood") },
+                   { key: 'share_sleep', label: t("doctorConnections.sleep") },
+                   { key: 'share_eating', label: t("doctorConnections.eating") },
+                   { key: 'share_exercise', label: t("doctorConnections.exercise") },
+                   { key: 'share_medication', label: t("doctorConnections.medication") },
+                   { key: 'share_comments', label: t("doctorConnections.comments") },
+                   { key: 'share_ai_insights', label: t("doctorConnections.aiInsights") },
+                 ].map(({ key, label }) => (
                   <div key={key} className="flex items-center justify-between">
                     <span className="text-sm">{label}</span>
                     <Switch
@@ -319,7 +319,7 @@ export const DoctorConnectionsSection = () => {
                 disabled={isResponding}
                 className="flex-1"
               >
-                Avvisa
+                {t("doctorConnections.reject")}
               </Button>
               <Button 
                 onClick={() => handleRespondToRequest(true)} 
@@ -327,7 +327,7 @@ export const DoctorConnectionsSection = () => {
                 className="flex-1"
               >
                 {isResponding && <Loader2 className="w-4 h-4 animate-spin mr-2" />}
-                Godkänn
+                {t("doctorConnections.approve")}
               </Button>
             </div>
           </div>
@@ -338,14 +338,14 @@ export const DoctorConnectionsSection = () => {
       {connections.filter(c => !(c.status === 'pending' && c.initiated_by === 'doctor')).length === 0 && pendingFromDoctors.length === 0 ? (
         <div className="text-center py-6 bg-muted/50 rounded-xl">
           <Users className="w-8 h-8 text-muted-foreground mx-auto mb-2" />
-          <p className="text-sm text-muted-foreground">Inga läkare kopplade ännu</p>
-          <Button 
-            onClick={() => setInviteDialogOpen(true)} 
-            variant="link" 
-            size="sm"
-            className="mt-2"
-          >
-            Bjud in din första läkare
+           <p className="text-sm text-muted-foreground">{t("doctorConnections.noDoctorsYet")}</p>
+           <Button 
+             onClick={() => setInviteDialogOpen(true)} 
+             variant="link" 
+             size="sm"
+             className="mt-2"
+           >
+             {t("doctorConnections.inviteFirstDoctor")}
           </Button>
         </div>
       ) : (
@@ -383,18 +383,18 @@ export const DoctorConnectionsSection = () => {
                 <div className="border-t pt-3">
                   <div className="flex items-center gap-2 mb-2">
                     <Settings className="w-3 h-3 text-muted-foreground" />
-                    <span className="text-xs font-medium text-muted-foreground">Delad data</span>
-                  </div>
-                  <div className="grid grid-cols-2 gap-2">
-                    {[
-                      { key: 'share_mood', label: 'Mående' },
-                      { key: 'share_sleep', label: 'Sömn' },
-                      { key: 'share_eating', label: 'Kost' },
-                      { key: 'share_exercise', label: 'Träning' },
-                      { key: 'share_medication', label: 'Mediciner' },
-                      { key: 'share_comments', label: 'Kommentarer' },
-                      { key: 'share_ai_insights', label: 'AI-insikter' },
-                    ].map(({ key, label }) => (
+                     <span className="text-xs font-medium text-muted-foreground">{t("doctorConnections.sharedData")}</span>
+                   </div>
+                   <div className="grid grid-cols-2 gap-2">
+                     {[
+                       { key: 'share_mood', label: t("doctorConnections.mood") },
+                       { key: 'share_sleep', label: t("doctorConnections.sleep") },
+                       { key: 'share_eating', label: t("doctorConnections.eating") },
+                       { key: 'share_exercise', label: t("doctorConnections.exercise") },
+                       { key: 'share_medication', label: t("doctorConnections.medication") },
+                       { key: 'share_comments', label: t("doctorConnections.comments") },
+                       { key: 'share_ai_insights', label: t("doctorConnections.aiInsights") },
+                     ].map(({ key, label }) => (
                       <div key={key} className="flex items-center justify-between bg-background rounded-lg px-2 py-1.5">
                         <span className="text-xs">{label}</span>
                         <Switch
