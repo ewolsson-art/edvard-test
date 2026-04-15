@@ -1,4 +1,4 @@
-import { Dumbbell, Calendar, Check, X, HelpCircle } from 'lucide-react';
+import { Dumbbell, Check, X, HelpCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useTranslation } from 'react-i18next';
 
@@ -16,6 +16,8 @@ interface ExerciseStatsProps {
 }
 
 export function ExerciseStats({ stats, periodLabel }: ExerciseStatsProps) {
+  const { t } = useTranslation();
+
   const statCards = [
     {
       key: 'exercised',
@@ -24,7 +26,7 @@ export function ExerciseStats({ stats, periodLabel }: ExerciseStatsProps) {
       bgClass: 'bg-mood-stable-light',
       textClass: 'text-mood-stable',
       barClass: 'bg-mood-stable',
-      label: 'Tränat',
+      label: t('exerciseStats.exercised'),
     },
     {
       key: 'notExercised',
@@ -33,7 +35,7 @@ export function ExerciseStats({ stats, periodLabel }: ExerciseStatsProps) {
       bgClass: 'bg-mood-depressed-light',
       textClass: 'text-mood-depressed',
       barClass: 'bg-mood-depressed',
-      label: 'Inte tränat',
+      label: t('exerciseStats.notExercised'),
     },
     {
       key: 'unregistered',
@@ -42,12 +44,11 @@ export function ExerciseStats({ stats, periodLabel }: ExerciseStatsProps) {
       bgClass: 'bg-muted',
       textClass: 'text-muted-foreground',
       barClass: 'bg-muted-foreground/50',
-      label: 'Ej registrerat',
+      label: t('exerciseStats.unregistered'),
     },
   ];
 
   const percentage = (count: number) => {
-  const { t } = useTranslation();
     if (stats.totalDays === 0) return 0;
     return Math.round((count / stats.totalDays) * 100);
   };
@@ -61,7 +62,7 @@ export function ExerciseStats({ stats, periodLabel }: ExerciseStatsProps) {
       <div className="flex items-center gap-2 mb-6">
         <Dumbbell className="w-5 h-5 text-muted-foreground" />
         <h3 className="font-display text-xl font-semibold">
-          Träning – {periodLabel}
+          {t('exerciseStats.title', { period: periodLabel })}
         </h3>
       </div>
 
@@ -86,7 +87,7 @@ export function ExerciseStats({ stats, periodLabel }: ExerciseStatsProps) {
           <div key={key} className="space-y-1">
             <div className="flex justify-between text-sm">
               <span className="text-muted-foreground">{label}</span>
-              <span className="font-medium">{count} dagar</span>
+              <span className="font-medium">{count} {t('exerciseStats.days')}</span>
             </div>
             <div className="h-2 bg-muted rounded-full overflow-hidden">
               <div
@@ -100,7 +101,7 @@ export function ExerciseStats({ stats, periodLabel }: ExerciseStatsProps) {
 
       <div className="mt-6 pt-4 border-t border-border">
         <div className="flex justify-between text-sm">
-          <span className="text-muted-foreground">Träningsfrekvens (av registrerade)</span>
+          <span className="text-muted-foreground">{t('exerciseStats.exerciseRate')}</span>
           <span className="font-semibold">{exerciseRate}%</span>
         </div>
       </div>

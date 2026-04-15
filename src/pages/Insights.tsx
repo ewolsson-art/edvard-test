@@ -50,6 +50,7 @@ const useThinkingPhrases = () => {
 };
 
 function InsightsLoadingAnimation() {
+  const { t } = useTranslation();
   const phrases = useThinkingPhrases();
   const [phraseIndex, setPhraseIndex] = useState(0);
   const [progress, setProgress] = useState(0);

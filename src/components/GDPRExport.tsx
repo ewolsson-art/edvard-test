@@ -7,6 +7,7 @@ import { Download, Loader2, FileJson, FileText } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 export function GDPRExport() {
+  const { t } = useTranslation();
   const { user } = useAuth();
   const { toast } = useToast();
   const [exporting, setExporting] = useState<'json' | 'pdf' | null>(null);
@@ -65,9 +66,9 @@ export function GDPRExport() {
       a.click();
       URL.revokeObjectURL(url);
 
-      toast({ title: 'Export klar', description: 'Din data har laddats ner som JSON.' });
+      toast({ title: t('gdpr.exportDone'), description: t('gdpr.exportDoneJSON') });
     } catch {
-      toast({ title: 'Exportfel', description: 'Kunde inte exportera data.', variant: 'destructive' });
+      toast({ title: t('gdpr.exportError'), description: t('gdpr.exportErrorDesc'), variant: 'destructive' });
     } finally {
       setExporting(null);
     }
@@ -87,7 +88,6 @@ export function GDPRExport() {
       const pageWidth = doc.internal.pageSize.getWidth();
 
       const addText = (text: string, fontSize = 10, bold = false) => {
-  const { t } = useTranslation();
         if (y > 270) { doc.addPage(); y = 20; }
         doc.setFontSize(fontSize);
         doc.setFont('helvetica', bold ? 'bold' : 'normal');
@@ -102,44 +102,39 @@ export function GDPRExport() {
         y += 2;
       };
 
-      // Header
-      addText('Toddy — Din dataexport', 18, true);
-      addText(`Exporterad: ${new Date().toLocaleDateString('sv-SE')}`, 10);
-      addText(`E-post: ${data.email || '—'}`, 10);
+      addText(t('gdpr.pdfHeader'), 18, true);
+      addText(`${t('gdpr.pdfExported')}: ${new Date().toLocaleDateString('sv-SE')}`, 10);
+      addText(`${t('gdpr.pdfEmail')}: ${data.email || '—'}`, 10);
       y += 5;
 
-      // Profile
-      addSection('Profil');
+      addSection(t('gdpr.pdfProfile'));
       if (data.profile) {
-        addText(`Namn: ${data.profile.first_name || ''} ${data.profile.last_name || ''}`);
+        addText(`${t('gdpr.pdfName')}: ${data.profile.first_name || ''} ${data.profile.last_name || ''}`);
       }
 
-      // Diagnoses
       if (data.diagnoses.length > 0) {
-        addSection('Diagnoser');
+        addSection(t('gdpr.pdfDiagnoses'));
         data.diagnoses.forEach((d: any) => addText(`• ${d.name}${d.diagnosed_at ? ` (${d.diagnosed_at})` : ''}`));
       }
 
-      // Medications
       if (data.medications.length > 0) {
-        addSection('Mediciner');
-        data.medications.forEach((m: any) => addText(`• ${m.name} — ${m.dosage} (${m.active ? 'Aktiv' : 'Inaktiv'})`));
+        addSection(t('gdpr.pdfMedications'));
+        data.medications.forEach((m: any) => addText(`• ${m.name} — ${m.dosage} (${m.active ? t('gdpr.pdfActive') : t('gdpr.pdfInactive')})`));
       }
 
-      // Mood entries summary
-      addSection(`Incheckningar (${data.moodEntries.length} totalt)`);
+      addSection(t('gdpr.pdfCheckins', { count: data.moodEntries.length }));
       const recentEntries = data.moodEntries.slice(0, 30);
       recentEntries.forEach((e: any) => {
         addText(`${e.date}: ${e.mood}${e.comment ? ` — "${e.comment}"` : ''}`);
       });
       if (data.moodEntries.length > 30) {
-        addText(`... och ${data.moodEntries.length - 30} till (se JSON-export for fullständig data)`);
+        addText(t('gdpr.pdfAndMore', { count: data.moodEntries.length - 30 }));
       }
 
       doc.save(`toddy-export-${new Date().toISOString().slice(0, 10)}.pdf`);
-      toast({ title: 'Export klar', description: 'Din data har laddats ner som PDF.' });
+      toast({ title: t('gdpr.exportDone'), description: t('gdpr.exportDonePDF') });
     } catch {
-      toast({ title: 'Exportfel', description: 'Kunde inte exportera data.', variant: 'destructive' });
+      toast({ title: t('gdpr.exportError'), description: t('gdpr.exportErrorDesc'), variant: 'destructive' });
     } finally {
       setExporting(null);
     }
@@ -147,9 +142,7 @@ export function GDPRExport() {
 
   return (
     <div className="space-y-3">
-      <p className="text-sm text-muted-foreground">
-        Ladda ner all din data i enlighet med GDPR. Du kan välja mellan JSON (maskinläsbart) eller PDF (läsbart).
-      </p>
+      <p className="text-sm text-muted-foreground">{t('gdpr.description')}</p>
       <div className="flex gap-3">
         <Button variant="outline" onClick={handleExportJSON} disabled={!!exporting} className="flex-1 gap-2">
           {exporting === 'json' ? <Loader2 className="w-4 h-4 animate-spin" /> : <FileJson className="w-4 h-4" />}

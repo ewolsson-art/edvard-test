@@ -16,6 +16,8 @@ interface EatingStatsProps {
 }
 
 export function EatingStats({ stats, periodLabel }: EatingStatsProps) {
+  const { t } = useTranslation();
+
   const statCards = [
     {
       key: 'good',
@@ -24,7 +26,7 @@ export function EatingStats({ stats, periodLabel }: EatingStatsProps) {
       bgClass: 'bg-mood-stable-light',
       textClass: 'text-mood-stable',
       barClass: 'bg-mood-stable',
-      label: 'Bra mat',
+      label: t('eatingStats.goodFood'),
     },
     {
       key: 'bad',
@@ -33,7 +35,7 @@ export function EatingStats({ stats, periodLabel }: EatingStatsProps) {
       bgClass: 'bg-mood-depressed-light',
       textClass: 'text-mood-depressed',
       barClass: 'bg-mood-depressed',
-      label: 'Dålig mat',
+      label: t('eatingStats.badFood'),
     },
     {
       key: 'unregistered',
@@ -42,12 +44,11 @@ export function EatingStats({ stats, periodLabel }: EatingStatsProps) {
       bgClass: 'bg-muted',
       textClass: 'text-muted-foreground',
       barClass: 'bg-muted-foreground/50',
-      label: 'Ej registrerat',
+      label: t('eatingStats.unregistered'),
     },
   ];
 
   const percentage = (count: number) => {
-  const { t } = useTranslation();
     if (stats.totalDays === 0) return 0;
     return Math.round((count / stats.totalDays) * 100);
   };
@@ -61,7 +62,7 @@ export function EatingStats({ stats, periodLabel }: EatingStatsProps) {
       <div className="flex items-center gap-2 mb-6">
         <Utensils className="w-5 h-5 text-muted-foreground" />
         <h3 className="font-display text-xl font-semibold">
-          Kost – {periodLabel}
+          {t('eatingStats.title', { period: periodLabel })}
         </h3>
       </div>
 
@@ -86,7 +87,7 @@ export function EatingStats({ stats, periodLabel }: EatingStatsProps) {
           <div key={key} className="space-y-1">
             <div className="flex justify-between text-sm">
               <span className="text-muted-foreground">{label}</span>
-              <span className="font-medium">{count} dagar</span>
+              <span className="font-medium">{count} {t('eatingStats.days')}</span>
             </div>
             <div className="h-2 bg-muted rounded-full overflow-hidden">
               <div
@@ -100,7 +101,7 @@ export function EatingStats({ stats, periodLabel }: EatingStatsProps) {
 
       <div className="mt-6 pt-4 border-t border-border">
         <div className="flex justify-between text-sm">
-          <span className="text-muted-foreground">Bra mat (av registrerade)</span>
+          <span className="text-muted-foreground">{t('eatingStats.goodEatingRate')}</span>
           <span className="font-semibold">{goodEatingRate}%</span>
         </div>
       </div>

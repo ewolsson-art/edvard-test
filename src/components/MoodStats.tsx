@@ -21,15 +21,15 @@ export function MoodStats({ stats, periodLabel, customLabels }: MoodStatsProps) 
     { key: 'somewhat_depressed', count: stats.somewhat_depressed, label: labels.somewhat_depressed },
     { key: 'depressed', count: stats.depressed, label: labels.depressed },
     { key: 'severe_depressed', count: stats.severe_depressed, label: labels.severe_depressed },
-    { key: 'unregistered', count: stats.unregistered, label: 'Ej registrerat' },
+    { key: 'unregistered', count: stats.unregistered, label: t('moodStats.unregistered') },
   ];
 
-  const pluralize = (count: number) => count === 1 ? 'dag' : 'dagar';
+  const pluralize = (count: number) => count === 1 ? t('common.day') : t('common.days');
 
   return (
     <div className="space-y-3">
       <p className="text-xs text-muted-foreground/40 font-medium uppercase tracking-wider">
-        Statistik · {periodLabel}
+        {t('moodStats.statsLabel', { period: periodLabel })}
       </p>
 
       <div className="space-y-1">
@@ -42,8 +42,8 @@ export function MoodStats({ stats, periodLabel, customLabels }: MoodStatsProps) 
       </div>
 
       <div className="flex justify-between text-xs text-muted-foreground/30 pt-1">
-        <span>Registrerat</span>
-        <span className="tabular-nums">{stats.total} av {stats.totalDays}</span>
+        <span>{t('moodStats.registered')}</span>
+        <span className="tabular-nums">{stats.total} {t('moodStats.of')} {stats.totalDays}</span>
       </div>
     </div>
   );
