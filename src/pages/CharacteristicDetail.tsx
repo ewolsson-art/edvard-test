@@ -7,6 +7,7 @@ import { useMoodData } from '@/hooks/useMoodData';
 import { cn } from '@/lib/utils';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { useTranslation } from 'react-i18next';
 
 const MOOD_CONFIG = {
   uppvarvad: {
@@ -44,6 +45,7 @@ interface AISuggestion {
 }
 
 const CharacteristicDetail = () => {
+  const { t } = useTranslation();
   const { moodType } = useParams<{ moodType: string }>();
   const navigate = useNavigate();
   const { toast } = useToast();

@@ -19,6 +19,7 @@ import {
 import { MOOD_LABELS as DEFAULT_MOOD_LABELS, MOOD_ICONS, MoodType } from '@/types/mood';
 import { format, isToday, isYesterday, subDays } from 'date-fns';
 import { sv } from 'date-fns/locale';
+import { useTranslation } from 'react-i18next';
 
 const formatCheckinTime = (dateStr: string) => {
   const d = new Date(dateStr);
@@ -79,6 +80,7 @@ function calculateStreak(entries: { date: string; mood: string }[], currentMood:
 const emailSchema = z.string().email({ message: "Ogiltig e-postadress" });
 
 const RelativeDashboard = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { toast } = useToast();
   const { approvedConnections, pendingFromRelative, isLoading, requestPatientAccess, cancelRequest } = useRelativeConnections();

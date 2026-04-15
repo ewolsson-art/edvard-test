@@ -4,6 +4,7 @@ import { Badge } from '@/components/ui/badge';
 import { usePatientCharacteristics } from '@/hooks/usePatientCharacteristics';
 import { cn } from '@/lib/utils';
 import { MoodType } from '@/types/mood';
+import { useTranslation } from 'react-i18next';
 
 interface PatientCharacteristicsProps {
   patientId: string;
@@ -18,6 +19,7 @@ export const PatientCharacteristics = ({
   isShared,
   patientName = 'Användaren'
 }: PatientCharacteristicsProps) => {
+  const { t } = useTranslation();
   const { elevatedCharacteristics, depressedCharacteristics, stableCharacteristics, isLoading } = usePatientCharacteristics(patientId);
 
   if (!isShared) {

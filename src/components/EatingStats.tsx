@@ -1,5 +1,6 @@
 import { Utensils, ThumbsUp, ThumbsDown, HelpCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useTranslation } from 'react-i18next';
 
 export interface EatingStatsType {
   good: number;
@@ -46,6 +47,7 @@ export function EatingStats({ stats, periodLabel }: EatingStatsProps) {
   ];
 
   const percentage = (count: number) => {
+  const { t } = useTranslation();
     if (stats.totalDays === 0) return 0;
     return Math.round((count / stats.totalDays) * 100);
   };

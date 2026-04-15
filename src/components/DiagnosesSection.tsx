@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { useDiagnoses } from '@/hooks/useDiagnoses';
 import { cn } from '@/lib/utils';
+import { useTranslation } from 'react-i18next';
 
 const COMMON_DIAGNOSES = [
   'Bipolär sjukdom typ 1',
@@ -26,6 +27,7 @@ const COMMON_DIAGNOSES = [
 ];
 
 export const DiagnosesSection = () => {
+  const { t } = useTranslation();
   const { diagnoses, isLoading, addDiagnosis, removeDiagnosis } = useDiagnoses();
   const [showForm, setShowForm] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');

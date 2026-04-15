@@ -60,6 +60,7 @@ const CHECKIN_OPTIONS = [
 const TOTAL_STEPS = 4;
 
 const Onboarding = () => {
+  const { t } = useTranslation();
   const { toast } = useToast();
   const { user } = useAuth();
   const { createPreferences } = useUserPreferences();

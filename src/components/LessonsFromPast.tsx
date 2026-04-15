@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { MoodEntry } from '@/types/mood';
 import { Characteristic } from '@/hooks/useCharacteristics';
 import { BookOpen, Flame, Sun, CloudRain, TrendingUp, Sparkles } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 interface LessonsFromPastProps {
   entries: MoodEntry[];
@@ -19,6 +20,7 @@ function findGroup(mood: string) {
 }
 
 export function LessonsFromPast({ entries, characteristics }: LessonsFromPastProps) {
+  const { t } = useTranslation();
   const analysis = useMemo(() => {
     if (entries.length < 3) return null;
 

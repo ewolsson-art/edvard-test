@@ -8,6 +8,7 @@ import { Loader2, Users, UserCheck, Clock, Eye, UserPlus, Send, X } from 'lucide
 import { useToast } from '@/hooks/use-toast';
 import { z } from 'zod';
 import {
+import { useTranslation } from 'react-i18next';
   Dialog,
   DialogContent,
   DialogDescription,
@@ -19,6 +20,7 @@ import {
 const emailSchema = z.string().email({ message: "Ogiltig e-postadress" });
 
 const DoctorDashboard = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { toast } = useToast();
   const { 

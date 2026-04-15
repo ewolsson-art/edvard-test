@@ -6,6 +6,7 @@ import { useDiagnosisConfig } from '@/hooks/useDiagnosisConfig';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
+import { useTranslation } from 'react-i18next';
 
 interface DayDetailDialogProps {
   open: boolean;
@@ -28,6 +29,7 @@ export function DayDetailDialog({
   const formattedDate = format(date, "EEEE d MMMM yyyy", { locale: sv });
 
   const getMoodIcon = (mood: MoodType) => {
+  const { t } = useTranslation();
     if (mood === 'severe_elevated' || mood === 'elevated') return <Zap className="w-6 h-6 text-mood-elevated" />;
     if (mood === 'somewhat_elevated') return <Zap className="w-6 h-6 text-mood-somewhat-elevated" />;
     if (mood === 'stable') return <Sun className="w-6 h-6 text-mood-stable" />;

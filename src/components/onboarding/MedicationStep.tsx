@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Plus, Pill, Search, Check, X, Clock, ChevronDown } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
+import { useTranslation } from 'react-i18next';
 
 const COMMON_MEDICATIONS = [
   'Lithium',
@@ -59,6 +60,7 @@ export const MedicationStep = ({ selectedMedications, onMedicationsChange }: Med
   };
 
   const handleAddCustom = () => {
+  const { t } = useTranslation();
     const trimmed = searchQuery.trim();
     if (!trimmed || existingNames.includes(trimmed.toLowerCase())) return;
     onMedicationsChange([...selectedMedications, { name: trimmed, dosage: '', timing: 'morning' }]);

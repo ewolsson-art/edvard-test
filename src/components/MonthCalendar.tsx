@@ -6,6 +6,7 @@ import { MoodType } from '@/types/mood';
 import { useDiagnosisConfig } from '@/hooks/useDiagnosisConfig';
 import { cn } from '@/lib/utils';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { useTranslation } from 'react-i18next';
 
 interface MonthCalendarProps {
   currentDate: Date;
@@ -52,6 +53,7 @@ export function MonthCalendar({
 
   // Get week number
   const getWeekNumber = (date: Date) => {
+  const { t } = useTranslation();
     const start = startOfYear(date);
     const diff = date.getTime() - start.getTime();
     const oneWeek = 7 * 24 * 60 * 60 * 1000;

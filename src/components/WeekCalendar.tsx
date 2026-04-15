@@ -5,6 +5,7 @@ import { MoodEntry, MoodType } from '@/types/mood';
 import { useDiagnosisConfig } from '@/hooks/useDiagnosisConfig';
 import { cn } from '@/lib/utils';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { useTranslation } from 'react-i18next';
 
 interface WeekCalendarProps {
   weekDays: Date[];
@@ -29,6 +30,7 @@ export function WeekCalendar({
   onDayClick,
   onDayDoubleClick,
 }: WeekCalendarProps) {
+  const { t } = useTranslation();
   const { moodLabels } = useDiagnosisConfig();
   return (
     <div className="fade-in">

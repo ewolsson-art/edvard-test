@@ -3,6 +3,7 @@ import { Plus, Trash2, HelpCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { CustomQuestion } from '@/hooks/useCustomCheckinQuestions';
+import { useTranslation } from 'react-i18next';
 
 interface CustomQuestionsSectionProps {
   questions: CustomQuestion[];
@@ -11,6 +12,7 @@ interface CustomQuestionsSectionProps {
 }
 
 export function CustomQuestionsSection({ questions, onAdd, onRemove }: CustomQuestionsSectionProps) {
+  const { t } = useTranslation();
   const [newQuestion, setNewQuestion] = useState('');
   const [isAdding, setIsAdding] = useState(false);
 

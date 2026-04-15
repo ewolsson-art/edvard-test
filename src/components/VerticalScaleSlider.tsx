@@ -1,6 +1,7 @@
 import { useState, useRef, useCallback } from 'react';
 import { cn } from '@/lib/utils';
 import { LucideIcon } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 export interface ScaleOption<T extends string = string> {
   value: T;
@@ -59,6 +60,7 @@ export function VerticalScaleSlider<T extends string>({ options, value, onSelect
   }, [isDragging, activeIndex, onSelect, options]);
 
   const handleStepClick = (index: number) => {
+  const { t } = useTranslation();
     setActiveIndex(index);
     onSelect(options[index].value);
   };

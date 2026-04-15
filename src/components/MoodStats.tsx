@@ -1,5 +1,6 @@
 import { MoodStats as MoodStatsType, MoodType } from '@/types/mood';
 import { useDiagnosisConfig } from '@/hooks/useDiagnosisConfig';
+import { useTranslation } from 'react-i18next';
 
 interface MoodStatsProps {
   stats: MoodStatsType;
@@ -8,6 +9,7 @@ interface MoodStatsProps {
 }
 
 export function MoodStats({ stats, periodLabel, customLabels }: MoodStatsProps) {
+  const { t } = useTranslation();
   const { moodLabels } = useDiagnosisConfig();
   const labels = customLabels || moodLabels;
 

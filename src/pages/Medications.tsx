@@ -40,6 +40,7 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import {
+import { useTranslation } from 'react-i18next';
   Accordion,
   AccordionContent,
   AccordionItem,
@@ -47,6 +48,7 @@ import {
 } from '@/components/ui/accordion';
 
 const Medications = () => {
+  const { t } = useTranslation();
   const [isAddOpen, setIsAddOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [newName, setNewName] = useState('');

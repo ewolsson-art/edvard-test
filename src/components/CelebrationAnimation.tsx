@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { cn } from '@/lib/utils';
 import { TurtleLogo } from '@/components/TurtleLogo';
 import { MilestoneInfo, MILESTONES } from '@/hooks/useStreak';
+import { useTranslation } from 'react-i18next';
 
 interface CelebrationAnimationProps {
   className?: string;
@@ -47,6 +48,7 @@ const DEFAULT_SUB_MESSAGES = [
 ];
 
 export function CelebrationAnimation({ className, streak = 0, milestone }: CelebrationAnimationProps) {
+  const { t } = useTranslation();
   const [phase, setPhase] = useState(0);
   
   const isMilestone = milestone?.isNewMilestone && streak > 0;

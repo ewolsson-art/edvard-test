@@ -4,6 +4,7 @@ import { sv } from 'date-fns/locale';
 import { ChevronLeft, ChevronRight, Pill } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
+import { useTranslation } from 'react-i18next';
 
 interface MedicationYearHeatmapProps {
   year: number;
@@ -21,6 +22,7 @@ const months = [
 const weekDays = ['M', 'T', 'O', 'T', 'F', 'L', 'S'];
 
 export function MedicationYearHeatmap({ year, medicationDates, onPrevYear, onNextYear, onMonthClick }: MedicationYearHeatmapProps) {
+  const { t } = useTranslation();
   const [showSecondHalf, setShowSecondHalf] = useState(false);
   
   const medicationSet = useMemo(() => {

@@ -1,5 +1,6 @@
  import { Moon, Dumbbell, Utensils, AlertTriangle, Calendar, Heart } from 'lucide-react';
  import { cn } from '@/lib/utils';
+import { useTranslation } from 'react-i18next';
  
  interface RecommendationCardProps {
    priority: 'high' | 'medium' | 'low';
@@ -9,6 +10,7 @@
  }
  
  export function RecommendationCard({ priority, icon, title, description }: RecommendationCardProps) {
+  const { t } = useTranslation();
    const icons = {
      sleep: Moon,
      exercise: Dumbbell,

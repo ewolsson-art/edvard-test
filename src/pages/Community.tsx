@@ -29,6 +29,7 @@ const CATEGORIES = [
 
 
 const Community = () => {
+  const { t } = useTranslation();
   const { user } = useAuth();
   const navigate = useNavigate();
   const { posts, loading, createPost } = useCommunityPosts();

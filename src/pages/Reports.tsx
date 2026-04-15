@@ -13,6 +13,7 @@ import { Label } from '@/components/ui/label';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { cn } from '@/lib/utils';
+import { useTranslation } from 'react-i18next';
 
 
 interface ReportData {
@@ -59,6 +60,7 @@ interface ReportData {
 }
 
 const Reports = () => {
+  const { t } = useTranslation();
   const today = new Date();
   const defaultStart = startOfMonth(subMonths(today, 1));
   const defaultEnd = endOfMonth(subMonths(today, 1));

@@ -5,6 +5,7 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { MoodEntry } from '@/types/mood';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
+import { useTranslation } from 'react-i18next';
 
 interface ExerciseYearHeatmapProps {
   year: number;
@@ -22,6 +23,7 @@ const months = [
 const weekDays = ['M', 'T', 'O', 'T', 'F', 'L', 'S'];
 
 export function ExerciseYearHeatmap({ year, entries, onPrevYear, onNextYear, onMonthClick }: ExerciseYearHeatmapProps) {
+  const { t } = useTranslation();
   const [showSecondHalf, setShowSecondHalf] = useState(false);
   
   const exerciseMap = useMemo(() => {

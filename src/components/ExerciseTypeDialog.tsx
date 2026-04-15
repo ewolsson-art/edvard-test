@@ -6,6 +6,7 @@ import { ExerciseType, EXERCISE_TYPE_LABELS } from '@/types/mood';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { useTranslation } from 'react-i18next';
 
 interface ExerciseTypeDialogProps {
   open: boolean;
@@ -38,6 +39,7 @@ export function ExerciseTypeDialog({
   const formattedDate = format(date, "EEEE d MMMM yyyy", { locale: sv });
 
   const toggleType = (type: ExerciseType) => {
+  const { t } = useTranslation();
     setSelectedTypes(prev => 
       prev.includes(type) 
         ? prev.filter(t => t !== type)

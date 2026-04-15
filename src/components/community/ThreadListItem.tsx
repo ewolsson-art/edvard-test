@@ -3,6 +3,7 @@ import { sv } from 'date-fns/locale';
 import { Heart, MessageCircle, BarChart3 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import type { CommunityPost } from '@/hooks/useCommunityPosts';
+import { useTranslation } from 'react-i18next';
 
 const CATEGORIES = [
   { id: 'general', label: 'Allmänt', emoji: '💬' },
@@ -24,6 +25,7 @@ interface ThreadListItemProps {
 }
 
 export const ThreadListItem = ({ post }: ThreadListItemProps) => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const cat = CATEGORIES.find(c => c.id === post.category);
   const replyCount = post.replies.length;

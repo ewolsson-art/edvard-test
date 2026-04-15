@@ -6,6 +6,7 @@ import { MoodEntry, MoodStats as MoodStatsType } from '@/types/mood';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import ReactMarkdown from 'react-markdown';
+import { useTranslation } from 'react-i18next';
 
 interface PatientAIInsightsProps {
   entries: MoodEntry[];
@@ -17,6 +18,7 @@ interface PatientAIInsightsProps {
 }
 
 export function PatientAIInsights({ entries, stats, periodLabel, view, patientName, isShared }: PatientAIInsightsProps) {
+  const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState(false);
   const [insights, setInsights] = useState<string | null>(null);
   const { toast } = useToast();

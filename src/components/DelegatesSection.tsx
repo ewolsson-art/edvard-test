@@ -26,6 +26,7 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import { Users, Plus, Mail, Trash2, Eye, MessageSquare, Loader2, CheckCircle, Clock } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 export function DelegatesSection() {
   const { delegates, isLoading, addDelegate, updateDelegate, removeDelegate } = useDoctorDelegates();
@@ -53,6 +54,7 @@ export function DelegatesSection() {
   };
 
   const getStatusBadge = (delegate: DoctorDelegate) => {
+  const { t } = useTranslation();
     if (delegate.status === 'approved' && delegate.delegate_id) {
       return (
         <Badge variant="default" className="bg-green-500/10 text-green-600 border-green-500/20">

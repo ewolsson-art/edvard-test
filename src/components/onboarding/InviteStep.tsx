@@ -4,6 +4,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
+import { useTranslation } from 'react-i18next';
 
 export interface InviteInput {
   doctors: string[];
@@ -24,6 +25,7 @@ export const InviteStep = ({ invites, onInvitesChange }: InviteStepProps) => {
   };
 
   const handleAddDoctor = () => {
+  const { t } = useTranslation();
     if (!isValidEmail(doctorEmail)) return;
     if (invites.doctors.includes(doctorEmail.toLowerCase())) return;
     

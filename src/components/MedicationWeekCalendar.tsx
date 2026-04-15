@@ -3,6 +3,7 @@ import { sv } from 'date-fns/locale';
 import { Check, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { CalendarHeader } from './CalendarHeader';
+import { useTranslation } from 'react-i18next';
 
 interface MedicationWeekCalendarProps {
   weekDays: Date[];
@@ -21,6 +22,7 @@ export function MedicationWeekCalendar({
   onNextWeek,
   onDayClick,
 }: MedicationWeekCalendarProps) {
+  const { t } = useTranslation();
   return (
     <div className="glass-card p-6 fade-in">
       <CalendarHeader

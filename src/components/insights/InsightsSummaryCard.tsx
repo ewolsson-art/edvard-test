@@ -1,6 +1,7 @@
  import { AlertTriangle, CheckCircle, AlertCircle, TrendingUp, TrendingDown, Minus } from 'lucide-react';
  import { Card, CardContent } from '@/components/ui/card';
  import { cn } from '@/lib/utils';
+import { useTranslation } from 'react-i18next';
  
  interface InsightsSummaryCardProps {
    status: 'good' | 'warning' | 'alert';
@@ -14,6 +15,7 @@
  }
  
  export function InsightsSummaryCard({ status, title, description, moodTrend }: InsightsSummaryCardProps) {
+  const { t } = useTranslation();
    const statusConfig = {
      good: {
        bg: 'bg-emerald-500/10 border-emerald-500/30',

@@ -7,6 +7,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
 import { cn } from '@/lib/utils';
+import { useTranslation } from 'react-i18next';
 
 interface InsightStats {
   totalDays: number;

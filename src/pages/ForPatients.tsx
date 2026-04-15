@@ -2,8 +2,10 @@ import { AuthNavbar } from '@/components/AuthNavbar';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 import { CheckCircle, Calendar, TrendingUp, MessageSquare, Pill, Share2, ArrowRight } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const ForPatients = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
 
   const features = [

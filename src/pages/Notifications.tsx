@@ -7,6 +7,7 @@ import { useNotifications, AppNotification } from '@/hooks/useNotifications';
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { useTranslation } from 'react-i18next';
 
 const TYPE_CONFIG: Record<string, { icon: typeof Bell; colorClass: string; bgClass: string }> = {
   forum_reply: { icon: MessageCircle, colorClass: 'text-blue-400', bgClass: 'bg-blue-400/10' },
@@ -142,6 +143,7 @@ function NotificationItem({ notification, onRead, onDelete, onNavigate, onHandle
 }
 
 const Notifications = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { notifications, isLoading, unreadCount, markAsRead, markAllAsRead, deleteNotification } = useNotifications();
 

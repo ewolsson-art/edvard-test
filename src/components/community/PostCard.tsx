@@ -5,6 +5,7 @@ import { Heart, Trash2, MessageCircle, Send, EyeOff, Eye, Bookmark } from 'lucid
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import type { CommunityPost } from '@/hooks/useCommunityPosts';
+import { useTranslation } from 'react-i18next';
 
 const CATEGORIES = [
   { id: 'general', label: 'Allmänt', emoji: '💬' },
@@ -59,6 +60,7 @@ export const PostCard = ({ post, userId, onToggleReaction, onDeletePost, onCreat
   };
 
   const handleLike = () => {
+  const { t } = useTranslation();
     if (!userId) return;
     if (!post.user_has_reacted) {
       setHeartAnimation(true);

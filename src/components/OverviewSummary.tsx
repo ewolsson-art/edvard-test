@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { MoodStats as MoodStatsType, MoodEntry } from '@/types/mood';
 import { Flame, Sun, CloudRain, CalendarCheck, TrendingUp } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 interface OverviewSummaryProps {
   stats: MoodStatsType;
@@ -54,6 +55,7 @@ export function OverviewSummary({ stats, entries, periodLabel }: OverviewSummary
 
   // Distribution + avg episode helper
   const calcDistribution = (source: MoodEntry[]) => {
+  const { t } = useTranslation();
     if (source.length === 0) return null;
     const total = source.length;
     const sorted = [...source].sort((a, b) => a.date.localeCompare(b.date));

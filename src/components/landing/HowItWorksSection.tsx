@@ -1,5 +1,6 @@
 import { CalendarCheck, BarChart3, Share2 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { useTranslation } from 'react-i18next';
 
 const steps = [
   {
@@ -33,6 +34,7 @@ function useInView(threshold = 0.15) {
 }
 
 export function HowItWorksSection() {
+  const { t } = useTranslation();
   const { ref, visible } = useInView(0.1);
 
   return (

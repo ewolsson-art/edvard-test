@@ -1,4 +1,5 @@
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 interface CalendarHeaderProps {
   title: string;
@@ -7,6 +8,7 @@ interface CalendarHeaderProps {
 }
 
 export function CalendarHeader({ title, onPrev, onNext }: CalendarHeaderProps) {
+  const { t } = useTranslation();
   return (
     <div className="flex items-center justify-between mb-6">
       <button

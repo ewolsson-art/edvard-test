@@ -5,6 +5,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogD
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Loader2, Trash2 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 interface RelativeCommentDialogProps {
   open: boolean;
@@ -23,6 +24,7 @@ export function RelativeCommentDialog({
   onSave,
   onDelete,
 }: RelativeCommentDialogProps) {
+  const { t } = useTranslation();
   const [comment, setComment] = useState('');
   const [isSaving, setIsSaving] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);

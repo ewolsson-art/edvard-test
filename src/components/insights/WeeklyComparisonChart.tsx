@@ -1,5 +1,6 @@
  import { TrendingUp, TrendingDown, Minus } from 'lucide-react';
  import { cn } from '@/lib/utils';
+import { useTranslation } from 'react-i18next';
  
  interface WeeklyComparisonChartProps {
    data: {
@@ -11,6 +12,7 @@
  }
  
  export function WeeklyComparisonChart({ data }: WeeklyComparisonChartProps) {
+  const { t } = useTranslation();
    const maxValue = Math.max(...data.flatMap(d => [d.current, d.previous]), 7);
  
    return (

@@ -1,6 +1,8 @@
  import { Button } from "@/components/ui/button";
+import { useTranslation } from 'react-i18next';
  
  export function SkipToContent() {
+  const { t } = useTranslation();
    return (
      <a
        href="#main-content"

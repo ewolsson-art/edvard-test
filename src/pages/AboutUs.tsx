@@ -2,8 +2,10 @@ import { AuthNavbar } from '@/components/AuthNavbar';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 import { Heart, Users, Shield, Target, ArrowRight } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const AboutUs = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
 
   return (

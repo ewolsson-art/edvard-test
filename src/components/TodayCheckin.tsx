@@ -22,6 +22,7 @@ import { TurtleLogo } from '@/components/TurtleLogo';
 import { FullscreenComment } from '@/components/FullscreenComment';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { MilestoneInfo } from '@/hooks/useStreak';
+import { useTranslation } from 'react-i18next';
 
 interface StreakData {
   currentStreak: number;
@@ -277,6 +278,7 @@ export function TodayCheckin({
   };
 
   const handleMoodContinue = () => {
+  const { t } = useTranslation();
     if (checkinData.mood) {
       navigateStep('tags');
     }

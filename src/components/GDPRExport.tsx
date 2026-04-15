@@ -4,6 +4,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import { Download, Loader2, FileJson, FileText } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 export function GDPRExport() {
   const { user } = useAuth();
@@ -86,6 +87,7 @@ export function GDPRExport() {
       const pageWidth = doc.internal.pageSize.getWidth();
 
       const addText = (text: string, fontSize = 10, bold = false) => {
+  const { t } = useTranslation();
         if (y > 270) { doc.addPage(); y = 20; }
         doc.setFontSize(fontSize);
         doc.setFont('helvetica', bold ? 'bold' : 'normal');

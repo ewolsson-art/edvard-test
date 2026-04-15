@@ -1,5 +1,6 @@
 import { Pill } from 'lucide-react';
 import { Medication } from '@/types/medication';
+import { useTranslation } from 'react-i18next';
 
 interface MedicationBadgesProps {
   medications: Medication[];
@@ -7,6 +8,7 @@ interface MedicationBadgesProps {
 }
 
 export function MedicationBadges({ medications, compact = false }: MedicationBadgesProps) {
+  const { t } = useTranslation();
   if (medications.length === 0) return null;
 
   if (compact) {

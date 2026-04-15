@@ -4,8 +4,10 @@ import { useRelativeConnections } from '@/hooks/useRelativeConnections';
 import { useUserRole } from '@/hooks/useUserRole';
 import { PatientOverview } from '@/components/PatientOverview';
 import { Loader2 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const PatientDetail = () => {
+  const { t } = useTranslation();
   const { patientId } = useParams<{ patientId: string }>();
   const navigate = useNavigate();
   const { isDoctor, isRelative, isLoading: roleLoading } = useUserRole();

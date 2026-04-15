@@ -39,9 +39,11 @@ import { MoodStats as MoodStatsType, ExerciseType, QualityType } from '@/types/m
 import { Last30DaysOverview } from '@/components/Last30DaysOverview';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Dumbbell, Moon, Utensils } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 type ViewType = 'week' | 'month' | 'year';
 
 const Overview = () => {
+  const { t } = useTranslation();
   const [searchParams, setSearchParams] = useSearchParams();
   
   // Parse period parameter (format: "2026-01" for month, "2026" for year)

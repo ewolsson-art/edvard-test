@@ -6,6 +6,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { useTranslation } from 'react-i18next';
 
 interface AvatarUploadProps {
   currentAvatarUrl: string | null;
@@ -22,6 +23,7 @@ export function AvatarUpload({
   lastName,
   className,
 }: AvatarUploadProps) {
+  const { t } = useTranslation();
   const { user } = useAuth();
   const { toast } = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);

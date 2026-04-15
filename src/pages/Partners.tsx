@@ -2,8 +2,10 @@ import { AuthNavbar } from '@/components/AuthNavbar';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 import { Handshake, Building2, GraduationCap, Heart, Mail, ArrowRight } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const Partners = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
 
   const partnerTypes = [
