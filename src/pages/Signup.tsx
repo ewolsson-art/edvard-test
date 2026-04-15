@@ -9,6 +9,7 @@ import { AuthNavbar } from "@/components/AuthNavbar";
 import { DarkNightBackground } from "@/components/DarkNightBackground";
 import { ArrowRight, ArrowLeft, Loader2, Mail, User, Users, CheckCircle2, Phone, Smartphone } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useTranslation } from 'react-i18next';
 
 type AccountRole = "patient" | "relative";
 type Step = "role" | "contact" | "verify-phone" | "email-sent";
@@ -16,15 +17,15 @@ type Step = "role" | "contact" | "verify-phone" | "email-sent";
 const roleInfo = {
   patient: {
     icon: User,
-    prefix: "Jag är",
-    title: "bipolär",
-    description: "Följ ditt mående och få bättre insikt",
+    prefix: "auth.iAm",
+    title: "auth.bipolar",
+    description: "auth.followYourMood",
   },
   relative: {
     icon: Users,
     prefix: "Jag är",
-    title: "anhörig",
-    description: "Stötta dina nära genom att följa deras resa",
+    title: "auth.relative",
+    description: "auth.supportCloseOnes",
   },
 };
 
@@ -38,6 +39,7 @@ const Signup = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const { user, loading, signInWithOtp, verifyOtp } = useAuth();
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -51,22 +53,22 @@ const Signup = () => {
     const value = contactMethod === "email" ? email.trim() : phone.trim();
     if (!value) {
       toast({
-        title: "Fyll i fältet",
-        description: contactMethod === "email" ? "Ange din e-postadress" : "Ange ditt telefonnummer",
+        title: t("auth.fillField"),
+        description: contactMethod === "email" ? t("auth.enterEmail") : t("auth.enterPhone"),
         variant: "destructive",
       });
       return;
     }
 
     if (contactMethod === "email" && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
-      toast({ title: "Ogiltig e-postadress", variant: "destructive" });
+      toast({ title: t("auth.invalidEmail"), variant: "destructive" });
       return;
     }
 
     if (contactMethod === "phone" && !value.startsWith("+")) {
       toast({
-        title: "Ange landskod",
-        description: "Telefonnumret måste börja med + (t.ex. +46701234567)",
+        title: t("auth.enterCountryCode"),
+        description: t("auth.phoneCountryCodeHint"),
         variant: "destructive",
       });
       return;
@@ -77,7 +79,7 @@ const Signup = () => {
 
     if (error) {
       toast({
-        title: "Något gick fel",
+        title: t("common.somethingWrong"),
         description: error.message,
         variant: "destructive",
       });
@@ -103,7 +105,7 @@ const Signup = () => {
     if (result.error) {
       toast({
         title: "Något gick fel",
-        description: result.error.message || "Kunde inte logga in",
+        description: result.error.message || t("auth.loginError"),
         variant: "destructive",
       });
     }
@@ -111,15 +113,15 @@ const Signup = () => {
 
   const handleVerifyPhone = async () => {
     if (!otpCode.trim() || otpCode.length < 6) {
-      toast({ title: "Ange den 6-siffriga koden", variant: "destructive" });
+      toast({ title: t("auth.enterCode"), variant: "destructive" });
       return;
     }
     setIsSubmitting(true);
     const { error } = await verifyOtp(phone.trim(), otpCode.trim());
     if (error) {
       toast({
-        title: "Felaktig kod",
-        description: "Kontrollera koden och försök igen",
+        title: t("auth.wrongCode"),
+        description: t("auth.checkCodeRetry"),
         variant: "destructive",
       });
       setIsSubmitting(false);
@@ -164,10 +166,10 @@ const Signup = () => {
                 Tillbaka
               </Link>
               <h1 className="text-2xl md:text-3xl font-bold text-white font-display tracking-tight">
-                Vem är du?
+                {t("auth.whoAreYou")}
               </h1>
               <p className="mt-2 text-sm text-white/40">
-                Välj hur du vill använda Toddy
+                {t("auth.chooseHowToUse")}
               </p>
 
               <div className="mt-8 space-y-3" role="radiogroup">
@@ -243,10 +245,10 @@ const Signup = () => {
               </button>
 
               <h1 className="text-2xl md:text-3xl font-bold text-white font-display tracking-tight">
-                Skapa konto
+                {t("auth.signUp")}
               </h1>
               <p className="mt-2 text-sm text-white/40">
-                Välj hur du vill komma igång
+                {t("auth.chooseHowToStart")}
               </p>
 
               {/* Social login FIRST */}
@@ -262,7 +264,7 @@ const Signup = () => {
                     <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
                     <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
                   </svg>
-                  Fortsätt med Google
+                  {t("auth.continueWithGoogle")}
                 </button>
                 <button
                   type="button"
@@ -272,7 +274,7 @@ const Signup = () => {
                   <svg className="h-[22px] w-[22px]" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M17.05 20.28c-.98.95-2.05.88-3.08.4-1.09-.5-2.08-.48-3.24 0-1.44.62-2.2.44-3.06-.4C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/>
                   </svg>
-                  Fortsätt med Apple
+                  {t("auth.continueWithApple")}
                 </button>
               </div>
 

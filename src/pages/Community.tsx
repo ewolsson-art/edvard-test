@@ -9,6 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Switch } from '@/components/ui/switch';
 import { ThreadListItem } from '@/components/community/ThreadListItem';
 import { formatDistanceToNow } from 'date-fns';
+import { useTranslation } from 'react-i18next';
 import { sv } from 'date-fns/locale';
 
 const CATEGORIES = [

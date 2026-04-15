@@ -20,6 +20,7 @@ import { DarkNightBackground } from '@/components/DarkNightBackground';
 import { MedicationStep, MedicationInput } from '@/components/onboarding/MedicationStep';
 import { DiagnosisStep } from '@/components/onboarding/DiagnosisStep';
 import { cn } from '@/lib/utils';
+import { useTranslation } from 'react-i18next';
 
 const CHECKIN_OPTIONS = [
   {
