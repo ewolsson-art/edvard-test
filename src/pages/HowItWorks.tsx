@@ -5,67 +5,32 @@ import { CalendarCheck, BarChart3, Share2, Brain, Shield, Bell, ArrowRight } fro
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
 
-const steps = [
-  {
-    icon: CalendarCheck,
-    number: 1,
-    title: "Checka in dagligen",
-    description: "Logga ditt mående, sömn, kost, träning och medicin på under en minut. Det är enkelt, snabbt och helt på dina villkor.",
-  },
-  {
-    icon: BarChart3,
-    number: 2,
-    title: "Upptäck dina mönster",
-    description: "Toddy analyserar dina incheckningar och visar trender över tid — så att du kan förstå vad som påverkar just dig.",
-  },
-  {
-    icon: Share2,
-    number: 3,
-    title: "Dela med vården och nära",
-    description: "Välj själv vilken data du vill dela med läkare och anhöriga. Du har alltid full kontroll.",
-  },
-];
-
-const features = [
-  {
-    icon: Brain,
-    title: "AI-drivna insikter",
-    description: "Få personliga observationer baserade på dina mönster — helt utan att dela data med tredje part.",
-  },
-  {
-    icon: Shield,
-    title: "Din data, dina regler",
-    description: "All data krypteras och lagras säkert. Du bestämmer alltid vem som ser vad.",
-  },
-  {
-    icon: Bell,
-    title: "Smarta påminnelser",
-    description: "Anpassningsbara notiser hjälper dig hålla rutinen utan att det blir påträngande.",
-  },
-];
-
 const HowItWorks = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+
+  const steps = [
+    { icon: CalendarCheck, number: 1, title: t('howItWorksPage.step1Title'), description: t('howItWorksPage.step1Desc') },
+    { icon: BarChart3, number: 2, title: t('howItWorksPage.step2Title'), description: t('howItWorksPage.step2Desc') },
+    { icon: Share2, number: 3, title: t('howItWorksPage.step3Title'), description: t('howItWorksPage.step3Desc') },
+  ];
 
   return (
     <DarkNightBackground>
       <AuthNavbar />
 
       <div className="flex flex-col min-h-screen pt-16">
-        {/* Hero */}
         <section className="px-5 md:px-8 pt-12 md:pt-20 pb-8 md:pb-16">
           <div className="max-w-3xl mx-auto text-center">
             <h1 className="text-3xl md:text-5xl font-display font-bold text-white tracking-tight">
-              Så funkar Toddy
+              {t('howItWorksPage.heroTitle')}
             </h1>
             <p className="mt-4 text-base md:text-lg text-white/50 max-w-xl mx-auto leading-relaxed">
-              Tre enkla steg till bättre koll på ditt mående
+              {t('howItWorksPage.heroSubtitle')}
             </p>
           </div>
         </section>
 
-        {/* Steps */}
         <section className="px-5 md:px-8 pb-16 md:pb-24">
           <div className="max-w-4xl mx-auto space-y-6 md:space-y-0 md:grid md:grid-cols-3 md:gap-10">
             {steps.map((step) => (
@@ -83,14 +48,13 @@ const HowItWorks = () => {
           </div>
         </section>
 
-        {/* CTA */}
         <section className="px-5 md:px-8 pb-20 md:pb-28">
           <div className="max-w-md mx-auto text-center">
             <button
               onClick={() => navigate("/skapa-konto")}
               className="px-10 py-3.5 rounded-full bg-[hsl(45_85%_55%)] text-[hsl(225_30%_7%)] font-semibold text-base tracking-wide shadow-[0_4px_20px_hsl(45_85%_55%/0.3)] hover:shadow-[0_6px_28px_hsl(45_85%_55%/0.45)] hover:scale-105 active:scale-[0.98] transition-all duration-200 group"
             >
-              Kom igång
+              {t('howItWorksPage.cta')}
               <ArrowRight className="inline-block ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
             </button>
           </div>
