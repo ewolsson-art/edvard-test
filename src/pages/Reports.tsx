@@ -375,7 +375,7 @@ const Reports = () => {
               {t('reports.createReport')}
             </CardTitle>
             <CardDescription>
-              Välj tidsperiod och vilka kategorier som ska ingå i rapporten
+              {t("reports.selectPeriodAndCategories")}
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
@@ -432,7 +432,7 @@ const Reports = () => {
                     setEndDate(endOfMonth(subMonths(today, 1)));
                   }}
                 >
-                  Förra månaden
+                  {t("reports.lastMonth")}
                 </Button>
                 <Button
                   variant="ghost"
@@ -442,7 +442,7 @@ const Reports = () => {
                     setEndDate(today);
                   }}
                 >
-                  Denna månad
+                  {t("reports.thisMonth")}
                 </Button>
                 <Button
                   variant="ghost"
@@ -452,7 +452,7 @@ const Reports = () => {
                     setEndDate(today);
                   }}
                 >
-                  Senaste 3 månaderna
+                  {t("reports.last3Months")}
                 </Button>
               </div>
             </div>
@@ -502,7 +502,7 @@ const Reports = () => {
             </div>
 
             <Button onClick={handleGenerateReport} className="w-full md:w-auto">
-              Generera rapport
+              {t("reports.generateReport")}
             </Button>
           </CardContent>
         </Card>
@@ -519,7 +519,7 @@ const Reports = () => {
               </div>
               <Button onClick={handleExportPDF} className="gap-2">
                 <Download className="h-4 w-4" />
-                Exportera PDF
+                {t("reports.exportPDF")}
               </Button>
             </CardHeader>
             <CardContent className="space-y-6">
