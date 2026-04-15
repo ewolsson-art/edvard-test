@@ -4,7 +4,7 @@ import { Globe, ChevronDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface LanguageSwitcherProps {
-  variant?: 'navbar' | 'settings';
+  variant?: 'navbar' | 'settings' | 'mobile-menu';
   className?: string;
 }
 
@@ -33,6 +33,28 @@ export function LanguageSwitcher({ variant = 'navbar', className }: LanguageSwit
     i18n.changeLanguage(code);
     setOpen(false);
   };
+
+  if (variant === 'mobile-menu') {
+    return (
+      <div className={cn("flex items-center gap-3", className)}>
+        {languages.map(lang => (
+          <button
+            key={lang.code}
+            onClick={() => select(lang.code)}
+            className={cn(
+              "flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-colors",
+              lang.code === currentLang
+                ? "bg-white/15 text-white"
+                : "text-white/40 hover:text-white/70"
+            )}
+          >
+            <span className="text-base">{lang.flag}</span>
+            <span>{lang.label}</span>
+          </button>
+        ))}
+      </div>
+    );
+  }
 
   if (variant === 'settings') {
     return (
