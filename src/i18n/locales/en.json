@@ -1202,5 +1202,22 @@
     "contactTitle": "Interested in collaboration?",
     "contactDescription": "We'd love to hear from you. Tell us about your organization and how you think we can work together.",
     "contactButton": "Contact us"
+  },
+  "howItWorksPage": {
+    "heroTitle": "How Toddy works",
+    "heroSubtitle": "Three simple steps to better control of your well-being",
+    "step1Title": "Check in daily",
+    "step1Desc": "Log your mood, sleep, diet, exercise and medication in under a minute. It's simple, fast and entirely on your terms.",
+    "step2Title": "Discover your patterns",
+    "step2Desc": "Toddy analyzes your check-ins and shows trends over time — so you can understand what affects you.",
+    "step3Title": "Share with care and loved ones",
+    "step3Desc": "Choose which data you want to share with doctors and relatives. You always have full control.",
+    "featureAI": "AI-powered insights",
+    "featureAIDesc": "Get personal observations based on your patterns — without sharing data with third parties.",
+    "featureData": "Your data, your rules",
+    "featureDataDesc": "All data is encrypted and stored securely. You always decide who sees what.",
+    "featureReminders": "Smart reminders",
+    "featureRemindersDesc": "Customizable notifications help you keep your routine without being intrusive.",
+    "cta": "Get started"
   }
 }
