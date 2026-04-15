@@ -7,8 +7,8 @@ import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Loader2, UserPlus, Users, Trash2, Settings } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import {
 import { useTranslation } from 'react-i18next';
+import {
   Dialog,
   DialogContent,
   DialogDescription,
