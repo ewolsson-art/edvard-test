@@ -12,30 +12,30 @@ import { useTranslation } from 'react-i18next';
 const MOOD_CONFIG = {
   uppvarvad: {
     type: 'elevated' as const,
-    title: 'Uppvarvad period',
-    description: 'Hur känner du igen den här perioden?',
+    titleKey: 'characteristics.elevatedPeriod',
+    descKey: 'characteristics.howRecognize',
     icon: Zap,
     iconColor: 'text-amber-400',
     dotColor: 'bg-amber-400',
-    placeholder: 'T.ex. Mer social, Pratar snabbare...',
+    placeholderKey: 'characteristics.placeholderElevated',
   },
   stabil: {
     type: 'stable' as const,
-    title: 'Stabil period',
-    description: 'Hur känner du igen den här perioden?',
+    titleKey: 'characteristics.stablePeriod',
+    descKey: 'characteristics.howRecognize',
     icon: Sun,
     iconColor: 'text-emerald-400',
     dotColor: 'bg-emerald-400',
-    placeholder: 'T.ex. God sömn, Lugn och fokuserad...',
+    placeholderKey: 'characteristics.placeholderStable',
   },
   nedstamd: {
     type: 'depressed' as const,
-    title: 'Nedstämd period',
-    description: 'Hur känner du igen den här perioden?',
+    titleKey: 'characteristics.depressedPeriod',
+    descKey: 'characteristics.howRecognize',
     icon: Cloud,
     iconColor: 'text-rose-400',
     dotColor: 'bg-rose-400',
-    placeholder: 'T.ex. Drar mig undan, Sover mer...',
+    placeholderKey: 'characteristics.placeholderDepressed',
   },
 };
 
@@ -112,12 +112,12 @@ const CharacteristicDetail = () => {
         setAiSuggestions(data.suggestions);
       } else {
         setAiSuggestions([]);
-        setAiError(data?.message || 'Inga förslag just nu. Fortsätt checka in dagligen.');
+        setAiError(data?.message || t('characteristics.noSuggestionsNow'));
       }
       setAiLoaded(true);
     } catch (e) {
       console.error('AI suggestions error:', e);
-      setAiError('Kunde inte hämta förslag just nu. Försök igen senare.');
+      setAiError(t('characteristics.couldNotFetchSuggestions'));
       setAiLoaded(true);
     } finally {
       setAiLoading(false);
@@ -128,7 +128,7 @@ const CharacteristicDetail = () => {
     const success = await addCharacteristic(suggestion.name, config.type);
     if (success) {
       setAddedSuggestions(prev => new Set(prev).add(suggestion.name));
-      toast({ title: `"${suggestion.name}" tillagt` });
+      toast({ title: t('characteristics.addedLabel', { name: suggestion.name }) });
     }
   };
 
@@ -152,7 +152,7 @@ const CharacteristicDetail = () => {
           className="mb-8 inline-flex items-center gap-1 text-[13px] text-foreground/30 hover:text-foreground/50 transition-colors group"
         >
           <ChevronLeft className="w-3.5 h-3.5 group-hover:-translate-x-0.5 transition-transform" />
-          Tillbaka till kännetecken
+          {t('characteristics.backToCharacteristics')}
         </button>
 
         {/* Header */}
@@ -160,28 +160,28 @@ const CharacteristicDetail = () => {
           <div className="flex items-center gap-3 mb-1">
             <Icon className={cn("w-[18px] h-[18px]", config.iconColor)} />
             <h1 className="font-display text-2xl font-bold text-foreground">
-              {config.title}
+              {t(config.titleKey)}
             </h1>
             {isActive && (
               <span className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-foreground/[0.04]">
                 <span className={cn("w-1.5 h-1.5 rounded-full animate-pulse", config.dotColor)} />
-                <span className="text-[10px] font-medium text-foreground/40">Nuvarande</span>
+                <span className="text-[10px] font-medium text-foreground/40">{t('characteristics.current')}</span>
               </span>
             )}
           </div>
           <p className="text-[13px] text-foreground/30 ml-[30px]">
-            {config.description}
+            {t(config.descKey)}
           </p>
         </div>
 
-        {/* Dina kännetecken */}
+        {/* {t('characteristics.yourCharacteristics')} */}
         <div className="mb-10">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-[13px] font-medium text-foreground/30 uppercase tracking-wide">
-              Dina kännetecken
+              {t('characteristics.yourCharacteristics')}
             </h2>
             {characteristics.length > 0 && (
-              <span className="text-[12px] text-foreground/20">{characteristics.length} st</span>
+              <span className="text-[12px] text-foreground/20">{t('characteristics.count', { count: characteristics.length })}</span>
             )}
           </div>
 
@@ -196,7 +196,7 @@ const CharacteristicDetail = () => {
                   <button
                     onClick={() => deleteCharacteristic(char.id)}
                     className="opacity-0 group-hover:opacity-100 text-foreground/25 hover:text-destructive transition-all duration-150 -mr-1"
-                    aria-label={`Ta bort ${char.name}`}
+                    aria-label={t('common.delete')}
                   >
                     <X className="h-3 w-3" />
                   </button>
@@ -209,7 +209,7 @@ const CharacteristicDetail = () => {
           {showInput ? (
             <div className="flex items-center gap-2 mt-2">
               <Input
-                placeholder={config.placeholder}
+                placeholder={t(config.placeholderKey)}
                 value={newValue}
                 onChange={(e) => setNewValue(e.target.value)}
                 onKeyDown={(e) => {
@@ -227,7 +227,7 @@ const CharacteristicDetail = () => {
                 disabled={!newValue.trim() || isAdding}
                 className="text-[13px] font-medium text-primary hover:text-primary/80 disabled:text-foreground/15 transition-colors"
               >
-                Spara
+                {t('common.save')}
               </button>
               <button
                 onClick={() => { setShowInput(false); setNewValue(''); }}
@@ -240,7 +240,7 @@ const CharacteristicDetail = () => {
             <button
               onClick={() => setShowInput(true)}
               className="mt-3 w-10 h-10 rounded-full bg-primary flex items-center justify-center shadow-[0_4px_16px_hsl(45_85%_55%/0.3)] hover:shadow-[0_6px_24px_hsl(45_85%_55%/0.45)] hover:scale-105 active:scale-95 transition-all duration-200"
-              aria-label="Lägg till kännetecken"
+              aria-label={t('characteristics.addCharacteristic')}
             >
               <Plus className="w-5 h-5 text-primary-foreground" />
             </button>
@@ -252,21 +252,21 @@ const CharacteristicDetail = () => {
           <div className="flex items-center gap-2 mb-3">
             <Sparkles className="w-4 h-4 text-primary/60" />
             <h2 className="text-[13px] font-medium text-foreground/30 uppercase tracking-wide">
-              AI-förslag
+              {t('characteristics.aiSuggestions')}
             </h2>
           </div>
 
           {!aiLoaded && !aiLoading && (
             <div className="rounded-2xl bg-foreground/[0.02] border border-foreground/[0.05] p-5">
               <p className="text-[13px] text-foreground/40 mb-4">
-                Analysera dina incheckningar för att hitta mönster som kan vara kännetecken för den här perioden.
+                {t('characteristics.analyzeCheckins')}
               </p>
               <button
                 onClick={handleFetchAI}
                 className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-foreground/[0.05] hover:bg-foreground/[0.08] text-[13px] font-medium text-foreground/50 hover:text-foreground/70 transition-all duration-200"
               >
                 <Sparkles className="w-3.5 h-3.5" />
-                Analysera
+                {t('characteristics.analyze')}
               </button>
             </div>
           )}
@@ -274,7 +274,7 @@ const CharacteristicDetail = () => {
           {aiLoading && (
             <div className="rounded-2xl bg-foreground/[0.02] border border-foreground/[0.05] p-6 flex items-center gap-3">
               <Loader2 className="w-4 h-4 animate-spin text-foreground/30" />
-              <span className="text-[13px] text-foreground/30">Analyserar dina incheckningar...</span>
+              <span className="text-[13px] text-foreground/30">{t('characteristics.analyzingCheckins')}</span>
             </div>
           )}
 
@@ -290,7 +290,7 @@ const CharacteristicDetail = () => {
               <div className="flex items-start gap-2 px-1 mb-1">
                 <Info className="w-3.5 h-3.5 text-foreground/20 flex-shrink-0 mt-0.5" />
                 <p className="text-[11px] text-foreground/25 leading-relaxed">
-                  Baserat på vad du valt vid steg 2 i dina incheckningar. Dessa förslag stämmer inte nödvändigtvis – det är mönster AI hittat i din data.
+                  {t('characteristics.aiDisclaimer')}
                 </p>
               </div>
 
@@ -327,7 +327,7 @@ const CharacteristicDetail = () => {
                         <button
                           onClick={() => handleAddSuggestion(suggestion)}
                           className="flex-shrink-0 w-7 h-7 rounded-full bg-primary/10 hover:bg-primary/20 flex items-center justify-center transition-colors"
-                          aria-label={`Lägg till ${suggestion.name}`}
+                          aria-label={t('characteristics.addCharacteristic')}
                         >
                           <Plus className="w-3.5 h-3.5 text-primary" />
                         </button>
@@ -342,7 +342,7 @@ const CharacteristicDetail = () => {
                 onClick={handleFetchAI}
                 className="text-[11px] text-foreground/20 hover:text-foreground/40 transition-colors mt-2"
               >
-                Analysera igen
+                {t('characteristics.analyzeAgain')}
               </button>
             </div>
           )}

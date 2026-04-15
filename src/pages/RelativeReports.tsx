@@ -133,16 +133,16 @@ const RelativeReports = () => {
       const depressedPercentage = (depressed / moodTotal) * 100;
       
       if (stablePercentage >= 60) {
-        moodInsight = `Din närstående har haft ett stabilt mående under ${Math.round(stablePercentage)}% av perioden.`;
+        moodInsight = t('reports.moodInsightStable', { percentage: Math.round(stablePercentage) });
         moodTrend = 'stable';
       } else if (elevatedPercentage > depressedPercentage) {
-        moodInsight = `Din närstående har upplevt förhöjt mående ${Math.round(elevatedPercentage)}% av tiden.`;
+        moodInsight = t('reports.moodInsightElevated', { percentage: Math.round(elevatedPercentage) });
         moodTrend = 'up';
       } else if (depressedPercentage > elevatedPercentage) {
-        moodInsight = `Din närstående har haft nedstämdhet ${Math.round(depressedPercentage)}% av perioden.`;
+        moodInsight = t('reports.moodInsightDepressed', { percentage: Math.round(depressedPercentage) });
         moodTrend = 'down';
       } else {
-        moodInsight = 'Måendet har varierat under perioden.';
+        moodInsight = t('reports.moodInsightVarying');
       }
     }
 
@@ -156,11 +156,11 @@ const RelativeReports = () => {
     const sleepPercentage = sleepTotal > 0 ? Math.round((sleepGood / sleepTotal) * 100) : 0;
     let sleepInsight = '';
     if (sleepPercentage >= 70) {
-      sleepInsight = `Bra sömn ${sleepPercentage}% av nätterna.`;
+      sleepInsight = t('reports.sleepInsightGood', { percentage: sleepPercentage });
     } else if (sleepPercentage >= 50) {
-      sleepInsight = `Varierande sömn med ${100 - sleepPercentage}% dåliga nätter.`;
+      sleepInsight = t('reports.sleepInsightVarying', { percentage: 100 - sleepPercentage });
     } else {
-      sleepInsight = `Sömnproblem ${100 - sleepPercentage}% av nätterna.`;
+      sleepInsight = t('reports.sleepInsightBad', { percentage: 100 - sleepPercentage });
     }
 
     // Eating stats
@@ -173,9 +173,9 @@ const RelativeReports = () => {
     const eatingPercentage = eatingTotal > 0 ? Math.round((eatingGood / eatingTotal) * 100) : 0;
     let eatingInsight = '';
     if (eatingPercentage >= 70) {
-      eatingInsight = `Bra matvanor ${eatingPercentage}% av dagarna.`;
+      eatingInsight = t('reports.eatingInsightGood', { percentage: eatingPercentage });
     } else {
-      eatingInsight = `Oregelbundna matvanor under perioden.`;
+      eatingInsight = t('reports.eatingInsightBad');
     }
 
     // Exercise stats
@@ -187,9 +187,9 @@ const RelativeReports = () => {
     const exercisePercentage = exerciseTotal > 0 ? Math.round((exercised / exerciseTotal) * 100) : 0;
     let exerciseInsight = '';
     if (exercisePercentage >= 50) {
-      exerciseInsight = `Träning ${exercisePercentage}% av dagarna.`;
+      exerciseInsight = t('reports.exerciseInsightGood', { percentage: exercisePercentage });
     } else {
-      exerciseInsight = `Träning ${exercisePercentage}% av dagarna.`;
+      exerciseInsight = t('reports.exerciseInsightGood', { percentage: exercisePercentage });
     }
 
     // Medication stats
@@ -201,11 +201,11 @@ const RelativeReports = () => {
     const medsPercentage = days.length > 0 ? Math.round((medsTaken / days.length) * 100) : 0;
     let medsInsight = '';
     if (medsPercentage >= 90) {
-      medsInsight = `Utmärkt följsamhet: ${medsPercentage}% av dagarna.`;
+      medsInsight = t('reports.medInsightExcellent', { percentage: medsPercentage });
     } else if (medsPercentage >= 70) {
-      medsInsight = `Medicin tagen ${medsPercentage}% av dagarna.`;
+      medsInsight = t('reports.medInsightGood', { percentage: medsPercentage });
     } else {
-      medsInsight = `Medicin missad ofta under perioden.`;
+      medsInsight = t('reports.medInsightBad');
     }
 
     return {
@@ -240,7 +240,7 @@ const RelativeReports = () => {
     // Header
     doc.setFontSize(24);
     doc.setTextColor(51, 65, 85);
-    doc.text('Hälsorapport', margin, y);
+    doc.text(t('relativeReports.healthReport'), margin, y);
     y += 10;
 
     doc.setFontSize(12);
@@ -249,9 +249,9 @@ const RelativeReports = () => {
     doc.text(periodText, margin, y);
     y += 5;
     
-    doc.text(`Patient: ${patientName}`, margin, y);
+    doc.text(t('relativeReports.patient') + ': ' + patientName, margin, y);
     y += 5;
-    doc.text(`Genererad: ${format(new Date(), 'd MMMM yyyy', { locale: sv })}`, margin, y);
+    doc.text(t('relativeReports.generated') + ': ' + format(new Date(), 'd MMMM yyyy', { locale: sv }), margin, y);
     y += 15;
 
     // Summary box
@@ -260,11 +260,11 @@ const RelativeReports = () => {
     y += 8;
     doc.setFontSize(11);
     doc.setTextColor(51, 65, 85);
-    doc.text(`Sammanfattning: ${reportData.period.registeredDays} av ${reportData.period.totalDays} dagar registrerade`, margin + 5, y);
+    doc.text(t('relativeReports.summaryLabel') + ': ' + reportData.period.registeredDays + '/' + reportData.period.totalDays, margin + 5, y);
     y += 7;
     const registrationRate = Math.round((reportData.period.registeredDays / reportData.period.totalDays) * 100);
     doc.setTextColor(100, 116, 139);
-    doc.text(`Registreringsfrekvens: ${registrationRate}%`, margin + 5, y);
+    doc.text(t('relativeReports.registrationRate') + ': ' + registrationRate + '%', margin + 5, y);
     y += 20;
 
     // Sections
@@ -301,12 +301,12 @@ const RelativeReports = () => {
 
     if (includeMood && selectedConnection.share_mood && reportData.mood.total > 0) {
       addSection(
-        'Mående',
+        t('relativeReports.mood'),
         '💙',
         [
-          `Förhöjt: ${reportData.mood.elevated} dagar`,
-          `Stabilt: ${reportData.mood.stable} dagar`,
-          `Nedstämt: ${reportData.mood.depressed} dagar`,
+          t('reports.elevatedDays', { count: reportData.mood.elevated }),
+          t('reports.stableDays', { count: reportData.mood.stable }),
+          t('reports.depressedDays', { count: reportData.mood.depressed }),
         ],
         reportData.mood.insight,
         [100, 116, 139]
@@ -315,11 +315,11 @@ const RelativeReports = () => {
 
     if (includeSleep && selectedConnection.share_sleep && reportData.sleep.total > 0) {
       addSection(
-        'Sömn',
+        t('relativeReports.sleep'),
         '🌙',
         [
-          `Bra sömn: ${reportData.sleep.good} nätter (${reportData.sleep.percentage}%)`,
-          `Dålig sömn: ${reportData.sleep.bad} nätter`,
+          t('reports.goodSleep', { count: reportData.sleep.good, percentage: reportData.sleep.percentage }),
+          t('reports.badSleep', { count: reportData.sleep.bad }),
         ],
         reportData.sleep.insight,
         [99, 102, 241]
@@ -328,11 +328,11 @@ const RelativeReports = () => {
 
     if (includeEating && selectedConnection.share_eating && reportData.eating.total > 0) {
       addSection(
-        'Mat',
+        t('relativeReports.food'),
         '🍽️',
         [
-          `Bra matvanor: ${reportData.eating.good} dagar (${reportData.eating.percentage}%)`,
-          `Mindre bra matvanor: ${reportData.eating.bad} dagar`,
+          t('reports.goodEating', { count: reportData.eating.good, percentage: reportData.eating.percentage }),
+          t('reports.badEating', { count: reportData.eating.bad }),
         ],
         reportData.eating.insight,
         [234, 179, 8]
@@ -341,10 +341,10 @@ const RelativeReports = () => {
 
     if (includeExercise && selectedConnection.share_exercise && reportData.exercise.total > 0) {
       addSection(
-        'Träning',
+        t('relativeReports.exercise'),
         '💪',
         [
-          `Träningsdagar: ${reportData.exercise.exercised} av ${reportData.exercise.total} (${reportData.exercise.percentage}%)`,
+          t('reports.exerciseDays', { exercised: reportData.exercise.exercised, total: reportData.exercise.total, percentage: reportData.exercise.percentage }),
         ],
         reportData.exercise.insight,
         [34, 197, 94]
@@ -353,10 +353,10 @@ const RelativeReports = () => {
 
     if (includeMedication && selectedConnection.share_medication && activeMedications.length > 0) {
       addSection(
-        'Medicin',
+        t('relativeReports.medication'),
         '💊',
         [
-          `Dagar med medicin: ${reportData.medication.taken} av ${reportData.medication.total} (${reportData.medication.percentage}%)`,
+          t('reports.medicationDays', { taken: reportData.medication.taken, total: reportData.medication.total, percentage: reportData.medication.percentage }),
         ],
         reportData.medication.insight,
         [168, 85, 247]
@@ -371,8 +371,8 @@ const RelativeReports = () => {
     y = doc.internal.pageSize.getHeight() - 15;
     doc.setFontSize(9);
     doc.setTextColor(148, 163, 184);
-    doc.text('Genererad med Between Clouds', margin, y);
-    doc.text('www.betweenclouds.se', pageWidth - margin - 40, y);
+    doc.text('Generated with Toddy', margin, y);
+    doc.text('www.toddy.se', pageWidth - margin - 40, y);
 
     // Save
     const filename = `halsorapport-${patientName.replace(/\s+/g, '-').toLowerCase()}-${format(reportData.period.start, 'yyyy-MM-dd')}-${format(reportData.period.end, 'yyyy-MM-dd')}.pdf`;
@@ -392,16 +392,16 @@ const RelativeReports = () => {
       <div className="py-8 px-4 md:px-8">
         <div className="max-w-4xl mx-auto">
           <header className="mb-8">
-            <h1 className="font-display text-3xl md:text-4xl font-bold mb-2">Rapporter</h1>
-            <p className="text-muted-foreground">Skapa rapporter för dina närstående</p>
+            <h1 className="font-display text-3xl md:text-4xl font-bold mb-2">{t('relativeReports.title')}</h1>
+            <p className="text-muted-foreground">{t('relativeReports.subtitle')}</p>
           </header>
           
           <Card className="text-center py-12">
             <CardContent>
               <Users className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-              <h3 className="text-lg font-medium mb-2">Inga godkända närstående</h3>
+              <h3 className="text-lg font-medium mb-2">{t('relativeReports.noApprovedRelatives')}</h3>
               <p className="text-muted-foreground">
-                Du behöver ha en godkänd koppling till en närstående för att kunna skapa rapporter.
+                {t('relativeReports.needApproved')}
               </p>
             </CardContent>
           </Card>
@@ -416,8 +416,8 @@ const RelativeReports = () => {
     <div className="py-8 px-4 md:px-8">
       <div className="max-w-4xl mx-auto space-y-8">
         <header>
-          <h1 className="font-display text-3xl md:text-4xl font-bold mb-2">Rapporter</h1>
-          <p className="text-muted-foreground">Skapa insiktsfulla rapporter för dina närstående</p>
+          <h1 className="font-display text-3xl md:text-4xl font-bold mb-2">{t('relativeReports.title')}</h1>
+          <p className="text-muted-foreground">{t('relativeReports.subtitleInsightful')}</p>
         </header>
 
         {/* Configuration Card */}
@@ -425,19 +425,19 @@ const RelativeReports = () => {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <FileText className="h-5 w-5" />
-              Skapa rapport
+              {t('relativeReports.createReport')}
             </CardTitle>
             <CardDescription>
-              Välj närstående, tidsperiod och vilka kategorier som ska ingå
+              {t('relativeReports.createReportDesc')}
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
             {/* Patient Selection */}
             <div className="space-y-3">
-              <Label className="text-sm font-medium">Välj närstående</Label>
+              <Label className="text-sm font-medium">{t('relativeReports.selectRelative')}</Label>
               <Select value={selectedPatientId || ''} onValueChange={setSelectedPatientId}>
                 <SelectTrigger className="w-full md:w-[300px]">
-                  <SelectValue placeholder="Välj en närstående" />
+                  <SelectValue placeholder={t("relativeReports.selectRelativePlaceholder")} />
                 </SelectTrigger>
                 <SelectContent>
                   {approvedConnections.map(connection => (
@@ -451,13 +451,13 @@ const RelativeReports = () => {
 
             {/* Date Range */}
             <div className="space-y-3">
-              <Label className="text-sm font-medium">Tidsperiod</Label>
+              <Label className="text-sm font-medium">{t('relativeReports.timePeriod')}</Label>
               <div className="flex flex-wrap gap-3">
                 <Popover>
                   <PopoverTrigger asChild>
                     <Button variant="outline" className={cn("justify-start text-left font-normal", !startDate && "text-muted-foreground")}>
                       <CalendarIcon className="mr-2 h-4 w-4" />
-                      {startDate ? format(startDate, 'd MMM yyyy', { locale: sv }) : 'Från datum'}
+                      {startDate ? format(startDate, 'd MMM yyyy', { locale: sv }) : t('relativeReports.fromDate')}
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent className="w-auto p-0" align="start">
@@ -477,7 +477,7 @@ const RelativeReports = () => {
                   <PopoverTrigger asChild>
                     <Button variant="outline" className={cn("justify-start text-left font-normal", !endDate && "text-muted-foreground")}>
                       <CalendarIcon className="mr-2 h-4 w-4" />
-                      {endDate ? format(endDate, 'd MMM yyyy', { locale: sv }) : 'Till datum'}
+                      {endDate ? format(endDate, 'd MMM yyyy', { locale: sv }) : t('relativeReports.toDate')}
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent className="w-auto p-0" align="start">
@@ -502,7 +502,7 @@ const RelativeReports = () => {
                     setEndDate(endOfMonth(subMonths(today, 1)));
                   }}
                 >
-                  Förra månaden
+                  {t('relativeReports.lastMonth')}
                 </Button>
                 <Button
                   variant="ghost"
@@ -512,7 +512,7 @@ const RelativeReports = () => {
                     setEndDate(today);
                   }}
                 >
-                  Denna månad
+                  {t('relativeReports.thisMonth')}
                 </Button>
                 <Button
                   variant="ghost"
@@ -522,7 +522,7 @@ const RelativeReports = () => {
                     setEndDate(today);
                   }}
                 >
-                  Senaste 3 månaderna
+                  {t('relativeReports.last3Months')}
                 </Button>
               </div>
             </div>
@@ -530,14 +530,14 @@ const RelativeReports = () => {
             {/* Category Selection - only show categories that are shared */}
             {selectedConnection && (
               <div className="space-y-3">
-                <Label className="text-sm font-medium">Inkludera i rapporten</Label>
+                <Label className="text-sm font-medium">{t('relativeReports.includeInReport')}</Label>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                   {selectedConnection.share_mood && (
                     <div className="flex items-center space-x-3">
                       <Checkbox id="mood" checked={includeMood} onCheckedChange={(checked) => setIncludeMood(checked === true)} />
                       <Label htmlFor="mood" className="flex items-center gap-2 cursor-pointer">
                         <Heart className="h-4 w-4 text-primary" />
-                        Mående
+                        {t('relativeReports.mood')}
                       </Label>
                     </div>
                   )}
@@ -546,7 +546,7 @@ const RelativeReports = () => {
                       <Checkbox id="sleep" checked={includeSleep} onCheckedChange={(checked) => setIncludeSleep(checked === true)} />
                       <Label htmlFor="sleep" className="flex items-center gap-2 cursor-pointer">
                         <Moon className="h-4 w-4 text-indigo-500" />
-                        Sömn
+                        {t('relativeReports.sleep')}
                       </Label>
                     </div>
                   )}
@@ -555,7 +555,7 @@ const RelativeReports = () => {
                       <Checkbox id="eating" checked={includeEating} onCheckedChange={(checked) => setIncludeEating(checked === true)} />
                       <Label htmlFor="eating" className="flex items-center gap-2 cursor-pointer">
                         <Utensils className="h-4 w-4 text-amber-500" />
-                        Mat
+                        {t('relativeReports.food')}
                       </Label>
                     </div>
                   )}
@@ -564,7 +564,7 @@ const RelativeReports = () => {
                       <Checkbox id="exercise" checked={includeExercise} onCheckedChange={(checked) => setIncludeExercise(checked === true)} />
                       <Label htmlFor="exercise" className="flex items-center gap-2 cursor-pointer">
                         <Dumbbell className="h-4 w-4 text-green-500" />
-                        Träning
+                        {t('relativeReports.exercise')}
                       </Label>
                     </div>
                   )}
@@ -573,7 +573,7 @@ const RelativeReports = () => {
                       <Checkbox id="medication" checked={includeMedication} onCheckedChange={(checked) => setIncludeMedication(checked === true)} />
                       <Label htmlFor="medication" className="flex items-center gap-2 cursor-pointer">
                         <Pill className="h-4 w-4 text-purple-500" />
-                        Medicin
+                        {t('relativeReports.medication')}
                       </Label>
                     </div>
                   )}
@@ -589,10 +589,10 @@ const RelativeReports = () => {
               {isDataLoading ? (
                 <>
                   <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                  Laddar data...
+                  {t('relativeReports.loadingData')}
                 </>
               ) : (
-                'Generera rapport'
+                t('relativeReports.generateReport')
               )}
             </Button>
           </CardContent>
@@ -603,22 +603,22 @@ const RelativeReports = () => {
           <Card className="animate-fade-in">
             <CardHeader className="flex flex-row items-center justify-between">
               <div>
-                <CardTitle>Rapport för {getPatientName(selectedConnection)}</CardTitle>
+                <CardTitle>{t('relativeReports.reportFor')} {getPatientName(selectedConnection)}</CardTitle>
                 <CardDescription>
                   {format(reportData.period.start, 'd MMMM', { locale: sv })} – {format(reportData.period.end, 'd MMMM yyyy', { locale: sv })}
                 </CardDescription>
               </div>
               <Button onClick={handleExportPDF} className="gap-2">
                 <Download className="h-4 w-4" />
-                Exportera PDF
+                {t('relativeReports.exportPdf')}
               </Button>
             </CardHeader>
             <CardContent className="space-y-6">
               {/* Summary */}
               <div className="bg-muted/50 rounded-xl p-4">
-                <p className="text-sm text-muted-foreground mb-1">Sammanfattning</p>
+                <p className="text-sm text-muted-foreground mb-1">{t('relativeReports.summary')}</p>
                 <p className="font-medium">
-                  {reportData.period.registeredDays} av {reportData.period.totalDays} dagar registrerade ({Math.round((reportData.period.registeredDays / reportData.period.totalDays) * 100)}%)
+                  {t('relativeReports.daysRegistered', { registered: reportData.period.registeredDays, total: reportData.period.totalDays })} ({Math.round((reportData.period.registeredDays / reportData.period.totalDays) * 100)}%)
                 </p>
               </div>
 
@@ -629,7 +629,7 @@ const RelativeReports = () => {
                     <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
                       <Heart className="h-4 w-4 text-primary" />
                     </div>
-                    <h3 className="font-semibold">Mående</h3>
+                    <h3 className="font-semibold">{t('relativeReports.mood')}</h3>
                     {reportData.mood.trend === 'up' && <TrendingUp className="h-4 w-4 text-amber-500" />}
                     {reportData.mood.trend === 'down' && <TrendingDown className="h-4 w-4 text-blue-500" />}
                     {reportData.mood.trend === 'stable' && <Minus className="h-4 w-4 text-green-500" />}
@@ -637,15 +637,15 @@ const RelativeReports = () => {
                   <div className="grid grid-cols-3 gap-3">
                     <div className="bg-mood-elevated-light rounded-lg p-3 text-center">
                       <p className="text-2xl font-bold text-mood-elevated-foreground">{reportData.mood.elevated}</p>
-                      <p className="text-xs text-muted-foreground">Förhöjt</p>
+                      <p className="text-xs text-muted-foreground">{t('relativeReports.elevatedDays')}</p>
                     </div>
                     <div className="bg-mood-stable-light rounded-lg p-3 text-center">
                       <p className="text-2xl font-bold text-mood-stable-foreground">{reportData.mood.stable}</p>
-                      <p className="text-xs text-muted-foreground">Stabilt</p>
+                      <p className="text-xs text-muted-foreground">{t('relativeReports.stableDays')}</p>
                     </div>
                     <div className="bg-mood-depressed-light rounded-lg p-3 text-center">
                       <p className="text-2xl font-bold text-mood-depressed-foreground">{reportData.mood.depressed}</p>
-                      <p className="text-xs text-muted-foreground">Nedstämt</p>
+                      <p className="text-xs text-muted-foreground">{t('relativeReports.depressedDays')}</p>
                     </div>
                   </div>
                   <p className="text-sm text-muted-foreground bg-muted/30 rounded-lg p-3">{reportData.mood.insight}</p>
@@ -659,8 +659,8 @@ const RelativeReports = () => {
                     <div className="h-8 w-8 rounded-lg bg-indigo-500/10 flex items-center justify-center">
                       <Moon className="h-4 w-4 text-indigo-500" />
                     </div>
-                    <h3 className="font-semibold">Sömn</h3>
-                    <span className="text-sm text-muted-foreground ml-auto">{reportData.sleep.percentage}% bra nätter</span>
+                    <h3 className="font-semibold">{t('relativeReports.sleep')}</h3>
+                    <span className="text-sm text-muted-foreground ml-auto">{reportData.sleep.percentage}% {t('relativeReports.goodNights')}</span>
                   </div>
                   <div className="h-3 bg-muted rounded-full overflow-hidden">
                     <div 
@@ -679,8 +679,8 @@ const RelativeReports = () => {
                     <div className="h-8 w-8 rounded-lg bg-amber-500/10 flex items-center justify-center">
                       <Utensils className="h-4 w-4 text-amber-500" />
                     </div>
-                    <h3 className="font-semibold">Mat</h3>
-                    <span className="text-sm text-muted-foreground ml-auto">{reportData.eating.percentage}% bra dagar</span>
+                    <h3 className="font-semibold">{t('relativeReports.food')}</h3>
+                    <span className="text-sm text-muted-foreground ml-auto">{reportData.eating.percentage}% {t('relativeReports.goodDays')}</span>
                   </div>
                   <div className="h-3 bg-muted rounded-full overflow-hidden">
                     <div 
@@ -699,8 +699,8 @@ const RelativeReports = () => {
                     <div className="h-8 w-8 rounded-lg bg-green-500/10 flex items-center justify-center">
                       <Dumbbell className="h-4 w-4 text-green-500" />
                     </div>
-                    <h3 className="font-semibold">Träning</h3>
-                    <span className="text-sm text-muted-foreground ml-auto">{reportData.exercise.percentage}% av dagarna</span>
+                    <h3 className="font-semibold">{t('relativeReports.exercise')}</h3>
+                    <span className="text-sm text-muted-foreground ml-auto">{reportData.exercise.percentage}% {t('relativeReports.ofDays')}</span>
                   </div>
                   <div className="h-3 bg-muted rounded-full overflow-hidden">
                     <div 
@@ -719,8 +719,8 @@ const RelativeReports = () => {
                     <div className="h-8 w-8 rounded-lg bg-purple-500/10 flex items-center justify-center">
                       <Pill className="h-4 w-4 text-purple-500" />
                     </div>
-                    <h3 className="font-semibold">Medicin</h3>
-                    <span className="text-sm text-muted-foreground ml-auto">{reportData.medication.percentage}% följsamhet</span>
+                    <h3 className="font-semibold">{t('relativeReports.medication')}</h3>
+                    <span className="text-sm text-muted-foreground ml-auto">{reportData.medication.percentage}% {t('relativeReports.compliance')}</span>
                   </div>
                   <div className="h-3 bg-muted rounded-full overflow-hidden">
                     <div 

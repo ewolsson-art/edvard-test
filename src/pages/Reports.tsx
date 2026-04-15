@@ -105,16 +105,16 @@ const Reports = () => {
       const depressedPercentage = (depressed / moodTotal) * 100;
       
       if (stablePercentage >= 60) {
-        moodInsight = `Du har haft ett stabilt mående under ${Math.round(stablePercentage)}% av perioden. Det är ett bra tecken på balans.`;
+        moodInsight = t('reports.moodInsightStable', { percentage: Math.round(stablePercentage) });
         moodTrend = 'stable';
       } else if (elevatedPercentage > depressedPercentage) {
-        moodInsight = `Du har upplevt förhöjt mående ${Math.round(elevatedPercentage)}% av tiden. Var uppmärksam på tecken på hypomani.`;
+        moodInsight = t('reports.moodInsightElevated', { percentage: Math.round(elevatedPercentage) });
         moodTrend = 'up';
       } else if (depressedPercentage > elevatedPercentage) {
-        moodInsight = `Du har haft nedstämdhet ${Math.round(depressedPercentage)}% av perioden. Överväg att prata med din läkare om detta mönster.`;
+        moodInsight = t('reports.moodInsightDepressed', { percentage: Math.round(depressedPercentage) });
         moodTrend = 'down';
       } else {
-        moodInsight = 'Ditt mående har varierat under perioden. Det kan vara värt att titta närmare på vilka faktorer som påverkar.';
+        moodInsight = t('reports.moodInsightVarying');
       }
     }
 
@@ -128,11 +128,11 @@ const Reports = () => {
     const sleepPercentage = sleepTotal > 0 ? Math.round((sleepGood / sleepTotal) * 100) : 0;
     let sleepInsight = '';
     if (sleepPercentage >= 70) {
-      sleepInsight = `Du har sovit bra ${sleepPercentage}% av nätterna. Fortsätt med dina goda sömnrutiner!`;
+      sleepInsight = t('reports.sleepInsightGood', { percentage: sleepPercentage });
     } else if (sleepPercentage >= 50) {
-      sleepInsight = `Din sömn har varit varierande. ${100 - sleepPercentage}% dåliga nätter kan påverka ditt mående.`;
+      sleepInsight = t('reports.sleepInsightVarying', { percentage: 100 - sleepPercentage });
     } else {
-      sleepInsight = `Du har haft sömnproblem ${100 - sleepPercentage}% av nätterna. Sömn är viktigt för din hälsa.`;
+      sleepInsight = t('reports.sleepInsightBad', { percentage: 100 - sleepPercentage });
     }
 
     // Eating stats
@@ -145,9 +145,9 @@ const Reports = () => {
     const eatingPercentage = eatingTotal > 0 ? Math.round((eatingGood / eatingTotal) * 100) : 0;
     let eatingInsight = '';
     if (eatingPercentage >= 70) {
-      eatingInsight = `Du har ätit bra ${eatingPercentage}% av dagarna. Bra jobbat!`;
+      eatingInsight = t('reports.eatingInsightGood', { percentage: eatingPercentage });
     } else {
-      eatingInsight = `Du har haft oregelbundna matvanor. Regelbunden mat kan stabilisera humöret.`;
+      eatingInsight = t('reports.eatingInsightBad');
     }
 
     // Exercise stats
@@ -159,9 +159,9 @@ const Reports = () => {
     const exercisePercentage = exerciseTotal > 0 ? Math.round((exercised / exerciseTotal) * 100) : 0;
     let exerciseInsight = '';
     if (exercisePercentage >= 50) {
-      exerciseInsight = `Du har tränat ${exercisePercentage}% av dagarna. Motion är bra för både kropp och sinne!`;
+      exerciseInsight = t('reports.exerciseInsightGood', { percentage: exercisePercentage });
     } else {
-      exerciseInsight = `Du har tränat ${exercisePercentage}% av dagarna. Även korta promenader kan göra skillnad.`;
+      exerciseInsight = t('reports.exerciseInsightBad', { percentage: exercisePercentage });
     }
 
     // Medication stats
@@ -173,11 +173,11 @@ const Reports = () => {
     const medsPercentage = days.length > 0 ? Math.round((medsTaken / days.length) * 100) : 0;
     let medsInsight = '';
     if (medsPercentage >= 90) {
-      medsInsight = `Utmärkt! Du har tagit din medicin ${medsPercentage}% av dagarna.`;
+      medsInsight = t('reports.medInsightExcellent', { percentage: medsPercentage });
     } else if (medsPercentage >= 70) {
-      medsInsight = `Du har tagit din medicin ${medsPercentage}% av dagarna. Försök att vara mer konsekvent.`;
+      medsInsight = t('reports.medInsightGood', { percentage: medsPercentage });
     } else {
-      medsInsight = `Du har missat medicin ofta. Regelbunden medicinering är viktig för din behandling.`;
+      medsInsight = t('reports.medInsightBad');
     }
 
     return {
@@ -211,7 +211,7 @@ const Reports = () => {
     // Header
     doc.setFontSize(24);
     doc.setTextColor(51, 65, 85);
-    doc.text('Hälsorapport', margin, y);
+    doc.text(t('reports.healthReport'), margin, y);
     y += 10;
 
     doc.setFontSize(12);
@@ -221,10 +221,10 @@ const Reports = () => {
     y += 5;
     
     if (fullName) {
-      doc.text(`Genererad för: ${fullName}`, margin, y);
+      doc.text(t('reports.generatedFor', { name: fullName }), margin, y);
       y += 5;
     }
-    doc.text(`Genererad: ${format(new Date(), 'd MMMM yyyy', { locale: sv })}`, margin, y);
+    doc.text(t('reports.generated', { date: format(new Date(), 'd MMMM yyyy', { locale: sv }) }), margin, y);
     y += 15;
 
     // Summary box
@@ -233,11 +233,11 @@ const Reports = () => {
     y += 8;
     doc.setFontSize(11);
     doc.setTextColor(51, 65, 85);
-    doc.text(`Sammanfattning: ${reportData.period.registeredDays} av ${reportData.period.totalDays} dagar registrerade`, margin + 5, y);
+    doc.text(t('reports.summaryLabel', { registered: reportData.period.registeredDays, total: reportData.period.totalDays }), margin + 5, y);
     y += 7;
     const registrationRate = Math.round((reportData.period.registeredDays / reportData.period.totalDays) * 100);
     doc.setTextColor(100, 116, 139);
-    doc.text(`Registreringsfrekvens: ${registrationRate}%`, margin + 5, y);
+    doc.text(t('reports.registrationRate', { rate: registrationRate }), margin + 5, y);
     y += 20;
 
     // Sections
@@ -274,12 +274,12 @@ const Reports = () => {
 
     if (includeMood && reportData.mood.total > 0) {
       addSection(
-        'Mående',
+        t('reports.mood'),
         '💙',
         [
-          `Förhöjt: ${reportData.mood.elevated} dagar`,
-          `Stabilt: ${reportData.mood.stable} dagar`,
-          `Nedstämt: ${reportData.mood.depressed} dagar`,
+          t('reports.elevatedDays', { count: reportData.mood.elevated }),
+          t('reports.stableDays', { count: reportData.mood.stable }),
+          t('reports.depressedDays', { count: reportData.mood.depressed }),
         ],
         reportData.mood.insight,
         [100, 116, 139]
@@ -288,11 +288,11 @@ const Reports = () => {
 
     if (includeSleep && reportData.sleep.total > 0) {
       addSection(
-        'Sömn',
+        t('reports.sleep'),
         '🌙',
         [
-          `Bra sömn: ${reportData.sleep.good} nätter (${reportData.sleep.percentage}%)`,
-          `Dålig sömn: ${reportData.sleep.bad} nätter`,
+          t('reports.goodSleep', { count: reportData.sleep.good, percentage: reportData.sleep.percentage }),
+          t('reports.badSleep', { count: reportData.sleep.bad }),
         ],
         reportData.sleep.insight,
         [99, 102, 241]
@@ -301,11 +301,11 @@ const Reports = () => {
 
     if (includeEating && reportData.eating.total > 0) {
       addSection(
-        'Mat',
+        t('reports.diet'),
         '🍽️',
         [
-          `Bra matvanor: ${reportData.eating.good} dagar (${reportData.eating.percentage}%)`,
-          `Mindre bra matvanor: ${reportData.eating.bad} dagar`,
+          t('reports.goodEating', { count: reportData.eating.good, percentage: reportData.eating.percentage }),
+          t('reports.badEating', { count: reportData.eating.bad }),
         ],
         reportData.eating.insight,
         [234, 179, 8]
@@ -314,10 +314,10 @@ const Reports = () => {
 
     if (includeExercise && reportData.exercise.total > 0) {
       addSection(
-        'Träning',
+        t('reports.exercise'),
         '💪',
         [
-          `Träningsdagar: ${reportData.exercise.exercised} av ${reportData.exercise.total} (${reportData.exercise.percentage}%)`,
+          t('reports.exerciseDays', { exercised: reportData.exercise.exercised, total: reportData.exercise.total, percentage: reportData.exercise.percentage }),
         ],
         reportData.exercise.insight,
         [34, 197, 94]
@@ -326,10 +326,10 @@ const Reports = () => {
 
     if (includeMedication && activeMedications.length > 0) {
       addSection(
-        'Medicin',
+        t('reports.medication'),
         '💊',
         [
-          `Dagar med medicin: ${reportData.medication.taken} av ${reportData.medication.total} (${reportData.medication.percentage}%)`,
+          t('reports.medicationDays', { taken: reportData.medication.taken, total: reportData.medication.total, percentage: reportData.medication.percentage }),
         ],
         reportData.medication.insight,
         [168, 85, 247]
@@ -344,8 +344,8 @@ const Reports = () => {
     y = doc.internal.pageSize.getHeight() - 15;
     doc.setFontSize(9);
     doc.setTextColor(148, 163, 184);
-    doc.text('Genererad med Between Clouds', margin, y);
-    doc.text('www.betweenclouds.se', pageWidth - margin - 40, y);
+    doc.text('Generated with Toddy', margin, y);
+    doc.text('www.toddy.se', pageWidth - margin - 40, y);
 
     // Save
     const filename = `halsorapport-${format(reportData.period.start, 'yyyy-MM-dd')}-${format(reportData.period.end, 'yyyy-MM-dd')}.pdf`;
@@ -363,8 +363,8 @@ const Reports = () => {
   return (
     <div className="space-y-6">
       <header>
-        <h2 className="font-display text-3xl font-bold mb-2">Rapporter</h2>
-        <p className="text-sm text-muted-foreground mb-8">Skapa insiktsfulla rapporter baserat på din insamlade data.</p>
+        <h2 className="font-display text-3xl font-bold mb-2">{t('reports.title')}</h2>
+        <p className="text-sm text-muted-foreground mb-8">{t('reports.subtitle')}</p>
       </header>
 
         {/* Configuration Card */}
@@ -372,22 +372,22 @@ const Reports = () => {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <FileText className="h-5 w-5" />
-              Skapa rapport
+              {t('reports.createReport')}
             </CardTitle>
             <CardDescription>
-              Välj tidsperiod och vilka kategorier som ska ingå i rapporten
+              {t("reports.selectPeriodAndCategories")}
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
             {/* Date Range */}
             <div className="space-y-3">
-              <Label className="text-sm font-medium">Tidsperiod</Label>
+              <Label className="text-sm font-medium">{t('reports.timePeriod')}</Label>
               <div className="flex flex-wrap gap-3">
                 <Popover>
                   <PopoverTrigger asChild>
                     <Button variant="outline" className={cn("justify-start text-left font-normal", !startDate && "text-muted-foreground")}>
                       <CalendarIcon className="mr-2 h-4 w-4" />
-                      {startDate ? format(startDate, 'd MMM yyyy', { locale: sv }) : 'Från datum'}
+                      {startDate ? format(startDate, 'd MMM yyyy', { locale: sv }) : t('reports.fromDate')}
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent className="w-auto p-0" align="start">
@@ -407,7 +407,7 @@ const Reports = () => {
                   <PopoverTrigger asChild>
                     <Button variant="outline" className={cn("justify-start text-left font-normal", !endDate && "text-muted-foreground")}>
                       <CalendarIcon className="mr-2 h-4 w-4" />
-                      {endDate ? format(endDate, 'd MMM yyyy', { locale: sv }) : 'Till datum'}
+                      {endDate ? format(endDate, 'd MMM yyyy', { locale: sv }) : t('reports.toDate')}
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent className="w-auto p-0" align="start">
@@ -432,7 +432,7 @@ const Reports = () => {
                     setEndDate(endOfMonth(subMonths(today, 1)));
                   }}
                 >
-                  Förra månaden
+                  {t("reports.lastMonth")}
                 </Button>
                 <Button
                   variant="ghost"
@@ -442,7 +442,7 @@ const Reports = () => {
                     setEndDate(today);
                   }}
                 >
-                  Denna månad
+                  {t("reports.thisMonth")}
                 </Button>
                 <Button
                   variant="ghost"
@@ -452,41 +452,41 @@ const Reports = () => {
                     setEndDate(today);
                   }}
                 >
-                  Senaste 3 månaderna
+                  {t("reports.last3Months")}
                 </Button>
               </div>
             </div>
 
             {/* Category Selection */}
             <div className="space-y-3">
-              <Label className="text-sm font-medium">Inkludera i rapporten</Label>
+              <Label className="text-sm font-medium">{t('reports.includeInReport')}</Label>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                 <div className="flex items-center space-x-3">
                   <Checkbox id="mood" checked={includeMood} onCheckedChange={(checked) => setIncludeMood(checked === true)} />
                   <Label htmlFor="mood" className="flex items-center gap-2 cursor-pointer">
                     <Heart className="h-4 w-4 text-primary" />
-                    Mående
+                    {t('reports.mood')}
                   </Label>
                 </div>
                 <div className="flex items-center space-x-3">
                   <Checkbox id="sleep" checked={includeSleep} onCheckedChange={(checked) => setIncludeSleep(checked === true)} />
                   <Label htmlFor="sleep" className="flex items-center gap-2 cursor-pointer">
                     <Moon className="h-4 w-4 text-indigo-500" />
-                    Sömn
+                    {t('reports.sleep')}
                   </Label>
                 </div>
                 <div className="flex items-center space-x-3">
                   <Checkbox id="eating" checked={includeEating} onCheckedChange={(checked) => setIncludeEating(checked === true)} />
                   <Label htmlFor="eating" className="flex items-center gap-2 cursor-pointer">
                     <Utensils className="h-4 w-4 text-amber-500" />
-                    Mat
+                    {t('reports.diet')}
                   </Label>
                 </div>
                 <div className="flex items-center space-x-3">
                   <Checkbox id="exercise" checked={includeExercise} onCheckedChange={(checked) => setIncludeExercise(checked === true)} />
                   <Label htmlFor="exercise" className="flex items-center gap-2 cursor-pointer">
                     <Dumbbell className="h-4 w-4 text-green-500" />
-                    Träning
+                    {t('reports.exercise')}
                   </Label>
                 </div>
                 {activeMedications.length > 0 && (
@@ -494,7 +494,7 @@ const Reports = () => {
                     <Checkbox id="medication" checked={includeMedication} onCheckedChange={(checked) => setIncludeMedication(checked === true)} />
                     <Label htmlFor="medication" className="flex items-center gap-2 cursor-pointer">
                       <Pill className="h-4 w-4 text-purple-500" />
-                      Medicin
+                      {t('reports.medication')}
                     </Label>
                   </div>
                 )}
@@ -502,7 +502,7 @@ const Reports = () => {
             </div>
 
             <Button onClick={handleGenerateReport} className="w-full md:w-auto">
-              Generera rapport
+              {t("reports.generateReport")}
             </Button>
           </CardContent>
         </Card>
@@ -512,22 +512,22 @@ const Reports = () => {
           <Card className="animate-fade-in">
             <CardHeader className="flex flex-row items-center justify-between">
               <div>
-                <CardTitle>Din rapport</CardTitle>
+                <CardTitle>{t('reports.yourReport')}</CardTitle>
                 <CardDescription>
                   {format(reportData.period.start, 'd MMMM', { locale: sv })} – {format(reportData.period.end, 'd MMMM yyyy', { locale: sv })}
                 </CardDescription>
               </div>
               <Button onClick={handleExportPDF} className="gap-2">
                 <Download className="h-4 w-4" />
-                Exportera PDF
+                {t("reports.exportPDF")}
               </Button>
             </CardHeader>
             <CardContent className="space-y-6">
               {/* Summary */}
               <div className="bg-muted/50 rounded-xl p-4">
-                <p className="text-sm text-muted-foreground mb-1">Sammanfattning</p>
+                <p className="text-sm text-muted-foreground mb-1">{t('reports.summary')}</p>
                 <p className="font-medium">
-                  Du har registrerat {reportData.period.registeredDays} av {reportData.period.totalDays} dagar ({Math.round((reportData.period.registeredDays / reportData.period.totalDays) * 100)}%)
+                  {t('reports.youRegistered', { registered: reportData.period.registeredDays, total: reportData.period.totalDays, percentage: Math.round((reportData.period.registeredDays / reportData.period.totalDays) * 100) })}
                 </p>
               </div>
 
@@ -538,7 +538,7 @@ const Reports = () => {
                     <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
                       <Heart className="h-4 w-4 text-primary" />
                     </div>
-                    <h3 className="font-semibold">Mående</h3>
+                    <h3 className="font-semibold">{t('reports.mood')}</h3>
                     {reportData.mood.trend === 'up' && <TrendingUp className="h-4 w-4 text-amber-500" />}
                     {reportData.mood.trend === 'down' && <TrendingDown className="h-4 w-4 text-blue-500" />}
                     {reportData.mood.trend === 'stable' && <Minus className="h-4 w-4 text-green-500" />}
@@ -546,15 +546,15 @@ const Reports = () => {
                   <div className="grid grid-cols-3 gap-3">
                     <div className="bg-mood-elevated-light rounded-lg p-3 text-center">
                       <p className="text-2xl font-bold text-mood-elevated-foreground">{reportData.mood.elevated}</p>
-                      <p className="text-xs text-muted-foreground">Förhöjt</p>
+                      <p className="text-xs text-muted-foreground">{t('reports.elevated')}</p>
                     </div>
                     <div className="bg-mood-stable-light rounded-lg p-3 text-center">
                       <p className="text-2xl font-bold text-mood-stable-foreground">{reportData.mood.stable}</p>
-                      <p className="text-xs text-muted-foreground">Stabilt</p>
+                      <p className="text-xs text-muted-foreground">{t('reports.stable')}</p>
                     </div>
                     <div className="bg-mood-depressed-light rounded-lg p-3 text-center">
                       <p className="text-2xl font-bold text-mood-depressed-foreground">{reportData.mood.depressed}</p>
-                      <p className="text-xs text-muted-foreground">Nedstämt</p>
+                      <p className="text-xs text-muted-foreground">{t('reports.depressed')}</p>
                     </div>
                   </div>
                   <p className="text-sm text-muted-foreground bg-muted/30 rounded-lg p-3">{reportData.mood.insight}</p>
@@ -568,8 +568,8 @@ const Reports = () => {
                     <div className="h-8 w-8 rounded-lg bg-indigo-500/10 flex items-center justify-center">
                       <Moon className="h-4 w-4 text-indigo-500" />
                     </div>
-                    <h3 className="font-semibold">Sömn</h3>
-                    <span className="text-sm text-muted-foreground ml-auto">{reportData.sleep.percentage}% bra nätter</span>
+                    <h3 className="font-semibold">{t('reports.sleep')}</h3>
+                    <span className="text-sm text-muted-foreground ml-auto">{reportData.sleep.percentage}% {t('reports.goodNights')}</span>
                   </div>
                   <div className="h-3 bg-muted rounded-full overflow-hidden">
                     <div 
@@ -588,8 +588,8 @@ const Reports = () => {
                     <div className="h-8 w-8 rounded-lg bg-amber-500/10 flex items-center justify-center">
                       <Utensils className="h-4 w-4 text-amber-500" />
                     </div>
-                    <h3 className="font-semibold">Mat</h3>
-                    <span className="text-sm text-muted-foreground ml-auto">{reportData.eating.percentage}% bra dagar</span>
+                    <h3 className="font-semibold">{t('reports.diet')}</h3>
+                    <span className="text-sm text-muted-foreground ml-auto">{reportData.eating.percentage}% {t('reports.goodDays')}</span>
                   </div>
                   <div className="h-3 bg-muted rounded-full overflow-hidden">
                     <div 
@@ -608,8 +608,8 @@ const Reports = () => {
                     <div className="h-8 w-8 rounded-lg bg-green-500/10 flex items-center justify-center">
                       <Dumbbell className="h-4 w-4 text-green-500" />
                     </div>
-                    <h3 className="font-semibold">Träning</h3>
-                    <span className="text-sm text-muted-foreground ml-auto">{reportData.exercise.percentage}% av dagarna</span>
+                    <h3 className="font-semibold">{t('reports.exercise')}</h3>
+                    <span className="text-sm text-muted-foreground ml-auto">{reportData.exercise.percentage}% {t('reports.ofTheDays')}</span>
                   </div>
                   <div className="h-3 bg-muted rounded-full overflow-hidden">
                     <div 
@@ -628,8 +628,8 @@ const Reports = () => {
                     <div className="h-8 w-8 rounded-lg bg-purple-500/10 flex items-center justify-center">
                       <Pill className="h-4 w-4 text-purple-500" />
                     </div>
-                    <h3 className="font-semibold">Medicin</h3>
-                    <span className="text-sm text-muted-foreground ml-auto">{reportData.medication.percentage}% följsamhet</span>
+                    <h3 className="font-semibold">{t('reports.medication')}</h3>
+                    <span className="text-sm text-muted-foreground ml-auto">{reportData.medication.percentage}% {t('reports.adherence')}</span>
                   </div>
                   <div className="h-3 bg-muted rounded-full overflow-hidden">
                     <div 

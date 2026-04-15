@@ -37,22 +37,26 @@ interface StructuredInsight {
   warnings: string[];
 }
 
-const THINKING_PHRASES = [
-  'Läser dina incheckningar…',
-  'Analyserar sömnmönster…',
-  'Kartlägger humörtrender…',
-  'Beräknar episodlängder…',
-  'Undersöker korrelationer…',
-  'Bygger din prognos…',
-];
+const useThinkingPhrases = () => {
+  const { t } = useTranslation();
+  return [
+    t('insights.readingCheckins'),
+    t('insights.analyzingSleepPatterns'),
+    t('insights.mappingMoodTrends'),
+    t('insights.calculatingEpisodeLengths'),
+    t('insights.examiningCorrelations'),
+    t('insights.buildingPrognosis'),
+  ];
+};
 
 function InsightsLoadingAnimation() {
+  const phrases = useThinkingPhrases();
   const [phraseIndex, setPhraseIndex] = useState(0);
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
     const phraseTimer = setInterval(() => {
-      setPhraseIndex(prev => (prev + 1) % THINKING_PHRASES.length);
+      setPhraseIndex(prev => (prev + 1) % phrases.length);
     }, 2400);
     return () => clearInterval(phraseTimer);
   }, []);
@@ -78,12 +82,12 @@ function InsightsLoadingAnimation() {
         <div className="absolute bottom-4 left-1 w-1.5 h-1.5 rounded-full bg-primary/30 animate-[bounce_2.5s_ease-in-out_infinite_0.5s]" />
       </div>
       <p className="text-[15px] text-foreground/80 font-medium h-6 transition-all duration-500 animate-fade-in" key={phraseIndex}>
-        {THINKING_PHRASES[phraseIndex]}
+        {phrases[phraseIndex]}
       </p>
       <div className="w-48 h-1 rounded-full bg-muted/30 mt-5 overflow-hidden">
         <div className="h-full rounded-full bg-gradient-to-r from-primary/60 to-primary transition-all duration-700 ease-out" style={{ width: `${progress}%` }} />
       </div>
-      <p className="text-[11px] text-muted-foreground/40 mt-3">Detta kan ta några sekunder</p>
+      <p className="text-[11px] text-muted-foreground/40 mt-3">{t('insights.mayTakeSeconds')}</p>
     </div>
   );
 }
@@ -95,10 +99,10 @@ const STATUS_CONFIG = {
 };
 
 const TREND_CONFIG = {
-  improving: { icon: ArrowUpRight, color: 'text-mood-stable', label: 'Förbättring' },
-  declining: { icon: ArrowDownRight, color: 'text-mood-depressed', label: 'Försämring' },
-  stable: { icon: ArrowRight, color: 'text-primary', label: 'Stabilt' },
-  fluctuating: { icon: Shuffle, color: 'text-amber-400', label: 'Växlande' },
+  improving: { icon: ArrowUpRight, color: 'text-mood-stable', labelKey: 'insights.improving' },
+  declining: { icon: ArrowDownRight, color: 'text-mood-depressed', labelKey: 'insights.declining' },
+  stable: { icon: ArrowRight, color: 'text-primary', labelKey: 'insights.stableLabel' },
+  fluctuating: { icon: Shuffle, color: 'text-amber-400', labelKey: 'insights.fluctuating' },
 };
 
 const PATTERN_ICONS: Record<string, typeof Moon> = {
@@ -129,6 +133,7 @@ function AnimatedCard({ children, delay = 0, className = '' }: { children: React
 }
 
 export default function Insights() {
+  const { t } = useTranslation();
   const [structured, setStructured] = useState<StructuredInsight | null>(null);
   const [stats, setStats] = useState<InsightStats | null>(null);
   const [loading, setLoading] = useState(false);
@@ -143,11 +148,11 @@ export default function Insights() {
       const { data, error: fnError } = await supabase.functions.invoke('ai-deep-insights');
       if (fnError) throw fnError;
       if (data?.error === 'insufficient_data') { setError(data.message); return; }
-      if (data?.error) { setError(data.message || 'Något gick fel.'); return; }
+      if (data?.error) { setError(data.message || t('insights.somethingWentWrong')); return; }
       setStructured(data.structured);
       setStats(data.stats);
     } catch (e: unknown) {
-      setError('Kunde inte generera insikter. Försök igen.');
+      setError(t('insights.couldNotGenerateRetry'));
     } finally {
       setLoading(false);
     }
@@ -162,9 +167,9 @@ export default function Insights() {
 
   return (
     <div className="p-5 md:p-8 max-w-2xl mx-auto md:mx-0 pb-24">
-      <h1 className="font-display text-3xl font-bold mb-2">Insikter</h1>
+      <h1 className="font-display text-3xl font-bold mb-2">{t('insights.title')}</h1>
       <p className="text-sm text-muted-foreground mb-8">
-        AI-driven analys baserad på alla dina incheckningar.
+        {t('insights.subtitle')}
       </p>
 
       {loading && <InsightsLoadingAnimation />}
@@ -177,7 +182,7 @@ export default function Insights() {
           <p className="text-sm text-muted-foreground max-w-sm mb-6">{error}</p>
           <Button onClick={generateInsights} variant="outline" className="gap-2 rounded-xl">
             <RefreshCw className="w-4 h-4" />
-            Försök igen
+            {t('insights.tryAgain')}
           </Button>
         </div>
       )}
@@ -225,11 +230,11 @@ export default function Insights() {
             <div className="flex justify-center pt-4">
               <Button variant="ghost" onClick={generateInsights} disabled={loading} className="gap-2 text-muted-foreground">
                 <RefreshCw className={cn("w-4 h-4", loading && "animate-spin")} />
-                Generera ny analys
+                {t('insights.generateNewAnalysis')}
               </Button>
             </div>
             <p className="text-[10px] text-muted-foreground/40 text-center mt-2">
-              AI-analysen är observationell och ersätter inte medicinsk rådgivning.
+              {t('insights.aiDisclaimer')}
             </p>
           </AnimatedCard>
         </div>
@@ -239,7 +244,8 @@ export default function Insights() {
 }
 
 function StatusCard({ insight }: { insight: StructuredInsight }) {
-  const config = STATUS_CONFIG[insight.status] || STATUS_CONFIG.good;
+  const { t } = useTranslation();
+    const config = STATUS_CONFIG[insight.status] || STATUS_CONFIG.good;
   const Icon = config.icon;
   const riskLevel = insight.riskLevel ?? 0;
 
@@ -260,7 +266,7 @@ function StatusCard({ insight }: { insight: StructuredInsight }) {
       {/* Risk bar */}
       <div className="mt-4">
         <div className="flex items-center justify-between mb-1.5">
-          <span className="text-[10px] uppercase tracking-wider text-muted-foreground/60 font-semibold">Risknivå</span>
+          <span className="text-[10px] uppercase tracking-wider text-muted-foreground/60 font-semibold">{t('insights.riskLevelLabel')}</span>
           <span className={cn('text-xs font-bold', riskLevel > 60 ? 'text-mood-depressed' : riskLevel > 30 ? 'text-amber-400' : 'text-mood-stable')}>
             {riskLevel}%
           </span>
@@ -298,7 +304,8 @@ function KeyNumbersGrid({ numbers }: { numbers: StructuredInsight['keyNumbers'] 
 }
 
 function TrendCard({ insight, stats }: { insight: StructuredInsight; stats: InsightStats }) {
-  const config = TREND_CONFIG[insight.trendDirection] || TREND_CONFIG.stable;
+  const { t } = useTranslation();
+    const config = TREND_CONFIG[insight.trendDirection] || TREND_CONFIG.stable;
   const Icon = config.icon;
 
   // Mini mood distribution bar from stats
@@ -311,14 +318,14 @@ function TrendCard({ insight, stats }: { insight: StructuredInsight; stats: Insi
     <div className="rounded-2xl border border-border/40 bg-card/60 p-5">
       <div className="flex items-center gap-2 mb-3">
         <Activity className="w-4 h-4 text-muted-foreground" />
-        <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Trend</h3>
+        <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">{t('insights.trend')}</h3>
       </div>
       <div className="flex items-center gap-4 mb-4">
         <div className="w-12 h-12 rounded-xl bg-card border border-border/50 flex items-center justify-center">
           <Icon className={cn('w-6 h-6', config.color)} />
         </div>
         <div>
-          <p className={cn('font-bold', config.color)}>{config.label}</p>
+          <p className={cn('font-bold', config.color)}>{t(config.labelKey)}</p>
           <p className="text-sm text-muted-foreground">{insight.trendLabel}</p>
         </div>
       </div>
@@ -339,13 +346,14 @@ function TrendCard({ insight, stats }: { insight: StructuredInsight; stats: Insi
 }
 
 function PatternsCard({ patterns }: { patterns: StructuredInsight['patterns'] }) {
-  const [expanded, setExpanded] = useState<number | null>(null);
+  const { t } = useTranslation();
+    const [expanded, setExpanded] = useState<number | null>(null);
 
   return (
     <div className="rounded-2xl border border-border/40 bg-card/60 p-5">
       <div className="flex items-center gap-2 mb-3">
         <Sparkles className="w-4 h-4 text-muted-foreground" />
-        <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Mönster</h3>
+        <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">{t('insights.patterns')}</h3>
       </div>
       <div className="space-y-2">
         {patterns.map((pattern, i) => {
@@ -386,14 +394,15 @@ function PatternsCard({ patterns }: { patterns: StructuredInsight['patterns'] })
 }
 
 function PrognosisCard({ prognosis }: { prognosis: StructuredInsight['prognosis'] }) {
-  const confidenceDots = prognosis.confidence === 'high' ? 3 : prognosis.confidence === 'medium' ? 2 : 1;
-  const confidenceLabel = prognosis.confidence === 'high' ? 'Hög' : prognosis.confidence === 'medium' ? 'Medel' : 'Låg';
+  const { t } = useTranslation();
+    const confidenceDots = prognosis.confidence === 'high' ? 3 : prognosis.confidence === 'medium' ? 2 : 1;
+  const confidenceLabel = prognosis.confidence === 'high' ? t('insights.high') : prognosis.confidence === 'medium' ? t('insights.medium') : t('insights.low');
 
   return (
     <div className="rounded-2xl border border-border/40 bg-card/60 p-5">
       <div className="flex items-center gap-2 mb-4">
         <TrendingUp className="w-4 h-4 text-muted-foreground" />
-        <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Prognos</h3>
+        <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">{t('insights.prognosis')}</h3>
         <div className="ml-auto flex items-center gap-1.5">
           <span className="text-[10px] text-muted-foreground/60">{confidenceLabel}</span>
           <div className="flex gap-0.5">
@@ -408,7 +417,7 @@ function PrognosisCard({ prognosis }: { prognosis: StructuredInsight['prognosis'
         <div className="rounded-xl bg-primary/5 border border-primary/10 p-4">
           <div className="flex items-center gap-2 mb-1.5">
             <div className="w-1.5 h-1.5 rounded-full bg-primary" />
-            <p className="text-xs font-semibold text-primary uppercase tracking-wider">Vecka</p>
+            <p className="text-xs font-semibold text-primary uppercase tracking-wider">{t('insights.weekLabel')}</p>
           </div>
           <p className="text-sm text-foreground/80">{prognosis.shortTerm}</p>
         </div>
@@ -416,7 +425,7 @@ function PrognosisCard({ prognosis }: { prognosis: StructuredInsight['prognosis'
         <div className="rounded-xl bg-muted/30 border border-border/30 p-4">
           <div className="flex items-center gap-2 mb-1.5">
             <div className="w-1.5 h-1.5 rounded-full bg-muted-foreground/40" />
-            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Månad</p>
+            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">{t('insights.monthLabel')}</p>
           </div>
           <p className="text-sm text-foreground/60">{prognosis.longTerm}</p>
         </div>
@@ -426,13 +435,14 @@ function PrognosisCard({ prognosis }: { prognosis: StructuredInsight['prognosis'
 }
 
 function StrengthsWarningsCard({ strengths, warnings }: { strengths: string[]; warnings: string[] }) {
-  return (
+  const { t } = useTranslation();
+    return (
     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
       {strengths && strengths.length > 0 && (
         <div className="rounded-2xl border border-mood-stable/20 bg-mood-stable/5 p-4">
           <div className="flex items-center gap-2 mb-3">
             <Shield className="w-4 h-4 text-mood-stable" />
-            <h3 className="text-xs font-semibold uppercase tracking-wider text-mood-stable">Styrkor</h3>
+            <h3 className="text-xs font-semibold uppercase tracking-wider text-mood-stable">{t('insights.strengths')}</h3>
           </div>
           <div className="space-y-2">
             {strengths.map((s, i) => (
@@ -449,7 +459,7 @@ function StrengthsWarningsCard({ strengths, warnings }: { strengths: string[]; w
         <div className="rounded-2xl border border-amber-400/20 bg-amber-400/5 p-4">
           <div className="flex items-center gap-2 mb-3">
             <AlertTriangle className="w-4 h-4 text-amber-400" />
-            <h3 className="text-xs font-semibold uppercase tracking-wider text-amber-400">Uppmärksamma</h3>
+            <h3 className="text-xs font-semibold uppercase tracking-wider text-amber-400">{t('insights.warnings')}</h3>
           </div>
           <div className="space-y-2">
             {warnings.map((w, i) => (
