@@ -49,6 +49,7 @@ function StatCircle({ stat, index }: { stat: EncouragingStat; index: number }) {
 export default function BadDay() {
   const { entries } = useMoodData();
   const { firstName } = useProfile();
+  const { t } = useTranslation();
 
   const encouragingStats = useMemo(() => {
     if (!entries || entries.length < 2) return null;
@@ -102,8 +103,8 @@ export default function BadDay() {
       stats.push({
         icon: ArrowUpRight,
         value: '✓',
-        label: 'Återhämtning',
-        detail: 'Du har återhämtat dig från nedstämdhet tidigare. Du kan göra det igen.',
+        label: t('badDayPage.recovery'),
+        detail: t('badDayPage.recoveryDetail'),
         color: 'text-mood-stable',
         ringColor: 'border-mood-stable/40',
         glowColor: 'bg-mood-stable/40',
@@ -114,8 +115,8 @@ export default function BadDay() {
       stats.push({
         icon: Clock,
         value: `~${avgDepDays}d`,
-        label: 'Snittperiod',
-        detail: `Dina nedstämda perioder varar i snitt ${avgDepDays} incheckade dagar.`,
+        label: t('badDayPage.avgPeriod'),
+        detail: t('badDayPage.avgPeriodDetail', { days: avgDepDays }),
         color: 'text-primary',
         ringColor: 'border-primary/40',
         glowColor: 'bg-primary/40',
@@ -125,8 +126,8 @@ export default function BadDay() {
     stats.push({
       icon: Sun,
       value: `${goodPct}%`,
-      label: 'Bra dagar',
-      detail: `${goodPct}% av dina incheckade dagar har du mått stabilt eller uppvarvat.`,
+      label: t('badDayPage.goodDays'),
+      detail: t('badDayPage.goodDaysDetail', { pct: goodPct }),
       color: 'text-mood-stable',
       ringColor: 'border-mood-stable/40',
       glowColor: 'bg-mood-stable/40',
@@ -136,8 +137,8 @@ export default function BadDay() {
       stats.push({
         icon: Shield,
         value: `${longestStable}d`,
-        label: 'Längsta stabila',
-        detail: `Din längsta period utan nedstämdhet var ${longestStable} incheckade dagar.`,
+        label: t('badDayPage.longestStable'),
+        detail: t('badDayPage.longestStableDetail', { days: longestStable }),
         color: 'text-primary',
         ringColor: 'border-primary/40',
         glowColor: 'bg-primary/40',
@@ -150,8 +151,8 @@ export default function BadDay() {
         stats.push({
           icon: TrendingUp,
           value: `~${daysLeft}d`,
-          label: 'Kvar i snitt',
-          detail: `Baserat på ditt mönster kan det vända inom ~${daysLeft} dagar.`,
+          label: t('badDayPage.daysLeft'),
+          detail: t('badDayPage.daysLeftDetail', { days: daysLeft }),
           color: 'text-mood-stable',
           ringColor: 'border-mood-stable/40',
           glowColor: 'bg-mood-stable/40',
@@ -160,49 +161,41 @@ export default function BadDay() {
     }
 
     return { stats, currentStreak, currentGroup, recoveryCount, avgDepDays };
-  }, [entries]);
+  }, [entries, t]);
 
   const greeting = firstName ? `${firstName}, ` : '';
 
-  // Pick the most relevant detail to show below circles
-  const activeDetail = encouragingStats?.stats[0]?.detail;
-
   return (
     <div className="p-5 md:p-8 max-w-2xl md:mx-0 pb-24">
-      <h1 className="font-display text-3xl font-bold mb-6">Dålig dag?</h1>
+      <h1 className="font-display text-3xl font-bold mb-6">{t('badDayPage.title')}</h1>
 
-      {/* Hero message */}
       <div className="text-center mb-10">
         <div className="w-20 h-20 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center mx-auto mb-5">
           <Heart className="w-10 h-10 text-primary" />
         </div>
         <p className="text-2xl font-semibold text-foreground mb-2">
-          {greeting}det kommer bli bättre.
+          {greeting}{t('badDayPage.itWillGetBetter')}
         </p>
         <p className="text-base text-muted-foreground max-w-md mx-auto">
           {encouragingStats && encouragingStats.recoveryCount > 0
-            ? 'Du har återhämtat dig förut. Dina siffror visar att detta är tillfälligt.'
-            : 'Svåra perioder tar slut. Här är bevis från din data.'}
+            ? t('badDayPage.recoveredBefore')
+            : t('badDayPage.hardPeriodsEnd')}
         </p>
       </div>
 
       {(!encouragingStats || !entries || entries.length < 5) ? (
         <div className="rounded-2xl border border-border/40 bg-card/60 p-8 text-center">
           <Sparkles className="w-10 h-10 text-muted-foreground mx-auto mb-4" />
-          <p className="text-sm text-muted-foreground">
-            Fortsätt checka in så kan vi visa dig uppmuntrande statistik baserad på dina mönster.
-          </p>
+          <p className="text-sm text-muted-foreground">{t('badDayPage.keepChecking')}</p>
         </div>
       ) : (
         <div className="space-y-8">
-          {/* Circles grid */}
           <div className="flex flex-wrap justify-center gap-8">
             {encouragingStats.stats.map((stat, i) => (
               <StatCircle key={i} stat={stat} index={i} />
             ))}
           </div>
 
-          {/* Detail text below */}
           {encouragingStats.stats.length > 0 && (
             <div className="rounded-2xl border border-border/30 bg-card/40 p-5 text-center space-y-3">
               {encouragingStats.stats.map((stat, i) => (
@@ -215,23 +208,22 @@ export default function BadDay() {
           )}
 
           <p className="text-[11px] text-muted-foreground/40 text-center">
-            ❤️ Baserat på dina {entries.length} incheckningar
+            {t('badDayPage.basedOn', { count: entries.length })}
           </p>
         </div>
       )}
 
-      {/* Vill du prata med någon? */}
       <div className="mt-10 rounded-2xl border border-border/30 bg-card/40 p-6 text-center">
         <Phone className="w-7 h-7 text-primary mx-auto mb-3" />
-        <p className="text-lg font-semibold text-foreground mb-1">Glöm aldrig att det finns människor som gärna lyssnar på dig</p>
-        <p className="text-sm text-muted-foreground mb-5">Du är inte ensam. Ring när du behöver.</p>
+        <p className="text-lg font-semibold text-foreground mb-1">{t('badDayPage.neverForget')}</p>
+        <p className="text-sm text-muted-foreground mb-5">{t('badDayPage.notAlone')}</p>
 
         <div className="space-y-3 max-w-sm mx-auto">
           {[
-            { name: 'Mind Självmordslinjen', phone: '90101', note: 'Dygnet runt' },
-            { name: 'Jourhavande medmänniska', phone: '08-702 16 80', note: 'Kväll & natt' },
-            { name: 'Mind Äldrelinjen', phone: '020-22 22 33', note: 'Vardagar' },
-            { name: '1177 Vårdguiden', phone: '1177', note: 'Dygnet runt' },
+            { name: 'Mind Självmordslinjen', phone: '90101', note: t('badDayPage.allDay') },
+            { name: 'Jourhavande medmänniska', phone: '08-702 16 80', note: t('badDayPage.eveningNight') },
+            { name: 'Mind Äldrelinjen', phone: '020-22 22 33', note: t('badDayPage.weekdays') },
+            { name: '1177 Vårdguiden', phone: '1177', note: t('badDayPage.allDay') },
           ].map((line) => (
             <a
               key={line.phone}
