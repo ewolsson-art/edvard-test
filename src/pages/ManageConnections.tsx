@@ -9,15 +9,8 @@ import { Loader2, UserPlus, Users, Trash2, Settings } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useTranslation } from 'react-i18next';
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
+  Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger,
 } from '@/components/ui/dialog';
-
-const emailSchema = z.string().email({ message: "Ogiltig e-postadress" });
 
 const ManageConnections = () => {
   const { t } = useTranslation();
@@ -28,57 +21,44 @@ const ManageConnections = () => {
   const [isInviting, setIsInviting] = useState(false);
   const [inviteDialogOpen, setInviteDialogOpen] = useState(false);
   const [shareSettings, setShareSettings] = useState({
-    share_mood: true,
-    share_sleep: true,
-    share_eating: true,
-    share_exercise: true,
-    share_medication: true,
-    share_comments: false,
+    share_mood: true, share_sleep: true, share_eating: true,
+    share_exercise: true, share_medication: true, share_comments: false,
   });
 
+  const shareLabels: Record<string, string> = {
+    share_mood: t('connectionsPage.mood'),
+    share_sleep: t('connectionsPage.sleep'),
+    share_eating: t('connectionsPage.diet'),
+    share_exercise: t('connectionsPage.exercise'),
+    share_medication: t('connectionsPage.medications'),
+    share_comments: t('connectionsPage.comments'),
+  };
+
   const handleInvite = async () => {
-    const result = emailSchema.safeParse(doctorEmail);
+    const result = z.string().email().safeParse(doctorEmail);
     if (!result.success) {
-      toast({
-        title: "Ogiltig e-postadress",
-        variant: "destructive",
-      });
+      toast({ title: t('connectionsPage.invalidEmail'), variant: "destructive" });
       return;
     }
-
     setIsInviting(true);
     const { success, error } = await inviteDoctor(doctorEmail, shareSettings);
     setIsInviting(false);
-
-    if (success) {
-      setDoctorEmail('');
-      setInviteDialogOpen(false);
-    } else if (error) {
-      toast({
-        title: "Kunde inte bjuda in",
-        description: error,
-        variant: "destructive",
-      });
-    }
+    if (success) { setDoctorEmail(''); setInviteDialogOpen(false); }
+    else if (error) { toast({ title: t('connectionsPage.couldNotInvite'), description: error, variant: "destructive" }); }
   };
 
   const getDoctorName = (connection: typeof connections[0]) => {
     if (connection.doctor_profile?.first_name || connection.doctor_profile?.last_name) {
-      return [connection.doctor_profile.first_name, connection.doctor_profile.last_name]
-        .filter(Boolean)
-        .join(' ');
+      return [connection.doctor_profile.first_name, connection.doctor_profile.last_name].filter(Boolean).join(' ');
     }
-    if (connection.doctor_email) {
-      return connection.doctor_email;
-    }
-    return 'Okänd läkare';
+    return connection.doctor_email || t('connectionsPage.unknownDoctor');
   };
 
   const getStatusLabel = (status: string) => {
     switch (status) {
-      case 'pending': return 'Väntar på godkännande';
-      case 'approved': return 'Godkänd';
-      case 'rejected': return 'Avvisad';
+      case 'pending': return t('connectionsPage.pending');
+      case 'approved': return t('connectionsPage.approved');
+      case 'rejected': return t('connectionsPage.rejected');
       default: return status;
     }
   };
@@ -93,11 +73,7 @@ const ManageConnections = () => {
   };
 
   if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <Loader2 className="w-8 h-8 animate-spin text-primary" />
-      </div>
-    );
+    return <div className="min-h-screen flex items-center justify-center"><Loader2 className="w-8 h-8 animate-spin text-primary" /></div>;
   }
 
   return (
@@ -105,70 +81,37 @@ const ManageConnections = () => {
       <div className="max-w-4xl mx-auto space-y-8">
         <header className="flex items-center justify-between">
           <div>
-            <h1 className="font-display text-3xl md:text-4xl font-bold mb-2">
-              Mina läkare
-            </h1>
-            <p className="text-muted-foreground">
-              Hantera vilka läkare som har tillgång till din data
-            </p>
+            <h1 className="font-display text-3xl md:text-4xl font-bold mb-2">{t('connectionsPage.title')}</h1>
+            <p className="text-muted-foreground">{t('connectionsPage.subtitle')}</p>
           </div>
-          
           <Dialog open={inviteDialogOpen} onOpenChange={setInviteDialogOpen}>
             <DialogTrigger asChild>
-              <Button className="gap-2">
-                <UserPlus className="w-4 h-4" />
-                Bjud in läkare
-              </Button>
+              <Button className="gap-2"><UserPlus className="w-4 h-4" />{t('connectionsPage.inviteDoctor')}</Button>
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>
-                <DialogTitle>Bjud in en läkare</DialogTitle>
-                <DialogDescription>
-                  Ange läkarens e-postadress och välj vilken data du vill dela.
-                </DialogDescription>
+                <DialogTitle>{t('connectionsPage.inviteDoctorTitle')}</DialogTitle>
+                <DialogDescription>{t('connectionsPage.inviteDoctorDesc')}</DialogDescription>
               </DialogHeader>
-              
               <div className="space-y-6 pt-4">
                 <div className="space-y-2">
-                  <Label htmlFor="doctorEmail">Läkarens e-post</Label>
-                  <Input
-                    id="doctorEmail"
-                    type="email"
-                    placeholder="lakare@example.com"
-                    value={doctorEmail}
-                    onChange={(e) => setDoctorEmail(e.target.value)}
-                    disabled={isInviting}
-                  />
+                  <Label htmlFor="doctorEmail">{t('connectionsPage.doctorEmail')}</Label>
+                  <Input id="doctorEmail" type="email" placeholder="doctor@example.com" value={doctorEmail} onChange={(e) => setDoctorEmail(e.target.value)} disabled={isInviting} />
                 </div>
-
                 <div className="space-y-4">
-                  <Label>Dela följande data</Label>
+                  <Label>{t('connectionsPage.shareData')}</Label>
                   <div className="space-y-3">
-                    {[
-                      { key: 'share_mood', label: 'Mående' },
-                      { key: 'share_sleep', label: 'Sömn' },
-                      { key: 'share_eating', label: 'Kost' },
-                      { key: 'share_exercise', label: 'Träning' },
-                      { key: 'share_medication', label: 'Mediciner' },
-                      { key: 'share_comments', label: 'Kommentarer' },
-                    ].map(({ key, label }) => (
+                    {Object.entries(shareLabels).map(([key, label]) => (
                       <div key={key} className="flex items-center justify-between">
                         <span className="text-sm">{label}</span>
-                        <Switch
-                          checked={shareSettings[key as keyof typeof shareSettings]}
-                          onCheckedChange={(checked) =>
-                            setShareSettings(prev => ({ ...prev, [key]: checked }))
-                          }
-                          disabled={isInviting}
-                        />
+                        <Switch checked={shareSettings[key as keyof typeof shareSettings]} onCheckedChange={(checked) => setShareSettings(prev => ({ ...prev, [key]: checked }))} disabled={isInviting} />
                       </div>
                     ))}
                   </div>
                 </div>
-
                 <Button onClick={handleInvite} disabled={isInviting} className="w-full">
                   {isInviting && <Loader2 className="w-4 h-4 animate-spin mr-2" />}
-                  Skicka inbjudan
+                  {t('connectionsPage.sendInvite')}
                 </Button>
               </div>
             </DialogContent>
@@ -178,13 +121,10 @@ const ManageConnections = () => {
         {connections.length === 0 ? (
           <div className="glass-card p-12 text-center">
             <Users className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-            <h3 className="text-lg font-medium mb-2">Inga kopplingar ännu</h3>
-            <p className="text-muted-foreground mb-6">
-              Bjud in en läkare för att dela din data.
-            </p>
+            <h3 className="text-lg font-medium mb-2">{t('connectionsPage.noConnections')}</h3>
+            <p className="text-muted-foreground mb-6">{t('connectionsPage.noConnectionsDesc')}</p>
             <Button onClick={() => setInviteDialogOpen(true)} className="gap-2">
-              <UserPlus className="w-4 h-4" />
-              Bjud in läkare
+              <UserPlus className="w-4 h-4" />{t('connectionsPage.inviteDoctor')}
             </Button>
           </div>
         ) : (
@@ -194,52 +134,29 @@ const ManageConnections = () => {
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex items-center gap-4">
                     <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
-                      <span className="text-lg font-semibold text-primary">
-                        {(connection.doctor_profile?.first_name?.[0] || 'L').toUpperCase()}
-                      </span>
+                      <span className="text-lg font-semibold text-primary">{(connection.doctor_profile?.first_name?.[0] || 'D').toUpperCase()}</span>
                     </div>
                     <div>
                       <h3 className="font-semibold">{getDoctorName(connection)}</h3>
-                      {connection.doctor_profile?.clinic_name && (
-                        <p className="text-sm text-muted-foreground">{connection.doctor_profile.clinic_name}</p>
-                      )}
-                      <span className={`text-xs px-2 py-0.5 rounded-full ${getStatusColor(connection.status)}`}>
-                        {getStatusLabel(connection.status)}
-                      </span>
+                      {connection.doctor_profile?.clinic_name && <p className="text-sm text-muted-foreground">{connection.doctor_profile.clinic_name}</p>}
+                      <span className={`text-xs px-2 py-0.5 rounded-full ${getStatusColor(connection.status)}`}>{getStatusLabel(connection.status)}</span>
                     </div>
                   </div>
-                  <Button
-                    size="sm"
-                    variant="ghost"
-                    onClick={() => removeConnection(connection.id)}
-                  >
+                  <Button size="sm" variant="ghost" onClick={() => removeConnection(connection.id)}>
                     <Trash2 className="w-4 h-4 text-destructive" />
                   </Button>
                 </div>
-
                 {connection.status === 'approved' && (
                   <div className="border-t pt-4">
                     <div className="flex items-center gap-2 mb-3">
                       <Settings className="w-4 h-4 text-muted-foreground" />
-                      <span className="text-sm font-medium">Välj vad du vill dela med {getDoctorName(connection)}</span>
+                      <span className="text-sm font-medium">{t('connectionsPage.chooseShare')} {getDoctorName(connection)}</span>
                     </div>
                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                      {[
-                        { key: 'share_mood', label: 'Mående' },
-                        { key: 'share_sleep', label: 'Sömn' },
-                        { key: 'share_eating', label: 'Kost' },
-                        { key: 'share_exercise', label: 'Träning' },
-                        { key: 'share_medication', label: 'Mediciner' },
-                        { key: 'share_comments', label: 'Kommentarer' },
-                      ].map(({ key, label }) => (
+                      {Object.entries(shareLabels).map(([key, label]) => (
                         <div key={key} className="flex items-center justify-between bg-muted/50 rounded-lg px-3 py-2">
                           <span className="text-sm">{label}</span>
-                          <Switch
-                            checked={connection[key as keyof typeof connection] as boolean}
-                            onCheckedChange={(checked) =>
-                              updateShareSettings(connection.id, { [key]: checked })
-                            }
-                          />
+                          <Switch checked={connection[key as keyof typeof connection] as boolean} onCheckedChange={(checked) => updateShareSettings(connection.id, { [key]: checked })} />
                         </div>
                       ))}
                     </div>

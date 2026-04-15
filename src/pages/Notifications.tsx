@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { formatDistanceToNow } from 'date-fns';
-import { sv } from 'date-fns/locale';
+import { sv, enUS } from 'date-fns/locale';
 import { Bell, Heart, MessageCircle, UserPlus, UserCheck, Check, Trash2, AlertTriangle, Loader2 } from 'lucide-react';
 import { useNotifications, AppNotification } from '@/hooks/useNotifications';
 import { Button } from '@/components/ui/button';
@@ -27,6 +27,7 @@ function ConnectionRequestActions({ notification, onHandled }: {
 }) {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
+  const { t } = useTranslation();
 
   const handleRespond = async (approved: boolean, e: React.MouseEvent) => {
     e.stopPropagation();
@@ -45,31 +46,20 @@ function ConnectionRequestActions({ notification, onHandled }: {
     setIsLoading(false);
 
     if (error) {
-      toast({ title: 'Kunde inte uppdatera', variant: 'destructive' });
+      toast({ title: t('notificationsPage.couldNotUpdate'), variant: 'destructive' });
     } else {
-      toast({ title: approved ? 'Förfrågan godkänd' : 'Förfrågan avvisad' });
+      toast({ title: approved ? t('notificationsPage.requestApproved') : t('notificationsPage.requestRejected') });
       onHandled();
     }
   };
 
   return (
     <div className="flex gap-2 mt-3" onClick={e => e.stopPropagation()}>
-      <Button
-        size="sm"
-        variant="outline"
-        className="h-8 text-xs rounded-xl flex-1"
-        disabled={isLoading}
-        onClick={(e) => handleRespond(false, e)}
-      >
-        Avvisa
+      <Button size="sm" variant="outline" className="h-8 text-xs rounded-xl flex-1" disabled={isLoading} onClick={(e) => handleRespond(false, e)}>
+        {t('notificationsPage.reject')}
       </Button>
-      <Button
-        size="sm"
-        className="h-8 text-xs rounded-xl flex-1"
-        disabled={isLoading}
-        onClick={(e) => handleRespond(true, e)}
-      >
-        {isLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : 'Godkänn'}
+      <Button size="sm" className="h-8 text-xs rounded-xl flex-1" disabled={isLoading} onClick={(e) => handleRespond(true, e)}>
+        {isLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : t('notificationsPage.approve')}
       </Button>
     </div>
   );
@@ -86,14 +76,14 @@ function NotificationItem({ notification, onRead, onDelete, onNavigate, onHandle
   const Icon = config.icon;
   const [handled, setHandled] = useState(false);
   const isConnectionRequest = notification.type === 'connection_request' && !handled;
+  const { t, i18n } = useTranslation();
+  const dateFnsLocale = i18n.language === 'sv' ? sv : enUS;
 
   return (
     <button
       onClick={() => { onRead(notification.id); onNavigate(notification); }}
       className={`w-full text-left rounded-2xl border p-4 transition-all active:scale-[0.99] ${
-        notification.read
-          ? 'bg-card/30 border-border/20'
-          : 'bg-card/60 border-border/40'
+        notification.read ? 'bg-card/30 border-border/20' : 'bg-card/60 border-border/40'
       }`}
     >
       <div className="flex gap-3">
@@ -107,32 +97,20 @@ function NotificationItem({ notification, onRead, onDelete, onNavigate, onHandle
                 {notification.title}
               </p>
               {notification.actor_name && (
-                <p className="text-xs text-muted-foreground/70 mt-0.5">av {notification.actor_name}</p>
+                <p className="text-xs text-muted-foreground/70 mt-0.5">{t('notificationsPage.by')} {notification.actor_name}</p>
               )}
             </div>
-            {!notification.read && (
-              <div className="w-2 h-2 rounded-full bg-primary flex-shrink-0 mt-1.5" />
-            )}
+            {!notification.read && <div className="w-2 h-2 rounded-full bg-primary flex-shrink-0 mt-1.5" />}
           </div>
-          {notification.body && (
-            <p className="text-xs text-muted-foreground/60 mt-1 line-clamp-1">{notification.body}</p>
-          )}
-
+          {notification.body && <p className="text-xs text-muted-foreground/60 mt-1 line-clamp-1">{notification.body}</p>}
           {isConnectionRequest && (
-            <ConnectionRequestActions
-              notification={notification}
-              onHandled={() => { setHandled(true); onHandled(notification.id); }}
-            />
+            <ConnectionRequestActions notification={notification} onHandled={() => { setHandled(true); onHandled(notification.id); }} />
           )}
-
           <div className="flex items-center justify-between mt-2">
             <span className="text-[11px] text-muted-foreground/40">
-              {formatDistanceToNow(new Date(notification.created_at), { addSuffix: true, locale: sv })}
+              {formatDistanceToNow(new Date(notification.created_at), { addSuffix: true, locale: dateFnsLocale })}
             </span>
-            <button
-              onClick={(e) => { e.stopPropagation(); onDelete(notification.id); }}
-              className="text-muted-foreground/30 hover:text-destructive transition-colors p-1"
-            >
+            <button onClick={(e) => { e.stopPropagation(); onDelete(notification.id); }} className="text-muted-foreground/30 hover:text-destructive transition-colors p-1">
               <Trash2 className="w-3.5 h-3.5" />
             </button>
           </div>
@@ -148,23 +126,16 @@ const Notifications = () => {
   const { notifications, isLoading, unreadCount, markAsRead, markAllAsRead, deleteNotification } = useNotifications();
 
   const handleNavigate = (n: AppNotification) => {
-    if (n.reference_type === 'community_post' && n.reference_id) {
-      navigate(`/forum/${n.reference_id}`);
-    }
-    // Connection requests are handled inline — no redirect needed
+    if (n.reference_type === 'community_post' && n.reference_id) navigate(`/forum/${n.reference_id}`);
   };
 
-  const handleConnectionHandled = (notificationId: string) => {
-    deleteNotification(notificationId);
-  };
+  const handleConnectionHandled = (notificationId: string) => deleteNotification(notificationId);
 
   if (isLoading) {
     return (
       <div className="p-5 md:p-8 max-w-2xl md:mx-0">
-        <h1 className="font-display text-3xl font-bold mb-2">Notiser</h1>
-        <div className="flex justify-center py-12">
-          <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-        </div>
+        <h1 className="font-display text-3xl font-bold mb-2">{t('notificationsPage.title')}</h1>
+        <div className="flex justify-center py-12"><div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin" /></div>
       </div>
     );
   }
@@ -172,39 +143,25 @@ const Notifications = () => {
   return (
     <div className="p-5 md:p-8 max-w-2xl md:mx-0 pb-24">
       <div className="flex items-center justify-between mb-1">
-        <h1 className="font-display text-3xl font-bold">Notiser</h1>
+        <h1 className="font-display text-3xl font-bold">{t('notificationsPage.title')}</h1>
         {unreadCount > 0 && (
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={markAllAsRead}
-            className="text-xs text-muted-foreground gap-1.5 rounded-full"
-          >
+          <Button variant="ghost" size="sm" onClick={markAllAsRead} className="text-xs text-muted-foreground gap-1.5 rounded-full">
             <Check className="w-3.5 h-3.5" />
-            Markera alla som lästa
+            {t('notificationsPage.markAllRead')}
           </Button>
         )}
       </div>
-      <p className="text-sm text-muted-foreground mb-6">
-        Håll koll på aktivitet kring dina inlägg och kopplingar.
-      </p>
+      <p className="text-sm text-muted-foreground mb-6">{t('notificationsPage.subtitle')}</p>
 
       {notifications.length === 0 ? (
         <div className="text-center py-16 space-y-3">
           <Bell className="h-10 w-10 mx-auto text-muted-foreground/30" />
-          <p className="text-muted-foreground text-sm">Inga notiser ännu</p>
+          <p className="text-muted-foreground text-sm">{t('notificationsPage.noNotifications')}</p>
         </div>
       ) : (
         <div className="space-y-2">
           {notifications.map(n => (
-            <NotificationItem
-              key={n.id}
-              notification={n}
-              onRead={markAsRead}
-              onDelete={deleteNotification}
-              onNavigate={handleNavigate}
-              onHandled={handleConnectionHandled}
-            />
+            <NotificationItem key={n.id} notification={n} onRead={markAsRead} onDelete={deleteNotification} onNavigate={handleNavigate} onHandled={handleConnectionHandled} />
           ))}
         </div>
       )}
