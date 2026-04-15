@@ -397,11 +397,11 @@ export function TodayCheckin({
   };
 
   const commentConfig: Record<string, { title: string; placeholder: string; getValue: () => string; setValue: (v: string) => void }> = {
-    mood: { title: 'Kommentar – Mående', placeholder: 'Berätta mer om hur du mår...', getValue: () => checkinData.moodComment || '', setValue: (v) => updateComment('mood', v) },
-    sleep: { title: 'Kommentar – Sömn', placeholder: 'Berätta mer om din sömn...', getValue: () => checkinData.sleepComment || '', setValue: (v) => updateComment('sleep', v) },
-    eating: { title: 'Kommentar – Mat', placeholder: 'Berätta mer om din mat...', getValue: () => checkinData.eatingComment || '', setValue: (v) => updateComment('eating', v) },
-    exercise: { title: 'Kommentar – Träning', placeholder: 'Berätta mer om din träning...', getValue: () => checkinData.exerciseComment || '', setValue: (v) => updateComment('exercise', v) },
-    medication: { title: 'Kommentar – Medicin', placeholder: 'Skriv en kommentar om dina mediciner...', getValue: () => checkinData.medicationComment || '', setValue: (v) => setCheckinData(prev => ({ ...prev, medicationComment: v })) },
+    mood: { title: t('checkin.commentMood'), placeholder: t('checkin.tellMoreMood'), getValue: () => checkinData.moodComment || '', setValue: (v) => updateComment('mood', v) },
+    sleep: { title: t('checkin.commentSleep'), placeholder: t('checkin.tellMoreSleep'), getValue: () => checkinData.sleepComment || '', setValue: (v) => updateComment('sleep', v) },
+    eating: { title: t('checkin.commentEating'), placeholder: t('checkin.tellMoreEating'), getValue: () => checkinData.eatingComment || '', setValue: (v) => updateComment('eating', v) },
+    exercise: { title: t('checkin.commentExercise'), placeholder: t('checkin.tellMoreExercise'), getValue: () => checkinData.exerciseComment || '', setValue: (v) => updateComment('exercise', v) },
+    medication: { title: t('checkin.commentMedication'), placeholder: t('checkin.tellMoreMedication'), getValue: () => checkinData.medicationComment || '', setValue: (v) => setCheckinData(prev => ({ ...prev, medicationComment: v })) },
   };
 
   const renderCommentSection = (step: Step) => {
@@ -446,26 +446,26 @@ export function TodayCheckin({
     // Build inline summary items
     const summaryItems: { label: string; value: string; colorClass?: string }[] = [];
     if (todayEntry) {
-      summaryItems.push({ label: 'Mående', value: moodLabels[todayEntry.mood], colorClass: moodDisplay?.colorClass });
+      summaryItems.push({ label: t('checkin.mood'), value: moodLabels[todayEntry.mood], colorClass: moodDisplay?.colorClass });
     }
     if (preferences?.include_sleep && todayEntry?.sleepQuality) {
       summaryItems.push({ 
-        label: 'Sömn', 
+        label: t('checkin.sleep'), 
         value: QUALITY_LABELS[todayEntry.sleepQuality],
         colorClass: (todayEntry.sleepQuality === 'good' || todayEntry.sleepQuality === 'very_good') ? 'text-mood-stable' : (todayEntry.sleepQuality === 'little' || todayEntry.sleepQuality === 'very_little' || todayEntry.sleepQuality === 'bad') ? 'text-mood-depressed' : 'text-primary'
       });
     }
     if (preferences?.include_eating && todayEntry?.eatingQuality) {
       summaryItems.push({ 
-        label: 'Mat', 
+        label: t('checkin.eating'), 
         value: QUALITY_LABELS[todayEntry.eatingQuality],
         colorClass: todayEntry.eatingQuality === 'good' ? 'text-mood-stable' : todayEntry.eatingQuality === 'bad' ? 'text-mood-depressed' : 'text-primary'
       });
     }
     if (preferences?.include_exercise && todayEntry?.exercised !== undefined) {
       summaryItems.push({ 
-        label: 'Träning', 
-        value: todayEntry.exercised ? 'Ja' : 'Nej',
+        label: t('checkin.exercise'), 
+        value: todayEntry.exercised ? t('common.yes') : t('common.no'),
         colorClass: todayEntry.exercised ? 'text-mood-stable' : 'text-muted-foreground'
       });
     }
@@ -476,7 +476,7 @@ export function TodayCheckin({
 
     const customAnswerItems = customQuestions
       .filter(q => customAnswersState[q.id])
-      .map(q => ({ question: q.question_text, answer: customAnswersState[q.id] === 'yes' ? 'Ja' : 'Nej' }));
+      .map(q => ({ question: q.question_text, answer: customAnswersState[q.id] === 'yes' ? t('common.yes') : t('common.no') }));
 
     return (
       <div className="fade-in h-full md:h-auto flex flex-col items-center justify-center px-5 py-16">
@@ -492,7 +492,7 @@ export function TodayCheckin({
                   {streakData.currentStreak}
                 </span>
                 <p className="text-[13px] text-foreground/20 mt-3 tracking-wide">
-                  {streakData.currentStreak === 1 ? 'dag' : 'dagar'} i rad
+                  {streakData.currentStreak === 1 ? t('checkin.dayStreak') : t('checkin.daysStreak')} {t('checkin.inARow')}
                 </p>
               </div>
             )}
@@ -512,10 +512,10 @@ export function TodayCheckin({
           {(todayEntry?.mood === 'severe_depressed' || todayEntry?.mood === 'depressed' || todayEntry?.mood === 'somewhat_depressed') && (
             <p className="text-[13px] text-foreground/35 leading-relaxed max-w-[280px] mb-8">
               <Heart className="w-3.5 h-3.5 inline mr-1.5 text-primary/30 -mt-0.5" />
-              Bättre dagar kommer.
+              {t('checkin.betterDaysComing')}
               {encouragementData.goodDaysCount > 0 && (
                 <span className="text-foreground/25">
-                  {' '}Du mådde bra för {encouragementData.daysSinceGood ?? '?'} {encouragementData.daysSinceGood === 1 ? 'dag' : 'dagar'} sen.
+                  {' '}{t('checkin.youFeltGood', { days: encouragementData.daysSinceGood ?? '?', dayWord: encouragementData.daysSinceGood === 1 ? t('checkin.dayStreak') : t('checkin.daysStreak') })}
                 </span>
               )}
             </p>
@@ -526,7 +526,7 @@ export function TodayCheckin({
             onClick={handleEdit}
             className="text-[13px] text-foreground/25 hover:text-foreground/45 transition-colors duration-200 cursor-pointer"
           >
-            Ändra incheckning
+            {t('checkin.editCheckin')}
           </button>
         </div>
       </div>
