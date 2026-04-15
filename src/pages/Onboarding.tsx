@@ -25,33 +25,33 @@ import { useTranslation } from 'react-i18next';
 const CHECKIN_OPTIONS = [
   {
     id: 'include_mood',
-    label: 'Mående',
-    description: 'Registrera hur du mår varje dag',
+    labelKey: 'onboarding.mood',
+    descKey: 'onboarding.moodDesc',
     icon: Brain,
     recommended: true,
   },
   {
     id: 'include_medication',
-    label: 'Medicin',
-    description: 'Loggning för dina mediciner',
+    labelKey: 'onboarding.medication',
+    descKey: 'onboarding.medicationDesc',
     icon: Pill,
   },
   {
     id: 'include_sleep',
-    label: 'Sömn',
-    description: 'Håll koll på din sömnkvalitet',
+    labelKey: 'onboarding.sleep',
+    descKey: 'onboarding.sleepDesc',
     icon: Moon,
   },
   {
     id: 'include_eating',
-    label: 'Kost',
-    description: 'Följ dina matvanor',
+    labelKey: 'onboarding.eating',
+    descKey: 'onboarding.eatingDesc',
     icon: Utensils,
   },
   {
     id: 'include_exercise',
-    label: 'Träning',
-    description: 'Logga din fysiska aktivitet',
+    labelKey: 'onboarding.exercise',
+    descKey: 'onboarding.exerciseDesc',
     icon: Dumbbell,
   },
 ];
@@ -111,8 +111,8 @@ const Onboarding = () => {
   const handleSubmit = async () => {
     if (!hasAnySelection) {
       toast({
-        title: 'Välj minst ett alternativ',
-        description: 'Du behöver välja minst en kategori för din dagliga incheckning.',
+        title: t('onboarding.chooseAtLeast'),
+        description: t('onboarding.needOneCategory'),
       });
       return;
     }
@@ -124,7 +124,7 @@ const Onboarding = () => {
     try {
       // 1. Save preferences
       const { error } = await createPreferences(selections);
-      if (error) throw new Error('Kunde inte spara preferenser');
+      if (error) throw new Error(t('onboarding.couldNotSavePrefs'));
 
       // 2. Mark profile as completed so we skip the complete-profile step
       await supabase.auth.updateUser({
@@ -152,7 +152,7 @@ const Onboarding = () => {
         const medicationsToInsert = selectedMedications.map(med => ({
           user_id: user.id,
           name: med.name,
-          dosage: med.dosage || 'Ej angiven',
+          dosage: med.dosage || t('onboarding.notSpecified'),
           started_at: today,
           frequency: timingToFrequency[med.timing || 'morning'] || 'daily',
         }));
@@ -163,16 +163,16 @@ const Onboarding = () => {
 
 
       toast({
-        title: 'Välkommen till Toddy!',
-        description: 'Din dagbok är nu redo att använda.',
+        title: t('onboarding.welcomeToToddy'),
+        description: t('onboarding.diaryReady'),
       });
       
       navigate('/', { replace: true });
     } catch (err) {
       console.error('Onboarding error:', err);
       toast({
-        title: 'Något gick fel',
-        description: 'Kunde inte spara alla inställningar. Försök igen.',
+        title: t('common.somethingWrong'),
+        description: t('onboarding.couldNotSaveAll'),
         variant: 'destructive',
       });
     } finally {
@@ -191,7 +191,7 @@ const Onboarding = () => {
           <div className="flex items-center justify-between mb-2">
             <Logo className="[&_span]:!bg-none [&_span]:!text-white" />
             <span className="text-xs text-white/50 font-medium">
-              Steg {actualStep} av {actualTotalSteps}
+              {t('onboarding.step')} {actualStep} {t('onboarding.of')} {actualTotalSteps}
             </span>
           </div>
           <div className="h-1 bg-white/10 rounded-full overflow-hidden">
@@ -214,22 +214,22 @@ const Onboarding = () => {
               </div>
 
               <h1 className="text-2xl md:text-3xl font-bold text-white font-display tracking-tight leading-snug">
-                Första steget till bättre insikt börjar här
+                {t('onboarding.firstStepTitle')}
               </h1>
               <p className="mt-3 text-sm text-white/50 max-w-xs">
-                Toddy hjälper dig förstå ditt mående — dag för dag, i din egen takt 🐢
+                {t('onboarding.firstStepDesc')}
               </p>
 
               <Button 
                 onClick={handleNext} 
                 className="w-full h-14 rounded-2xl text-base font-semibold bg-[hsl(45_85%_55%)] text-[hsl(230_30%_5%)] hover:bg-[hsl(45_85%_65%)] shadow-[0_4px_20px_-4px_hsl(45_85%_55%/0.4)] hover:shadow-[0_6px_28px_-4px_hsl(45_85%_55%/0.5)] hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 mt-8"
               >
-                Sätt igång
+                {t('onboarding.letsGo')}
                 <ArrowRight className="w-5 h-5 ml-2" />
               </Button>
 
               <p className="mt-6 text-[11px] text-white/25">
-                Skapad för personer med bipolär sjukdom · i samråd med läkare
+                {t('onboarding.createdFor')}
               </p>
             </div>
           )}
@@ -238,10 +238,10 @@ const Onboarding = () => {
           {step === 2 && (
             <div className="animate-fade-in">
               <h1 className="text-2xl md:text-3xl font-bold text-white font-display tracking-tight">
-                Din diagnos
+                {t('onboarding.yourDiagnosis')}
               </h1>
               <p className="mt-2 text-sm text-white/40">
-                Anpassa appen utifrån din diagnos (valfritt)
+                {t('onboarding.customizeFromDiagnosis')}
               </p>
 
               <div className="mt-6 max-h-[50vh] overflow-y-auto [&_input]:bg-white/[0.06] [&_input]:border-white/[0.1] [&_input]:text-white [&_input]:placeholder:text-white/30 [&_button]:text-white/70 [&_.text-muted-foreground]:text-white/40 [&_.text-primary]:text-[hsl(45_85%_55%)] [&_.bg-popover]:bg-[hsl(230_30%_12%)] [&_.border-border]:border-white/10 [&_.hover\\:bg-muted]:hover:bg-white/[0.06] [&_.bg-card]:bg-white/[0.04] [&_.border-border]:border-white/10">
@@ -252,7 +252,7 @@ const Onboarding = () => {
               </div>
 
               <p className="text-xs text-white/20 text-center mt-3">
-                Detta anpassar etiketter och taggar i din dagbok
+                {t('onboarding.customizesLabels')}
               </p>
 
               <div className="flex gap-3 mt-6">
@@ -263,7 +263,7 @@ const Onboarding = () => {
                   onClick={handleNext} 
                   className="flex-1 h-12 rounded-2xl text-[15px] font-semibold bg-[hsl(45_85%_55%)] text-[hsl(230_30%_5%)] hover:bg-[hsl(45_85%_65%)] shadow-[0_4px_20px_-4px_hsl(45_85%_55%/0.4)] transition-all duration-300" 
                 >
-                  {selectedDiagnoses.length === 0 ? 'Hoppa över' : 'Fortsätt'}
+                  {selectedDiagnoses.length === 0 ? t('onboarding.skipOrContinue') : t('onboarding.continueBtn')}
                   <ArrowRight className="w-4 h-4 ml-1" />
                 </Button>
               </div>
@@ -274,10 +274,10 @@ const Onboarding = () => {
           {step === 3 && (
             <div className="animate-fade-in">
               <h1 className="text-2xl md:text-3xl font-bold text-white font-display tracking-tight">
-                Skapa din incheckning
+                {t('onboarding.createYourCheckin')}
               </h1>
               <p className="mt-2 text-sm text-white/40">
-                Välj vad du vill ha med i din dagliga incheckning
+                {t('onboarding.chooseWhatToTrack')}
               </p>
 
               <div className="mt-6 space-y-2.5">
@@ -316,15 +316,15 @@ const Onboarding = () => {
                           htmlFor={option.id} 
                           className="text-sm font-medium cursor-pointer flex items-center gap-2 text-white"
                         >
-                          {option.label}
+                          {t(`${option.labelKey}`)}
                           {option.recommended && (
                             <span className="text-[10px] bg-[hsl(45_85%_55%/0.1)] text-[hsl(45_85%_55%)] px-1.5 py-0.5 rounded-full">
-                              Rekommenderas
+                              {t('onboarding.recommended')}
                             </span>
                           )}
                         </Label>
                         <p className="text-xs text-white/30 line-clamp-1">
-                          {option.description}
+                          {t(`${option.descKey}`)}
                         </p>
                       </div>
                     </div>
@@ -334,12 +334,12 @@ const Onboarding = () => {
 
               {!hasAnySelection && (
                 <p className="text-xs text-red-400/80 text-center mt-3">
-                  Välj minst en kategori för att fortsätta
+                  {t('onboarding.chooseAtLeastOne')}
                 </p>
               )}
 
               <p className="text-xs text-white/20 text-center mt-3">
-                Du kan ändra detta senare i inställningarna
+                {t('onboarding.canChangeLater')}
               </p>
 
               <div className="flex gap-3 mt-6">
@@ -354,7 +354,7 @@ const Onboarding = () => {
                   {isSubmitting ? (
                     <Loader2 className="w-4 h-4 animate-spin mr-1" />
                   ) : null}
-                  {selections.include_medication ? 'Fortsätt' : 'Starta min dagbok'}
+                  {selections.include_medication ? t('onboarding.continueBtn') : t('onboarding.startMyDiary')}
                   {!isSubmitting && <ArrowRight className="w-4 h-4 ml-1" />}
                 </Button>
               </div>
@@ -365,10 +365,10 @@ const Onboarding = () => {
           {step === 4 && (
             <div className="animate-fade-in">
               <h1 className="text-2xl md:text-3xl font-bold text-white font-display tracking-tight">
-                Dina mediciner
+                {t('onboarding.yourMedications')}
               </h1>
               <p className="mt-2 text-sm text-white/40">
-                Lägg till dina aktuella mediciner (valfritt)
+                {t('onboarding.addCurrentMeds')}
               </p>
 
               <div className="mt-6 max-h-[50vh] overflow-y-auto">
@@ -392,7 +392,7 @@ const Onboarding = () => {
                   ) : (
                     <Sparkles className="w-4 h-4 mr-1" />
                   )}
-                  {selectedMedications.length === 0 ? 'Hoppa över och starta' : 'Starta min dagbok'}
+                  {selectedMedications.length === 0 ? t('onboarding.skipAndStart') : t('onboarding.startMyDiary')}
                   <ArrowRight className="w-4 h-4 ml-1" />
                 </Button>
               </div>
