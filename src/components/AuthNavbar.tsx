@@ -1,43 +1,25 @@
 import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { Logo } from '@/components/Logo';
 import { Button } from '@/components/ui/button';
+import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 import { Menu, X } from 'lucide-react';
-import { cn } from '@/lib/utils';
-
-interface NavItem {
-  label: string;
-  href: string;
-}
-
-const navItems: NavItem[] = [
-  { label: 'Om oss', href: '/om-oss' },
-  { label: 'Så funkar det', href: '/sa-funkar-det' },
-];
 
 export function AuthNavbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
-  const location = useLocation();
+  const { t } = useTranslation();
+
+  const navItems = [
+    { label: t('nav.aboutUs'), href: '/om-oss' },
+    { label: t('nav.howItWorks'), href: '/sa-funkar-det' },
+  ];
 
   const handleNavClick = (href: string) => {
     setIsMobileMenuOpen(false);
     navigate(href);
   };
-
-  const handleLoginClick = () => {
-    setIsMobileMenuOpen(false);
-    navigate('/logga-in');
-  };
-
-  const handleSignupClick = () => {
-    setIsMobileMenuOpen(false);
-    navigate('/skapa-konto');
-  };
-
-  // Check current mode from URL
-  const searchParams = new URLSearchParams(location.search);
-  const currentMode = searchParams.get('mode');
 
   return (
     <>
