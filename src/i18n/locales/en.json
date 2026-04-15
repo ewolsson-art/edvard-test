@@ -1991,5 +1991,17 @@
     "since": "Since",
     "endedMeds": "Ended medications",
     "generatedWith": "This report was generated with Between Clouds"
+  },
+  "dayDetail": {
+    "noCheckin": "No check-in recorded this day.",
+    "addCheckin": "Add check-in",
+    "editCheckin": "Edit check-in",
+    "mood": "Mood",
+    "sleep": "Sleep",
+    "eating": "Eating",
+    "exercise": "Exercise",
+    "medication": "Medication",
+    "yes": "Yes",
+    "no": "No"
   }
 }

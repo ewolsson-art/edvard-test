@@ -1991,5 +1991,17 @@
     "since": "Sedan",
     "endedMeds": "Avslutade mediciner",
     "generatedWith": "Denna rapport genererades med Between Clouds"
+  },
+  "dayDetail": {
+    "noCheckin": "Ingen incheckning gjord denna dag.",
+    "addCheckin": "Lägg till incheckning",
+    "editCheckin": "Ändra incheckning",
+    "mood": "Mående",
+    "sleep": "Sömn",
+    "eating": "Mat",
+    "exercise": "Träning",
+    "medication": "Medicin",
+    "yes": "Ja",
+    "no": "Nej"
   }
 }
