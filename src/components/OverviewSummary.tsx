@@ -12,9 +12,9 @@ interface OverviewSummaryProps {
 }
 
 const MOOD_GROUPS = [
-  { key: 'elevated', label: 'Uppvarvad', icon: Flame, moods: ['severe_elevated', 'elevated', 'somewhat_elevated'], colorClass: 'text-mood-elevated', bgClass: 'bg-mood-elevated/10', barClass: 'bg-mood-elevated', borderClass: 'border-mood-elevated/30' },
-  { key: 'stable', label: 'Stabil', icon: Sun, moods: ['stable'], colorClass: 'text-mood-stable', bgClass: 'bg-mood-stable/10', barClass: 'bg-mood-stable', borderClass: 'border-mood-stable/30' },
-  { key: 'depressed', label: 'Nedstämd', icon: CloudRain, moods: ['somewhat_depressed', 'depressed', 'severe_depressed'], colorClass: 'text-mood-depressed', bgClass: 'bg-mood-depressed/10', barClass: 'bg-mood-depressed', borderClass: 'border-mood-depressed/30' },
+  { key: 'elevated', moods: ['severe_elevated', 'elevated', 'somewhat_elevated'], icon: Flame, colorClass: 'text-mood-elevated', bgClass: 'bg-mood-elevated/10', barClass: 'bg-mood-elevated', borderClass: 'border-mood-elevated/30' },
+  { key: 'stable', moods: ['stable'], icon: Sun, colorClass: 'text-mood-stable', bgClass: 'bg-mood-stable/10', barClass: 'bg-mood-stable', borderClass: 'border-mood-stable/30' },
+  { key: 'depressed', moods: ['somewhat_depressed', 'depressed', 'severe_depressed'], icon: CloudRain, colorClass: 'text-mood-depressed', bgClass: 'bg-mood-depressed/10', barClass: 'bg-mood-depressed', borderClass: 'border-mood-depressed/30' },
 ];
 
 function findGroup(mood: string) {
@@ -22,7 +22,14 @@ function findGroup(mood: string) {
 }
 
 export function OverviewSummary({ stats, entries, periodLabel }: OverviewSummaryProps) {
-  // Current streak
+  const { t } = useTranslation();
+
+  const moodGroupLabels: Record<string, string> = {
+    elevated: t('overviewSummary.elevated'),
+    stable: t('overviewSummary.stable'),
+    depressed: t('overviewSummary.depressed'),
+  };
+
   const currentStreak = useMemo(() => {
     if (entries.length === 0) return null;
     const sorted = [...entries].sort((a, b) => b.date.localeCompare(a.date));
@@ -36,7 +43,6 @@ export function OverviewSummary({ stats, entries, periodLabel }: OverviewSummary
     return { days: count, group: currentGroup };
   }, [entries]);
 
-  // Days since each group
   const daysSinceGroup = useMemo(() => {
     if (entries.length === 0) return [];
     const sorted = [...entries].sort((a, b) => b.date.localeCompare(a.date));
@@ -53,9 +59,7 @@ export function OverviewSummary({ stats, entries, periodLabel }: OverviewSummary
     });
   }, [entries]);
 
-  // Distribution + avg episode helper
   const calcDistribution = (source: MoodEntry[]) => {
-  const { t } = useTranslation();
     if (source.length === 0) return null;
     const total = source.length;
     const sorted = [...source].sort((a, b) => a.date.localeCompare(b.date));
@@ -81,12 +85,6 @@ export function OverviewSummary({ stats, entries, periodLabel }: OverviewSummary
 
   const allTimeDistribution = useMemo(() => calcDistribution(entries), [entries]);
 
-  const yearDistribution = useMemo(() => {
-    const currentYear = new Date().getFullYear();
-    return calcDistribution(entries.filter(e => new Date(e.date).getFullYear() === currentYear));
-  }, [entries]);
-
-  // Calculate days since first check-in
   const { totalDaysSinceStart, registrationRate } = useMemo(() => {
     if (entries.length === 0) return { totalDaysSinceStart: 0, registrationRate: 0 };
     const sorted = [...entries].sort((a, b) => a.date.localeCompare(b.date));
@@ -102,23 +100,22 @@ export function OverviewSummary({ stats, entries, periodLabel }: OverviewSummary
   if (entries.length === 0) {
     return (
       <div className="rounded-2xl bg-card/60 border border-border/40 p-6 text-center">
-        <p className="text-muted-foreground">Ingen data att visa ännu. Börja checka in för att se statistik.</p>
+        <p className="text-muted-foreground">{t('overviewSummary.noDataYet')}</p>
       </div>
     );
   }
 
   return (
     <div className="space-y-5">
-      {/* 1. Current streak */}
       {currentStreak && (
         <section className="rounded-2xl bg-card/60 border border-border/40 p-5">
-          <SectionHeader icon={TrendingUp} title="Nuvarande tillstånd" />
+          <SectionHeader icon={TrendingUp} title={t('overviewSummary.currentState')} />
           <div className={`mt-3 rounded-xl ${currentStreak.group.bgClass} border ${currentStreak.group.borderClass} p-4 flex items-center gap-4`}>
             <currentStreak.group.icon className={`w-8 h-8 ${currentStreak.group.colorClass}`} />
             <div>
-              <p className="text-lg font-bold">{currentStreak.group.label}</p>
+              <p className="text-lg font-bold">{moodGroupLabels[currentStreak.group.key]}</p>
               <p className="text-sm text-muted-foreground">
-                <span className="font-semibold text-foreground">{currentStreak.days}</span> {currentStreak.days === 1 ? 'dag' : 'dagar'} i rad
+                <span className="font-semibold text-foreground">{currentStreak.days}</span> {currentStreak.days === 1 ? t('overviewSummary.dayInRow') : t('overviewSummary.daysInRow')}
               </p>
             </div>
           </div>
@@ -131,16 +128,16 @@ export function OverviewSummary({ stats, entries, periodLabel }: OverviewSummary
             return (
               <div className="mt-3 rounded-xl bg-mood-stable/10 border border-mood-stable/20 px-4 py-3 space-y-1">
                 <p className="text-sm font-medium text-mood-stable flex items-center gap-1.5">
-                  <span>💚</span> Det vänder snart
+                  <span>💚</span> {t('overviewSummary.itWillTurnAround')}
                 </p>
                 {avgDays > 0 && (
                   <p className="text-xs text-muted-foreground">
-                    Dina nedstämda perioder varar i snitt <span className="font-semibold text-foreground">{avgDays} {avgDays === 1 ? 'dag' : 'dagar'}</span>. Du är på dag {currentStreak.days}.
+                    {t('overviewSummary.avgDepPeriods')} <span className="font-semibold text-foreground">{avgDays} {avgDays === 1 ? t('common.day') : t('common.days')}</span>. {t('overviewSummary.youAreOnDay', { current: currentStreak.days })}
                   </p>
                 )}
                 {stablePct > 0 && (
                   <p className="text-xs text-muted-foreground">
-                    <span className="font-semibold text-foreground">{stablePct}%</span> av alla dina dagar har du mått stabilt.
+                    <span className="font-semibold text-foreground">{stablePct}%</span> {t('overviewSummary.ofAllDays')}
                   </p>
                 )}
               </div>
@@ -149,10 +146,9 @@ export function OverviewSummary({ stats, entries, periodLabel }: OverviewSummary
         </section>
       )}
 
-      {/* 2. Days since each group */}
       <section className="rounded-2xl bg-card/60 border border-border/40 p-5">
-        <SectionHeader icon={CalendarCheck} title="Dagar sedan senast" />
-        <p className="text-xs text-muted-foreground mt-1 mb-3">Antal dagar sedan du senast var i varje tillstånd.</p>
+        <SectionHeader icon={CalendarCheck} title={t('overviewSummary.daysSinceLast')} />
+        <p className="text-xs text-muted-foreground mt-1 mb-3">{t('overviewSummary.daysSinceDesc')}</p>
         <div className="grid grid-cols-3 gap-3">
           {daysSinceGroup.map(item => (
             <div key={item.key} className={`rounded-xl ${item.bgClass} border ${item.borderClass} p-4 text-center`}>
@@ -161,20 +157,19 @@ export function OverviewSummary({ stats, entries, periodLabel }: OverviewSummary
                 {item.daysAgo === null ? '—' : item.daysAgo}
               </p>
               <p className="text-xs text-muted-foreground mt-0.5">
-                {item.daysAgo === null ? 'Aldrig' : item.daysAgo === 0 ? 'Idag' : item.daysAgo === 1 ? 'dag sedan' : 'dagar sedan'}
+                {item.daysAgo === null ? t('overviewSummary.never') : item.daysAgo === 0 ? t('overviewSummary.todayLabel') : item.daysAgo === 1 ? t('overviewSummary.daySince') : t('overviewSummary.daysSince')}
               </p>
-              <p className="text-[10px] font-medium text-muted-foreground/80 mt-1">{item.label}</p>
+              <p className="text-[10px] font-medium text-muted-foreground/80 mt-1">{moodGroupLabels[item.key]}</p>
             </div>
           ))}
         </div>
       </section>
 
-      {/* 3. All-time distribution */}
       {allTimeDistribution && (
         <section className="rounded-2xl bg-card/60 border border-border/40 p-5">
-          <SectionHeader icon={CalendarCheck} title="Sedan start" />
+          <SectionHeader icon={CalendarCheck} title={t('overviewSummary.sinceStart')} />
           <p className="text-xs text-muted-foreground mt-1 mb-3">
-            Fördelning av dina {entries.length} registrerade {entries.length === 1 ? 'dag' : 'dagar'}.
+            {t('overviewSummary.distributionOf', { count: entries.length })} {entries.length === 1 ? t('common.day') : t('common.days')}.
           </p>
           <div className="flex h-4 rounded-full overflow-hidden mb-3">
             {allTimeDistribution.map(item => item.percentage > 0 && (
@@ -193,11 +188,10 @@ export function OverviewSummary({ stats, entries, periodLabel }: OverviewSummary
         </section>
       )}
 
-      {/* 5. Average episode length */}
       {allTimeDistribution && (
         <section className="rounded-2xl bg-card/60 border border-border/40 p-5">
-          <SectionHeader icon={TrendingUp} title="Genomsnittlig episodlängd" />
-          <p className="text-xs text-muted-foreground mt-1 mb-3">Hur länge varar en period i varje tillstånd i genomsnitt?</p>
+          <SectionHeader icon={TrendingUp} title={t('overviewSummary.avgEpisodeLength')} />
+          <p className="text-xs text-muted-foreground mt-1 mb-3">{t('overviewSummary.avgEpisodeLengthDesc')}</p>
           <div className="space-y-3">
             {allTimeDistribution.map(item => {
               const maxDays = Math.max(...allTimeDistribution.map(i => i.avgEpisodeDays), 1);
@@ -207,7 +201,7 @@ export function OverviewSummary({ stats, entries, periodLabel }: OverviewSummary
                   <item.icon className={`w-5 h-5 flex-shrink-0 ${item.colorClass}`} />
                   <div className="flex-1">
                     <div className="flex items-center justify-between mb-1">
-                      <span className="text-sm text-muted-foreground">{item.label}</span>
+                      <span className="text-sm text-muted-foreground">{moodGroupLabels[item.key]}</span>
                       <span className="text-sm font-bold">{item.avgEpisodeDays > 0 ? `${item.avgEpisodeDays} d` : '—'}</span>
                     </div>
                     <div className="h-2.5 bg-muted rounded-full overflow-hidden">
@@ -221,11 +215,10 @@ export function OverviewSummary({ stats, entries, periodLabel }: OverviewSummary
         </section>
       )}
 
-      {/* Registration rate */}
       <section className="rounded-2xl bg-card/60 border border-border/40 p-4 flex items-center justify-between">
         <div>
-          <p className="text-sm font-medium">Registrerade dagar</p>
-          <p className="text-xs text-muted-foreground">Sedan första incheckning</p>
+          <p className="text-sm font-medium">{t('overviewSummary.registeredDays')}</p>
+          <p className="text-xs text-muted-foreground">{t('overviewSummary.sinceFirstCheckin')}</p>
         </div>
         <div className="text-right">
           <p className="text-xl font-bold">{entries.length}<span className="text-muted-foreground font-normal text-sm">/{totalDaysSinceStart}</span></p>
