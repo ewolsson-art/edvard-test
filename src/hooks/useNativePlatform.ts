@@ -1,22 +1,30 @@
 import { useEffect, useState } from 'react';
+import { Capacitor } from '@capacitor/core';
 
 /**
  * Detects if app is running inside a native Capacitor shell (iOS/Android).
- * Used to enable native-only features like status bar, haptics, and to
- * adjust UX (bottom tab bar always visible, no hover states, etc.)
+ * Uses the official Capacitor import — most reliable across timing/race scenarios.
+ *
+ * We initialize state synchronously so the first render is already correct
+ * (no flash of web-landing in the native app).
  */
 export function useNativePlatform() {
-  const [isNative, setIsNative] = useState(false);
-  const [platform, setPlatform] = useState<'ios' | 'android' | 'web'>('web');
+  const initialIsNative = Capacitor.isNativePlatform();
+  const initialPlatform = Capacitor.getPlatform() as 'ios' | 'android' | 'web';
+
+  const [isNative, setIsNative] = useState(initialIsNative);
+  const [platform, setPlatform] = useState<'ios' | 'android' | 'web'>(initialPlatform);
 
   useEffect(() => {
-    const cap = (window as any).Capacitor;
-    if (cap?.isNativePlatform?.()) {
-      setIsNative(true);
-      const p = cap.getPlatform?.();
-      if (p === 'ios' || p === 'android') setPlatform(p);
-    }
+    // Re-check on mount in case the bridge wasn't ready at module-eval time
+    setIsNative(Capacitor.isNativePlatform());
+    setPlatform(Capacitor.getPlatform() as 'ios' | 'android' | 'web');
   }, []);
 
-  return { isNative, platform, isIOS: platform === 'ios', isAndroid: platform === 'android' };
+  return {
+    isNative,
+    platform,
+    isIOS: platform === 'ios',
+    isAndroid: platform === 'android',
+  };
 }
