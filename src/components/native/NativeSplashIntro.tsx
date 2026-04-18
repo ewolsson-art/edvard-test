@@ -21,9 +21,15 @@ export function NativeSplashIntro({ onComplete, holdMs = 2000 }: NativeSplashInt
   const [phase, setPhase] = useState<"in" | "out">("in");
 
   useEffect(() => {
-    const fadeOutTimer = setTimeout(() => setPhase("out"), holdMs);
-    // 700ms matches the fade-out duration below
-    const completeTimer = setTimeout(() => onComplete(), holdMs + 700);
+    console.log("[SPLASH_V2] mounted, will hold for", holdMs, "ms");
+    const fadeOutTimer = setTimeout(() => {
+      console.log("[SPLASH_V2] starting fade-out");
+      setPhase("out");
+    }, holdMs);
+    const completeTimer = setTimeout(() => {
+      console.log("[SPLASH_V2] complete");
+      onComplete();
+    }, holdMs + 700);
     return () => {
       clearTimeout(fadeOutTimer);
       clearTimeout(completeTimer);
