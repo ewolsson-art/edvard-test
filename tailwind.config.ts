@@ -112,5 +112,38 @@ export default {
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [
+    require("tailwindcss-animate"),
+    function ({ addUtilities }: any) {
+      addUtilities({
+        // Safe-area padding (respects iPhone notch + home indicator)
+        '.pt-safe': { paddingTop: 'env(safe-area-inset-top)' },
+        '.pb-safe': { paddingBottom: 'env(safe-area-inset-bottom)' },
+        '.pl-safe': { paddingLeft: 'env(safe-area-inset-left)' },
+        '.pr-safe': { paddingRight: 'env(safe-area-inset-right)' },
+        '.px-safe': {
+          paddingLeft: 'env(safe-area-inset-left)',
+          paddingRight: 'env(safe-area-inset-right)',
+        },
+        '.py-safe': {
+          paddingTop: 'env(safe-area-inset-top)',
+          paddingBottom: 'env(safe-area-inset-bottom)',
+        },
+        // Safe-area margin
+        '.mt-safe': { marginTop: 'env(safe-area-inset-top)' },
+        '.mb-safe': { marginBottom: 'env(safe-area-inset-bottom)' },
+        // Combined: padding + safe-area
+        '.pt-safe-4': { paddingTop: 'calc(env(safe-area-inset-top) + 1rem)' },
+        '.pb-safe-4': { paddingBottom: 'calc(env(safe-area-inset-bottom) + 1rem)' },
+        // Min-height with safe-area
+        '.min-h-screen-safe': {
+          minHeight: 'calc(100svh - env(safe-area-inset-top) - env(safe-area-inset-bottom))',
+        },
+        // Bottom-tab-bar height variable for layout offsets
+        '.pb-tabbar': {
+          paddingBottom: 'calc(env(safe-area-inset-bottom) + 4.5rem)',
+        },
+      });
+    },
+  ],
 } satisfies Config;
