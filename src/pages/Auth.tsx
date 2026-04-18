@@ -39,10 +39,6 @@ const Auth = () => {
 
   return (
     <div className="flex flex-col">
-      {/* DEBUG BANNER — remove after verifying native detection */}
-      <div className="fixed top-0 left-0 right-0 z-[9999] bg-red-600 text-white text-xs font-mono p-2 text-center">
-        isNative: {String(isNative)} | UA: {typeof navigator !== "undefined" ? navigator.userAgent.slice(0, 60) : "n/a"}
-      </div>
       {/* === HERO WITH NIGHT SKY === */}
       <div className="min-h-[100svh] flex flex-col relative overflow-hidden">
         <NightCityscape />
