@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
-import { CalendarDays, BarChart3, MessageCircle, Bell, UserCircle, Home, Users, Sparkles } from 'lucide-react';
+import { CalendarDays, BarChart3, MessageCircle, Bell, UserCircle, Home, Users, type LucideIcon } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useUserRole } from '@/hooks/useUserRole';
 import { useNotifications } from '@/hooks/useNotifications';
@@ -10,7 +10,7 @@ import { cn } from '@/lib/utils';
 type TabItem = {
   to: string;
   label: string;
-  icon: React.ComponentType<{ className?: string; strokeWidth?: number }>;
+  icon: LucideIcon;
   badge?: number;
   dot?: boolean;
   exact?: boolean;

@@ -193,13 +193,45 @@
     @apply border-border;
   }
 
-  body {
+  html, body {
     @apply bg-background text-foreground antialiased;
     font-family: 'Inter', sans-serif;
+    /* Prevent rubber-band overscroll on iOS */
+    overscroll-behavior-y: none;
+    /* Disable tap highlight (we use :active instead) */
+    -webkit-tap-highlight-color: transparent;
+    /* Smooth momentum scrolling */
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Re-enable text selection where it matters (UI chrome stays non-selectable via components) */
+  input, textarea, [contenteditable], p, h1, h2, h3, h4, h5, h6, span, li, td, th, label {
+    -webkit-user-select: text;
+    user-select: text;
   }
 
   h1, h2, h3 {
     font-family: 'Instrument Sans', sans-serif;
+  }
+
+  /* Touch devices: stronger active feedback, neutralize hover bg-shifts */
+  @media (hover: none) and (pointer: coarse) {
+    button:active,
+    a:active,
+    [role="button"]:active,
+    [role="tab"]:active {
+      transition: transform 0.05s ease, opacity 0.05s ease;
+    }
+  }
+
+  /* Ensure all interactive elements meet 44pt min touch target on mobile */
+  @media (max-width: 767px) {
+    button:not([data-no-min]),
+    a[role="button"]:not([data-no-min]),
+    [role="tab"],
+    [role="menuitem"] {
+      min-height: 44px;
+    }
   }
 }
 
