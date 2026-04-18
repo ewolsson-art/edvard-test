@@ -5,12 +5,14 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { ThemeProvider } from "next-themes";
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
 import { SkipToContent } from "@/components/SkipToContent";
 import { AuthProvider } from "@/hooks/useAuth";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { NotificationSchedulerProvider } from "@/components/NotificationSchedulerProvider";
+import { BottomTabBar } from "@/components/native/BottomTabBar";
+import { NativeShellInit } from "@/components/native/NativeShellInit";
 
 // Preload critical dashboard chunks on idle
 const preloadDashboard = () => {
@@ -79,16 +81,21 @@ const AppLayout = ({ children }: { children: React.ReactNode }) => (
   <SidebarProvider>
     <SkipToContent />
     <div className="min-h-screen flex w-full">
-      <AppSidebar />
-      <main id="main-content" className="flex-1 relative" role="main" aria-label="Huvudinnehåll">
-        <header className="sticky top-0 z-40 h-12 sm:h-14 flex items-center px-3 sm:px-4 bg-background/90 backdrop-blur-xl border-b border-border/50 md:hidden" role="banner">
-          <SidebarTrigger className="h-10 w-10 hover:bg-muted/50 [&_svg.default-icon]:hidden" aria-label="Öppna navigeringsmeny" />
-        </header>
-        <div className="md:pt-0">
-          {children}
-        </div>
+      {/* Desktop: keep sidebar */}
+      <div className="hidden md:block">
+        <AppSidebar />
+      </div>
+      <main
+        id="main-content"
+        className="flex-1 relative pb-tabbar md:pb-0"
+        role="main"
+        aria-label="Huvudinnehåll"
+      >
+        {children}
       </main>
     </div>
+    {/* Mobile: bottom tab bar */}
+    <BottomTabBar />
   </SidebarProvider>
 );
 
@@ -98,6 +105,7 @@ const App = () => (
     <TooltipProvider>
       <AuthProvider>
         <NotificationSchedulerProvider>
+          <NativeShellInit />
           <Toaster />
           <Sonner />
           <BrowserRouter>
