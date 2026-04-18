@@ -32,10 +32,27 @@
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
     <script>
+      // Detect Capacitor (native iOS/Android shell) — skip & unregister service worker there.
+      // The SW caches old assets and prevents hot-reload / new builds from showing in the native app.
+      const isCapacitor =
+        window.Capacitor?.isNativePlatform?.() ||
+        /(iPhone|iPad|iPod|Android).+Capacitor/i.test(navigator.userAgent) ||
+        location.protocol === 'capacitor:';
+
       if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          navigator.serviceWorker.register('/sw.js').catch(() => {});
-        });
+        if (isCapacitor) {
+          // Aggressively kill any previously installed SW + caches in the native app
+          navigator.serviceWorker.getRegistrations().then((regs) => {
+            regs.forEach((r) => r.unregister());
+          });
+          if (window.caches) {
+            caches.keys().then((keys) => keys.forEach((k) => caches.delete(k)));
+          }
+        } else {
+          window.addEventListener('load', () => {
+            navigator.serviceWorker.register('/sw.js').catch(() => {});
+          });
+        }
       }
     </script>
   </body>
