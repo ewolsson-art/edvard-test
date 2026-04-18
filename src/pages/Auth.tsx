@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { useTranslation } from "react-i18next";
@@ -10,12 +10,18 @@ import { LandingFooter } from "@/components/landing/LandingFooter";
 import { NightCityscape } from "@/components/NightCityscape";
 import { useNativePlatform } from "@/hooks/useNativePlatform";
 import { NativeAuthLanding } from "@/components/native/NativeAuthLanding";
+import { NativeSplashIntro } from "@/components/native/NativeSplashIntro";
+
+// Module-level flag so the splash only shows once per app session
+// (not every time the user navigates back to /auth from signup/login).
+let splashShown = false;
 
 const Auth = () => {
   const { user, loading } = useAuth();
   const navigate = useNavigate();
   const { t } = useTranslation();
   const { isNative } = useNativePlatform();
+  const [showSplash, setShowSplash] = useState(isNative && !splashShown);
 
   useEffect(() => {
     if (!loading && user) {
@@ -34,7 +40,19 @@ const Auth = () => {
   // Native iOS/Android app gets a focused, professional onboarding screen
   // — not the marketing landing page used on the web.
   if (isNative) {
-    return <NativeAuthLanding />;
+    return (
+      <>
+        <NativeAuthLanding />
+        {showSplash && (
+          <NativeSplashIntro
+            onComplete={() => {
+              splashShown = true;
+              setShowSplash(false);
+            }}
+          />
+        )}
+      </>
+    );
   }
 
   return (
