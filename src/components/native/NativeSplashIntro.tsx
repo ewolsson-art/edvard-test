@@ -4,7 +4,7 @@ import { TurtleLogo } from "@/components/TurtleLogo";
 interface NativeSplashIntroProps {
   /** Called when the intro has fully faded out and parent should render the next screen. */
   onComplete: () => void;
-  /** How long the splash stays fully visible before fading out. Defaults to 3800ms. */
+  /** How long the splash stays fully visible before fading out. Defaults to 5200ms. */
   holdMs?: number;
 }
 
