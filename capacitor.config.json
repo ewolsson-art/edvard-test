@@ -2,10 +2,6 @@
   "appId": "app.lovable.edvardtest",
   "appName": "edvard-test",
   "webDir": "dist",
-  "server": {
-    "url": "https://98da7b9e-4e91-4e4a-9b6d-1a1ba6269510.lovableproject.com?forceHideBadge=true",
-    "cleartext": true
-  },
   "plugins": {
     "SplashScreen": {
       "launchShowDuration": 1500,
