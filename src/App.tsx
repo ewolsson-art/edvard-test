@@ -13,6 +13,7 @@ import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { NotificationSchedulerProvider } from "@/components/NotificationSchedulerProvider";
 import { BottomTabBar } from "@/components/native/BottomTabBar";
 import { NativeShellInit } from "@/components/native/NativeShellInit";
+import { NativeAppGate } from "@/components/native/NativeAppGate";
 
 // Preload critical dashboard chunks on idle
 const preloadDashboard = () => {
@@ -108,6 +109,7 @@ const App = () => (
           <NativeShellInit />
           <Toaster />
           <Sonner />
+          <NativeAppGate>
           <BrowserRouter>
             <div className="min-h-screen" role="application" aria-label="Toddy - Moodtracker">
             <Suspense fallback={<div className="min-h-screen bg-background" />}>
@@ -241,6 +243,7 @@ const App = () => (
             </Suspense>
             </div>
           </BrowserRouter>
+          </NativeAppGate>
         </NotificationSchedulerProvider>
       </AuthProvider>
     </TooltipProvider>
