@@ -130,18 +130,51 @@ export function NativeSplashIntro({ onComplete, holdMs = 3800 }: NativeSplashInt
           Toddy
         </h1>
 
-        {/* Slogan — fades up last, sets the tone */}
+        {/* Tagline */}
         <p
-          className="mt-6 text-base font-light tracking-wide text-center max-w-xs animate-fade-in"
+          className="mt-5 text-base font-light tracking-wide text-center max-w-xs animate-fade-in"
           style={{
-            color: "hsl(45 25% 80% / 0.8)",
+            color: "hsl(45 25% 82% / 0.85)",
             animationDelay: "2.8s",
-            animationDuration: "1.2s",
+            animationDuration: "1.1s",
             animationFillMode: "both",
           }}
         >
-          Ett lugnare sätt att förstå ditt mående.
+          Din egna stämningsdagbok
         </p>
+
+        {/* Bullet list — fades in last, staggered */}
+        <ul className="mt-8 space-y-3 text-left">
+          {[
+            { text: "Få bättre koll på ditt mående", delay: "3.4s" },
+            { text: "AI-drivna hjälpmedel", delay: "3.8s" },
+          ].map((item) => (
+            <li
+              key={item.text}
+              className="flex items-center gap-3 animate-fade-in"
+              style={{
+                animationDelay: item.delay,
+                animationDuration: "0.9s",
+                animationFillMode: "both",
+              }}
+            >
+              <span
+                aria-hidden
+                className="inline-block w-1.5 h-1.5 rounded-full"
+                style={{
+                  background: "hsl(45 90% 60%)",
+                  boxShadow: "0 0 12px hsl(45 90% 55% / 0.7)",
+                }}
+              />
+              <span
+                className="text-sm font-light tracking-wide"
+                style={{ color: "hsl(45 20% 88% / 0.9)" }}
+              >
+                {item.text}
+              </span>
+            </li>
+          ))}
+        </ul>
       </div>
 
       {/* Subtle bottom vignette for depth */}
