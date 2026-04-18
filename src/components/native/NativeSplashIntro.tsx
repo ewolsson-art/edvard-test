@@ -20,7 +20,7 @@ interface NativeSplashIntroProps {
  *   2.8s  Slogan fades up underneath
  *   3.8s  Whole layer cross-fades out (900ms)
  */
-export function NativeSplashIntro({ onComplete, holdMs = 3800 }: NativeSplashIntroProps) {
+export function NativeSplashIntro({ onComplete, holdMs = 5200 }: NativeSplashIntroProps) {
   const [phase, setPhase] = useState<"in" | "out">("in");
 
   useEffect(() => {
