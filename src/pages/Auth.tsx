@@ -8,11 +8,14 @@ import { TurtleLogo } from "@/components/TurtleLogo";
 import { HowItWorksSection } from "@/components/landing/HowItWorksSection";
 import { LandingFooter } from "@/components/landing/LandingFooter";
 import { NightCityscape } from "@/components/NightCityscape";
+import { useNativePlatform } from "@/hooks/useNativePlatform";
+import { NativeAuthLanding } from "@/components/native/NativeAuthLanding";
 
 const Auth = () => {
   const { user, loading } = useAuth();
   const navigate = useNavigate();
   const { t } = useTranslation();
+  const { isNative } = useNativePlatform();
 
   useEffect(() => {
     if (!loading && user) {
@@ -26,6 +29,12 @@ const Auth = () => {
         <Loader2 className="w-8 h-8 animate-spin text-primary" />
       </div>
     );
+  }
+
+  // Native iOS/Android app gets a focused, professional onboarding screen
+  // — not the marketing landing page used on the web.
+  if (isNative) {
+    return <NativeAuthLanding />;
   }
 
   return (
