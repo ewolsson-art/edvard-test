@@ -79,10 +79,14 @@ export function useMoodData() {
         medication_side_effects: data.medicationSideEffects || null,
         tags: data.tags || null,
       };
+      console.log('[saveCheckin] upserting:', upsertData);
       const { error } = await supabase
         .from('mood_entries')
         .upsert(upsertData, { onConflict: 'user_id,date' });
-      if (error) throw error;
+      if (error) {
+        console.error('[saveCheckin] supabase error:', error);
+        throw error;
+      }
       return { date, data };
     },
     onSuccess: ({ date, data }) => {
@@ -109,8 +113,10 @@ export function useMoodData() {
       });
       toast({ title: "Incheckning sparad!" });
     },
-    onError: () => {
-      toast({ title: "Kunde inte spara", description: "Försök igen.", variant: "destructive" });
+    onError: (err: unknown) => {
+      const msg = err instanceof Error ? err.message : 'Försök igen.';
+      console.error('[saveCheckin] mutation error:', err);
+      toast({ title: "Kunde inte spara", description: msg, variant: "destructive" });
     },
   });
 
