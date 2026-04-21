@@ -108,13 +108,13 @@ export function VerticalMoodSlider({ options, value, onSelect }: VerticalMoodSli
               right: '8px',
               background: `linear-gradient(
                 to right,
-                hsl(var(--mood-severe-elevated)),
-                hsl(var(--mood-elevated)),
-                hsl(var(--mood-somewhat-elevated)),
-                hsl(var(--mood-stable)),
-                hsl(var(--mood-somewhat-depressed)),
+                hsl(var(--mood-severe-depressed)),
                 hsl(var(--mood-depressed)),
-                hsl(var(--mood-severe-depressed))
+                hsl(var(--mood-somewhat-depressed)),
+                hsl(var(--mood-stable)),
+                hsl(var(--mood-somewhat-elevated)),
+                hsl(var(--mood-elevated)),
+                hsl(var(--mood-severe-elevated))
               )`,
               opacity: 0.7,
             }}
