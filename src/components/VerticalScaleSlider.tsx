@@ -28,32 +28,32 @@ export function VerticalScaleSlider<T extends string>({ options, value, onSelect
   const trackRef = useRef<HTMLDivElement>(null);
   const stepCount = options.length;
 
-  const getIndexFromY = useCallback((clientY: number) => {
+  const getIndexFromX = useCallback((clientX: number) => {
     const track = trackRef.current;
     if (!track) return 0;
     const rect = track.getBoundingClientRect();
-    const relativeY = clientY - rect.top;
-    const fraction = Math.max(0, Math.min(1, relativeY / rect.height));
+    const relativeX = clientX - rect.left;
+    const fraction = Math.max(0, Math.min(1, relativeX / rect.width));
     return Math.round(fraction * (stepCount - 1));
   }, [stepCount]);
 
   const handlePointerDown = useCallback((e: React.PointerEvent) => {
     e.preventDefault();
     setIsDragging(true);
-    const idx = getIndexFromY(e.clientY);
+    const idx = getIndexFromX(e.clientX);
     setActiveIndex(idx);
     onSelect(options[idx].value);
     (e.target as HTMLElement).setPointerCapture?.(e.pointerId);
-  }, [getIndexFromY, onSelect, options]);
+  }, [getIndexFromX, onSelect, options]);
 
   const handlePointerMove = useCallback((e: React.PointerEvent) => {
     if (!isDragging) return;
-    const idx = getIndexFromY(e.clientY);
+    const idx = getIndexFromX(e.clientX);
     if (idx !== activeIndex) {
       setActiveIndex(idx);
       onSelect(options[idx].value);
     }
-  }, [isDragging, getIndexFromY, activeIndex, onSelect, options]);
+  }, [isDragging, getIndexFromX, activeIndex, onSelect, options]);
 
   const handlePointerUp = useCallback(() => {
     setIsDragging(false);
@@ -69,16 +69,14 @@ export function VerticalScaleSlider<T extends string>({ options, value, onSelect
     return `hsl(${o.color}) ${pct}%`;
   }).join(', ');
 
-  const trackHeight = Math.max(280, stepCount * 56);
-
   return (
-    <div className="flex flex-col items-center w-full select-none mx-auto" style={{ maxWidth: '320px' }}>
-      {/* Slider track — centered as the hero element */}
-      <div className="relative flex justify-center w-full" style={{ height: `${trackHeight}px` }}>
+    <div className="flex flex-col items-center w-full select-none mx-auto" style={{ maxWidth: '420px' }}>
+      {/* Horizontal slider track — hero element */}
+      <div className="relative flex items-center w-full px-4" style={{ height: '64px' }}>
         <div
           ref={trackRef}
-          className="relative h-full cursor-pointer touch-none"
-          style={{ width: '56px' }}
+          className="relative w-full cursor-pointer touch-none"
+          style={{ height: '56px' }}
           onPointerDown={handlePointerDown}
           onPointerMove={handlePointerMove}
           onPointerUp={handlePointerUp}
@@ -86,11 +84,11 @@ export function VerticalScaleSlider<T extends string>({ options, value, onSelect
         >
           {/* Gradient bar */}
           <div
-            className="absolute left-1/2 -translate-x-1/2 w-3 rounded-full overflow-hidden"
+            className="absolute top-1/2 -translate-y-1/2 h-3 rounded-full overflow-hidden"
             style={{
-              top: '8px',
-              bottom: '8px',
-              background: `linear-gradient(to bottom, ${gradientStops})`,
+              left: '8px',
+              right: '8px',
+              background: `linear-gradient(to right, ${gradientStops})`,
               opacity: 0.7,
             }}
           />
@@ -101,8 +99,8 @@ export function VerticalScaleSlider<T extends string>({ options, value, onSelect
             return (
               <div
                 key={opt.value}
-                className="absolute left-1/2 -translate-x-1/2 -translate-y-1/2 transition-all duration-200"
-                style={{ top: `calc(8px + (100% - 16px) * ${i / (stepCount - 1)})` }}
+                className="absolute top-1/2 -translate-x-1/2 -translate-y-1/2 transition-all duration-200"
+                style={{ left: `calc(8px + (100% - 16px) * ${i / (stepCount - 1)})` }}
               >
                 <div
                   className={cn(
@@ -121,10 +119,10 @@ export function VerticalScaleSlider<T extends string>({ options, value, onSelect
           {/* Thumb */}
           {thumbPercent !== null && activeOpt && (
             <div
-              className="absolute left-1/2 -translate-x-1/2 -translate-y-1/2 z-10"
+              className="absolute top-1/2 -translate-x-1/2 -translate-y-1/2 z-10"
               style={{
-                top: `calc(8px + (100% - 16px) * ${thumbPercent / 100})`,
-                transition: isDragging ? 'none' : 'top 200ms',
+                left: `calc(8px + (100% - 16px) * ${thumbPercent / 100})`,
+                transition: isDragging ? 'none' : 'left 200ms',
               }}
             >
               <div
