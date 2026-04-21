@@ -69,43 +69,16 @@ export function VerticalScaleSlider<T extends string>({ options, value, onSelect
     return `hsl(${o.color}) ${pct}%`;
   }).join(', ');
 
-  return (
-    <div
-      className="flex items-stretch justify-center gap-6 w-full select-none mx-auto"
-      style={{ minHeight: `${Math.max(260, stepCount * 56)}px`, maxWidth: '420px' }}
-    >
-      {/* Active label – only visible when a value is selected */}
-      <div className="flex-1 min-w-0 flex flex-col justify-center">
-        {activeOpt && ActiveIcon ? (
-          <div
-            key={activeOpt.value}
-            className="flex items-center gap-3 rounded-2xl px-4 py-3 bg-white/5 backdrop-blur-sm animate-fade-in"
-          >
-            <ActiveIcon
-              className="w-7 h-7 flex-shrink-0"
-              style={{ color: `hsl(${activeOpt.color})` }}
-            />
-            <div className="min-w-0">
-              <span className="block text-base font-semibold leading-tight text-foreground">
-                {activeOpt.label}
-              </span>
-              <span className="block text-xs leading-tight text-muted-foreground mt-0.5">
-                {activeOpt.sublabel}
-              </span>
-            </div>
-          </div>
-        ) : (
-          <div className="text-center text-sm text-muted-foreground/70 px-3">
-            Tryck eller dra på skalan
-          </div>
-        )}
-      </div>
+  const trackHeight = Math.max(280, stepCount * 56);
 
-      {/* Track */}
-      <div className="relative flex flex-col items-center flex-shrink-0" style={{ width: '48px' }}>
+  return (
+    <div className="flex flex-col items-center w-full select-none mx-auto" style={{ maxWidth: '320px' }}>
+      {/* Slider track — centered as the hero element */}
+      <div className="relative flex justify-center w-full" style={{ height: `${trackHeight}px` }}>
         <div
           ref={trackRef}
-          className="relative w-full h-full cursor-pointer touch-none"
+          className="relative h-full cursor-pointer touch-none"
+          style={{ width: '56px' }}
           onPointerDown={handlePointerDown}
           onPointerMove={handlePointerMove}
           onPointerUp={handlePointerUp}
@@ -155,7 +128,7 @@ export function VerticalScaleSlider<T extends string>({ options, value, onSelect
               }}
             >
               <div
-                className="w-8 h-8 rounded-full border-4 border-background shadow-lg"
+                className="w-9 h-9 rounded-full border-4 border-background shadow-lg"
                 style={{
                   backgroundColor: `hsl(${activeOpt.color})`,
                   boxShadow: `0 4px 20px hsl(${activeOpt.color} / 0.4), 0 0 0 4px hsl(${activeOpt.color} / 0.1)`,
@@ -164,6 +137,33 @@ export function VerticalScaleSlider<T extends string>({ options, value, onSelect
             </div>
           )}
         </div>
+      </div>
+
+      {/* Active label area — only renders once a value is selected */}
+      <div className="mt-8 min-h-[72px] w-full flex items-center justify-center">
+        {activeOpt && ActiveIcon ? (
+          <div
+            key={activeOpt.value}
+            className="flex items-center gap-3 rounded-2xl px-5 py-3 bg-white/5 backdrop-blur-sm animate-fade-in"
+          >
+            <ActiveIcon
+              className="w-7 h-7 flex-shrink-0"
+              style={{ color: `hsl(${activeOpt.color})` }}
+            />
+            <div className="min-w-0 text-left">
+              <span className="block text-base font-semibold leading-tight text-foreground">
+                {activeOpt.label}
+              </span>
+              <span className="block text-xs leading-tight text-muted-foreground mt-0.5">
+                {activeOpt.sublabel}
+              </span>
+            </div>
+          </div>
+        ) : (
+          <p className="text-sm text-muted-foreground/60">
+            Tryck eller dra på skalan
+          </p>
+        )}
       </div>
     </div>
   );
