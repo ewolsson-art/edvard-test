@@ -36,12 +36,16 @@ const moodColorVars: Record<MoodType, string> = {
 };
 
 export function VerticalMoodSlider({ options, value, onSelect }: VerticalMoodSliderProps) {
-  const [activeIndex, setActiveIndex] = useState<number | null>(() => {
+  // Find the "stable" (normal) mood index to use as default
+  const defaultIndex = options.findIndex(o => o.mood === 'stable');
+  const stableIndex = defaultIndex >= 0 ? defaultIndex : 3; // fallback to middle if stable not found
+
+  const [activeIndex, setActiveIndex] = useState<number>(() => {
     if (value) {
       const idx = options.findIndex(o => o.mood === value);
-      return idx >= 0 ? idx : null;
+      return idx >= 0 ? idx : stableIndex;
     }
-    return null;
+    return stableIndex;
   });
   const [isDragging, setIsDragging] = useState(false);
   const trackRef = useRef<HTMLDivElement>(null);
