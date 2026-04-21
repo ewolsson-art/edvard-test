@@ -136,7 +136,7 @@ export function TodayCheckin({
   const sleepSliderOptions = useSleepSliderOptions();
   
   const moodButtons = useMemo(() => {
-    const moods: MoodType[] = ['severe_elevated', 'elevated', 'somewhat_elevated', 'stable', 'somewhat_depressed', 'depressed', 'severe_depressed'];
+    const moods: MoodType[] = ['severe_depressed', 'depressed', 'somewhat_depressed', 'stable', 'somewhat_elevated', 'elevated', 'severe_elevated'];
     return moods.map(mood => ({
       mood,
       icon: moodIcons[mood],
