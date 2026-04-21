@@ -202,7 +202,7 @@ export function TodayCheckin({
   const commentRef = useRef<HTMLDivElement>(null);
   
   // Form data
-  const [checkinData, setCheckinData] = useState<CheckinData>({});
+  const [checkinData, setCheckinData] = useState<CheckinData>({ mood: 'stable', sleepQuality: 'okay' });
   const [customAnswersState, setCustomAnswersState] = useState<Record<string, string>>(initialCustomAnswers);
 
   // Auto-mark all medications as taken when entering medication step for the first time
@@ -246,7 +246,7 @@ export function TodayCheckin({
         tags: todayEntry.tags,
       });
     } else {
-      setCheckinData({});
+      setCheckinData({ mood: 'stable', sleepQuality: 'okay' });
     }
   }, [todayEntry, displayDate.toDateString()]);
 
