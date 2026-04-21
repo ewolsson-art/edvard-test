@@ -1,8 +1,7 @@
-import { useState, useRef, useCallback, useEffect } from 'react';
+import { useState, useRef, useCallback } from 'react';
 import { MoodType } from '@/types/mood';
 import { cn } from '@/lib/utils';
 import { Flame, Zap, Sun, Cloud, CloudRain } from 'lucide-react';
-import { useTranslation } from 'react-i18next';
 
 interface MoodOption {
   mood: MoodType;
@@ -62,27 +61,22 @@ export function VerticalMoodSlider({ options, value, onSelect }: VerticalMoodSli
     setIsDragging(true);
     const idx = getIndexFromY(e.clientY);
     setActiveIndex(idx);
+    onSelect(options[idx].mood);
     (e.target as HTMLElement).setPointerCapture?.(e.pointerId);
-  }, [getIndexFromY]);
+  }, [getIndexFromY, onSelect, options]);
 
   const handlePointerMove = useCallback((e: React.PointerEvent) => {
     if (!isDragging) return;
     const idx = getIndexFromY(e.clientY);
-    setActiveIndex(idx);
-  }, [isDragging, getIndexFromY]);
+    if (idx !== activeIndex) {
+      setActiveIndex(idx);
+      onSelect(options[idx].mood);
+    }
+  }, [isDragging, getIndexFromY, activeIndex, onSelect, options]);
 
   const handlePointerUp = useCallback(() => {
-    if (isDragging && activeIndex !== null) {
-      onSelect(options[activeIndex].mood);
-    }
     setIsDragging(false);
-  }, [isDragging, activeIndex, onSelect, options]);
-
-  const handleStepClick = (index: number) => {
-  const { t } = useTranslation();
-    setActiveIndex(index);
-    onSelect(options[index].mood);
-  };
+  }, []);
 
   // Thumb position as percentage
   const thumbPercent = activeIndex !== null ? (activeIndex / (stepCount - 1)) * 100 : null;
@@ -90,58 +84,43 @@ export function VerticalMoodSlider({ options, value, onSelect }: VerticalMoodSli
   // Active mood color
   const activeMood = activeIndex !== null ? options[activeIndex] : null;
   const activeColorVar = activeMood ? moodColorVars[activeMood.mood] : null;
+  const ActiveIcon = activeMood ? moodIcons[activeMood.mood] : null;
 
   return (
-    <div className="flex items-stretch gap-5 max-w-md w-full select-none" style={{ minHeight: '340px' }}>
-      {/* Labels left side */}
-      <div className="flex flex-col justify-between py-1 flex-1 min-w-0">
-        {options.map((opt, i) => {
-          const isActive = activeIndex === i;
-          const Icon = moodIcons[opt.mood];
-          return (
-            <button
-              key={opt.mood}
-              onClick={() => handleStepClick(i)}
-              className={cn(
-                "flex items-center gap-3 text-left rounded-xl px-3 py-2 transition-all duration-200 -mx-1",
-                isActive
-                  ? "bg-white/10 scale-[1.03]"
-                  : "opacity-50 hover:opacity-75 hover:bg-white/5"
-              )}
-            >
-              <Icon
-                className={cn(
-                  "w-5 h-5 flex-shrink-0 transition-all duration-200",
-                  isActive && "scale-110"
-                )}
-                style={isActive && activeColorVar ? { color: `hsl(${activeColorVar})` } : { color: 'hsl(var(--muted-foreground))' }}
-              />
-              <div className="min-w-0">
-                <span
-                  className={cn(
-                    "block text-sm font-semibold leading-tight transition-colors duration-200",
-                    isActive ? "text-foreground" : "text-muted-foreground"
-                  )}
-                >
-                  {opt.label}
-                </span>
-                <span
-                  className={cn(
-                    "block text-[11px] leading-tight transition-colors duration-200 mt-0.5",
-                    isActive ? "text-muted-foreground" : "text-muted-foreground/50"
-                  )}
-                >
-                  {opt.sublabel}
-                </span>
-              </div>
-            </button>
-          );
-        })}
+    <div
+      className="flex items-stretch justify-center gap-6 w-full select-none mx-auto"
+      style={{ minHeight: '340px', maxWidth: '420px' }}
+    >
+      {/* Active label area – only visible when a mood is selected */}
+      <div className="flex-1 min-w-0 flex flex-col justify-center">
+        {activeMood && ActiveIcon ? (
+          <div
+            key={activeMood.mood}
+            className="flex items-center gap-3 rounded-2xl px-4 py-3 bg-white/5 backdrop-blur-sm animate-fade-in"
+          >
+            <ActiveIcon
+              className="w-7 h-7 flex-shrink-0"
+              style={activeColorVar ? { color: `hsl(${activeColorVar})` } : undefined}
+            />
+            <div className="min-w-0">
+              <span className="block text-base font-semibold leading-tight text-foreground">
+                {activeMood.label}
+              </span>
+              <span className="block text-xs leading-tight text-muted-foreground mt-0.5">
+                {activeMood.sublabel}
+              </span>
+            </div>
+          </div>
+        ) : (
+          <div className="text-center text-sm text-muted-foreground/70 px-3">
+            Tryck eller dra på skalan
+          </div>
+        )}
       </div>
 
       {/* Slider track */}
       <div
-        className="relative flex flex-col items-center"
+        className="relative flex flex-col items-center flex-shrink-0"
         style={{ width: '48px' }}
       >
         <div
@@ -174,7 +153,6 @@ export function VerticalMoodSlider({ options, value, onSelect }: VerticalMoodSli
 
           {/* Step dots */}
           {options.map((opt, i) => {
-            const percent = (i / (stepCount - 1)) * 100;
             const isActive = activeIndex === i;
             return (
               <div
@@ -199,7 +177,7 @@ export function VerticalMoodSlider({ options, value, onSelect }: VerticalMoodSli
           {/* Draggable thumb */}
           {thumbPercent !== null && (
             <div
-              className="absolute left-1/2 -translate-x-1/2 -translate-y-1/2 transition-all z-10"
+              className="absolute left-1/2 -translate-x-1/2 -translate-y-1/2 z-10"
               style={{
                 top: `calc(8px + (100% - 16px) * ${thumbPercent / 100})`,
                 transitionProperty: isDragging ? 'none' : 'top',
