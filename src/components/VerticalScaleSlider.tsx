@@ -1,7 +1,6 @@
 import { useState, useRef, useCallback } from 'react';
 import { cn } from '@/lib/utils';
 import { LucideIcon } from 'lucide-react';
-import { useTranslation } from 'react-i18next';
 
 export interface ScaleOption<T extends string = string> {
   value: T;
@@ -43,30 +42,26 @@ export function VerticalScaleSlider<T extends string>({ options, value, onSelect
     setIsDragging(true);
     const idx = getIndexFromY(e.clientY);
     setActiveIndex(idx);
+    onSelect(options[idx].value);
     (e.target as HTMLElement).setPointerCapture?.(e.pointerId);
-  }, [getIndexFromY]);
+  }, [getIndexFromY, onSelect, options]);
 
   const handlePointerMove = useCallback((e: React.PointerEvent) => {
     if (!isDragging) return;
     const idx = getIndexFromY(e.clientY);
-    setActiveIndex(idx);
-  }, [isDragging, getIndexFromY]);
+    if (idx !== activeIndex) {
+      setActiveIndex(idx);
+      onSelect(options[idx].value);
+    }
+  }, [isDragging, getIndexFromY, activeIndex, onSelect, options]);
 
   const handlePointerUp = useCallback(() => {
-    if (isDragging && activeIndex !== null) {
-      onSelect(options[activeIndex].value);
-    }
     setIsDragging(false);
-  }, [isDragging, activeIndex, onSelect, options]);
-
-  const handleStepClick = (index: number) => {
-  const { t } = useTranslation();
-    setActiveIndex(index);
-    onSelect(options[index].value);
-  };
+  }, []);
 
   const thumbPercent = activeIndex !== null ? (activeIndex / (stepCount - 1)) * 100 : null;
   const activeOpt = activeIndex !== null ? options[activeIndex] : null;
+  const ActiveIcon = activeOpt ? activeOpt.icon : null;
 
   // Build gradient from option colors
   const gradientStops = options.map((o, i) => {
@@ -75,48 +70,39 @@ export function VerticalScaleSlider<T extends string>({ options, value, onSelect
   }).join(', ');
 
   return (
-    <div className="flex items-stretch gap-5 max-w-md w-full select-none" style={{ minHeight: `${Math.max(260, stepCount * 56)}px` }}>
-      {/* Labels */}
-      <div className="flex flex-col justify-between py-1 flex-1 min-w-0">
-        {options.map((opt, i) => {
-          const isActive = activeIndex === i;
-          const Icon = opt.icon;
-          return (
-            <button
-              key={opt.value}
-              onClick={() => handleStepClick(i)}
-              className={cn(
-                "flex items-center gap-3 text-left rounded-xl px-3 py-2 transition-all duration-200 -mx-1",
-                isActive
-                  ? "bg-white/10 scale-[1.03]"
-                  : "opacity-50 hover:opacity-75 hover:bg-white/5"
-              )}
-            >
-              <Icon
-                className={cn("w-5 h-5 flex-shrink-0 transition-all duration-200", isActive && "scale-110")}
-                style={isActive ? { color: `hsl(${opt.color})` } : { color: 'hsl(var(--muted-foreground))' }}
-              />
-              <div className="min-w-0">
-                <span className={cn(
-                  "block text-sm font-semibold leading-tight transition-colors duration-200",
-                  isActive ? "text-foreground" : "text-muted-foreground"
-                )}>
-                  {opt.label}
-                </span>
-                <span className={cn(
-                  "block text-[11px] leading-tight transition-colors duration-200 mt-0.5",
-                  isActive ? "text-muted-foreground" : "text-muted-foreground/50"
-                )}>
-                  {opt.sublabel}
-                </span>
-              </div>
-            </button>
-          );
-        })}
+    <div
+      className="flex items-stretch justify-center gap-6 w-full select-none mx-auto"
+      style={{ minHeight: `${Math.max(260, stepCount * 56)}px`, maxWidth: '420px' }}
+    >
+      {/* Active label – only visible when a value is selected */}
+      <div className="flex-1 min-w-0 flex flex-col justify-center">
+        {activeOpt && ActiveIcon ? (
+          <div
+            key={activeOpt.value}
+            className="flex items-center gap-3 rounded-2xl px-4 py-3 bg-white/5 backdrop-blur-sm animate-fade-in"
+          >
+            <ActiveIcon
+              className="w-7 h-7 flex-shrink-0"
+              style={{ color: `hsl(${activeOpt.color})` }}
+            />
+            <div className="min-w-0">
+              <span className="block text-base font-semibold leading-tight text-foreground">
+                {activeOpt.label}
+              </span>
+              <span className="block text-xs leading-tight text-muted-foreground mt-0.5">
+                {activeOpt.sublabel}
+              </span>
+            </div>
+          </div>
+        ) : (
+          <div className="text-center text-sm text-muted-foreground/70 px-3">
+            Tryck eller dra på skalan
+          </div>
+        )}
       </div>
 
       {/* Track */}
-      <div className="relative flex flex-col items-center" style={{ width: '48px' }}>
+      <div className="relative flex flex-col items-center flex-shrink-0" style={{ width: '48px' }}>
         <div
           ref={trackRef}
           className="relative w-full h-full cursor-pointer touch-none"
