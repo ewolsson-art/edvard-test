@@ -107,6 +107,7 @@ export function useMedications() {
       stopped_at: input.stoppedAt ?? null,
       stop_reason: input.stopReason ?? null,
       is_trial: input.isTrial ?? false,
+      indication: input.indication ?? null,
     };
 
     const { data, error } = await supabase
