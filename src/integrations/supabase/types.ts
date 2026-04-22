@@ -370,6 +370,7 @@ export type Database = {
           effectiveness: string | null
           frequency: string
           id: string
+          is_trial: boolean
           name: string
           notes: string | null
           side_effects: string[] | null
@@ -387,6 +388,7 @@ export type Database = {
           effectiveness?: string | null
           frequency?: string
           id?: string
+          is_trial?: boolean
           name: string
           notes?: string | null
           side_effects?: string[] | null
@@ -404,6 +406,7 @@ export type Database = {
           effectiveness?: string | null
           frequency?: string
           id?: string
+          is_trial?: boolean
           name?: string
           notes?: string | null
           side_effects?: string[] | null

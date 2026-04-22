@@ -42,6 +42,7 @@ export interface AddMedicationInput {
   notes?: string | null;
   stoppedAt?: string | null;
   stopReason?: string | null;
+  isTrial?: boolean;
 }
 
 export interface UpdateMedicationInput extends AddMedicationInput {}
@@ -104,6 +105,7 @@ export function useMedications() {
       notes: input.notes ?? null,
       stopped_at: input.stoppedAt ?? null,
       stop_reason: input.stopReason ?? null,
+      is_trial: input.isTrial ?? false,
     };
 
     const { data, error } = await supabase
@@ -146,6 +148,7 @@ export function useMedications() {
     if (input.notes !== undefined) updates.notes = input.notes;
     if (input.stoppedAt !== undefined) updates.stopped_at = input.stoppedAt;
     if (input.stopReason !== undefined) updates.stop_reason = input.stopReason;
+    if (input.isTrial !== undefined) updates.is_trial = input.isTrial;
 
     const { error } = await supabase
       .from('medications')

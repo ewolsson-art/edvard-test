@@ -4,7 +4,7 @@ import { sv, enUS } from 'date-fns/locale';
 import {
   Pill, Plus, Pencil, Trash2, Check, X, Calendar, CheckCircle2, Clock,
   AlertTriangle, ThumbsUp, ThumbsDown, Minus, HelpCircle, History, Info, ChevronRight,
-  Sparkles, FileText,
+  Sparkles, FileText, FlaskConical,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -58,6 +58,7 @@ interface MedFormState {
   notes: string;
   stoppedAt: string;
   stopReason: string;
+  isTrial: boolean;
 }
 
 const emptyForm = (): MedFormState => ({
@@ -72,6 +73,7 @@ const emptyForm = (): MedFormState => ({
   notes: '',
   stoppedAt: '',
   stopReason: '',
+  isTrial: false,
 });
 
 const Medications = () => {
@@ -119,6 +121,7 @@ const Medications = () => {
       notes: med.notes ?? '',
       stoppedAt: med.stopped_at ?? '',
       stopReason: med.stop_reason ?? '',
+      isTrial: med.is_trial ?? false,
     });
     setDetailMed(null);
     setIsFormOpen(true);
@@ -151,8 +154,9 @@ const Medications = () => {
       sideEffects: form.sideEffects,
       effectiveness: form.effectiveness === '' ? null : form.effectiveness,
       notes: form.notes.trim() || null,
-      stoppedAt: form.status === 'previous' ? (form.stoppedAt || today) : null,
-      stopReason: form.status === 'previous' ? (form.stopReason.trim() || null) : null,
+      stoppedAt: form.status === 'previous' ? (form.stoppedAt || today) : (form.stoppedAt || null),
+      stopReason: form.status === 'previous' ? (form.stopReason.trim() || null) : (form.stopReason.trim() || null),
+      isTrial: form.isTrial,
     };
     if (editingMed) {
       await updateMedication(editingMed.id, payload);
@@ -410,17 +414,53 @@ const Medications = () => {
                     />
                   </div>
                   <div>
-                    <Label className="text-xs text-muted-foreground">Hur ofta</Label>
-                    <Select value={form.frequency} onValueChange={(v) => setForm(f => ({ ...f, frequency: v as MedicationFrequency }))}>
-                      <SelectTrigger><SelectValue /></SelectTrigger>
-                      <SelectContent>
-                        {Object.entries(FREQUENCY_LABELS).map(([value, label]) => (
-                          <SelectItem key={value} value={value}>{label}</SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                    <Label className="text-xs text-muted-foreground">
+                      {form.status === 'previous' ? 'Slutade' : 'Slutdatum (valfritt)'}
+                    </Label>
+                    <Input
+                      type="date"
+                      value={form.stoppedAt}
+                      onChange={e => setForm(f => ({ ...f, stoppedAt: e.target.value }))}
+                    />
                   </div>
                 </div>
+                <div>
+                  <Label className="text-xs text-muted-foreground">Hur ofta</Label>
+                  <Select value={form.frequency} onValueChange={(v) => setForm(f => ({ ...f, frequency: v as MedicationFrequency }))}>
+                    <SelectTrigger><SelectValue /></SelectTrigger>
+                    <SelectContent>
+                      {Object.entries(FREQUENCY_LABELS).map(([value, label]) => (
+                        <SelectItem key={value} value={value}>{label}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {/* Trial / regular medication toggle */}
+                <button
+                  type="button"
+                  onClick={() => setForm(f => ({ ...f, isTrial: !f.isTrial }))}
+                  className={`w-full flex items-start gap-3 p-3 rounded-lg border-2 text-left transition-all ${
+                    form.isTrial
+                      ? 'border-amber-500/40 bg-amber-500/10'
+                      : 'border-border bg-muted/30 hover:border-amber-500/30'
+                  }`}
+                >
+                  <div className={`mt-0.5 flex-shrink-0 w-5 h-5 rounded border-2 flex items-center justify-center ${
+                    form.isTrial ? 'border-amber-500 bg-amber-500' : 'border-muted-foreground/40'
+                  }`}>
+                    {form.isTrial && <Check className="h-3 w-3 text-white" />}
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex items-center gap-1.5">
+                      <FlaskConical className="h-4 w-4 text-amber-600 dark:text-amber-400" />
+                      <span className="text-sm font-medium">Provmedicin (nyinsatt / under utvärdering)</span>
+                    </div>
+                    <p className="text-xs text-muted-foreground mt-0.5">
+                      Markera om detta är en medicin du provar – så hålls den isär från dina grundmediciner när du rapporterar biverkningar.
+                    </p>
+                  </div>
+                </button>
               </div>
             </div>
 
@@ -499,19 +539,14 @@ const Medications = () => {
               </div>
             </div>
 
-            {/* Step 5: Stopped info if previous */}
+            {/* Step 5: Reason for stopping (only when 'previous') */}
             {form.status === 'previous' && (
               <div className="space-y-2 p-3 rounded-lg border border-border bg-muted/30">
                 <Label className="flex items-center gap-1.5 text-sm">
                   <span className="flex items-center justify-center w-5 h-5 rounded-full bg-primary/10 text-primary text-xs font-bold">5</span>
-                  När och varför slutade du?
+                  Varför slutade du?
                 </Label>
-                <Input
-                  type="date"
-                  value={form.stoppedAt}
-                  onChange={e => setForm(f => ({ ...f, stoppedAt: e.target.value }))}
-                  placeholder="Slutdatum"
-                />
+                <p className="text-xs text-muted-foreground">Slutdatum fyller du i ovan under Grunduppgifter.</p>
                 <Textarea
                   placeholder="Orsak (t.ex. för biverkningar, byttes ut, ingen effekt)"
                   value={form.stopReason}
@@ -561,6 +596,12 @@ const Medications = () => {
               </DialogHeader>
 
               <div className="space-y-4 py-2">
+                {detailMed.is_trial && (
+                  <div className="flex items-center gap-2 px-3 py-2 rounded-lg border border-amber-500/40 bg-amber-500/10 text-amber-700 dark:text-amber-400 text-sm">
+                    <FlaskConical className="h-4 w-4" />
+                    <span className="font-medium">Provmedicin – under utvärdering</span>
+                  </div>
+                )}
                 <div className="grid grid-cols-2 gap-3 text-sm">
                   <InfoRow label="Hur ofta" value={FREQUENCY_LABELS[detailMed.frequency]} />
                   <InfoRow label="Startade" value={formatDate(detailMed.started_at)} />
@@ -714,6 +755,12 @@ function MedCard({
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap">
             <p className="font-semibold truncate">{med.name}</p>
+            {med.is_trial && (
+              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full border border-amber-500/40 bg-amber-500/10 text-amber-700 dark:text-amber-400 text-[10px] font-semibold uppercase tracking-wider">
+                <FlaskConical className="h-3 w-3" />
+                Prov
+              </span>
+            )}
             {effectiveness && (
               <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full border text-xs ${EFFECTIVENESS_COLORS[effectiveness]}`}>
                 {EFFECTIVENESS_ICONS[effectiveness]}
