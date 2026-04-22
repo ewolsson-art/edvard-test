@@ -12,7 +12,6 @@ import { Label } from '@/components/ui/label';
 import { Loader2, User, Mail, Save, Stethoscope, HeartPulse, Building2, Hospital, Users, ChevronRight, Pill, UserPlus, Heart, ClipboardList, Sparkles, Zap, Sun, Cloud, FileText } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { DiagnosesSection } from '@/components/DiagnosesSection';
-import { MedicationsSection } from '@/components/MedicationsSection';
 import { DoctorConnectionsSection } from '@/components/DoctorConnectionsSection';
 import { RelativeConnectionsSection } from '@/components/RelativeConnectionsSection';
 import { DelegatesSection } from '@/components/DelegatesSection';
