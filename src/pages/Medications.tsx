@@ -609,7 +609,7 @@ const Medications = () => {
             <Button variant="outline" onClick={() => { setIsFormOpen(false); setEditingMed(null); }}>
               Avbryt
             </Button>
-            <Button onClick={handleSave} disabled={!form.name.trim() || !form.dosage.trim() || !form.startedAt}>
+            <Button onClick={handleSave} disabled={!form.name.trim() || !form.dosage.trim()}>
               {editingMed ? 'Spara ändringar' : 'Lägg till'}
             </Button>
           </DialogFooter>
