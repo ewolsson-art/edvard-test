@@ -23,6 +23,7 @@ import {
   EFFECTIVENESS_LABELS,
   EFFECTIVENESS_COLORS,
   COMMON_SIDE_EFFECTS,
+  COMMON_INDICATIONS,
   Medication,
 } from '@/types/medication';
 import {
