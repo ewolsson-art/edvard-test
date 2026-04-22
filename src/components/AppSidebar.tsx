@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { CalendarDays, BarChart3, LogOut, UserCircle, Users, Home, FileText, Settings, MessageCircle, Bell, Sparkles, Stethoscope, Loader2 } from "lucide-react";
+import { CalendarDays, BarChart3, LogOut, UserCircle, Users, Home, FileText, Settings, MessageCircle, Bell, Sparkles, Stethoscope, Loader2, Bot } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { NavLink } from "@/components/NavLink";
@@ -34,6 +34,12 @@ const patientNavGroups = [
       { titleKey: "sidebar.diagnoses", url: "/diagnoser", icon: Stethoscope },
       { titleKey: "sidebar.forum", url: "/forum", icon: MessageCircle },
       { titleKey: "sidebar.notifications", url: "/notiser", icon: Bell },
+    ],
+  },
+  {
+    labelKey: "sidebar.assistant",
+    items: [
+      { titleKey: "sidebar.askToddy", url: "/fraga", icon: Bot },
     ],
   },
   {
