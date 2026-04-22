@@ -264,7 +264,7 @@ export default function AskToddy() {
         </div>
       </div>
 
-      <div className="shrink-0 border-t border-border/30 bg-background/80 backdrop-blur px-5 md:px-8 py-4 pb-[max(env(safe-area-inset-bottom),1rem)]">
+      <div className="shrink-0 border-t border-border/30 bg-background/85 backdrop-blur-xl px-4 md:px-8 py-3 md:py-4">
         <div className="max-w-3xl mx-auto flex items-end gap-2">
           <Textarea
             ref={textareaRef}
