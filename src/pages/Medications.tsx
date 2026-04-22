@@ -1,67 +1,167 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { format } from 'date-fns';
 import { sv, enUS } from 'date-fns/locale';
-import { Pill, Plus, Pencil, Trash2, Check, X, Calendar, CheckCircle2, Circle, Clock } from 'lucide-react';
+import {
+  Pill, Plus, Pencil, Trash2, Check, X, Calendar, CheckCircle2, Clock,
+  AlertTriangle, ThumbsUp, ThumbsDown, Minus, HelpCircle, History, Info, ChevronRight,
+  Sparkles, FileText,
+} from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
-import { Switch } from '@/components/ui/switch';
-import { Checkbox } from '@/components/ui/checkbox';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
-import { useMedications } from '@/hooks/useMedications';
-import { MedicationFrequency, FREQUENCY_LABELS } from '@/types/medication';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
+import { useMedications, AddMedicationInput } from '@/hooks/useMedications';
+import {
+  MedicationFrequency,
+  FREQUENCY_LABELS,
+  MedicationStatus,
+  STATUS_LABELS,
+  MedicationEffectiveness,
+  EFFECTIVENESS_LABELS,
+  EFFECTIVENESS_COLORS,
+  COMMON_SIDE_EFFECTS,
+  Medication,
+} from '@/types/medication';
+import {
+  Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
+} from '@/components/ui/select';
+import {
+  Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle,
+} from '@/components/ui/dialog';
+import {
+  AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
+  AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useTranslation } from 'react-i18next';
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+
+const EFFECTIVENESS_ICONS: Record<MedicationEffectiveness, JSX.Element> = {
+  works_well: <ThumbsUp className="h-4 w-4" />,
+  works_partially: <Check className="h-4 w-4" />,
+  no_effect: <Minus className="h-4 w-4" />,
+  made_worse: <ThumbsDown className="h-4 w-4" />,
+  too_early: <HelpCircle className="h-4 w-4" />,
+};
+
+interface MedFormState {
+  name: string;
+  dosage: string;
+  startedAt: string;
+  frequency: MedicationFrequency;
+  status: MedicationStatus;
+  sideEffects: string[];
+  customSideEffect: string;
+  effectiveness: MedicationEffectiveness | '';
+  notes: string;
+  stoppedAt: string;
+  stopReason: string;
+}
+
+const emptyForm = (): MedFormState => ({
+  name: '',
+  dosage: '',
+  startedAt: format(new Date(), 'yyyy-MM-dd'),
+  frequency: 'daily',
+  status: 'current',
+  sideEffects: [],
+  customSideEffect: '',
+  effectiveness: '',
+  notes: '',
+  stoppedAt: '',
+  stopReason: '',
+});
 
 const Medications = () => {
-  const { t, i18n } = useTranslation();
+  const { i18n } = useTranslation();
   const dateFnsLocale = i18n.language === 'sv' ? sv : enUS;
-  const [isAddOpen, setIsAddOpen] = useState(false);
-  const [editingId, setEditingId] = useState<string | null>(null);
-  const [newName, setNewName] = useState('');
-  const [newDosage, setNewDosage] = useState('');
-  const [newStartDate, setNewStartDate] = useState(format(new Date(), 'yyyy-MM-dd'));
-  const [newFrequency, setNewFrequency] = useState<MedicationFrequency>('daily');
-  const [editName, setEditName] = useState('');
-  const [editDosage, setEditDosage] = useState('');
-  const [editStartDate, setEditStartDate] = useState('');
-  const [editFrequency, setEditFrequency] = useState<MedicationFrequency>('daily');
 
   const {
-    medications, activeMedications, asNeededMedications, inactiveMedications,
-    isLoaded, addMedication, updateMedication, toggleMedicationActive,
+    medications, currentMedications, asNeededMedications, previousMedications, pausedMedications,
+    isLoaded, addMedication, updateMedication, setMedicationStatus,
     deleteMedication, logMedication, isMedicationTakenOnDate,
   } = useMedications();
+
+  const [tab, setTab] = useState<'current' | 'previous'>('current');
+  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [editingMed, setEditingMed] = useState<Medication | null>(null);
+  const [form, setForm] = useState<MedFormState>(emptyForm());
+  const [detailMed, setDetailMed] = useState<Medication | null>(null);
 
   const today = format(new Date(), 'yyyy-MM-dd');
   const todayLabel = format(new Date(), 'EEEE d MMMM', { locale: dateFnsLocale });
 
-  const takenToday = activeMedications.filter(med => isMedicationTakenOnDate(med.id, today)).length;
-  const totalToday = activeMedications.length;
+  const dailyMeds = currentMedications;
+  const takenToday = dailyMeds.filter(m => isMedicationTakenOnDate(m.id, today)).length;
+  const totalToday = dailyMeds.length;
   const progressPercent = totalToday > 0 ? (takenToday / totalToday) * 100 : 0;
   const allTaken = totalToday > 0 && takenToday === totalToday;
 
-  const handleAdd = async () => {
-    if (newName.trim() && newDosage.trim() && newStartDate) {
-      await addMedication(newName.trim(), newDosage.trim(), newStartDate, newFrequency);
-      setNewName(''); setNewDosage(''); setNewStartDate(format(new Date(), 'yyyy-MM-dd')); setNewFrequency('daily'); setIsAddOpen(false);
+  const openAdd = () => {
+    setEditingMed(null);
+    setForm(emptyForm());
+    setIsFormOpen(true);
+  };
+
+  const openEdit = (med: Medication) => {
+    setEditingMed(med);
+    setForm({
+      name: med.name,
+      dosage: med.dosage,
+      startedAt: med.started_at,
+      frequency: med.frequency,
+      status: med.status ?? (med.active ? 'current' : 'previous'),
+      sideEffects: med.side_effects ?? [],
+      customSideEffect: '',
+      effectiveness: med.effectiveness ?? '',
+      notes: med.notes ?? '',
+      stoppedAt: med.stopped_at ?? '',
+      stopReason: med.stop_reason ?? '',
+    });
+    setDetailMed(null);
+    setIsFormOpen(true);
+  };
+
+  const toggleSideEffect = (effect: string) => {
+    setForm(f => ({
+      ...f,
+      sideEffects: f.sideEffects.includes(effect)
+        ? f.sideEffects.filter(s => s !== effect)
+        : [...f.sideEffects, effect],
+    }));
+  };
+
+  const addCustomSideEffect = () => {
+    const v = form.customSideEffect.trim();
+    if (v && !form.sideEffects.includes(v)) {
+      setForm(f => ({ ...f, sideEffects: [...f.sideEffects, v], customSideEffect: '' }));
     }
   };
 
-  const handleEdit = (id: string, name: string, dosage: string, startedAt: string, frequency: MedicationFrequency) => {
-    setEditingId(id); setEditName(name); setEditDosage(dosage); setEditStartDate(startedAt); setEditFrequency(frequency);
-  };
-
-  const handleSaveEdit = async () => {
-    if (editingId && editName.trim() && editDosage.trim() && editStartDate) {
-      await updateMedication(editingId, editName.trim(), editDosage.trim(), editStartDate, editFrequency);
-      setEditingId(null);
+  const handleSave = async () => {
+    if (!form.name.trim() || !form.dosage.trim() || !form.startedAt) return;
+    const payload: AddMedicationInput = {
+      name: form.name.trim(),
+      dosage: form.dosage.trim(),
+      startedAt: form.startedAt,
+      frequency: form.frequency,
+      status: form.status,
+      sideEffects: form.sideEffects,
+      effectiveness: form.effectiveness === '' ? null : form.effectiveness,
+      notes: form.notes.trim() || null,
+      stoppedAt: form.status === 'previous' ? (form.stoppedAt || today) : null,
+      stopReason: form.status === 'previous' ? (form.stopReason.trim() || null) : null,
+    };
+    if (editingMed) {
+      await updateMedication(editingMed.id, payload);
+    } else {
+      await addMedication(payload);
     }
+    setIsFormOpen(false);
+    setEditingMed(null);
+    setForm(emptyForm());
   };
 
   const handleToggleTaken = async (medicationId: string) => {
@@ -69,107 +169,250 @@ const Medications = () => {
     await logMedication(medicationId, today, !isTaken);
   };
 
-  const formatStartDate = (dateStr: string) => {
+  const formatDate = (dateStr: string | null) => {
+    if (!dateStr) return '';
     try { return format(new Date(dateStr), 'd MMM yyyy', { locale: dateFnsLocale }); } catch { return dateStr; }
   };
 
   if (!isLoaded) {
-    return <div className="min-h-screen flex items-center justify-center"><div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" /></div>;
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
   }
+
+  const allCurrent = [...currentMedications, ...asNeededMedications, ...pausedMedications];
+  const hasAny = medications.length > 0;
 
   return (
     <div className="p-5 md:p-8 pb-24">
       <div className="max-w-2xl mx-auto space-y-6">
-        <header>
-          <h1 className="font-display text-3xl font-bold mb-2">{t('medicationsPage.title')}</h1>
-          <p className="text-sm text-muted-foreground mb-8">{t('medicationsPage.subtitle')}</p>
+        <header className="flex items-start justify-between gap-4">
+          <div className="flex-1">
+            <h1 className="font-display text-3xl font-bold mb-2">Mediciner</h1>
+            <p className="text-sm text-muted-foreground">
+              Håll koll på vad du tar nu, vad du har testat tidigare och vilka effekter & biverkningar du upplever.
+            </p>
+          </div>
+          <Button onClick={openAdd} className="gap-2 rounded-full shrink-0">
+            <Plus className="h-4 w-4" />
+            <span className="hidden sm:inline">Lägg till</span>
+          </Button>
         </header>
 
-        <section>
-          <Card className="glass-card overflow-hidden">
-            <CardHeader className="pb-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className={`p-3 rounded-xl ${allTaken ? 'bg-green-500/10' : 'bg-primary/10'}`}>
-                    {allTaken ? <CheckCircle2 className="h-6 w-6 text-green-500" /> : <Clock className="h-6 w-6 text-primary" />}
-                  </div>
-                  <div>
-                    <CardTitle className="text-xl">{t('medicationsPage.todaysMeds')}</CardTitle>
-                    <CardDescription className="capitalize">{todayLabel}</CardDescription>
-                  </div>
+        {/* Onboarding info card when empty */}
+        {!hasAny && (
+          <Card className="glass-card border-primary/20">
+            <CardContent className="p-6 space-y-4">
+              <div className="flex items-center gap-3">
+                <div className="p-3 rounded-xl bg-primary/10">
+                  <Sparkles className="h-6 w-6 text-primary" />
                 </div>
-                {totalToday > 0 && (
-                  <Badge variant={allTaken ? 'default' : 'secondary'} className="text-sm px-3 py-1">
-                    {takenToday} {t('medicationsPage.of')} {totalToday} {t('medicationsPage.taken').toLowerCase()}
-                  </Badge>
-                )}
+                <div>
+                  <h3 className="font-semibold">Bygg din medicin-historik</h3>
+                  <p className="text-sm text-muted-foreground">Det här hjälper dig och din vårdgivare</p>
+                </div>
               </div>
-              {totalToday > 0 && <div className="mt-4"><Progress value={progressPercent} className="h-2" /></div>}
-            </CardHeader>
-            <CardContent>
-              {activeMedications.length === 0 ? (
-                <div className="text-center py-8">
-                  <Pill className="h-12 w-12 text-muted-foreground/50 mx-auto mb-3" />
-                  <p className="text-muted-foreground">{t('medicationsPage.noActiveMeds')}</p>
-                  <p className="text-sm text-muted-foreground mt-1">{t('medicationsPage.addBelow')}</p>
-                </div>
-              ) : (
-                <div className="space-y-2">
-                  {activeMedications.map(med => {
-                    const isTaken = isMedicationTakenOnDate(med.id, today);
-                    return (
-                      <button key={med.id} onClick={() => handleToggleTaken(med.id)} className={`w-full flex items-center gap-4 p-4 rounded-xl border-2 transition-all text-left ${isTaken ? 'border-green-500/30 bg-green-500/5' : 'border-border bg-muted/30 hover:border-primary/30 hover:bg-primary/5'}`}>
-                        <div className={`flex-shrink-0 w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors ${isTaken ? 'border-green-500 bg-green-500' : 'border-muted-foreground/30'}`}>
-                          {isTaken && <Check className="h-4 w-4 text-white" />}
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <p className={`font-medium ${isTaken ? 'text-muted-foreground' : ''}`}>{med.name}</p>
-                          <p className="text-sm text-muted-foreground">{med.dosage}</p>
-                        </div>
-                        {isTaken && <span className="text-xs text-green-600 font-medium">{t('medicationsPage.taken')} ✓</span>}
-                      </button>
-                    );
-                  })}
-                </div>
-              )}
+              <ul className="space-y-2 text-sm text-muted-foreground">
+                <li className="flex items-start gap-2">
+                  <Check className="h-4 w-4 text-primary mt-0.5 shrink-0" />
+                  <span>Lägg till medicinerna du tar <strong className="text-foreground">just nu</strong> så du kan checka av dem dagligen.</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <Check className="h-4 w-4 text-primary mt-0.5 shrink-0" />
+                  <span>Registrera även mediciner du <strong className="text-foreground">har testat tidigare</strong> – med biverkningar och om de fungerade.</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <Check className="h-4 w-4 text-primary mt-0.5 shrink-0" />
+                  <span>Allt sparas privat och kan delas med läkare eller anhörig.</span>
+                </li>
+              </ul>
+              <Button onClick={openAdd} className="w-full gap-2 rounded-full">
+                <Plus className="h-4 w-4" />
+                Lägg till första medicinen
+              </Button>
             </CardContent>
           </Card>
-        </section>
+        )}
 
-        <section>
-          <div className="flex items-center justify-between mb-4">
-            <div>
-              <h2 className="font-display text-xl font-semibold">{t('medicationsPage.allMeds')}</h2>
-              <p className="text-sm text-muted-foreground">
-                {medications.length} {t('medicationsPage.medsTotal')} ({activeMedications.length} {t('medicationsPage.active')})
-              </p>
+        {/* Today's check-in */}
+        {dailyMeds.length > 0 && (
+          <Card className="glass-card overflow-hidden">
+            <CardContent className="p-5 space-y-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className={`p-2.5 rounded-xl ${allTaken ? 'bg-green-500/10' : 'bg-primary/10'}`}>
+                    {allTaken ? <CheckCircle2 className="h-5 w-5 text-green-500" /> : <Clock className="h-5 w-5 text-primary" />}
+                  </div>
+                  <div>
+                    <p className="font-semibold">Idag</p>
+                    <p className="text-xs text-muted-foreground capitalize">{todayLabel}</p>
+                  </div>
+                </div>
+                <Badge variant={allTaken ? 'default' : 'secondary'}>
+                  {takenToday}/{totalToday} tagna
+                </Badge>
+              </div>
+              <Progress value={progressPercent} className="h-1.5" />
+              <div className="space-y-1.5">
+                {dailyMeds.map(med => {
+                  const isTaken = isMedicationTakenOnDate(med.id, today);
+                  return (
+                    <button
+                      key={med.id}
+                      onClick={() => handleToggleTaken(med.id)}
+                      className={`w-full flex items-center gap-3 p-3 rounded-lg border transition-all text-left ${
+                        isTaken ? 'border-green-500/30 bg-green-500/5' : 'border-border bg-muted/30 hover:border-primary/30'
+                      }`}
+                    >
+                      <div className={`flex-shrink-0 w-5 h-5 rounded-full border-2 flex items-center justify-center ${
+                        isTaken ? 'border-green-500 bg-green-500' : 'border-muted-foreground/30'
+                      }`}>
+                        {isTaken && <Check className="h-3 w-3 text-white" />}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className={`text-sm font-medium ${isTaken ? 'text-muted-foreground line-through' : ''}`}>{med.name}</p>
+                        <p className="text-xs text-muted-foreground">{med.dosage}</p>
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Tabs current vs previous */}
+        {hasAny && (
+          <Tabs value={tab} onValueChange={(v) => setTab(v as 'current' | 'previous')}>
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="current" className="gap-2">
+                <Pill className="h-4 w-4" />
+                Aktuella ({allCurrent.length})
+              </TabsTrigger>
+              <TabsTrigger value="previous" className="gap-2">
+                <History className="h-4 w-4" />
+                Har testat ({previousMedications.length})
+              </TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="current" className="space-y-3 mt-4">
+              {allCurrent.length === 0 ? (
+                <EmptyState
+                  icon={<Pill className="h-10 w-10 text-muted-foreground/50" />}
+                  text="Inga aktuella mediciner"
+                  hint="Lägg till en medicin du tar just nu."
+                />
+              ) : (
+                <>
+                  {currentMedications.map(med => (
+                    <MedCard key={med.id} med={med} onClick={() => setDetailMed(med)} />
+                  ))}
+                  {asNeededMedications.length > 0 && (
+                    <div className="pt-2">
+                      <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-2 px-1">
+                        Vid behov
+                      </p>
+                      {asNeededMedications.map(med => (
+                        <MedCard key={med.id} med={med} onClick={() => setDetailMed(med)} accent="amber" />
+                      ))}
+                    </div>
+                  )}
+                  {pausedMedications.length > 0 && (
+                    <div className="pt-2">
+                      <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-2 px-1">
+                        Pausade
+                      </p>
+                      {pausedMedications.map(med => (
+                        <MedCard key={med.id} med={med} onClick={() => setDetailMed(med)} accent="muted" />
+                      ))}
+                    </div>
+                  )}
+                </>
+              )}
+            </TabsContent>
+
+            <TabsContent value="previous" className="space-y-3 mt-4">
+              {previousMedications.length === 0 ? (
+                <EmptyState
+                  icon={<History className="h-10 w-10 text-muted-foreground/50" />}
+                  text="Inga tidigare mediciner registrerade"
+                  hint="Lägg till mediciner du har testat förut – det hjälper läkaren att se vad som fungerat eller inte."
+                />
+              ) : (
+                previousMedications.map(med => (
+                  <MedCard key={med.id} med={med} onClick={() => setDetailMed(med)} accent="muted" />
+                ))
+              )}
+            </TabsContent>
+          </Tabs>
+        )}
+      </div>
+
+      {/* Add / Edit form dialog */}
+      <Dialog open={isFormOpen} onOpenChange={(open) => { if (!open) { setIsFormOpen(false); setEditingMed(null); } }}>
+        <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>{editingMed ? 'Redigera medicin' : 'Lägg till medicin'}</DialogTitle>
+            <DialogDescription>
+              Fyll i så mycket eller lite du vill. Du kan alltid uppdatera senare.
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-5 py-2">
+            {/* Step 1: Status */}
+            <div className="space-y-2">
+              <Label className="flex items-center gap-1.5 text-sm">
+                <span className="flex items-center justify-center w-5 h-5 rounded-full bg-primary/10 text-primary text-xs font-bold">1</span>
+                Tar du den nu eller har du testat den?
+              </Label>
+              <div className="grid grid-cols-3 gap-2">
+                {(['current', 'previous', 'paused'] as MedicationStatus[]).map(s => (
+                  <button
+                    key={s}
+                    type="button"
+                    onClick={() => setForm(f => ({ ...f, status: s }))}
+                    className={`p-3 rounded-lg border-2 text-sm font-medium transition-all ${
+                      form.status === s ? 'border-primary bg-primary/10 text-primary' : 'border-border bg-muted/30 hover:border-primary/30'
+                    }`}
+                  >
+                    {STATUS_LABELS[s]}
+                  </button>
+                ))}
+              </div>
             </div>
-            <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
-              <DialogTrigger asChild>
-                <Button className="gap-2"><Plus className="h-4 w-4" />{t('medicationsPage.addMed')}</Button>
-              </DialogTrigger>
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>{t('medicationsPage.addMedTitle')}</DialogTitle>
-                  <DialogDescription>{t('medicationsPage.addMedDesc')}</DialogDescription>
-                </DialogHeader>
-                <div className="space-y-4 py-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="name">{t('medicationsPage.name')}</Label>
-                    <Input id="name" placeholder={t('medicationsPage.namePlaceholder')} value={newName} onChange={e => setNewName(e.target.value)} />
+
+            {/* Step 2: Basic info */}
+            <div className="space-y-3">
+              <Label className="flex items-center gap-1.5 text-sm">
+                <span className="flex items-center justify-center w-5 h-5 rounded-full bg-primary/10 text-primary text-xs font-bold">2</span>
+                Grunduppgifter
+              </Label>
+              <div className="space-y-2">
+                <Input
+                  placeholder="Namn (t.ex. Lamotrigin)"
+                  value={form.name}
+                  onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
+                />
+                <Input
+                  placeholder="Dosering (t.ex. 100mg morgon & kväll)"
+                  value={form.dosage}
+                  onChange={e => setForm(f => ({ ...f, dosage: e.target.value }))}
+                />
+                <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <Label className="text-xs text-muted-foreground">Startade</Label>
+                    <Input
+                      type="date"
+                      value={form.startedAt}
+                      onChange={e => setForm(f => ({ ...f, startedAt: e.target.value }))}
+                    />
                   </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="dosage">{t('medicationsPage.dosage')}</Label>
-                    <Input id="dosage" placeholder={t('medicationsPage.dosagePlaceholder')} value={newDosage} onChange={e => setNewDosage(e.target.value)} />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="startDate">{t('medicationsPage.startDate')}</Label>
-                    <Input id="startDate" type="date" value={newStartDate} onChange={e => setNewStartDate(e.target.value)} />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="frequency">{t('medicationsPage.frequency')}</Label>
-                    <Select value={newFrequency} onValueChange={(v) => setNewFrequency(v as MedicationFrequency)}>
-                      <SelectTrigger><SelectValue placeholder={t('medicationsPage.selectFrequency')} /></SelectTrigger>
+                  <div>
+                    <Label className="text-xs text-muted-foreground">Hur ofta</Label>
+                    <Select value={form.frequency} onValueChange={(v) => setForm(f => ({ ...f, frequency: v as MedicationFrequency }))}>
+                      <SelectTrigger><SelectValue /></SelectTrigger>
                       <SelectContent>
                         {Object.entries(FREQUENCY_LABELS).map(([value, label]) => (
                           <SelectItem key={value} value={value}>{label}</SelectItem>
@@ -178,175 +421,331 @@ const Medications = () => {
                     </Select>
                   </div>
                 </div>
-                <DialogFooter>
-                  <Button variant="outline" onClick={() => setIsAddOpen(false)}>{t('medicationsPage.cancel')}</Button>
-                  <Button onClick={handleAdd} disabled={!newName.trim() || !newDosage.trim() || !newStartDate}>{t('medicationsPage.add')}</Button>
-                </DialogFooter>
-              </DialogContent>
-            </Dialog>
+              </div>
+            </div>
+
+            {/* Step 3: Effectiveness */}
+            <div className="space-y-2">
+              <Label className="flex items-center gap-1.5 text-sm">
+                <span className="flex items-center justify-center w-5 h-5 rounded-full bg-primary/10 text-primary text-xs font-bold">3</span>
+                Hur fungerar/fungerade den för dig?
+              </Label>
+              <div className="grid grid-cols-2 gap-2">
+                {(Object.keys(EFFECTIVENESS_LABELS) as MedicationEffectiveness[]).map(eff => (
+                  <button
+                    key={eff}
+                    type="button"
+                    onClick={() => setForm(f => ({ ...f, effectiveness: f.effectiveness === eff ? '' : eff }))}
+                    className={`flex items-center gap-2 p-2.5 rounded-lg border text-sm transition-all text-left ${
+                      form.effectiveness === eff
+                        ? EFFECTIVENESS_COLORS[eff] + ' border-2'
+                        : 'border-border bg-muted/30 hover:bg-muted/60'
+                    }`}
+                  >
+                    {EFFECTIVENESS_ICONS[eff]}
+                    <span className="text-xs">{EFFECTIVENESS_LABELS[eff]}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Step 4: Side effects */}
+            <div className="space-y-2">
+              <Label className="flex items-center gap-1.5 text-sm">
+                <span className="flex items-center justify-center w-5 h-5 rounded-full bg-primary/10 text-primary text-xs font-bold">4</span>
+                Biverkningar du upplever/upplevde
+              </Label>
+              <p className="text-xs text-muted-foreground">Tryck på de som stämmer, eller skriv egna.</p>
+              <div className="flex flex-wrap gap-1.5">
+                {COMMON_SIDE_EFFECTS.map(effect => {
+                  const selected = form.sideEffects.includes(effect);
+                  return (
+                    <button
+                      key={effect}
+                      type="button"
+                      onClick={() => toggleSideEffect(effect)}
+                      className={`px-3 py-1.5 rounded-full text-xs border transition-all ${
+                        selected
+                          ? 'bg-amber-500/15 border-amber-500/40 text-amber-600 dark:text-amber-400'
+                          : 'border-border bg-muted/30 hover:border-amber-500/30'
+                      }`}
+                    >
+                      {selected && <Check className="h-3 w-3 inline mr-1" />}
+                      {effect}
+                    </button>
+                  );
+                })}
+              </div>
+              {form.sideEffects.filter(s => !COMMON_SIDE_EFFECTS.includes(s)).length > 0 && (
+                <div className="flex flex-wrap gap-1.5 pt-1">
+                  {form.sideEffects.filter(s => !COMMON_SIDE_EFFECTS.includes(s)).map(s => (
+                    <Badge key={s} variant="secondary" className="gap-1">
+                      {s}
+                      <button onClick={() => toggleSideEffect(s)}><X className="h-3 w-3" /></button>
+                    </Badge>
+                  ))}
+                </div>
+              )}
+              <div className="flex gap-2 pt-1">
+                <Input
+                  placeholder="Lägg till egen biverkning"
+                  value={form.customSideEffect}
+                  onChange={e => setForm(f => ({ ...f, customSideEffect: e.target.value }))}
+                  onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); addCustomSideEffect(); }}}
+                />
+                <Button type="button" variant="outline" size="sm" onClick={addCustomSideEffect}>
+                  <Plus className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
+
+            {/* Step 5: Stopped info if previous */}
+            {form.status === 'previous' && (
+              <div className="space-y-2 p-3 rounded-lg border border-border bg-muted/30">
+                <Label className="flex items-center gap-1.5 text-sm">
+                  <span className="flex items-center justify-center w-5 h-5 rounded-full bg-primary/10 text-primary text-xs font-bold">5</span>
+                  När och varför slutade du?
+                </Label>
+                <Input
+                  type="date"
+                  value={form.stoppedAt}
+                  onChange={e => setForm(f => ({ ...f, stoppedAt: e.target.value }))}
+                  placeholder="Slutdatum"
+                />
+                <Textarea
+                  placeholder="Orsak (t.ex. för biverkningar, byttes ut, ingen effekt)"
+                  value={form.stopReason}
+                  onChange={e => setForm(f => ({ ...f, stopReason: e.target.value }))}
+                  className="min-h-[60px]"
+                />
+              </div>
+            )}
+
+            {/* Notes */}
+            <div className="space-y-2">
+              <Label className="flex items-center gap-1.5 text-sm">
+                <FileText className="h-4 w-4 text-muted-foreground" />
+                Egna anteckningar (valfritt)
+              </Label>
+              <Textarea
+                placeholder="Allt du vill komma ihåg om denna medicin"
+                value={form.notes}
+                onChange={e => setForm(f => ({ ...f, notes: e.target.value }))}
+                className="min-h-[70px]"
+              />
+            </div>
           </div>
 
-          {medications.length === 0 ? (
-            <Card className="glass-card">
-              <CardContent className="py-12 text-center">
-                <Pill className="h-12 w-12 text-muted-foreground/50 mx-auto mb-3" />
-                <p className="text-muted-foreground">{t('medicationsPage.noMeds')}</p>
-                <p className="text-sm text-muted-foreground mt-1">{t('medicationsPage.clickAdd')}</p>
-              </CardContent>
-            </Card>
-          ) : (
-            <div className="space-y-4">
-              {activeMedications.length > 0 && (
-                <Card className="glass-card">
-                  <CardHeader className="pb-3">
-                    <div className="flex items-center gap-2">
-                      <div className="w-2 h-2 rounded-full bg-green-500" />
-                      <CardTitle className="text-base">{t('medicationsPage.activeMeds')}</CardTitle>
-                      <Badge variant="secondary" className="ml-auto">{activeMedications.length}</Badge>
+          <DialogFooter className="gap-2">
+            <Button variant="outline" onClick={() => { setIsFormOpen(false); setEditingMed(null); }}>
+              Avbryt
+            </Button>
+            <Button onClick={handleSave} disabled={!form.name.trim() || !form.dosage.trim() || !form.startedAt}>
+              {editingMed ? 'Spara ändringar' : 'Lägg till'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Detail dialog */}
+      <Dialog open={!!detailMed} onOpenChange={(open) => { if (!open) setDetailMed(null); }}>
+        <DialogContent className="max-w-md">
+          {detailMed && (
+            <>
+              <DialogHeader>
+                <DialogTitle className="flex items-center gap-2">
+                  <Pill className="h-5 w-5 text-primary" />
+                  {detailMed.name}
+                </DialogTitle>
+                <DialogDescription>{detailMed.dosage}</DialogDescription>
+              </DialogHeader>
+
+              <div className="space-y-4 py-2">
+                <div className="grid grid-cols-2 gap-3 text-sm">
+                  <InfoRow label="Hur ofta" value={FREQUENCY_LABELS[detailMed.frequency]} />
+                  <InfoRow label="Startade" value={formatDate(detailMed.started_at)} />
+                  <InfoRow label="Status" value={STATUS_LABELS[(detailMed.status ?? (detailMed.active ? 'current' : 'previous')) as MedicationStatus]} />
+                  {detailMed.stopped_at && <InfoRow label="Slutade" value={formatDate(detailMed.stopped_at)} />}
+                </div>
+
+                {detailMed.effectiveness && (
+                  <div className="space-y-1.5">
+                    <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Effekt</p>
+                    <div className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full border text-sm ${EFFECTIVENESS_COLORS[detailMed.effectiveness]}`}>
+                      {EFFECTIVENESS_ICONS[detailMed.effectiveness]}
+                      <span>{EFFECTIVENESS_LABELS[detailMed.effectiveness]}</span>
                     </div>
-                  </CardHeader>
-                  <CardContent className="pt-0">
-                    <div className="divide-y divide-border">
-                      {activeMedications.map(med => (
-                        <MedicationRow key={med.id} med={med} editingId={editingId} editName={editName} editDosage={editDosage} editStartDate={editStartDate} editFrequency={editFrequency} setEditName={setEditName} setEditDosage={setEditDosage} setEditStartDate={setEditStartDate} setEditFrequency={setEditFrequency} handleEdit={handleEdit} handleSaveEdit={handleSaveEdit} setEditingId={setEditingId} toggleMedicationActive={toggleMedicationActive} deleteMedication={deleteMedication} formatStartDate={formatStartDate} t={t} />
+                  </div>
+                )}
+
+                {detailMed.side_effects && detailMed.side_effects.length > 0 && (
+                  <div className="space-y-1.5">
+                    <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider flex items-center gap-1">
+                      <AlertTriangle className="h-3 w-3" /> Biverkningar
+                    </p>
+                    <div className="flex flex-wrap gap-1.5">
+                      {detailMed.side_effects.map(s => (
+                        <Badge key={s} variant="secondary" className="bg-amber-500/15 text-amber-700 dark:text-amber-400 border-amber-500/30">
+                          {s}
+                        </Badge>
                       ))}
                     </div>
-                  </CardContent>
-                </Card>
-              )}
+                  </div>
+                )}
 
-              {asNeededMedications.length > 0 && (
-                <Card className="glass-card">
-                  <CardHeader className="pb-3">
-                    <div className="flex items-center gap-2">
-                      <div className="w-2 h-2 rounded-full bg-amber-500" />
-                      <CardTitle className="text-base">{t('medicationsPage.asNeeded')}</CardTitle>
-                      <Badge variant="secondary" className="ml-auto">{asNeededMedications.length}</Badge>
-                    </div>
-                    <CardDescription className="text-sm">{t('medicationsPage.asNeededDesc')}</CardDescription>
-                  </CardHeader>
-                  <CardContent className="pt-0">
-                    <div className="space-y-2 mb-4">
-                      {asNeededMedications.map(med => {
-                        const isTaken = isMedicationTakenOnDate(med.id, today);
-                        return (
-                          <button key={med.id} onClick={() => handleToggleTaken(med.id)} className={`w-full flex items-center gap-4 p-4 rounded-xl border-2 transition-all text-left ${isTaken ? 'border-amber-500/30 bg-amber-500/5' : 'border-border bg-muted/30 hover:border-amber-500/30 hover:bg-amber-500/5'}`}>
-                            <div className={`flex-shrink-0 w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors ${isTaken ? 'border-amber-500 bg-amber-500' : 'border-muted-foreground/30'}`}>
-                              {isTaken && <Check className="h-4 w-4 text-white" />}
-                            </div>
-                            <div className="flex-1 min-w-0">
-                              <p className={`font-medium ${isTaken ? 'text-muted-foreground' : ''}`}>{med.name}</p>
-                              <p className="text-sm text-muted-foreground">{med.dosage}</p>
-                            </div>
-                            {isTaken && <span className="text-xs text-amber-600 font-medium">{t('medicationsPage.takenToday')} ✓</span>}
-                          </button>
-                        );
-                      })}
-                    </div>
-                    <div className="divide-y divide-border border-t pt-4">
-                      {asNeededMedications.map(med => (
-                        <MedicationRow key={med.id} med={med} editingId={editingId} editName={editName} editDosage={editDosage} editStartDate={editStartDate} editFrequency={editFrequency} setEditName={setEditName} setEditDosage={setEditDosage} setEditStartDate={setEditStartDate} setEditFrequency={setEditFrequency} handleEdit={handleEdit} handleSaveEdit={handleSaveEdit} setEditingId={setEditingId} toggleMedicationActive={toggleMedicationActive} deleteMedication={deleteMedication} formatStartDate={formatStartDate} t={t} />
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
-              )}
+                {detailMed.stop_reason && (
+                  <div className="space-y-1.5">
+                    <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Orsak till att den slutades</p>
+                    <p className="text-sm">{detailMed.stop_reason}</p>
+                  </div>
+                )}
 
-              {inactiveMedications.length > 0 && (
-                <Accordion type="single" collapsible>
-                  <AccordionItem value="inactive" className="border-0">
-                    <Card className="glass-card">
-                      <AccordionTrigger className="px-6 py-4 hover:no-underline">
-                        <div className="flex items-center gap-2">
-                          <div className="w-2 h-2 rounded-full bg-muted-foreground/50" />
-                          <span className="text-base font-semibold">{t('medicationsPage.inactiveMeds')}</span>
-                          <Badge variant="outline" className="ml-2">{inactiveMedications.length}</Badge>
-                        </div>
-                      </AccordionTrigger>
-                      <AccordionContent className="px-6 pb-4">
-                        <div className="divide-y divide-border">
-                          {inactiveMedications.map(med => (
-                            <MedicationRow key={med.id} med={med} editingId={editingId} editName={editName} editDosage={editDosage} editStartDate={editStartDate} editFrequency={editFrequency} setEditName={setEditName} setEditDosage={setEditDosage} setEditStartDate={setEditStartDate} setEditFrequency={setEditFrequency} handleEdit={handleEdit} handleSaveEdit={handleSaveEdit} setEditingId={setEditingId} toggleMedicationActive={toggleMedicationActive} deleteMedication={deleteMedication} formatStartDate={formatStartDate} t={t} />
-                          ))}
-                        </div>
-                      </AccordionContent>
-                    </Card>
-                  </AccordionItem>
-                </Accordion>
-              )}
-            </div>
+                {detailMed.notes && (
+                  <div className="space-y-1.5">
+                    <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Anteckningar</p>
+                    <p className="text-sm whitespace-pre-wrap">{detailMed.notes}</p>
+                  </div>
+                )}
+
+                {/* Quick status switch */}
+                <div className="space-y-1.5 pt-2 border-t border-border">
+                  <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Ändra status</p>
+                  <div className="grid grid-cols-3 gap-1.5">
+                    {(['current', 'paused', 'previous'] as MedicationStatus[]).map(s => {
+                      const currentStatus = detailMed.status ?? (detailMed.active ? 'current' : 'previous');
+                      const isCurrent = currentStatus === s;
+                      return (
+                        <button
+                          key={s}
+                          onClick={() => { setMedicationStatus(detailMed.id, s); setDetailMed({ ...detailMed, status: s, active: s === 'current' } as Medication); }}
+                          disabled={isCurrent}
+                          className={`p-2 rounded-lg border text-xs font-medium transition-all ${
+                            isCurrent ? 'border-primary bg-primary/10 text-primary' : 'border-border bg-muted/30 hover:border-primary/30'
+                          }`}
+                        >
+                          {STATUS_LABELS[s]}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+
+              <DialogFooter className="gap-2 sm:justify-between">
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <Button variant="ghost" size="sm" className="text-destructive hover:text-destructive hover:bg-destructive/10 gap-1">
+                      <Trash2 className="h-4 w-4" /> Ta bort
+                    </Button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>Ta bort medicin?</AlertDialogTitle>
+                      <AlertDialogDescription>
+                        Detta tar bort {detailMed.name} och all tillhörande historik permanent.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Avbryt</AlertDialogCancel>
+                      <AlertDialogAction
+                        onClick={() => { deleteMedication(detailMed.id); setDetailMed(null); }}
+                        className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                      >
+                        Ta bort
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
+                <Button onClick={() => openEdit(detailMed)} className="gap-1">
+                  <Pencil className="h-4 w-4" /> Redigera
+                </Button>
+              </DialogFooter>
+            </>
           )}
-        </section>
-      </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
 
-interface MedicationRowProps {
-  med: { id: string; name: string; dosage: string; started_at: string; frequency: MedicationFrequency; active: boolean };
-  editingId: string | null;
-  editName: string; editDosage: string; editStartDate: string; editFrequency: MedicationFrequency;
-  setEditName: (v: string) => void; setEditDosage: (v: string) => void; setEditStartDate: (v: string) => void; setEditFrequency: (v: MedicationFrequency) => void;
-  handleEdit: (id: string, name: string, dosage: string, startedAt: string, frequency: MedicationFrequency) => void;
-  handleSaveEdit: () => void; setEditingId: (id: string | null) => void;
-  toggleMedicationActive: (id: string, active: boolean) => void;
-  deleteMedication: (id: string) => void;
-  formatStartDate: (dateStr: string) => string;
-  t: (key: string, opts?: any) => string;
-}
-
-function MedicationRow({ med, editingId, editName, editDosage, editStartDate, editFrequency, setEditName, setEditDosage, setEditStartDate, setEditFrequency, handleEdit, handleSaveEdit, setEditingId, toggleMedicationActive, deleteMedication, formatStartDate, t }: MedicationRowProps) {
-  if (editingId === med.id) {
-    return (
-      <div className="py-4 space-y-3">
-        <Input value={editName} onChange={e => setEditName(e.target.value)} placeholder={t('medicationsPage.name')} />
-        <Input value={editDosage} onChange={e => setEditDosage(e.target.value)} placeholder={t('medicationsPage.dosage')} />
-        <Input type="date" value={editStartDate} onChange={e => setEditStartDate(e.target.value)} />
-        <Select value={editFrequency} onValueChange={(v) => setEditFrequency(v as MedicationFrequency)}>
-          <SelectTrigger><SelectValue placeholder={t('medicationsPage.selectFrequency')} /></SelectTrigger>
-          <SelectContent>
-            {Object.entries(FREQUENCY_LABELS).map(([value, label]) => (
-              <SelectItem key={value} value={value}>{label}</SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-        <div className="flex gap-2">
-          <Button size="sm" onClick={handleSaveEdit}><Check className="h-4 w-4 mr-1" />{t('medicationsPage.save')}</Button>
-          <Button size="sm" variant="outline" onClick={() => setEditingId(null)} className="text-destructive border-destructive/30 hover:bg-destructive/10 hover:text-destructive"><X className="h-4 w-4 mr-1" />{t('medicationsPage.cancel')}</Button>
-        </div>
-      </div>
-    );
-  }
-
+function InfoRow({ label, value }: { label: string; value: string }) {
   return (
-    <div className={`py-4 flex items-center gap-3 ${!med.active ? 'opacity-60' : ''}`}>
-      <div className="flex-1 min-w-0">
-        <p className="font-medium">{med.name}</p>
-        <p className="text-sm text-muted-foreground">{med.dosage}</p>
-        <div className="flex flex-wrap gap-x-4 gap-y-1 mt-1 text-xs text-muted-foreground">
-          <span>{FREQUENCY_LABELS[med.frequency] || t('medicationsPage.daily')}</span>
-          <span className="flex items-center gap-1"><Calendar className="h-3 w-3" />{t('medicationsPage.since')} {formatStartDate(med.started_at)}</span>
-        </div>
-      </div>
-      <div className="flex items-center gap-2 flex-shrink-0">
-        <Switch checked={med.active} onCheckedChange={(checked) => toggleMedicationActive(med.id, checked)} />
-        <Button size="icon" variant="ghost" onClick={() => handleEdit(med.id, med.name, med.dosage, med.started_at, med.frequency)}><Pencil className="h-4 w-4" /></Button>
-        <AlertDialog>
-          <AlertDialogTrigger asChild><Button size="icon" variant="ghost" className="text-destructive hover:text-destructive"><Trash2 className="h-4 w-4" /></Button></AlertDialogTrigger>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>{t('medicationsPage.deleteMed')}</AlertDialogTitle>
-              <AlertDialogDescription>{t('medicationsPage.deleteConfirm', { name: med.name })}</AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel>{t('medicationsPage.cancel')}</AlertDialogCancel>
-              <AlertDialogAction onClick={() => deleteMedication(med.id)} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">{t('medicationsPage.delete')}</AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
-      </div>
+    <div className="space-y-0.5">
+      <p className="text-xs text-muted-foreground">{label}</p>
+      <p className="font-medium">{value}</p>
     </div>
   );
+}
+
+function EmptyState({ icon, text, hint }: { icon: React.ReactNode; text: string; hint: string }) {
+  return (
+    <Card className="glass-card">
+      <CardContent className="py-10 text-center">
+        <div className="flex justify-center mb-3">{icon}</div>
+        <p className="font-medium text-muted-foreground">{text}</p>
+        <p className="text-sm text-muted-foreground mt-1">{hint}</p>
+      </CardContent>
+    </Card>
+  );
+}
+
+function MedCard({
+  med,
+  onClick,
+  accent = 'default',
+}: {
+  med: Medication;
+  onClick: () => void;
+  accent?: 'default' | 'amber' | 'muted';
+}) {
+  const sideEffectsCount = med.side_effects?.length ?? 0;
+  const effectiveness = med.effectiveness;
+  const accentClass =
+    accent === 'amber' ? 'border-amber-500/20 hover:border-amber-500/40' :
+    accent === 'muted' ? 'border-border opacity-80 hover:opacity-100' :
+    'border-border hover:border-primary/40';
+
+  return (
+    <button
+      onClick={onClick}
+      className={`w-full text-left rounded-xl border bg-card transition-all p-4 ${accentClass} hover:shadow-md`}
+    >
+      <div className="flex items-start gap-3">
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-2 flex-wrap">
+            <p className="font-semibold truncate">{med.name}</p>
+            {effectiveness && (
+              <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full border text-xs ${EFFECTIVENESS_COLORS[effectiveness]}`}>
+                {EFFECTIVENESS_ICONS[effectiveness]}
+                <span className="hidden xs:inline">{EFFECTIVENESS_LABELS[effectiveness]}</span>
+              </span>
+            )}
+          </div>
+          <p className="text-sm text-muted-foreground mt-0.5">{med.dosage}</p>
+          <div className="flex flex-wrap gap-x-3 gap-y-1 mt-2 text-xs text-muted-foreground">
+            <span className="flex items-center gap-1">
+              <Calendar className="h-3 w-3" />
+              {med.status === 'previous' && med.stopped_at
+                ? `${formatShort(med.started_at)} – ${formatShort(med.stopped_at)}`
+                : `Sedan ${formatShort(med.started_at)}`}
+            </span>
+            <span>{FREQUENCY_LABELS[med.frequency]}</span>
+            {sideEffectsCount > 0 && (
+              <span className="flex items-center gap-1 text-amber-600 dark:text-amber-400">
+                <AlertTriangle className="h-3 w-3" />
+                {sideEffectsCount} biverkning{sideEffectsCount > 1 ? 'ar' : ''}
+              </span>
+            )}
+          </div>
+        </div>
+        <ChevronRight className="h-4 w-4 text-muted-foreground/50 mt-1 shrink-0" />
+      </div>
+    </button>
+  );
+}
+
+function formatShort(dateStr: string) {
+  try { return format(new Date(dateStr), 'MMM yyyy', { locale: sv }); } catch { return dateStr; }
 }
 
 export default Medications;
