@@ -11,6 +11,7 @@ import { useCustomCheckinQuestions } from '@/hooks/useCustomCheckinQuestions';
 import { StreakBadge } from '@/components/StreakBadge';
 import { CheckinData } from '@/types/mood';
 import { TodayCheckin } from '@/components/TodayCheckin';
+import { MissedDayPrompt } from '@/components/MissedDayPrompt';
 
 const Index = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -37,6 +38,7 @@ const Index = () => {
   const streakData = useStreak(entries);
 
   const [customAnswers, setCustomAnswers] = useState<Record<string, string>>({});
+  const [missedPromptDismissed, setMissedPromptDismissed] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date>(() => {
     if (dateParam) {
       try { return parseISO(dateParam); } catch { return new Date(); }
@@ -84,25 +86,55 @@ const Index = () => {
     );
   }
 
+  // Show missed-day prompt only when:
+  //  - User is viewing today
+  //  - Today is not yet checked in
+  //  - There are missed days
+  //  - User hasn't dismissed the prompt this session
+  const shouldShowMissedPrompt =
+    !missedPromptDismissed &&
+    isToday(selectedDate) &&
+    !selectedEntry &&
+    streakData.missedDays.length > 0;
+
+  const handlePickMissedDay = (date: Date) => {
+    setSelectedDate(date);
+    setSearchParams({ date: format(date, 'yyyy-MM-dd') });
+    setMissedPromptDismissed(true);
+  };
+
+  const handleCheckInToday = () => {
+    setMissedPromptDismissed(true);
+  };
+
   return (
     <AnimatedPage className="fixed inset-0 md:relative md:h-screen flex items-center justify-center md:py-4 md:px-5 overflow-hidden">
       <div className="w-full h-full md:h-auto md:max-w-xl relative">
-        <TodayCheckin
-          todayEntry={selectedEntry} 
-          activeMedications={activeMedications}
-          medicationsTakenToday={medicationsTakenForDate}
-          yearEntries={yearEntries}
-          firstName={firstName}
-          onSaveCheckin={handleSaveCheckin}
-          onToggleMedication={handleToggleMedication}
-          preferences={preferences}
-          streakData={streakData}
-          customQuestions={customQuestions}
-          customAnswers={customAnswers}
-          onSaveCustomAnswers={async (answers) => saveAnswers(selectedDateStr, answers)}
-          selectedDate={selectedDate}
-          onSelectDate={(date) => { setSelectedDate(date); setSearchParams(isToday(date) ? {} : { date: format(date, 'yyyy-MM-dd') }); }}
-        />
+        {shouldShowMissedPrompt ? (
+          <MissedDayPrompt
+            missedDays={streakData.missedDays}
+            currentStreak={streakData.currentStreak}
+            onPickMissedDay={handlePickMissedDay}
+            onCheckInToday={handleCheckInToday}
+          />
+        ) : (
+          <TodayCheckin
+            todayEntry={selectedEntry} 
+            activeMedications={activeMedications}
+            medicationsTakenToday={medicationsTakenForDate}
+            yearEntries={yearEntries}
+            firstName={firstName}
+            onSaveCheckin={handleSaveCheckin}
+            onToggleMedication={handleToggleMedication}
+            preferences={preferences}
+            streakData={streakData}
+            customQuestions={customQuestions}
+            customAnswers={customAnswers}
+            onSaveCustomAnswers={async (answers) => saveAnswers(selectedDateStr, answers)}
+            selectedDate={selectedDate}
+            onSelectDate={(date) => { setSelectedDate(date); setSearchParams(isToday(date) ? {} : { date: format(date, 'yyyy-MM-dd') }); }}
+          />
+        )}
       </div>
     </AnimatedPage>
   );
