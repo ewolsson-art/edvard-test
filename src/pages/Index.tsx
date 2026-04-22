@@ -38,6 +38,7 @@ const Index = () => {
   const streakData = useStreak(entries);
 
   const [customAnswers, setCustomAnswers] = useState<Record<string, string>>({});
+  const [missedPromptDismissed, setMissedPromptDismissed] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date>(() => {
     if (dateParam) {
       try { return parseISO(dateParam); } catch { return new Date(); }
