@@ -17,6 +17,8 @@ export interface StreakData {
   hasCheckedInToday: boolean;
   lastCheckinDate: string | null;
   milestone: MilestoneInfo;
+  /** Recent missed days (yyyy-MM-dd), most recent first. Up to 3 days, only past days, excluding today. */
+  missedDays: string[];
 }
 
 function getMilestoneInfo(streak: number): MilestoneInfo {
