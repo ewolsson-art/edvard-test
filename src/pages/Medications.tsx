@@ -144,18 +144,20 @@ const Medications = () => {
   };
 
   const handleSave = async () => {
-    if (!form.name.trim() || !form.dosage.trim() || !form.startedAt) return;
+    if (!form.name.trim() || !form.dosage.trim()) return;
+    // For previously tested medications, dates are optional — fall back to today so the DB stays valid
+    const effectiveStartedAt = form.startedAt || today;
     const payload: AddMedicationInput = {
       name: form.name.trim(),
       dosage: form.dosage.trim(),
-      startedAt: form.startedAt,
+      startedAt: effectiveStartedAt,
       frequency: form.frequency,
       status: form.status,
       sideEffects: form.sideEffects,
       effectiveness: form.effectiveness === '' ? null : form.effectiveness,
       notes: form.notes.trim() || null,
-      stoppedAt: form.status === 'previous' ? (form.stoppedAt || today) : (form.stoppedAt || null),
-      stopReason: form.status === 'previous' ? (form.stopReason.trim() || null) : (form.stopReason.trim() || null),
+      stoppedAt: form.status === 'previous' ? (form.stoppedAt || effectiveStartedAt) : (form.stoppedAt || null),
+      stopReason: form.stopReason.trim() || null,
       isTrial: form.isTrial,
     };
     if (editingMed) {
