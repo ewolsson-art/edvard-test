@@ -118,7 +118,7 @@ const CompleteProfile = () => {
     }
 
     const effectiveRoleForDb = storedRole || user?.user_metadata?.role || 'patient';
-    await supabase.rpc('assign_initial_role', { _role: effectiveRoleForDb as "patient" | "relative" });
+    await supabase.rpc('assign_initial_role', { _role: effectiveRoleForDb as "patient" | "relative" | "doctor" });
 
     localStorage.removeItem("signup_role");
 
