@@ -303,34 +303,85 @@ export const MedicationsSection = () => {
               {isExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
             </Button>
           </CollapsibleTrigger>
-          <CollapsibleContent className="space-y-3 pt-3">
-            {/* Active medications */}
-            {activeMedications.map(med => (
-              <MedicationRow
-                key={med.id}
-                med={med}
-                editingId={editingId}
-                editName={editName}
-                editDosage={editDosage}
-                editStartDate={editStartDate}
-                editFrequency={editFrequency}
-                setEditName={setEditName}
-                setEditDosage={setEditDosage}
-                setEditStartDate={setEditStartDate}
-                setEditFrequency={setEditFrequency}
-                handleEdit={handleEdit}
-                handleSaveEdit={handleSaveEdit}
-                setEditingId={setEditingId}
-                toggleMedicationActive={toggleMedicationActive}
-                deleteMedication={deleteMedication}
-                formatStartDate={formatStartDate}
-              />
-            ))}
-            
-            {/* As-needed medications */}
+          <CollapsibleContent className="space-y-4 pt-3">
+            {/* Pågående (ongoing base meds) */}
+            {ongoingMedications.length > 0 && (
+              <div className="space-y-2">
+                <div className="flex items-center gap-2 px-1">
+                  <div className="w-1.5 h-1.5 rounded-full bg-green-500" />
+                  <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                    Pågående · {ongoingMedications.length}
+                  </p>
+                </div>
+                {ongoingMedications.map(med => (
+                  <MedicationRow
+                    key={med.id}
+                    med={med}
+                    editingId={editingId}
+                    editName={editName}
+                    editDosage={editDosage}
+                    editStartDate={editStartDate}
+                    editFrequency={editFrequency}
+                    setEditName={setEditName}
+                    setEditDosage={setEditDosage}
+                    setEditStartDate={setEditStartDate}
+                    setEditFrequency={setEditFrequency}
+                    handleEdit={handleEdit}
+                    handleSaveEdit={handleSaveEdit}
+                    setEditingId={setEditingId}
+                    toggleMedicationActive={toggleMedicationActive}
+                    deleteMedication={deleteMedication}
+                    formatStartDate={formatStartDate}
+                  />
+                ))}
+              </div>
+            )}
+
+            {/* Testar (trial / under evaluation) */}
+            {trialMedications.length > 0 && (
+              <div className="space-y-2">
+                <div className="flex items-center gap-2 px-1">
+                  <div className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+                  <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                    Testar · {trialMedications.length}
+                  </p>
+                </div>
+                <p className="text-xs text-muted-foreground px-1 -mt-1">
+                  Mediciner du utvärderar för att se om de fungerar
+                </p>
+                {trialMedications.map(med => (
+                  <MedicationRow
+                    key={med.id}
+                    med={med}
+                    editingId={editingId}
+                    editName={editName}
+                    editDosage={editDosage}
+                    editStartDate={editStartDate}
+                    editFrequency={editFrequency}
+                    setEditName={setEditName}
+                    setEditDosage={setEditDosage}
+                    setEditStartDate={setEditStartDate}
+                    setEditFrequency={setEditFrequency}
+                    handleEdit={handleEdit}
+                    handleSaveEdit={handleSaveEdit}
+                    setEditingId={setEditingId}
+                    toggleMedicationActive={toggleMedicationActive}
+                    deleteMedication={deleteMedication}
+                    formatStartDate={formatStartDate}
+                  />
+                ))}
+              </div>
+            )}
+
+            {/* Vid behov */}
             {asNeededMedications.length > 0 && (
-              <>
-                <p className="text-xs text-muted-foreground font-medium pt-2">Vid behov</p>
+              <div className="space-y-2">
+                <div className="flex items-center gap-2 px-1">
+                  <div className="w-1.5 h-1.5 rounded-full bg-blue-500" />
+                  <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                    Vid behov · {asNeededMedications.length}
+                  </p>
+                </div>
                 {asNeededMedications.map(med => (
                   <MedicationRow
                     key={med.id}
@@ -352,19 +403,27 @@ export const MedicationsSection = () => {
                     formatStartDate={formatStartDate}
                   />
                 ))}
-              </>
+              </div>
             )}
-            
-            {/* Inactive medications */}
+
+            {/* Avslutade (previously tested, now inactive) */}
             {inactiveMedications.length > 0 && (
               <Collapsible open={showInactive} onOpenChange={setShowInactive}>
                 <CollapsibleTrigger asChild>
-                  <Button variant="ghost" size="sm" className="w-full justify-start gap-2 text-muted-foreground">
-                    {showInactive ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />}
-                    <span className="text-xs">{inactiveMedications.length} inaktiva</span>
+                  <Button variant="ghost" size="sm" className="w-full justify-between px-1">
+                    <div className="flex items-center gap-2">
+                      <div className="w-1.5 h-1.5 rounded-full bg-muted-foreground/50" />
+                      <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                        Avslutade · {inactiveMedications.length}
+                      </span>
+                    </div>
+                    {showInactive ? <ChevronUp className="h-3 w-3 text-muted-foreground" /> : <ChevronDown className="h-3 w-3 text-muted-foreground" />}
                   </Button>
                 </CollapsibleTrigger>
                 <CollapsibleContent className="space-y-2 pt-2">
+                  <p className="text-xs text-muted-foreground px-1">
+                    Mediciner du har testat tidigare
+                  </p>
                   {inactiveMedications.map(med => (
                     <MedicationRow
                       key={med.id}
