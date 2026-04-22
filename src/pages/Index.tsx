@@ -86,25 +86,55 @@ const Index = () => {
     );
   }
 
+  // Show missed-day prompt only when:
+  //  - User is viewing today
+  //  - Today is not yet checked in
+  //  - There are missed days
+  //  - User hasn't dismissed the prompt this session
+  const shouldShowMissedPrompt =
+    !missedPromptDismissed &&
+    isToday(selectedDate) &&
+    !selectedEntry &&
+    streakData.missedDays.length > 0;
+
+  const handlePickMissedDay = (date: Date) => {
+    setSelectedDate(date);
+    setSearchParams({ date: format(date, 'yyyy-MM-dd') });
+    setMissedPromptDismissed(true);
+  };
+
+  const handleCheckInToday = () => {
+    setMissedPromptDismissed(true);
+  };
+
   return (
     <AnimatedPage className="fixed inset-0 md:relative md:h-screen flex items-center justify-center md:py-4 md:px-5 overflow-hidden">
       <div className="w-full h-full md:h-auto md:max-w-xl relative">
-        <TodayCheckin
-          todayEntry={selectedEntry} 
-          activeMedications={activeMedications}
-          medicationsTakenToday={medicationsTakenForDate}
-          yearEntries={yearEntries}
-          firstName={firstName}
-          onSaveCheckin={handleSaveCheckin}
-          onToggleMedication={handleToggleMedication}
-          preferences={preferences}
-          streakData={streakData}
-          customQuestions={customQuestions}
-          customAnswers={customAnswers}
-          onSaveCustomAnswers={async (answers) => saveAnswers(selectedDateStr, answers)}
-          selectedDate={selectedDate}
-          onSelectDate={(date) => { setSelectedDate(date); setSearchParams(isToday(date) ? {} : { date: format(date, 'yyyy-MM-dd') }); }}
-        />
+        {shouldShowMissedPrompt ? (
+          <MissedDayPrompt
+            missedDays={streakData.missedDays}
+            currentStreak={streakData.currentStreak}
+            onPickMissedDay={handlePickMissedDay}
+            onCheckInToday={handleCheckInToday}
+          />
+        ) : (
+          <TodayCheckin
+            todayEntry={selectedEntry} 
+            activeMedications={activeMedications}
+            medicationsTakenToday={medicationsTakenForDate}
+            yearEntries={yearEntries}
+            firstName={firstName}
+            onSaveCheckin={handleSaveCheckin}
+            onToggleMedication={handleToggleMedication}
+            preferences={preferences}
+            streakData={streakData}
+            customQuestions={customQuestions}
+            customAnswers={customAnswers}
+            onSaveCustomAnswers={async (answers) => saveAnswers(selectedDateStr, answers)}
+            selectedDate={selectedDate}
+            onSelectDate={(date) => { setSelectedDate(date); setSearchParams(isToday(date) ? {} : { date: format(date, 'yyyy-MM-dd') }); }}
+          />
+        )}
       </div>
     </AnimatedPage>
   );
