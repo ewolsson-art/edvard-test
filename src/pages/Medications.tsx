@@ -539,19 +539,14 @@ const Medications = () => {
               </div>
             </div>
 
-            {/* Step 5: Stopped info if previous */}
+            {/* Step 5: Reason for stopping (only when 'previous') */}
             {form.status === 'previous' && (
               <div className="space-y-2 p-3 rounded-lg border border-border bg-muted/30">
                 <Label className="flex items-center gap-1.5 text-sm">
                   <span className="flex items-center justify-center w-5 h-5 rounded-full bg-primary/10 text-primary text-xs font-bold">5</span>
-                  När och varför slutade du?
+                  Varför slutade du?
                 </Label>
-                <Input
-                  type="date"
-                  value={form.stoppedAt}
-                  onChange={e => setForm(f => ({ ...f, stoppedAt: e.target.value }))}
-                  placeholder="Slutdatum"
-                />
+                <p className="text-xs text-muted-foreground">Slutdatum fyller du i ovan under Grunduppgifter.</p>
                 <Textarea
                   placeholder="Orsak (t.ex. för biverkningar, byttes ut, ingen effekt)"
                   value={form.stopReason}
