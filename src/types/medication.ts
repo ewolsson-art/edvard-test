@@ -85,6 +85,7 @@ export interface Medication {
   side_effects: string[];
   effectiveness: MedicationEffectiveness | null;
   notes: string | null;
+  is_trial: boolean;
   created_at: string;
   updated_at: string;
 }
