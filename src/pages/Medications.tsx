@@ -596,6 +596,12 @@ const Medications = () => {
               </DialogHeader>
 
               <div className="space-y-4 py-2">
+                {detailMed.is_trial && (
+                  <div className="flex items-center gap-2 px-3 py-2 rounded-lg border border-amber-500/40 bg-amber-500/10 text-amber-700 dark:text-amber-400 text-sm">
+                    <FlaskConical className="h-4 w-4" />
+                    <span className="font-medium">Provmedicin – under utvärdering</span>
+                  </div>
+                )}
                 <div className="grid grid-cols-2 gap-3 text-sm">
                   <InfoRow label="Hur ofta" value={FREQUENCY_LABELS[detailMed.frequency]} />
                   <InfoRow label="Startade" value={formatDate(detailMed.started_at)} />
