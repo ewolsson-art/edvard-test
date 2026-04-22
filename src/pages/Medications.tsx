@@ -86,7 +86,7 @@ const Medications = () => {
   const dateFnsLocale = i18n.language === 'sv' ? sv : enUS;
 
   const {
-    medications, currentMedications, asNeededMedications, previousMedications, pausedMedications,
+    medications, currentMedications, asNeededMedications, previousMedications,
     isLoaded, addMedication, updateMedication, setMedicationStatus,
     deleteMedication, logMedication, isMedicationTakenOnDate,
   } = useMedications();
