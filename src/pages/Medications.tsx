@@ -420,6 +420,39 @@ const Medications = () => {
                   value={form.dosage}
                   onChange={e => setForm(f => ({ ...f, dosage: e.target.value }))}
                 />
+                <div className="space-y-1.5">
+                  <Label className="text-xs text-muted-foreground">
+                    Vad tar du den mot? <span className="opacity-60">(valfritt)</span>
+                  </Label>
+                  <div className="flex flex-wrap gap-1.5">
+                    {COMMON_INDICATIONS.map(ind => {
+                      const selected = form.indication === ind;
+                      return (
+                        <button
+                          key={ind}
+                          type="button"
+                          onClick={() => setForm(f => ({ ...f, indication: selected ? '' : ind, customIndication: ind === 'Annat' ? f.customIndication : '' }))}
+                          className={`px-3 py-1.5 rounded-full text-xs border transition-all ${
+                            selected
+                              ? 'bg-primary/15 border-primary/40 text-primary'
+                              : 'border-border bg-muted/30 hover:border-primary/30'
+                          }`}
+                        >
+                          {selected && <Check className="h-3 w-3 inline mr-1" />}
+                          {ind}
+                        </button>
+                      );
+                    })}
+                  </div>
+                  {form.indication === 'Annat' && (
+                    <Input
+                      placeholder="Skriv vad medicinen tas mot"
+                      value={form.customIndication}
+                      onChange={e => setForm(f => ({ ...f, customIndication: e.target.value }))}
+                      className="mt-2"
+                    />
+                  )}
+                </div>
                 <div className="grid grid-cols-2 gap-2">
                   <div>
                     <Label className="text-xs text-muted-foreground">
