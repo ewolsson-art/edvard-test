@@ -66,6 +66,7 @@ const CommunityThread = lazy(() => import("./pages/CommunityThread"));
 const Notifications = lazy(() => import("./pages/Notifications"));
 const Insights = lazy(() => import("./pages/Insights"));
 const BadDay = lazy(() => import("./pages/BadDay"));
+const Diagnoses = lazy(() => import("./pages/Diagnoses"));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -194,6 +195,11 @@ const App = () => (
             <Route path="/mediciner" element={
               <ProtectedRoute>
                 <AppLayout><Medications /></AppLayout>
+              </ProtectedRoute>
+            } />
+            <Route path="/diagnoser" element={
+              <ProtectedRoute>
+                <AppLayout><Diagnoses /></AppLayout>
               </ProtectedRoute>
             } />
             <Route path="/rapporter" element={
