@@ -7,11 +7,11 @@ import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { AuthNavbar } from "@/components/AuthNavbar";
 import { DarkNightBackground } from "@/components/DarkNightBackground";
-import { ArrowRight, ArrowLeft, Loader2, Mail, User, Users, CheckCircle2, Phone, Smartphone } from "lucide-react";
+import { ArrowRight, ArrowLeft, Loader2, Mail, User, Users, Stethoscope, CheckCircle2, Phone, Smartphone } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useTranslation } from 'react-i18next';
 
-type AccountRole = "patient" | "relative";
+type AccountRole = "patient" | "relative" | "doctor";
 type Step = "role" | "contact" | "verify-phone" | "email-sent";
 
 const roleInfo = {
@@ -26,6 +26,12 @@ const roleInfo = {
     prefix: "auth.iAm",
     title: "auth.relative",
     description: "auth.supportCloseOnes",
+  },
+  doctor: {
+    icon: Stethoscope,
+    prefix: "auth.iAm",
+    title: "auth.doctor",
+    description: "auth.followPatients",
   },
 };
 
