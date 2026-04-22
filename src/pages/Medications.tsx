@@ -114,6 +114,8 @@ const Medications = () => {
 
   const openEdit = (med: Medication) => {
     setEditingMed(med);
+    const ind = med.indication ?? '';
+    const isCommon = ind === '' || COMMON_INDICATIONS.includes(ind);
     setForm({
       name: med.name,
       dosage: med.dosage,
@@ -127,6 +129,8 @@ const Medications = () => {
       stoppedAt: med.stopped_at ?? '',
       stopReason: med.stop_reason ?? '',
       isTrial: med.is_trial ?? false,
+      indication: isCommon ? ind : 'Annat',
+      customIndication: isCommon ? '' : ind,
     });
     setDetailMed(null);
     setIsFormOpen(true);
