@@ -161,22 +161,27 @@ export default function AskToddy() {
 
   const isEmpty = messages.length === 0;
 
+  // Mobile chat shell:
+  // - Page itself fills the viewport (dvh) and is a flex column
+  // - Header sticks to top, input docks to bottom (above the BottomTabBar via pb-tabbar offset)
+  // - Only the message list scrolls
+  // The parent <main> already adds pb-tabbar on mobile, so a normal flex column fills correctly.
   return (
-    <AnimatedPage className="h-[100dvh] md:h-screen flex flex-col">
-      <header className="px-5 md:px-8 pt-6 md:pt-8 pb-4 border-b border-border/30 shrink-0">
+    <AnimatedPage className="flex flex-col h-[100dvh] md:h-screen bg-background">
+      <header className="sticky top-0 z-20 px-5 md:px-8 pt-[max(env(safe-area-inset-top),0.75rem)] md:pt-6 pb-3 md:pb-4 border-b border-border/30 bg-background/85 backdrop-blur-xl shrink-0">
         <div className="max-w-3xl mx-auto flex items-center gap-3">
-          <div className="w-10 h-10 rounded-2xl bg-[hsl(45_85%_55%/0.15)] border border-[hsl(45_85%_55%/0.25)] flex items-center justify-center">
-            <Sparkles className="w-5 h-5 text-[hsl(45_85%_55%)]" />
+          <div className="w-9 h-9 md:w-10 md:h-10 rounded-2xl bg-[hsl(45_85%_55%/0.15)] border border-[hsl(45_85%_55%/0.25)] flex items-center justify-center shrink-0">
+            <Sparkles className="w-[18px] h-[18px] md:w-5 md:h-5 text-[hsl(45_85%_55%)]" />
           </div>
-          <div>
-            <h1 className="font-display text-xl md:text-2xl font-bold tracking-tight">Fråga Toddy</h1>
-            <p className="text-[12px] text-muted-foreground/70">AI-assistent som kan din statistik</p>
+          <div className="min-w-0">
+            <h1 className="font-display text-lg md:text-2xl font-bold tracking-tight leading-tight truncate">Fråga Toddy</h1>
+            <p className="text-[11px] md:text-[12px] text-muted-foreground/70 truncate">AI-assistent som kan din statistik</p>
           </div>
         </div>
       </header>
 
-      <div ref={scrollRef} className="flex-1 overflow-y-auto px-5 md:px-8 py-6">
-        <div className="max-w-3xl mx-auto space-y-5">
+      <div ref={scrollRef} className="flex-1 min-h-0 overflow-y-auto overscroll-contain px-4 md:px-8 py-5 md:py-6">
+        <div className="max-w-3xl mx-auto space-y-4 md:space-y-5">
           {isEmpty && (
             <div className="text-center py-8 md:py-12">
               <div className="w-16 h-16 mx-auto mb-5 rounded-3xl bg-[hsl(45_85%_55%/0.1)] border border-[hsl(45_85%_55%/0.2)] flex items-center justify-center">
