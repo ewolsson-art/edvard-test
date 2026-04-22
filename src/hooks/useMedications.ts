@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Medication, MedicationLog, MedicationFrequency } from '@/types/medication';
+import { Medication, MedicationLog, MedicationFrequency, MedicationStatus, MedicationEffectiveness } from '@/types/medication';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
@@ -15,7 +15,11 @@ async function fetchMedications(userId: string): Promise<Medication[]> {
     .eq('user_id', userId)
     .order('created_at', { ascending: true });
   if (error) throw error;
-  return data as Medication[];
+  return (data as any[]).map(m => ({
+    ...m,
+    side_effects: m.side_effects ?? [],
+    status: m.status ?? (m.active ? 'current' : 'previous'),
+  })) as Medication[];
 }
 
 async function fetchMedicationLogs(userId: string): Promise<MedicationLog[]> {
@@ -26,6 +30,21 @@ async function fetchMedicationLogs(userId: string): Promise<MedicationLog[]> {
   if (error) throw error;
   return data as MedicationLog[];
 }
+
+export interface AddMedicationInput {
+  name: string;
+  dosage: string;
+  startedAt: string;
+  frequency?: MedicationFrequency;
+  status?: MedicationStatus;
+  sideEffects?: string[];
+  effectiveness?: MedicationEffectiveness | null;
+  notes?: string | null;
+  stoppedAt?: string | null;
+  stopReason?: string | null;
+}
+
+export interface UpdateMedicationInput extends AddMedicationInput {}
 
 export function useMedications() {
   const { user } = useAuth();
@@ -60,47 +79,113 @@ export function useMedications() {
     [queryClient, user?.id]
   );
 
-  const addMedication = useCallback(async (name: string, dosage: string, startedAt: string, frequency: MedicationFrequency = 'daily') => {
+  const addMedication = useCallback(async (
+    nameOrInput: string | AddMedicationInput,
+    dosage?: string,
+    startedAt?: string,
+    frequency: MedicationFrequency = 'daily'
+  ) => {
     if (!user) return;
+    const input: AddMedicationInput = typeof nameOrInput === 'string'
+      ? { name: nameOrInput, dosage: dosage!, startedAt: startedAt!, frequency }
+      : nameOrInput;
+
+    const status = input.status ?? 'current';
+    const payload: any = {
+      user_id: user.id,
+      name: input.name,
+      dosage: input.dosage,
+      started_at: input.startedAt,
+      frequency: input.frequency ?? 'daily',
+      status,
+      active: status === 'current',
+      side_effects: input.sideEffects ?? [],
+      effectiveness: input.effectiveness ?? null,
+      notes: input.notes ?? null,
+      stopped_at: input.stoppedAt ?? null,
+      stop_reason: input.stopReason ?? null,
+    };
+
     const { data, error } = await supabase
       .from('medications')
-      .insert({ user_id: user.id, name, dosage, started_at: startedAt, frequency })
+      .insert(payload)
       .select()
       .single();
     if (error) {
       toast({ title: "Kunde inte lägga till medicin", description: "Försök igen.", variant: "destructive" });
     } else {
-      setMedications(prev => [...prev, data as Medication]);
-      toast({ title: "Medicin tillagd", description: `${name} har lagts till.` });
+      setMedications(prev => [...prev, { ...(data as any), side_effects: (data as any).side_effects ?? [] } as Medication]);
+      toast({ title: "Medicin tillagd", description: `${input.name} har lagts till.` });
     }
   }, [user, toast, setMedications]);
 
-  const updateMedication = useCallback(async (id: string, name: string, dosage: string, startedAt: string, frequency: MedicationFrequency = 'daily') => {
+  const updateMedication = useCallback(async (
+    id: string,
+    nameOrInput: string | UpdateMedicationInput,
+    dosage?: string,
+    startedAt?: string,
+    frequency: MedicationFrequency = 'daily'
+  ) => {
     if (!user) return;
+    const input: UpdateMedicationInput = typeof nameOrInput === 'string'
+      ? { name: nameOrInput, dosage: dosage!, startedAt: startedAt!, frequency }
+      : nameOrInput;
+
+    const updates: any = {
+      name: input.name,
+      dosage: input.dosage,
+      started_at: input.startedAt,
+      frequency: input.frequency ?? 'daily',
+    };
+    if (input.status !== undefined) {
+      updates.status = input.status;
+      updates.active = input.status === 'current';
+    }
+    if (input.sideEffects !== undefined) updates.side_effects = input.sideEffects;
+    if (input.effectiveness !== undefined) updates.effectiveness = input.effectiveness;
+    if (input.notes !== undefined) updates.notes = input.notes;
+    if (input.stoppedAt !== undefined) updates.stopped_at = input.stoppedAt;
+    if (input.stopReason !== undefined) updates.stop_reason = input.stopReason;
+
     const { error } = await supabase
       .from('medications')
-      .update({ name, dosage, started_at: startedAt, frequency })
+      .update(updates)
       .eq('id', id)
       .eq('user_id', user.id);
     if (error) {
       toast({ title: "Kunde inte uppdatera medicin", variant: "destructive" });
     } else {
-      setMedications(prev => prev.map(m => m.id === id ? { ...m, name, dosage, started_at: startedAt, frequency } : m));
+      setMedications(prev => prev.map(m => m.id === id ? { ...m, ...updates } as Medication : m));
       toast({ title: "Medicin uppdaterad" });
     }
   }, [user, toast, setMedications]);
 
-  const toggleMedicationActive = useCallback(async (id: string, active: boolean) => {
+  const setMedicationStatus = useCallback(async (id: string, status: MedicationStatus, stopReason?: string) => {
     if (!user) return;
+    const updates: any = {
+      status,
+      active: status === 'current',
+    };
+    if (status === 'previous') {
+      updates.stopped_at = new Date().toISOString().slice(0, 10);
+      if (stopReason !== undefined) updates.stop_reason = stopReason;
+    } else if (status === 'current') {
+      updates.stopped_at = null;
+      updates.stop_reason = null;
+    }
     const { error } = await supabase
       .from('medications')
-      .update({ active })
+      .update(updates)
       .eq('id', id)
       .eq('user_id', user.id);
     if (!error) {
-      setMedications(prev => prev.map(m => m.id === id ? { ...m, active } : m));
+      setMedications(prev => prev.map(m => m.id === id ? { ...m, ...updates } as Medication : m));
     }
   }, [user, setMedications]);
+
+  const toggleMedicationActive = useCallback(async (id: string, active: boolean) => {
+    await setMedicationStatus(id, active ? 'current' : 'previous');
+  }, [setMedicationStatus]);
 
   const deleteMedication = useCallback(async (id: string) => {
     if (!user) return;
@@ -159,19 +244,29 @@ export function useMedications() {
     return logs.some(l => l.medication_id === medicationId && l.date === date);
   }, [logs]);
 
-  const activeMedications = medications.filter(m => m.active && m.frequency !== 'as_needed');
-  const asNeededMedications = medications.filter(m => m.active && m.frequency === 'as_needed');
-  const inactiveMedications = medications.filter(m => !m.active);
+  // Filter by status (preferred) with fallback to active flag
+  const currentMedications = medications.filter(m => (m.status ?? (m.active ? 'current' : 'previous')) === 'current' && m.frequency !== 'as_needed');
+  const asNeededMedications = medications.filter(m => (m.status ?? (m.active ? 'current' : 'previous')) === 'current' && m.frequency === 'as_needed');
+  const pausedMedications = medications.filter(m => m.status === 'paused');
+  const previousMedications = medications.filter(m => (m.status ?? (m.active ? 'current' : 'previous')) === 'previous');
+
+  // Backwards compat aliases
+  const activeMedications = currentMedications;
+  const inactiveMedications = previousMedications;
 
   return {
     medications,
+    currentMedications,
     activeMedications,
     asNeededMedications,
+    pausedMedications,
+    previousMedications,
     inactiveMedications,
     logs,
     isLoaded,
     addMedication,
     updateMedication,
+    setMedicationStatus,
     toggleMedicationActive,
     deleteMedication,
     logMedication,
