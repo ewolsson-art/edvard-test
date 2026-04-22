@@ -441,8 +441,7 @@ export const MedicationsSection = () => {
                 </CollapsibleContent>
               </Collapsible>
             )}
-          </CollapsibleContent>
-        </Collapsible>
+        </div>
       )}
     </div>
   );
