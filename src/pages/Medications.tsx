@@ -23,6 +23,7 @@ import {
   EFFECTIVENESS_LABELS,
   EFFECTIVENESS_COLORS,
   COMMON_SIDE_EFFECTS,
+  COMMON_INDICATIONS,
   Medication,
 } from '@/types/medication';
 import {
@@ -59,6 +60,8 @@ interface MedFormState {
   stoppedAt: string;
   stopReason: string;
   isTrial: boolean;
+  indication: string;
+  customIndication: string;
 }
 
 const emptyForm = (): MedFormState => ({
@@ -74,6 +77,8 @@ const emptyForm = (): MedFormState => ({
   stoppedAt: '',
   stopReason: '',
   isTrial: false,
+  indication: '',
+  customIndication: '',
 });
 
 const Medications = () => {
@@ -109,6 +114,8 @@ const Medications = () => {
 
   const openEdit = (med: Medication) => {
     setEditingMed(med);
+    const ind = med.indication ?? '';
+    const isCommon = ind === '' || COMMON_INDICATIONS.includes(ind);
     setForm({
       name: med.name,
       dosage: med.dosage,
@@ -122,6 +129,8 @@ const Medications = () => {
       stoppedAt: med.stopped_at ?? '',
       stopReason: med.stop_reason ?? '',
       isTrial: med.is_trial ?? false,
+      indication: isCommon ? ind : 'Annat',
+      customIndication: isCommon ? '' : ind,
     });
     setDetailMed(null);
     setIsFormOpen(true);
@@ -147,6 +156,10 @@ const Medications = () => {
     if (!form.name.trim() || !form.dosage.trim()) return;
     // For previously tested medications, dates are optional — fall back to today so the DB stays valid
     const effectiveStartedAt = form.startedAt || today;
+    const indicationValue =
+      form.indication === 'Annat'
+        ? (form.customIndication.trim() || null)
+        : (form.indication.trim() || null);
     const payload: AddMedicationInput = {
       name: form.name.trim(),
       dosage: form.dosage.trim(),
@@ -159,6 +172,7 @@ const Medications = () => {
       stoppedAt: form.status === 'previous' ? (form.stoppedAt || effectiveStartedAt) : (form.stoppedAt || null),
       stopReason: form.stopReason.trim() || null,
       isTrial: form.isTrial,
+      indication: indicationValue,
     };
     if (editingMed) {
       await updateMedication(editingMed.id, payload);
@@ -406,6 +420,39 @@ const Medications = () => {
                   value={form.dosage}
                   onChange={e => setForm(f => ({ ...f, dosage: e.target.value }))}
                 />
+                <div className="space-y-1.5">
+                  <Label className="text-xs text-muted-foreground">
+                    Vad tar du den mot? <span className="opacity-60">(valfritt)</span>
+                  </Label>
+                  <div className="flex flex-wrap gap-1.5">
+                    {COMMON_INDICATIONS.map(ind => {
+                      const selected = form.indication === ind;
+                      return (
+                        <button
+                          key={ind}
+                          type="button"
+                          onClick={() => setForm(f => ({ ...f, indication: selected ? '' : ind, customIndication: ind === 'Annat' ? f.customIndication : '' }))}
+                          className={`px-3 py-1.5 rounded-full text-xs border transition-all ${
+                            selected
+                              ? 'bg-primary/15 border-primary/40 text-primary'
+                              : 'border-border bg-muted/30 hover:border-primary/30'
+                          }`}
+                        >
+                          {selected && <Check className="h-3 w-3 inline mr-1" />}
+                          {ind}
+                        </button>
+                      );
+                    })}
+                  </div>
+                  {form.indication === 'Annat' && (
+                    <Input
+                      placeholder="Skriv vad medicinen tas mot"
+                      value={form.customIndication}
+                      onChange={e => setForm(f => ({ ...f, customIndication: e.target.value }))}
+                      className="mt-2"
+                    />
+                  )}
+                </div>
                 <div className="grid grid-cols-2 gap-2">
                   <div>
                     <Label className="text-xs text-muted-foreground">
@@ -636,6 +683,14 @@ const Medications = () => {
                     <span className="font-medium">Provmedicin – under utvärdering</span>
                   </div>
                 )}
+                {detailMed.indication && (
+                  <div className="space-y-1.5">
+                    <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Tas mot</p>
+                    <span className="inline-flex items-center px-3 py-1 rounded-full border border-primary/30 bg-primary/10 text-primary text-sm">
+                      {detailMed.indication}
+                    </span>
+                  </div>
+                )}
                 <div className="grid grid-cols-2 gap-3 text-sm">
                   <InfoRow label="Hur ofta" value={FREQUENCY_LABELS[detailMed.frequency]} />
                   <InfoRow label="Startade" value={formatDate(detailMed.started_at)} />
@@ -803,6 +858,9 @@ function MedCard({
             )}
           </div>
           <p className="text-sm text-muted-foreground mt-0.5">{med.dosage}</p>
+          {med.indication && (
+            <p className="text-xs text-primary/80 mt-1 font-medium">Mot: {med.indication}</p>
+          )}
           <div className="flex flex-wrap gap-x-3 gap-y-1 mt-2 text-xs text-muted-foreground">
             <span className="flex items-center gap-1">
               <Calendar className="h-3 w-3" />
