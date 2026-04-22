@@ -749,6 +749,12 @@ function MedCard({
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap">
             <p className="font-semibold truncate">{med.name}</p>
+            {med.is_trial && (
+              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full border border-amber-500/40 bg-amber-500/10 text-amber-700 dark:text-amber-400 text-[10px] font-semibold uppercase tracking-wider">
+                <FlaskConical className="h-3 w-3" />
+                Prov
+              </span>
+            )}
             {effectiveness && (
               <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full border text-xs ${EFFECTIVENESS_COLORS[effectiveness]}`}>
                 {EFFECTIVENESS_ICONS[effectiveness]}
