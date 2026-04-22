@@ -858,6 +858,9 @@ function MedCard({
             )}
           </div>
           <p className="text-sm text-muted-foreground mt-0.5">{med.dosage}</p>
+          {med.indication && (
+            <p className="text-xs text-primary/80 mt-1 font-medium">Mot: {med.indication}</p>
+          )}
           <div className="flex flex-wrap gap-x-3 gap-y-1 mt-2 text-xs text-muted-foreground">
             <span className="flex items-center gap-1">
               <Calendar className="h-3 w-3" />
