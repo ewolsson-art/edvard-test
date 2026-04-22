@@ -541,7 +541,14 @@ function MedicationRow({
   return (
     <div className={`flex items-center gap-3 p-3 rounded-lg border ${!med.active ? 'opacity-60 bg-muted/30' : 'bg-background'}`}>
       <div className="flex-1 min-w-0">
-        <p className="text-sm font-medium">{med.name}</p>
+        <div className="flex items-center gap-2 flex-wrap">
+          <p className="text-sm font-medium">{med.name}</p>
+          {med.is_trial && (
+            <Badge variant="outline" className="h-4 px-1.5 text-[10px] border-amber-500/40 text-amber-500 bg-amber-500/10">
+              Prov
+            </Badge>
+          )}
+        </div>
         <p className="text-xs text-muted-foreground">{med.dosage}</p>
         <p className="text-xs text-muted-foreground">
           {FREQUENCY_LABELS[med.frequency]} · Sedan {formatStartDate(med.started_at)}
