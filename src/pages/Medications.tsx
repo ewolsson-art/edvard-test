@@ -144,18 +144,20 @@ const Medications = () => {
   };
 
   const handleSave = async () => {
-    if (!form.name.trim() || !form.dosage.trim() || !form.startedAt) return;
+    if (!form.name.trim() || !form.dosage.trim()) return;
+    // For previously tested medications, dates are optional — fall back to today so the DB stays valid
+    const effectiveStartedAt = form.startedAt || today;
     const payload: AddMedicationInput = {
       name: form.name.trim(),
       dosage: form.dosage.trim(),
-      startedAt: form.startedAt,
+      startedAt: effectiveStartedAt,
       frequency: form.frequency,
       status: form.status,
       sideEffects: form.sideEffects,
       effectiveness: form.effectiveness === '' ? null : form.effectiveness,
       notes: form.notes.trim() || null,
-      stoppedAt: form.status === 'previous' ? (form.stoppedAt || today) : (form.stoppedAt || null),
-      stopReason: form.status === 'previous' ? (form.stopReason.trim() || null) : (form.stopReason.trim() || null),
+      stoppedAt: form.status === 'previous' ? (form.stoppedAt || effectiveStartedAt) : (form.stoppedAt || null),
+      stopReason: form.stopReason.trim() || null,
       isTrial: form.isTrial,
     };
     if (editingMed) {
@@ -406,7 +408,9 @@ const Medications = () => {
                 />
                 <div className="grid grid-cols-2 gap-2">
                   <div>
-                    <Label className="text-xs text-muted-foreground">Startade</Label>
+                    <Label className="text-xs text-muted-foreground">
+                      Startade {form.status === 'previous' && <span className="opacity-60">(valfritt)</span>}
+                    </Label>
                     <Input
                       type="date"
                       value={form.startedAt}
@@ -415,7 +419,8 @@ const Medications = () => {
                   </div>
                   <div>
                     <Label className="text-xs text-muted-foreground">
-                      {form.status === 'previous' ? 'Slutade' : 'Slutdatum (valfritt)'}
+                      Slutade {form.status === 'previous' && <span className="opacity-60">(valfritt)</span>}
+                      {form.status !== 'previous' && <span className="opacity-60">(valfritt)</span>}
                     </Label>
                     <Input
                       type="date"
@@ -424,6 +429,35 @@ const Medications = () => {
                     />
                   </div>
                 </div>
+                {form.status === 'previous' && (
+                  <div className="flex flex-wrap gap-1.5 pt-1">
+                    <p className="text-xs text-muted-foreground w-full">Kommer du inte ihåg datum? Välj en grov uppskattning:</p>
+                    {[
+                      { label: 'Senaste året', months: 12 },
+                      { label: '1–2 år sedan', months: 18 },
+                      { label: '2–5 år sedan', months: 42 },
+                      { label: 'Mer än 5 år sedan', months: 72 },
+                      { label: 'Vet ej', months: null },
+                    ].map(opt => (
+                      <button
+                        key={opt.label}
+                        type="button"
+                        onClick={() => {
+                          if (opt.months === null) {
+                            setForm(f => ({ ...f, startedAt: '', stoppedAt: '' }));
+                          } else {
+                            const d = new Date();
+                            d.setMonth(d.getMonth() - opt.months);
+                            setForm(f => ({ ...f, startedAt: format(d, 'yyyy-MM-dd'), stoppedAt: '' }));
+                          }
+                        }}
+                        className="px-3 py-1.5 rounded-full text-xs border border-border bg-muted/30 hover:border-primary/30 transition-all"
+                      >
+                        {opt.label}
+                      </button>
+                    ))}
+                  </div>
+                )}
                 <div>
                   <Label className="text-xs text-muted-foreground">Hur ofta</Label>
                   <Select value={form.frequency} onValueChange={(v) => setForm(f => ({ ...f, frequency: v as MedicationFrequency }))}>
