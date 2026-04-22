@@ -88,12 +88,22 @@ export function useStreak(entries: MoodEntry[]): StreakData {
       longestStreak = Math.max(longestStreak, tempStreak);
     }
 
+    // Find recent missed days: walk backwards from yesterday up to 3 days,
+    // collecting consecutive missed days until we hit a checked-in day.
+    const missedDays: string[] = [];
+    for (let i = 1; i <= 3; i++) {
+      const d = format(subDays(new Date(), i), 'yyyy-MM-dd');
+      if (entryDates.has(d)) break;
+      missedDays.push(d);
+    }
+
     return {
       currentStreak,
       longestStreak,
       hasCheckedInToday,
       lastCheckinDate,
       milestone: getMilestoneInfo(currentStreak),
+      missedDays,
     };
   }, [entries]);
 }
