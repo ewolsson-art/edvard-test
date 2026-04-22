@@ -414,17 +414,53 @@ const Medications = () => {
                     />
                   </div>
                   <div>
-                    <Label className="text-xs text-muted-foreground">Hur ofta</Label>
-                    <Select value={form.frequency} onValueChange={(v) => setForm(f => ({ ...f, frequency: v as MedicationFrequency }))}>
-                      <SelectTrigger><SelectValue /></SelectTrigger>
-                      <SelectContent>
-                        {Object.entries(FREQUENCY_LABELS).map(([value, label]) => (
-                          <SelectItem key={value} value={value}>{label}</SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                    <Label className="text-xs text-muted-foreground">
+                      {form.status === 'previous' ? 'Slutade' : 'Slutdatum (valfritt)'}
+                    </Label>
+                    <Input
+                      type="date"
+                      value={form.stoppedAt}
+                      onChange={e => setForm(f => ({ ...f, stoppedAt: e.target.value }))}
+                    />
                   </div>
                 </div>
+                <div>
+                  <Label className="text-xs text-muted-foreground">Hur ofta</Label>
+                  <Select value={form.frequency} onValueChange={(v) => setForm(f => ({ ...f, frequency: v as MedicationFrequency }))}>
+                    <SelectTrigger><SelectValue /></SelectTrigger>
+                    <SelectContent>
+                      {Object.entries(FREQUENCY_LABELS).map(([value, label]) => (
+                        <SelectItem key={value} value={value}>{label}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {/* Trial / regular medication toggle */}
+                <button
+                  type="button"
+                  onClick={() => setForm(f => ({ ...f, isTrial: !f.isTrial }))}
+                  className={`w-full flex items-start gap-3 p-3 rounded-lg border-2 text-left transition-all ${
+                    form.isTrial
+                      ? 'border-amber-500/40 bg-amber-500/10'
+                      : 'border-border bg-muted/30 hover:border-amber-500/30'
+                  }`}
+                >
+                  <div className={`mt-0.5 flex-shrink-0 w-5 h-5 rounded border-2 flex items-center justify-center ${
+                    form.isTrial ? 'border-amber-500 bg-amber-500' : 'border-muted-foreground/40'
+                  }`}>
+                    {form.isTrial && <Check className="h-3 w-3 text-white" />}
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex items-center gap-1.5">
+                      <FlaskConical className="h-4 w-4 text-amber-600 dark:text-amber-400" />
+                      <span className="text-sm font-medium">Provmedicin (nyinsatt / under utvärdering)</span>
+                    </div>
+                    <p className="text-xs text-muted-foreground mt-0.5">
+                      Markera om detta är en medicin du provar – så hålls den isär från dina grundmediciner när du rapporterar biverkningar.
+                    </p>
+                  </div>
+                </button>
               </div>
             </div>
 
