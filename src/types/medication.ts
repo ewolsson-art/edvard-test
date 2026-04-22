@@ -86,9 +86,23 @@ export interface Medication {
   effectiveness: MedicationEffectiveness | null;
   notes: string | null;
   is_trial: boolean;
+  indication: string | null;
   created_at: string;
   updated_at: string;
 }
+
+// Common indications for quick selection (what the medication is taken for)
+export const COMMON_INDICATIONS = [
+  'Nedstämdhet',
+  'Uppvarvad',
+  'Stämningsstabiliserare',
+  'ADHD',
+  'Ångest',
+  'Sömnsvårigheter',
+  'Tvång (OCD)',
+  'Psykos',
+  'Annat',
+];
 
 export interface MedicationLog {
   id: string;
