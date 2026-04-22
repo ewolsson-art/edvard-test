@@ -60,6 +60,8 @@ interface MedFormState {
   stoppedAt: string;
   stopReason: string;
   isTrial: boolean;
+  indication: string;
+  customIndication: string;
 }
 
 const emptyForm = (): MedFormState => ({
@@ -75,6 +77,8 @@ const emptyForm = (): MedFormState => ({
   stoppedAt: '',
   stopReason: '',
   isTrial: false,
+  indication: '',
+  customIndication: '',
 });
 
 const Medications = () => {
