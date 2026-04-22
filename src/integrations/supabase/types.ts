@@ -367,10 +367,16 @@ export type Database = {
           active: boolean
           created_at: string
           dosage: string
+          effectiveness: string | null
           frequency: string
           id: string
           name: string
+          notes: string | null
+          side_effects: string[] | null
           started_at: string
+          status: string
+          stop_reason: string | null
+          stopped_at: string | null
           updated_at: string
           user_id: string
         }
@@ -378,10 +384,16 @@ export type Database = {
           active?: boolean
           created_at?: string
           dosage: string
+          effectiveness?: string | null
           frequency?: string
           id?: string
           name: string
+          notes?: string | null
+          side_effects?: string[] | null
           started_at?: string
+          status?: string
+          stop_reason?: string | null
+          stopped_at?: string | null
           updated_at?: string
           user_id: string
         }
@@ -389,10 +401,16 @@ export type Database = {
           active?: boolean
           created_at?: string
           dosage?: string
+          effectiveness?: string | null
           frequency?: string
           id?: string
           name?: string
+          notes?: string | null
+          side_effects?: string[] | null
           started_at?: string
+          status?: string
+          stop_reason?: string | null
+          stopped_at?: string | null
           updated_at?: string
           user_id?: string
         }
