@@ -457,7 +457,7 @@ export const MedicationsSection = () => {
 
 // Medication row component
 interface MedicationRowProps {
-  med: { id: string; name: string; dosage: string; started_at: string; frequency: MedicationFrequency; active: boolean };
+  med: { id: string; name: string; dosage: string; started_at: string; frequency: MedicationFrequency; active: boolean; is_trial?: boolean };
   editingId: string | null;
   editName: string;
   editDosage: string;
