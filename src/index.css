@@ -968,3 +968,31 @@
   animation-delay: var(--star-delay);
   opacity: 0;
 }
+
+/* Markdown prose styling for AskToddy chat */
+.prose-toddy { font-size: 15px; line-height: 1.6; }
+.prose-toddy p { margin: 0 0 0.6em; }
+.prose-toddy p:last-child { margin-bottom: 0; }
+.prose-toddy h1, .prose-toddy h2, .prose-toddy h3 {
+  font-weight: 700; margin: 0.8em 0 0.4em; line-height: 1.25;
+}
+.prose-toddy h1 { font-size: 1.15rem; }
+.prose-toddy h2 { font-size: 1.05rem; }
+.prose-toddy h3 { font-size: 1rem; }
+.prose-toddy ul, .prose-toddy ol { margin: 0.5em 0 0.7em; padding-left: 1.25em; }
+.prose-toddy li { margin: 0.2em 0; }
+.prose-toddy ul > li { list-style: disc; }
+.prose-toddy ol > li { list-style: decimal; }
+.prose-toddy strong { font-weight: 600; color: hsl(var(--foreground)); }
+.prose-toddy em { font-style: italic; }
+.prose-toddy code {
+  background: hsl(var(--muted) / 0.5);
+  padding: 0.1em 0.35em; border-radius: 0.3em;
+  font-size: 0.9em;
+}
+.prose-toddy a { color: hsl(45 85% 55%); text-decoration: underline; text-underline-offset: 2px; }
+.prose-toddy blockquote {
+  border-left: 3px solid hsl(var(--border));
+  padding-left: 0.8em; margin: 0.6em 0;
+  color: hsl(var(--muted-foreground));
+}

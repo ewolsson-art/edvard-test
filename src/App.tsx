@@ -67,6 +67,7 @@ const Notifications = lazy(() => import("./pages/Notifications"));
 const Insights = lazy(() => import("./pages/Insights"));
 const BadDay = lazy(() => import("./pages/BadDay"));
 const Diagnoses = lazy(() => import("./pages/Diagnoses"));
+const AskToddy = lazy(() => import("./pages/AskToddy"));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -230,6 +231,11 @@ const App = () => (
             <Route path="/notiser" element={
               <ProtectedRoute>
                 <AppLayout><Notifications /></AppLayout>
+              </ProtectedRoute>
+            } />
+            <Route path="/fraga" element={
+              <ProtectedRoute>
+                <AppLayout><AskToddy /></AppLayout>
               </ProtectedRoute>
             } />
 
