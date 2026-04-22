@@ -151,6 +151,7 @@ export function useMedications() {
     if (input.stoppedAt !== undefined) updates.stopped_at = input.stoppedAt;
     if (input.stopReason !== undefined) updates.stop_reason = input.stopReason;
     if (input.isTrial !== undefined) updates.is_trial = input.isTrial;
+    if (input.indication !== undefined) updates.indication = input.indication;
 
     const { error } = await supabase
       .from('medications')
