@@ -156,6 +156,10 @@ const Medications = () => {
     if (!form.name.trim() || !form.dosage.trim()) return;
     // For previously tested medications, dates are optional — fall back to today so the DB stays valid
     const effectiveStartedAt = form.startedAt || today;
+    const indicationValue =
+      form.indication === 'Annat'
+        ? (form.customIndication.trim() || null)
+        : (form.indication.trim() || null);
     const payload: AddMedicationInput = {
       name: form.name.trim(),
       dosage: form.dosage.trim(),
@@ -168,6 +172,7 @@ const Medications = () => {
       stoppedAt: form.status === 'previous' ? (form.stoppedAt || effectiveStartedAt) : (form.stoppedAt || null),
       stopReason: form.stopReason.trim() || null,
       isTrial: form.isTrial,
+      indication: indicationValue,
     };
     if (editingMed) {
       await updateMedication(editingMed.id, payload);
