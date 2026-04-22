@@ -202,7 +202,7 @@ const Medications = () => {
     );
   }
 
-  const allCurrent = [...currentMedications, ...asNeededMedications, ...pausedMedications];
+  const allCurrent = [...currentMedications, ...asNeededMedications];
   const hasAny = medications.length > 0;
 
   return (
@@ -339,16 +339,6 @@ const Medications = () => {
                       ))}
                     </div>
                   )}
-                  {pausedMedications.length > 0 && (
-                    <div className="pt-2">
-                      <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-2 px-1">
-                        Pausade
-                      </p>
-                      {pausedMedications.map(med => (
-                        <MedCard key={med.id} med={med} onClick={() => setDetailMed(med)} accent="muted" />
-                      ))}
-                    </div>
-                  )}
                 </>
               )}
             </TabsContent>
@@ -387,8 +377,8 @@ const Medications = () => {
                 <span className="flex items-center justify-center w-5 h-5 rounded-full bg-primary/10 text-primary text-xs font-bold">1</span>
                 Tar du den nu eller har du testat den?
               </Label>
-              <div className="grid grid-cols-3 gap-2">
-                {(['current', 'previous', 'paused'] as MedicationStatus[]).map(s => (
+              <div className="grid grid-cols-2 gap-2">
+                {(['current', 'previous'] as MedicationStatus[]).map(s => (
                   <button
                     key={s}
                     type="button"
@@ -740,8 +730,8 @@ const Medications = () => {
                 {/* Quick status switch */}
                 <div className="space-y-1.5 pt-2 border-t border-border">
                   <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Ändra status</p>
-                  <div className="grid grid-cols-3 gap-1.5">
-                    {(['current', 'paused', 'previous'] as MedicationStatus[]).map(s => {
+                  <div className="grid grid-cols-2 gap-1.5">
+                    {(['current', 'previous'] as MedicationStatus[]).map(s => {
                       const currentStatus = detailMed.status ?? (detailMed.active ? 'current' : 'previous');
                       const isCurrent = currentStatus === s;
                       return (
