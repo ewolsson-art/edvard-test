@@ -147,8 +147,7 @@ const Profile = () => {
   }
 
   if (view === 'medications') {
-    navigate('/mediciner');
-    return null;
+    return <Navigate to="/mediciner" replace />;
   }
   if (view === 'doctors') {
     return <SubPage title={t('profile.caregivers')} onBack={() => setView('main')}><DoctorConnectionsSection /></SubPage>;
