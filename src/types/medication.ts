@@ -15,12 +15,11 @@ export const FREQUENCY_LABELS: Record<MedicationFrequency, string> = {
   other: 'Annan',
 };
 
-export type MedicationStatus = 'current' | 'previous' | 'paused';
+export type MedicationStatus = 'current' | 'previous';
 
 export const STATUS_LABELS: Record<MedicationStatus, string> = {
   current: 'Tar nu',
   previous: 'Har testat',
-  paused: 'Pausad',
 };
 
 export type MedicationEffectiveness =
