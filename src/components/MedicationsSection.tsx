@@ -296,15 +296,8 @@ export const MedicationsSection = () => {
       {medications.length === 0 ? (
         <p className="text-sm text-muted-foreground">Inga mediciner tillagda ännu.</p>
       ) : (
-        <Collapsible open={isExpanded} onOpenChange={setIsExpanded}>
-          <CollapsibleTrigger asChild>
-            <Button variant="ghost" size="sm" className="w-full justify-between">
-              <span className="text-sm">{medications.length} mediciner totalt</span>
-              {isExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
-            </Button>
-          </CollapsibleTrigger>
-          <CollapsibleContent className="space-y-4 pt-3">
-            {/* Pågående (ongoing base meds) */}
+        <div className="space-y-4 pt-1">
+          {/* Pågående (ongoing base meds) */}
             {ongoingMedications.length > 0 && (
               <div className="space-y-2">
                 <div className="flex items-center gap-2 px-1">
@@ -448,8 +441,7 @@ export const MedicationsSection = () => {
                 </CollapsibleContent>
               </Collapsible>
             )}
-          </CollapsibleContent>
-        </Collapsible>
+        </div>
       )}
     </div>
   );
