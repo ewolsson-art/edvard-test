@@ -74,6 +74,10 @@ export const MedicationsSection = () => {
     isMedicationTakenOnDate,
   } = useMedications();
 
+  // Split active meds into ongoing vs. trial (under evaluation)
+  const ongoingMedications = activeMedications.filter(m => !m.is_trial);
+  const trialMedications = activeMedications.filter(m => m.is_trial);
+
   const today = format(new Date(), 'yyyy-MM-dd');
   const todayLabel = format(new Date(), 'EEEE d MMMM', { locale: sv });
 
