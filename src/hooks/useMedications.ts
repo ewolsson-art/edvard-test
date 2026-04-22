@@ -250,11 +250,15 @@ export function useMedications() {
     return logs.some(l => l.medication_id === medicationId && l.date === date);
   }, [logs]);
 
-  // Filter by status (preferred) with fallback to active flag
-  const currentMedications = medications.filter(m => (m.status ?? (m.active ? 'current' : 'previous')) === 'current' && m.frequency !== 'as_needed');
-  const asNeededMedications = medications.filter(m => (m.status ?? (m.active ? 'current' : 'previous')) === 'current' && m.frequency === 'as_needed');
-  const pausedMedications = medications.filter(m => m.status === 'paused');
-  const previousMedications = medications.filter(m => (m.status ?? (m.active ? 'current' : 'previous')) === 'previous');
+  // Filter by status (preferred) with fallback to active flag.
+  // Legacy 'paused' rows are treated as current so they remain visible after the status was removed.
+  const isCurrentStatus = (m: Medication) => {
+    const s = (m.status as string) ?? (m.active ? 'current' : 'previous');
+    return s !== 'previous';
+  };
+  const currentMedications = medications.filter(m => isCurrentStatus(m) && m.frequency !== 'as_needed');
+  const asNeededMedications = medications.filter(m => isCurrentStatus(m) && m.frequency === 'as_needed');
+  const previousMedications = medications.filter(m => !isCurrentStatus(m));
 
   // Backwards compat aliases
   const activeMedications = currentMedications;
@@ -265,7 +269,6 @@ export function useMedications() {
     currentMedications,
     activeMedications,
     asNeededMedications,
-    pausedMedications,
     previousMedications,
     inactiveMedications,
     logs,
