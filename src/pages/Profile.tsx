@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Navigate } from 'react-router-dom';
 import { z } from 'zod';
 import { useAuth } from '@/hooks/useAuth';
 import { useProfile } from '@/hooks/useProfile';
@@ -12,7 +12,6 @@ import { Label } from '@/components/ui/label';
 import { Loader2, User, Mail, Save, Stethoscope, HeartPulse, Building2, Hospital, Users, ChevronRight, Pill, UserPlus, Heart, ClipboardList, Sparkles, Zap, Sun, Cloud, FileText } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { DiagnosesSection } from '@/components/DiagnosesSection';
-import { MedicationsSection } from '@/components/MedicationsSection';
 import { DoctorConnectionsSection } from '@/components/DoctorConnectionsSection';
 import { RelativeConnectionsSection } from '@/components/RelativeConnectionsSection';
 import { DelegatesSection } from '@/components/DelegatesSection';
@@ -148,7 +147,7 @@ const Profile = () => {
   }
 
   if (view === 'medications') {
-    return <SubPage title={t('profile.medications')} onBack={() => setView('main')}><MedicationsSection /></SubPage>;
+    return <Navigate to="/mediciner" replace />;
   }
   if (view === 'doctors') {
     return <SubPage title={t('profile.caregivers')} onBack={() => setView('main')}><DoctorConnectionsSection /></SubPage>;
