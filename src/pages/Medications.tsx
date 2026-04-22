@@ -683,6 +683,14 @@ const Medications = () => {
                     <span className="font-medium">Provmedicin – under utvärdering</span>
                   </div>
                 )}
+                {detailMed.indication && (
+                  <div className="space-y-1.5">
+                    <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Tas mot</p>
+                    <span className="inline-flex items-center px-3 py-1 rounded-full border border-primary/30 bg-primary/10 text-primary text-sm">
+                      {detailMed.indication}
+                    </span>
+                  </div>
+                )}
                 <div className="grid grid-cols-2 gap-3 text-sm">
                   <InfoRow label="Hur ofta" value={FREQUENCY_LABELS[detailMed.frequency]} />
                   <InfoRow label="Startade" value={formatDate(detailMed.started_at)} />
