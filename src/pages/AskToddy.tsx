@@ -167,7 +167,14 @@ export default function AskToddy() {
   // - Only the message list scrolls
   // The parent <main> already adds pb-tabbar on mobile, so a normal flex column fills correctly.
   return (
-    <AnimatedPage className="flex flex-col h-[100dvh] md:h-screen bg-background">
+    <AnimatedPage
+      className={cn(
+        // Mobile: lock to viewport, sit above the BottomTabBar (~4.5rem + safe-area)
+        "fixed inset-x-0 top-0 bottom-[calc(env(safe-area-inset-bottom)+4.5rem)] z-10 flex flex-col bg-background",
+        // Desktop: normal in-flow page filling its parent
+        "md:static md:inset-auto md:bottom-auto md:h-screen md:z-auto",
+      )}
+    >
       <header className="sticky top-0 z-20 px-5 md:px-8 pt-[max(env(safe-area-inset-top),0.75rem)] md:pt-6 pb-3 md:pb-4 border-b border-border/30 bg-background/85 backdrop-blur-xl shrink-0">
         <div className="max-w-3xl mx-auto flex items-center gap-3">
           <div className="w-9 h-9 md:w-10 md:h-10 rounded-2xl bg-[hsl(45_85%_55%/0.15)] border border-[hsl(45_85%_55%/0.25)] flex items-center justify-center shrink-0">
