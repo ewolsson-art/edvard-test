@@ -11,6 +11,7 @@ import { useCustomCheckinQuestions } from '@/hooks/useCustomCheckinQuestions';
 import { StreakBadge } from '@/components/StreakBadge';
 import { CheckinData } from '@/types/mood';
 import { TodayCheckin } from '@/components/TodayCheckin';
+import { MissedDayPrompt } from '@/components/MissedDayPrompt';
 
 const Index = () => {
   const [searchParams, setSearchParams] = useSearchParams();
