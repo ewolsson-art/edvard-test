@@ -43,6 +43,7 @@ export interface AddMedicationInput {
   stoppedAt?: string | null;
   stopReason?: string | null;
   isTrial?: boolean;
+  indication?: string | null;
 }
 
 export interface UpdateMedicationInput extends AddMedicationInput {}
