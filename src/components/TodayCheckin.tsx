@@ -23,6 +23,7 @@ import { FullscreenComment } from '@/components/FullscreenComment';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { MilestoneInfo } from '@/hooks/useStreak';
 import { useTranslation } from 'react-i18next';
+import { motion } from 'framer-motion';
 
 interface StreakData {
   currentStreak: number;
