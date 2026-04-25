@@ -76,9 +76,14 @@ export function MonthCalendar({
       'depressed',
       'severe_depressed',
     ];
+    const total = Object.values(counts).reduce((sum, c) => sum + (c ?? 0), 0);
     return order
       .filter((m) => (counts[m] ?? 0) > 0)
-      .map((m) => ({ mood: m, count: counts[m] as number }));
+      .map((m) => ({
+        mood: m,
+        count: counts[m] as number,
+        percent: total > 0 ? Math.round(((counts[m] as number) / total) * 100) : 0,
+      }));
   }, [moodData]);
 
   const moodColorClass: Record<MoodType, string> = {
@@ -122,11 +127,11 @@ export function MonthCalendar({
       {/* Mood stats per month */}
       {moodStats.length > 0 && (
         <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 mb-4">
-          {moodStats.map(({ mood, count }) => (
+          {moodStats.map(({ mood, percent }) => (
             <div key={mood} className="flex items-center gap-1.5">
               <span className={cn('h-2 w-2 rounded-full', moodColorClass[mood])} aria-hidden="true" />
               <span className="text-[12px] text-foreground/70">
-                <span className="font-semibold text-foreground/85">{count}</span>{' '}
+                <span className="font-semibold text-foreground/85">{percent}%</span>{' '}
                 <span className="text-foreground/55">{moodLabels[mood].toLowerCase()}</span>
               </span>
             </div>
