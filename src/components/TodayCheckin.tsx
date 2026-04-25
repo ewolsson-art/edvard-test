@@ -582,14 +582,23 @@ export function TodayCheckin({
           </div>
 
           {checkinData.mood && (
-            <div className="flex justify-center pt-4 pb-2">
+            <div className="flex flex-col items-stretch gap-2.5 pt-4 pb-2 max-w-md mx-auto w-full">
               <button
                 onClick={handleMoodContinue}
-                className="px-10 py-3.5 rounded-full bg-[hsl(45_85%_55%)] text-[hsl(225_30%_7%)] font-bold text-base tracking-wide shadow-[0_4px_24px_hsl(45_85%_55%/0.35)] hover:shadow-[0_8px_32px_hsl(45_85%_55%/0.5)] hover:bg-[hsl(45_85%_62%)] hover:scale-105 active:scale-[0.98] transition-all duration-200 inline-flex items-center gap-1.5"
+                className="px-8 py-3.5 rounded-full bg-[hsl(45_85%_55%)] text-[hsl(225_30%_7%)] font-bold text-base tracking-wide shadow-[0_4px_24px_hsl(45_85%_55%/0.35)] hover:shadow-[0_8px_32px_hsl(45_85%_55%/0.5)] hover:bg-[hsl(45_85%_62%)] hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 inline-flex items-center justify-center gap-1.5"
               >
-                {t('common.continue')}
+                {t('checkin.detailedCheckin')}
                 <ChevronRight className="w-4 h-4" />
               </button>
+              <button
+                onClick={() => handleCompleteWithData({ mood: checkinData.mood })}
+                className="px-8 py-3 rounded-full border border-border/40 bg-transparent text-foreground/70 font-medium text-sm tracking-wide hover:bg-white/[0.04] hover:text-foreground hover:border-border/70 active:scale-[0.98] transition-all duration-200 inline-flex items-center justify-center gap-1.5"
+              >
+                {t('checkin.quickCheckin')}
+              </button>
+              <p className="text-[11px] text-muted-foreground/40 text-center mt-1">
+                {t('checkin.bothCountStreak')}
+              </p>
             </div>
           )}
         </div>
