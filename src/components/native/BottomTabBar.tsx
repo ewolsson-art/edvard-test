@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
-import { CalendarDays, BarChart3, MessageCircle, Bell, UserCircle, Home, Users, type LucideIcon } from 'lucide-react';
+import { CalendarDays, BarChart3, MessageCircle, Bell, UserCircle, Home, Users, Bot, type LucideIcon } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useUserRole } from '@/hooks/useUserRole';
 import { useNotifications } from '@/hooks/useNotifications';
@@ -35,8 +35,8 @@ export function BottomTabBar() {
     { to: '/', label: t('sidebar.today'), icon: CalendarDays, exact: true },
     { to: '/oversikt', label: t('sidebar.overview'), icon: BarChart3 },
     { to: '/forum', label: t('sidebar.forum'), icon: MessageCircle },
-    { to: '/notiser', label: t('sidebar.notifications'), icon: Bell, badge: unreadCount },
-    { to: '/profil', label: t('sidebar.myProfile'), icon: UserCircle, dot: hasPending },
+    { to: '/fraga', label: t('sidebar.askToddy'), icon: Bot },
+    { to: '/profil', label: t('sidebar.myProfile'), icon: UserCircle, dot: hasPending || unreadCount > 0 },
   ];
 
   const doctorTabs: TabItem[] = [
