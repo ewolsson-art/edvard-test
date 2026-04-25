@@ -551,23 +551,38 @@ export function TodayCheckin({
               </Button>
             ) : <div />}
 
-            {/* Discreet mode toggle */}
+            {/* Playful animated mode toggle */}
             <div
               role="tablist"
               aria-label={t('checkin.checkinMode')}
-              className="inline-flex items-center rounded-full border border-border/40 bg-white/[0.02] p-0.5 text-[11px] font-medium"
+              className="relative inline-flex items-center rounded-full border border-border/30 bg-foreground/[0.04] backdrop-blur-md p-1 text-[11px] font-semibold shadow-inner"
             >
+              {/* Sliding thumb */}
+              <motion.div
+                aria-hidden
+                className="absolute top-1 bottom-1 rounded-full bg-gradient-to-b from-[hsl(45_90%_60%)] to-[hsl(42_90%_50%)] shadow-[0_2px_12px_hsl(45_85%_55%/0.45)]"
+                initial={false}
+                animate={{
+                  left: checkinMode === 'quick' ? 4 : '50%',
+                  right: checkinMode === 'quick' ? '50%' : 4,
+                }}
+                transition={{ type: 'spring', stiffness: 500, damping: 32, mass: 0.7 }}
+              />
               <button
                 role="tab"
                 aria-selected={checkinMode === 'quick'}
                 onClick={() => setCheckinMode('quick')}
                 className={cn(
-                  "px-2.5 py-1 rounded-full transition-all duration-200",
+                  "relative z-10 flex items-center gap-1.5 px-3 py-1.5 rounded-full transition-colors duration-300",
                   checkinMode === 'quick'
-                    ? "bg-foreground/10 text-foreground"
-                    : "text-muted-foreground/60 hover:text-foreground/80"
+                    ? "text-[hsl(225_30%_7%)]"
+                    : "text-muted-foreground/70 hover:text-foreground/90"
                 )}
               >
+                <Zap className={cn(
+                  "w-3 h-3 transition-transform duration-300",
+                  checkinMode === 'quick' && "scale-110"
+                )} />
                 {t('checkin.quickCheckin')}
               </button>
               <button
@@ -575,12 +590,16 @@ export function TodayCheckin({
                 aria-selected={checkinMode === 'detailed'}
                 onClick={() => setCheckinMode('detailed')}
                 className={cn(
-                  "px-2.5 py-1 rounded-full transition-all duration-200",
+                  "relative z-10 flex items-center gap-1.5 px-3 py-1.5 rounded-full transition-colors duration-300",
                   checkinMode === 'detailed'
-                    ? "bg-foreground/10 text-foreground"
-                    : "text-muted-foreground/60 hover:text-foreground/80"
+                    ? "text-[hsl(225_30%_7%)]"
+                    : "text-muted-foreground/70 hover:text-foreground/90"
                 )}
               >
+                <Pencil className={cn(
+                  "w-3 h-3 transition-transform duration-300",
+                  checkinMode === 'detailed' && "scale-110"
+                )} />
                 {t('checkin.detailedCheckin')}
               </button>
             </div>
