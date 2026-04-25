@@ -550,6 +550,40 @@ export function TodayCheckin({
                 {t('checkin.cancel')}
               </Button>
             ) : <div />}
+
+            {/* Discreet mode toggle */}
+            <div
+              role="tablist"
+              aria-label={t('checkin.checkinMode')}
+              className="inline-flex items-center rounded-full border border-border/40 bg-white/[0.02] p-0.5 text-[11px] font-medium"
+            >
+              <button
+                role="tab"
+                aria-selected={checkinMode === 'quick'}
+                onClick={() => setCheckinMode('quick')}
+                className={cn(
+                  "px-2.5 py-1 rounded-full transition-all duration-200",
+                  checkinMode === 'quick'
+                    ? "bg-foreground/10 text-foreground"
+                    : "text-muted-foreground/60 hover:text-foreground/80"
+                )}
+              >
+                {t('checkin.quickCheckin')}
+              </button>
+              <button
+                role="tab"
+                aria-selected={checkinMode === 'detailed'}
+                onClick={() => setCheckinMode('detailed')}
+                className={cn(
+                  "px-2.5 py-1 rounded-full transition-all duration-200",
+                  checkinMode === 'detailed'
+                    ? "bg-foreground/10 text-foreground"
+                    : "text-muted-foreground/60 hover:text-foreground/80"
+                )}
+              >
+                {t('checkin.detailedCheckin')}
+              </button>
+            </div>
           </div>
 
           {/* Date label + Heading + Streak */}
