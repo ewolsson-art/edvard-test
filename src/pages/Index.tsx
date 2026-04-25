@@ -71,6 +71,14 @@ const Index = () => {
 
   const handleSaveCheckin = async (data: CheckinData): Promise<boolean> => {
     const result = await saveCheckin(selectedDateStr, data);
+    if (result && !isSelectedToday) {
+      // After completing a retroactive check-in, return to today so the user
+      // can continue with their normal flow.
+      setTimeout(() => {
+        setSelectedDate(new Date());
+        setSearchParams({});
+      }, 3600);
+    }
     return result ?? false;
   };
 
