@@ -91,19 +91,19 @@ export function MonthCalendar({
   }, [moodData]);
 
   const groupColorClass: Record<MoodGroup, string> = {
-    elevated: 'bg-mood-elevated',
-    stable: 'bg-mood-stable',
-    depressed: 'bg-mood-depressed',
+    elevated: 'bg-[hsl(45_95%_55%)]',
+    stable: 'bg-[hsl(142_70%_45%)]',
+    depressed: 'bg-[hsl(0_75%_55%)]',
   };
 
   const moodDotClass: Record<MoodType, string> = {
-    severe_elevated: 'bg-[hsl(var(--mood-severe-elevated))]',
-    elevated: 'bg-mood-elevated',
-    somewhat_elevated: 'bg-mood-somewhat-elevated',
-    stable: 'bg-mood-stable',
-    somewhat_depressed: 'bg-mood-somewhat-depressed',
-    depressed: 'bg-mood-depressed',
-    severe_depressed: 'bg-[hsl(var(--mood-severe-depressed))]',
+    severe_elevated: 'bg-[hsl(45_95%_55%)]',
+    elevated: 'bg-[hsl(45_95%_55%/0.7)]',
+    somewhat_elevated: 'bg-[hsl(45_95%_55%/0.5)]',
+    stable: 'bg-[hsl(142_70%_45%)]',
+    somewhat_depressed: 'bg-[hsl(0_75%_55%/0.5)]',
+    depressed: 'bg-[hsl(0_75%_55%/0.7)]',
+    severe_depressed: 'bg-[hsl(0_75%_55%)]',
   };
 
   const groupLabel: Record<MoodGroup, string> = {
