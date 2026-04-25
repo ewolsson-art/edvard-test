@@ -214,6 +214,7 @@ const Profile = () => {
           <SettingsGroup label={t('profile.medicalInfo')}>
             <SettingsRow icon={Pill} label={t('profile.medications')} description={t('profile.manageMeds')} onClick={() => setView('medications')} />
             <SettingsRow icon={ClipboardList} label={t('profile.diagnoses')} description={t('profile.yourDiagnoses')} onClick={() => setView('diagnoses')} />
+            <SettingsRow icon={Sparkles} label={t('profile.characteristics')} description={t('profile.manageCharacteristics')} onClick={() => setView('characteristics')} />
             <SettingsRow icon={FileText} label={t('profile.reports')} description={t('profile.createShareReports')} onClick={() => setView('reports')} />
           </SettingsGroup>
         )}
