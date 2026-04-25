@@ -60,11 +60,42 @@ export function MonthCalendar({
     return Math.ceil((diff / oneWeek) + 1);
   };
 
+  // Mood distribution stats for this month
+  const moodStats = useMemo(() => {
+    const counts: Partial<Record<MoodType, number>> = {};
+    Object.values(moodData).forEach((m) => {
+      counts[m] = (counts[m] ?? 0) + 1;
+    });
+    // Order matches mood scale (elevated → depressed)
+    const order: MoodType[] = [
+      'severe_elevated',
+      'elevated',
+      'somewhat_elevated',
+      'stable',
+      'somewhat_depressed',
+      'depressed',
+      'severe_depressed',
+    ];
+    return order
+      .filter((m) => (counts[m] ?? 0) > 0)
+      .map((m) => ({ mood: m, count: counts[m] as number }));
+  }, [moodData]);
+
+  const moodColorClass: Record<MoodType, string> = {
+    severe_elevated: 'bg-[hsl(var(--mood-severe-elevated))]',
+    elevated: 'bg-mood-elevated',
+    somewhat_elevated: 'bg-mood-somewhat-elevated',
+    stable: 'bg-mood-stable',
+    somewhat_depressed: 'bg-mood-somewhat-depressed',
+    depressed: 'bg-mood-depressed',
+    severe_depressed: 'bg-[hsl(var(--mood-severe-depressed))]',
+  };
+
   return (
     <div className="fade-in">
       {/* Navigation */}
       {/* Month title with navigation */}
-      <div className="flex items-center gap-3 mb-4">
+      <div className="flex items-center gap-3 mb-2 flex-wrap">
         {!hideNavigation && (
           <button
             onClick={onPrevMonth}
@@ -87,6 +118,21 @@ export function MonthCalendar({
           </button>
         )}
       </div>
+
+      {/* Mood stats per month */}
+      {moodStats.length > 0 && (
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 mb-4">
+          {moodStats.map(({ mood, count }) => (
+            <div key={mood} className="flex items-center gap-1.5">
+              <span className={cn('h-2 w-2 rounded-full', moodColorClass[mood])} aria-hidden="true" />
+              <span className="text-[12px] text-foreground/70">
+                <span className="font-semibold text-foreground/85">{count}</span>{' '}
+                <span className="text-foreground/55">{moodLabels[mood].toLowerCase()}</span>
+              </span>
+            </div>
+          ))}
+        </div>
+      )}
 
       {/* Weekday headers */}
       <div className="grid grid-cols-7 mb-1">
