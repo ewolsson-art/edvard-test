@@ -124,30 +124,24 @@ export function MonthCalendar({
                   onDoubleClick={() => isCurrentMonth && onDayDoubleClick?.(day)}
                   disabled={!isCurrentMonth}
                   className={cn(
-                    "relative flex flex-col items-center justify-center py-4 transition-all duration-150",
+                    "relative flex flex-col items-center justify-center py-4 rounded-md transition-all duration-150",
                     !isCurrentMonth && "opacity-15",
-                    isCurrentMonth && "hover:bg-muted/30 hover:scale-110 hover:z-10 hover:rounded-md",
-                    !isTodayDate && mood === 'severe_elevated' && "bg-[hsl(var(--mood-severe-elevated)/0.08)]",
-                    !isTodayDate && mood === 'elevated' && "bg-mood-elevated/8",
-                    !isTodayDate && mood === 'somewhat_elevated' && "bg-mood-somewhat-elevated/8",
-                    !isTodayDate && mood === 'stable' && "bg-mood-stable/8",
-                    !isTodayDate && mood === 'somewhat_depressed' && "bg-mood-somewhat-depressed/8",
-                    !isTodayDate && mood === 'depressed' && "bg-mood-depressed/8",
-                    !isTodayDate && mood === 'severe_depressed' && "bg-[hsl(var(--mood-severe-depressed)/0.08)]",
+                    isCurrentMonth && "hover:scale-105 hover:z-10",
+                    !isTodayDate && mood === 'severe_elevated' && "bg-[hsl(var(--mood-severe-elevated)/0.35)]",
+                    !isTodayDate && mood === 'elevated' && "bg-[hsl(var(--mood-elevated)/0.32)]",
+                    !isTodayDate && mood === 'somewhat_elevated' && "bg-[hsl(var(--mood-somewhat-elevated)/0.28)]",
+                    !isTodayDate && mood === 'stable' && "bg-[hsl(var(--mood-stable)/0.28)]",
+                    !isTodayDate && mood === 'somewhat_depressed' && "bg-[hsl(var(--mood-somewhat-depressed)/0.28)]",
+                    !isTodayDate && mood === 'depressed' && "bg-[hsl(var(--mood-depressed)/0.32)]",
+                    !isTodayDate && mood === 'severe_depressed' && "bg-[hsl(var(--mood-severe-depressed)/0.35)]",
                     showMissed && "bg-muted-foreground/10",
-                    isTodayDate && "bg-foreground/10 rounded-md",
+                    isTodayDate && "bg-foreground/15 ring-1 ring-foreground/30",
                   )}
                 >
                   <span className={cn(
-                    "flex items-center justify-center text-base font-medium leading-none",
+                    "flex items-center justify-center text-base font-semibold leading-none",
                     isTodayDate && "text-foreground font-bold text-lg",
-                    !isTodayDate && mood === 'severe_elevated' && "text-[hsl(var(--mood-severe-elevated))]",
-                    !isTodayDate && mood === 'elevated' && "text-mood-elevated",
-                    !isTodayDate && mood === 'somewhat_elevated' && "text-mood-somewhat-elevated",
-                    !isTodayDate && mood === 'stable' && "text-mood-stable",
-                    !isTodayDate && mood === 'somewhat_depressed' && "text-mood-somewhat-depressed",
-                    !isTodayDate && mood === 'depressed' && "text-mood-depressed",
-                    !isTodayDate && mood === 'severe_depressed' && "text-[hsl(var(--mood-severe-depressed))]",
+                    !isTodayDate && mood && "text-white",
                     !isTodayDate && !mood && isCurrentMonth && "text-foreground/60",
                     !isCurrentMonth && "text-muted-foreground"
                   )}>
@@ -161,10 +155,10 @@ export function MonthCalendar({
                   {/* Indicators */}
                   <div className="flex gap-1 mt-1 h-3">
                     {medCount && medCount > 0 && (
-                      <Pill className="h-3 w-3 text-primary/50" />
+                      <Pill className={cn("h-3 w-3", mood ? "text-white/80" : "text-primary/50")} />
                     )}
                     {hasRelativeComment && (
-                      <MessageCircle className="h-3 w-3 text-accent-foreground/50 fill-accent/50" />
+                      <MessageCircle className={cn("h-3 w-3", mood ? "text-white/80 fill-white/30" : "text-accent-foreground/50 fill-accent/50")} />
                     )}
                   </div>
                 </button>
