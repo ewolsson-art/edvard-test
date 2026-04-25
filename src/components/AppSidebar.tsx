@@ -30,8 +30,6 @@ const patientNavGroups = [
     items: [
       { titleKey: "sidebar.today", url: "/", icon: CalendarDays, primary: true },
       { titleKey: "sidebar.overview", url: "/oversikt", icon: BarChart3 },
-      { titleKey: "sidebar.characteristics", url: "/kannetecken", icon: Sparkles },
-      { titleKey: "sidebar.diagnoses", url: "/diagnoser", icon: Stethoscope },
       { titleKey: "sidebar.forum", url: "/forum", icon: MessageCircle },
       { titleKey: "sidebar.notifications", url: "/notiser", icon: Bell },
     ],
