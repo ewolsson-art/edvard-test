@@ -161,15 +161,15 @@ export const YearHeatmap = memo(function YearHeatmap({ year, entries, medication
       {/* Legend */}
       <div className="flex flex-wrap items-center gap-4 mt-8 pt-4 border-t border-border/30 justify-center">
         <div className="flex items-center gap-1.5">
-          <div className="w-2.5 h-2.5 rounded-full bg-mood-elevated" />
+          <div className="w-2.5 h-2.5 rounded-full bg-[hsl(45_95%_55%)]" />
           <span className="text-[11px] text-muted-foreground">Uppvarvad</span>
         </div>
         <div className="flex items-center gap-1.5">
-          <div className="w-2.5 h-2.5 rounded-full bg-mood-stable" />
+          <div className="w-2.5 h-2.5 rounded-full bg-[hsl(142_70%_45%)]" />
           <span className="text-[11px] text-muted-foreground">Stabil</span>
         </div>
         <div className="flex items-center gap-1.5">
-          <div className="w-2.5 h-2.5 rounded-full bg-mood-depressed" />
+          <div className="w-2.5 h-2.5 rounded-full bg-[hsl(0_75%_55%)]" />
           <span className="text-[11px] text-muted-foreground">Nedstämd</span>
         </div>
       </div>
