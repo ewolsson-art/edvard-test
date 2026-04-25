@@ -60,40 +60,40 @@ export function MonthCalendar({
     return Math.ceil((diff / oneWeek) + 1);
   };
 
-  // Mood distribution stats for this month
+  // Mood distribution stats for this month — grouped into 3 buckets
+  type MoodGroup = 'elevated' | 'stable' | 'depressed';
   const moodStats = useMemo(() => {
-    const counts: Partial<Record<MoodType, number>> = {};
+    const buckets: Record<MoodGroup, number> = { elevated: 0, stable: 0, depressed: 0 };
     Object.values(moodData).forEach((m) => {
-      counts[m] = (counts[m] ?? 0) + 1;
+      if (m === 'severe_elevated' || m === 'elevated' || m === 'somewhat_elevated') {
+        buckets.elevated += 1;
+      } else if (m === 'stable') {
+        buckets.stable += 1;
+      } else if (m === 'somewhat_depressed' || m === 'depressed' || m === 'severe_depressed') {
+        buckets.depressed += 1;
+      }
     });
-    // Order matches mood scale (elevated → depressed)
-    const order: MoodType[] = [
-      'severe_elevated',
-      'elevated',
-      'somewhat_elevated',
-      'stable',
-      'somewhat_depressed',
-      'depressed',
-      'severe_depressed',
-    ];
-    const total = Object.values(counts).reduce((sum, c) => sum + (c ?? 0), 0);
+    const total = buckets.elevated + buckets.stable + buckets.depressed;
+    const order: MoodGroup[] = ['elevated', 'stable', 'depressed'];
     return order
-      .filter((m) => (counts[m] ?? 0) > 0)
-      .map((m) => ({
-        mood: m,
-        count: counts[m] as number,
-        percent: total > 0 ? Math.round(((counts[m] as number) / total) * 100) : 0,
+      .filter((g) => buckets[g] > 0)
+      .map((g) => ({
+        group: g,
+        count: buckets[g],
+        percent: total > 0 ? Math.round((buckets[g] / total) * 100) : 0,
       }));
   }, [moodData]);
 
-  const moodColorClass: Record<MoodType, string> = {
-    severe_elevated: 'bg-[hsl(var(--mood-severe-elevated))]',
+  const groupColorClass: Record<MoodGroup, string> = {
     elevated: 'bg-mood-elevated',
-    somewhat_elevated: 'bg-mood-somewhat-elevated',
     stable: 'bg-mood-stable',
-    somewhat_depressed: 'bg-mood-somewhat-depressed',
     depressed: 'bg-mood-depressed',
-    severe_depressed: 'bg-[hsl(var(--mood-severe-depressed))]',
+  };
+
+  const groupLabel: Record<MoodGroup, string> = {
+    elevated: 'uppvarvad',
+    stable: moodLabels.stable.toLowerCase(),
+    depressed: 'nedstämd',
   };
 
   return (
@@ -127,12 +127,12 @@ export function MonthCalendar({
       {/* Mood stats per month */}
       {moodStats.length > 0 && (
         <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 mb-4">
-          {moodStats.map(({ mood, percent }) => (
-            <div key={mood} className="flex items-center gap-1.5">
-              <span className={cn('h-2 w-2 rounded-full', moodColorClass[mood])} aria-hidden="true" />
+          {moodStats.map(({ group, percent }) => (
+            <div key={group} className="flex items-center gap-1.5">
+              <span className={cn('h-2 w-2 rounded-full', groupColorClass[group])} aria-hidden="true" />
               <span className="text-[12px] text-foreground/70">
                 <span className="font-semibold text-foreground/85">{percent}%</span>{' '}
-                <span className="text-foreground/55">{moodLabels[mood].toLowerCase()}</span>
+                <span className="text-foreground/55">{groupLabel[group]}</span>
               </span>
             </div>
           ))}
