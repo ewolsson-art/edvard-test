@@ -136,13 +136,15 @@ export const YearHeatmap = memo(function YearHeatmap({ year, entries, medication
                           {...(isTodayDate ? { 'data-today': 'true' } : {})}
                         >
                           <span className={cn(
-                            "flex items-center justify-center text-[10px] w-5 h-5 rounded-full leading-none",
+                            "flex items-center justify-center text-[10px] w-5 h-5 rounded-full leading-none font-medium",
                             isTodayDate && "bg-primary text-primary-foreground font-bold",
-                            !isTodayDate && (mood === 'severe_elevated' || mood === 'elevated') && "text-mood-elevated font-medium",
-                            !isTodayDate && mood === 'somewhat_elevated' && "text-mood-somewhat-elevated font-medium",
-                            !isTodayDate && mood === 'stable' && "text-mood-stable font-medium",
-                            !isTodayDate && mood === 'somewhat_depressed' && "text-mood-somewhat-depressed font-medium",
-                            !isTodayDate && (mood === 'depressed' || mood === 'severe_depressed') && "text-mood-depressed font-medium",
+                            !isTodayDate && mood === 'severe_elevated' && "bg-[hsl(var(--mood-severe-elevated)/0.55)] text-white",
+                            !isTodayDate && mood === 'elevated' && "bg-[hsl(var(--mood-elevated)/0.5)] text-white",
+                            !isTodayDate && mood === 'somewhat_elevated' && "bg-[hsl(var(--mood-somewhat-elevated)/0.45)] text-white",
+                            !isTodayDate && mood === 'stable' && "bg-[hsl(var(--mood-stable)/0.45)] text-white",
+                            !isTodayDate && mood === 'somewhat_depressed' && "bg-[hsl(var(--mood-somewhat-depressed)/0.45)] text-white",
+                            !isTodayDate && mood === 'depressed' && "bg-[hsl(var(--mood-depressed)/0.5)] text-white",
+                            !isTodayDate && mood === 'severe_depressed' && "bg-[hsl(var(--mood-severe-depressed)/0.55)] text-white",
                             !isTodayDate && !mood && "text-muted-foreground/70"
                           )}>
                             {day.getDate()}
