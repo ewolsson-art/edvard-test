@@ -138,13 +138,11 @@ export const YearHeatmap = memo(function YearHeatmap({ year, entries, medication
                           <span className={cn(
                             "flex items-center justify-center text-[10px] w-5 h-5 rounded-full leading-none font-medium",
                             isTodayDate && "bg-primary text-primary-foreground font-bold",
-                            !isTodayDate && mood === 'severe_elevated' && "bg-[hsl(var(--mood-severe-elevated)/0.55)] text-white",
-                            !isTodayDate && mood === 'elevated' && "bg-[hsl(var(--mood-elevated)/0.5)] text-white",
-                            !isTodayDate && mood === 'somewhat_elevated' && "bg-[hsl(var(--mood-somewhat-elevated)/0.45)] text-white",
-                            !isTodayDate && mood === 'stable' && "bg-[hsl(var(--mood-stable)/0.45)] text-white",
-                            !isTodayDate && mood === 'somewhat_depressed' && "bg-[hsl(var(--mood-somewhat-depressed)/0.45)] text-white",
-                            !isTodayDate && mood === 'depressed' && "bg-[hsl(var(--mood-depressed)/0.5)] text-white",
-                            !isTodayDate && mood === 'severe_depressed' && "bg-[hsl(var(--mood-severe-depressed)/0.55)] text-white",
+                            !isTodayDate && mood === 'severe_elevated' && "bg-[hsl(45_95%_55%/0.85)] text-white",
+                            !isTodayDate && (mood === 'elevated' || mood === 'somewhat_elevated') && "bg-[hsl(45_95%_55%/0.5)] text-white",
+                            !isTodayDate && mood === 'stable' && "bg-[hsl(142_70%_45%/0.5)] text-white",
+                            !isTodayDate && (mood === 'depressed' || mood === 'somewhat_depressed') && "bg-[hsl(0_75%_55%/0.5)] text-white",
+                            !isTodayDate && mood === 'severe_depressed' && "bg-[hsl(0_75%_55%/0.85)] text-white",
                             !isTodayDate && !mood && "text-muted-foreground/70"
                           )}>
                             {day.getDate()}
@@ -163,15 +161,15 @@ export const YearHeatmap = memo(function YearHeatmap({ year, entries, medication
       {/* Legend */}
       <div className="flex flex-wrap items-center gap-4 mt-8 pt-4 border-t border-border/30 justify-center">
         <div className="flex items-center gap-1.5">
-          <div className="w-2.5 h-2.5 rounded-full bg-mood-elevated" />
+          <div className="w-2.5 h-2.5 rounded-full bg-[hsl(45_95%_55%)]" />
           <span className="text-[11px] text-muted-foreground">Uppvarvad</span>
         </div>
         <div className="flex items-center gap-1.5">
-          <div className="w-2.5 h-2.5 rounded-full bg-mood-stable" />
+          <div className="w-2.5 h-2.5 rounded-full bg-[hsl(142_70%_45%)]" />
           <span className="text-[11px] text-muted-foreground">Stabil</span>
         </div>
         <div className="flex items-center gap-1.5">
-          <div className="w-2.5 h-2.5 rounded-full bg-mood-depressed" />
+          <div className="w-2.5 h-2.5 rounded-full bg-[hsl(0_75%_55%)]" />
           <span className="text-[11px] text-muted-foreground">Nedstämd</span>
         </div>
       </div>

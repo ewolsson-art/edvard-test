@@ -91,19 +91,19 @@ export function MonthCalendar({
   }, [moodData]);
 
   const groupColorClass: Record<MoodGroup, string> = {
-    elevated: 'bg-mood-elevated',
-    stable: 'bg-mood-stable',
-    depressed: 'bg-mood-depressed',
+    elevated: 'bg-[hsl(45_95%_55%)]',
+    stable: 'bg-[hsl(142_70%_45%)]',
+    depressed: 'bg-[hsl(0_75%_55%)]',
   };
 
   const moodDotClass: Record<MoodType, string> = {
-    severe_elevated: 'bg-[hsl(var(--mood-severe-elevated))]',
-    elevated: 'bg-mood-elevated',
-    somewhat_elevated: 'bg-mood-somewhat-elevated',
-    stable: 'bg-mood-stable',
-    somewhat_depressed: 'bg-mood-somewhat-depressed',
-    depressed: 'bg-mood-depressed',
-    severe_depressed: 'bg-[hsl(var(--mood-severe-depressed))]',
+    severe_elevated: 'bg-[hsl(45_95%_55%)]',
+    elevated: 'bg-[hsl(45_95%_55%/0.7)]',
+    somewhat_elevated: 'bg-[hsl(45_95%_55%/0.5)]',
+    stable: 'bg-[hsl(142_70%_45%)]',
+    somewhat_depressed: 'bg-[hsl(0_75%_55%/0.5)]',
+    depressed: 'bg-[hsl(0_75%_55%/0.7)]',
+    severe_depressed: 'bg-[hsl(0_75%_55%)]',
   };
 
   const groupLabel: Record<MoodGroup, string> = {
@@ -241,13 +241,14 @@ export function MonthCalendar({
                     "relative flex flex-col items-center justify-center py-4 rounded-md transition-all duration-150",
                     !isCurrentMonth && "opacity-15",
                     isCurrentMonth && "hover:scale-105 hover:z-10",
-                    !isTodayDate && mood === 'severe_elevated' && "bg-[hsl(var(--mood-severe-elevated)/0.35)]",
-                    !isTodayDate && mood === 'elevated' && "bg-[hsl(var(--mood-elevated)/0.32)]",
-                    !isTodayDate && mood === 'somewhat_elevated' && "bg-[hsl(var(--mood-somewhat-elevated)/0.28)]",
-                    !isTodayDate && mood === 'stable' && "bg-[hsl(var(--mood-stable)/0.28)]",
-                    !isTodayDate && mood === 'somewhat_depressed' && "bg-[hsl(var(--mood-somewhat-depressed)/0.28)]",
-                    !isTodayDate && mood === 'depressed' && "bg-[hsl(var(--mood-depressed)/0.32)]",
-                    !isTodayDate && mood === 'severe_depressed' && "bg-[hsl(var(--mood-severe-depressed)/0.35)]",
+                    // Yellow = elevated (severe stronger)
+                    !isTodayDate && mood === 'severe_elevated' && "bg-[hsl(45_95%_55%/0.6)]",
+                    !isTodayDate && (mood === 'elevated' || mood === 'somewhat_elevated') && "bg-[hsl(45_95%_55%/0.3)]",
+                    // Green = stable
+                    !isTodayDate && mood === 'stable' && "bg-[hsl(142_70%_45%/0.3)]",
+                    // Red = depressed (severe stronger)
+                    !isTodayDate && (mood === 'depressed' || mood === 'somewhat_depressed') && "bg-[hsl(0_75%_55%/0.3)]",
+                    !isTodayDate && mood === 'severe_depressed' && "bg-[hsl(0_75%_55%/0.6)]",
                     showMissed && "bg-muted-foreground/10",
                     isTodayDate && "bg-foreground/15 ring-1 ring-foreground/30",
                   )}
