@@ -211,6 +211,7 @@ export function TurtleLogo({ size = 'md', animated = true, className }: TurtleLo
             strokeWidth="2.5"
             strokeLinecap="round"
             fill="none"
+            className={animated ? 'turtle-smile' : ''}
           />
 
           {/* Yellow hat */}
