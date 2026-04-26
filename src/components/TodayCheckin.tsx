@@ -18,7 +18,7 @@ import { StreakBadge } from '@/components/StreakBadge';
 import { CelebrationAnimation } from '@/components/CelebrationAnimation';
 import { VerticalMoodSlider } from '@/components/VerticalMoodSlider';
 import { VerticalScaleSlider, ScaleOption } from '@/components/VerticalScaleSlider';
-import { CircularMoodDial } from '@/components/CircularMoodDial';
+import { MoodTapButtons } from '@/components/MoodTapButtons';
 import { TurtleLogo } from '@/components/TurtleLogo';
 import { FullscreenComment } from '@/components/FullscreenComment';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -675,10 +675,10 @@ export function TodayCheckin({
             </h1>
           </div>
 
-          {/* Mood selector — circular dial on mobile, slider on desktop */}
+          {/* Mood selector — large tap buttons on mobile, slider on desktop */}
           <div className="flex-1 flex flex-col justify-center">
             {isMobile ? (
-              <CircularMoodDial
+              <MoodTapButtons
                 options={moodButtons.map(b => ({ mood: b.mood, label: b.label, sublabel: b.sublabel }))}
                 value={checkinData.mood}
                 onSelect={handleMoodSelect}
