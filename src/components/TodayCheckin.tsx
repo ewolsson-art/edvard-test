@@ -91,6 +91,16 @@ const moodCssClasses: Record<MoodType, string> = {
   severe_depressed: 'mood-btn-severe-depressed',
 };
 
+const moodColorVars: Record<MoodType, string> = {
+  severe_elevated: 'var(--mood-severe-elevated)',
+  elevated: 'var(--mood-elevated)',
+  somewhat_elevated: 'var(--mood-somewhat-elevated)',
+  stable: 'var(--mood-stable)',
+  somewhat_depressed: 'var(--mood-somewhat-depressed)',
+  depressed: 'var(--mood-depressed)',
+  severe_depressed: 'var(--mood-severe-depressed)',
+};
+
 // Smart follow-up messages based on mood + energy combination
 function getSmartFollowUp(mood: MoodType, energy?: EnergyType, t?: (key: string) => string): { message: string; icon: string } | null {
   const tr = t || ((k: string) => k);
@@ -670,8 +680,20 @@ export function TodayCheckin({
                 />
               )}
             </div>
-            <h1 className="font-display text-[28px] sm:text-3xl md:text-3xl font-bold leading-tight tracking-tight">
-              {isDisplayToday ? t('checkin.howAreYouToday') : t('checkin.howDidYouFeel')}
+            <h1
+              key={checkinData.mood || 'prompt'}
+              className="font-display text-[28px] sm:text-3xl md:text-3xl font-bold leading-tight tracking-tight animate-fade-in transition-colors duration-200"
+              style={
+                checkinData.mood
+                  ? { color: `hsl(${moodColorVars[checkinData.mood]})` }
+                  : undefined
+              }
+            >
+              {checkinData.mood
+                ? moodLabels[checkinData.mood]
+                : isDisplayToday
+                  ? t('checkin.howAreYouToday')
+                  : t('checkin.howDidYouFeel')}
             </h1>
           </div>
 
