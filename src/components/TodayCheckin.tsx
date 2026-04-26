@@ -501,17 +501,13 @@ export function TodayCheckin({
             transition={{ type: 'spring', stiffness: 240, damping: 22, mass: 0.7 }}
             className="flex items-center gap-2 md:gap-4 mb-10"
           >
-            <motion.div
-              className="w-28 h-28 md:w-36 md:h-36 flex items-center justify-center"
-              animate={{ y: [0, -6, 0] }}
-              transition={{ duration: 4.5, repeat: Infinity, ease: 'easeInOut' }}
-            >
+            <div className="w-28 h-28 md:w-36 md:h-36 flex items-center justify-center">
               <TurtleLogo
                 size="lg"
-                animated={false}
-                className="drop-shadow-[0_8px_28px_hsl(45_85%_55%/0.35)] scale-[2.4] md:scale-[3]"
+                animated={true}
+                className="turtle-still drop-shadow-[0_8px_28px_hsl(45_85%_55%/0.35)] scale-[2.4] md:scale-[3]"
               />
-            </motion.div>
+            </div>
             {streakData.currentStreak > 0 && (
               <div className="text-left">
                 <motion.span
