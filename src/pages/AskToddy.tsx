@@ -13,10 +13,10 @@ import { cn } from "@/lib/utils";
 type Msg = { role: "user" | "assistant"; content: string };
 
 const SUGGESTIONS = [
+  "Hur många dagar var jag nedstämd i år?",
   "Hur länge sen var jag uppåt senast?",
-  "Vilken vecka mådde jag bäst senaste månaden?",
-  "Hur har min sömn påverkat mitt mående?",
-  "Vilka mönster ser du i mina deppigare perioder?",
+  "Vilken månad sov jag bäst senaste året?",
+  "Hur många dagar har jag tränat senaste 30 dagarna?",
 ];
 
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/chat-stats`;
@@ -198,8 +198,7 @@ export default function AskToddy() {
                 Hej{firstName ? ` ${firstName}` : ""}!
               </h2>
               <p className="text-muted-foreground max-w-md mx-auto leading-relaxed mb-8">
-                Jag har koll på dina incheckningar, mediciner och diagnoser.
-                Fråga vad du vill om ditt mående över tid.
+                Jag svarar på frågor om din statistik och översikt — antal dagar, perioder, mönster i din egen data. Inga råd, ingen tolkning.
               </p>
 
               <div className="grid gap-2.5 max-w-md mx-auto">
@@ -220,7 +219,7 @@ export default function AskToddy() {
               <div className="max-w-md mx-auto mt-8 p-3.5 rounded-xl bg-muted/30 border border-border/30 flex items-start gap-2.5 text-left">
                 <AlertTriangle className="w-4 h-4 text-muted-foreground/70 shrink-0 mt-0.5" />
                 <p className="text-[12px] text-muted-foreground leading-relaxed">
-                  Toddy är inte en läkare. Vid akut psykisk ohälsa, ring 1177 eller 112.
+                  Toddy ger inga råd och tolkar inte ditt mående — bara siffror från din egen data. Vid akut psykisk ohälsa, ring 1177 eller 112.
                 </p>
               </div>
             </div>
@@ -271,7 +270,7 @@ export default function AskToddy() {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="Fråga om ditt mående…"
+            placeholder="Fråga om din statistik…"
             rows={1}
             disabled={isLoading}
             className="resize-none min-h-[48px] max-h-40 text-base rounded-2xl bg-card border-border/50 focus-visible:ring-1 focus-visible:ring-primary/30"
