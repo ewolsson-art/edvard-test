@@ -363,14 +363,15 @@ export function CircularMoodDial({ options, value, onSelect }: CircularMoodDialP
           })}
         </svg>
 
-        {/* Rotating knob indicator */}
+        {/* Rotating knob indicator — positioned imperatively for max smoothness */}
         <div
-          className="absolute top-1/2 left-1/2 pointer-events-none"
+          ref={knobRef}
+          className="absolute top-1/2 left-1/2 pointer-events-none will-change-transform"
           style={{
             width: 0,
             height: 0,
             transform: `translate(-50%, -50%) rotate(${knobAngle}deg)`,
-            transition: isDragging ? 'none' : 'transform 220ms cubic-bezier(0.34, 1.4, 0.64, 1)',
+            transition: isDragging ? 'none' : 'transform 180ms cubic-bezier(0.34, 1.4, 0.64, 1)',
           }}
         >
           <div
