@@ -44,66 +44,64 @@ export function MoodTapButtons({ options, value, onSelect }: MoodTapButtonsProps
   };
 
   const selected = value ? options.find(o => o.mood === value) : undefined;
+  const selectedColor = selected ? moodColorVars[selected.mood] : null;
 
   return (
-    <div className="flex flex-col items-center w-full select-none gap-6">
-      {/* Live label of currently chosen mood */}
-      <div className="h-14 flex flex-col items-center justify-center text-center px-4">
+    <div className="flex flex-col items-center w-full select-none gap-8">
+      {/* Live label of currently chosen mood — large, visible feedback */}
+      <div className="h-20 flex flex-col items-center justify-center text-center px-4">
         {selected ? (
           <div key={selected.mood} className="animate-fade-in">
             <div
-              className="text-lg font-semibold leading-tight"
+              className="text-2xl font-bold leading-tight tracking-tight"
               style={{ color: `hsl(${moodColorVars[selected.mood]})` }}
             >
               {selected.label}
             </div>
-            <div className="text-xs leading-tight text-muted-foreground mt-1">
+            <div className="text-sm leading-tight text-muted-foreground mt-1.5">
               {selected.sublabel}
             </div>
           </div>
         ) : (
-          <div className="text-sm text-muted-foreground/60">
-            Tryck för att välja stämning
+          <div className="text-base text-muted-foreground/60">
+            Tryck för att välja
           </div>
         )}
       </div>
 
-      {/* Vertical stack of large tap targets — easiest UX, one tap = done */}
-      <div className="w-full max-w-sm flex flex-col gap-2.5">
-        {options.map(opt => {
-          const Icon = moodIcons[opt.mood];
-          const colorVar = moodColorVars[opt.mood];
-          const isSelected = value === opt.mood;
+      {/* Horizontal row — all 7 moods visible at once, no scrolling */}
+      <div className="w-full max-w-md">
+        {/* Scale endpoints labels */}
+        <div className="flex justify-between text-[10px] uppercase tracking-wider text-muted-foreground/50 px-1 mb-2.5 font-medium">
+          <span>Nedstämd</span>
+          <span>Uppvarvad</span>
+        </div>
 
-          return (
-            <button
-              key={opt.mood}
-              type="button"
-              onClick={() => handleSelect(opt.mood)}
-              className={cn(
-                'group relative w-full flex items-center gap-4 px-4 py-3.5 rounded-2xl',
-                'border transition-all duration-200 text-left',
-                'active:scale-[0.98]',
-                isSelected
-                  ? 'border-transparent shadow-lg'
-                  : 'border-border/40 bg-card/40 hover:bg-card/70'
-              )}
-              style={
-                isSelected
-                  ? {
-                      backgroundColor: `hsl(${colorVar} / 0.15)`,
-                      boxShadow: `0 4px 20px hsl(${colorVar} / 0.25), inset 0 0 0 1.5px hsl(${colorVar} / 0.6)`,
-                    }
-                  : undefined
-              }
-              aria-pressed={isSelected}
-            >
-              {/* Color indicator dot */}
-              <div
-                className="flex-shrink-0 w-11 h-11 rounded-full flex items-center justify-center transition-transform duration-200"
+        <div className="flex items-center justify-between gap-1.5">
+          {options.map(opt => {
+            const Icon = moodIcons[opt.mood];
+            const colorVar = moodColorVars[opt.mood];
+            const isSelected = value === opt.mood;
+
+            return (
+              <button
+                key={opt.mood}
+                type="button"
+                onClick={() => handleSelect(opt.mood)}
+                aria-label={opt.label}
+                aria-pressed={isSelected}
+                className={cn(
+                  'group relative flex-1 aspect-square rounded-2xl flex items-center justify-center',
+                  'transition-all duration-200 active:scale-90',
+                  isSelected ? 'scale-110' : 'scale-100 hover:scale-105'
+                )}
                 style={{
-                  backgroundColor: `hsl(${colorVar} / ${isSelected ? '0.9' : '0.18'})`,
-                  transform: isSelected ? 'scale(1.05)' : 'scale(1)',
+                  backgroundColor: isSelected
+                    ? `hsl(${colorVar})`
+                    : `hsl(${colorVar} / 0.14)`,
+                  boxShadow: isSelected
+                    ? `0 6px 20px hsl(${colorVar} / 0.5), 0 0 0 2px hsl(${colorVar} / 0.25)`
+                    : 'none',
                 }}
               >
                 <Icon
@@ -111,33 +109,27 @@ export function MoodTapButtons({ options, value, onSelect }: MoodTapButtonsProps
                   style={{
                     color: isSelected ? 'hsl(var(--background))' : `hsl(${colorVar})`,
                   }}
+                  strokeWidth={2.5}
                 />
-              </div>
+              </button>
+            );
+          })}
+        </div>
 
-              <div className="flex-1 min-w-0">
-                <div
-                  className={cn(
-                    'text-base font-semibold leading-tight transition-colors',
-                    isSelected ? 'text-foreground' : 'text-foreground/90'
-                  )}
-                >
-                  {opt.label}
-                </div>
-                <div className="text-xs text-muted-foreground leading-tight mt-0.5 truncate">
-                  {opt.sublabel}
-                </div>
-              </div>
-
-              {/* Selected check indicator */}
-              {isSelected && (
-                <div
-                  className="flex-shrink-0 w-2.5 h-2.5 rounded-full animate-fade-in"
-                  style={{ backgroundColor: `hsl(${colorVar})` }}
-                />
-              )}
-            </button>
-          );
-        })}
+        {/* Subtle gradient track underneath, shows it's a scale */}
+        <div
+          className="mt-3 mx-1 h-1 rounded-full opacity-30"
+          style={{
+            background: `linear-gradient(to right,
+              hsl(var(--mood-severe-depressed)),
+              hsl(var(--mood-depressed)),
+              hsl(var(--mood-somewhat-depressed)),
+              hsl(var(--mood-stable)),
+              hsl(var(--mood-somewhat-elevated)),
+              hsl(var(--mood-elevated)),
+              hsl(var(--mood-severe-elevated)))`,
+          }}
+        />
       </div>
     </div>
   );
