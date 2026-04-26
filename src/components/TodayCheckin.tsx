@@ -675,21 +675,13 @@ export function TodayCheckin({
             </h1>
           </div>
 
-          {/* Mood selector — large tap buttons on mobile, slider on desktop */}
+          {/* Mood selector — slider on all devices */}
           <div className="flex-1 flex flex-col justify-center">
-            {isMobile ? (
-              <MoodTapButtons
-                options={moodButtons.map(b => ({ mood: b.mood, label: b.label, sublabel: b.sublabel }))}
-                value={checkinData.mood}
-                onSelect={handleMoodSelect}
-              />
-            ) : (
-              <VerticalMoodSlider
-                options={moodButtons.map(b => ({ mood: b.mood, label: b.label, sublabel: b.sublabel }))}
-                value={checkinData.mood}
-                onSelect={handleMoodSelect}
-              />
-            )}
+            <VerticalMoodSlider
+              options={moodButtons.map(b => ({ mood: b.mood, label: b.label, sublabel: b.sublabel }))}
+              value={checkinData.mood}
+              onSelect={handleMoodSelect}
+            />
           </div>
 
           {checkinData.mood && (
