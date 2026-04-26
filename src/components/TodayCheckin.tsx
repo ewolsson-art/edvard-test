@@ -254,12 +254,13 @@ export function TodayCheckin({
 
   // Check if checkin is complete based on active preferences
   const isCheckinComplete = useMemo(() => {
-    if (!todayEntry?.mood) return false;
-    if (preferences?.include_sleep && todayEntry?.sleepQuality === undefined) return false;
-    if (preferences?.include_eating && todayEntry?.eatingQuality === undefined) return false;
-    if (preferences?.include_exercise && todayEntry?.exercised === undefined) return false;
-    return true;
-  }, [todayEntry, preferences]);
+    // A check-in is considered complete as soon as a mood has been registered
+    // for the day. This supports the "quick" check-in mode where the user only
+    // logs their mood — we still want to show them the celebratory summary
+    // view rather than a blank screen. Sleep / eating / exercise sections in
+    // the summary already render conditionally based on what's available.
+    return Boolean(todayEntry?.mood);
+  }, [todayEntry]);
 
   // Helper to get next step in the flow
   const getNextStep = (currentStep: Step): Step | 'success-animation' => {
