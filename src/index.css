@@ -759,6 +759,11 @@
     transform-origin: 70px 150px;
     animation: turtle-wave 3s ease-in-out infinite;
   }
+
+  .turtle-smile {
+    transform-origin: 100px 84px;
+    animation: turtle-smile 4.5s ease-in-out infinite;
+  }
 }
 
 @layer utilities {
