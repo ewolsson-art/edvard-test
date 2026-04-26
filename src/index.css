@@ -723,6 +723,11 @@
     80% { transform: rotate(-5deg); }
   }
 
+  @keyframes turtle-smile {
+    0%, 100% { transform: translateY(0) scaleX(1); }
+    50% { transform: translateY(1px) scaleX(1.08); }
+  }
+
   .turtle-idle {
     animation: turtle-idle 3s ease-in-out infinite;
   }
