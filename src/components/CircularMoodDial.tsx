@@ -82,17 +82,23 @@ export function CircularMoodDial({ options, value, onSelect }: CircularMoodDialP
   const stepCount = options.length;
   const stableIndex = Math.max(0, options.findIndex(o => o.mood === 'stable'));
 
-  const [activeIndex, setActiveIndex] = useState<number>(() => {
+  const initialIndex = (() => {
     if (value) {
       const idx = options.findIndex(o => o.mood === value);
       return idx >= 0 ? idx : stableIndex;
     }
     return stableIndex;
-  });
+  })();
+
+  const [activeIndex, setActiveIndex] = useState<number>(initialIndex);
   const [isDragging, setIsDragging] = useState(false);
 
   const dialRef = useRef<HTMLDivElement>(null);
-  const lastIndexRef = useRef<number>(activeIndex);
+  const knobRef = useRef<HTMLDivElement>(null);
+  const arcRef = useRef<SVGPathElement>(null);
+  const lastIndexRef = useRef<number>(initialIndex);
+  const rafRef = useRef<number | null>(null);
+  const pendingPointerRef = useRef<{ x: number; y: number } | null>(null);
   const tick = useTickSound();
   const { selection: hapticSelection, medium: hapticMedium } = useHaptics();
 
@@ -106,28 +112,41 @@ export function CircularMoodDial({ options, value, onSelect }: CircularMoodDialP
     [stepAngle]
   );
 
-  const getIndexFromPointer = useCallback(
-    (clientX: number, clientY: number) => {
+  // Returns continuous angle (clamped to dial sweep) — NOT snapped
+  const getAngleFromPointer = useCallback(
+    (clientX: number, clientY: number): number | null => {
       const dial = dialRef.current;
-      if (!dial) return activeIndex;
+      if (!dial) return null;
       const rect = dial.getBoundingClientRect();
       const cx = rect.left + rect.width / 2;
       const cy = rect.top + rect.height / 2;
       const dx = clientX - cx;
       const dy = clientY - cy;
-      // Angle in degrees, 0° = up, increases clockwise
       let angle = (Math.atan2(dx, -dy) * 180) / Math.PI;
-      // Clamp into dial sweep range [ARC_START, ARC_START + ARC_SWEEP]
       if (angle < ARC_START - (360 - ARC_SWEEP) / 2) angle += 360;
       if (angle > ARC_START + ARC_SWEEP + (360 - ARC_SWEEP) / 2) angle -= 360;
-      const clamped = Math.max(ARC_START, Math.min(ARC_START + ARC_SWEEP, angle));
-      const idx = Math.round((clamped - ARC_START) / stepAngle);
-      return Math.max(0, Math.min(stepCount - 1, idx));
+      return Math.max(ARC_START, Math.min(ARC_START + ARC_SWEEP, angle));
     },
-    [activeIndex, stepAngle, stepCount]
+    []
   );
 
-  const updateIndex = useCallback(
+  const angleToIndex = useCallback(
+    (angle: number) => {
+      const idx = Math.round((angle - ARC_START) / stepAngle);
+      return Math.max(0, Math.min(stepCount - 1, idx));
+    },
+    [stepAngle, stepCount]
+  );
+
+  // Imperatively position the knob — bypasses React render for buttery motion
+  const applyAngle = useCallback((angle: number) => {
+    const knob = knobRef.current;
+    if (knob) {
+      knob.style.transform = `translate(-50%, -50%) rotate(${angle}deg)`;
+    }
+  }, []);
+
+  const commitIndex = useCallback(
     (idx: number) => {
       if (idx === lastIndexRef.current) return;
       lastIndexRef.current = idx;
@@ -139,31 +158,69 @@ export function CircularMoodDial({ options, value, onSelect }: CircularMoodDialP
     [onSelect, options, tick, hapticSelection]
   );
 
+  const processPointer = useCallback(() => {
+    rafRef.current = null;
+    const p = pendingPointerRef.current;
+    if (!p) return;
+    const angle = getAngleFromPointer(p.x, p.y);
+    if (angle === null) return;
+    applyAngle(angle);
+    const idx = angleToIndex(angle);
+    commitIndex(idx);
+  }, [getAngleFromPointer, applyAngle, angleToIndex, commitIndex]);
+
+  const schedulePointer = useCallback(
+    (clientX: number, clientY: number) => {
+      pendingPointerRef.current = { x: clientX, y: clientY };
+      if (rafRef.current === null) {
+        rafRef.current = requestAnimationFrame(processPointer);
+      }
+    },
+    [processPointer]
+  );
+
   const handlePointerDown = useCallback(
     (e: React.PointerEvent) => {
       e.preventDefault();
       setIsDragging(true);
-      const idx = getIndexFromPointer(e.clientX, e.clientY);
       (e.target as HTMLElement).setPointerCapture?.(e.pointerId);
-      // Always commit on tap, even if same index, so onSelect fires
+      // Force a commit on tap even if same index
       lastIndexRef.current = -1;
-      updateIndex(idx);
+      const angle = getAngleFromPointer(e.clientX, e.clientY);
+      if (angle !== null) {
+        applyAngle(angle);
+        commitIndex(angleToIndex(angle));
+      }
       hapticMedium();
     },
-    [getIndexFromPointer, updateIndex, hapticMedium]
+    [getAngleFromPointer, applyAngle, angleToIndex, commitIndex, hapticMedium]
   );
 
   const handlePointerMove = useCallback(
     (e: React.PointerEvent) => {
       if (!isDragging) return;
-      const idx = getIndexFromPointer(e.clientX, e.clientY);
-      updateIndex(idx);
+      schedulePointer(e.clientX, e.clientY);
     },
-    [isDragging, getIndexFromPointer, updateIndex]
+    [isDragging, schedulePointer]
   );
 
   const handlePointerUp = useCallback(() => {
     setIsDragging(false);
+    if (rafRef.current !== null) {
+      cancelAnimationFrame(rafRef.current);
+      rafRef.current = null;
+    }
+    // Snap knob to nearest step on release
+    requestAnimationFrame(() => {
+      applyAngle(indexToAngle(lastIndexRef.current));
+    });
+  }, [applyAngle, indexToAngle]);
+
+  // Cleanup rAF on unmount
+  useEffect(() => {
+    return () => {
+      if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
+    };
   }, []);
 
   // Keep dial in sync if value changes externally
@@ -173,8 +230,15 @@ export function CircularMoodDial({ options, value, onSelect }: CircularMoodDialP
     if (idx >= 0 && idx !== activeIndex) {
       lastIndexRef.current = idx;
       setActiveIndex(idx);
+      applyAngle(indexToAngle(idx));
     }
-  }, [value, options, activeIndex]);
+  }, [value, options, activeIndex, applyAngle, indexToAngle]);
+
+  // Set initial knob angle on mount
+  useEffect(() => {
+    applyAngle(indexToAngle(initialIndex));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const activeOpt = options[activeIndex];
   const ActiveIcon = moodIcons[activeOpt.mood];
