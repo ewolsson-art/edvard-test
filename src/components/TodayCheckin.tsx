@@ -670,8 +670,20 @@ export function TodayCheckin({
                 />
               )}
             </div>
-            <h1 className="font-display text-[28px] sm:text-3xl md:text-3xl font-bold leading-tight tracking-tight">
-              {isDisplayToday ? t('checkin.howAreYouToday') : t('checkin.howDidYouFeel')}
+            <h1
+              key={checkinData.mood || 'prompt'}
+              className="font-display text-[28px] sm:text-3xl md:text-3xl font-bold leading-tight tracking-tight animate-fade-in transition-colors duration-200"
+              style={
+                checkinData.mood
+                  ? { color: `hsl(${moodColorVars[checkinData.mood]})` }
+                  : undefined
+              }
+            >
+              {checkinData.mood
+                ? moodLabels[checkinData.mood]
+                : isDisplayToday
+                  ? t('checkin.howAreYouToday')
+                  : t('checkin.howDidYouFeel')}
             </h1>
           </div>
 
