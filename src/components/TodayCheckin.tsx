@@ -675,10 +675,10 @@ export function TodayCheckin({
             </h1>
           </div>
 
-          {/* Mood selector — circular dial on mobile, slider on desktop */}
+          {/* Mood selector — large tap buttons on mobile, slider on desktop */}
           <div className="flex-1 flex flex-col justify-center">
             {isMobile ? (
-              <CircularMoodDial
+              <MoodTapButtons
                 options={moodButtons.map(b => ({ mood: b.mood, label: b.label, sublabel: b.sublabel }))}
                 value={checkinData.mood}
                 onSelect={handleMoodSelect}
