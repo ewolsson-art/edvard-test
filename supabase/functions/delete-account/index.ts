@@ -77,7 +77,7 @@ Deno.serve(async (req) => {
     const { error: deleteError } = await supabaseAdmin.auth.admin.deleteUser(userId);
 
     if (deleteError) {
-      console.error("Error deleting user", { code: deleteError?.code, hint: deleteError?.hint });
+      console.error("Error deleting user", { code: deleteError?.code, message: deleteError?.message });
       return new Response(
         JSON.stringify({ error: "Failed to delete account" }),
         { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
