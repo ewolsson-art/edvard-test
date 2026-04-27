@@ -1,8 +1,12 @@
 import { CalendarCheck, BarChart3, Share2 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from 'react-i18next';
+import toddyPencil from "@/assets/toddy-pencil.png";
+import toddyGraph from "@/assets/toddy-graph.png";
+import toddyShare from "@/assets/toddy-share.png";
 
 const stepIcons = [CalendarCheck, BarChart3, Share2];
+const stepImages = [toddyPencil, toddyGraph, toddyShare];
 const stepKeys = ['landing.step1', 'landing.step2', 'landing.step3'];
 
 function useInView(threshold = 0.15) {
