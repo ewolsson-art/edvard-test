@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { TurtleLogo } from "@/components/TurtleLogo";
 import { useTranslation } from 'react-i18next';
+import toddySleeping from "@/assets/toddy-sleeping.png";
 
 function FooterSkyline() {
   return (
