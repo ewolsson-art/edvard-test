@@ -273,6 +273,16 @@ function MobileStepCard({
           >
             {index + 1}
           </span>
+          {index === 2 && (
+            <span
+              className={`absolute -bottom-1 -right-1 w-7 h-7 rounded-full flex items-center justify-center z-10 transition-all duration-500 bg-gradient-to-br from-[hsl(345_85%_62%)] to-[hsl(15_85%_60%)] shadow-[0_4px_12px_hsl(345_85%_62%/0.5)] ${
+                isActive ? 'scale-110' : 'scale-100'
+              }`}
+              aria-hidden="true"
+            >
+              <Heart className="w-3.5 h-3.5 text-white fill-white" strokeWidth={2.2} />
+            </span>
+          )}
         </div>
       </div>
 
