@@ -89,7 +89,34 @@ export function VerticalMoodSlider({ options, value, onSelect }: VerticalMoodSli
 
   return (
     <div className="flex flex-col items-center w-full select-none mx-auto" style={{ maxWidth: '420px' }}>
-      {/* Horizontal slider track — hero element */}
+      {/* Active label area — acts as heading, sits ABOVE the slider */}
+      <div className="mb-10 min-h-[72px] w-full flex items-center justify-center">
+        {activeMood && ActiveIcon ? (
+          <div
+            key={activeMood.mood}
+            className="flex items-center gap-3 rounded-2xl px-5 py-3 bg-white/5 backdrop-blur-sm animate-fade-in"
+          >
+            <ActiveIcon
+              className="w-7 h-7 flex-shrink-0"
+              style={activeColorVar ? { color: `hsl(${activeColorVar})` } : undefined}
+            />
+            <div className="min-w-0 text-left">
+              <span className="block text-base font-semibold leading-tight text-foreground">
+                {activeMood.label}
+              </span>
+              <span className="block text-xs leading-tight text-muted-foreground mt-0.5">
+                {activeMood.sublabel}
+              </span>
+            </div>
+          </div>
+        ) : (
+          <p className="text-sm text-muted-foreground/60">
+            Tryck eller dra på skalan
+          </p>
+        )}
+      </div>
+
+      {/* Horizontal slider track */}
       <div className="relative flex items-center w-full px-4" style={{ height: '64px' }}>
         <div
           ref={trackRef}
@@ -165,33 +192,6 @@ export function VerticalMoodSlider({ options, value, onSelect }: VerticalMoodSli
             </div>
           )}
         </div>
-      </div>
-
-      {/* Active label area — only renders once a mood is selected */}
-      <div className="mt-8 min-h-[72px] w-full flex items-center justify-center">
-        {activeMood && ActiveIcon ? (
-          <div
-            key={activeMood.mood}
-            className="flex items-center gap-3 rounded-2xl px-5 py-3 bg-white/5 backdrop-blur-sm animate-fade-in"
-          >
-            <ActiveIcon
-              className="w-7 h-7 flex-shrink-0"
-              style={activeColorVar ? { color: `hsl(${activeColorVar})` } : undefined}
-            />
-            <div className="min-w-0 text-left">
-              <span className="block text-base font-semibold leading-tight text-foreground">
-                {activeMood.label}
-              </span>
-              <span className="block text-xs leading-tight text-muted-foreground mt-0.5">
-                {activeMood.sublabel}
-              </span>
-            </div>
-          </div>
-        ) : (
-          <p className="text-sm text-muted-foreground/60">
-            Tryck eller dra på skalan
-          </p>
-        )}
       </div>
     </div>
   );
