@@ -1,7 +1,6 @@
 import { Link } from "react-router-dom";
 import { TurtleLogo } from "@/components/TurtleLogo";
 import { useTranslation } from 'react-i18next';
-import toddySleeping from "@/assets/toddy-sleeping.png";
 
 function FooterSkyline() {
   return (
@@ -39,18 +38,6 @@ export function LandingFooter() {
   return (
     <footer className="relative z-10 bg-[hsl(225_30%_5%)] pt-20 pb-6 overflow-hidden">
       <FooterSkyline />
-
-      {/* Sleeping Toddy — godnatt-hälsning ovanför skyline */}
-      <div className="absolute bottom-[140px] left-1/2 -translate-x-1/2 z-10 pointer-events-none">
-        <img
-          src={toddySleeping}
-          alt="Toddy sover"
-          loading="lazy"
-          width={512}
-          height={512}
-          className="w-24 h-24 md:w-28 md:h-28 object-contain opacity-90 drop-shadow-[0_4px_16px_rgba(0,0,0,0.5)]"
-        />
-      </div>
 
       <div className="relative z-10 max-w-5xl mx-auto px-4 md:px-8">
         <div className="flex flex-col md:flex-row items-center md:items-start justify-between gap-10 mb-12">
