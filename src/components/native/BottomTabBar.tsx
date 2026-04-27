@@ -6,6 +6,7 @@ import { useNotifications } from '@/hooks/useNotifications';
 import { usePendingNotifications } from '@/hooks/usePendingNotifications';
 import { useHaptics } from '@/hooks/useHaptics';
 import { cn } from '@/lib/utils';
+import { preloadRoute } from '@/lib/routePreload';
 
 type TabItem = {
   to: string;
