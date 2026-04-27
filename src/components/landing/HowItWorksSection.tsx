@@ -58,7 +58,10 @@ export function HowItWorksSection() {
           <div className="hidden md:block relative">
             {/* Connector line removed */}
 
-            <div className="flex items-start justify-center gap-16">
+            <div
+              className="flex items-start justify-center gap-16"
+              onMouseLeave={() => setActiveStep(null)}
+            >
               {steps.map((step, i) => (
                 <StepCard
                   key={i}
