@@ -32,6 +32,7 @@ export function HowItWorksSection() {
 
   const steps = stepKeys.map((key, i) => ({
     icon: stepIcons[i],
+    image: stepImages[i],
     title: t(key),
   }));
 
