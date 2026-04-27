@@ -573,24 +573,7 @@ export function TodayCheckin({
             )}
           </motion.div>
 
-          {/* Personlig hälsning */}
-          <motion.h2
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2, type: 'spring', stiffness: 260, damping: 24 }}
-            className="font-display text-2xl md:text-3xl font-bold tracking-tight mb-2 max-w-[320px]"
-            style={{ color: moodColor }}
-          >
-            {heroTitle}
-          </motion.h2>
-          <motion.p
-            initial={{ opacity: 0, y: 6 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-            className="text-[14px] text-muted-foreground/80 leading-relaxed mb-8 max-w-[320px]"
-          >
-            {heroSub}
-          </motion.p>
+          {/* Personlig hälsning borttagen */}
 
           {/* Status pills */}
           {summaryItems.length > 0 && (
