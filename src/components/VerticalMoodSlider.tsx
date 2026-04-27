@@ -156,10 +156,7 @@ export function VerticalMoodSlider({ options, value, onSelect }: VerticalMoodSli
             style={{ background: `radial-gradient(closest-side, hsl(${activeColorVar} / 0.35), transparent 70%)` }}
             aria-hidden="true"
           />
-          <div
-            className="relative flex items-center gap-3.5 rounded-2xl pl-2.5 pr-5 py-2.5 bg-foreground/[0.03] backdrop-blur-sm"
-          >
-          >
+          <div className="relative flex items-center gap-3.5 rounded-2xl pl-2.5 pr-5 py-2.5 bg-foreground/[0.03] backdrop-blur-sm">
             {/* Icon in tinted circle */}
             <div
               className="flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center transition-colors duration-300"
