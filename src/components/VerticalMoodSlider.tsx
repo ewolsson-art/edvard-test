@@ -1,7 +1,8 @@
-import { useState, useRef, useCallback } from 'react';
+import { useState, useRef, useCallback, useEffect } from 'react';
 import { MoodType } from '@/types/mood';
 import { cn } from '@/lib/utils';
 import { Flame, Zap, Sun, Cloud, CloudRain } from 'lucide-react';
+import { useHaptics } from '@/hooks/useHaptics';
 
 interface MoodOption {
   mood: MoodType;
@@ -36,9 +37,11 @@ const moodColorVars: Record<MoodType, string> = {
 };
 
 export function VerticalMoodSlider({ options, value, onSelect }: VerticalMoodSliderProps) {
+  const { selection: hapticSelection } = useHaptics();
+
   // Find the "stable" (normal) mood index to use as default
   const defaultIndex = options.findIndex(o => o.mood === 'stable');
-  const stableIndex = defaultIndex >= 0 ? defaultIndex : 3; // fallback to middle if stable not found
+  const stableIndex = defaultIndex >= 0 ? defaultIndex : 3;
 
   const [activeIndex, setActiveIndex] = useState<number>(() => {
     if (value) {
@@ -49,7 +52,28 @@ export function VerticalMoodSlider({ options, value, onSelect }: VerticalMoodSli
   });
   const [isDragging, setIsDragging] = useState(false);
   const trackRef = useRef<HTMLDivElement>(null);
+  const sliderRef = useRef<HTMLDivElement>(null);
   const stepCount = options.length;
+
+  // Sync external value changes
+  useEffect(() => {
+    if (value) {
+      const idx = options.findIndex(o => o.mood === value);
+      if (idx >= 0 && idx !== activeIndex) {
+        setActiveIndex(idx);
+      }
+    }
+  }, [value, options, activeIndex]);
+
+  const updateIndex = useCallback((newIdx: number) => {
+    const clamped = Math.max(0, Math.min(stepCount - 1, newIdx));
+    if (clamped !== activeIndex) {
+      setActiveIndex(clamped);
+      onSelect(options[clamped].mood);
+      // Haptic tick at every step boundary (no-op on web)
+      hapticSelection();
+    }
+  }, [activeIndex, stepCount, onSelect, options, hapticSelection]);
 
   const getIndexFromX = useCallback((clientX: number) => {
     const track = trackRef.current;
@@ -64,64 +88,101 @@ export function VerticalMoodSlider({ options, value, onSelect }: VerticalMoodSli
     e.preventDefault();
     setIsDragging(true);
     const idx = getIndexFromX(e.clientX);
-    setActiveIndex(idx);
-    onSelect(options[idx].mood);
+    updateIndex(idx);
     (e.target as HTMLElement).setPointerCapture?.(e.pointerId);
-  }, [getIndexFromX, onSelect, options]);
+    // Focus the slider so keyboard nav works after pointer interaction
+    sliderRef.current?.focus({ preventScroll: true });
+  }, [getIndexFromX, updateIndex]);
 
   const handlePointerMove = useCallback((e: React.PointerEvent) => {
     if (!isDragging) return;
     const idx = getIndexFromX(e.clientX);
-    if (idx !== activeIndex) {
-      setActiveIndex(idx);
-      onSelect(options[idx].mood);
-    }
-  }, [isDragging, getIndexFromX, activeIndex, onSelect, options]);
+    updateIndex(idx);
+  }, [isDragging, getIndexFromX, updateIndex]);
 
   const handlePointerUp = useCallback(() => {
     setIsDragging(false);
   }, []);
 
-  const thumbPercent = activeIndex !== null ? (activeIndex / (stepCount - 1)) * 100 : null;
-  const activeMood = activeIndex !== null ? options[activeIndex] : null;
-  const activeColorVar = activeMood ? moodColorVars[activeMood.mood] : null;
-  const ActiveIcon = activeMood ? moodIcons[activeMood.mood] : null;
+  const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
+    switch (e.key) {
+      case 'ArrowRight':
+      case 'ArrowUp':
+        e.preventDefault();
+        updateIndex(activeIndex + 1);
+        break;
+      case 'ArrowLeft':
+      case 'ArrowDown':
+        e.preventDefault();
+        updateIndex(activeIndex - 1);
+        break;
+      case 'Home':
+        e.preventDefault();
+        updateIndex(0);
+        break;
+      case 'End':
+        e.preventDefault();
+        updateIndex(stepCount - 1);
+        break;
+      case 'PageUp':
+        e.preventDefault();
+        updateIndex(activeIndex + 2);
+        break;
+      case 'PageDown':
+        e.preventDefault();
+        updateIndex(activeIndex - 2);
+        break;
+    }
+  }, [activeIndex, stepCount, updateIndex]);
+
+  const thumbPercent = (activeIndex / (stepCount - 1)) * 100;
+  const activeMood = options[activeIndex];
+  const activeColorVar = moodColorVars[activeMood.mood];
+  const ActiveIcon = moodIcons[activeMood.mood];
 
   return (
     <div className="flex flex-col items-center w-full select-none mx-auto" style={{ maxWidth: '420px' }}>
-      {/* Active label area — acts as heading, sits ABOVE the slider */}
+      {/* Active label — heading */}
       <div className="mb-10 min-h-[72px] w-full flex items-center justify-center">
-        {activeMood && ActiveIcon ? (
-          <div
-            key={activeMood.mood}
-            className="flex items-center gap-3 rounded-2xl px-5 py-3 bg-white/5 backdrop-blur-sm animate-fade-in"
-          >
-            <ActiveIcon
-              className="w-7 h-7 flex-shrink-0"
-              style={activeColorVar ? { color: `hsl(${activeColorVar})` } : undefined}
-            />
-            <div className="min-w-0 text-left">
-              <span className="block text-base font-semibold leading-tight text-foreground">
-                {activeMood.label}
-              </span>
-              <span className="block text-xs leading-tight text-muted-foreground mt-0.5">
-                {activeMood.sublabel}
-              </span>
-            </div>
+        <div
+          key={activeMood.mood}
+          className="flex items-center gap-3 rounded-2xl px-5 py-3 bg-white/5 backdrop-blur-sm animate-fade-in"
+          aria-live="polite"
+          aria-atomic="true"
+        >
+          <ActiveIcon
+            className="w-7 h-7 flex-shrink-0"
+            style={{ color: `hsl(${activeColorVar})` }}
+          />
+          <div className="min-w-0 text-left">
+            <span className="block text-base font-semibold leading-tight text-foreground">
+              {activeMood.label}
+            </span>
+            <span className="block text-xs leading-tight text-muted-foreground mt-0.5">
+              {activeMood.sublabel}
+            </span>
           </div>
-        ) : (
-          <p className="text-sm text-muted-foreground/60">
-            Tryck eller dra på skalan
-          </p>
-        )}
+        </div>
       </div>
 
-      {/* Horizontal slider track */}
-      <div className="relative flex items-center w-full px-4" style={{ height: '64px' }}>
+      {/* Slider track — wrapped in focusable, keyboard-driven, ARIA-compliant role="slider" */}
+      <div
+        ref={sliderRef}
+        role="slider"
+        tabIndex={0}
+        aria-valuemin={0}
+        aria-valuemax={stepCount - 1}
+        aria-valuenow={activeIndex}
+        aria-valuetext={`${activeMood.label} — ${activeMood.sublabel}`}
+        aria-label="Stämningsläge"
+        onKeyDown={handleKeyDown}
+        className="relative flex items-center w-full px-2 outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded-2xl"
+        style={{ height: '72px' }}
+      >
         <div
           ref={trackRef}
           className="relative w-full cursor-pointer touch-none"
-          style={{ height: '56px' }}
+          style={{ height: '64px' }}
           onPointerDown={handlePointerDown}
           onPointerMove={handlePointerMove}
           onPointerUp={handlePointerUp}
@@ -129,7 +190,7 @@ export function VerticalMoodSlider({ options, value, onSelect }: VerticalMoodSli
         >
           {/* Gradient track bar */}
           <div
-            className="absolute top-1/2 -translate-y-1/2 h-3 rounded-full overflow-hidden"
+            className="absolute top-1/2 -translate-y-1/2 h-3 rounded-full overflow-hidden pointer-events-none"
             style={{
               left: '8px',
               right: '8px',
@@ -153,7 +214,7 @@ export function VerticalMoodSlider({ options, value, onSelect }: VerticalMoodSli
             return (
               <div
                 key={opt.mood}
-                className="absolute top-1/2 -translate-x-1/2 -translate-y-1/2 transition-all duration-200"
+                className="absolute top-1/2 -translate-x-1/2 -translate-y-1/2 transition-all duration-200 pointer-events-none"
                 style={{ left: `calc(8px + (100% - 16px) * ${i / (stepCount - 1)})` }}
               >
                 <div
@@ -170,27 +231,31 @@ export function VerticalMoodSlider({ options, value, onSelect }: VerticalMoodSli
             );
           })}
 
-          {/* Draggable thumb */}
-          {thumbPercent !== null && (
+          {/* Draggable thumb — visible 36px, 48px tap-target via invisible padding ring */}
+          <div
+            className="absolute top-1/2 -translate-x-1/2 -translate-y-1/2 z-10 flex items-center justify-center"
+            style={{
+              left: `calc(8px + (100% - 16px) * ${thumbPercent / 100})`,
+              width: '48px',
+              height: '48px',
+              transitionProperty: isDragging ? 'none' : 'left',
+              transitionDuration: '200ms',
+              transitionTimingFunction: 'cubic-bezier(0.34, 1.56, 0.64, 1)',
+            }}
+          >
             <div
-              className="absolute top-1/2 -translate-x-1/2 -translate-y-1/2 z-10"
+              className={cn(
+                "rounded-full border-4 border-background shadow-lg transition-transform duration-150",
+                isDragging ? "scale-110" : "scale-100"
+              )}
               style={{
-                left: `calc(8px + (100% - 16px) * ${thumbPercent / 100})`,
-                transitionProperty: isDragging ? 'none' : 'left',
-                transitionDuration: '200ms',
+                width: '36px',
+                height: '36px',
+                backgroundColor: `hsl(${activeColorVar})`,
+                boxShadow: `0 4px 20px hsl(${activeColorVar} / 0.4), 0 0 0 4px hsl(${activeColorVar} / 0.1)`,
               }}
-            >
-              <div
-                className="w-9 h-9 rounded-full border-4 border-background shadow-lg"
-                style={{
-                  backgroundColor: activeColorVar ? `hsl(${activeColorVar})` : 'hsl(var(--muted))',
-                  boxShadow: activeColorVar
-                    ? `0 4px 20px hsl(${activeColorVar} / 0.4), 0 0 0 4px hsl(${activeColorVar} / 0.1)`
-                    : '0 4px 12px rgba(0,0,0,0.15)',
-                }}
-              />
-            </div>
-          )}
+            />
+          </div>
         </div>
       </div>
     </div>
