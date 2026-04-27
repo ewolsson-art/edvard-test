@@ -118,7 +118,11 @@ const App = () => (
           <NativeAppGate>
           <BrowserRouter>
             <div className="min-h-screen" role="application" aria-label="Toddy - Moodtracker">
-            <Suspense fallback={<div className="min-h-screen bg-background" />}>
+            <Suspense fallback={
+              <div className="min-h-screen bg-background flex items-center justify-center">
+                <div className="h-6 w-6 rounded-full border-2 border-white/15 border-t-white/60 animate-spin" />
+              </div>
+            }>
             <Routes>
             <Route path="/auth" element={<Auth />} />
             <Route path="/sa-funkar-det" element={<HowItWorksPage />} />
