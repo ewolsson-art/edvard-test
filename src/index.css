@@ -750,6 +750,27 @@
     animation: none !important;
   }
 
+  /* Subtil andning för maskoten på landningssidan (kombineras med -scale-x-100) */
+  .turtle-breathe {
+    animation: turtle-breathe 4s ease-in-out infinite;
+    transform-origin: center bottom;
+  }
+
+  @keyframes turtle-breathe {
+    0%, 100% { transform: scaleX(-1) scale(1); }
+    50% { transform: scaleX(-1) scale(1.025); }
+  }
+
+  /* Talbubbla — fade + slide in efter maskoten landat */
+  @keyframes toddy-bubble-in {
+    0% { opacity: 0; transform: translateY(8px) scale(0.92); }
+    100% { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  .animate-toddy-bubble-in {
+    animation: toddy-bubble-in 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 1.4s forwards;
+  }
+
   .turtle-tail-wag {
     transform-origin: 100px 210px;
     animation: turtle-tail-wag 2s ease-in-out infinite;
