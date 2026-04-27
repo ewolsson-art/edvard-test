@@ -24,41 +24,96 @@ function useInView(threshold = 0.15) {
 export function HowItWorksSection() {
   const { t } = useTranslation();
   const { ref, visible } = useInView(0.1);
+  const [activeStep, setActiveStep] = useState<number | null>(null);
 
   const steps = stepKeys.map((key, i) => ({
     icon: stepIcons[i],
     title: t(key),
   }));
 
+  // Auto-cycle through steps when visible (Apple-style attention guidance)
+  useEffect(() => {
+    if (!visible) return;
+    let i = 0;
+    setActiveStep(0);
+    const interval = setInterval(() => {
+      i = (i + 1) % steps.length;
+      setActiveStep(i);
+    }, 2400);
+    return () => clearInterval(interval);
+  }, [visible, steps.length]);
+
   return (
     <section className="relative z-10 bg-[hsl(225_30%_7%)] py-14 md:py-32 px-5 md:px-8 overflow-hidden">
-      <div className="max-w-5xl mx-auto">
+      {/* Ambient gradient glow */}
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+        <div
+          className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] h-[60%] rounded-full opacity-40"
+          style={{
+            background: 'radial-gradient(circle at center, hsl(45 85% 55% / 0.08) 0%, transparent 60%)',
+          }}
+        />
+      </div>
+
+      <div className="relative max-w-5xl mx-auto">
         <IntroBlock />
 
-        <div ref={ref} className="mt-10 md:mt-24">
-          {/* Desktop: horizontal */}
-          <div className="hidden md:flex items-start justify-center gap-16">
-            {steps.map((step, i) => (
-              <StepCard key={i} step={step} index={i} visible={visible} />
-            ))}
+        <div ref={ref} className="mt-12 md:mt-24">
+          {/* Desktop: horizontal with connecting line */}
+          <div className="hidden md:block relative">
+            {/* Animated connector line */}
+            <div className="absolute top-12 left-[16%] right-[16%] h-px overflow-hidden">
+              <div className="h-full w-full bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+              <div
+                className={`absolute top-0 left-0 h-full bg-gradient-to-r from-transparent via-[hsl(45_85%_55%)] to-transparent transition-all duration-[2000ms] ease-out ${
+                  visible ? 'w-full opacity-100' : 'w-0 opacity-0'
+                }`}
+                style={{ transitionDelay: '400ms' }}
+              />
+            </div>
+
+            <div className="flex items-start justify-center gap-16">
+              {steps.map((step, i) => (
+                <StepCard
+                  key={i}
+                  step={step}
+                  index={i}
+                  visible={visible}
+                  isActive={activeStep === i}
+                  onHover={() => setActiveStep(i)}
+                />
+              ))}
+            </div>
           </div>
 
-          {/* Mobile: vertical */}
-          <div className="flex md:hidden flex-col items-center gap-8">
+          {/* Mobile: vertical with side connector */}
+          <div className="flex md:hidden flex-col items-stretch gap-6 relative">
+            <div className="absolute left-[44px] top-12 bottom-12 w-px bg-gradient-to-b from-transparent via-white/10 to-transparent" />
             {steps.map((step, i) => (
-              <div key={i} className="w-full">
-                <StepCard step={step} index={i} visible={visible} />
-              </div>
+              <MobileStepCard
+                key={i}
+                step={step}
+                index={i}
+                visible={visible}
+                isActive={activeStep === i}
+                onTap={() => setActiveStep(i)}
+              />
             ))}
           </div>
         </div>
 
-        <div className="mt-10 md:mt-20 flex justify-center">
+        <div
+          className={`mt-12 md:mt-20 flex justify-center transition-all duration-700 ${
+            visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+          }`}
+          style={{ transitionDelay: '900ms' }}
+        >
           <a
             href="/skapa-konto"
-            className="px-10 py-3.5 rounded-full bg-[hsl(45_85%_55%)] text-[hsl(225_30%_7%)] font-semibold text-base tracking-wide shadow-[0_4px_20px_hsl(260_60%_72%/0.3)] hover:shadow-[0_6px_28px_hsl(260_60%_72%/0.45)] hover:scale-105 active:scale-[0.98] transition-all duration-200"
+            className="group relative px-10 py-3.5 rounded-full bg-[hsl(45_85%_55%)] text-[hsl(225_30%_7%)] font-semibold text-base tracking-wide shadow-[0_4px_20px_hsl(45_85%_55%/0.35)] hover:shadow-[0_8px_32px_hsl(45_85%_55%/0.55)] hover:scale-[1.04] active:scale-[0.97] transition-all duration-300 ease-out overflow-hidden"
           >
-            {t('landing.getStarted')}
+            <span className="relative z-10">{t('landing.getStarted')}</span>
+            <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-out" />
           </a>
         </div>
       </div>
@@ -74,39 +129,171 @@ function IntroBlock() {
       ref={ref}
       className={`text-center max-w-2xl mx-auto transition-all duration-700 ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}
     >
-      <h2 className="text-2xl sm:text-3xl md:text-4xl font-display font-bold text-white mb-6">
+      <h2 className="text-2xl sm:text-3xl md:text-4xl font-display font-bold text-white mb-6 tracking-tight">
         {t('landing.sectionTitle')}
       </h2>
-      <p className="text-base sm:text-lg md:text-xl text-white/70 leading-relaxed max-w-xl mx-auto">
+      <p className="text-base sm:text-lg md:text-xl text-white/60 leading-relaxed max-w-xl mx-auto font-light">
         {t('landing.sectionSubtitle')}
       </p>
     </div>
   );
 }
 
-function StepCard({ step, index, visible }: { step: { icon: any; title: string }; index: number; visible: boolean }) {
-  const delay = index * 200;
+function StepCard({
+  step,
+  index,
+  visible,
+  isActive,
+  onHover,
+}: {
+  step: { icon: any; title: string };
+  index: number;
+  visible: boolean;
+  isActive: boolean;
+  onHover: () => void;
+}) {
+  const delay = index * 180;
+  const Icon = step.icon;
 
   return (
     <div
-      className={`relative flex flex-col items-center text-center flex-1 max-w-xs mx-auto transition-all duration-700 ease-out ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}
+      onMouseEnter={onHover}
+      className={`group relative flex flex-col items-center text-center flex-1 max-w-xs mx-auto cursor-pointer transition-all duration-700 ease-out ${
+        visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+      }`}
       style={{ transitionDelay: `${delay}ms` }}
     >
+      {/* Glow halo — intensifies when active */}
       <div
-        className={`absolute w-20 h-20 rounded-full bg-[hsl(260_60%_72%/0.06)] blur-xl transition-all duration-1000 ${visible ? "scale-100 opacity-100" : "scale-50 opacity-0"}`}
-        style={{ transitionDelay: `${delay + 100}ms` }}
+        className={`absolute top-0 w-32 h-32 rounded-full blur-2xl transition-all duration-700 ${
+          isActive
+            ? 'bg-[hsl(45_85%_55%/0.25)] scale-110 opacity-100'
+            : 'bg-[hsl(45_85%_55%/0.08)] scale-90 opacity-50 group-hover:opacity-80'
+        }`}
       />
 
-      <div className="flex-shrink-0 w-20 h-20 md:w-24 md:h-24 rounded-2xl bg-[hsl(260_60%_72%/0.10)] border border-[hsl(260_60%_72%/0.18)] flex items-center justify-center relative mb-6 z-10">
-        <step.icon className="w-9 h-9 md:w-11 md:h-11 text-[hsl(45_85%_55%)]" />
-        <span className="absolute -top-3 -left-3 w-8 h-8 rounded-full bg-[hsl(45_85%_55%)] text-[hsl(225_30%_7%)] text-sm font-bold flex items-center justify-center shadow-lg">
+      {/* Icon tile */}
+      <div
+        className={`relative z-10 flex-shrink-0 w-24 h-24 rounded-3xl flex items-center justify-center mb-7 transition-all duration-500 ease-out ${
+          isActive
+            ? 'bg-[hsl(260_60%_72%/0.16)] border border-[hsl(45_85%_55%/0.4)] scale-[1.06] shadow-[0_12px_40px_hsl(45_85%_55%/0.2)]'
+            : 'bg-[hsl(260_60%_72%/0.08)] border border-white/8 group-hover:border-[hsl(45_85%_55%/0.3)] group-hover:scale-[1.04]'
+        }`}
+      >
+        <Icon
+          className={`w-11 h-11 transition-all duration-500 ${
+            isActive ? 'text-[hsl(45_85%_55%)] scale-110' : 'text-[hsl(45_85%_55%/0.85)]'
+          }`}
+          strokeWidth={1.5}
+        />
+
+        {/* Number badge */}
+        <span
+          className={`absolute -top-3 -left-3 w-9 h-9 rounded-full text-sm font-bold flex items-center justify-center transition-all duration-500 ${
+            isActive
+              ? 'bg-[hsl(45_85%_55%)] text-[hsl(225_30%_7%)] scale-110 shadow-[0_4px_16px_hsl(45_85%_55%/0.6)]'
+              : 'bg-white/10 text-white/70 backdrop-blur-sm border border-white/10'
+          }`}
+        >
           {index + 1}
         </span>
+
+        {/* Pulse ring when active */}
+        <span
+          className={`absolute inset-0 rounded-3xl border border-[hsl(45_85%_55%/0.5)] transition-all duration-1000 ${
+            isActive ? 'scale-125 opacity-0' : 'scale-100 opacity-0'
+          }`}
+        />
       </div>
 
-      <h3 className="text-lg md:text-xl font-semibold text-white">
+      <h3
+        className={`text-lg md:text-xl font-semibold tracking-tight transition-colors duration-500 ${
+          isActive ? 'text-white' : 'text-white/70 group-hover:text-white/90'
+        }`}
+      >
         {step.title}
       </h3>
+
+      {/* Active indicator dot */}
+      <span
+        className={`mt-3 h-1 rounded-full bg-[hsl(45_85%_55%)] transition-all duration-500 ${
+          isActive ? 'w-8 opacity-100' : 'w-1 opacity-30'
+        }`}
+      />
     </div>
+  );
+}
+
+function MobileStepCard({
+  step,
+  index,
+  visible,
+  isActive,
+  onTap,
+}: {
+  step: { icon: any; title: string };
+  index: number;
+  visible: boolean;
+  isActive: boolean;
+  onTap: () => void;
+}) {
+  const delay = index * 150;
+  const Icon = step.icon;
+
+  return (
+    <button
+      onClick={onTap}
+      className={`relative flex items-center gap-5 text-left rounded-2xl p-4 transition-all duration-700 ease-out ${
+        isActive ? 'bg-white/[0.04]' : 'bg-transparent active:bg-white/[0.02]'
+      } ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}
+      style={{ transitionDelay: `${delay}ms` }}
+    >
+      <div className="relative flex-shrink-0">
+        {/* Glow */}
+        <div
+          className={`absolute inset-0 rounded-2xl blur-xl transition-all duration-500 ${
+            isActive ? 'bg-[hsl(45_85%_55%/0.3)] scale-110' : 'bg-[hsl(45_85%_55%/0.08)] scale-90'
+          }`}
+        />
+        <div
+          className={`relative w-[72px] h-[72px] rounded-2xl flex items-center justify-center transition-all duration-500 ${
+            isActive
+              ? 'bg-[hsl(260_60%_72%/0.16)] border border-[hsl(45_85%_55%/0.4)] scale-[1.04]'
+              : 'bg-[hsl(260_60%_72%/0.08)] border border-white/8'
+          }`}
+        >
+          <Icon
+            className={`w-8 h-8 transition-all duration-500 ${
+              isActive ? 'text-[hsl(45_85%_55%)]' : 'text-[hsl(45_85%_55%/0.8)]'
+            }`}
+            strokeWidth={1.5}
+          />
+          <span
+            className={`absolute -top-2 -left-2 w-7 h-7 rounded-full text-xs font-bold flex items-center justify-center transition-all duration-500 ${
+              isActive
+                ? 'bg-[hsl(45_85%_55%)] text-[hsl(225_30%_7%)] shadow-[0_4px_12px_hsl(45_85%_55%/0.5)]'
+                : 'bg-white/10 text-white/70 border border-white/10'
+            }`}
+          >
+            {index + 1}
+          </span>
+        </div>
+      </div>
+
+      <div className="flex-1 min-w-0">
+        <h3
+          className={`text-[17px] font-semibold tracking-tight transition-colors duration-500 ${
+            isActive ? 'text-white' : 'text-white/75'
+          }`}
+        >
+          {step.title}
+        </h3>
+        <span
+          className={`block mt-2 h-[3px] rounded-full bg-[hsl(45_85%_55%)] transition-all duration-500 ${
+            isActive ? 'w-10 opacity-100' : 'w-1 opacity-30'
+          }`}
+        />
+      </div>
+    </button>
   );
 }
