@@ -186,27 +186,27 @@ const Profile = () => {
   return (
     <div className="p-5 md:p-8 pb-24">
       <div className="max-w-2xl mx-auto md:mx-0">
-        <h1 className="font-display text-3xl font-bold mb-2">{t('profile.title')}</h1>
-        <p className="text-sm text-muted-foreground mb-8">{t('profile.subtitle')}</p>
+        <h1 className="font-display text-2xl font-bold mb-1">{t('profile.title')}</h1>
+        <p className="text-[13px] text-foreground/30 mb-10">{t('profile.subtitle')}</p>
 
         {/* Profile header card */}
         <button
           onClick={() => setView('edit')}
-          className="w-full flex items-center gap-4 p-4 rounded-xl border border-border/50 bg-card/50 mb-6 text-left hover:bg-muted/50 active:bg-muted transition-colors"
+          className="w-full flex items-center gap-4 p-4 rounded-2xl bg-foreground/[0.03] backdrop-blur-sm mb-8 text-left hover:bg-foreground/[0.05] active:bg-foreground/[0.06] transition-colors"
         >
-          <div className="w-14 h-14 rounded-full bg-muted flex items-center justify-center overflow-hidden flex-shrink-0">
+          <div className="w-14 h-14 rounded-full bg-foreground/[0.06] flex items-center justify-center overflow-hidden flex-shrink-0">
             {avatarUrl ? (
               <img src={avatarUrl} alt="" className="w-full h-full object-cover" />
             ) : (
-              <User className="w-6 h-6 text-muted-foreground" />
+              <User className="w-6 h-6 text-foreground/40" />
             )}
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-[15px] font-semibold text-foreground truncate">{displayName}</p>
-            <p className="text-sm text-muted-foreground truncate">{user?.email}</p>
-            <p className="text-xs text-muted-foreground/70 mt-0.5">{roleLabel}</p>
+            <p className="text-[15px] font-semibold text-foreground/90 truncate">{displayName}</p>
+            <p className="text-[13px] text-foreground/40 truncate">{user?.email}</p>
+            <p className="text-[11px] text-foreground/25 mt-0.5">{roleLabel}</p>
           </div>
-          <ChevronRight className="w-4 h-4 text-muted-foreground/50 flex-shrink-0" />
+          <ChevronRight className="w-4 h-4 text-foreground/15 flex-shrink-0" />
         </button>
 
         {/* Patient sections */}
