@@ -798,7 +798,6 @@ const Medications = () => {
           )}
         </DialogContent>
       </Dialog>
-        </div>
       </div>
     </div>
   );
