@@ -66,7 +66,7 @@ const Auth = () => {
                 </div>
               </div>
               <div className="hidden md:block flex-shrink-0 ml-6 lg:ml-12 self-end mb-4">
-                <div className="turtle-still turtle-breathe">
+                <div className="turtle-still">
                   <TurtleLogo size="hero" animated className="w-44 h-44 lg:w-56 lg:h-56" />
                 </div>
               </div>
