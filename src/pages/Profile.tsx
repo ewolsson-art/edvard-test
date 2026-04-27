@@ -20,6 +20,7 @@ import { AvatarUpload } from '@/components/AvatarUpload';
 import { CharacteristicsSharingSection } from '@/components/CharacteristicsSharingSection';
 import { useCharacteristics } from '@/hooks/useCharacteristics';
 import { useTranslation } from 'react-i18next';
+import Reports from './Reports';
 
 const Profile = () => {
   const { t } = useTranslation();
@@ -175,7 +176,6 @@ const Profile = () => {
     );
   }
   if (view === 'reports') {
-    const Reports = require('./Reports').default;
     return <SubPage title={t('profile.reports')} onBack={() => setView('main')}><Reports /></SubPage>;
   }
 
