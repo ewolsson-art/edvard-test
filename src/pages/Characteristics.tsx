@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Zap, Cloud, Sun, ChevronRight } from 'lucide-react';
+import { Zap, Cloud, Sun, ChevronRight, ArrowLeft } from 'lucide-react';
 import { useCharacteristics } from '@/hooks/useCharacteristics';
 import { useMoodData } from '@/hooks/useMoodData';
 import { cn } from '@/lib/utils';
@@ -38,10 +38,21 @@ const Characteristics = () => {
   }
 
   return (
-    <div className="p-5 md:p-8 pb-24">
-      <div className="max-w-2xl mx-auto md:mx-0">
+    <div className="pb-24">
+      <header className="sticky top-0 z-20 backdrop-blur-xl bg-background/80 border-b border-border/40">
+        <div className="max-w-2xl mx-auto md:mx-0 px-5 md:px-8 py-4 flex items-center gap-3">
+          <button
+            onClick={() => navigate(-1)}
+            className="p-2 -ml-2 rounded-full hover:bg-muted/50 transition-colors"
+            aria-label={t('common.back', { defaultValue: 'Tillbaka' })}
+          >
+            <ArrowLeft className="w-5 h-5" />
+          </button>
+          <h1 className="text-xl font-display font-semibold tracking-tight">{t('characteristics.myCharacteristics')}</h1>
+        </div>
+      </header>
+      <div className="max-w-2xl mx-auto md:mx-0 p-5 md:p-8">
         <div className="mb-10">
-          <h1 className="font-display text-2xl font-bold text-foreground mb-1">{t('characteristics.myCharacteristics')}</h1>
           <p className="text-[13px] text-foreground/30">{t('characteristics.characteristicsDesc')}</p>
         </div>
         <div className="rounded-2xl bg-foreground/[0.03] backdrop-blur-sm overflow-hidden divide-y divide-border/20">

@@ -1,10 +1,11 @@
 import { useState, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { format } from 'date-fns';
 import { sv, enUS } from 'date-fns/locale';
 import {
   Pill, Plus, Pencil, Trash2, Check, X, Calendar, CheckCircle2, Clock,
   AlertTriangle, ThumbsUp, ThumbsDown, Minus, HelpCircle, History, Info, ChevronRight,
-  Sparkles, FileText, FlaskConical,
+  Sparkles, FileText, FlaskConical, ArrowLeft,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -83,6 +84,7 @@ const emptyForm = (): MedFormState => ({
 
 const Medications = () => {
   const { i18n } = useTranslation();
+  const navigate = useNavigate();
   const dateFnsLocale = i18n.language === 'sv' ? sv : enUS;
 
   const {
@@ -206,11 +208,23 @@ const Medications = () => {
   const hasAny = medications.length > 0;
 
   return (
-    <div className="p-5 md:p-8 pb-24">
-      <div className="max-w-2xl mx-auto md:mx-0 space-y-8">
+    <div className="pb-24">
+      <header className="sticky top-0 z-20 backdrop-blur-xl bg-background/80 border-b border-border/40">
+        <div className="max-w-2xl mx-auto md:mx-0 px-5 md:px-8 py-4 flex items-center gap-3">
+          <button
+            onClick={() => navigate(-1)}
+            className="p-2 -ml-2 rounded-full hover:bg-muted/50 transition-colors"
+            aria-label="Tillbaka"
+          >
+            <ArrowLeft className="w-5 h-5" />
+          </button>
+          <h1 className="text-xl font-display font-semibold tracking-tight">Mediciner</h1>
+        </div>
+      </header>
+      <div className="p-5 md:p-8">
+        <div className="max-w-2xl mx-auto md:mx-0 space-y-8">
         <header className="flex items-start justify-between gap-4">
           <div className="flex-1">
-            <h1 className="font-display text-2xl font-bold mb-1">Mediciner</h1>
             <p className="text-[13px] text-foreground/30">
               Håll koll på vad du tar nu, vad du har testat tidigare och vilka effekter & biverkningar du upplever.
             </p>
