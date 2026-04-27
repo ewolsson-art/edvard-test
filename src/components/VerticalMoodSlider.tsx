@@ -142,25 +142,48 @@ export function VerticalMoodSlider({ options, value, onSelect }: VerticalMoodSli
 
   return (
     <div className="flex flex-col items-center w-full select-none mx-auto" style={{ maxWidth: '420px' }}>
-      {/* Active label — heading */}
-      <div className="mb-10 min-h-[72px] w-full flex items-center justify-center">
+      {/* Active label — premium mood pill */}
+      <div className="mb-10 min-h-[80px] w-full flex items-center justify-center">
         <div
           key={activeMood.mood}
-          className="flex items-center gap-3 rounded-2xl px-5 py-3 bg-white/5 backdrop-blur-sm animate-fade-in"
+          className="relative animate-fade-in"
           aria-live="polite"
           aria-atomic="true"
         >
-          <ActiveIcon
-            className="w-7 h-7 flex-shrink-0"
-            style={{ color: `hsl(${activeColorVar})` }}
+          {/* Soft colored halo behind the pill */}
+          <div
+            className="absolute -inset-6 rounded-[2rem] opacity-60 blur-2xl pointer-events-none transition-opacity duration-500"
+            style={{ background: `radial-gradient(closest-side, hsl(${activeColorVar} / 0.35), transparent 70%)` }}
+            aria-hidden="true"
           />
-          <div className="min-w-0 text-left">
-            <span className="block text-base font-semibold leading-tight text-foreground">
-              {activeMood.label}
-            </span>
-            <span className="block text-xs leading-tight text-muted-foreground mt-0.5">
-              {activeMood.sublabel}
-            </span>
+          <div
+            className="relative flex items-center gap-3.5 rounded-full pl-2 pr-5 py-2 bg-foreground/[0.04] backdrop-blur-xl ring-1 ring-foreground/10 shadow-[0_8px_30px_-12px_rgba(0,0,0,0.6)]"
+            style={{
+              boxShadow: `0 0 0 1px hsl(${activeColorVar} / 0.18) inset, 0 8px 30px -12px hsl(${activeColorVar} / 0.45)`,
+            }}
+          >
+            {/* Icon in tinted circle */}
+            <div
+              className="flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center transition-colors duration-300"
+              style={{
+                background: `hsl(${activeColorVar} / 0.14)`,
+                boxShadow: `inset 0 0 0 1px hsl(${activeColorVar} / 0.25)`,
+              }}
+            >
+              <ActiveIcon
+                className="w-5 h-5"
+                style={{ color: `hsl(${activeColorVar})` }}
+                strokeWidth={2.25}
+              />
+            </div>
+            <div className="min-w-0 text-left pr-1">
+              <span className="block text-[15px] font-semibold leading-tight text-foreground tracking-[-0.01em]">
+                {activeMood.label}
+              </span>
+              <span className="block text-[11px] leading-tight text-muted-foreground/80 mt-0.5 tracking-wide">
+                {activeMood.sublabel}
+              </span>
+            </div>
           </div>
         </div>
       </div>
