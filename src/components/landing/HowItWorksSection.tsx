@@ -187,7 +187,18 @@ function StepCard({
         >
           {index + 1}
         </span>
-      </div>
+
+        {/* Family/community heart badge — only on the sharing step */}
+        {index === 2 && (
+          <span
+            className={`absolute -bottom-1 -right-1 w-9 h-9 rounded-full flex items-center justify-center z-10 transition-all duration-500 bg-gradient-to-br from-[hsl(345_85%_62%)] to-[hsl(15_85%_60%)] shadow-[0_4px_16px_hsl(345_85%_62%/0.5)] ${
+              isActive ? 'scale-110' : 'scale-100'
+            }`}
+            aria-hidden="true"
+          >
+            <Heart className="w-4 h-4 text-white fill-white" strokeWidth={2.2} />
+          </span>
+        )}
 
       <h3
         className={`text-lg md:text-xl font-semibold tracking-tight transition-colors duration-500 ${
