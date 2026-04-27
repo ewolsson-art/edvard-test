@@ -51,16 +51,7 @@ export function HowItWorksSection() {
         <div ref={ref} className="mt-12 md:mt-24">
           {/* Desktop: horizontal with connecting line */}
           <div className="hidden md:block relative">
-            {/* Animated connector line */}
-            <div className="absolute top-12 left-[16%] right-[16%] h-px overflow-hidden">
-              <div className="h-full w-full bg-gradient-to-r from-transparent via-white/10 to-transparent" />
-              <div
-                className={`absolute top-0 left-0 h-full bg-gradient-to-r from-transparent via-[hsl(45_85%_55%)] to-transparent transition-all duration-[2000ms] ease-out ${
-                  visible ? 'w-full opacity-100' : 'w-0 opacity-0'
-                }`}
-                style={{ transitionDelay: '400ms' }}
-              />
-            </div>
+            {/* Connector line removed */}
 
             <div className="flex items-start justify-center gap-16">
               {steps.map((step, i) => (
