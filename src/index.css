@@ -940,7 +940,8 @@
 .celebration-ring {
   position: absolute;
   border-radius: 50%;
-  border: 3px solid hsl(var(--primary) / 0.3);
+  border: 3px solid var(--ring-color, hsl(var(--primary) / 0.3));
+  opacity: 0.35;
   animation: celebration-ring-expand 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   animation-delay: var(--ring-delay);
 }

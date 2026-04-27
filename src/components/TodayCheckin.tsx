@@ -493,30 +493,64 @@ export function TodayCheckin({
       .map(q => ({ question: q.question_text, answer: customAnswersState[q.id] === 'yes' ? t('common.yes') : t('common.no') }));
 
     const isLowMood = todayEntry?.mood === 'severe_depressed' || todayEntry?.mood === 'depressed' || todayEntry?.mood === 'somewhat_depressed';
+    const isHighMood = todayEntry?.mood === 'severe_elevated' || todayEntry?.mood === 'elevated' || todayEntry?.mood === 'somewhat_elevated';
+    const isStable = todayEntry?.mood === 'stable';
+
+    const moodColorVar = todayEntry ? moodColorVars[todayEntry.mood] : 'var(--primary)';
+    const moodColor = `hsl(${moodColorVar})`;
+
+    // Personlig hälsning baserat på stämningsläge
+    const namePart = firstName?.trim() ? `, ${firstName.trim()}` : '';
+    const heroTitle = isLowMood
+      ? `Tack för att du loggade idag${namePart}`
+      : isHighMood
+        ? `Bra att du fångar känslan${namePart}`
+        : isStable
+          ? `Snyggt jobbat${namePart}`
+          : `Klart${namePart}`;
+
+    const heroSub = isLowMood
+      ? 'En tung dag är också värd att se. Var snäll mot dig själv ikväll.'
+      : isHighMood
+        ? 'Försök hitta en lugn stund — bra för balansen över tid.'
+        : isStable
+          ? 'Stabilitet är en superkraft. Fortsätt med det du gör.'
+          : 'Din incheckning är sparad.';
 
     return (
       <div className="fade-in h-full md:h-auto flex flex-col items-center justify-center px-5 py-12 relative overflow-hidden">
-        {/* Ambient golden glow backdrop */}
+        {/* Mood-färgad ambient backdrop */}
         <div
           aria-hidden
           className="pointer-events-none absolute inset-0 flex items-center justify-center"
         >
-          <div className="w-[520px] h-[520px] rounded-full bg-[radial-gradient(circle,hsl(45_85%_55%/0.12)_0%,transparent_60%)] blur-2xl" />
+          <div
+            className="w-[520px] h-[520px] rounded-full blur-3xl"
+            style={{
+              background: `radial-gradient(circle, ${moodColor.replace(')', ' / 0.16)')} 0%, transparent 60%)`,
+            }}
+          />
         </div>
 
         <div className="relative flex flex-col items-center text-center w-full max-w-md">
-          {/* Hero: floating turtle + huge gradient streak */}
+          {/* Hero: mood-ikon i färgad cirkel + ev. streak */}
           <motion.div
             initial={{ opacity: 0, y: 12, scale: 0.92 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             transition={{ type: 'spring', stiffness: 240, damping: 22, mass: 0.7 }}
-            className="flex items-center gap-2 md:gap-4 mb-10"
+            className="flex items-center gap-4 md:gap-6 mb-8"
           >
-            <div className="w-28 h-28 md:w-36 md:h-36 flex items-center justify-center">
-              <TurtleLogo
-                size="lg"
-                animated={true}
-                className="turtle-still drop-shadow-[0_8px_28px_hsl(45_85%_55%/0.35)] scale-[2.4] md:scale-[3]"
+            <div
+              className="w-24 h-24 md:w-28 md:h-28 rounded-full flex items-center justify-center"
+              style={{
+                backgroundColor: moodColor.replace(')', ' / 0.12)'),
+                boxShadow: `0 0 40px ${moodColor.replace(')', ' / 0.3)')}, inset 0 0 0 1px ${moodColor.replace(')', ' / 0.25)')}`,
+              }}
+            >
+              <MoodIcon
+                className="w-12 h-12 md:w-14 md:h-14"
+                style={{ color: moodColor }}
+                strokeWidth={1.75}
               />
             </div>
             {streakData.currentStreak > 0 && (
@@ -525,11 +559,11 @@ export function TodayCheckin({
                   initial={{ opacity: 0, scale: 0.5 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ delay: 0.15, type: 'spring', stiffness: 280, damping: 18 }}
-                  className="block text-[96px] md:text-[124px] font-bold tabular-nums leading-[0.8] tracking-tighter bg-gradient-to-br from-foreground via-foreground to-foreground/55 bg-clip-text text-transparent"
+                  className="block text-[72px] md:text-[88px] font-bold tabular-nums leading-[0.8] tracking-tighter bg-gradient-to-br from-foreground via-foreground to-foreground/55 bg-clip-text text-transparent"
                 >
                   {streakData.currentStreak}
                 </motion.span>
-                <div className="flex items-center gap-1.5 mt-3 ml-1">
+                <div className="flex items-center gap-1.5 mt-2 ml-1">
                   <Flame className="w-3 h-3 text-primary/70" />
                   <p className="text-[11px] uppercase tracking-[0.18em] text-foreground/40 font-medium">
                     {streakData.currentStreak === 1 ? t('checkin.dayStreak') : t('checkin.daysStreak')} {t('checkin.inARow')}
@@ -539,13 +573,32 @@ export function TodayCheckin({
             )}
           </motion.div>
 
+          {/* Personlig hälsning */}
+          <motion.h2
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2, type: 'spring', stiffness: 260, damping: 24 }}
+            className="font-display text-2xl md:text-3xl font-bold tracking-tight mb-2 max-w-[320px]"
+            style={{ color: moodColor }}
+          >
+            {heroTitle}
+          </motion.h2>
+          <motion.p
+            initial={{ opacity: 0, y: 6 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+            className="text-[14px] text-muted-foreground/80 leading-relaxed mb-8 max-w-[320px]"
+          >
+            {heroSub}
+          </motion.p>
+
           {/* Status pills */}
           {summaryItems.length > 0 && (
             <motion.div
               initial="hidden"
               animate="visible"
-              variants={{ visible: { transition: { staggerChildren: 0.06, delayChildren: 0.25 } } }}
-              className="flex flex-wrap items-center justify-center gap-2 mb-8 max-w-[340px]"
+              variants={{ visible: { transition: { staggerChildren: 0.06, delayChildren: 0.4 } } }}
+              className="flex flex-wrap items-center justify-center gap-2 mb-6 max-w-[340px]"
             >
               {summaryItems.map((item) => (
                 <motion.span
@@ -563,33 +616,33 @@ export function TodayCheckin({
             </motion.div>
           )}
 
-          {/* Encouragement for low mood */}
-          {isLowMood && (
+          {/* Empatiskt budskap för låga mood — referenser till tidigare bra dagar */}
+          {isLowMood && encouragementData.goodDaysCount > 0 && (
             <motion.div
               initial={{ opacity: 0, y: 6 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5 }}
-              className="mb-8 px-5 py-3.5 rounded-2xl bg-primary/[0.06] border border-primary/15 max-w-[320px]"
+              transition={{ delay: 0.6 }}
+              className="mb-6 px-5 py-3.5 rounded-2xl bg-foreground/[0.04] border border-foreground/10 max-w-[320px]"
             >
               <div className="flex items-start gap-2.5 text-left">
-                <Heart className="w-4 h-4 mt-0.5 shrink-0 text-primary/70 fill-primary/20" />
-                <p className="text-[13px] text-foreground/70 leading-relaxed">
-                  {t('checkin.betterDaysComing')}
-                  {encouragementData.goodDaysCount > 0 && (
-                    <span className="text-foreground/45">
-                      {' '}{t('checkin.youFeltGood', { days: encouragementData.daysSinceGood ?? '?', dayWord: encouragementData.daysSinceGood === 1 ? t('checkin.dayStreak') : t('checkin.daysStreak') })}
-                    </span>
-                  )}
+                <Heart
+                  className="w-4 h-4 mt-0.5 shrink-0"
+                  style={{ color: moodColor, fill: moodColor.replace(')', ' / 0.2)') }}
+                />
+                <p className="text-[13px] text-foreground/75 leading-relaxed">
+                  {encouragementData.daysSinceGood !== null && encouragementData.daysSinceGood <= 14
+                    ? `För bara ${encouragementData.daysSinceGood} ${encouragementData.daysSinceGood === 1 ? 'dag' : 'dagar'} sedan mådde du bra. Det kommer tillbaka.`
+                    : `Du har haft ${encouragementData.goodDaysCount} bra ${encouragementData.goodDaysCount === 1 ? 'dag' : 'dagar'} i år. Bättre stunder kommer.`}
                 </p>
               </div>
             </motion.div>
           )}
 
-          {/* Edit link */}
+          {/* Edit-länk */}
           <motion.button
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 0.6 }}
+            transition={{ delay: 0.7 }}
             onClick={handleEdit}
             className="inline-flex items-center gap-1.5 text-[13px] text-foreground/40 hover:text-foreground/70 transition-colors duration-200 cursor-pointer group"
           >
@@ -1357,6 +1410,8 @@ export function TodayCheckin({
           <CelebrationAnimation 
             streak={streakData.currentStreak}
             milestone={streakData.milestone}
+            mood={checkinData.mood}
+            firstName={firstName}
           />
         </div>
       )}
