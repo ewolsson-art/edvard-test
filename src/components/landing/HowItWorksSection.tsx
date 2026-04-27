@@ -199,6 +199,7 @@ function StepCard({
             <Heart className="w-4 h-4 text-white fill-white" strokeWidth={2.2} />
           </span>
         )}
+      </div>
 
       <h3
         className={`text-lg md:text-xl font-semibold tracking-tight transition-colors duration-500 ${
