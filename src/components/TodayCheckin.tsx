@@ -1357,6 +1357,8 @@ export function TodayCheckin({
           <CelebrationAnimation 
             streak={streakData.currentStreak}
             milestone={streakData.milestone}
+            mood={checkinData.mood}
+            firstName={firstName}
           />
         </div>
       )}
