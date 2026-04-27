@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { useTranslation } from "react-i18next";
@@ -10,6 +10,37 @@ import { LandingFooter } from "@/components/landing/LandingFooter";
 import { NightCityscape } from "@/components/NightCityscape";
 import { useNativePlatform } from "@/hooks/useNativePlatform";
 import { NativeAuthLanding } from "@/components/native/NativeAuthLanding";
+
+const TODDY_GREETINGS = [
+  "Hej! Jag är Toddy 👋",
+  "Redo att checka in?",
+  "Jag följer dig hela vägen",
+  "Vi tar det en dag i taget",
+  "Skönt att se dig här",
+  "En liten stund — stor skillnad",
+];
+
+function ToddySpeechBubble() {
+  const greeting = useMemo(
+    () => TODDY_GREETINGS[Math.floor(Math.random() * TODDY_GREETINGS.length)],
+    []
+  );
+
+  return (
+    <div
+      className="absolute top-2 -left-40 lg:-left-48 z-20 opacity-0 animate-toddy-bubble-in pointer-events-none"
+      aria-hidden="true"
+    >
+      <div className="relative bg-white/95 backdrop-blur-sm text-[hsl(225_30%_15%)] px-4 py-2.5 rounded-2xl rounded-br-sm shadow-[0_8px_32px_rgba(0,0,0,0.25)]">
+        <p className="text-sm font-medium leading-snug whitespace-nowrap">
+          {greeting}
+        </p>
+        <span className="absolute -bottom-1.5 right-3 w-3 h-3 bg-white/95 rotate-45" />
+      </div>
+    </div>
+  );
+}
+
 
 const Auth = () => {
   const { user, loading } = useAuth();
