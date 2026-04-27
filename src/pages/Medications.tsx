@@ -258,23 +258,23 @@ const Medications = () => {
 
         {/* Today's check-in */}
         {dailyMeds.length > 0 && (
-          <Card className="glass-card overflow-hidden">
-            <CardContent className="p-5 space-y-4">
+          <div className="rounded-2xl bg-foreground/[0.03] backdrop-blur-sm overflow-hidden">
+            <div className="p-5 space-y-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className={`p-2.5 rounded-xl ${allTaken ? 'bg-green-500/10' : 'bg-primary/10'}`}>
-                    {allTaken ? <CheckCircle2 className="h-5 w-5 text-green-500" /> : <Clock className="h-5 w-5 text-primary" />}
+                  <div className={`p-2.5 rounded-xl ${allTaken ? 'bg-emerald-500/10' : 'bg-foreground/[0.06]'}`}>
+                    {allTaken ? <CheckCircle2 className="h-5 w-5 text-emerald-500" /> : <Clock className="h-5 w-5 text-foreground/40" />}
                   </div>
                   <div>
-                    <p className="font-semibold">Idag</p>
-                    <p className="text-xs text-muted-foreground capitalize">{todayLabel}</p>
+                    <p className="text-[15px] font-semibold text-foreground/90">Idag</p>
+                    <p className="text-[12px] text-foreground/30 capitalize">{todayLabel}</p>
                   </div>
                 </div>
-                <Badge variant={allTaken ? 'default' : 'secondary'}>
+                <span className="text-[12px] font-medium text-foreground/50 px-2.5 py-1 rounded-full bg-foreground/[0.05]">
                   {takenToday}/{totalToday} tagna
-                </Badge>
+                </span>
               </div>
-              <Progress value={progressPercent} className="h-1.5" />
+              <Progress value={progressPercent} className="h-1" />
               <div className="space-y-1.5">
                 {dailyMeds.map(med => {
                   const isTaken = isMedicationTakenOnDate(med.id, today);
@@ -282,25 +282,25 @@ const Medications = () => {
                     <button
                       key={med.id}
                       onClick={() => handleToggleTaken(med.id)}
-                      className={`w-full flex items-center gap-3 p-3 rounded-lg border transition-all text-left ${
-                        isTaken ? 'border-green-500/30 bg-green-500/5' : 'border-border bg-muted/30 hover:border-primary/30'
+                      className={`w-full flex items-center gap-3 p-3 rounded-xl transition-all text-left ${
+                        isTaken ? 'bg-emerald-500/[0.06]' : 'bg-foreground/[0.03] hover:bg-foreground/[0.05]'
                       }`}
                     >
                       <div className={`flex-shrink-0 w-5 h-5 rounded-full border-2 flex items-center justify-center ${
-                        isTaken ? 'border-green-500 bg-green-500' : 'border-muted-foreground/30'
+                        isTaken ? 'border-emerald-500 bg-emerald-500' : 'border-foreground/20'
                       }`}>
                         {isTaken && <Check className="h-3 w-3 text-white" />}
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className={`text-sm font-medium ${isTaken ? 'text-muted-foreground line-through' : ''}`}>{med.name}</p>
-                        <p className="text-xs text-muted-foreground">{med.dosage}</p>
+                        <p className={`text-[14px] font-medium ${isTaken ? 'text-foreground/40 line-through' : 'text-foreground/85'}`}>{med.name}</p>
+                        <p className="text-[12px] text-foreground/30">{med.dosage}</p>
                       </div>
                     </button>
                   );
                 })}
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         )}
 
         {/* Tabs current vs previous */}
