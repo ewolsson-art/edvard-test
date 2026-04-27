@@ -799,13 +799,11 @@ function InfoRow({ label, value }: { label: string; value: string }) {
 
 function EmptyState({ icon, text, hint }: { icon: React.ReactNode; text: string; hint: string }) {
   return (
-    <Card className="glass-card">
-      <CardContent className="py-10 text-center">
-        <div className="flex justify-center mb-3">{icon}</div>
-        <p className="font-medium text-muted-foreground">{text}</p>
-        <p className="text-sm text-muted-foreground mt-1">{hint}</p>
-      </CardContent>
-    </Card>
+    <div className="rounded-2xl bg-foreground/[0.03] backdrop-blur-sm py-10 text-center">
+      <div className="flex justify-center mb-3">{icon}</div>
+      <p className="text-[14px] font-medium text-foreground/60">{text}</p>
+      <p className="text-[13px] text-foreground/30 mt-1 px-6">{hint}</p>
+    </div>
   );
 }
 
@@ -820,38 +818,40 @@ function MedCard({
 }) {
   const sideEffectsCount = med.side_effects?.length ?? 0;
   const effectiveness = med.effectiveness;
-  const accentClass =
-    accent === 'amber' ? 'border-amber-500/20 hover:border-amber-500/40' :
-    accent === 'muted' ? 'border-border opacity-80 hover:opacity-100' :
-    'border-border hover:border-primary/40';
+  const opacityClass = accent === 'muted' ? 'opacity-70 hover:opacity-100' : '';
 
   return (
     <button
       onClick={onClick}
-      className={`w-full text-left rounded-xl border bg-card transition-all p-4 ${accentClass} hover:shadow-md`}
+      className={`w-full text-left rounded-2xl bg-foreground/[0.03] backdrop-blur-sm hover:bg-foreground/[0.05] active:bg-foreground/[0.06] transition-colors p-4 ${opacityClass}`}
     >
       <div className="flex items-start gap-3">
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap">
-            <p className="font-semibold truncate">{med.name}</p>
+            <p className="text-[15px] font-semibold text-foreground/90 truncate">{med.name}</p>
             {med.is_trial && (
-              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full border border-amber-500/40 bg-amber-500/10 text-amber-700 dark:text-amber-400 text-[10px] font-semibold uppercase tracking-wider">
+              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-600 dark:text-amber-400 text-[10px] font-semibold uppercase tracking-wider">
                 <FlaskConical className="h-3 w-3" />
                 Prov
               </span>
             )}
+            {accent === 'amber' && !med.is_trial && (
+              <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-600 dark:text-amber-400 text-[10px] font-semibold uppercase tracking-wider">
+                Vid behov
+              </span>
+            )}
             {effectiveness && (
-              <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full border text-xs ${EFFECTIVENESS_COLORS[effectiveness]}`}>
+              <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] ${EFFECTIVENESS_COLORS[effectiveness]}`}>
                 {EFFECTIVENESS_ICONS[effectiveness]}
                 <span className="hidden xs:inline">{EFFECTIVENESS_LABELS[effectiveness]}</span>
               </span>
             )}
           </div>
-          <p className="text-sm text-muted-foreground mt-0.5">{med.dosage}</p>
+          <p className="text-[13px] text-foreground/40 mt-0.5">{med.dosage}</p>
           {med.indication && (
-            <p className="text-xs text-primary/80 mt-1 font-medium">Mot: {med.indication}</p>
+            <p className="text-[12px] text-foreground/50 mt-1">Mot: {med.indication}</p>
           )}
-          <div className="flex flex-wrap gap-x-3 gap-y-1 mt-2 text-xs text-muted-foreground">
+          <div className="flex flex-wrap gap-x-3 gap-y-1 mt-2 text-[11px] text-foreground/30">
             <span className="flex items-center gap-1">
               <Calendar className="h-3 w-3" />
               {med.status === 'previous' && med.stopped_at
@@ -860,14 +860,14 @@ function MedCard({
             </span>
             <span>{FREQUENCY_LABELS[med.frequency]}</span>
             {sideEffectsCount > 0 && (
-              <span className="flex items-center gap-1 text-amber-600 dark:text-amber-400">
+              <span className="flex items-center gap-1 text-amber-600/80 dark:text-amber-400/80">
                 <AlertTriangle className="h-3 w-3" />
                 {sideEffectsCount} biverkning{sideEffectsCount > 1 ? 'ar' : ''}
               </span>
             )}
           </div>
         </div>
-        <ChevronRight className="h-4 w-4 text-muted-foreground/50 mt-1 shrink-0" />
+        <ChevronRight className="h-4 w-4 text-foreground/15 mt-1 shrink-0" />
       </div>
     </button>
   );
