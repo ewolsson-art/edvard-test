@@ -186,27 +186,27 @@ const Profile = () => {
   return (
     <div className="p-5 md:p-8 pb-24">
       <div className="max-w-2xl mx-auto md:mx-0">
-        <h1 className="font-display text-3xl font-bold mb-2">{t('profile.title')}</h1>
-        <p className="text-sm text-muted-foreground mb-8">{t('profile.subtitle')}</p>
+        <h1 className="font-display text-2xl font-bold mb-1">{t('profile.title')}</h1>
+        <p className="text-[13px] text-foreground/30 mb-10">{t('profile.subtitle')}</p>
 
         {/* Profile header card */}
         <button
           onClick={() => setView('edit')}
-          className="w-full flex items-center gap-4 p-4 rounded-xl border border-border/50 bg-card/50 mb-6 text-left hover:bg-muted/50 active:bg-muted transition-colors"
+          className="w-full flex items-center gap-4 p-4 rounded-2xl bg-foreground/[0.03] backdrop-blur-sm mb-8 text-left hover:bg-foreground/[0.05] active:bg-foreground/[0.06] transition-colors"
         >
-          <div className="w-14 h-14 rounded-full bg-muted flex items-center justify-center overflow-hidden flex-shrink-0">
+          <div className="w-14 h-14 rounded-full bg-foreground/[0.06] flex items-center justify-center overflow-hidden flex-shrink-0">
             {avatarUrl ? (
               <img src={avatarUrl} alt="" className="w-full h-full object-cover" />
             ) : (
-              <User className="w-6 h-6 text-muted-foreground" />
+              <User className="w-6 h-6 text-foreground/40" />
             )}
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-[15px] font-semibold text-foreground truncate">{displayName}</p>
-            <p className="text-sm text-muted-foreground truncate">{user?.email}</p>
-            <p className="text-xs text-muted-foreground/70 mt-0.5">{roleLabel}</p>
+            <p className="text-[15px] font-semibold text-foreground/90 truncate">{displayName}</p>
+            <p className="text-[13px] text-foreground/40 truncate">{user?.email}</p>
+            <p className="text-[11px] text-foreground/25 mt-0.5">{roleLabel}</p>
           </div>
-          <ChevronRight className="w-4 h-4 text-muted-foreground/50 flex-shrink-0" />
+          <ChevronRight className="w-4 h-4 text-foreground/15 flex-shrink-0" />
         </button>
 
         {/* Patient sections */}
@@ -271,25 +271,25 @@ function CharacteristicsInlineView() {
           <button
             key={s.type}
             onClick={() => navigate(`/kannetecken/${s.slug}`)}
-          className="w-full flex items-center gap-4 p-4 rounded-xl border border-border/50 bg-card/50 text-left hover:bg-muted/50 active:bg-muted transition-colors"
+          className="w-full flex items-center gap-4 p-4 rounded-2xl bg-foreground/[0.03] backdrop-blur-sm text-left hover:bg-foreground/[0.05] active:bg-foreground/[0.06] transition-colors"
           >
             <div className={cn("p-2.5 rounded-xl", s.iconBg)}>
               <Icon className={cn("w-5 h-5", s.iconColor)} />
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-[15px] font-semibold text-foreground">{s.title}</p>
+              <p className="text-[15px] font-semibold text-foreground/90">{s.title}</p>
               {s.chars.length > 0 ? (
                 <div className="flex flex-wrap gap-1.5 mt-1.5">
                   {s.chars.slice(0, 3).map((c) => (
                     <span key={c.id} className={cn("text-xs py-0.5 px-2 rounded-full font-medium", s.badgeClass)}>{c.name}</span>
                   ))}
-                  {s.chars.length > 3 && <span className="text-xs text-muted-foreground self-center">+{s.chars.length - 3}</span>}
+                  {s.chars.length > 3 && <span className="text-xs text-foreground/30 self-center">+{s.chars.length - 3}</span>}
                 </div>
               ) : (
-                <p className="text-xs text-muted-foreground mt-0.5">{t('profile.noneAddedYet')}</p>
+                <p className="text-[12px] text-foreground/30 mt-0.5">{t('profile.noneAddedYet')}</p>
               )}
             </div>
-            <ChevronRight className="w-4 h-4 text-muted-foreground/50 flex-shrink-0" />
+            <ChevronRight className="w-4 h-4 text-foreground/15 flex-shrink-0" />
           </button>
         );
       })}
@@ -318,9 +318,9 @@ function SubPage({ title, onBack, children }: { title: string; onBack: () => voi
 
 function SettingsGroup({ label, children }: { label: string; children: React.ReactNode }) {
   return (
-    <div className="mb-6">
-      <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2 px-1">{label}</p>
-      <div className="rounded-xl border border-border/50 bg-card/50 overflow-hidden divide-y divide-border/50">
+    <div className="mb-8">
+      <p className="text-[11px] font-semibold uppercase tracking-[0.15em] text-foreground/25 mb-3 px-1">{label}</p>
+      <div className="rounded-2xl bg-foreground/[0.03] backdrop-blur-sm overflow-hidden divide-y divide-border/20">
         {children}
       </div>
     </div>
@@ -336,14 +336,14 @@ function SettingsRow({ icon: Icon, label, description, onClick }: {
   return (
     <button
       onClick={onClick}
-      className="w-full flex items-center gap-4 px-4 py-3.5 text-left hover:bg-muted/50 active:bg-muted transition-colors"
+      className="w-full flex items-center gap-3.5 px-4 py-3.5 text-left transition-colors duration-150 hover:bg-foreground/[0.04] active:bg-foreground/[0.06]"
     >
-      <Icon className="w-5 h-5 text-muted-foreground flex-shrink-0" />
+      <Icon className="w-[18px] h-[18px] text-foreground/30 flex-shrink-0" />
       <div className="flex-1 min-w-0">
-        <span className="text-[15px] font-medium text-foreground">{label}</span>
-        {description && <p className="text-xs text-muted-foreground truncate">{description}</p>}
+        <span className="text-[15px] font-medium text-foreground/80">{label}</span>
+        {description && <p className="text-[12px] text-foreground/30 truncate mt-0.5">{description}</p>}
       </div>
-      <ChevronRight className="w-4 h-4 text-muted-foreground/50 flex-shrink-0" />
+      <ChevronRight className="w-4 h-4 text-foreground/15 flex-shrink-0" />
     </button>
   );
 }
