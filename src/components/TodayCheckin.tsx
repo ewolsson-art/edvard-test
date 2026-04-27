@@ -599,24 +599,59 @@ export function TodayCheckin({
             </motion.div>
           )}
 
-          {/* Empatiskt budskap för låga mood — referenser till tidigare bra dagar */}
+          {/* Empatiskt budskap för låga mood — pedagogiskt & varmt */}
           {isLowMood && encouragementData.goodDaysCount > 0 && (
             <motion.div
-              initial={{ opacity: 0, y: 6 }}
+              initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.6 }}
-              className="mb-6 px-5 py-3.5 rounded-2xl bg-foreground/[0.04] border border-foreground/10 max-w-[320px]"
+              transition={{ delay: 0.6, type: 'spring', stiffness: 260, damping: 24 }}
+              className="mb-6 max-w-[340px] w-full overflow-hidden rounded-2xl border border-foreground/10 bg-foreground/[0.03] backdrop-blur-sm"
             >
-              <div className="flex items-start gap-2.5 text-left">
-                <Heart
-                  className="w-4 h-4 mt-0.5 shrink-0"
-                  style={{ color: moodColor, fill: moodColor.replace(')', ' / 0.2)') }}
-                />
-                <p className="text-[13px] text-foreground/75 leading-relaxed">
-                  {encouragementData.daysSinceGood !== null && encouragementData.daysSinceGood <= 14
-                    ? `För bara ${encouragementData.daysSinceGood} ${encouragementData.daysSinceGood === 1 ? 'dag' : 'dagar'} sedan mådde du bra. Det kommer tillbaka.`
-                    : `Du har haft ${encouragementData.goodDaysCount} bra ${encouragementData.goodDaysCount === 1 ? 'dag' : 'dagar'} i år. Bättre stunder kommer.`}
-                </p>
+              {/* Färgad accent-stripe */}
+              <div
+                className="h-[3px] w-full"
+                style={{ background: `linear-gradient(90deg, transparent, ${moodColor}, transparent)` }}
+              />
+
+              <div className="px-5 py-4">
+                {/* Header: ikon + label */}
+                <div className="flex items-center gap-2 mb-3">
+                  <div
+                    className="w-7 h-7 rounded-full flex items-center justify-center shrink-0"
+                    style={{ backgroundColor: moodColor.replace(')', ' / 0.15)') }}
+                  >
+                    <Heart
+                      className="w-3.5 h-3.5"
+                      style={{ color: moodColor, fill: moodColor.replace(')', ' / 0.4)') }}
+                    />
+                  </div>
+                  <span className="text-[10.5px] uppercase tracking-[0.12em] font-semibold text-foreground/45">
+                    En liten påminnelse
+                  </span>
+                </div>
+
+                {/* Pedagogisk mätare: senaste bra dag */}
+                {encouragementData.daysSinceGood !== null && encouragementData.daysSinceGood <= 14 ? (
+                  <div className="text-left space-y-3">
+                    <p className="text-[15px] leading-snug text-foreground/90 font-medium">
+                      För <span style={{ color: moodColor }}>{encouragementData.daysSinceGood}</span>{' '}
+                      {encouragementData.daysSinceGood === 1 ? 'dag' : 'dagar'} sedan mådde du bra.
+                    </p>
+                    <p className="text-[13px] leading-relaxed text-foreground/55">
+                      Måendet rör sig i vågor — det här är en svacka, inte en slutpunkt. Var snäll mot dig själv idag.
+                    </p>
+                  </div>
+                ) : (
+                  <div className="text-left space-y-3">
+                    <p className="text-[15px] leading-snug text-foreground/90 font-medium">
+                      Du har haft <span style={{ color: moodColor }}>{encouragementData.goodDaysCount}</span> bra{' '}
+                      {encouragementData.goodDaysCount === 1 ? 'dag' : 'dagar'} i år.
+                    </p>
+                    <p className="text-[13px] leading-relaxed text-foreground/55">
+                      Bättre stunder kommer tillbaka. Att checka in idag är ett steg i rätt riktning.
+                    </p>
+                  </div>
+                )}
               </div>
             </motion.div>
           )}
