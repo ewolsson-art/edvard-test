@@ -65,8 +65,7 @@ const Auth = () => {
                   </button>
                 </div>
               </div>
-              <div className="hidden md:block flex-shrink-0 ml-6 lg:ml-12 self-end mb-4 relative">
-                <ToddySpeechBubble />
+              <div className="hidden md:block flex-shrink-0 ml-6 lg:ml-12 self-end mb-4">
                 <div className="turtle-still turtle-breathe">
                   <TurtleLogo size="hero" animated className="w-44 h-44 lg:w-56 lg:h-56" />
                 </div>
