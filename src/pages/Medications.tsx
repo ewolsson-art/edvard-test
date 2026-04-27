@@ -207,11 +207,11 @@ const Medications = () => {
 
   return (
     <div className="p-5 md:p-8 pb-24">
-      <div className="max-w-2xl mx-auto space-y-6">
+      <div className="max-w-2xl mx-auto md:mx-0 space-y-8">
         <header className="flex items-start justify-between gap-4">
           <div className="flex-1">
-            <h1 className="font-display text-3xl font-bold mb-2">Mediciner</h1>
-            <p className="text-sm text-muted-foreground">
+            <h1 className="font-display text-2xl font-bold mb-1">Mediciner</h1>
+            <p className="text-[13px] text-foreground/30">
               Håll koll på vad du tar nu, vad du har testat tidigare och vilka effekter & biverkningar du upplever.
             </p>
           </div>
