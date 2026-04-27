@@ -1,8 +1,12 @@
 import { CalendarCheck, BarChart3, Share2 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from 'react-i18next';
+import toddyPencil from "@/assets/toddy-pencil.png";
+import toddyGraph from "@/assets/toddy-graph.png";
+import toddyShare from "@/assets/toddy-share.png";
 
 const stepIcons = [CalendarCheck, BarChart3, Share2];
+const stepImages = [toddyPencil, toddyGraph, toddyShare];
 const stepKeys = ['landing.step1', 'landing.step2', 'landing.step3'];
 
 function useInView(threshold = 0.15) {
@@ -28,6 +32,7 @@ export function HowItWorksSection() {
 
   const steps = stepKeys.map((key, i) => ({
     icon: stepIcons[i],
+    image: stepImages[i],
     title: t(key),
   }));
 
@@ -127,14 +132,13 @@ function StepCard({
   isActive,
   onHover,
 }: {
-  step: { icon: any; title: string };
+  step: { icon: any; image: string; title: string };
   index: number;
   visible: boolean;
   isActive: boolean;
   onHover: () => void;
 }) {
   const delay = index * 180;
-  const Icon = step.icon;
 
   return (
     <div
@@ -146,45 +150,40 @@ function StepCard({
     >
       {/* Glow halo — intensifies when active */}
       <div
-        className={`absolute top-0 w-32 h-32 rounded-full blur-2xl transition-all duration-700 ${
+        className={`absolute top-4 w-40 h-40 rounded-full blur-3xl transition-all duration-700 ${
           isActive
-            ? 'bg-[hsl(45_85%_55%/0.25)] scale-110 opacity-100'
-            : 'bg-[hsl(45_85%_55%/0.08)] scale-90 opacity-50 group-hover:opacity-80'
+            ? 'bg-[hsl(45_85%_55%/0.28)] scale-110 opacity-100'
+            : 'bg-[hsl(45_85%_55%/0.1)] scale-90 opacity-60 group-hover:opacity-90'
         }`}
       />
 
-      {/* Icon tile */}
+      {/* Mascot tile */}
       <div
-        className={`relative z-10 flex-shrink-0 w-24 h-24 rounded-3xl flex items-center justify-center mb-7 transition-all duration-500 ease-out ${
-          isActive
-            ? 'bg-[hsl(260_60%_72%/0.16)] border border-[hsl(45_85%_55%/0.4)] scale-[1.06] shadow-[0_12px_40px_hsl(45_85%_55%/0.2)]'
-            : 'bg-[hsl(260_60%_72%/0.08)] border border-white/8 group-hover:border-[hsl(45_85%_55%/0.3)] group-hover:scale-[1.04]'
+        className={`relative z-10 flex-shrink-0 w-36 h-36 rounded-full flex items-center justify-center mb-7 transition-all duration-500 ease-out ${
+          isActive ? 'scale-[1.06]' : 'group-hover:scale-[1.03]'
         }`}
       >
-        <Icon
-          className={`w-11 h-11 transition-all duration-500 ${
-            isActive ? 'text-[hsl(45_85%_55%)] scale-110' : 'text-[hsl(45_85%_55%/0.85)]'
+        <img
+          src={step.image}
+          alt={step.title}
+          loading="lazy"
+          width={512}
+          height={512}
+          className={`w-full h-full object-contain transition-all duration-500 ${
+            isActive ? 'drop-shadow-[0_8px_24px_hsl(45_85%_55%/0.45)]' : 'drop-shadow-[0_4px_12px_rgba(0,0,0,0.3)]'
           }`}
-          strokeWidth={1.5}
         />
 
         {/* Number badge */}
         <span
-          className={`absolute -top-3 -left-3 w-9 h-9 rounded-full text-sm font-bold flex items-center justify-center transition-all duration-500 ${
+          className={`absolute -top-1 -left-1 w-9 h-9 rounded-full text-sm font-bold flex items-center justify-center transition-all duration-500 z-10 ${
             isActive
               ? 'bg-[hsl(45_85%_55%)] text-[hsl(225_30%_7%)] scale-110 shadow-[0_4px_16px_hsl(45_85%_55%/0.6)]'
-              : 'bg-white/10 text-white/70 backdrop-blur-sm border border-white/10'
+              : 'bg-white/15 text-white/80 backdrop-blur-sm border border-white/15'
           }`}
         >
           {index + 1}
         </span>
-
-        {/* Pulse ring when active */}
-        <span
-          className={`absolute inset-0 rounded-3xl border border-[hsl(45_85%_55%/0.5)] transition-all duration-1000 ${
-            isActive ? 'scale-125 opacity-0' : 'scale-100 opacity-0'
-          }`}
-        />
       </div>
 
       <h3
@@ -212,14 +211,13 @@ function MobileStepCard({
   isActive,
   onTap,
 }: {
-  step: { icon: any; title: string };
+  step: { icon: any; image: string; title: string };
   index: number;
   visible: boolean;
   isActive: boolean;
   onTap: () => void;
 }) {
   const delay = index * 150;
-  const Icon = step.icon;
 
   return (
     <button
@@ -232,28 +230,30 @@ function MobileStepCard({
       <div className="relative flex-shrink-0">
         {/* Glow */}
         <div
-          className={`absolute inset-0 rounded-2xl blur-xl transition-all duration-500 ${
-            isActive ? 'bg-[hsl(45_85%_55%/0.3)] scale-110' : 'bg-[hsl(45_85%_55%/0.08)] scale-90'
+          className={`absolute inset-0 rounded-full blur-xl transition-all duration-500 ${
+            isActive ? 'bg-[hsl(45_85%_55%/0.35)] scale-110' : 'bg-[hsl(45_85%_55%/0.1)] scale-90'
           }`}
         />
         <div
-          className={`relative w-[72px] h-[72px] rounded-2xl flex items-center justify-center transition-all duration-500 ${
-            isActive
-              ? 'bg-[hsl(260_60%_72%/0.16)] border border-[hsl(45_85%_55%/0.4)] scale-[1.04]'
-              : 'bg-[hsl(260_60%_72%/0.08)] border border-white/8'
+          className={`relative w-[88px] h-[88px] rounded-full flex items-center justify-center transition-all duration-500 ${
+            isActive ? 'scale-[1.04]' : ''
           }`}
         >
-          <Icon
-            className={`w-8 h-8 transition-all duration-500 ${
-              isActive ? 'text-[hsl(45_85%_55%)]' : 'text-[hsl(45_85%_55%/0.8)]'
+          <img
+            src={step.image}
+            alt={step.title}
+            loading="lazy"
+            width={512}
+            height={512}
+            className={`w-full h-full object-contain transition-all duration-500 ${
+              isActive ? 'drop-shadow-[0_6px_18px_hsl(45_85%_55%/0.45)]' : 'drop-shadow-[0_3px_8px_rgba(0,0,0,0.3)]'
             }`}
-            strokeWidth={1.5}
           />
           <span
-            className={`absolute -top-2 -left-2 w-7 h-7 rounded-full text-xs font-bold flex items-center justify-center transition-all duration-500 ${
+            className={`absolute -top-1 -left-1 w-7 h-7 rounded-full text-xs font-bold flex items-center justify-center transition-all duration-500 z-10 ${
               isActive
                 ? 'bg-[hsl(45_85%_55%)] text-[hsl(225_30%_7%)] shadow-[0_4px_12px_hsl(45_85%_55%/0.5)]'
-                : 'bg-white/10 text-white/70 border border-white/10'
+                : 'bg-white/15 text-white/80 border border-white/15 backdrop-blur-sm'
             }`}
           >
             {index + 1}
