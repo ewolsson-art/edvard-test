@@ -31,17 +31,7 @@ export function HowItWorksSection() {
     title: t(key),
   }));
 
-  // Auto-cycle through steps when visible (Apple-style attention guidance)
-  useEffect(() => {
-    if (!visible) return;
-    let i = 0;
-    setActiveStep(0);
-    const interval = setInterval(() => {
-      i = (i + 1) % steps.length;
-      setActiveStep(i);
-    }, 2400);
-    return () => clearInterval(interval);
-  }, [visible, steps.length]);
+  // Auto-cycling disabled — hover/tap to activate
 
   return (
     <section className="relative z-10 bg-[hsl(225_30%_7%)] py-14 md:py-32 px-5 md:px-8 overflow-hidden">
