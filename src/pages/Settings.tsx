@@ -22,7 +22,7 @@ import { ChangePasswordSection } from '@/components/ChangePasswordSection';
 import { GDPRExport } from '@/components/GDPRExport';
 import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 
-type SettingsView = 'main' | 'checkin' | 'custom-questions' | 'notifications' | 'password' | 'delete' | 'export';
+type SettingsView = 'main' | 'checkin' | 'custom-questions' | 'notifications' | 'password' | 'delete' | 'export' | 'language';
 
 const Settings = () => {
   const { user, signOut } = useAuth();
@@ -185,6 +185,14 @@ const Settings = () => {
     );
   }
 
+  if (view === 'language') {
+    return (
+      <SubPage title={t('settings.languageTitle', { defaultValue: 'Språk' })} onBack={() => setView('main')}>
+        <LanguageSelectList />
+      </SubPage>
+    );
+  }
+
   if (view === 'delete') {
     return (
       <SubPage title={t('settings.deleteAccountTitle')} onBack={() => setView('main')}>
@@ -218,7 +226,7 @@ const Settings = () => {
         <p className="text-[13px] text-foreground/30 mb-10">{t('settings.subtitle')}</p>
 
         <SettingsGroup label={t('settings.general')}>
-          <LanguageSwitcher variant="settings" />
+          <LanguageRow onClick={() => setView('language')} />
         </SettingsGroup>
 
         {isPatient && (
