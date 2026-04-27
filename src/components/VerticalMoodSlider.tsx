@@ -157,7 +157,7 @@ export function VerticalMoodSlider({ options, value, onSelect }: VerticalMoodSli
             aria-hidden="true"
           />
           <div
-            className="relative flex items-center gap-3.5 rounded-full pl-2 pr-5 py-2 bg-foreground/[0.04] backdrop-blur-xl ring-1 ring-foreground/10 shadow-[0_8px_30px_-12px_rgba(0,0,0,0.6)]"
+            className="relative flex items-center gap-3.5 rounded-full pl-2 pr-5 py-2 bg-foreground/[0.03] backdrop-blur-xl ring-1 ring-foreground/10 shadow-[0_8px_30px_-12px_rgba(0,0,0,0.6)]"
             style={{
               boxShadow: `0 0 0 1px hsl(${activeColorVar} / 0.18) inset, 0 8px 30px -12px hsl(${activeColorVar} / 0.45)`,
             }}
