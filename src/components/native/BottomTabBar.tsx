@@ -6,6 +6,7 @@ import { useNotifications } from '@/hooks/useNotifications';
 import { usePendingNotifications } from '@/hooks/usePendingNotifications';
 import { useHaptics } from '@/hooks/useHaptics';
 import { cn } from '@/lib/utils';
+import { preloadRoute } from '@/lib/routePreload';
 
 type TabItem = {
   to: string;
@@ -72,6 +73,8 @@ export function BottomTabBar() {
               <Link
                 to={tab.to}
                 onClick={() => tap()}
+                onTouchStart={() => preloadRoute(tab.to)}
+                onMouseEnter={() => preloadRoute(tab.to)}
                 className={cn(
                   'relative flex flex-col items-center justify-center gap-0.5 py-1.5 min-h-[52px] rounded-xl transition-all duration-200',
                   'active:scale-95 active:bg-white/[0.04]',
