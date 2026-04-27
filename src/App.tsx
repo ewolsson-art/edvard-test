@@ -15,16 +15,20 @@ import { BottomTabBar } from "@/components/native/BottomTabBar";
 import { NativeShellInit } from "@/components/native/NativeShellInit";
 import { NativeAppGate } from "@/components/native/NativeAppGate";
 
-// Preload critical dashboard chunks on idle
+import { preloadCriticalRoutes } from "@/lib/routePreload";
+
+// Preload critical chunks on idle so navigation is instant.
 const preloadDashboard = () => {
-  import("./pages/Index");
+  preloadCriticalRoutes();
   import("./hooks/useMoodData");
   import("./hooks/useMedications");
 };
-if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
-  (window as any).requestIdleCallback(preloadDashboard);
-} else {
-  setTimeout(preloadDashboard, 2000);
+if (typeof window !== 'undefined') {
+  if ('requestIdleCallback' in window) {
+    (window as any).requestIdleCallback(preloadDashboard, { timeout: 2500 });
+  } else {
+    setTimeout(preloadDashboard, 1200);
+  }
 }
 
 const Index = lazy(() => import("./pages/Index"));
