@@ -673,7 +673,7 @@ export function TodayCheckin({
   }
 
   return (
-    <div className="fade-in h-full md:h-auto flex flex-col justify-center px-5 pt-12 pb-4 md:pt-4 overflow-hidden md:overflow-y-auto md:glass-card md:p-12 md:max-h-[calc(100vh-4rem)] md:border md:bg-card/80 md:rounded-2xl md:shadow-sm">
+    <div className="fade-in h-full md:h-auto flex flex-col justify-center px-5 pt-12 pb-4 md:pt-4 overflow-hidden md:overflow-y-auto md:glass-card md:p-12 md:max-h-[calc(100vh-4rem)] md:border md:border-foreground/10 md:bg-foreground/[0.03] md:backdrop-blur-sm md:rounded-2xl md:shadow-sm">
       {/* Date removed from here - now shown inline with each step heading */}
 
 
