@@ -14,8 +14,8 @@ type Msg = { role: "user" | "assistant"; content: string };
 
 const SUGGESTIONS = [
   "Hur många dagar var jag nedstämd i år?",
-  "Hur länge sen var jag uppåt senast?",
-  "Vilken månad sov jag bäst senaste året?",
+  "Lägg till illamående som biverkning på min medicin",
+  "Lägg till 'pratar mycket' som kännetecken när jag är uppvarvad",
   "Hur många dagar har jag tränat senaste 30 dagarna?",
 ];
 
@@ -198,7 +198,7 @@ export default function AskToddy() {
                 Hej{firstName ? ` ${firstName}` : ""}!
               </h2>
               <p className="text-muted-foreground max-w-md mx-auto leading-relaxed mb-8">
-                Jag svarar på frågor om din statistik och översikt — antal dagar, perioder, mönster i din egen data. Inga råd, ingen tolkning.
+                Jag svarar på frågor om din statistik och kan hjälpa dig att registrera biverkningar på mediciner och lägga till kännetecken för olika stämningslägen.
               </p>
 
               <div className="grid gap-2.5 max-w-md mx-auto">
