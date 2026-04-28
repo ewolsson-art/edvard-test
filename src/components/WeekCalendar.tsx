@@ -90,19 +90,20 @@ export function WeekCalendar({
               className={cn(
                 "relative flex flex-col items-center justify-center py-4 rounded-md transition-all duration-150",
                 "hover:scale-105 hover:z-10",
-                !isTodayDate && mood === 'severe_elevated' && "bg-[hsl(45_95%_55%/0.6)]",
-                !isTodayDate && (mood === 'elevated' || mood === 'somewhat_elevated') && "bg-[hsl(45_95%_55%/0.3)]",
-                !isTodayDate && mood === 'stable' && "bg-[hsl(142_70%_45%/0.3)]",
-                !isTodayDate && (mood === 'depressed' || mood === 'somewhat_depressed') && "bg-[hsl(0_75%_55%/0.3)]",
-                !isTodayDate && mood === 'severe_depressed' && "bg-[hsl(0_75%_55%/0.6)]",
+                mood === 'severe_elevated' && "bg-[hsl(45_95%_55%/0.6)]",
+                (mood === 'elevated' || mood === 'somewhat_elevated') && "bg-[hsl(45_95%_55%/0.3)]",
+                mood === 'stable' && "bg-[hsl(142_70%_45%/0.3)]",
+                (mood === 'depressed' || mood === 'somewhat_depressed') && "bg-[hsl(0_75%_55%/0.3)]",
+                mood === 'severe_depressed' && "bg-[hsl(0_75%_55%/0.6)]",
                 showMissed && "bg-muted-foreground/10",
-                isTodayDate && "bg-foreground/15 ring-1 ring-foreground/30",
+                isTodayDate && !mood && "bg-foreground/15",
+                isTodayDate && "ring-1 ring-foreground/30",
               )}
             >
               <span className={cn(
                 "flex items-center justify-center text-base font-semibold leading-none",
-                isTodayDate && "text-foreground font-bold text-lg",
-                !isTodayDate && mood && "text-white",
+                isTodayDate && !mood && "text-foreground font-bold text-lg",
+                mood && "text-white",
                 !isTodayDate && !mood && "text-foreground/60",
               )}>
                 {format(day, 'd')}
