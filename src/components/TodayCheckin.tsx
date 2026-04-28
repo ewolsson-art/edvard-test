@@ -1359,11 +1359,11 @@ export function TodayCheckin({
 
             {renderCommentSection('medication')}
 
-            {/* Status summary */}
-            {activeMedications.length > 0 && (
+            {/* Status summary — visar bara schemalagda mediciner */}
+            {scheduledMedications.length > 0 && (
               <div className="flex items-center justify-center gap-2 mt-4">
                 <div className="flex gap-1">
-                  {activeMedications.map(med => (
+                  {scheduledMedications.map(med => (
                     <div
                       key={med.id}
                       className={cn(
@@ -1374,28 +1374,28 @@ export function TodayCheckin({
                   ))}
                 </div>
                 <span className="text-xs text-muted-foreground/50">
-                  {t('checkin.takenCount', { count: medicationsTakenToday.length, total: activeMedications.length })}
+                  {t('checkin.takenCount', { count: scheduledTakenCount, total: scheduledMedications.length })}
                 </span>
               </div>
             )}
 
             {isLastStep('medication') ? (
               <Button onClick={handleComplete} className="w-full mt-4 py-6 text-base font-semibold gap-2">
-                {activeMedications.length === 0
+                {scheduledMedications.length === 0
                   ? t('common.continue')
-                  : medicationsTakenToday.length === activeMedications.length
+                  : allScheduledTaken
                     ? t('common.yes')
-                    : medicationsTakenToday.length === 0
+                    : noScheduledTaken
                       ? t('common.no')
                       : t('checkin.notAll')}
               </Button>
             ) : (
               <Button onClick={() => navigateStep(getNextStep('medication') as Step)} className="w-full mt-4 py-6 text-base font-semibold gap-2">
-                {activeMedications.length === 0
+                {scheduledMedications.length === 0
                   ? t('common.continue')
-                  : medicationsTakenToday.length === activeMedications.length
+                  : allScheduledTaken
                     ? t('common.yes')
-                    : medicationsTakenToday.length === 0
+                    : noScheduledTaken
                       ? t('common.no')
                       : t('checkin.notAll')}
                 <ChevronRight className="w-4 h-4" />
