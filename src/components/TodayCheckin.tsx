@@ -218,12 +218,15 @@ export function TodayCheckin({
   const [customAnswersState, setCustomAnswersState] = useState<Record<string, string>>(initialCustomAnswers);
   const [checkinMode, setCheckinMode] = useState<'quick' | 'detailed'>('detailed');
 
-  // Auto-mark all medications as taken when entering medication step for the first time
+  // Auto-mark scheduled medications as taken when entering medication step for the first time.
+  // Vid behov-mediciner är frivilliga och förkryssas aldrig.
   const hasPrefilled = useRef(false);
   useEffect(() => {
     if (currentStep === 'medication' && activeMedications.length > 0 && medicationsTakenToday.length === 0 && !hasPrefilled.current) {
       hasPrefilled.current = true;
-      activeMedications.forEach(med => onToggleMedication(med.id, true));
+      activeMedications
+        .filter(med => med.frequency !== 'as_needed')
+        .forEach(med => onToggleMedication(med.id, true));
     }
   }, [currentStep, activeMedications, medicationsTakenToday.length, onToggleMedication]);
 
