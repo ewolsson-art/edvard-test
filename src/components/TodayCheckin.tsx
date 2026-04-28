@@ -438,6 +438,11 @@ export function TodayCheckin({
   };
 
   const hasMedications = activeMedications.length > 0;
+  const scheduledMedications = activeMedications.filter(m => m.frequency !== 'as_needed');
+  const asNeededMedications = activeMedications.filter(m => m.frequency === 'as_needed');
+  const scheduledTakenCount = scheduledMedications.filter(m => medicationsTakenToday.includes(m.id)).length;
+  const allScheduledTaken = scheduledMedications.length > 0 && scheduledTakenCount === scheduledMedications.length;
+  const noScheduledTaken = scheduledMedications.length > 0 && scheduledTakenCount === 0;
 
   // Helper to get mood icon and color for summary
   const getMoodDisplay = (mood: MoodType) => {
