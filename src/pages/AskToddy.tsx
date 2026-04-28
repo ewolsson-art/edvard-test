@@ -14,8 +14,8 @@ type Msg = { role: "user" | "assistant"; content: string };
 
 const SUGGESTIONS = [
   "Hur många dagar var jag nedstämd i år?",
-  "Hur länge sen var jag uppåt senast?",
-  "Vilken månad sov jag bäst senaste året?",
+  "Lägg till illamående som biverkning på min medicin",
+  "Lägg till 'pratar mycket' som kännetecken när jag är uppvarvad",
   "Hur många dagar har jag tränat senaste 30 dagarna?",
 ];
 
