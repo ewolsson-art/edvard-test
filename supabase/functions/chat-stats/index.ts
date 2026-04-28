@@ -1,5 +1,7 @@
 // Edge function: chat-stats
 // Streaming AI chat that has access to the authenticated user's mood/medication/diagnosis data.
+// Supports tool calling so Toddy can register side effects on medications and add
+// characteristics for mood states (uppvarvad/stabil/nedstämd) on the user's behalf.
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
 
@@ -10,8 +12,11 @@ const corsHeaders = {
 };
 
 interface ChatMessage {
-  role: "user" | "assistant";
+  role: "user" | "assistant" | "tool";
   content: string;
+  tool_calls?: any;
+  tool_call_id?: string;
+  name?: string;
 }
 
 const MOOD_LABELS: Record<string, string> = {
@@ -30,10 +35,10 @@ function buildContext(args: {
   moodEntries: any[];
   medications: any[];
   diagnoses: any[];
+  characteristics: any[];
 }): string {
-  const { firstName, todayStr, moodEntries, medications, diagnoses } = args;
+  const { firstName, todayStr, moodEntries, medications, diagnoses, characteristics } = args;
 
-  // Most recent first; cap at 180 days for token budget.
   const sortedEntries = [...moodEntries]
     .sort((a, b) => (a.date < b.date ? 1 : -1))
     .slice(0, 180);
@@ -55,7 +60,7 @@ function buildContext(args: {
   const medsPrev = medications.filter((m) => m.status === "previous");
 
   const fmtMed = (m: any) => {
-    const parts: string[] = [`${m.name} (${m.dosage})`];
+    const parts: string[] = [`id=${m.id} | ${m.name} (${m.dosage})`];
     if (m.indication) parts.push(`mot ${m.indication}`);
     if (m.started_at) parts.push(`startad ${m.started_at}`);
     if (m.stopped_at) parts.push(`avslutad ${m.stopped_at}`);
@@ -70,6 +75,11 @@ function buildContext(args: {
   const diagLines = diagnoses.map(
     (d) => `- ${d.name}${d.diagnosed_at ? ` (sedan ${d.diagnosed_at})` : ""}`,
   );
+
+  const charsByType: Record<string, string[]> = { elevated: [], stable: [], depressed: [] };
+  for (const c of characteristics) {
+    if (charsByType[c.mood_type]) charsByType[c.mood_type].push(c.name);
+  }
 
   const lines: string[] = [];
   lines.push(`Dagens datum: ${todayStr}`);
@@ -90,32 +100,182 @@ function buildContext(args: {
   }
 
   lines.push("");
+  lines.push("=== KÄNNETECKEN ===");
+  lines.push(`Uppvarvad: ${charsByType.elevated.join(", ") || "(inga)"}`);
+  lines.push(`Stabil: ${charsByType.stable.join(", ") || "(inga)"}`);
+  lines.push(`Nedstämd: ${charsByType.depressed.join(", ") || "(inga)"}`);
+
+  lines.push("");
   lines.push(`=== INCHECKNINGAR (senaste ${compactEntries.length} dagar, nyast först) ===`);
   lines.push(compactEntries.length ? compactEntries.join("\n") : "(inga incheckningar)");
 
   return lines.join("\n");
 }
 
-const SYSTEM_PROMPT = (context: string) => `Du är "Toddy", en strikt **statistik- och översiktsassistent** för en person som loggar sitt mående. Ditt enda syfte är att svara på faktafrågor om användarens egen registrerade data nedan.
+const SYSTEM_PROMPT = (context: string) => `Du är "Toddy", en assistent för en person som loggar sitt mående. Du har två syften:
 
-VAD DU FÅR GÖRA:
-- Räkna, summera och beskriva mönster i användarens incheckningar, mediciner och diagnoser (antal dagar, perioder, datum, frekvenser, jämförelser mellan veckor/månader/år).
-- Exempel på tillåtna frågor: "Hur många dagar var jag nedstämd 2026?", "Hur länge sen var jag uppåt senast?", "Vilken månad sov jag bäst?", "Hur många dagar har jag tagit X medicin?".
-- Svara på svenska, kort och konkret. Använd markdown (listor, **fetstil**, små rubriker) bara när det gör siffror tydligare.
-- Om data saknas eller perioden är tom: säg det rakt ut. Hitta aldrig på siffror, datum eller mediciner som inte finns i datat nedan.
+1) **Statistik & översikt** — svara på faktafrågor om användarens egen registrerade data.
+2) **Registrering** — hjälpa användaren att lägga till biverkningar på mediciner och kännetecken för stämningslägen via verktyg (tools).
 
-VAD DU INTE FÅR GÖRA — VIKTIGT:
-- Ge **inga** råd, rekommendationer, tips, åtgärdsförslag eller "vad du kan göra"-listor.
-- Tolka **inte** känslor, ge **ingen** terapi, coachning, validering eller emotionell support.
-- Uttala dig **inte** om mediciner (effekt, dos, byte, biverkningar utöver att räkna upp vad användaren själv loggat), behandling, diagnoser eller prognos.
-- Spekulera **inte** om orsaker ("därför att du…", "det kan bero på…"). Beskriv bara vad datan visar.
-- Svara **inte** på allmänna frågor om bipolär sjukdom, psykiatri, livsstil, sömnhygien, kost, träning eller liknande – även om användaren ber om det.
-- Om frågan inte handlar om användarens egen statistik/översikt, svara kort och vänligt:
-  > "Jag kan bara svara på frågor om din egen statistik och översikt — t.ex. hur många dagar du varit nedstämd, hur ditt mående sett ut en viss period, eller när du senast var uppåt. För råd, stöd eller medicinska frågor — prata med din läkare eller ring 1177."
-- Vid tecken på akut psykisk ohälsa (självmordstankar, mani med riskbeteende): hänvisa kort till 1177 eller 112. Ge inga andra råd.
+REGISTRERING — VERKTYG:
+- När användaren vill **lägga till biverkningar** för en medicin (t.ex. "lägg till illamående som biverkning på Lamictal"), använd verktyget \`add_medication_side_effects\`. Identifiera medicinen via dess id i listan ovan. Om flera mediciner matchar eller namnet är otydligt — fråga först. Lägg bara till biverkningar som användaren tydligt nämnt.
+- När användaren vill **lägga till ett kännetecken** för uppvarvad / stabil / nedstämd (t.ex. "lägg till 'pratar mycket' som kännetecken när jag är uppvarvad"), använd \`add_characteristic\`. mood_type måste vara exakt "elevated" (uppvarvad), "stable" (stabil) eller "depressed" (nedstämd).
+- Bekräfta kort efteråt vad du har lagt till. Hitta inte på saker — använd bara det användaren faktiskt sagt.
+- Svenska terminologi: använd "uppvarvad" (inte mani) och "nedstämdhet" (inte depression) i svar till användaren.
 
-ANVÄNDARENS DATA (din enda informationskälla):
+VAD DU FÅR GÖRA I ÖVRIGT:
+- Räkna, summera och beskriva mönster i användarens incheckningar, mediciner och diagnoser.
+- Svara på svenska, kort och konkret. Använd markdown bara när det gör svaret tydligare.
+- Om data saknas: säg det rakt ut. Hitta aldrig på siffror, datum eller mediciner.
+
+VAD DU INTE FÅR GÖRA:
+- Ge inga medicinska råd, ingen terapi, ingen tolkning av känslor.
+- Uttala dig inte om mediciners effekt, dos eller om byte av behandling.
+- Spekulera inte om orsaker.
+- Svara inte på allmänna frågor om bipolär sjukdom, psykiatri eller livsstil.
+- Vid tecken på akut psykisk ohälsa: hänvisa kort till 1177 eller 112.
+
+ANVÄNDARENS DATA (din enda informationskälla för statistik, och referens för id:n vid registrering):
 ${context}`;
+
+const TOOLS = [
+  {
+    type: "function",
+    function: {
+      name: "add_medication_side_effects",
+      description:
+        "Lägg till en eller flera biverkningar på en av användarens mediciner. Befintliga biverkningar bevaras; dubbletter ignoreras.",
+      parameters: {
+        type: "object",
+        properties: {
+          medication_id: {
+            type: "string",
+            description: "UUID för medicinen (från listan ANVÄNDARENS DATA).",
+          },
+          side_effects: {
+            type: "array",
+            items: { type: "string" },
+            description: "Biverkningar att lägga till, t.ex. ['illamående', 'huvudvärk'].",
+            minItems: 1,
+          },
+        },
+        required: ["medication_id", "side_effects"],
+        additionalProperties: false,
+      },
+    },
+  },
+  {
+    type: "function",
+    function: {
+      name: "add_characteristic",
+      description:
+        "Lägg till ett kännetecken för ett stämningsläge (uppvarvad, stabil eller nedstämd).",
+      parameters: {
+        type: "object",
+        properties: {
+          name: { type: "string", description: "Kort beskrivning, t.ex. 'pratar mycket'." },
+          mood_type: {
+            type: "string",
+            enum: ["elevated", "stable", "depressed"],
+            description: "elevated=uppvarvad, stable=stabil, depressed=nedstämd",
+          },
+        },
+        required: ["name", "mood_type"],
+        additionalProperties: false,
+      },
+    },
+  },
+];
+
+async function executeTool(
+  admin: any,
+  userId: string,
+  name: string,
+  args: any,
+): Promise<{ ok: boolean; message: string }> {
+  try {
+    if (name === "add_medication_side_effects") {
+      const medId = String(args?.medication_id ?? "");
+      const newEffects = Array.isArray(args?.side_effects)
+        ? args.side_effects.map((s: any) => String(s).trim()).filter(Boolean)
+        : [];
+      if (!medId || newEffects.length === 0) {
+        return { ok: false, message: "Ogiltiga argument." };
+      }
+      const { data: med, error: medErr } = await admin
+        .from("medications")
+        .select("id, name, side_effects, user_id")
+        .eq("id", medId)
+        .eq("user_id", userId)
+        .maybeSingle();
+      if (medErr || !med) {
+        return { ok: false, message: "Medicinen hittades inte." };
+      }
+      const existing: string[] = Array.isArray(med.side_effects) ? med.side_effects : [];
+      const lower = new Set(existing.map((s) => s.toLowerCase()));
+      const added: string[] = [];
+      for (const e of newEffects) {
+        if (!lower.has(e.toLowerCase())) {
+          added.push(e);
+          lower.add(e.toLowerCase());
+        }
+      }
+      const merged = [...existing, ...added];
+      const { error: updErr } = await admin
+        .from("medications")
+        .update({ side_effects: merged })
+        .eq("id", medId)
+        .eq("user_id", userId);
+      if (updErr) return { ok: false, message: `DB-fel: ${updErr.message}` };
+      return {
+        ok: true,
+        message:
+          added.length === 0
+            ? `Inga nya biverkningar tillagda på ${med.name} (alla fanns redan).`
+            : `La till [${added.join(", ")}] på ${med.name}. Aktuella biverkningar: [${merged.join(", ")}].`,
+      };
+    }
+
+    if (name === "add_characteristic") {
+      const cname = String(args?.name ?? "").trim();
+      const moodType = String(args?.mood_type ?? "");
+      if (!cname || !["elevated", "stable", "depressed"].includes(moodType)) {
+        return { ok: false, message: "Ogiltiga argument." };
+      }
+      // Avoid duplicates (case-insensitive) within same mood_type
+      const { data: existing } = await admin
+        .from("characteristics")
+        .select("id, name")
+        .eq("user_id", userId)
+        .eq("mood_type", moodType);
+      if (
+        Array.isArray(existing) &&
+        existing.some((c: any) => c.name.toLowerCase() === cname.toLowerCase())
+      ) {
+        return { ok: true, message: `"${cname}" finns redan som kännetecken.` };
+      }
+      const { error: insErr } = await admin
+        .from("characteristics")
+        .insert({ user_id: userId, name: cname, mood_type: moodType });
+      if (insErr) return { ok: false, message: `DB-fel: ${insErr.message}` };
+      const label =
+        moodType === "elevated" ? "uppvarvad" : moodType === "stable" ? "stabil" : "nedstämd";
+      return { ok: true, message: `La till "${cname}" som kännetecken för ${label}.` };
+    }
+
+    return { ok: false, message: `Okänt verktyg: ${name}` };
+  } catch (e) {
+    return { ok: false, message: e instanceof Error ? e.message : "Fel vid verktygsexekvering." };
+  }
+}
+
+// Helper: stream a plain text chunk in OpenAI-compatible SSE delta format.
+function sseDelta(text: string): string {
+  const payload = {
+    choices: [{ delta: { content: text }, index: 0, finish_reason: null }],
+  };
+  return `data: ${JSON.stringify(payload)}\n\n`;
+}
 
 Deno.serve(async (req: Request) => {
   if (req.method === "OPTIONS") {
@@ -134,7 +294,6 @@ Deno.serve(async (req: Request) => {
       });
     }
 
-    // Authenticate
     const authHeader = req.headers.get("Authorization") ?? "";
     const token = authHeader.replace(/^Bearer\s+/i, "");
     if (!token) {
@@ -157,7 +316,7 @@ Deno.serve(async (req: Request) => {
     }
     const userId = userData.user.id;
 
-    const body = await req.json().catch(() => null) as { messages?: ChatMessage[] } | null;
+    const body = (await req.json().catch(() => null)) as { messages?: ChatMessage[] } | null;
     const messages = Array.isArray(body?.messages) ? body!.messages : [];
     if (messages.length === 0) {
       return new Response(JSON.stringify({ error: "No messages" }), {
@@ -165,68 +324,150 @@ Deno.serve(async (req: Request) => {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
-    // Cap conversation length & message size
     const safeMessages = messages
       .slice(-30)
-      .filter((m) => m && (m.role === "user" || m.role === "assistant") && typeof m.content === "string")
+      .filter(
+        (m) => m && (m.role === "user" || m.role === "assistant") && typeof m.content === "string",
+      )
       .map((m) => ({ role: m.role, content: m.content.slice(0, 4000) }));
 
-    // Fetch user data (using service role; we trust userId verified above)
-    const [moodRes, medsRes, diagRes, profRes] = await Promise.all([
-      admin.from("mood_entries").select("*").eq("user_id", userId).order("date", { ascending: false }).limit(400),
-      admin.from("medications").select("*").eq("user_id", userId),
-      admin.from("diagnoses").select("*").eq("user_id", userId),
-      admin.from("profiles").select("first_name").eq("user_id", userId).maybeSingle(),
-    ]);
+    // Build initial context (will be rebuilt after any tool call so model sees fresh data)
+    const buildPromptMessages = async () => {
+      const [moodRes, medsRes, diagRes, profRes, charRes] = await Promise.all([
+        admin
+          .from("mood_entries")
+          .select("*")
+          .eq("user_id", userId)
+          .order("date", { ascending: false })
+          .limit(400),
+        admin.from("medications").select("*").eq("user_id", userId),
+        admin.from("diagnoses").select("*").eq("user_id", userId),
+        admin.from("profiles").select("first_name").eq("user_id", userId).maybeSingle(),
+        admin.from("characteristics").select("*").eq("user_id", userId),
+      ]);
+      const todayStr = new Date().toISOString().slice(0, 10);
+      const context = buildContext({
+        firstName: profRes.data?.first_name ?? null,
+        todayStr,
+        moodEntries: moodRes.data ?? [],
+        medications: medsRes.data ?? [],
+        diagnoses: diagRes.data ?? [],
+        characteristics: charRes.data ?? [],
+      });
+      return [{ role: "system", content: SYSTEM_PROMPT(context) }, ...safeMessages] as any[];
+    };
 
-    const todayStr = new Date().toISOString().slice(0, 10);
-    const context = buildContext({
-      firstName: profRes.data?.first_name ?? null,
-      todayStr,
-      moodEntries: moodRes.data ?? [],
-      medications: medsRes.data ?? [],
-      diagnoses: diagRes.data ?? [],
-    });
+    let convo = await buildPromptMessages();
 
-    const aiResp = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${LOVABLE_API_KEY}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        model: "google/gemini-3-flash-preview",
-        stream: true,
-        messages: [
-          { role: "system", content: SYSTEM_PROMPT(context) },
-          ...safeMessages,
-        ],
-      }),
-    });
+    // Tool-calling loop: do up to N non-streaming rounds; final round streams.
+    const MAX_TOOL_ROUNDS = 4;
+    const callAI = async (stream: boolean, msgs: any[]) => {
+      return await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${LOVABLE_API_KEY}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          model: "google/gemini-2.5-flash",
+          stream,
+          messages: msgs,
+          tools: TOOLS,
+        }),
+      });
+    };
 
-    if (!aiResp.ok) {
-      if (aiResp.status === 429) {
+    const handleAiError = (status: number, txt: string) => {
+      if (status === 429) {
         return new Response(
           JSON.stringify({ error: "För många frågor just nu, försök igen om en stund." }),
           { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" } },
         );
       }
-      if (aiResp.status === 402) {
+      if (status === 402) {
         return new Response(
           JSON.stringify({ error: "AI-krediter slut. Lägg till krediter i Lovable Cloud." }),
           { status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" } },
         );
       }
-      const txt = await aiResp.text();
-      console.error("AI gateway error:", aiResp.status, txt);
+      console.error("AI gateway error:", status, txt);
       return new Response(JSON.stringify({ error: "AI-fel" }), {
         status: 500,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
+    };
+
+    for (let round = 0; round < MAX_TOOL_ROUNDS; round++) {
+      const aiResp = await callAI(false, convo);
+      if (!aiResp.ok) {
+        const txt = await aiResp.text().catch(() => "");
+        return handleAiError(aiResp.status, txt);
+      }
+      const data = await aiResp.json();
+      const choice = data?.choices?.[0];
+      const msg = choice?.message;
+      const toolCalls = msg?.tool_calls;
+
+      if (!toolCalls || toolCalls.length === 0) {
+        // No tool call — stream the final answer back. We already have the text;
+        // emit it as a single SSE delta + [DONE].
+        const finalText: string = msg?.content ?? "";
+        const stream = new ReadableStream({
+          start(controller) {
+            const enc = new TextEncoder();
+            // Emit in reasonable chunks so UI feels responsive.
+            const chunkSize = 80;
+            for (let i = 0; i < finalText.length; i += chunkSize) {
+              controller.enqueue(enc.encode(sseDelta(finalText.slice(i, i + chunkSize))));
+            }
+            if (finalText.length === 0) {
+              controller.enqueue(enc.encode(sseDelta("")));
+            }
+            controller.enqueue(enc.encode("data: [DONE]\n\n"));
+            controller.close();
+          },
+        });
+        return new Response(stream, {
+          headers: { ...corsHeaders, "Content-Type": "text/event-stream" },
+        });
+      }
+
+      // Execute tool calls and append results.
+      convo.push({
+        role: "assistant",
+        content: msg?.content ?? "",
+        tool_calls: toolCalls,
+      });
+      let anyChange = false;
+      for (const tc of toolCalls) {
+        const fnName = tc?.function?.name;
+        let parsedArgs: any = {};
+        try {
+          parsedArgs = tc?.function?.arguments ? JSON.parse(tc.function.arguments) : {};
+        } catch {
+          parsedArgs = {};
+        }
+        const result = await executeTool(admin, userId, fnName, parsedArgs);
+        if (result.ok) anyChange = true;
+        convo.push({
+          role: "tool",
+          tool_call_id: tc.id,
+          content: JSON.stringify(result),
+        });
+      }
+      // After mutations, rebuild context so model sees fresh data on next round.
+      if (anyChange) {
+        const fresh = await buildPromptMessages();
+        // Replace system message; keep the rest of convo (assistant tool_calls + tool results + user msgs)
+        const restAfterSystem = convo.slice(1);
+        convo = [fresh[0], ...fresh.slice(1), ...restAfterSystem.slice(safeMessages.length)];
+      }
     }
 
-    return new Response(aiResp.body, {
-      headers: { ...corsHeaders, "Content-Type": "text/event-stream" },
+    // Safety fallback if loop didn't terminate.
+    return new Response(JSON.stringify({ error: "För många verktygsanrop." }), {
+      status: 500,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   } catch (e) {
     console.error("chat-stats error:", e);
