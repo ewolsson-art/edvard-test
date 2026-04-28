@@ -502,12 +502,17 @@
   "characteristics": {
     "title": "Kännetecken",
     "subtitle": "Identifiera och lär dig känna igen dina mönster",
+    "myCharacteristics": "Mina kännetecken",
+    "characteristicsDesc": "Lär känna dina mönster – det hjälper dig och din vårdgivare att tidigt upptäcka förändringar.",
     "elevated": "Uppvarvad",
     "elevatedDesc": "Period med förhöjt stämningsläge",
+    "elevatedSub": "Period med förhöjt stämningsläge",
     "stable": "Stabil",
     "stableDesc": "Period i balans",
+    "stableSub": "Period i balans",
     "depressed": "Nedstämd",
     "depressedDesc": "Period med sänkt stämningsläge",
+    "depressedSub": "Period med sänkt stämningsläge",
     "noCharacteristics": "Inga kännetecken tillagda ännu",
     "addCharacteristic": "Lägg till kännetecken",
     "writeCharacteristic": "Skriv kännetecken...",
@@ -1900,17 +1905,6 @@
     "unknownRelative": "Okänd anhörig",
     "shared": "Delad",
     "notShared": "Inte delad"
-  },
-  "characteristics": {
-    "myCharacteristics": "Mina kännetecken",
-    "characteristicsDesc": "Lär känna dina mönster – det hjälper dig och din vårdgivare att tidigt upptäcka förändringar.",
-    "elevated": "Uppvarvad",
-    "elevatedSub": "Period med förhöjt stämningsläge",
-    "stable": "Stabil",
-    "stableSub": "Period i balans",
-    "depressed": "Nedstämd",
-    "depressedSub": "Period med sänkt stämningsläge",
-    "current": "Nuvarande"
   },
   "relativeComment": {
     "ownNote": "Egen anteckning",
