@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react';
 import { format, subMonths, startOfMonth, endOfMonth, eachDayOfInterval, isWithinInterval, parseISO } from 'date-fns';
 import { sv } from 'date-fns/locale';
-import { Calendar as CalendarIcon, FileText, Download, TrendingUp, TrendingDown, Minus, Heart, Moon, Utensils, Dumbbell, Pill } from 'lucide-react';
+import { Calendar as CalendarIcon, Download, TrendingUp, TrendingDown, Minus, Heart, Moon, Utensils, Dumbbell, Pill } from 'lucide-react';
 import { useMoodData } from '@/hooks/useMoodData';
 import { useMedications } from '@/hooks/useMedications';
 import { useUserPreferences } from '@/hooks/useUserPreferences';
