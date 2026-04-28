@@ -1906,17 +1906,6 @@
     "shared": "Delad",
     "notShared": "Inte delad"
   },
-  "characteristics": {
-    "myCharacteristics": "Mina kännetecken",
-    "characteristicsDesc": "Lär känna dina mönster – det hjälper dig och din vårdgivare att tidigt upptäcka förändringar.",
-    "elevated": "Uppvarvad",
-    "elevatedSub": "Period med förhöjt stämningsläge",
-    "stable": "Stabil",
-    "stableSub": "Period i balans",
-    "depressed": "Nedstämd",
-    "depressedSub": "Period med sänkt stämningsläge",
-    "current": "Nuvarande"
-  },
   "relativeComment": {
     "ownNote": "Egen anteckning",
     "placeholder": "Skriv din observation om dagen, t.ex. 'Ringde och verkade ledsen' eller 'Hade en bra dag tillsammans'...",
