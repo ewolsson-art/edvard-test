@@ -1155,23 +1155,22 @@ export function TodayCheckin({
           {/* Medication checklist */}
           {hasMedications ? (
             <div className="max-w-md space-y-2.5">
-              {/* Quick toggle: mark all */}
-              {activeMedications.length > 1 && (
+              {/* Quick toggle: mark all (scheduled only) */}
+              {scheduledMedications.length > 1 && (
                 <button
                   onClick={() => {
-                    const allTaken = medicationsTakenToday.length === activeMedications.length;
-                    activeMedications.forEach(med => {
-                      onToggleMedication(med.id, !allTaken);
+                    scheduledMedications.forEach(med => {
+                      onToggleMedication(med.id, !allScheduledTaken);
                     });
                   }}
                   className={cn(
                     "w-full flex items-center justify-center gap-2 py-2 rounded-xl text-sm font-medium transition-all",
-                    medicationsTakenToday.length === activeMedications.length
+                    allScheduledTaken
                       ? "text-mood-stable bg-mood-stable/10"
                       : "text-muted-foreground/60 hover:text-foreground hover:bg-muted/30"
                   )}
                 >
-                  {medicationsTakenToday.length === activeMedications.length ? (
+                  {allScheduledTaken ? (
                     <>
                       <CheckCircle2 className="w-4 h-4" />
                       {t('checkin.allTaken')}
@@ -1185,8 +1184,8 @@ export function TodayCheckin({
                 </button>
               )}
 
-              {/* Individual medications */}
-              {activeMedications.map(med => {
+              {/* Scheduled medications */}
+              {scheduledMedications.map(med => {
                 const isTaken = medicationsTakenToday.includes(med.id);
                 return (
                   <button
@@ -1222,8 +1221,8 @@ export function TodayCheckin({
                 );
               })}
 
-              {/* Missed medication reason */}
-              {medicationsTakenToday.length < activeMedications.length && (
+              {/* Missed scheduled medication reason */}
+              {scheduledMedications.length > 0 && scheduledTakenCount < scheduledMedications.length && (
                 <div className="pt-3">
                   <p className="text-xs text-muted-foreground/50 mb-2">{t('checkin.missedDoseReason')}</p>
                   <div className="flex flex-wrap gap-2">
@@ -1251,6 +1250,57 @@ export function TodayCheckin({
                         {reason.label}
                       </button>
                     ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Vid behov-mediciner — frivillig sektion, ingen "missad" logik */}
+              {asNeededMedications.length > 0 && (
+                <div className="pt-5">
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.15em] text-foreground/30 mb-2 px-1">
+                    Vid behov
+                  </p>
+                  <p className="text-xs text-muted-foreground/50 mb-3 px-1">
+                    Markera om du tagit någon av dessa idag.
+                  </p>
+                  <div className="space-y-2.5">
+                    {asNeededMedications.map(med => {
+                      const isTaken = medicationsTakenToday.includes(med.id);
+                      return (
+                        <button
+                          key={med.id}
+                          onClick={() => onToggleMedication(med.id, !isTaken)}
+                          className={cn(
+                            "w-full flex items-center gap-4 p-4 rounded-2xl border transition-all text-left",
+                            "active:scale-[0.98]",
+                            isTaken
+                              ? "border-mood-stable/20 bg-mood-stable/5"
+                              : "border-border/30 bg-card/20 hover:border-muted-foreground/20"
+                          )}
+                        >
+                          <div className={cn(
+                            "w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 transition-all",
+                            isTaken ? "bg-mood-stable text-white" : "bg-muted/30 border border-border/50"
+                          )}>
+                            {isTaken && <Check className="w-4 h-4" />}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className={cn(
+                              "font-medium text-[15px] transition-colors",
+                              isTaken ? "text-foreground" : "text-foreground/70"
+                            )}>
+                              {med.name}
+                            </p>
+                            <p className="text-xs text-muted-foreground/50 mt-0.5">
+                              {med.dosage} · Vid behov
+                            </p>
+                          </div>
+                          {isTaken && (
+                            <span className="text-xs text-mood-stable/80 font-medium flex-shrink-0">{t('checkin.takenCheck')}</span>
+                          )}
+                        </button>
+                      );
+                    })}
                   </div>
                 </div>
               )}
