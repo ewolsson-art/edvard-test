@@ -1,18 +1,16 @@
 import { useState, useMemo } from 'react';
 import { format, subMonths, startOfMonth, endOfMonth, eachDayOfInterval, isWithinInterval, parseISO } from 'date-fns';
 import { sv } from 'date-fns/locale';
-import { Calendar as CalendarIcon, FileText, Download, TrendingUp, TrendingDown, Minus, Heart, Moon, Utensils, Dumbbell, Pill } from 'lucide-react';
+import { Calendar as CalendarIcon, Download, TrendingUp, TrendingDown, Minus, Heart, Moon, Utensils, Dumbbell, Pill } from 'lucide-react';
 import { useMoodData } from '@/hooks/useMoodData';
 import { useMedications } from '@/hooks/useMedications';
 import { useUserPreferences } from '@/hooks/useUserPreferences';
 import { useProfile } from '@/hooks/useProfile';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Label } from '@/components/ui/label';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { cn } from '@/lib/utils';
+
 import { useTranslation } from 'react-i18next';
 
 
@@ -360,291 +358,214 @@ const Reports = () => {
     );
   }
 
+  const CATEGORY_OPTIONS = [
+    { id: 'mood', icon: Heart, label: t('reports.mood'), checked: includeMood, setChecked: setIncludeMood, show: true },
+    { id: 'sleep', icon: Moon, label: t('reports.sleep'), checked: includeSleep, setChecked: setIncludeSleep, show: true },
+    { id: 'eating', icon: Utensils, label: t('reports.diet'), checked: includeEating, setChecked: setIncludeEating, show: true },
+    { id: 'exercise', icon: Dumbbell, label: t('reports.exercise'), checked: includeExercise, setChecked: setIncludeExercise, show: true },
+    { id: 'medication', icon: Pill, label: t('reports.medication'), checked: includeMedication, setChecked: setIncludeMedication, show: activeMedications.length > 0 },
+  ];
+
+  const presets = [
+    { label: t('reports.lastMonth'), apply: () => { setStartDate(startOfMonth(subMonths(today, 1))); setEndDate(endOfMonth(subMonths(today, 1))); } },
+    { label: t('reports.thisMonth'), apply: () => { setStartDate(startOfMonth(today)); setEndDate(today); } },
+    { label: t('reports.last3Months'), apply: () => { setStartDate(subMonths(today, 3)); setEndDate(today); } },
+  ];
+
   return (
-    <div className="space-y-6">
-      <header>
-        <h2 className="font-display text-3xl font-bold mb-2">{t('reports.title')}</h2>
-        <p className="text-sm text-muted-foreground mb-8">{t('reports.subtitle')}</p>
-      </header>
+    <div className="space-y-8">
+      <p className="text-[13px] text-foreground/30 -mt-4">{t('reports.subtitle')}</p>
 
-        {/* Configuration Card */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <FileText className="h-5 w-5" />
-              {t('reports.createReport')}
-            </CardTitle>
-            <CardDescription>
-              {t("reports.selectPeriodAndCategories")}
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-6">
-            {/* Date Range */}
-            <div className="space-y-3">
-              <Label className="text-sm font-medium">{t('reports.timePeriod')}</Label>
-              <div className="flex flex-wrap gap-3">
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button variant="outline" className={cn("justify-start text-left font-normal", !startDate && "text-muted-foreground")}>
-                      <CalendarIcon className="mr-2 h-4 w-4" />
-                      {startDate ? format(startDate, 'd MMM yyyy', { locale: sv }) : t('reports.fromDate')}
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar
-                      mode="single"
-                      selected={startDate}
-                      onSelect={(date) => date && setStartDate(date)}
-                      initialFocus
-                      locale={sv}
-                    />
-                  </PopoverContent>
-                </Popover>
+      {/* Period */}
+      <ReportGroup label={t('reports.timePeriod')}>
+        <div className="px-4 py-3.5 flex flex-wrap gap-2">
+          <Popover>
+            <PopoverTrigger asChild>
+              <button className="flex items-center gap-2 px-3 py-2 rounded-lg bg-foreground/[0.04] hover:bg-foreground/[0.07] text-[14px] text-foreground/80 transition-colors">
+                <CalendarIcon className="h-4 w-4 text-foreground/40" />
+                {format(startDate, 'd MMM yyyy', { locale: sv })}
+              </button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0" align="start">
+              <Calendar mode="single" selected={startDate} onSelect={(d) => d && setStartDate(d)} initialFocus locale={sv} />
+            </PopoverContent>
+          </Popover>
+          <span className="self-center text-foreground/30">–</span>
+          <Popover>
+            <PopoverTrigger asChild>
+              <button className="flex items-center gap-2 px-3 py-2 rounded-lg bg-foreground/[0.04] hover:bg-foreground/[0.07] text-[14px] text-foreground/80 transition-colors">
+                <CalendarIcon className="h-4 w-4 text-foreground/40" />
+                {format(endDate, 'd MMM yyyy', { locale: sv })}
+              </button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0" align="start">
+              <Calendar mode="single" selected={endDate} onSelect={(d) => d && setEndDate(d)} initialFocus locale={sv} />
+            </PopoverContent>
+          </Popover>
+        </div>
+        <div className="px-4 py-3 flex flex-wrap gap-2">
+          {presets.map((p) => (
+            <button
+              key={p.label}
+              onClick={p.apply}
+              className="px-3 py-1.5 rounded-full text-[13px] text-foreground/60 hover:text-foreground/90 bg-foreground/[0.04] hover:bg-foreground/[0.07] transition-colors"
+            >
+              {p.label}
+            </button>
+          ))}
+        </div>
+      </ReportGroup>
 
-                <span className="self-center text-muted-foreground">–</span>
+      {/* Categories */}
+      <ReportGroup label={t('reports.includeInReport')}>
+        {CATEGORY_OPTIONS.filter(c => c.show).map((opt) => {
+          const Icon = opt.icon;
+          return (
+            <button
+              key={opt.id}
+              onClick={() => opt.setChecked(!opt.checked)}
+              className="w-full flex items-center gap-3.5 px-4 py-3.5 text-left transition-colors duration-150 hover:bg-foreground/[0.04] active:bg-foreground/[0.06]"
+            >
+              <Icon className="w-[18px] h-[18px] flex-shrink-0 text-foreground/30" />
+              <span className="flex-1 text-[15px] font-medium text-foreground/80">{opt.label}</span>
+              <Checkbox checked={opt.checked} onCheckedChange={(c) => opt.setChecked(c === true)} className="pointer-events-none" />
+            </button>
+          );
+        })}
+      </ReportGroup>
 
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button variant="outline" className={cn("justify-start text-left font-normal", !endDate && "text-muted-foreground")}>
-                      <CalendarIcon className="mr-2 h-4 w-4" />
-                      {endDate ? format(endDate, 'd MMM yyyy', { locale: sv }) : t('reports.toDate')}
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar
-                      mode="single"
-                      selected={endDate}
-                      onSelect={(date) => date && setEndDate(date)}
-                      initialFocus
-                      locale={sv}
-                    />
-                  </PopoverContent>
-                </Popover>
-              </div>
+      <Button onClick={handleGenerateReport} className="w-full rounded-full">
+        {t('reports.generateReport')}
+      </Button>
 
-              {/* Quick date presets */}
-              <div className="flex flex-wrap gap-2">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => {
-                    setStartDate(startOfMonth(subMonths(today, 1)));
-                    setEndDate(endOfMonth(subMonths(today, 1)));
-                  }}
-                >
-                  {t("reports.lastMonth")}
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => {
-                    setStartDate(startOfMonth(today));
-                    setEndDate(today);
-                  }}
-                >
-                  {t("reports.thisMonth")}
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => {
-                    setStartDate(subMonths(today, 3));
-                    setEndDate(today);
-                  }}
-                >
-                  {t("reports.last3Months")}
-                </Button>
-              </div>
+      {reportGenerated && reportData && (
+        <div className="space-y-6 animate-fade-in">
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="font-display text-lg font-bold text-foreground/90">{t('reports.yourReport')}</h2>
+              <p className="text-[13px] text-foreground/40 mt-0.5">
+                {format(reportData.period.start, 'd MMMM', { locale: sv })} – {format(reportData.period.end, 'd MMMM yyyy', { locale: sv })}
+              </p>
             </div>
-
-            {/* Category Selection */}
-            <div className="space-y-3">
-              <Label className="text-sm font-medium">{t('reports.includeInReport')}</Label>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                <div className="flex items-center space-x-3">
-                  <Checkbox id="mood" checked={includeMood} onCheckedChange={(checked) => setIncludeMood(checked === true)} />
-                  <Label htmlFor="mood" className="flex items-center gap-2 cursor-pointer">
-                    <Heart className="h-4 w-4 text-primary" />
-                    {t('reports.mood')}
-                  </Label>
-                </div>
-                <div className="flex items-center space-x-3">
-                  <Checkbox id="sleep" checked={includeSleep} onCheckedChange={(checked) => setIncludeSleep(checked === true)} />
-                  <Label htmlFor="sleep" className="flex items-center gap-2 cursor-pointer">
-                    <Moon className="h-4 w-4 text-indigo-500" />
-                    {t('reports.sleep')}
-                  </Label>
-                </div>
-                <div className="flex items-center space-x-3">
-                  <Checkbox id="eating" checked={includeEating} onCheckedChange={(checked) => setIncludeEating(checked === true)} />
-                  <Label htmlFor="eating" className="flex items-center gap-2 cursor-pointer">
-                    <Utensils className="h-4 w-4 text-amber-500" />
-                    {t('reports.diet')}
-                  </Label>
-                </div>
-                <div className="flex items-center space-x-3">
-                  <Checkbox id="exercise" checked={includeExercise} onCheckedChange={(checked) => setIncludeExercise(checked === true)} />
-                  <Label htmlFor="exercise" className="flex items-center gap-2 cursor-pointer">
-                    <Dumbbell className="h-4 w-4 text-green-500" />
-                    {t('reports.exercise')}
-                  </Label>
-                </div>
-                {activeMedications.length > 0 && (
-                  <div className="flex items-center space-x-3">
-                    <Checkbox id="medication" checked={includeMedication} onCheckedChange={(checked) => setIncludeMedication(checked === true)} />
-                    <Label htmlFor="medication" className="flex items-center gap-2 cursor-pointer">
-                      <Pill className="h-4 w-4 text-purple-500" />
-                      {t('reports.medication')}
-                    </Label>
-                  </div>
-                )}
-              </div>
-            </div>
-
-            <Button onClick={handleGenerateReport} className="w-full md:w-auto">
-              {t("reports.generateReport")}
+            <Button onClick={handleExportPDF} variant="outline" size="sm" className="gap-2 rounded-full">
+              <Download className="h-4 w-4" />
+              {t('reports.exportPDF')}
             </Button>
-          </CardContent>
-        </Card>
+          </div>
 
-        {/* Report Preview */}
-        {reportGenerated && reportData && (
-          <Card className="animate-fade-in">
-            <CardHeader className="flex flex-row items-center justify-between">
-              <div>
-                <CardTitle>{t('reports.yourReport')}</CardTitle>
-                <CardDescription>
-                  {format(reportData.period.start, 'd MMMM', { locale: sv })} – {format(reportData.period.end, 'd MMMM yyyy', { locale: sv })}
-                </CardDescription>
+          <ReportGroup label={t('reports.summary')}>
+            <div className="px-4 py-4">
+              <p className="text-[14px] text-foreground/80">
+                {t('reports.youRegistered', { registered: reportData.period.registeredDays, total: reportData.period.totalDays, percentage: Math.round((reportData.period.registeredDays / reportData.period.totalDays) * 100) })}
+              </p>
+            </div>
+          </ReportGroup>
+
+          {includeMood && reportData.mood.total > 0 && (
+            <ReportSection icon={Heart} title={t('reports.mood')} trailing={
+              reportData.mood.trend === 'up' ? <TrendingUp className="h-4 w-4 text-foreground/40" /> :
+              reportData.mood.trend === 'down' ? <TrendingDown className="h-4 w-4 text-foreground/40" /> :
+              <Minus className="h-4 w-4 text-foreground/40" />
+            }>
+              <div className="grid grid-cols-3 gap-px bg-border/20">
+                <MoodCell value={reportData.mood.elevated} label={t('reports.elevated')} />
+                <MoodCell value={reportData.mood.stable} label={t('reports.stable')} />
+                <MoodCell value={reportData.mood.depressed} label={t('reports.depressed')} />
               </div>
-              <Button onClick={handleExportPDF} className="gap-2">
-                <Download className="h-4 w-4" />
-                {t("reports.exportPDF")}
-              </Button>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              {/* Summary */}
-              <div className="bg-muted/50 rounded-xl p-4">
-                <p className="text-sm text-muted-foreground mb-1">{t('reports.summary')}</p>
-                <p className="font-medium">
-                  {t('reports.youRegistered', { registered: reportData.period.registeredDays, total: reportData.period.totalDays, percentage: Math.round((reportData.period.registeredDays / reportData.period.totalDays) * 100) })}
-                </p>
-              </div>
+              <InsightRow text={reportData.mood.insight} />
+            </ReportSection>
+          )}
 
-              {/* Mood Section */}
-              {includeMood && reportData.mood.total > 0 && (
-                <div className="space-y-3">
-                  <div className="flex items-center gap-2">
-                    <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
-                      <Heart className="h-4 w-4 text-primary" />
-                    </div>
-                    <h3 className="font-semibold">{t('reports.mood')}</h3>
-                    {reportData.mood.trend === 'up' && <TrendingUp className="h-4 w-4 text-amber-500" />}
-                    {reportData.mood.trend === 'down' && <TrendingDown className="h-4 w-4 text-blue-500" />}
-                    {reportData.mood.trend === 'stable' && <Minus className="h-4 w-4 text-green-500" />}
-                  </div>
-                  <div className="grid grid-cols-3 gap-3">
-                    <div className="bg-mood-elevated-light rounded-lg p-3 text-center">
-                      <p className="text-2xl font-bold text-mood-elevated-foreground">{reportData.mood.elevated}</p>
-                      <p className="text-xs text-muted-foreground">{t('reports.elevated')}</p>
-                    </div>
-                    <div className="bg-mood-stable-light rounded-lg p-3 text-center">
-                      <p className="text-2xl font-bold text-mood-stable-foreground">{reportData.mood.stable}</p>
-                      <p className="text-xs text-muted-foreground">{t('reports.stable')}</p>
-                    </div>
-                    <div className="bg-mood-depressed-light rounded-lg p-3 text-center">
-                      <p className="text-2xl font-bold text-mood-depressed-foreground">{reportData.mood.depressed}</p>
-                      <p className="text-xs text-muted-foreground">{t('reports.depressed')}</p>
-                    </div>
-                  </div>
-                  <p className="text-sm text-muted-foreground bg-muted/30 rounded-lg p-3">{reportData.mood.insight}</p>
-                </div>
-              )}
+          {includeSleep && reportData.sleep.total > 0 && (
+            <ReportSection icon={Moon} title={t('reports.sleep')} trailing={
+              <span className="text-[13px] text-foreground/40">{reportData.sleep.percentage}% {t('reports.goodNights')}</span>
+            }>
+              <ProgressRow value={reportData.sleep.percentage} />
+              <InsightRow text={reportData.sleep.insight} />
+            </ReportSection>
+          )}
 
-              {/* Sleep Section */}
-              {includeSleep && reportData.sleep.total > 0 && (
-                <div className="space-y-3">
-                  <div className="flex items-center gap-2">
-                    <div className="h-8 w-8 rounded-lg bg-indigo-500/10 flex items-center justify-center">
-                      <Moon className="h-4 w-4 text-indigo-500" />
-                    </div>
-                    <h3 className="font-semibold">{t('reports.sleep')}</h3>
-                    <span className="text-sm text-muted-foreground ml-auto">{reportData.sleep.percentage}% {t('reports.goodNights')}</span>
-                  </div>
-                  <div className="h-3 bg-muted rounded-full overflow-hidden">
-                    <div 
-                      className="h-full bg-indigo-500 rounded-full transition-all duration-500" 
-                      style={{ width: `${reportData.sleep.percentage}%` }} 
-                    />
-                  </div>
-                  <p className="text-sm text-muted-foreground bg-muted/30 rounded-lg p-3">{reportData.sleep.insight}</p>
-                </div>
-              )}
+          {includeEating && reportData.eating.total > 0 && (
+            <ReportSection icon={Utensils} title={t('reports.diet')} trailing={
+              <span className="text-[13px] text-foreground/40">{reportData.eating.percentage}% {t('reports.goodDays')}</span>
+            }>
+              <ProgressRow value={reportData.eating.percentage} />
+              <InsightRow text={reportData.eating.insight} />
+            </ReportSection>
+          )}
 
-              {/* Eating Section */}
-              {includeEating && reportData.eating.total > 0 && (
-                <div className="space-y-3">
-                  <div className="flex items-center gap-2">
-                    <div className="h-8 w-8 rounded-lg bg-amber-500/10 flex items-center justify-center">
-                      <Utensils className="h-4 w-4 text-amber-500" />
-                    </div>
-                    <h3 className="font-semibold">{t('reports.diet')}</h3>
-                    <span className="text-sm text-muted-foreground ml-auto">{reportData.eating.percentage}% {t('reports.goodDays')}</span>
-                  </div>
-                  <div className="h-3 bg-muted rounded-full overflow-hidden">
-                    <div 
-                      className="h-full bg-amber-500 rounded-full transition-all duration-500" 
-                      style={{ width: `${reportData.eating.percentage}%` }} 
-                    />
-                  </div>
-                  <p className="text-sm text-muted-foreground bg-muted/30 rounded-lg p-3">{reportData.eating.insight}</p>
-                </div>
-              )}
+          {includeExercise && reportData.exercise.total > 0 && (
+            <ReportSection icon={Dumbbell} title={t('reports.exercise')} trailing={
+              <span className="text-[13px] text-foreground/40">{reportData.exercise.percentage}% {t('reports.ofTheDays')}</span>
+            }>
+              <ProgressRow value={reportData.exercise.percentage} />
+              <InsightRow text={reportData.exercise.insight} />
+            </ReportSection>
+          )}
 
-              {/* Exercise Section */}
-              {includeExercise && reportData.exercise.total > 0 && (
-                <div className="space-y-3">
-                  <div className="flex items-center gap-2">
-                    <div className="h-8 w-8 rounded-lg bg-green-500/10 flex items-center justify-center">
-                      <Dumbbell className="h-4 w-4 text-green-500" />
-                    </div>
-                    <h3 className="font-semibold">{t('reports.exercise')}</h3>
-                    <span className="text-sm text-muted-foreground ml-auto">{reportData.exercise.percentage}% {t('reports.ofTheDays')}</span>
-                  </div>
-                  <div className="h-3 bg-muted rounded-full overflow-hidden">
-                    <div 
-                      className="h-full bg-green-500 rounded-full transition-all duration-500" 
-                      style={{ width: `${reportData.exercise.percentage}%` }} 
-                    />
-                  </div>
-                  <p className="text-sm text-muted-foreground bg-muted/30 rounded-lg p-3">{reportData.exercise.insight}</p>
-                </div>
-              )}
-
-              {/* Medication Section */}
-              {includeMedication && activeMedications.length > 0 && (
-                <div className="space-y-3">
-                  <div className="flex items-center gap-2">
-                    <div className="h-8 w-8 rounded-lg bg-purple-500/10 flex items-center justify-center">
-                      <Pill className="h-4 w-4 text-purple-500" />
-                    </div>
-                    <h3 className="font-semibold">{t('reports.medication')}</h3>
-                    <span className="text-sm text-muted-foreground ml-auto">{reportData.medication.percentage}% {t('reports.adherence')}</span>
-                  </div>
-                  <div className="h-3 bg-muted rounded-full overflow-hidden">
-                    <div 
-                      className="h-full bg-purple-500 rounded-full transition-all duration-500" 
-                      style={{ width: `${reportData.medication.percentage}%` }} 
-                    />
-                  </div>
-                  <p className="text-sm text-muted-foreground bg-muted/30 rounded-lg p-3">{reportData.medication.insight}</p>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        )}
-      </div>
+          {includeMedication && activeMedications.length > 0 && (
+            <ReportSection icon={Pill} title={t('reports.medication')} trailing={
+              <span className="text-[13px] text-foreground/40">{reportData.medication.percentage}% {t('reports.adherence')}</span>
+            }>
+              <ProgressRow value={reportData.medication.percentage} />
+              <InsightRow text={reportData.medication.insight} />
+            </ReportSection>
+          )}
+        </div>
+      )}
+    </div>
   );
 };
+
+function ReportGroup({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <div>
+      <p className="text-[11px] font-semibold uppercase tracking-[0.15em] text-foreground/25 mb-3 px-1">{label}</p>
+      <div className="rounded-2xl bg-foreground/[0.03] backdrop-blur-sm overflow-hidden divide-y divide-border/20">
+        {children}
+      </div>
+    </div>
+  );
+}
+
+function ReportSection({ icon: Icon, title, trailing, children }: { icon: React.ElementType; title: string; trailing?: React.ReactNode; children: React.ReactNode }) {
+  return (
+    <div className="rounded-2xl bg-foreground/[0.03] backdrop-blur-sm overflow-hidden divide-y divide-border/20">
+      <div className="flex items-center gap-3 px-4 py-3.5">
+        <Icon className="w-[18px] h-[18px] text-foreground/40" />
+        <h3 className="flex-1 text-[15px] font-semibold text-foreground/85">{title}</h3>
+        {trailing}
+      </div>
+      {children}
+    </div>
+  );
+}
+
+function MoodCell({ value, label }: { value: number; label: string }) {
+  return (
+    <div className="bg-foreground/[0.02] px-3 py-4 text-center">
+      <p className="text-2xl font-bold text-foreground/85">{value}</p>
+      <p className="text-[12px] text-foreground/40 mt-0.5">{label}</p>
+    </div>
+  );
+}
+
+function ProgressRow({ value }: { value: number }) {
+  return (
+    <div className="px-4 py-4">
+      <div className="h-2 bg-foreground/[0.06] rounded-full overflow-hidden">
+        <div className="h-full bg-primary/70 rounded-full transition-all duration-500" style={{ width: `${value}%` }} />
+      </div>
+    </div>
+  );
+}
+
+function InsightRow({ text }: { text: string }) {
+  return (
+    <div className="px-4 py-3.5">
+      <p className="text-[13px] text-foreground/55 leading-relaxed">{text}</p>
+    </div>
+  );
+}
 
 export default Reports;
