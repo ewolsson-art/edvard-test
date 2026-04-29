@@ -63,15 +63,57 @@ const DoctorDashboard = () => {
             <DialogTrigger asChild>
               <Button className="gap-2"><UserPlus className="w-4 h-4" />{t('doctorDashboard.requestAccess')}</Button>
             </DialogTrigger>
-            <DialogContent>
+            <DialogContent className="sm:max-w-md">
               <DialogHeader>
-                <DialogTitle>Ange personens mejladress</DialogTitle>
+                <div className="w-12 h-12 rounded-full bg-primary/15 flex items-center justify-center mb-3">
+                  <Sparkles className="w-6 h-6 text-primary" />
+                </div>
+                <DialogTitle className="font-display text-xl">Bjud in en patient</DialogTitle>
+                <p className="text-sm text-muted-foreground pt-1">
+                  Vi skickar en förfrågan i appen. Patienten väljer själv vilken data som delas med dig.
+                </p>
               </DialogHeader>
-              <div className="space-y-4 pt-2">
-                <Input id="patientEmail" type="email" placeholder="namn@example.com" value={patientEmail} onChange={(e) => setPatientEmail(e.target.value)} disabled={isRequesting} className="text-base" />
-                <Button onClick={handleRequestAccess} disabled={isRequesting} className="w-full gap-2">
+
+              <div className="space-y-5 pt-2">
+                <div className="space-y-2">
+                  <Label htmlFor="patientEmail" className="text-sm font-medium">Patientens e-post</Label>
+                  <div className="relative">
+                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
+                    <Input
+                      id="patientEmail"
+                      type="email"
+                      autoComplete="email"
+                      inputMode="email"
+                      placeholder="namn@example.com"
+                      value={patientEmail}
+                      onChange={(e) => setPatientEmail(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          e.preventDefault();
+                          handleRequestAccess();
+                        }
+                      }}
+                      disabled={isRequesting}
+                      className="pl-10 text-base"
+                    />
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-3 p-3 rounded-xl bg-foreground/[0.03]">
+                  <ShieldCheck className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
+                  <p className="text-xs text-muted-foreground leading-relaxed">
+                    Patienten måste godkänna förfrågan innan du ser någon data. De kan när som helst dra tillbaka delningen.
+                  </p>
+                </div>
+
+                <Button
+                  onClick={handleRequestAccess}
+                  disabled={isRequesting || !patientEmail.trim()}
+                  size="lg"
+                  className="w-full rounded-full font-semibold gap-2"
+                >
                   {isRequesting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
-                  {t('doctorDashboard.sendRequest')}
+                  {isRequesting ? 'Skickar…' : 'Skicka förfrågan'}
                 </Button>
               </div>
             </DialogContent>
