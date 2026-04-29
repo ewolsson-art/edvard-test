@@ -101,6 +101,7 @@ const Medications = () => {
   const [editingMed, setEditingMed] = useState<Medication | null>(null);
   const [form, setForm] = useState<MedFormState>(emptyForm());
   const [detailMed, setDetailMed] = useState<Medication | null>(null);
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const today = format(new Date(), 'yyyy-MM-dd');
 
