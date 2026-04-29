@@ -288,7 +288,7 @@ const Medications = () => {
             </button>
 
             <button
-              onClick={() => setTab('previous')}
+              onClick={() => navigate('/mediciner/slutat')}
               className={`group text-left rounded-2xl p-3.5 transition-all ${
                 tab === 'previous'
                   ? 'bg-gradient-to-br from-foreground/[0.08] to-foreground/[0.02] ring-1 ring-foreground/15'
