@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://toddy.se/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>
+  <url><loc>https://toddy.se/sa-funkar-det</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://toddy.se/om-oss</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://toddy.se/for-anvandare</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://toddy.se/for-anhoriga</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://toddy.se/for-vardgivare</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://toddy.se/samarbetspartners</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://toddy.se/integritet</loc><changefreq>yearly</changefreq><priority>0.4</priority></url>
+  <url><loc>https://toddy.se/villkor</loc><changefreq>yearly</changefreq><priority>0.4</priority></url>
+  <url><loc>https://toddy.se/logga-in</loc><changefreq>yearly</changefreq><priority>0.3</priority></url>
+  <url><loc>https://toddy.se/skapa-konto</loc><changefreq>yearly</changefreq><priority>0.3</priority></url>
+</urlset>
