@@ -39,13 +39,27 @@ const roleInfo = {
   },
 };
 
-const CHECKIN_OPTIONS = [
+const CHECKIN_OPTIONS: Array<{
+  id: keyof CheckinSelections;
+  labelKey: string;
+  descKey: string;
+  icon: typeof Brain;
+  recommended?: boolean;
+}> = [
   { id: "include_mood", labelKey: "onboarding.mood", descKey: "onboarding.moodDesc", icon: Brain, recommended: true },
   { id: "include_medication", labelKey: "onboarding.medication", descKey: "onboarding.medicationDesc", icon: Pill },
   { id: "include_sleep", labelKey: "onboarding.sleep", descKey: "onboarding.sleepDesc", icon: Moon },
   { id: "include_eating", labelKey: "onboarding.eating", descKey: "onboarding.eatingDesc", icon: Utensils },
   { id: "include_exercise", labelKey: "onboarding.exercise", descKey: "onboarding.exerciseDesc", icon: Dumbbell },
-] as const;
+];
+
+type CheckinSelections = {
+  include_mood: boolean;
+  include_medication: boolean;
+  include_sleep: boolean;
+  include_eating: boolean;
+  include_exercise: boolean;
+};
 
 type CheckinSelections = {
   include_mood: boolean;
