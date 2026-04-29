@@ -27,6 +27,9 @@ import { YearHeatmap } from '@/components/YearHeatmap';
 import { SleepYearHeatmap } from '@/components/SleepYearHeatmap';
 import { EatingYearHeatmap } from '@/components/EatingYearHeatmap';
 import { ExerciseYearHeatmap } from '@/components/ExerciseYearHeatmap';
+import { SeasonalPatterns } from '@/components/SeasonalPatterns';
+import { PostElevatedReflection } from '@/components/PostElevatedReflection';
+import { useAuth } from '@/hooks/useAuth';
 
 import { DayDetailDialog } from '@/components/DayDetailDialog';
 import { ExerciseTypeDialog } from '@/components/ExerciseTypeDialog';
@@ -90,6 +93,7 @@ const Overview = () => {
   const { isLoaded: medsLoaded, getMedicationsTakenOnDate, logs, activeMedications } = useMedications();
   const { preferences, loading: prefsLoading } = useUserPreferences();
   const { characteristics } = useCharacteristics();
+  const { user } = useAuth();
 
   // Scroll to today when year view is loaded initially
   useEffect(() => {
@@ -629,6 +633,7 @@ const Overview = () => {
         <div className="lg:flex lg:gap-8">
           {/* Main calendar area */}
           <div className="flex-1 min-w-0 space-y-6">
+            <PostElevatedReflection entries={entries} userId={user?.id ?? null} />
             {showMood && sectionView === 'calendar' && (
               <section>
                      {view === 'week' && (
@@ -654,11 +659,14 @@ const Overview = () => {
                       />
                     )}
                     {view === 'year' && (
-                      <YearHeatmap year={currentYear} entries={yearEntries}
-                        medicationDates={yearMedicationDates}
-                        onPrevYear={() => setCurrentYear(prev => prev - 1)}
-                        onNextYear={() => setCurrentYear(prev => prev + 1)}
-                        onMonthClick={handleMonthClick} />
+                      <div className="space-y-8">
+                        <SeasonalPatterns entries={entries} />
+                        <YearHeatmap year={currentYear} entries={yearEntries}
+                          medicationDates={yearMedicationDates}
+                          onPrevYear={() => setCurrentYear(prev => prev - 1)}
+                          onNextYear={() => setCurrentYear(prev => prev + 1)}
+                          onMonthClick={handleMonthClick} />
+                      </div>
                     )}
               </section>
             )}
