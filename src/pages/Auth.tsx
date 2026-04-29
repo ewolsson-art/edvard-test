@@ -10,6 +10,7 @@ import { LandingFooter } from "@/components/landing/LandingFooter";
 import { NightCityscape } from "@/components/NightCityscape";
 import { useNativePlatform } from "@/hooks/useNativePlatform";
 import { NativeAuthLanding } from "@/components/native/NativeAuthLanding";
+import { SEO } from "@/components/seo/SEO";
 
 const Auth = () => {
   const { user, loading } = useAuth();
@@ -39,6 +40,11 @@ const Auth = () => {
 
   return (
     <div className="flex flex-col">
+      <SEO
+        title="Toddy – stämningsdagbok för bipolär sjukdom"
+        description="Toddy är en digital stämningsdagbok för dig som lever med bipolär sjukdom. Logga mående, sömn och mediciner – upptäck mönster och dela med vården."
+        path="/"
+      />
       {/* === HERO WITH NIGHT SKY === */}
       <div className="min-h-[100svh] flex flex-col relative overflow-hidden">
         <NightCityscape />
