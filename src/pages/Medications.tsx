@@ -302,7 +302,7 @@ const Medications = () => {
             <CardContent className="p-6 space-y-4">
               <div className="flex items-center gap-3">
                 <div className="p-3 rounded-2xl bg-gradient-to-br from-primary/20 to-primary/5 text-[24px] leading-none">
-                  <span aria-hidden="true">💊</span>
+                  <span aria-hidden="true">🌱</span>
                 </div>
                 <div>
                   <h3 className="font-semibold">Bygg din medicin-historik</h3>
