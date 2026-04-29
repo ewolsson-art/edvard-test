@@ -182,10 +182,6 @@ const Medications = () => {
     setForm(emptyForm());
   };
 
-  const handleToggleTaken = async (medicationId: string) => {
-    const isTaken = isMedicationTakenOnDate(medicationId, today);
-    await logMedication(medicationId, today, !isTaken);
-  };
 
   const formatDate = (dateStr: string | null) => {
     if (!dateStr) return '';
