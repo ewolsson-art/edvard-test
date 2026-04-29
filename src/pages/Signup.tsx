@@ -270,12 +270,6 @@ const Signup = () => {
                       <path d="M18 43 C27 39 37 38 47 39" stroke="hsl(var(--primary-foreground) / 0.22)" strokeWidth="2" strokeLinecap="round" />
                     </svg>
 
-                    {/* Fartlinjer bakom bilen */}
-                    <svg viewBox="0 0 40 40" className="absolute -left-10 top-2 w-10 h-12 pointer-events-none">
-                      <path d="M2 14 L20 14" stroke="white" strokeOpacity="0.4" strokeWidth="2" strokeLinecap="round" />
-                      <path d="M0 24 L16 24" stroke="white" strokeOpacity="0.25" strokeWidth="2" strokeLinecap="round" />
-                      <path d="M4 34 L18 34" stroke="white" strokeOpacity="0.18" strokeWidth="2" strokeLinecap="round" />
-                    </svg>
                   </div>
                 </div>
               </div>
