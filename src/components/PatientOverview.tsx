@@ -1,9 +1,13 @@
-import { useState, useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MOOD_ICONS, MoodType } from '@/types/mood';
 import { getPatientDiagnosisConfig } from '@/hooks/useDiagnosisConfig';
 import { cn } from '@/lib/utils';
 import { format, startOfMonth, endOfMonth, eachDayOfInterval, subMonths, addMonths, startOfWeek, endOfWeek, addWeeks, subWeeks } from 'date-fns';
+import { ScrollableMonthsCalendar, ScrollableMonthsCalendarRef } from '@/components/ScrollableMonthsCalendar';
+import { SeasonalPatterns } from '@/components/SeasonalPatterns';
+import { LessonsFromPast } from '@/components/LessonsFromPast';
+import { usePatientCharacteristics } from '@/hooks/usePatientCharacteristics';
 import { sv } from 'date-fns/locale';
 import { usePatientMoodData } from '@/hooks/usePatientMoodData';
 import { usePatientMedications } from '@/hooks/usePatientMedications';
@@ -55,14 +59,16 @@ export function PatientOverview({ connection, onBack, hideExtras = false }: Pati
   const [currentWeek, setCurrentWeek] = useState(new Date());
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
+  const scrollableCalendarRef = useRef<ScrollableMonthsCalendarRef>(null);
   
   
   // State for relative comment dialog
   const [commentDialogOpen, setCommentDialogOpen] = useState(false);
   const [selectedDateForComment, setSelectedDateForComment] = useState<Date | null>(null);
   
-  // Check if this is a relative viewing
-  const isRelativeViewing = true; // simplified after chat removal
+  // Relatives use hideExtras=true. Doctors see everything.
+  const isRelativeViewing = hideExtras;
+  const isDoctorViewing = !hideExtras;
 
   const { entries, isLoaded: moodLoaded, getEntryForDate, getEntriesForMonth, getEntriesForYear, getStatsForYear } = usePatientMoodData({
     patientId: connection.patient_id,
@@ -73,6 +79,7 @@ export function PatientOverview({ connection, onBack, hideExtras = false }: Pati
   const { diagnoses, isLoading: diagnosesLoading } = usePatientDiagnoses({
     patientId: connection.patient_id,
   });
+  const { characteristics } = usePatientCharacteristics(connection.patient_id);
   
   // Relative comments - only fetch for relatives
   const { 
@@ -465,26 +472,42 @@ export function PatientOverview({ connection, onBack, hideExtras = false }: Pati
 
       {/* Stats view */}
       {showStats && (
-        <OverviewSummary
-          stats={stats}
-          entries={entries}
-          periodLabel={label}
-          sleepBadDays={0}
-          showSleep={false}
-        />
+        <>
+          <OverviewSummary
+            stats={stats}
+            entries={entries}
+            periodLabel={label}
+            sleepBadDays={0}
+            showSleep={false}
+          />
+          <LessonsFromPast entries={entries} characteristics={characteristics} />
+        </>
       )}
 
-      {/* View tabs */}
+      {/* View tabs — same pill style as patient's own Overview */}
       {!showStats && (
         <>
-        <div className="flex items-center gap-4">
-          <Tabs value={view} onValueChange={(v) => setView(v as ViewType)} className="flex-1 max-w-md">
-            <TabsList className="grid w-full grid-cols-3">
-              <TabsTrigger value="week">{t('patientOverview.today')}</TabsTrigger>
-              <TabsTrigger value="month">{t('patientOverview.month')}</TabsTrigger>
-              <TabsTrigger value="year">{t('patientOverview.year')}</TabsTrigger>
+        <div className="flex items-center gap-3">
+          <Tabs value={view} onValueChange={(v) => setView(v as ViewType)} className="flex-1">
+            <TabsList className="inline-flex w-full h-9 bg-muted/80 p-0.5 rounded-full gap-0">
+              <TabsTrigger value="week" className="flex-1 text-xs font-semibold px-2 py-1 rounded-full data-[state=active]:bg-muted-foreground/30 data-[state=active]:text-foreground data-[state=active]:shadow-none">V</TabsTrigger>
+              <TabsTrigger value="month" className="flex-1 text-xs font-semibold px-2 py-1 rounded-full data-[state=active]:bg-muted-foreground/30 data-[state=active]:text-foreground data-[state=active]:shadow-none">M</TabsTrigger>
+              <TabsTrigger value="year" className="flex-1 text-xs font-semibold px-2 py-1 rounded-full data-[state=active]:bg-muted-foreground/30 data-[state=active]:text-foreground data-[state=active]:shadow-none">ÅR</TabsTrigger>
             </TabsList>
           </Tabs>
+          {view === 'month' && (
+            <button
+              onClick={() => {
+                const now = new Date();
+                setCurrentYear(now.getFullYear());
+                setCurrentMonth(new Date(now.getFullYear(), now.getMonth(), 1));
+                setTimeout(() => scrollableCalendarRef.current?.scrollToToday(), 50);
+              }}
+              className="text-sm font-semibold text-primary px-3 py-1 rounded-full border border-primary/30 bg-primary/5 hover:bg-primary/10 transition-colors shrink-0"
+            >
+              Idag
+            </button>
+          )}
         </div>
 
       {/* Stats and calendars based on what's shared */}
@@ -589,23 +612,26 @@ export function PatientOverview({ connection, onBack, hideExtras = false }: Pati
                 );
               })()}
               {view === 'month' && (
-                <MonthCalendar
-                  currentDate={currentMonth}
-                  moodData={monthMoodData}
-                  relativeCommentsData={monthRelativeCommentsData}
-                  onPrevMonth={handlePrevMonth}
-                  onNextMonth={handleNextMonth}
-                  onDayDoubleClick={handleDayDoubleClick}
+                <ScrollableMonthsCalendar
+                  ref={scrollableCalendarRef}
+                  year={currentYear}
+                  type="mood"
+                  getEntryForDate={getEntryForDate}
+                  getEntriesForMonth={getEntriesForMonth}
+                  onDayClick={isRelativeViewing ? handleDayDoubleClick : undefined}
                 />
               )}
               {view === 'year' && (
-                <YearHeatmap
-                  year={currentYear}
-                  entries={yearEntries}
-                  onPrevYear={handlePrevYear}
-                  onNextYear={handleNextYear}
-                  onMonthClick={handleMonthClick}
-                />
+                <div className="space-y-8">
+                  <SeasonalPatterns entries={entries} />
+                  <YearHeatmap
+                    year={currentYear}
+                    entries={yearEntries}
+                    onPrevYear={handlePrevYear}
+                    onNextYear={handleNextYear}
+                    onMonthClick={handleMonthClick}
+                  />
+                </div>
               )}
             </div>
           </section>
