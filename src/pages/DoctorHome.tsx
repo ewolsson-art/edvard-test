@@ -84,7 +84,11 @@ const DoctorHome = () => {
         </header>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div className="bg-foreground/[0.03] backdrop-blur-sm rounded-2xl p-6">
+          <button
+            type="button"
+            onClick={() => navigate('/mina-patienter')}
+            className="text-left bg-foreground/[0.03] backdrop-blur-sm rounded-2xl p-6 transition-colors hover:bg-foreground/[0.05] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
+          >
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center"><UserCheck className="w-6 h-6 text-primary" /></div>
               <div>
@@ -92,8 +96,12 @@ const DoctorHome = () => {
                 <p className="text-muted-foreground text-sm">{approvedConnections.length === 1 ? t('doctorHome.activeUser') : t('doctorHome.activeUsers')}</p>
               </div>
             </div>
-          </div>
-          <div className="bg-foreground/[0.03] backdrop-blur-sm rounded-2xl p-6">
+          </button>
+          <button
+            type="button"
+            onClick={() => navigate('/mina-patienter#vantande')}
+            className="text-left bg-foreground/[0.03] backdrop-blur-sm rounded-2xl p-6 transition-colors hover:bg-foreground/[0.05] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
+          >
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center"><Clock className="w-6 h-6 text-primary" /></div>
               <div>
@@ -101,7 +109,7 @@ const DoctorHome = () => {
                 <p className="text-muted-foreground text-sm">{pendingConnections.length === 1 ? t('doctorHome.pendingRequest') : t('doctorHome.pendingRequests')}</p>
               </div>
             </div>
-          </div>
+          </button>
         </div>
 
         <Dialog open={inviteOpen} onOpenChange={setInviteOpen}>
