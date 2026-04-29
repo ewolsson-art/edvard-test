@@ -633,6 +633,7 @@ const Overview = () => {
         <div className="lg:flex lg:gap-8">
           {/* Main calendar area */}
           <div className="flex-1 min-w-0 space-y-6">
+            <PostElevatedReflection entries={entries} userId={user?.id ?? null} />
             {showMood && sectionView === 'calendar' && (
               <section>
                      {view === 'week' && (
