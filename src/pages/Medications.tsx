@@ -333,52 +333,6 @@ const Medications = () => {
           />
         )}
 
-        {/* Lista — styrs av valt kort högst upp (regelbundet · vid behov · slutat ta) */}
-        {hasAny && (
-          <div className="space-y-3">
-            {tab === 'regular' && (
-              currentMedications.length === 0 ? (
-                <EmptyState
-                  icon={<Pill className="h-10 w-10 text-muted-foreground/50" />}
-                  text="Inga regelbundna mediciner"
-                  hint="Lägg till en medicin du tar dagligen eller på schema."
-                />
-              ) : (
-                currentMedications.map(med => (
-                  <MedCard key={med.id} med={med} onClick={() => setDetailMed(med)} />
-                ))
-              )
-            )}
-
-            {tab === 'asneeded' && (
-              asNeededMedications.length === 0 ? (
-                <EmptyState
-                  icon={<Pill className="h-10 w-10 text-muted-foreground/50" />}
-                  text="Inga vid behov-mediciner"
-                  hint="Lägg till mediciner du tar vid besvär (t.ex. ångest, sömnbesvär)."
-                />
-              ) : (
-                asNeededMedications.map(med => (
-                  <MedCard key={med.id} med={med} onClick={() => setDetailMed(med)} accent="amber" />
-                ))
-              )
-            )}
-
-            {tab === 'previous' && (
-              previousMedications.length === 0 ? (
-                <EmptyState
-                  icon={<History className="h-10 w-10 text-muted-foreground/50" />}
-                  text="Inga tidigare mediciner registrerade"
-                  hint="Lägg till mediciner du har testat men slutat ta – det hjälper läkaren att se vad som fungerat eller inte."
-                />
-              ) : (
-                previousMedications.map(med => (
-                  <MedCard key={med.id} med={med} onClick={() => setDetailMed(med)} accent="muted" />
-                ))
-              )
-            )}
-          </div>
-        )}
       </div>
 
       {/* Add / Edit form dialog */}
