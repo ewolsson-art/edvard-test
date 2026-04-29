@@ -98,9 +98,18 @@ const Login = () => {
 
   return (
     <DarkNightBackground>
-      <AuthNavbar />
-      
-      <div className="flex flex-1 items-center justify-center px-6 pt-16 pb-12">
+      <div className="flex flex-1 items-center justify-center px-6 pt-12 pb-12 min-h-screen">
+        <div className="w-full max-w-sm">
+
+          {/* Back to landing */}
+          <div className="mb-6 animate-fade-in">
+            <Link
+              to="/auth"
+              className="inline-flex items-center gap-1.5 text-xs text-white/40 hover:text-white/70 transition-colors"
+            >
+              ← Toddy
+            </Link>
+          </div>
         <div className="w-full max-w-sm">
 
           {/* Mascot + heading */}
