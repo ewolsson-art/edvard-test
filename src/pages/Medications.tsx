@@ -218,7 +218,7 @@ const Medications = () => {
         <header className="flex items-start justify-between gap-4">
           <div className="flex-1 space-y-1.5">
             <h2 className="text-[20px] md:text-[22px] font-display font-semibold tracking-tight text-foreground/95 leading-snug">
-              <span className="mr-1.5" aria-hidden="true">💊</span>
+              <span className="mr-1.5" aria-hidden="true">🧭</span>
               Hjälpmedel för att följa och optimera din medicinering
             </h2>
             <p className="text-[13px] text-foreground/45 leading-relaxed">
