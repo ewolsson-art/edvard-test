@@ -140,12 +140,7 @@ export function AppSidebar() {
         {/* Profile section at top */}
         {!isCollapsed && (
           <div className="px-6 mb-10">
-            <Link 
-              to="/profil"
-              className="flex items-center gap-3.5 hover:opacity-80 transition-opacity"
-              aria-label="Gå till min profil"
-              onClick={() => { if (isMobile) setOpenMobile(false); }}
-            >
+            <div className="flex items-center gap-3.5">
               <Avatar className="h-10 w-10 shrink-0 ring-1 ring-white/10">
                 {avatarUrl ? (
                   <AvatarImage src={avatarUrl} alt="Profilbild" className="object-cover" />
@@ -157,7 +152,7 @@ export function AppSidebar() {
                   {firstName || 'Användare'}
                 </span>
               </div>
-            </Link>
+            </div>
           </div>
         )}
 
