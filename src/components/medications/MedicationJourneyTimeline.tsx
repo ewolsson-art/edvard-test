@@ -119,13 +119,13 @@ export function MedicationJourneyTimeline({ medications, onSelect, entries: entr
     >
       <div className="px-5 pt-5 pb-4">
         <div className="flex items-center gap-2.5">
-          <div className="p-2 rounded-lg bg-primary/10">
-            <TrendingUp className="h-4 w-4 text-primary" />
+          <div className="p-2 rounded-xl bg-gradient-to-br from-primary/20 to-primary/5 text-[18px] leading-none">
+            <span aria-hidden="true">🗺️</span>
           </div>
           <div>
             <h2 className="text-[15px] font-semibold text-foreground/90">Din medicineringsresa</h2>
             <p className="text-[12px] text-foreground/40 mt-0.5">
-              När du började, slutade och hur måendet följde med.
+              När du började, slutade och hur måendet följde med. 📈
             </p>
           </div>
         </div>

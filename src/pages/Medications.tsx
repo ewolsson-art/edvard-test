@@ -218,10 +218,11 @@ const Medications = () => {
         <header className="flex items-start justify-between gap-4">
           <div className="flex-1 space-y-1.5">
             <h2 className="text-[20px] md:text-[22px] font-display font-semibold tracking-tight text-foreground/95 leading-snug">
+              <span className="mr-1.5" aria-hidden="true">💊</span>
               Hjälpmedel för att följa och optimera din medicinering
             </h2>
             <p className="text-[13px] text-foreground/45 leading-relaxed">
-              Små steg gör stor skillnad — registrera vad du tar, hur det känns, och se mönster över tid.
+              Små steg gör stor skillnad — registrera vad du tar, hur det känns, och se mönster över tid. ✨
             </p>
           </div>
           <Button onClick={openAdd} className="gap-2 rounded-full shrink-0">
@@ -235,16 +236,14 @@ const Medications = () => {
           <div className="grid grid-cols-2 gap-3">
             <button
               onClick={() => setTab('current')}
-              className={`text-left rounded-2xl p-4 transition-all ${
+              className={`group text-left rounded-2xl p-4 transition-all ${
                 tab === 'current'
-                  ? 'bg-primary/10 ring-1 ring-primary/30'
+                  ? 'bg-gradient-to-br from-primary/15 to-primary/5 ring-1 ring-primary/30'
                   : 'bg-foreground/[0.03] hover:bg-foreground/[0.05]'
               }`}
             >
               <div className="flex items-center gap-2 mb-2">
-                <div className="p-1.5 rounded-md bg-primary/15">
-                  <Pill className="h-3.5 w-3.5 text-primary" />
-                </div>
+                <span className="text-[18px] leading-none transition-transform group-hover:scale-110" aria-hidden="true">💊</span>
                 <span className="text-[12px] font-medium text-foreground/60">Tar just nu</span>
               </div>
               <p className="text-[28px] font-display font-semibold leading-none text-foreground/95">
@@ -259,16 +258,14 @@ const Medications = () => {
 
             <button
               onClick={() => setTab('previous')}
-              className={`text-left rounded-2xl p-4 transition-all ${
+              className={`group text-left rounded-2xl p-4 transition-all ${
                 tab === 'previous'
-                  ? 'bg-foreground/[0.06] ring-1 ring-foreground/15'
+                  ? 'bg-gradient-to-br from-foreground/[0.08] to-foreground/[0.02] ring-1 ring-foreground/15'
                   : 'bg-foreground/[0.03] hover:bg-foreground/[0.05]'
               }`}
             >
               <div className="flex items-center gap-2 mb-2">
-                <div className="p-1.5 rounded-md bg-foreground/[0.08]">
-                  <History className="h-3.5 w-3.5 text-foreground/60" />
-                </div>
+                <span className="text-[18px] leading-none transition-transform group-hover:scale-110" aria-hidden="true">📚</span>
                 <span className="text-[12px] font-medium text-foreground/60">Har provat</span>
               </div>
               <p className="text-[28px] font-display font-semibold leading-none text-foreground/95">
@@ -288,12 +285,12 @@ const Medications = () => {
           <Card className="glass-card border-primary/20">
             <CardContent className="p-6 space-y-4">
               <div className="flex items-center gap-3">
-                <div className="p-3 rounded-xl bg-primary/10">
-                  <Sparkles className="h-6 w-6 text-primary" />
+                <div className="p-3 rounded-2xl bg-gradient-to-br from-primary/20 to-primary/5 text-[24px] leading-none">
+                  <span aria-hidden="true">💊</span>
                 </div>
                 <div>
                   <h3 className="font-semibold">Bygg din medicin-historik</h3>
-                  <p className="text-sm text-muted-foreground">Det här hjälper dig och din vårdgivare</p>
+                  <p className="text-sm text-muted-foreground">Det här hjälper dig och din vårdgivare 🩺</p>
                 </div>
               </div>
               <ul className="space-y-2 text-sm text-muted-foreground">
@@ -331,11 +328,11 @@ const Medications = () => {
           <Tabs value={tab} onValueChange={(v) => setTab(v as 'current' | 'previous')}>
             <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="current" className="gap-2">
-                <Pill className="h-4 w-4" />
+                <span aria-hidden="true">💊</span>
                 Aktuella ({allCurrent.length})
               </TabsTrigger>
               <TabsTrigger value="previous" className="gap-2">
-                <History className="h-4 w-4" />
+                <span aria-hidden="true">📚</span>
                 Har testat ({previousMedications.length})
               </TabsTrigger>
             </TabsList>
