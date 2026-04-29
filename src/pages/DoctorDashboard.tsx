@@ -12,11 +12,14 @@ import {
   Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger,
 } from '@/components/ui/dialog';
 
+import { usePatientsLatestStatus, STATUS_META } from '@/hooks/usePatientsLatestStatus';
+
 const DoctorDashboard = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { toast } = useToast();
   const { approvedConnections, pendingFromPatients, pendingFromDoctor, isLoading, updateConnectionStatus, requestPatientAccess, cancelRequest } = useDoctorConnections();
+  const { statuses } = usePatientsLatestStatus(approvedConnections.map(c => c.patient_id));
   const [requestDialogOpen, setRequestDialogOpen] = useState(false);
   const [patientEmail, setPatientEmail] = useState('');
   const [isRequesting, setIsRequesting] = useState(false);
