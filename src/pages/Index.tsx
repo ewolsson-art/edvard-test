@@ -117,11 +117,11 @@ const Index = () => {
   };
 
   return (
-    <AnimatedPage className="fixed inset-0 md:relative md:h-screen flex flex-col items-center justify-start md:py-4 md:px-5 overflow-hidden">
-      <div className="w-full md:max-w-xl">
-        <DiagnosisPromptBanner />
-      </div>
-      <div className="w-full h-full md:h-auto md:max-w-xl relative flex-1 flex items-center justify-center">
+    <AnimatedPage className="fixed inset-0 md:relative md:h-screen flex items-center justify-center md:py-4 md:px-5 overflow-hidden">
+      <div className="w-full h-full md:h-auto md:max-w-xl relative">
+        <div className="absolute top-0 left-0 right-0 z-10 px-4 md:px-0">
+          <DiagnosisPromptBanner />
+        </div>
         {shouldShowMissedPrompt ? (
           <MissedDayPrompt
             missedDays={streakData.missedDays}
