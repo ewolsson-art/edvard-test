@@ -226,20 +226,14 @@ const Signup = () => {
                 <div className="absolute left-0 right-0 bottom-2 h-px bg-white/[0.06]" />
 
                 {/* Rörlig scen */}
-                <div className="turtle-car-scene absolute left-0 bottom-0 w-[104px] h-16 md:w-[120px] md:h-[74px]">
+                <div className="turtle-car-scene absolute left-0 bottom-0 w-[112px] h-[70px] md:w-[132px] md:h-[78px]">
                   <div className="turtle-car-bounce relative w-full h-full">
-                    {/* Sköldpadda-förare — nedsänkt i kupén så karossen döljer kroppen */}
-                    <div className="absolute left-[30%] bottom-[27%] w-[38px] h-[38px] md:w-11 md:h-11 z-0 overflow-hidden rounded-t-full">
-                      <TurtleLogo
-                        size="sm"
-                        animated={false}
-                        className="absolute left-1/2 top-1/2 w-[56px] h-[60px] md:w-[64px] md:h-[68px] -translate-x-1/2 -translate-y-[48%] rotate-[3deg]"
+                    {/* Bilbas bakom föraren */}
+                    <svg viewBox="0 0 120 70" className="absolute inset-0 w-full h-full z-0 pointer-events-none overflow-visible">
+                      <path
+                        d="M5 50 C8 41 19 38 36 37 L49 29 C55 25 65 25 73 31 L84 38 C102 38 114 43 117 54 C118 58 115 61 110 61 L9 61 C3 61 1 56 5 50 Z"
+                        fill="hsl(var(--primary) / 0.92)"
                       />
-                    </div>
-
-                    {/* Bil (karosseri ovanpå föraren) */}
-                    <svg viewBox="0 0 120 70" className="absolute inset-0 w-full h-full z-10 pointer-events-none overflow-visible">
-                      {/* Hjul bakom karossen */}
                       <g>
                         <circle cx="27" cy="61" r="8" fill="hsl(var(--background))" />
                         <circle cx="27" cy="61" r="3.5" fill="hsl(var(--muted-foreground))" className="turtle-car-wheel" />
@@ -248,25 +242,28 @@ const Signup = () => {
                         <circle cx="94" cy="61" r="8" fill="hsl(var(--background))" />
                         <circle cx="94" cy="61" r="3.5" fill="hsl(var(--muted-foreground))" className="turtle-car-wheel" />
                       </g>
-                      {/* Kaross */}
+                    </svg>
+
+                    {/* Sköldpadda-förare — sitter nedsänkt i kupén vid ratten */}
+                    <div className="absolute left-[35%] bottom-[25%] w-[52px] h-[48px] md:w-[58px] md:h-[54px] z-10 overflow-hidden">
+                      <TurtleLogo
+                        size="sm"
+                        animated={false}
+                        className="absolute left-1/2 top-1/2 w-[72px] h-[78px] md:w-[80px] md:h-[86px] -translate-x-1/2 -translate-y-[43%] rotate-[3deg]"
+                      />
+                    </div>
+
+                    {/* Dörr, sarg, ratt och front ovanpå föraren för sittande effekt */}
+                    <svg viewBox="0 0 120 70" className="absolute inset-0 w-full h-full z-20 pointer-events-none overflow-visible">
+                      <path d="M50 31 C56 28 64 29 70 36 L49 37 Z" fill="hsl(var(--background) / 0.36)" />
                       <path
-                        d="M5 50 C8 41 19 38 36 37 L48 29 C53 25 64 25 72 31 L83 38 C101 38 113 43 117 54 C118 58 115 61 110 61 L9 61 C3 61 1 56 5 50 Z"
+                        d="M7 49 C13 43 25 41 38 41 L84 41 C101 41 111 45 116 54 C117 58 114 61 109 61 L9 61 C3 61 1 55 7 49 Z"
                         fill="hsl(var(--primary))"
                       />
-                      {/* Kupésarg framför förare */}
-                      <path
-                        d="M37 38 L50 29 C56 25 65 27 72 36 L82 38 L82 51 L37 51 Z"
-                        fill="hsl(var(--primary))"
-                      />
-                      <path d="M51 31 C57 28 63 29 69 36 L49 37 Z" fill="hsl(var(--background) / 0.42)" />
-                      {/* Hög front åt höger — samma håll som bilen kör */}
-                      <path
-                        d="M75 39 Q102 38 114 52 L75 52 Z"
-                        fill="hsl(var(--primary) / 0.92)"
-                      />
+                      <path d="M40 41 L48 31 C55 26 66 27 74 38" stroke="hsl(var(--primary-foreground) / 0.28)" strokeWidth="2" strokeLinecap="round" fill="none" />
                       {/* Ratt nära föraren */}
-                      <path d="M63 39 L58 47" stroke="hsl(var(--background))" strokeWidth="2" strokeLinecap="round" />
-                      <circle cx="58" cy="47" r="4" fill="none" stroke="hsl(var(--background))" strokeWidth="2" />
+                      <path d="M66 38 L60 48" stroke="hsl(var(--background))" strokeWidth="2" strokeLinecap="round" />
+                      <circle cx="59" cy="48" r="4" fill="none" stroke="hsl(var(--background))" strokeWidth="2" />
                       {/* Strålkastare riktade framåt åt höger */}
                       <path d="M116 48 L128 44 L128 53 Z" fill="hsl(var(--primary) / 0.16)" />
                       <ellipse cx="114" cy="49" rx="3" ry="2.3" fill="hsl(50 100% 88%)" />
