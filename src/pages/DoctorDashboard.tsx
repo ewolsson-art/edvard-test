@@ -56,8 +56,8 @@ const DoctorDashboard = () => {
       <div className="max-w-6xl mx-auto space-y-8">
         <header className="flex items-start justify-between">
           <div>
-            <h1 className="font-display text-3xl md:text-4xl font-bold mb-2">{t('doctorDashboard.myUsers')}</h1>
-            <p className="text-muted-foreground">{t('doctorDashboard.seeOverview')}</p>
+            <h1 className="font-display text-3xl md:text-4xl font-bold mb-2">Mina patienter</h1>
+            <p className="text-muted-foreground">Översikt över patienter som delar sin data med dig.</p>
           </div>
           <Dialog open={requestDialogOpen} onOpenChange={setRequestDialogOpen}>
             <DialogTrigger asChild>
