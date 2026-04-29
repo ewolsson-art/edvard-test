@@ -96,7 +96,7 @@ const Medications = () => {
     deleteMedication,
   } = useMedications();
 
-  const [tab, setTab] = useState<'current' | 'previous'>('current');
+  const [tab, setTab] = useState<'regular' | 'asneeded' | 'previous'>('regular');
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingMed, setEditingMed] = useState<Medication | null>(null);
   const [form, setForm] = useState<MedFormState>(emptyForm());
@@ -231,50 +231,66 @@ const Medications = () => {
           </Button>
         </header>
 
-        {/* Snabb fördelning: nuvarande vs tidigare */}
+        {/* Snabb fördelning: regelbundet · vid behov · slutat */}
         {hasAny && (
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-3 gap-2.5">
             <button
-              onClick={() => setTab('current')}
-              className={`group text-left rounded-2xl p-4 transition-all ${
-                tab === 'current'
+              onClick={() => setTab('regular')}
+              className={`group text-left rounded-2xl p-3.5 transition-all ${
+                tab === 'regular'
                   ? 'bg-gradient-to-br from-primary/15 to-primary/5 ring-1 ring-primary/30'
                   : 'bg-foreground/[0.03] hover:bg-foreground/[0.05]'
               }`}
             >
-              <div className="flex items-center gap-2 mb-2">
-                <span className="text-[18px] leading-none transition-transform group-hover:scale-110" aria-hidden="true">💊</span>
-                <span className="text-[12px] font-medium text-foreground/60">Tar just nu</span>
+              <div className="flex items-center gap-1.5 mb-2">
+                <span className="text-[16px] leading-none transition-transform group-hover:scale-110" aria-hidden="true">💊</span>
+                <span className="text-[11px] font-medium text-foreground/60 leading-tight">Tar regelbundet</span>
               </div>
-              <p className="text-[28px] font-display font-semibold leading-none text-foreground/95">
-                {allCurrent.length}
+              <p className="text-[26px] font-display font-semibold leading-none text-foreground/95">
+                {currentMedications.length}
               </p>
-              <p className="text-[11px] text-foreground/40 mt-1.5">
-                {allCurrent.length === 0
-                  ? 'Inga aktuella mediciner'
-                  : `${currentMedications.length} dagligen${asNeededMedications.length > 0 ? ` · ${asNeededMedications.length} vid behov` : ''}`}
+              <p className="text-[10.5px] text-foreground/40 mt-1.5 leading-snug">
+                {currentMedications.length === 0 ? 'Inga dagliga ännu' : 'Dagligen / schema'}
+              </p>
+            </button>
+
+            <button
+              onClick={() => setTab('asneeded')}
+              className={`group text-left rounded-2xl p-3.5 transition-all ${
+                tab === 'asneeded'
+                  ? 'bg-gradient-to-br from-amber-500/15 to-amber-500/5 ring-1 ring-amber-500/30'
+                  : 'bg-foreground/[0.03] hover:bg-foreground/[0.05]'
+              }`}
+            >
+              <div className="flex items-center gap-1.5 mb-2">
+                <span className="text-[16px] leading-none transition-transform group-hover:scale-110" aria-hidden="true">⚡</span>
+                <span className="text-[11px] font-medium text-foreground/60 leading-tight">Vid behov</span>
+              </div>
+              <p className="text-[26px] font-display font-semibold leading-none text-foreground/95">
+                {asNeededMedications.length}
+              </p>
+              <p className="text-[10.5px] text-foreground/40 mt-1.5 leading-snug">
+                {asNeededMedications.length === 0 ? 'Inga vid behov' : 'Vid besvär'}
               </p>
             </button>
 
             <button
               onClick={() => setTab('previous')}
-              className={`group text-left rounded-2xl p-4 transition-all ${
+              className={`group text-left rounded-2xl p-3.5 transition-all ${
                 tab === 'previous'
                   ? 'bg-gradient-to-br from-foreground/[0.08] to-foreground/[0.02] ring-1 ring-foreground/15'
                   : 'bg-foreground/[0.03] hover:bg-foreground/[0.05]'
               }`}
             >
-              <div className="flex items-center gap-2 mb-2">
-                <span className="text-[18px] leading-none transition-transform group-hover:scale-110" aria-hidden="true">📚</span>
-                <span className="text-[12px] font-medium text-foreground/60">Har provat</span>
+              <div className="flex items-center gap-1.5 mb-2">
+                <span className="text-[16px] leading-none transition-transform group-hover:scale-110" aria-hidden="true">📚</span>
+                <span className="text-[11px] font-medium text-foreground/60 leading-tight">Slutat ta</span>
               </div>
-              <p className="text-[28px] font-display font-semibold leading-none text-foreground/95">
+              <p className="text-[26px] font-display font-semibold leading-none text-foreground/95">
                 {previousMedications.length}
               </p>
-              <p className="text-[11px] text-foreground/40 mt-1.5">
-                {previousMedications.length === 0
-                  ? 'Lägg till tidigare mediciner'
-                  : 'Värdefull historik för läkaren'}
+              <p className="text-[10.5px] text-foreground/40 mt-1.5 leading-snug">
+                {previousMedications.length === 0 ? 'Inget testat ännu' : 'Tidigare provade'}
               </p>
             </button>
           </div>
@@ -323,43 +339,49 @@ const Medications = () => {
           />
         )}
 
-        {/* Tabs current vs previous */}
+        {/* Tabs: tar regelbundet · vid behov · slutat ta */}
         {hasAny && (
-          <Tabs value={tab} onValueChange={(v) => setTab(v as 'current' | 'previous')}>
-            <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="current" className="gap-2">
+          <Tabs value={tab} onValueChange={(v) => setTab(v as 'regular' | 'asneeded' | 'previous')}>
+            <TabsList className="grid w-full grid-cols-3">
+              <TabsTrigger value="regular" className="gap-1.5 text-[12.5px]">
                 <span aria-hidden="true">💊</span>
-                Aktuella ({allCurrent.length})
+                <span className="truncate">Regelbundet</span>
               </TabsTrigger>
-              <TabsTrigger value="previous" className="gap-2">
+              <TabsTrigger value="asneeded" className="gap-1.5 text-[12.5px]">
+                <span aria-hidden="true">⚡</span>
+                <span className="truncate">Vid behov</span>
+              </TabsTrigger>
+              <TabsTrigger value="previous" className="gap-1.5 text-[12.5px]">
                 <span aria-hidden="true">📚</span>
-                Har testat ({previousMedications.length})
+                <span className="truncate">Slutat ta</span>
               </TabsTrigger>
             </TabsList>
 
-            <TabsContent value="current" className="space-y-3 mt-4">
-              {allCurrent.length === 0 ? (
+            <TabsContent value="regular" className="space-y-3 mt-4">
+              {currentMedications.length === 0 ? (
                 <EmptyState
                   icon={<Pill className="h-10 w-10 text-muted-foreground/50" />}
-                  text="Inga aktuella mediciner"
-                  hint="Lägg till en medicin du tar just nu."
+                  text="Inga regelbundna mediciner"
+                  hint="Lägg till en medicin du tar dagligen eller på schema."
                 />
               ) : (
-                <>
-                  {currentMedications.map(med => (
-                    <MedCard key={med.id} med={med} onClick={() => setDetailMed(med)} />
-                  ))}
-                  {asNeededMedications.length > 0 && (
-                    <div className="pt-2">
-                      <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-2 px-1">
-                        Vid behov
-                      </p>
-                      {asNeededMedications.map(med => (
-                        <MedCard key={med.id} med={med} onClick={() => setDetailMed(med)} accent="amber" />
-                      ))}
-                    </div>
-                  )}
-                </>
+                currentMedications.map(med => (
+                  <MedCard key={med.id} med={med} onClick={() => setDetailMed(med)} />
+                ))
+              )}
+            </TabsContent>
+
+            <TabsContent value="asneeded" className="space-y-3 mt-4">
+              {asNeededMedications.length === 0 ? (
+                <EmptyState
+                  icon={<Pill className="h-10 w-10 text-muted-foreground/50" />}
+                  text="Inga vid behov-mediciner"
+                  hint="Lägg till mediciner du tar vid besvär (t.ex. ångest, sömnbesvär)."
+                />
+              ) : (
+                asNeededMedications.map(med => (
+                  <MedCard key={med.id} med={med} onClick={() => setDetailMed(med)} accent="amber" />
+                ))
               )}
             </TabsContent>
 
@@ -368,7 +390,7 @@ const Medications = () => {
                 <EmptyState
                   icon={<History className="h-10 w-10 text-muted-foreground/50" />}
                   text="Inga tidigare mediciner registrerade"
-                  hint="Lägg till mediciner du har testat förut – det hjälper läkaren att se vad som fungerat eller inte."
+                  hint="Lägg till mediciner du har testat men slutat ta – det hjälper läkaren att se vad som fungerat eller inte."
                 />
               ) : (
                 previousMedications.map(med => (
