@@ -125,7 +125,7 @@ const MedicationCategory = () => {
               </Button>
             </div>
           ) : (
-            <div className="space-y-3">
+            <div className="space-y-6">
               <Button
                 onClick={() => navigate('/mediciner?add=1')}
                 className="w-full gap-2 rounded-full"
@@ -133,11 +133,24 @@ const MedicationCategory = () => {
                 <Plus className="h-4 w-4" />
                 Lägg till medicin
               </Button>
-              <div className="space-y-2">
-                {meds.map(med => (
-                  <MedRow key={med.id} med={med} accent={meta.accent} onClick={() => openMed(med.id)} />
-                ))}
-              </div>
+              {groupByEffectiveness(meds).map(group => (
+                group.meds.length === 0 ? null : (
+                  <section key={group.key} className="space-y-2">
+                    <div className="flex items-center gap-2 px-1">
+                      <span className={`inline-block w-1.5 h-1.5 rounded-full ${group.dotClass}`} aria-hidden="true" />
+                      <h3 className="text-[13px] font-semibold text-foreground/70 uppercase tracking-wider">
+                        {group.label}
+                      </h3>
+                      <span className="text-[12px] text-foreground/35">{group.meds.length}</span>
+                    </div>
+                    <div className="space-y-2">
+                      {group.meds.map(med => (
+                        <MedRow key={med.id} med={med} accent={meta.accent} onClick={() => openMed(med.id)} />
+                      ))}
+                    </div>
+                  </section>
+                )
+              ))}
             </div>
           )}
         </div>
@@ -204,6 +217,30 @@ function MedRow({ med, onClick, accent }: { med: Medication; onClick: () => void
 
 function formatShort(dateStr: string) {
   try { return format(new Date(dateStr), 'MMM yyyy', { locale: sv }); } catch { return dateStr; }
+}
+
+type EffGroup = {
+  key: 'good' | 'bad' | 'unclear';
+  label: string;
+  dotClass: string;
+  meds: Medication[];
+};
+
+function groupByEffectiveness(meds: Medication[]): EffGroup[] {
+  const good: Medication[] = [];
+  const bad: Medication[] = [];
+  const unclear: Medication[] = [];
+  for (const m of meds) {
+    const e = m.effectiveness;
+    if (e === 'works_well' || e === 'works_partially') good.push(m);
+    else if (e === 'no_effect' || e === 'made_worse') bad.push(m);
+    else unclear.push(m);
+  }
+  return [
+    { key: 'good', label: 'Fungerade bra', dotClass: 'bg-emerald-500', meds: good },
+    { key: 'bad', label: 'Fungerade dåligt', dotClass: 'bg-red-500', meds: bad },
+    { key: 'unclear', label: 'Oklart resultat', dotClass: 'bg-foreground/30', meds: unclear },
+  ];
 }
 
 export default MedicationCategory;
