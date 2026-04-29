@@ -243,7 +243,7 @@ const Medications = () => {
               }`}
             >
               <div className="flex items-center gap-1.5 mb-2">
-                <span className="text-[16px] leading-none transition-transform group-hover:scale-110" aria-hidden="true">🌿</span>
+                <span className="text-[16px] leading-none transition-transform group-hover:scale-110" aria-hidden="true">🕒</span>
                 <span className="text-[11px] font-medium text-foreground/60 leading-tight">Tar regelbundet</span>
               </div>
               <p className="text-[26px] font-display font-semibold leading-none text-foreground/95">
@@ -344,7 +344,7 @@ const Medications = () => {
           <Tabs value={tab} onValueChange={(v) => setTab(v as 'regular' | 'asneeded' | 'previous')}>
             <TabsList className="grid w-full grid-cols-3">
               <TabsTrigger value="regular" className="gap-1.5 text-[12.5px]">
-                <span aria-hidden="true">🌿</span>
+                <span aria-hidden="true">🕒</span>
                 <span className="truncate">Regelbundet</span>
               </TabsTrigger>
               <TabsTrigger value="asneeded" className="gap-1.5 text-[12.5px]">
