@@ -43,6 +43,7 @@ const patientNavGroups = [
   {
     labelKey: "sidebar.account",
     items: [
+      { titleKey: "sidebar.myProfile", url: "/profil", icon: UserCircle },
       { titleKey: "sidebar.settings", url: "/installningar", icon: Settings },
     ],
   },
