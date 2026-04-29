@@ -352,7 +352,7 @@ const Medications = () => {
                 <span className="truncate">Vid behov</span>
               </TabsTrigger>
               <TabsTrigger value="previous" className="gap-1.5 text-[12.5px]">
-                <span aria-hidden="true">📚</span>
+                <span aria-hidden="true">🗂️</span>
                 <span className="truncate">Slutat ta</span>
               </TabsTrigger>
             </TabsList>
