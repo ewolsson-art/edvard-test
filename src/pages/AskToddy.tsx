@@ -181,7 +181,7 @@ export default function AskToddy() {
             <Sparkles className="w-[18px] h-[18px] md:w-5 md:h-5 text-[hsl(45_85%_55%)]" />
           </div>
           <div className="min-w-0">
-            <h1 className="font-display text-lg md:text-2xl font-bold tracking-tight leading-tight truncate">Chatta med Toddy</h1>
+            <h1 className="font-display text-lg md:text-2xl font-bold tracking-tight leading-tight truncate">Chatta</h1>
             <p className="text-[11px] md:text-[12px] text-muted-foreground/70 truncate">AI-assistent som kan din statistik</p>
           </div>
         </div>
