@@ -9,7 +9,8 @@ import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { AuthNavbar } from "@/components/AuthNavbar";
 import { DarkNightBackground } from "@/components/DarkNightBackground";
-import { Eye, EyeOff, ArrowRight, Loader2, Mail, CheckCircle2 } from "lucide-react";
+import { Eye, EyeOff, Loader2, Mail, CheckCircle2, Lock, ShieldCheck } from "lucide-react";
+import { TurtleLogo } from "@/components/TurtleLogo";
 import { useTranslation } from 'react-i18next';
 
 const loginSchema = z.object({
