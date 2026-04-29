@@ -236,16 +236,14 @@ const Medications = () => {
           <div className="grid grid-cols-2 gap-3">
             <button
               onClick={() => setTab('current')}
-              className={`text-left rounded-2xl p-4 transition-all ${
+              className={`group text-left rounded-2xl p-4 transition-all ${
                 tab === 'current'
-                  ? 'bg-primary/10 ring-1 ring-primary/30'
+                  ? 'bg-gradient-to-br from-primary/15 to-primary/5 ring-1 ring-primary/30'
                   : 'bg-foreground/[0.03] hover:bg-foreground/[0.05]'
               }`}
             >
               <div className="flex items-center gap-2 mb-2">
-                <div className="p-1.5 rounded-md bg-primary/15">
-                  <Pill className="h-3.5 w-3.5 text-primary" />
-                </div>
+                <span className="text-[18px] leading-none transition-transform group-hover:scale-110" aria-hidden="true">💊</span>
                 <span className="text-[12px] font-medium text-foreground/60">Tar just nu</span>
               </div>
               <p className="text-[28px] font-display font-semibold leading-none text-foreground/95">
@@ -260,16 +258,14 @@ const Medications = () => {
 
             <button
               onClick={() => setTab('previous')}
-              className={`text-left rounded-2xl p-4 transition-all ${
+              className={`group text-left rounded-2xl p-4 transition-all ${
                 tab === 'previous'
-                  ? 'bg-foreground/[0.06] ring-1 ring-foreground/15'
+                  ? 'bg-gradient-to-br from-foreground/[0.08] to-foreground/[0.02] ring-1 ring-foreground/15'
                   : 'bg-foreground/[0.03] hover:bg-foreground/[0.05]'
               }`}
             >
               <div className="flex items-center gap-2 mb-2">
-                <div className="p-1.5 rounded-md bg-foreground/[0.08]">
-                  <History className="h-3.5 w-3.5 text-foreground/60" />
-                </div>
+                <span className="text-[18px] leading-none transition-transform group-hover:scale-110" aria-hidden="true">📚</span>
                 <span className="text-[12px] font-medium text-foreground/60">Har provat</span>
               </div>
               <p className="text-[28px] font-display font-semibold leading-none text-foreground/95">
