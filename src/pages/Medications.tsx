@@ -328,11 +328,11 @@ const Medications = () => {
           <Tabs value={tab} onValueChange={(v) => setTab(v as 'current' | 'previous')}>
             <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="current" className="gap-2">
-                <Pill className="h-4 w-4" />
+                <span aria-hidden="true">💊</span>
                 Aktuella ({allCurrent.length})
               </TabsTrigger>
               <TabsTrigger value="previous" className="gap-2">
-                <History className="h-4 w-4" />
+                <span aria-hidden="true">📚</span>
                 Har testat ({previousMedications.length})
               </TabsTrigger>
             </TabsList>
