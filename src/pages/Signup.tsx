@@ -189,7 +189,8 @@ const Signup = () => {
   }
 
   // Progress: role → checkin → contact (3 visible steps)
-  const progressWidth = step === "role" ? "33%" : step === "checkin" ? "66%" : "100%";
+  const isDoctor = role === "doctor";
+  const progressWidth = step === "role" ? (isDoctor ? "50%" : "33%") : step === "checkin" ? "66%" : "100%";
   const showProgress = step === "role" || step === "checkin" || step === "contact";
 
   return (
@@ -337,7 +338,7 @@ const Signup = () => {
               </div>
 
               <Button
-                onClick={() => role && setStep("checkin")}
+                onClick={() => role && setStep(role === "doctor" ? "contact" : "checkin")}
                 disabled={!role}
                 className="w-full h-12 rounded-2xl text-[15px] font-semibold bg-[hsl(45_85%_55%)] text-[hsl(230_30%_5%)] hover:bg-[hsl(45_85%_65%)] shadow-[0_4px_20px_-4px_hsl(45_85%_55%/0.4)] hover:shadow-[0_6px_28px_-4px_hsl(45_85%_55%/0.5)] transition-all duration-300 mt-8 group disabled:opacity-30 disabled:shadow-none"
               >
@@ -439,7 +440,7 @@ const Signup = () => {
           {/* Step 3: Contact (account creation) */}
           {step === "contact" && (
             <div className="animate-fade-in">
-              <button onClick={() => setStep("checkin")} className="inline-flex items-center gap-2 px-4 py-2 -ml-2 mb-8 rounded-full text-sm font-medium text-white/70 hover:text-white hover:bg-white/[0.06] transition-all">
+              <button onClick={() => setStep(role === "doctor" ? "role" : "checkin")} className="inline-flex items-center gap-2 px-4 py-2 -ml-2 mb-8 rounded-full text-sm font-medium text-white/70 hover:text-white hover:bg-white/[0.06] transition-all">
                 <ArrowLeft className="h-4 w-4" />
                 {t("common.back")}
               </button>
