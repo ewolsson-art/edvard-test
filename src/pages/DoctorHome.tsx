@@ -46,7 +46,7 @@ const DoctorHome = () => {
         </header>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div className="bg-background/40 border border-border/40 rounded-2xl p-6">
+          <div className="bg-foreground/[0.03] backdrop-blur-sm rounded-2xl p-6">
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center"><UserCheck className="w-6 h-6 text-primary" /></div>
               <div>
@@ -55,7 +55,7 @@ const DoctorHome = () => {
               </div>
             </div>
           </div>
-          <div className="bg-background/40 border border-border/40 rounded-2xl p-6">
+          <div className="bg-foreground/[0.03] backdrop-blur-sm rounded-2xl p-6">
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center"><Clock className="w-6 h-6 text-primary" /></div>
               <div>
@@ -67,7 +67,7 @@ const DoctorHome = () => {
         </div>
 
         {pendingConnections.length > 0 && (
-          <section className="bg-background/40 border border-border/40 rounded-2xl p-6">
+          <section className="bg-foreground/[0.03] backdrop-blur-sm rounded-2xl p-6">
             <div className="flex items-center gap-3 mb-4">
               <Clock className="w-5 h-5 text-primary" />
               <h2 className="font-display text-xl font-semibold">{t('doctorHome.pendingRequestsTitle')}</h2>
@@ -75,7 +75,7 @@ const DoctorHome = () => {
             </div>
             <div className="space-y-3">
               {pendingConnections.map((connection) => (
-                <div key={connection.id} className="flex items-center justify-between p-4 bg-card/60 border border-border/50 rounded-lg">
+                <div key={connection.id} className="flex items-center justify-between p-4 bg-foreground/[0.03] rounded-lg">
                   <div>
                     <p className="font-medium">{getPatientName(connection)}</p>
                     <p className="text-sm text-muted-foreground">{t('doctorHome.wantsToShareData')}</p>
@@ -97,7 +97,7 @@ const DoctorHome = () => {
           </div>
 
           {approvedConnections.length === 0 ? (
-            <div className="bg-background/40 border border-border/40 rounded-2xl p-12 text-center">
+            <div className="bg-foreground/[0.03] backdrop-blur-sm rounded-2xl p-12 text-center">
               <Users className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
               <h3 className="text-lg font-medium mb-2">{t('doctorHome.noUsersYet')}</h3>
               <p className="text-muted-foreground">{t('doctorHome.usersWillAppearHere')}</p>
@@ -105,7 +105,7 @@ const DoctorHome = () => {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {approvedConnections.map((connection) => (
-                <div key={connection.id} className="bg-background/40 border border-border/40 rounded-2xl p-6 cursor-pointer transition-all hover:border-border/70 hover:bg-background/60" onClick={() => navigate(`/patient/${connection.patient_id}`)}>
+                <div key={connection.id} className="bg-foreground/[0.03] backdrop-blur-sm rounded-2xl p-6 cursor-pointer transition-colors hover:bg-foreground/[0.05]" onClick={() => navigate(`/patient/${connection.patient_id}`)}>
                   <div className="flex items-start justify-between mb-4">
                     <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
                       <span className="text-lg font-semibold text-primary">{getPatientInitial(connection)}</span>
@@ -132,7 +132,7 @@ const DoctorHome = () => {
           )}
         </section>
 
-        <div className="bg-background/40 border border-border/40 rounded-2xl p-6">
+        <div className="bg-foreground/[0.03] backdrop-blur-sm rounded-2xl p-6">
           <h3 className="font-medium mb-2">{t('doctorHome.howItWorks')}</h3>
           <ul className="text-sm text-muted-foreground space-y-2">
             <li>• {t('doctorHome.howItWorksInfo1')}</li>
