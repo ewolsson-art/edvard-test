@@ -30,7 +30,18 @@ export function BottomTabBar() {
   const { tap } = useHaptics();
   const { t } = useTranslation();
 
-  if (isLoading) return null;
+  // While role is loading, render an empty placeholder bar of the same height
+  // so the page content doesn't reflow (jump up by ~72px) once the real bar appears.
+  if (isLoading) {
+    return (
+      <nav
+        aria-hidden="true"
+        className="fixed bottom-0 left-0 right-0 z-50 md:hidden bg-background/85 backdrop-blur-2xl border-t border-border/30 pb-safe"
+      >
+        <div className="flex items-stretch justify-around px-2 pt-1.5 min-h-[60px]" />
+      </nav>
+    );
+  }
 
   const patientTabs: TabItem[] = [
     { to: '/', label: t('sidebar.today'), icon: CalendarDays, exact: true },
