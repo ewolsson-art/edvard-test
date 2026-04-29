@@ -1046,6 +1046,6 @@
   50%      { transform: translateY(-1.5px); }
 }
 .turtle-car-track { overflow: hidden; }
-.turtle-car-scene { animation: turtle-car-drive 7s linear infinite; will-change: transform; }
+.turtle-car-scene { animation: turtle-car-drive 7s linear 1 forwards; will-change: transform; }
 .turtle-car-wheel { transform-origin: center; transform-box: fill-box; animation: turtle-car-wheel 0.9s linear infinite; }
 .turtle-car-bounce { animation: turtle-car-bounce 0.55s ease-in-out infinite; }
