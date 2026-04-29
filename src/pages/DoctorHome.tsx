@@ -212,21 +212,9 @@ const DoctorHome = () => {
         )}
 
         <section>
-          <div className="flex items-center justify-between gap-3 mb-6">
-            <div className="flex items-center gap-3">
-              <UserCheck className="w-6 h-6 text-primary" />
-              <h2 className="font-display text-2xl font-semibold">{t('doctorHome.myUsers')}</h2>
-            </div>
-            {approvedConnections.length > 0 && (
-              <Button
-                onClick={() => setInviteOpen(true)}
-                size="sm"
-                className="rounded-full font-semibold gap-2"
-              >
-                <UserPlus className="w-4 h-4" />
-                Bjud in patient
-              </Button>
-            )}
+          <div className="flex items-center gap-3 mb-6">
+            <UserCheck className="w-6 h-6 text-primary" />
+            <h2 className="font-display text-2xl font-semibold">{t('doctorHome.myUsers')}</h2>
           </div>
 
           {approvedConnections.length === 0 ? (
