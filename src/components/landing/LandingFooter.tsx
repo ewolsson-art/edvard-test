@@ -60,7 +60,7 @@ export function LandingFooter() {
             <Link to="/om-oss" className="text-sm text-white/50 hover:text-white transition-colors">
               {t('footer.aboutUs')}
             </Link>
-            <Link to="/for-patienter" className="text-sm text-white/50 hover:text-white transition-colors">
+            <Link to="/for-anvandare" className="text-sm text-white/50 hover:text-white transition-colors">
               {t('footer.forUsers')}
             </Link>
           </div>
