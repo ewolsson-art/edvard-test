@@ -81,13 +81,13 @@ export const QUALITY_LABELS: Record<string, string> = {
   good: 'Bra och lagom mycket',
   okay: 'Helt okej',
   bad: 'För mycket sömn',
-  very_good: 'Djup och lugn sömn',
+  very_good: 'Något mer än vanligt',
   little: 'Ovanligt lite',
   very_little: 'Nästan ingenting',
 };
 
 export const SLEEP_QUALITY_LABELS: Record<SleepQualityType, string> = {
-  very_good: 'Djup och lugn sömn',
+  very_good: 'Något mer än vanligt',
   good: 'Bra och lagom mycket',
   okay: 'Helt okej',
   little: 'Ovanligt lite',
