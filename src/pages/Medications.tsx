@@ -283,7 +283,7 @@ const Medications = () => {
               }`}
             >
               <div className="flex items-center gap-1.5 mb-2">
-                <span className="text-[16px] leading-none transition-transform group-hover:scale-110" aria-hidden="true">📚</span>
+                <span className="text-[16px] leading-none transition-transform group-hover:scale-110" aria-hidden="true">🗂️</span>
                 <span className="text-[11px] font-medium text-foreground/60 leading-tight">Slutat ta</span>
               </div>
               <p className="text-[26px] font-display font-semibold leading-none text-foreground/95">
