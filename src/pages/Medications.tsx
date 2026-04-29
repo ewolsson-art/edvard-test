@@ -384,15 +384,43 @@ const Medications = () => {
             </div>
 
             {/* Startdatum */}
-            <div className="space-y-1.5">
+            <div className="space-y-2">
               <Label className="text-sm">
                 Startade <span className="text-muted-foreground font-normal">(valfritt)</span>
               </Label>
+              <div className="flex flex-wrap gap-1.5">
+                {[
+                  { label: 'Idag', getValue: () => today },
+                  { label: 'Förra veckan', getValue: () => { const d = new Date(); d.setDate(d.getDate() - 7); return format(d, 'yyyy-MM-dd'); } },
+                  { label: 'Förra månaden', getValue: () => { const d = new Date(); d.setMonth(d.getMonth() - 1); return format(d, 'yyyy-MM-dd'); } },
+                  { label: 'För ett år sen', getValue: () => { const d = new Date(); d.setFullYear(d.getFullYear() - 1); return format(d, 'yyyy-MM-dd'); } },
+                  { label: 'Ange senare', getValue: () => '' },
+                ].map(opt => {
+                  const optValue = opt.getValue();
+                  const selected = form.startedAt === optValue;
+                  return (
+                    <button
+                      key={opt.label}
+                      type="button"
+                      onClick={() => setForm(f => ({ ...f, startedAt: optValue }))}
+                      className={`px-3 py-1.5 rounded-full text-xs border transition-all ${
+                        selected
+                          ? 'bg-primary/15 border-primary/40 text-primary'
+                          : 'border-border bg-muted/30 hover:border-primary/30'
+                      }`}
+                    >
+                      {selected && <Check className="h-3 w-3 inline mr-1" />}
+                      {opt.label}
+                    </button>
+                  );
+                })}
+              </div>
               <Input
                 type="date"
                 value={form.startedAt}
                 onChange={e => setForm(f => ({ ...f, startedAt: e.target.value }))}
                 className="text-base"
+                placeholder="Eller välj exakt datum"
               />
             </div>
 
