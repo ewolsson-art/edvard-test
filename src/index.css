@@ -1028,3 +1028,22 @@
   padding-left: 0.8em; margin: 0.6em 0;
   color: hsl(var(--muted-foreground));
 }
+
+/* Toddy turtle car driving animation */
+@keyframes turtle-car-drive {
+  0%, 100% { transform: translateX(0) translateY(0); }
+  25% { transform: translateX(2px) translateY(-1px); }
+  50% { transform: translateX(4px) translateY(0); }
+  75% { transform: translateX(2px) translateY(-1px); }
+}
+@keyframes turtle-car-wheel {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+@keyframes turtle-car-bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-1px); }
+}
+.turtle-car-scene { animation: turtle-car-drive 2.4s ease-in-out infinite; }
+.turtle-car-wheel { transform-origin: center; transform-box: fill-box; animation: turtle-car-wheel 1.6s linear infinite; }
+.turtle-car-driver { animation: turtle-car-bounce 0.8s ease-in-out infinite; }
