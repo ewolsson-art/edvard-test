@@ -96,7 +96,7 @@ const Medications = () => {
     deleteMedication,
   } = useMedications();
 
-  const [tab, setTab] = useState<'current' | 'previous'>('current');
+  const [tab, setTab] = useState<'regular' | 'asneeded' | 'previous'>('regular');
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingMed, setEditingMed] = useState<Medication | null>(null);
   const [form, setForm] = useState<MedFormState>(emptyForm());
