@@ -125,7 +125,7 @@ export function MedicationJourneyTimeline({ medications, onSelect, entries: entr
           <div>
             <h2 className="text-[15px] font-semibold text-foreground/90">Din medicineringsresa</h2>
             <p className="text-[12px] text-foreground/40 mt-0.5">
-              När du började, slutade och hur måendet följde med. 📈
+              När du började, slutade och hur måendet följde med.
             </p>
           </div>
         </div>
