@@ -244,12 +244,12 @@ const Signup = () => {
                       </g>
                     </svg>
 
-                    {/* Sköldpadda-förare — sitter nedsänkt i kupén vid ratten */}
+                    {/* Sköldpadda-förare — lutar framåt mot ratten i köriktningen */}
                     <div className="absolute left-[35%] bottom-[13%] w-[52px] h-[52px] md:w-[58px] md:h-[58px] z-10 overflow-hidden">
                       <TurtleLogo
                         size="sm"
                         animated={false}
-                        className="absolute left-1/2 top-2 w-[72px] h-[78px] md:w-[80px] md:h-[86px] -translate-x-1/2 rotate-[3deg]"
+                        className="absolute left-1/2 top-2 w-[72px] h-[78px] md:w-[80px] md:h-[86px] -translate-x-1/2 rotate-[14deg] translate-x-[3px]"
                       />
                     </div>
 
@@ -261,9 +261,15 @@ const Signup = () => {
                         fill="hsl(var(--primary))"
                       />
                       <path d="M40 41 L48 31 C55 26 66 27 74 38" stroke="hsl(var(--primary-foreground) / 0.28)" strokeWidth="2" strokeLinecap="round" fill="none" />
+                      {/* Armar som sträcker sig ut mot ratten — visar att hen kör */}
+                      <path d="M56 46 C58 47 60 48 62 49" stroke="hsl(120 30% 28%)" strokeWidth="2.4" strokeLinecap="round" fill="none" />
+                      <path d="M58 44 C60 45 62 46 63 47" stroke="hsl(120 30% 28%)" strokeWidth="2.4" strokeLinecap="round" fill="none" />
                       {/* Ratt nära föraren */}
-                      <path d="M66 38 L60 48" stroke="hsl(var(--background))" strokeWidth="2" strokeLinecap="round" />
-                      <circle cx="59" cy="48" r="4" fill="none" stroke="hsl(var(--background))" strokeWidth="2" />
+                      <path d="M66 38 L62 47" stroke="hsl(var(--background))" strokeWidth="2" strokeLinecap="round" />
+                      <circle cx="62" cy="48" r="4" fill="none" stroke="hsl(var(--background))" strokeWidth="2" />
+                      {/* Små händer som greppar ratten */}
+                      <circle cx="60.5" cy="48.5" r="1.6" fill="hsl(120 35% 35%)" />
+                      <circle cx="63.5" cy="47.5" r="1.6" fill="hsl(120 35% 35%)" />
                       {/* Strålkastare riktade framåt åt höger */}
                       <path d="M116 49 L132 45 L132 53 Z" fill="hsl(50 100% 88% / 0.16)" />
                       <ellipse cx="114" cy="49" rx="3" ry="2.3" fill="hsl(50 100% 88%)" />
