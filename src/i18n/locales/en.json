@@ -440,6 +440,8 @@
     "didntWantTo": "Didn't want to",
     "noActiveMeds": "You have no active medications registered.",
     "notAll": "Not all",
+    "tooMuchSleep": "Too much",
+    "tooMuchSleepSub": "Slept more than usual",
     "deepCalm": "Deep and calm sleep",
     "deepCalmSub": "Slept really well",
     "goodEnough": "Good and adequate",
