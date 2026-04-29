@@ -612,23 +612,26 @@ export function PatientOverview({ connection, onBack, hideExtras = false }: Pati
                 );
               })()}
               {view === 'month' && (
-                <MonthCalendar
-                  currentDate={currentMonth}
-                  moodData={monthMoodData}
-                  relativeCommentsData={monthRelativeCommentsData}
-                  onPrevMonth={handlePrevMonth}
-                  onNextMonth={handleNextMonth}
-                  onDayDoubleClick={handleDayDoubleClick}
+                <ScrollableMonthsCalendar
+                  ref={scrollableCalendarRef}
+                  year={currentYear}
+                  type="mood"
+                  getEntryForDate={getEntryForDate}
+                  getEntriesForMonth={getEntriesForMonth}
+                  onDayClick={isRelativeViewing ? handleDayDoubleClick : undefined}
                 />
               )}
               {view === 'year' && (
-                <YearHeatmap
-                  year={currentYear}
-                  entries={yearEntries}
-                  onPrevYear={handlePrevYear}
-                  onNextYear={handleNextYear}
-                  onMonthClick={handleMonthClick}
-                />
+                <div className="space-y-8">
+                  <SeasonalPatterns entries={entries} />
+                  <YearHeatmap
+                    year={currentYear}
+                    entries={yearEntries}
+                    onPrevYear={handlePrevYear}
+                    onNextYear={handleNextYear}
+                    onMonthClick={handleMonthClick}
+                  />
+                </div>
               )}
             </div>
           </section>
