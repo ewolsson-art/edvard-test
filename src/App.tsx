@@ -127,7 +127,8 @@ const App = () => (
             <Route path="/auth" element={<Auth />} />
             <Route path="/sa-funkar-det" element={<HowItWorksPage />} />
             <Route path="/om-oss" element={<AboutUs />} />
-            <Route path="/for-patienter" element={<ForPatients />} />
+            <Route path="/for-anvandare" element={<ForPatients />} />
+            <Route path="/for-patienter" element={<Navigate to="/for-anvandare" replace />} />
             <Route path="/for-vardgivare" element={<ForCaregivers />} />
             <Route path="/for-anhoriga" element={<ForRelatives />} />
             <Route path="/samarbetspartners" element={<Partners />} />
