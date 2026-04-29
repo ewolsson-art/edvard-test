@@ -218,34 +218,45 @@ const Signup = () => {
               </Link>
               <h1 className="text-2xl md:text-3xl font-bold text-white font-display tracking-tight flex items-center gap-3 flex-wrap">
                 <span>{t("auth.whoAreYou")}</span>
-                <span className="relative inline-block w-20 h-14 md:w-24 md:h-16 shrink-0" aria-hidden="true">
-                  {/* Bil */}
-                  <svg viewBox="0 0 100 60" className="absolute inset-0 w-full h-full">
-                    {/* Karosseri */}
+                <span className="relative inline-block w-28 h-16 md:w-32 md:h-[72px] shrink-0 turtle-car-scene" aria-hidden="true">
+                  {/* Sköldpadda i förarsätet (bakom karossen) */}
+                  <span className="absolute left-[34%] -translate-x-1/2 top-0 w-10 h-10 md:w-12 md:h-12 turtle-car-driver z-0">
+                    <TurtleLogo size="sm" animated={false} className="w-full h-full" />
+                  </span>
+                  {/* Bil ovanpå (döljer sköldpaddans nedre del så den ser ut att sitta i) */}
+                  <svg viewBox="0 0 120 70" className="absolute inset-0 w-full h-full z-10 pointer-events-none">
+                    {/* Bakre karosseri (under förarens midja) */}
                     <path
-                      d="M8 42 Q8 30 22 28 L40 22 Q50 18 62 22 L80 28 Q92 30 92 42 L92 48 Q92 52 88 52 L12 52 Q8 52 8 48 Z"
+                      d="M6 50 Q6 38 18 36 L34 32 L34 50 Z"
                       fill="hsl(45 85% 55%)"
                     />
-                    {/* Vindruta */}
+                    {/* Motorhuv framför föraren */}
                     <path
-                      d="M40 24 Q50 20 60 24 L70 30 L36 30 Z"
-                      fill="hsl(220 50% 85% / 0.4)"
-                      stroke="hsl(45 60% 35%)"
-                      strokeWidth="1"
+                      d="M58 38 L78 34 Q104 34 110 50 L58 50 Z"
+                      fill="hsl(45 85% 55%)"
                     />
+                    {/* Underrede som binder ihop */}
+                    <path
+                      d="M6 50 L110 50 Q112 56 108 60 L10 60 Q4 60 6 54 Z"
+                      fill="hsl(45 75% 48%)"
+                    />
+                    {/* Ratt (liten cirkel framför sköldpaddan) */}
+                    <circle cx="48" cy="44" r="3" fill="hsl(230 30% 12%)" />
+                    <circle cx="48" cy="44" r="1.2" fill="hsl(230 20% 50%)" />
                     {/* Hjul */}
-                    <circle cx="28" cy="52" r="7" fill="hsl(230 30% 8%)" />
-                    <circle cx="28" cy="52" r="3" fill="hsl(230 20% 40%)" />
-                    <circle cx="72" cy="52" r="7" fill="hsl(230 30% 8%)" />
-                    <circle cx="72" cy="52" r="3" fill="hsl(230 20% 40%)" />
+                    <g>
+                      <circle cx="26" cy="60" r="8" fill="hsl(230 30% 8%)" />
+                      <circle cx="26" cy="60" r="3.5" fill="hsl(230 20% 35%)" className="turtle-car-wheel" />
+                    </g>
+                    <g>
+                      <circle cx="92" cy="60" r="8" fill="hsl(230 30% 8%)" />
+                      <circle cx="92" cy="60" r="3.5" fill="hsl(230 20% 35%)" className="turtle-car-wheel" />
+                    </g>
                     {/* Fartlinjer */}
-                    <path d="M-2 36 L8 36" stroke="white" strokeOpacity="0.5" strokeWidth="2" strokeLinecap="round" />
-                    <path d="M-4 44 L6 44" stroke="white" strokeOpacity="0.3" strokeWidth="2" strokeLinecap="round" />
+                    <path d="M-4 30 L8 30" stroke="white" strokeOpacity="0.45" strokeWidth="2" strokeLinecap="round" />
+                    <path d="M-6 42 L4 42" stroke="white" strokeOpacity="0.3" strokeWidth="2" strokeLinecap="round" />
+                    <path d="M-4 56 L6 56" stroke="white" strokeOpacity="0.25" strokeWidth="2" strokeLinecap="round" />
                   </svg>
-                  {/* Sköldpadda som förare */}
-                  <span className="absolute left-1/2 -translate-x-1/2 -top-1 w-9 h-9 md:w-11 md:h-11">
-                    <TurtleLogo size="sm" animated className="w-full h-full" />
-                  </span>
                 </span>
               </h1>
               <p className="mt-2 text-sm text-white/40">
