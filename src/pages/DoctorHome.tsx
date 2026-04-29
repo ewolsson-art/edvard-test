@@ -57,7 +57,7 @@ const DoctorHome = () => {
           </div>
           <div className="glass-card p-6">
             <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-full bg-amber-500/10 flex items-center justify-center"><Clock className="w-6 h-6 text-amber-500" /></div>
+              <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center"><Clock className="w-6 h-6 text-primary" /></div>
               <div>
                 <p className="text-3xl font-bold">{pendingConnections.length}</p>
                 <p className="text-muted-foreground text-sm">{pendingConnections.length === 1 ? t('doctorHome.pendingRequest') : t('doctorHome.pendingRequests')}</p>
@@ -69,13 +69,13 @@ const DoctorHome = () => {
         {pendingConnections.length > 0 && (
           <section className="glass-card p-6">
             <div className="flex items-center gap-3 mb-4">
-              <Clock className="w-5 h-5 text-amber-500" />
+              <Clock className="w-5 h-5 text-primary" />
               <h2 className="font-display text-xl font-semibold">{t('doctorHome.pendingRequestsTitle')}</h2>
-              <span className="bg-amber-500/20 text-amber-700 dark:text-amber-400 text-xs font-medium px-2 py-1 rounded-full">{pendingConnections.length}</span>
+              <span className="bg-primary/15 text-primary text-xs font-medium px-2 py-1 rounded-full">{pendingConnections.length}</span>
             </div>
             <div className="space-y-3">
               {pendingConnections.map((connection) => (
-                <div key={connection.id} className="flex items-center justify-between p-4 bg-muted/50 rounded-lg">
+                <div key={connection.id} className="flex items-center justify-between p-4 bg-card/60 border border-border/50 rounded-lg">
                   <div>
                     <p className="font-medium">{getPatientName(connection)}</p>
                     <p className="text-sm text-muted-foreground">{t('doctorHome.wantsToShareData')}</p>
@@ -132,7 +132,7 @@ const DoctorHome = () => {
           )}
         </section>
 
-        <div className="glass-card p-6 bg-muted/30">
+        <div className="glass-card p-6">
           <h3 className="font-medium mb-2">{t('doctorHome.howItWorks')}</h3>
           <ul className="text-sm text-muted-foreground space-y-2">
             <li>• {t('doctorHome.howItWorksInfo1')}</li>
