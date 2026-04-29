@@ -111,6 +111,24 @@ const Medications = () => {
     setIsFormOpen(true);
   };
 
+  // Handle ?open=<medId> and ?add=1 from category pages
+  useEffect(() => {
+    const openId = searchParams.get('open');
+    const addParam = searchParams.get('add');
+    if (openId && medications.length > 0) {
+      const found = medications.find(m => m.id === openId);
+      if (found) setDetailMed(found);
+      searchParams.delete('open');
+      setSearchParams(searchParams, { replace: true });
+    }
+    if (addParam) {
+      openAdd();
+      searchParams.delete('add');
+      setSearchParams(searchParams, { replace: true });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [medications, searchParams]);
+
   const openEdit = (med: Medication) => {
     setEditingMed(med);
     const ind = med.indication ?? '';
