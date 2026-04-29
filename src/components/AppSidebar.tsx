@@ -203,18 +203,10 @@ export function AppSidebar() {
                           onClick={() => { if (isMobile) setOpenMobile(false); }}
                         >
                           {item.url === '/profil' && avatarUrl ? (
-                            <div className="relative">
-                              <Avatar className="h-[22px] w-[22px] shrink-0">
-                                <AvatarImage src={avatarUrl} alt="Profilbild" className="object-cover" />
-                                <AvatarFallback className="text-[10px] bg-white/[0.08] text-white/60">{getInitials()}</AvatarFallback>
-                              </Avatar>
-                              {hasPending && (
-                                <span className="absolute -top-0.5 -right-0.5 flex h-2 w-2" aria-hidden="true">
-                                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-destructive opacity-75"></span>
-                                  <span className="relative inline-flex rounded-full h-2 w-2 bg-destructive"></span>
-                                </span>
-                              )}
-                            </div>
+                            <Avatar className="h-[22px] w-[22px] shrink-0">
+                              <AvatarImage src={avatarUrl} alt="Profilbild" className="object-cover" />
+                              <AvatarFallback className="text-[10px] bg-white/[0.08] text-white/60">{getInitials()}</AvatarFallback>
+                            </Avatar>
                           ) : (
                             <div className="relative">
                               <item.icon 
@@ -224,12 +216,6 @@ export function AppSidebar() {
                                 strokeWidth={active ? 2 : 1.5}
                                 aria-hidden="true" 
                               />
-                              {item.url === '/profil' && hasPending && (
-                                <span className="absolute -top-0.5 -right-0.5 flex h-2 w-2" aria-hidden="true">
-                                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-destructive opacity-75"></span>
-                                  <span className="relative inline-flex rounded-full h-2 w-2 bg-destructive"></span>
-                                </span>
-                              )}
                               {item.url === '/notiser' && notifUnread > 0 && (
                                 <span className="absolute -top-1 -right-1.5 min-w-[16px] h-4 px-1 flex items-center justify-center rounded-full bg-primary text-[10px] font-bold text-primary-foreground" aria-hidden="true">
                                   {notifUnread > 9 ? '9+' : notifUnread}
