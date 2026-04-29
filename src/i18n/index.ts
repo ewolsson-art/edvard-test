@@ -12,13 +12,16 @@ i18n
       sv: { translation: sv },
       en: { translation: en },
     },
+    lng: 'sv',
     fallbackLng: 'sv',
     supportedLngs: ['sv', 'en'],
     interpolation: {
       escapeValue: false,
     },
     detection: {
-      order: ['localStorage', 'navigator'],
+      // Default to Swedish unless the user has explicitly chosen another
+      // language via the in-app language switcher (which writes to localStorage).
+      order: ['localStorage'],
       caches: ['localStorage'],
       lookupLocalStorage: 'i18nextLng',
     },
