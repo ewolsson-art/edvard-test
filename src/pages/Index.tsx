@@ -12,6 +12,7 @@ import { StreakBadge } from '@/components/StreakBadge';
 import { CheckinData } from '@/types/mood';
 import { TodayCheckin } from '@/components/TodayCheckin';
 import { MissedDayPrompt } from '@/components/MissedDayPrompt';
+import { DiagnosisPromptBanner } from '@/components/DiagnosisPromptBanner';
 
 const Index = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -116,8 +117,11 @@ const Index = () => {
   };
 
   return (
-    <AnimatedPage className="fixed inset-0 md:relative md:h-screen flex items-center justify-center md:py-4 md:px-5 overflow-hidden">
-      <div className="w-full h-full md:h-auto md:max-w-xl relative">
+    <AnimatedPage className="fixed inset-0 md:relative md:h-screen flex flex-col items-center justify-start md:py-4 md:px-5 overflow-hidden">
+      <div className="w-full md:max-w-xl">
+        <DiagnosisPromptBanner />
+      </div>
+      <div className="w-full h-full md:h-auto md:max-w-xl relative flex-1 flex items-center justify-center">
         {shouldShowMissedPrompt ? (
           <MissedDayPrompt
             missedDays={streakData.missedDays}

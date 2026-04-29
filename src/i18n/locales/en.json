@@ -1,4 +1,14 @@
 {
+  "home": {
+    "diagnosisPromptTitle": "Add diagnosis",
+    "diagnosisPromptDesc": "Get a check-in tailored to you"
+  },
+  "signup": {
+    "checkinTitle": "What do you want to track?",
+    "checkinSubtitle": "We'll personalize your daily check-in. You can change this anytime.",
+    "saveYourSetupTitle": "Save your check-in",
+    "saveYourSetupSubtitle": "Create an account to get started — it's quick."
+  },
   "common": {
     "save": "Save",
     "cancel": "Cancel",
@@ -15,6 +25,7 @@
     "next": "Next",
     "previous": "Previous",
     "close": "Close",
+    "dismiss": "Dismiss",
     "delete": "Delete",
     "edit": "Edit",
     "add": "Add",
