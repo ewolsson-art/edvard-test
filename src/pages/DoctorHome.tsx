@@ -76,7 +76,7 @@ const DoctorHome = () => {
   return (
     <div className="py-8 px-4 md:px-8">
       <div className="max-w-6xl mx-auto space-y-8">
-        <header className="text-center">
+        <header className="text-left">
           <h1 className="font-display text-3xl md:text-4xl font-bold mb-2">
             {greeting()}{firstName ? `, ${firstName}` : ''}! 👋
           </h1>
