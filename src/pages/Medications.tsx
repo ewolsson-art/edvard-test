@@ -40,6 +40,8 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useTranslation } from 'react-i18next';
 import { MedicationInsights } from '@/components/medications/MedicationInsights';
+import { MedicationJourneyTimeline } from '@/components/medications/MedicationJourneyTimeline';
+import { MedicationBeforeAfter } from '@/components/medications/MedicationBeforeAfter';
 
 const EFFECTIVENESS_ICONS: Record<MedicationEffectiveness, JSX.Element> = {
   works_well: <ThumbsUp className="h-4 w-4" />,
@@ -316,6 +318,14 @@ const Medications = () => {
               </div>
             </div>
           </div>
+        )}
+
+        {/* Tidslinje över hela medicineringsresan — visas bara om man har 2+ mediciner */}
+        {medications.length >= 2 && (
+          <MedicationJourneyTimeline
+            medications={medications}
+            onSelect={(m) => setDetailMed(m)}
+          />
         )}
 
         {/* Tabs current vs previous */}
@@ -703,8 +713,13 @@ const Medications = () => {
                   {detailMed.stopped_at && <InfoRow label="Slutade" value={formatDate(detailMed.stopped_at)} />}
                 </div>
 
-                {/* Grafiska insikter: mående + biverkningar under medicinens period */}
+                {/* Före vs under-jämförelse — kärnan i utvärderingen över tid */}
                 <div className="pt-2 border-t border-border/40">
+                  <MedicationBeforeAfter med={detailMed} />
+                </div>
+
+                {/* Grafiska insikter: mående + biverkningar under medicinens period */}
+                <div>
                   <MedicationInsights med={detailMed} />
                 </div>
 
