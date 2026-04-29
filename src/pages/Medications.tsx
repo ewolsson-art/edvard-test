@@ -103,13 +103,6 @@ const Medications = () => {
   const [detailMed, setDetailMed] = useState<Medication | null>(null);
 
   const today = format(new Date(), 'yyyy-MM-dd');
-  const todayLabel = format(new Date(), 'EEEE d MMMM', { locale: dateFnsLocale });
-
-  const dailyMeds = currentMedications;
-  const takenToday = dailyMeds.filter(m => isMedicationTakenOnDate(m.id, today)).length;
-  const totalToday = dailyMeds.length;
-  const progressPercent = totalToday > 0 ? (takenToday / totalToday) * 100 : 0;
-  const allTaken = totalToday > 0 && takenToday === totalToday;
 
   const openAdd = () => {
     setEditingMed(null);
