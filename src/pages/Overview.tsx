@@ -27,6 +27,9 @@ import { YearHeatmap } from '@/components/YearHeatmap';
 import { SleepYearHeatmap } from '@/components/SleepYearHeatmap';
 import { EatingYearHeatmap } from '@/components/EatingYearHeatmap';
 import { ExerciseYearHeatmap } from '@/components/ExerciseYearHeatmap';
+import { SeasonalPatterns } from '@/components/SeasonalPatterns';
+import { PostElevatedReflection } from '@/components/PostElevatedReflection';
+import { useAuth } from '@/hooks/useAuth';
 
 import { DayDetailDialog } from '@/components/DayDetailDialog';
 import { ExerciseTypeDialog } from '@/components/ExerciseTypeDialog';
