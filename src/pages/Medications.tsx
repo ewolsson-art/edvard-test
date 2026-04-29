@@ -713,8 +713,13 @@ const Medications = () => {
                   {detailMed.stopped_at && <InfoRow label="Slutade" value={formatDate(detailMed.stopped_at)} />}
                 </div>
 
-                {/* Grafiska insikter: mående + biverkningar under medicinens period */}
+                {/* Före vs under-jämförelse — kärnan i utvärderingen över tid */}
                 <div className="pt-2 border-t border-border/40">
+                  <MedicationBeforeAfter med={detailMed} />
+                </div>
+
+                {/* Grafiska insikter: mående + biverkningar under medicinens period */}
+                <div>
                   <MedicationInsights med={detailMed} />
                 </div>
 
