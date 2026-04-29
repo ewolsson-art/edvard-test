@@ -261,16 +261,6 @@ const DoctorHome = () => {
             </div>
           )}
         </section>
-
-        <div className="bg-foreground/[0.03] backdrop-blur-sm rounded-2xl p-6">
-          <h3 className="font-medium mb-2">{t('doctorHome.howItWorks')}</h3>
-          <ul className="text-sm text-muted-foreground space-y-2">
-            <li>• {t('doctorHome.howItWorksInfo1')}</li>
-            <li>• {t('doctorHome.howItWorksInfo2')}</li>
-            <li>• {t('doctorHome.howItWorksInfo3')}</li>
-            <li>• {t('doctorHome.howItWorksInfo4')}</li>
-          </ul>
-        </div>
       </div>
     </div>
   );
