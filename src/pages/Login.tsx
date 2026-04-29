@@ -120,9 +120,6 @@ const Login = () => {
             <h1 className="text-2xl md:text-3xl font-bold text-white font-display tracking-tight">
               {t("auth.welcomeBack")}
             </h1>
-            <p className="mt-2 text-sm text-white/45">
-              {t("auth.welcomeBackSubtitle")}
-            </p>
           </div>
 
           {isVerified && (
