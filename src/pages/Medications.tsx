@@ -344,7 +344,7 @@ const Medications = () => {
           <Tabs value={tab} onValueChange={(v) => setTab(v as 'regular' | 'asneeded' | 'previous')}>
             <TabsList className="grid w-full grid-cols-3">
               <TabsTrigger value="regular" className="gap-1.5 text-[12.5px]">
-                <span aria-hidden="true">🌿</span>
+                <span aria-hidden="true">🕒</span>
                 <span className="truncate">Regelbundet</span>
               </TabsTrigger>
               <TabsTrigger value="asneeded" className="gap-1.5 text-[12.5px]">
