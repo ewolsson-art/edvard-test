@@ -212,6 +212,11 @@ const App = () => (
                 <AppLayout><Medications /></AppLayout>
               </ProtectedRoute>
             } />
+            <Route path="/mediciner/:category" element={
+              <ProtectedRoute>
+                <AppLayout><MedicationCategory /></AppLayout>
+              </ProtectedRoute>
+            } />
             <Route path="/diagnoser" element={
               <ProtectedRoute>
                 <AppLayout><Diagnoses /></AppLayout>
