@@ -84,7 +84,7 @@ const DoctorDashboard = () => {
         </header>
 
         {pendingFromPatients.length > 0 && (
-          <section className="glass-card p-6">
+          <section className="bg-background/40 border border-border/40 rounded-2xl p-6">
             <div className="flex items-center gap-3 mb-4">
               <Clock className="w-5 h-5 text-primary" />
               <h2 className="font-display text-xl font-semibold">{t('doctorDashboard.incomingRequests')}</h2>
@@ -109,7 +109,7 @@ const DoctorDashboard = () => {
         )}
 
         {pendingFromDoctor.length > 0 && (
-          <section className="glass-card p-6">
+          <section className="bg-background/40 border border-border/40 rounded-2xl p-6">
             <div className="flex items-center gap-3 mb-4">
               <Send className="w-5 h-5 text-primary" />
               <h2 className="font-display text-xl font-semibold">{t('doctorDashboard.sentRequests')}</h2>
@@ -141,7 +141,7 @@ const DoctorDashboard = () => {
             )}
           </div>
           {approvedConnections.length === 0 ? (
-            <div className="glass-card p-12 text-center">
+            <div className="bg-background/40 border border-border/40 rounded-2xl p-12 text-center">
               <Users className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
               <h3 className="text-lg font-medium mb-2">{t('doctorDashboard.noUsersYet')}</h3>
               <p className="text-muted-foreground mb-4">{t('doctorDashboard.requestAccessOrWait')}</p>
@@ -161,7 +161,7 @@ const DoctorDashboard = () => {
                     ? 'Incheckad igår'
                     : `${status.daysSince} dagar sedan`;
                 return (
-                  <div key={c.id} className="glass-card p-6 cursor-pointer transition-all hover:shadow-lg" onClick={() => navigate(`/patient/${c.patient_id}`)}>
+                  <div key={c.id} className="bg-background/40 border border-border/40 rounded-2xl p-6 cursor-pointer transition-all hover:border-border/70 hover:bg-background/60" onClick={() => navigate(`/patient/${c.patient_id}`)}>
                     <div className="flex items-start justify-between mb-4">
                       <div className="relative">
                         <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
