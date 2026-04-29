@@ -104,86 +104,62 @@ const DoctorHome = () => {
           </div>
         </div>
 
-        {/* Invite CTA */}
-        <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-primary/15 via-primary/5 to-transparent border border-primary/20 p-6 md:p-8">
-          <div className="absolute -top-16 -right-16 w-64 h-64 rounded-full bg-primary/10 blur-3xl pointer-events-none" />
-          <div className="relative flex flex-col md:flex-row md:items-center gap-6 md:gap-8">
-            <div className="w-14 h-14 rounded-2xl bg-primary/20 flex items-center justify-center flex-shrink-0">
-              <UserPlus className="w-7 h-7 text-primary" />
-            </div>
-            <div className="flex-1 min-w-0">
-              <h2 className="font-display text-xl md:text-2xl font-bold mb-1">Bjud in en patient</h2>
-              <p className="text-muted-foreground text-sm md:text-base">
-                Skicka en förfrågan med patientens e-post. De godkänner och väljer själva vad som delas med dig.
+        <Dialog open={inviteOpen} onOpenChange={setInviteOpen}>
+          <DialogContent className="sm:max-w-md">
+            <DialogHeader>
+              <div className="w-12 h-12 rounded-full bg-primary/15 flex items-center justify-center mb-3">
+                <Sparkles className="w-6 h-6 text-primary" />
+              </div>
+              <DialogTitle className="font-display text-xl">Bjud in en patient</DialogTitle>
+              <p className="text-sm text-muted-foreground pt-1">
+                Vi skickar en förfrågan i appen. Patienten väljer själv vilken data som delas med dig.
               </p>
-            </div>
-            <Dialog open={inviteOpen} onOpenChange={setInviteOpen}>
-              <DialogTrigger asChild>
-                <Button
-                  size="lg"
-                  className="rounded-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold gap-2 shadow-lg shadow-primary/20 px-6 self-start md:self-center"
-                >
-                  <Send className="w-4 h-4" />
-                  Bjud in patient
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="sm:max-w-md">
-                <DialogHeader>
-                  <div className="w-12 h-12 rounded-full bg-primary/15 flex items-center justify-center mb-3">
-                    <Sparkles className="w-6 h-6 text-primary" />
-                  </div>
-                  <DialogTitle className="font-display text-xl">Bjud in en patient</DialogTitle>
-                  <p className="text-sm text-muted-foreground pt-1">
-                    Vi skickar en förfrågan i appen. Patienten väljer själv vilken data som delas med dig.
-                  </p>
-                </DialogHeader>
+            </DialogHeader>
 
-                <div className="space-y-5 pt-2">
-                  <div className="space-y-2">
-                    <Label htmlFor="patientEmail" className="text-sm font-medium">Patientens e-post</Label>
-                    <div className="relative">
-                      <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
-                      <Input
-                        id="patientEmail"
-                        type="email"
-                        autoComplete="email"
-                        inputMode="email"
-                        placeholder="namn@example.com"
-                        value={patientEmail}
-                        onChange={(e) => setPatientEmail(e.target.value)}
-                        onKeyDown={(e) => {
-                          if (e.key === 'Enter') {
-                            e.preventDefault();
-                            handleSendRequest();
-                          }
-                        }}
-                        disabled={isRequesting}
-                        className="pl-10 text-base"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="flex items-start gap-3 p-3 rounded-xl bg-foreground/[0.03]">
-                    <ShieldCheck className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
-                    <p className="text-xs text-muted-foreground leading-relaxed">
-                      Patienten måste godkänna förfrågan innan du ser någon data. De kan när som helst dra tillbaka delningen.
-                    </p>
-                  </div>
-
-                  <Button
-                    onClick={handleSendRequest}
-                    disabled={isRequesting || !patientEmail.trim()}
-                    size="lg"
-                    className="w-full rounded-full font-semibold gap-2"
-                  >
-                    {isRequesting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
-                    {isRequesting ? 'Skickar…' : 'Skicka förfrågan'}
-                  </Button>
+            <div className="space-y-5 pt-2">
+              <div className="space-y-2">
+                <Label htmlFor="patientEmail" className="text-sm font-medium">Patientens e-post</Label>
+                <div className="relative">
+                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
+                  <Input
+                    id="patientEmail"
+                    type="email"
+                    autoComplete="email"
+                    inputMode="email"
+                    placeholder="namn@example.com"
+                    value={patientEmail}
+                    onChange={(e) => setPatientEmail(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        e.preventDefault();
+                        handleSendRequest();
+                      }
+                    }}
+                    disabled={isRequesting}
+                    className="pl-10 text-base"
+                  />
                 </div>
-              </DialogContent>
-            </Dialog>
-          </div>
-        </section>
+              </div>
+
+              <div className="flex items-start gap-3 p-3 rounded-xl bg-foreground/[0.03]">
+                <ShieldCheck className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
+                <p className="text-xs text-muted-foreground leading-relaxed">
+                  Patienten måste godkänna förfrågan innan du ser någon data. De kan när som helst dra tillbaka delningen.
+                </p>
+              </div>
+
+              <Button
+                onClick={handleSendRequest}
+                disabled={isRequesting || !patientEmail.trim()}
+                size="lg"
+                className="w-full rounded-full font-semibold gap-2"
+              >
+                {isRequesting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
+                {isRequesting ? 'Skickar…' : 'Skicka förfrågan'}
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
 
         {pendingConnections.length > 0 && (
           <section className="bg-foreground/[0.03] backdrop-blur-sm rounded-2xl p-6">
