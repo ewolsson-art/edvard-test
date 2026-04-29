@@ -8,6 +8,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { DarkNightBackground } from "@/components/DarkNightBackground";
+import { TurtleLogo } from "@/components/TurtleLogo";
 import {
   ArrowRight, ArrowLeft, Loader2, Mail, User, Users, Stethoscope,
   CheckCircle2, Phone, Smartphone, Brain, Pill, Moon, Utensils, Dumbbell,
@@ -215,6 +216,9 @@ const Signup = () => {
                 <ArrowLeft className="h-4 w-4" />
                 {t("common.cancel")}
               </Link>
+              <div className="mb-5 w-16 h-16">
+                <TurtleLogo size="md" animated className="w-full h-full" />
+              </div>
               <h1 className="text-2xl md:text-3xl font-bold text-white font-display tracking-tight">
                 {t("auth.whoAreYou")}
               </h1>
