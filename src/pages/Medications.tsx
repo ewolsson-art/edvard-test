@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { format } from 'date-fns';
 import { sv, enUS } from 'date-fns/locale';
 import {
-  Pill, Plus, Pencil, Trash2, Check, X, Calendar, CheckCircle2, Clock,
+  Pill, Plus, Pencil, Trash2, Check, X, Calendar,
   AlertTriangle, ThumbsUp, ThumbsDown, Minus, HelpCircle, History, Info, ChevronRight,
   Sparkles, FileText, FlaskConical, ArrowLeft,
 } from 'lucide-react';
