@@ -86,13 +86,13 @@ const DoctorDashboard = () => {
         {pendingFromPatients.length > 0 && (
           <section className="glass-card p-6">
             <div className="flex items-center gap-3 mb-4">
-              <Clock className="w-5 h-5 text-amber-500" />
+              <Clock className="w-5 h-5 text-primary" />
               <h2 className="font-display text-xl font-semibold">{t('doctorDashboard.incomingRequests')}</h2>
-              <span className="bg-amber-500/20 text-amber-700 dark:text-amber-400 text-xs font-medium px-2 py-1 rounded-full">{pendingFromPatients.length}</span>
+              <span className="bg-primary/15 text-primary text-xs font-medium px-2 py-1 rounded-full">{pendingFromPatients.length}</span>
             </div>
             <div className="space-y-3">
               {pendingFromPatients.map((c) => (
-                <div key={c.id} className="flex items-center justify-between p-4 bg-muted/50 rounded-lg">
+                <div key={c.id} className="flex items-center justify-between p-4 bg-card/60 border border-border/50 rounded-lg">
                   <div>
                     <p className="font-medium">{getPatientName(c)}</p>
                     {(c.patient_profile?.first_name || c.patient_profile?.last_name) && c.patient_email && <p className="text-sm text-muted-foreground">{c.patient_email}</p>}
@@ -109,19 +109,19 @@ const DoctorDashboard = () => {
         )}
 
         {pendingFromDoctor.length > 0 && (
-          <section className="glass-card p-6 border-2 border-blue-200 dark:border-blue-800">
+          <section className="glass-card p-6">
             <div className="flex items-center gap-3 mb-4">
-              <Send className="w-5 h-5 text-blue-500" />
+              <Send className="w-5 h-5 text-primary" />
               <h2 className="font-display text-xl font-semibold">{t('doctorDashboard.sentRequests')}</h2>
-              <span className="bg-blue-500/20 text-blue-700 dark:text-blue-400 text-xs font-medium px-2 py-1 rounded-full">{pendingFromDoctor.length}</span>
+              <span className="bg-primary/15 text-primary text-xs font-medium px-2 py-1 rounded-full">{pendingFromDoctor.length}</span>
             </div>
             <div className="space-y-3">
               {pendingFromDoctor.map((c) => (
-                <div key={c.id} className="flex items-center justify-between p-4 bg-blue-50/50 dark:bg-blue-950/20 rounded-lg">
+                <div key={c.id} className="flex items-center justify-between p-4 bg-card/60 border border-border/50 rounded-lg">
                   <div>
                     <p className="font-medium">{getPatientName(c)}</p>
                     {(c.patient_profile?.first_name || c.patient_profile?.last_name) && c.patient_email && <p className="text-sm text-muted-foreground">{c.patient_email}</p>}
-                    <p className="text-sm text-blue-600 dark:text-blue-400">{t('doctorDashboard.waitingForResponse')}</p>
+                    <p className="text-sm text-muted-foreground">{t('doctorDashboard.waitingForResponse')}</p>
                   </div>
                   <Button size="sm" variant="outline" className="gap-1" onClick={() => cancelRequest(c.id)}>
                     <X className="w-4 h-4" />{t('doctorDashboard.cancel')}
