@@ -39,6 +39,7 @@ import {
 } from '@/components/ui/alert-dialog';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useTranslation } from 'react-i18next';
+import { MedicationInsights } from '@/components/medications/MedicationInsights';
 
 const EFFECTIVENESS_ICONS: Record<MedicationEffectiveness, JSX.Element> = {
   works_well: <ThumbsUp className="h-4 w-4" />,
@@ -700,6 +701,11 @@ const Medications = () => {
                   <InfoRow label="Startade" value={formatDate(detailMed.started_at)} />
                   <InfoRow label="Status" value={STATUS_LABELS[(detailMed.status ?? (detailMed.active ? 'current' : 'previous')) as MedicationStatus]} />
                   {detailMed.stopped_at && <InfoRow label="Slutade" value={formatDate(detailMed.stopped_at)} />}
+                </div>
+
+                {/* Grafiska insikter: mående + biverkningar under medicinens period */}
+                <div className="pt-2 border-t border-border/40">
+                  <MedicationInsights med={detailMed} />
                 </div>
 
                 {detailMed.effectiveness && (
