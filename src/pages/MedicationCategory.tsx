@@ -125,10 +125,19 @@ const MedicationCategory = () => {
               </Button>
             </div>
           ) : (
-            <div className="space-y-2">
-              {meds.map(med => (
-                <MedRow key={med.id} med={med} accent={meta.accent} onClick={() => openMed(med.id)} />
-              ))}
+            <div className="space-y-3">
+              <Button
+                onClick={() => navigate('/mediciner?add=1')}
+                className="w-full gap-2 rounded-full"
+              >
+                <Plus className="h-4 w-4" />
+                Lägg till medicin
+              </Button>
+              <div className="space-y-2">
+                {meds.map(med => (
+                  <MedRow key={med.id} med={med} accent={meta.accent} onClick={() => openMed(med.id)} />
+                ))}
+              </div>
             </div>
           )}
         </div>
