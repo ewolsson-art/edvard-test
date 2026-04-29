@@ -121,7 +121,7 @@ function IntroBlock() {
       <h2 className="text-2xl sm:text-3xl md:text-4xl font-display font-bold text-white mb-6 tracking-tight">
         {t('landing.sectionTitle')}
       </h2>
-      <p className="text-base sm:text-lg md:text-xl text-white/60 leading-relaxed max-w-xl mx-auto font-light">
+      <p className="text-[0.95rem] sm:text-lg md:text-xl text-white/80 leading-relaxed max-w-xl mx-auto">
         {t('landing.sectionSubtitle')}
       </p>
     </div>
