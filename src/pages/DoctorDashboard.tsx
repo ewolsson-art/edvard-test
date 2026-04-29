@@ -65,15 +65,10 @@ const DoctorDashboard = () => {
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>
-                <DialogTitle>{t('doctorDashboard.requestAccessToUser')}</DialogTitle>
-                <DialogDescription>{t('doctorDashboard.enterUserEmail')}</DialogDescription>
+                <DialogTitle>Bjud in användare att dela sin data med dig</DialogTitle>
               </DialogHeader>
-              <div className="space-y-6 pt-4">
-                <div className="space-y-2">
-                  <Label htmlFor="patientEmail">{t('doctorDashboard.userEmail')}</Label>
-                  <Input id="patientEmail" type="email" placeholder="namn@example.com" value={patientEmail} onChange={(e) => setPatientEmail(e.target.value)} disabled={isRequesting} />
-                </div>
-                <p className="text-sm text-muted-foreground">{t('doctorDashboard.userWillApproveOrReject')}</p>
+              <div className="space-y-4 pt-2">
+                <Input id="patientEmail" type="email" placeholder="namn@example.com" value={patientEmail} onChange={(e) => setPatientEmail(e.target.value)} disabled={isRequesting} className="text-base" />
                 <Button onClick={handleRequestAccess} disabled={isRequesting} className="w-full gap-2">
                   {isRequesting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
                   {t('doctorDashboard.sendRequest')}
