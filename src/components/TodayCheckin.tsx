@@ -54,6 +54,8 @@ interface TodayCheckinProps {
 const useSleepSliderOptions = () => {
   const { t } = useTranslation();
   return useMemo((): ScaleOption<QualityType>[] => [
+    // 'bad' = för mycket sömn (kan vara symptom på depression / utmattning)
+    { value: 'bad', label: t('checkin.tooMuchSleep'), sublabel: t('checkin.tooMuchSleepSub'), icon: MoonStar, color: '25 70% 50%' },
     { value: 'very_good', label: t('checkin.deepCalm'), sublabel: t('checkin.deepCalmSub'), icon: MoonStar, color: '160 70% 40%' },
     { value: 'good', label: t('checkin.goodEnough'), sublabel: t('checkin.goodEnoughSub'), icon: MoonStar, color: '150 55% 48%' },
     { value: 'okay', label: t('checkin.justOkay'), sublabel: t('checkin.justOkaySub'), icon: Moon, color: '45 70% 50%' },
