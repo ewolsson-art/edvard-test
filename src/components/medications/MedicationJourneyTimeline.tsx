@@ -31,8 +31,9 @@ const MOOD_SCORE: Record<MoodType, number> = {
  *   så man kan se korrelation: när byttes mediciner och vad hände med måendet?
  * – Klick på medicin öppnar detaljvy.
  */
-export function MedicationJourneyTimeline({ medications, onSelect }: Props) {
-  const { entries } = useMoodData();
+export function MedicationJourneyTimeline({ medications, onSelect, entries: entriesProp }: Props) {
+  const { entries: ownEntries } = useMoodData();
+  const entries = entriesProp ?? ownEntries;
 
   const journey = useMemo(() => {
     if (medications.length === 0) return null;
