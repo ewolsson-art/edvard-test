@@ -39,6 +39,7 @@ import {
 } from '@/components/ui/alert-dialog';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useTranslation } from 'react-i18next';
+import { MedicationInsights } from '@/components/medications/MedicationInsights';
 
 const EFFECTIVENESS_ICONS: Record<MedicationEffectiveness, JSX.Element> = {
   works_well: <ThumbsUp className="h-4 w-4" />,
