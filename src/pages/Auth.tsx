@@ -6,6 +6,7 @@ import { Loader2 } from "lucide-react";
 import { AuthNavbar } from "@/components/AuthNavbar";
 import { TurtleLogo } from "@/components/TurtleLogo";
 import { HowItWorksSection } from "@/components/landing/HowItWorksSection";
+import { FAQSection } from "@/components/landing/FAQSection";
 import { LandingFooter } from "@/components/landing/LandingFooter";
 import { NightCityscape } from "@/components/NightCityscape";
 import { useNativePlatform } from "@/hooks/useNativePlatform";
@@ -82,6 +83,7 @@ const Auth = () => {
       </div>
 
       <HowItWorksSection />
+      <FAQSection />
       <LandingFooter />
     </div>
   );

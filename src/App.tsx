@@ -72,6 +72,8 @@ const Insights = lazy(() => import("./pages/Insights"));
 const BadDay = lazy(() => import("./pages/BadDay"));
 const Diagnoses = lazy(() => import("./pages/Diagnoses"));
 const AskToddy = lazy(() => import("./pages/AskToddy"));
+const Blog = lazy(() => import("./pages/Blog"));
+const BlogPost = lazy(() => import("./pages/BlogPost"));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -132,6 +134,8 @@ const App = () => (
             <Route path="/for-vardgivare" element={<ForCaregivers />} />
             <Route path="/for-anhoriga" element={<ForRelatives />} />
             <Route path="/samarbetspartners" element={<Partners />} />
+            <Route path="/blogg" element={<Blog />} />
+            <Route path="/blogg/:slug" element={<BlogPost />} />
             <Route path="/integritet" element={<PrivacyPolicy />} />
             <Route path="/villkor" element={<TermsOfService />} />
             <Route path="/logga-in" element={<Login />} />
