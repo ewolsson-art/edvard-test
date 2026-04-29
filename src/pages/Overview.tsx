@@ -658,11 +658,14 @@ const Overview = () => {
                       />
                     )}
                     {view === 'year' && (
-                      <YearHeatmap year={currentYear} entries={yearEntries}
-                        medicationDates={yearMedicationDates}
-                        onPrevYear={() => setCurrentYear(prev => prev - 1)}
-                        onNextYear={() => setCurrentYear(prev => prev + 1)}
-                        onMonthClick={handleMonthClick} />
+                      <div className="space-y-8">
+                        <SeasonalPatterns entries={entries} />
+                        <YearHeatmap year={currentYear} entries={yearEntries}
+                          medicationDates={yearMedicationDates}
+                          onPrevYear={() => setCurrentYear(prev => prev - 1)}
+                          onNextYear={() => setCurrentYear(prev => prev + 1)}
+                          onMonthClick={handleMonthClick} />
+                      </div>
                     )}
               </section>
             )}
