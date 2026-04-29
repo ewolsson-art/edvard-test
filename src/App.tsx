@@ -39,6 +39,7 @@ const Signup = lazy(() => import("./pages/Signup"));
 const Overview = lazy(() => import("./pages/Overview"));
 const Settings = lazy(() => import("./pages/Settings"));
 const Medications = lazy(() => import("./pages/Medications"));
+const MedicationCategory = lazy(() => import("./pages/MedicationCategory"));
 const AboutUs = lazy(() => import("./pages/AboutUs"));
 const ForPatients = lazy(() => import("./pages/ForPatients"));
 const ForCaregivers = lazy(() => import("./pages/ForCaregivers"));
