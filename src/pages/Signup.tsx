@@ -265,7 +265,7 @@ const Signup = () => {
                       <path d="M66 38 L60 48" stroke="hsl(var(--background))" strokeWidth="2" strokeLinecap="round" />
                       <circle cx="59" cy="48" r="4" fill="none" stroke="hsl(var(--background))" strokeWidth="2" />
                       {/* Strålkastare riktade framåt åt höger */}
-                      <path d="M116 48 L128 44 L128 53 Z" fill="hsl(var(--primary) / 0.16)" />
+                      <path d="M116 49 L132 45 L132 53 Z" fill="hsl(50 100% 88% / 0.16)" />
                       <ellipse cx="114" cy="49" rx="3" ry="2.3" fill="hsl(50 100% 88%)" />
                       <path d="M18 43 C27 39 37 38 47 39" stroke="hsl(var(--primary-foreground) / 0.22)" strokeWidth="2" strokeLinecap="round" />
                     </svg>
