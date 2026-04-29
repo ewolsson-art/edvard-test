@@ -339,26 +339,11 @@ const Medications = () => {
           />
         )}
 
-        {/* Tabs: tar regelbundet · vid behov · slutat ta */}
+        {/* Lista — styrs av valt kort högst upp (regelbundet · vid behov · slutat ta) */}
         {hasAny && (
-          <Tabs value={tab} onValueChange={(v) => setTab(v as 'regular' | 'asneeded' | 'previous')}>
-            <TabsList className="grid w-full grid-cols-3">
-              <TabsTrigger value="regular" className="gap-1.5 text-[12.5px]">
-                <span aria-hidden="true">🕒</span>
-                <span className="truncate">Regelbundet</span>
-              </TabsTrigger>
-              <TabsTrigger value="asneeded" className="gap-1.5 text-[12.5px]">
-                <span aria-hidden="true">⛑️</span>
-                <span className="truncate">Vid behov</span>
-              </TabsTrigger>
-              <TabsTrigger value="previous" className="gap-1.5 text-[12.5px]">
-                <span aria-hidden="true">🗂️</span>
-                <span className="truncate">Slutat ta</span>
-              </TabsTrigger>
-            </TabsList>
-
-            <TabsContent value="regular" className="space-y-3 mt-4">
-              {currentMedications.length === 0 ? (
+          <div className="space-y-3">
+            {tab === 'regular' && (
+              currentMedications.length === 0 ? (
                 <EmptyState
                   icon={<Pill className="h-10 w-10 text-muted-foreground/50" />}
                   text="Inga regelbundna mediciner"
@@ -368,11 +353,11 @@ const Medications = () => {
                 currentMedications.map(med => (
                   <MedCard key={med.id} med={med} onClick={() => setDetailMed(med)} />
                 ))
-              )}
-            </TabsContent>
+              )
+            )}
 
-            <TabsContent value="asneeded" className="space-y-3 mt-4">
-              {asNeededMedications.length === 0 ? (
+            {tab === 'asneeded' && (
+              asNeededMedications.length === 0 ? (
                 <EmptyState
                   icon={<Pill className="h-10 w-10 text-muted-foreground/50" />}
                   text="Inga vid behov-mediciner"
@@ -382,11 +367,11 @@ const Medications = () => {
                 asNeededMedications.map(med => (
                   <MedCard key={med.id} med={med} onClick={() => setDetailMed(med)} accent="amber" />
                 ))
-              )}
-            </TabsContent>
+              )
+            )}
 
-            <TabsContent value="previous" className="space-y-3 mt-4">
-              {previousMedications.length === 0 ? (
+            {tab === 'previous' && (
+              previousMedications.length === 0 ? (
                 <EmptyState
                   icon={<History className="h-10 w-10 text-muted-foreground/50" />}
                   text="Inga tidigare mediciner registrerade"
@@ -396,9 +381,9 @@ const Medications = () => {
                 previousMedications.map(med => (
                   <MedCard key={med.id} med={med} onClick={() => setDetailMed(med)} accent="muted" />
                 ))
-              )}
-            </TabsContent>
-          </Tabs>
+              )
+            )}
+          </div>
         )}
       </div>
 
