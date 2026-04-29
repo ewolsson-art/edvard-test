@@ -14,7 +14,6 @@ export function AuthNavbar() {
   const navItems = [
     { label: t('nav.aboutUs'), href: '/om-oss' },
     { label: t('nav.howItWorks'), href: '/sa-funkar-det' },
-    { label: 'Blogg', href: '/blogg' },
   ];
 
   const handleNavClick = (href: string) => {
