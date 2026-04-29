@@ -1,4 +1,5 @@
 import { AuthNavbar } from '@/components/AuthNavbar';
+import { SEO } from '@/components/seo/SEO';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 import { Activity, Users, FileText, MessageSquare, Clock, Shield, ArrowRight } from 'lucide-react';
@@ -26,6 +27,7 @@ const ForCaregivers = () => {
 
   return (
     <div className="min-h-screen flex flex-col">
+      <SEO title="För vårdgivare – realtidsinsikt vid bipolär sjukdom | Toddy" description="Få strukturerade rapporter och realtidsinsikt om dina användares mående. Toddy stöttar bättre samtal i vården." path="/for-vardgivare" />
       <AuthNavbar />
       <main className="flex-1 pt-20">
         <section className="py-16 px-4 md:px-8 bg-gradient-to-br from-background via-primary/5 to-background">

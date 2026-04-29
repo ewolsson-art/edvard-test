@@ -1,4 +1,5 @@
 import { AuthNavbar } from '@/components/AuthNavbar';
+import { SEO } from '@/components/seo/SEO';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 import { Heart, Users, Shield, Target, ArrowRight } from 'lucide-react';
@@ -10,6 +11,7 @@ const AboutUs = () => {
 
   return (
     <div className="min-h-screen flex flex-col">
+      <SEO title="Om Toddy – stämningsdagbok byggd för bipolär" description="Vi bygger Toddy för att göra vardagen enklare för personer med bipolär sjukdom och deras nätverk. Läs om vår mission och våra värderingar." path="/om-oss" />
       <AuthNavbar />
       
       <main className="flex-1 pt-20">

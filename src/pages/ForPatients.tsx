@@ -1,4 +1,5 @@
 import { AuthNavbar } from '@/components/AuthNavbar';
+import { SEO } from '@/components/seo/SEO';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 import { CheckCircle, Calendar, TrendingUp, MessageSquare, Pill, Share2, ArrowRight } from 'lucide-react';
@@ -26,6 +27,7 @@ const ForPatients = () => {
 
   return (
     <div className="min-h-screen flex flex-col">
+      <SEO title="För användare – stämningsdagbok vid bipolär sjukdom | Toddy" description="Logga mående, sömn och mediciner. Visualisera mönster och dela tryggt med vården. Toddy är gjord för dig som lever med bipolär sjukdom." path="/for-anvandare" />
       <AuthNavbar />
       <main className="flex-1 pt-20">
         <section className="py-16 px-4 md:px-8 bg-gradient-to-br from-background via-primary/5 to-background">
