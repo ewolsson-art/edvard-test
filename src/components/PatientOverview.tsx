@@ -34,6 +34,7 @@ import { Loader2, ChevronLeft, Radio, Pill, Check, X, Moon, Utensils, Dumbbell, 
 import { OverviewSummary } from '@/components/OverviewSummary';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { PatientPresentation } from '@/components/PatientPresentation';
 
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useTranslation } from 'react-i18next';
@@ -450,20 +451,16 @@ export function PatientOverview({ connection, onBack, hideExtras = false }: Pati
         </button>
       </div>
 
-      {!hideExtras && diagnoses.length > 0 && (
-        <div className="glass-card p-4">
-          <div className="flex items-center gap-3 mb-3">
-            <Stethoscope className="w-5 h-5 text-primary" />
-            <h3 className="font-medium">{t('patientOverview.diagnoses')}</h3>
-          </div>
-          <div className="flex flex-wrap gap-2">
-            {diagnoses.map((diagnosis) => (
-              <Badge key={diagnosis.id} variant="secondary" className="text-sm">
-                {diagnosis.name}
-              </Badge>
-            ))}
-          </div>
-        </div>
+      {!hideExtras && (
+        <PatientPresentation
+          patientName={patientName}
+          diagnoses={diagnoses}
+          activeMedications={activeMedications}
+          inactiveMedications={inactiveMedications}
+          entries={entries}
+          shareMedication={connection.share_medication !== false}
+          shareMood={connection.share_mood !== false}
+        />
       )}
 
       {/* Stats view */}

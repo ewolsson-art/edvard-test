@@ -12,11 +12,14 @@ import {
   Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger,
 } from '@/components/ui/dialog';
 
+import { usePatientsLatestStatus, STATUS_META } from '@/hooks/usePatientsLatestStatus';
+
 const DoctorDashboard = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { toast } = useToast();
   const { approvedConnections, pendingFromPatients, pendingFromDoctor, isLoading, updateConnectionStatus, requestPatientAccess, cancelRequest } = useDoctorConnections();
+  const { statuses } = usePatientsLatestStatus(approvedConnections.map(c => c.patient_id));
   const [requestDialogOpen, setRequestDialogOpen] = useState(false);
   const [patientEmail, setPatientEmail] = useState('');
   const [isRequesting, setIsRequesting] = useState(false);
@@ -53,8 +56,8 @@ const DoctorDashboard = () => {
       <div className="max-w-6xl mx-auto space-y-8">
         <header className="flex items-start justify-between">
           <div>
-            <h1 className="font-display text-3xl md:text-4xl font-bold mb-2">{t('doctorDashboard.myUsers')}</h1>
-            <p className="text-muted-foreground">{t('doctorDashboard.seeOverview')}</p>
+            <h1 className="font-display text-3xl md:text-4xl font-bold mb-2">Mina patienter</h1>
+            <p className="text-muted-foreground">Översikt över patienter som delar sin data med dig.</p>
           </div>
           <Dialog open={requestDialogOpen} onOpenChange={setRequestDialogOpen}>
             <DialogTrigger asChild>
@@ -132,7 +135,10 @@ const DoctorDashboard = () => {
         <section>
           <div className="flex items-center gap-3 mb-6">
             <UserCheck className="w-6 h-6 text-primary" />
-            <h2 className="font-display text-2xl font-semibold">{t('doctorDashboard.approvedUsers')}</h2>
+            <h2 className="font-display text-2xl font-semibold">Patienter</h2>
+            {approvedConnections.length > 0 && (
+              <span className="text-sm text-muted-foreground">({approvedConnections.length})</span>
+            )}
           </div>
           {approvedConnections.length === 0 ? (
             <div className="glass-card p-12 text-center">
@@ -143,24 +149,51 @@ const DoctorDashboard = () => {
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {approvedConnections.map((c) => (
-                <div key={c.id} className="glass-card p-6 cursor-pointer transition-all hover:shadow-lg" onClick={() => navigate(`/patient/${c.patient_id}`)}>
-                  <div className="flex items-start justify-between mb-4">
-                    <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center"><span className="text-lg font-semibold text-primary">{getPatientInitial(c)}</span></div>
-                    <Button size="sm" variant="ghost"><Eye className="w-4 h-4 mr-1" />{t('doctorDashboard.show')}</Button>
+              {approvedConnections.map((c) => {
+                const status = statuses[c.patient_id];
+                const meta = status ? STATUS_META[status.status] : STATUS_META.unknown;
+                const sinceLabel =
+                  status?.daysSince === null || status?.daysSince === undefined
+                    ? 'Ingen incheckning ännu'
+                    : status.daysSince === 0
+                    ? 'Incheckad idag'
+                    : status.daysSince === 1
+                    ? 'Incheckad igår'
+                    : `${status.daysSince} dagar sedan`;
+                return (
+                  <div key={c.id} className="glass-card p-6 cursor-pointer transition-all hover:shadow-lg" onClick={() => navigate(`/patient/${c.patient_id}`)}>
+                    <div className="flex items-start justify-between mb-4">
+                      <div className="relative">
+                        <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
+                          <span className="text-lg font-semibold text-primary">{getPatientInitial(c)}</span>
+                        </div>
+                        <span
+                          className="absolute -bottom-0.5 -right-0.5 w-4 h-4 rounded-full border-2 border-background"
+                          style={{ backgroundColor: meta.color }}
+                          aria-label={meta.label}
+                        />
+                      </div>
+                      <Button size="sm" variant="ghost"><Eye className="w-4 h-4 mr-1" />{t('doctorDashboard.show')}</Button>
+                    </div>
+                    <h3 className="font-semibold mb-1">{getPatientName(c)}</h3>
+                    {c.patient_email && c.patient_profile?.first_name && (
+                      <p className="text-xs text-muted-foreground mb-1 truncate">{c.patient_email}</p>
+                    )}
+                    <p className="text-sm text-muted-foreground mb-3">
+                      <span className="font-medium" style={{ color: meta.color }}>{meta.label}</span>
+                      {' · '}
+                      <span className="text-muted-foreground">{sinceLabel}</span>
+                    </p>
+                    <div className="flex flex-wrap gap-1">
+                      {c.share_mood && <span className="text-xs bg-primary/10 text-primary px-2 py-0.5 rounded">{t('doctorDashboard.mood')}</span>}
+                      {c.share_sleep && <span className="text-xs bg-primary/10 text-primary px-2 py-0.5 rounded">{t('doctorDashboard.sleep')}</span>}
+                      {c.share_eating && <span className="text-xs bg-primary/10 text-primary px-2 py-0.5 rounded">{t('doctorDashboard.diet')}</span>}
+                      {c.share_exercise && <span className="text-xs bg-primary/10 text-primary px-2 py-0.5 rounded">{t('doctorDashboard.exercise')}</span>}
+                      {c.share_medication && <span className="text-xs bg-primary/10 text-primary px-2 py-0.5 rounded">{t('doctorDashboard.medication')}</span>}
+                    </div>
                   </div>
-                  <h3 className="font-semibold mb-1">{getPatientName(c)}</h3>
-                  {c.patient_email && c.patient_profile?.first_name && <p className="text-xs text-muted-foreground mb-1 truncate">{c.patient_email}</p>}
-                  <p className="text-sm text-muted-foreground mb-3">{t('doctorDashboard.connectedSince')} {new Date(c.created_at).toLocaleDateString()}</p>
-                  <div className="flex flex-wrap gap-1">
-                    {c.share_mood && <span className="text-xs bg-primary/10 text-primary px-2 py-0.5 rounded">{t('doctorDashboard.mood')}</span>}
-                    {c.share_sleep && <span className="text-xs bg-primary/10 text-primary px-2 py-0.5 rounded">{t('doctorDashboard.sleep')}</span>}
-                    {c.share_eating && <span className="text-xs bg-primary/10 text-primary px-2 py-0.5 rounded">{t('doctorDashboard.diet')}</span>}
-                    {c.share_exercise && <span className="text-xs bg-primary/10 text-primary px-2 py-0.5 rounded">{t('doctorDashboard.exercise')}</span>}
-                    {c.share_medication && <span className="text-xs bg-primary/10 text-primary px-2 py-0.5 rounded">{t('doctorDashboard.medication')}</span>}
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           )}
         </section>
