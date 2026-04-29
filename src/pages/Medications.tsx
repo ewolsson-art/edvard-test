@@ -230,6 +230,59 @@ const Medications = () => {
           </Button>
         </header>
 
+        {/* Snabb fördelning: nuvarande vs tidigare */}
+        {hasAny && (
+          <div className="grid grid-cols-2 gap-3">
+            <button
+              onClick={() => setTab('current')}
+              className={`text-left rounded-2xl p-4 transition-all ${
+                tab === 'current'
+                  ? 'bg-primary/10 ring-1 ring-primary/30'
+                  : 'bg-foreground/[0.03] hover:bg-foreground/[0.05]'
+              }`}
+            >
+              <div className="flex items-center gap-2 mb-2">
+                <div className="p-1.5 rounded-md bg-primary/15">
+                  <Pill className="h-3.5 w-3.5 text-primary" />
+                </div>
+                <span className="text-[12px] font-medium text-foreground/60">Tar just nu</span>
+              </div>
+              <p className="text-[28px] font-display font-semibold leading-none text-foreground/95">
+                {allCurrent.length}
+              </p>
+              <p className="text-[11px] text-foreground/40 mt-1.5">
+                {allCurrent.length === 0
+                  ? 'Inga aktuella mediciner'
+                  : `${currentMedications.length} dagligen${asNeededMedications.length > 0 ? ` · ${asNeededMedications.length} vid behov` : ''}`}
+              </p>
+            </button>
+
+            <button
+              onClick={() => setTab('previous')}
+              className={`text-left rounded-2xl p-4 transition-all ${
+                tab === 'previous'
+                  ? 'bg-foreground/[0.06] ring-1 ring-foreground/15'
+                  : 'bg-foreground/[0.03] hover:bg-foreground/[0.05]'
+              }`}
+            >
+              <div className="flex items-center gap-2 mb-2">
+                <div className="p-1.5 rounded-md bg-foreground/[0.08]">
+                  <History className="h-3.5 w-3.5 text-foreground/60" />
+                </div>
+                <span className="text-[12px] font-medium text-foreground/60">Har provat</span>
+              </div>
+              <p className="text-[28px] font-display font-semibold leading-none text-foreground/95">
+                {previousMedications.length}
+              </p>
+              <p className="text-[11px] text-foreground/40 mt-1.5">
+                {previousMedications.length === 0
+                  ? 'Lägg till tidigare mediciner'
+                  : 'Värdefull historik för läkaren'}
+              </p>
+            </button>
+          </div>
+        )}
+
         {/* Onboarding info card when empty */}
         {!hasAny && (
           <Card className="glass-card border-primary/20">
