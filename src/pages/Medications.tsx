@@ -170,7 +170,7 @@ const Medications = () => {
   };
 
   const handleSave = async () => {
-    if (!form.name.trim() || !form.dosage.trim()) return;
+    if (!form.name.trim()) return;
     // For previously tested medications, dates are optional — fall back to today so the DB stays valid
     const effectiveStartedAt = form.startedAt || today;
     const indicationValue =
