@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { format } from 'date-fns';
 import { sv, enUS } from 'date-fns/locale';
 import {
-  Pill, Plus, Pencil, Trash2, Check, X, Calendar, CheckCircle2, Clock,
+  Pill, Plus, Pencil, Trash2, Check, X, Calendar,
   AlertTriangle, ThumbsUp, ThumbsDown, Minus, HelpCircle, History, Info, ChevronRight,
   Sparkles, FileText, FlaskConical, ArrowLeft,
 } from 'lucide-react';
@@ -13,7 +13,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
+
 import { useMedications, AddMedicationInput } from '@/hooks/useMedications';
 import {
   MedicationFrequency,
@@ -93,7 +93,7 @@ const Medications = () => {
   const {
     medications, currentMedications, asNeededMedications, previousMedications,
     isLoaded, addMedication, updateMedication, setMedicationStatus,
-    deleteMedication, logMedication, isMedicationTakenOnDate,
+    deleteMedication,
   } = useMedications();
 
   const [tab, setTab] = useState<'current' | 'previous'>('current');
@@ -103,13 +103,6 @@ const Medications = () => {
   const [detailMed, setDetailMed] = useState<Medication | null>(null);
 
   const today = format(new Date(), 'yyyy-MM-dd');
-  const todayLabel = format(new Date(), 'EEEE d MMMM', { locale: dateFnsLocale });
-
-  const dailyMeds = currentMedications;
-  const takenToday = dailyMeds.filter(m => isMedicationTakenOnDate(m.id, today)).length;
-  const totalToday = dailyMeds.length;
-  const progressPercent = totalToday > 0 ? (takenToday / totalToday) * 100 : 0;
-  const allTaken = totalToday > 0 && takenToday === totalToday;
 
   const openAdd = () => {
     setEditingMed(null);
@@ -189,10 +182,6 @@ const Medications = () => {
     setForm(emptyForm());
   };
 
-  const handleToggleTaken = async (medicationId: string) => {
-    const isTaken = isMedicationTakenOnDate(medicationId, today);
-    await logMedication(medicationId, today, !isTaken);
-  };
 
   const formatDate = (dateStr: string | null) => {
     if (!dateStr) return '';
@@ -271,53 +260,6 @@ const Medications = () => {
               </Button>
             </CardContent>
           </Card>
-        )}
-
-        {/* Today's check-in */}
-        {dailyMeds.length > 0 && (
-          <div className="rounded-2xl bg-foreground/[0.03] backdrop-blur-sm overflow-hidden">
-            <div className="p-5 space-y-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className={`p-2.5 rounded-xl ${allTaken ? 'bg-emerald-500/10' : 'bg-foreground/[0.06]'}`}>
-                    {allTaken ? <CheckCircle2 className="h-5 w-5 text-emerald-500" /> : <Clock className="h-5 w-5 text-foreground/40" />}
-                  </div>
-                  <div>
-                    <p className="text-[15px] font-semibold text-foreground/90">Idag</p>
-                    <p className="text-[12px] text-foreground/30 capitalize">{todayLabel}</p>
-                  </div>
-                </div>
-                <span className="text-[12px] font-medium text-foreground/50 px-2.5 py-1 rounded-full bg-foreground/[0.05]">
-                  {takenToday}/{totalToday} tagna
-                </span>
-              </div>
-              <Progress value={progressPercent} className="h-1" />
-              <div className="space-y-1.5">
-                {dailyMeds.map(med => {
-                  const isTaken = isMedicationTakenOnDate(med.id, today);
-                  return (
-                    <button
-                      key={med.id}
-                      onClick={() => handleToggleTaken(med.id)}
-                      className={`w-full flex items-center gap-3 p-3 rounded-xl transition-all text-left ${
-                        isTaken ? 'bg-emerald-500/[0.06]' : 'bg-foreground/[0.03] hover:bg-foreground/[0.05]'
-                      }`}
-                    >
-                      <div className={`flex-shrink-0 w-5 h-5 rounded-full border-2 flex items-center justify-center ${
-                        isTaken ? 'border-emerald-500 bg-emerald-500' : 'border-foreground/20'
-                      }`}>
-                        {isTaken && <Check className="h-3 w-3 text-white" />}
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <p className={`text-[14px] font-medium ${isTaken ? 'text-foreground/40 line-through' : 'text-foreground/85'}`}>{med.name}</p>
-                        <p className="text-[12px] text-foreground/30">{med.dosage}</p>
-                      </div>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-          </div>
         )}
 
         {/* Tidslinje över hela medicineringsresan — visas bara om man har 2+ mediciner */}
