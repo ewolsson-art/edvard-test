@@ -120,14 +120,42 @@ const CompleteProfile = () => {
     const effectiveRoleForDb = storedRole || user?.user_metadata?.role || 'patient';
     await supabase.rpc('assign_initial_role', { _role: effectiveRoleForDb as "patient" | "relative" | "doctor" });
 
+    // Persist pre-signup check-in preferences chosen BEFORE the account existed.
+    // This lets us skip the onboarding step entirely and drop the user straight into the app.
+    const storedPrefsRaw = localStorage.getItem("signup_checkin_prefs");
+    let prefsPayload = {
+      include_mood: true,
+      include_medication: false,
+      include_sleep: false,
+      include_eating: false,
+      include_exercise: false,
+    };
+    if (storedPrefsRaw) {
+      try {
+        const parsed = JSON.parse(storedPrefsRaw);
+        prefsPayload = { ...prefsPayload, ...parsed };
+      } catch {
+        // ignore malformed storage
+      }
+    }
+
+    await supabase
+      .from("user_preferences")
+      .upsert({
+        user_id: user!.id,
+        ...prefsPayload,
+        onboarding_completed: true,
+      }, { onConflict: "user_id" });
+
     localStorage.removeItem("signup_role");
+    localStorage.removeItem("signup_checkin_prefs");
 
     toast({
       title: t("profile.saved"),
       description: t("auth.welcomeToToddy"),
     });
 
-    // Redirect based on role
+    // Redirect based on role — patients go straight to the app (no onboarding step).
     const effectiveRole = storedRole || user?.user_metadata?.role;
     if (effectiveRole === 'relative') {
       window.location.href = "/anhorig-onboarding";
