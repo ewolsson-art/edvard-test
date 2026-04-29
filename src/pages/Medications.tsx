@@ -231,50 +231,66 @@ const Medications = () => {
           </Button>
         </header>
 
-        {/* Snabb fördelning: nuvarande vs tidigare */}
+        {/* Snabb fördelning: regelbundet · vid behov · slutat */}
         {hasAny && (
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-3 gap-2.5">
             <button
-              onClick={() => setTab('current')}
-              className={`group text-left rounded-2xl p-4 transition-all ${
-                tab === 'current'
+              onClick={() => setTab('regular')}
+              className={`group text-left rounded-2xl p-3.5 transition-all ${
+                tab === 'regular'
                   ? 'bg-gradient-to-br from-primary/15 to-primary/5 ring-1 ring-primary/30'
                   : 'bg-foreground/[0.03] hover:bg-foreground/[0.05]'
               }`}
             >
-              <div className="flex items-center gap-2 mb-2">
-                <span className="text-[18px] leading-none transition-transform group-hover:scale-110" aria-hidden="true">💊</span>
-                <span className="text-[12px] font-medium text-foreground/60">Tar just nu</span>
+              <div className="flex items-center gap-1.5 mb-2">
+                <span className="text-[16px] leading-none transition-transform group-hover:scale-110" aria-hidden="true">💊</span>
+                <span className="text-[11px] font-medium text-foreground/60 leading-tight">Tar regelbundet</span>
               </div>
-              <p className="text-[28px] font-display font-semibold leading-none text-foreground/95">
-                {allCurrent.length}
+              <p className="text-[26px] font-display font-semibold leading-none text-foreground/95">
+                {currentMedications.length}
               </p>
-              <p className="text-[11px] text-foreground/40 mt-1.5">
-                {allCurrent.length === 0
-                  ? 'Inga aktuella mediciner'
-                  : `${currentMedications.length} dagligen${asNeededMedications.length > 0 ? ` · ${asNeededMedications.length} vid behov` : ''}`}
+              <p className="text-[10.5px] text-foreground/40 mt-1.5 leading-snug">
+                {currentMedications.length === 0 ? 'Inga dagliga ännu' : 'Dagligen / schema'}
+              </p>
+            </button>
+
+            <button
+              onClick={() => setTab('asneeded')}
+              className={`group text-left rounded-2xl p-3.5 transition-all ${
+                tab === 'asneeded'
+                  ? 'bg-gradient-to-br from-amber-500/15 to-amber-500/5 ring-1 ring-amber-500/30'
+                  : 'bg-foreground/[0.03] hover:bg-foreground/[0.05]'
+              }`}
+            >
+              <div className="flex items-center gap-1.5 mb-2">
+                <span className="text-[16px] leading-none transition-transform group-hover:scale-110" aria-hidden="true">⚡</span>
+                <span className="text-[11px] font-medium text-foreground/60 leading-tight">Vid behov</span>
+              </div>
+              <p className="text-[26px] font-display font-semibold leading-none text-foreground/95">
+                {asNeededMedications.length}
+              </p>
+              <p className="text-[10.5px] text-foreground/40 mt-1.5 leading-snug">
+                {asNeededMedications.length === 0 ? 'Inga vid behov' : 'Vid besvär'}
               </p>
             </button>
 
             <button
               onClick={() => setTab('previous')}
-              className={`group text-left rounded-2xl p-4 transition-all ${
+              className={`group text-left rounded-2xl p-3.5 transition-all ${
                 tab === 'previous'
                   ? 'bg-gradient-to-br from-foreground/[0.08] to-foreground/[0.02] ring-1 ring-foreground/15'
                   : 'bg-foreground/[0.03] hover:bg-foreground/[0.05]'
               }`}
             >
-              <div className="flex items-center gap-2 mb-2">
-                <span className="text-[18px] leading-none transition-transform group-hover:scale-110" aria-hidden="true">📚</span>
-                <span className="text-[12px] font-medium text-foreground/60">Har provat</span>
+              <div className="flex items-center gap-1.5 mb-2">
+                <span className="text-[16px] leading-none transition-transform group-hover:scale-110" aria-hidden="true">📚</span>
+                <span className="text-[11px] font-medium text-foreground/60 leading-tight">Slutat ta</span>
               </div>
-              <p className="text-[28px] font-display font-semibold leading-none text-foreground/95">
+              <p className="text-[26px] font-display font-semibold leading-none text-foreground/95">
                 {previousMedications.length}
               </p>
-              <p className="text-[11px] text-foreground/40 mt-1.5">
-                {previousMedications.length === 0
-                  ? 'Lägg till tidigare mediciner'
-                  : 'Värdefull historik för läkaren'}
+              <p className="text-[10.5px] text-foreground/40 mt-1.5 leading-snug">
+                {previousMedications.length === 0 ? 'Inget testat ännu' : 'Tidigare provade'}
               </p>
             </button>
           </div>
