@@ -472,26 +472,42 @@ export function PatientOverview({ connection, onBack, hideExtras = false }: Pati
 
       {/* Stats view */}
       {showStats && (
-        <OverviewSummary
-          stats={stats}
-          entries={entries}
-          periodLabel={label}
-          sleepBadDays={0}
-          showSleep={false}
-        />
+        <>
+          <OverviewSummary
+            stats={stats}
+            entries={entries}
+            periodLabel={label}
+            sleepBadDays={0}
+            showSleep={false}
+          />
+          <LessonsFromPast entries={entries} characteristics={characteristics} />
+        </>
       )}
 
-      {/* View tabs */}
+      {/* View tabs — same pill style as patient's own Overview */}
       {!showStats && (
         <>
-        <div className="flex items-center gap-4">
-          <Tabs value={view} onValueChange={(v) => setView(v as ViewType)} className="flex-1 max-w-md">
-            <TabsList className="grid w-full grid-cols-3">
-              <TabsTrigger value="week">{t('patientOverview.today')}</TabsTrigger>
-              <TabsTrigger value="month">{t('patientOverview.month')}</TabsTrigger>
-              <TabsTrigger value="year">{t('patientOverview.year')}</TabsTrigger>
+        <div className="flex items-center gap-3">
+          <Tabs value={view} onValueChange={(v) => setView(v as ViewType)} className="flex-1">
+            <TabsList className="inline-flex w-full h-9 bg-muted/80 p-0.5 rounded-full gap-0">
+              <TabsTrigger value="week" className="flex-1 text-xs font-semibold px-2 py-1 rounded-full data-[state=active]:bg-muted-foreground/30 data-[state=active]:text-foreground data-[state=active]:shadow-none">V</TabsTrigger>
+              <TabsTrigger value="month" className="flex-1 text-xs font-semibold px-2 py-1 rounded-full data-[state=active]:bg-muted-foreground/30 data-[state=active]:text-foreground data-[state=active]:shadow-none">M</TabsTrigger>
+              <TabsTrigger value="year" className="flex-1 text-xs font-semibold px-2 py-1 rounded-full data-[state=active]:bg-muted-foreground/30 data-[state=active]:text-foreground data-[state=active]:shadow-none">ÅR</TabsTrigger>
             </TabsList>
           </Tabs>
+          {view === 'month' && (
+            <button
+              onClick={() => {
+                const now = new Date();
+                setCurrentYear(now.getFullYear());
+                setCurrentMonth(new Date(now.getFullYear(), now.getMonth(), 1));
+                setTimeout(() => scrollableCalendarRef.current?.scrollToToday(), 50);
+              }}
+              className="text-sm font-semibold text-primary px-3 py-1 rounded-full border border-primary/30 bg-primary/5 hover:bg-primary/10 transition-colors shrink-0"
+            >
+              Idag
+            </button>
+          )}
         </div>
 
       {/* Stats and calendars based on what's shared */}
