@@ -8,7 +8,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { DarkNightBackground } from "@/components/DarkNightBackground";
-import { TurtleLogo } from "@/components/TurtleLogo";
+import turtleDriving from "@/assets/turtle-driving.png";
 import {
   ArrowRight, ArrowLeft, Loader2, Mail, User, Users, Stethoscope,
   CheckCircle2, Phone, Smartphone, Brain, Pill, Moon, Utensils, Dumbbell,
@@ -218,9 +218,14 @@ const Signup = () => {
               </Link>
               <h1 className="text-2xl md:text-3xl font-bold text-white font-display tracking-tight flex items-center gap-3 flex-wrap">
                 <span>{t("auth.whoAreYou")}</span>
-                <span className="inline-block w-10 h-10 md:w-12 md:h-12 -rotate-12 translate-y-0.5">
-                  <TurtleLogo size="md" animated className="w-full h-full" />
-                </span>
+                <img
+                  src={turtleDriving}
+                  alt=""
+                  width={512}
+                  height={512}
+                  loading="lazy"
+                  className="inline-block w-14 h-14 md:w-16 md:h-16 object-contain -translate-y-0.5"
+                />
               </h1>
               <p className="mt-2 text-sm text-white/40">
                 {t("auth.chooseHowToUse")}
