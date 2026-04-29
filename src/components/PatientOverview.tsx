@@ -34,6 +34,7 @@ import { Loader2, ChevronLeft, Radio, Pill, Check, X, Moon, Utensils, Dumbbell, 
 import { OverviewSummary } from '@/components/OverviewSummary';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { PatientPresentation } from '@/components/PatientPresentation';
 
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useTranslation } from 'react-i18next';
