@@ -218,11 +218,11 @@ const Medications = () => {
         <header className="flex items-start justify-between gap-4">
           <div className="flex-1 space-y-1.5">
             <h2 className="text-[20px] md:text-[22px] font-display font-semibold tracking-tight text-foreground/95 leading-snug">
-              <span className="mr-1.5" aria-hidden="true">💊</span>
+              <span className="mr-1.5" aria-hidden="true">🧭</span>
               Hjälpmedel för att följa och optimera din medicinering
             </h2>
             <p className="text-[13px] text-foreground/45 leading-relaxed">
-              Små steg gör stor skillnad — registrera vad du tar, hur det känns, och se mönster över tid. ✨
+              Små steg gör stor skillnad — registrera vad du tar, hur det känns, och se mönster över tid.
             </p>
           </div>
           <Button onClick={openAdd} className="gap-2 rounded-full shrink-0">
@@ -243,7 +243,7 @@ const Medications = () => {
               }`}
             >
               <div className="flex items-center gap-1.5 mb-2">
-                <span className="text-[16px] leading-none transition-transform group-hover:scale-110" aria-hidden="true">💊</span>
+                <span className="text-[16px] leading-none transition-transform group-hover:scale-110" aria-hidden="true">🌿</span>
                 <span className="text-[11px] font-medium text-foreground/60 leading-tight">Tar regelbundet</span>
               </div>
               <p className="text-[26px] font-display font-semibold leading-none text-foreground/95">
@@ -263,7 +263,7 @@ const Medications = () => {
               }`}
             >
               <div className="flex items-center gap-1.5 mb-2">
-                <span className="text-[16px] leading-none transition-transform group-hover:scale-110" aria-hidden="true">⚡</span>
+                <span className="text-[16px] leading-none transition-transform group-hover:scale-110" aria-hidden="true">⛑️</span>
                 <span className="text-[11px] font-medium text-foreground/60 leading-tight">Vid behov</span>
               </div>
               <p className="text-[26px] font-display font-semibold leading-none text-foreground/95">
@@ -283,7 +283,7 @@ const Medications = () => {
               }`}
             >
               <div className="flex items-center gap-1.5 mb-2">
-                <span className="text-[16px] leading-none transition-transform group-hover:scale-110" aria-hidden="true">📚</span>
+                <span className="text-[16px] leading-none transition-transform group-hover:scale-110" aria-hidden="true">🗂️</span>
                 <span className="text-[11px] font-medium text-foreground/60 leading-tight">Slutat ta</span>
               </div>
               <p className="text-[26px] font-display font-semibold leading-none text-foreground/95">
@@ -302,7 +302,7 @@ const Medications = () => {
             <CardContent className="p-6 space-y-4">
               <div className="flex items-center gap-3">
                 <div className="p-3 rounded-2xl bg-gradient-to-br from-primary/20 to-primary/5 text-[24px] leading-none">
-                  <span aria-hidden="true">💊</span>
+                  <span aria-hidden="true">🌱</span>
                 </div>
                 <div>
                   <h3 className="font-semibold">Bygg din medicin-historik</h3>
@@ -344,15 +344,15 @@ const Medications = () => {
           <Tabs value={tab} onValueChange={(v) => setTab(v as 'regular' | 'asneeded' | 'previous')}>
             <TabsList className="grid w-full grid-cols-3">
               <TabsTrigger value="regular" className="gap-1.5 text-[12.5px]">
-                <span aria-hidden="true">💊</span>
+                <span aria-hidden="true">🌿</span>
                 <span className="truncate">Regelbundet</span>
               </TabsTrigger>
               <TabsTrigger value="asneeded" className="gap-1.5 text-[12.5px]">
-                <span aria-hidden="true">⚡</span>
+                <span aria-hidden="true">⛑️</span>
                 <span className="truncate">Vid behov</span>
               </TabsTrigger>
               <TabsTrigger value="previous" className="gap-1.5 text-[12.5px]">
-                <span aria-hidden="true">📚</span>
+                <span aria-hidden="true">🗂️</span>
                 <span className="truncate">Slutat ta</span>
               </TabsTrigger>
             </TabsList>
