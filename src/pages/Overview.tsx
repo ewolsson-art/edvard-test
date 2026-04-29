@@ -93,6 +93,7 @@ const Overview = () => {
   const { isLoaded: medsLoaded, getMedicationsTakenOnDate, logs, activeMedications } = useMedications();
   const { preferences, loading: prefsLoading } = useUserPreferences();
   const { characteristics } = useCharacteristics();
+  const { user } = useAuth();
 
   // Scroll to today when year view is loaded initially
   useEffect(() => {
