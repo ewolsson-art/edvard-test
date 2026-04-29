@@ -4,15 +4,19 @@ import { useAuth } from "@/hooks/useAuth";
 import { lovable } from "@/integrations/lovable/index";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
-import { AuthNavbar } from "@/components/AuthNavbar";
 import { DarkNightBackground } from "@/components/DarkNightBackground";
-import { ArrowRight, ArrowLeft, Loader2, Mail, User, Users, Stethoscope, CheckCircle2, Phone, Smartphone } from "lucide-react";
+import {
+  ArrowRight, ArrowLeft, Loader2, Mail, User, Users, Stethoscope,
+  CheckCircle2, Phone, Smartphone, Brain, Pill, Moon, Utensils, Dumbbell,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useTranslation } from 'react-i18next';
 
 type AccountRole = "patient" | "relative" | "doctor";
-type Step = "role" | "contact" | "verify-phone" | "email-sent";
+type Step = "role" | "checkin" | "contact" | "verify-phone" | "email-sent";
 
 const roleInfo = {
   patient: {
@@ -35,9 +39,32 @@ const roleInfo = {
   },
 };
 
+const CHECKIN_OPTIONS = [
+  { id: "include_mood", labelKey: "onboarding.mood", descKey: "onboarding.moodDesc", icon: Brain, recommended: true },
+  { id: "include_medication", labelKey: "onboarding.medication", descKey: "onboarding.medicationDesc", icon: Pill },
+  { id: "include_sleep", labelKey: "onboarding.sleep", descKey: "onboarding.sleepDesc", icon: Moon },
+  { id: "include_eating", labelKey: "onboarding.eating", descKey: "onboarding.eatingDesc", icon: Utensils },
+  { id: "include_exercise", labelKey: "onboarding.exercise", descKey: "onboarding.exerciseDesc", icon: Dumbbell },
+] as const;
+
+type CheckinSelections = {
+  include_mood: boolean;
+  include_medication: boolean;
+  include_sleep: boolean;
+  include_eating: boolean;
+  include_exercise: boolean;
+};
+
 const Signup = () => {
   const [step, setStep] = useState<Step>("role");
   const [role, setRole] = useState<AccountRole | null>(null);
+  const [checkinSelections, setCheckinSelections] = useState<CheckinSelections>({
+    include_mood: true,
+    include_medication: false,
+    include_sleep: false,
+    include_eating: false,
+    include_exercise: false,
+  });
   const [contactMethod, setContactMethod] = useState<"email" | "phone">("email");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -54,6 +81,17 @@ const Signup = () => {
       navigate("/");
     }
   }, [user, loading, navigate]);
+
+  const handleToggleCheckin = (id: keyof CheckinSelections) => {
+    setCheckinSelections(prev => ({ ...prev, [id]: !prev[id] }));
+  };
+
+  const hasAnyCheckin = Object.values(checkinSelections).some(Boolean);
+
+  const persistPreSignupData = () => {
+    if (role) localStorage.setItem("signup_role", role);
+    localStorage.setItem("signup_checkin_prefs", JSON.stringify(checkinSelections));
+  };
 
   const handleSendOtp = async () => {
     const value = contactMethod === "email" ? email.trim() : phone.trim();
@@ -80,6 +118,8 @@ const Signup = () => {
       return;
     }
 
+    persistPreSignupData();
+
     setIsSubmitting(true);
     const { error } = await signInWithOtp(value, role!);
 
@@ -102,9 +142,7 @@ const Signup = () => {
   };
 
   const handleSocialLogin = async (provider: "google" | "apple") => {
-    if (role) {
-      localStorage.setItem("signup_role", role);
-    }
+    persistPreSignupData();
     const result = await lovable.auth.signInWithOAuth(provider, {
       redirect_uri: window.location.origin + "/slutfor-profil",
     });
@@ -143,17 +181,17 @@ const Signup = () => {
     );
   }
 
-  const progressWidth = step === "role" ? "50%" : "100%";
+  // Progress: role → checkin → contact (3 visible steps)
+  const progressWidth = step === "role" ? "33%" : step === "checkin" ? "66%" : "100%";
+  const showProgress = step === "role" || step === "checkin" || step === "contact";
 
   return (
     <DarkNightBackground>
-      
-
       <div className="flex flex-1 items-center justify-center px-6 pt-16 pb-8" role="main">
         <div className="w-full max-w-sm">
 
           {/* Subtle progress bar */}
-          {(step === "role" || step === "contact") && (
+          {showProgress && (
             <div className="mb-10 animate-fade-in">
               <div className="h-[2px] w-full bg-white/[0.06] rounded-full overflow-hidden">
                 <div
@@ -232,7 +270,7 @@ const Signup = () => {
               </div>
 
               <Button
-                onClick={() => role && setStep("contact")}
+                onClick={() => role && setStep("checkin")}
                 disabled={!role}
                 className="w-full h-12 rounded-2xl text-[15px] font-semibold bg-[hsl(45_85%_55%)] text-[hsl(230_30%_5%)] hover:bg-[hsl(45_85%_65%)] shadow-[0_4px_20px_-4px_hsl(45_85%_55%/0.4)] hover:shadow-[0_6px_28px_-4px_hsl(45_85%_55%/0.5)] transition-all duration-300 mt-8 group disabled:opacity-30 disabled:shadow-none"
               >
@@ -242,19 +280,108 @@ const Signup = () => {
             </div>
           )}
 
-          {/* Step 2: Contact */}
-          {step === "contact" && (
+          {/* Step 2: Choose check-in categories (BEFORE account creation) */}
+          {step === "checkin" && (
             <div className="animate-fade-in">
-              <button onClick={() => setStep("role")} className="flex items-center gap-1.5 text-sm text-white/30 hover:text-white/60 mb-8 transition-colors">
+              <button
+                onClick={() => setStep("role")}
+                className="inline-flex items-center gap-2 px-4 py-2 -ml-2 mb-8 rounded-full text-sm font-medium text-white/70 hover:text-white hover:bg-white/[0.06] transition-all"
+              >
                 <ArrowLeft className="h-4 w-4" />
                 {t("common.back")}
               </button>
 
               <h1 className="text-2xl md:text-3xl font-bold text-white font-display tracking-tight">
-                {t("auth.signUp")}
+                {t("signup.checkinTitle")}
               </h1>
               <p className="mt-2 text-sm text-white/40">
-                {t("auth.chooseHowToStart")}
+                {t("signup.checkinSubtitle")}
+              </p>
+
+              <div className="mt-6 space-y-2.5">
+                {CHECKIN_OPTIONS.map((option) => {
+                  const Icon = option.icon;
+                  const isChecked = checkinSelections[option.id as keyof CheckinSelections];
+
+                  return (
+                    <div
+                      key={option.id}
+                      className={cn(
+                        "flex items-center gap-3 p-3 rounded-2xl transition-all cursor-pointer",
+                        isChecked
+                          ? "bg-white/[0.06] ring-1 ring-[hsl(45_85%_55%/0.3)]"
+                          : "bg-white/[0.04] ring-1 ring-white/[0.08] hover:ring-white/[0.15]"
+                      )}
+                      onClick={() => handleToggleCheckin(option.id as keyof CheckinSelections)}
+                    >
+                      <Checkbox
+                        id={option.id}
+                        checked={isChecked}
+                        onCheckedChange={() => handleToggleCheckin(option.id as keyof CheckinSelections)}
+                        className="pointer-events-none border-white/20 data-[state=checked]:bg-[hsl(45_85%_55%)] data-[state=checked]:border-[hsl(45_85%_55%)]"
+                      />
+                      <div className={cn(
+                        "p-1.5 rounded-xl transition-colors",
+                        isChecked ? "bg-[hsl(45_85%_55%/0.1)]" : "bg-white/[0.04]"
+                      )}>
+                        <Icon className={cn(
+                          "w-4 h-4 transition-colors",
+                          isChecked ? "text-[hsl(45_85%_55%)]" : "text-white/30"
+                        )} />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <Label
+                          htmlFor={option.id}
+                          className="text-sm font-medium cursor-pointer flex items-center gap-2 text-white"
+                        >
+                          {t(option.labelKey)}
+                          {option.recommended && (
+                            <span className="text-[10px] bg-[hsl(45_85%_55%/0.1)] text-[hsl(45_85%_55%)] px-1.5 py-0.5 rounded-full">
+                              {t("onboarding.recommended")}
+                            </span>
+                          )}
+                        </Label>
+                        <p className="text-xs text-white/30 line-clamp-1">{t(option.descKey)}</p>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+
+              {!hasAnyCheckin && (
+                <p className="text-xs text-red-400/80 text-center mt-3">
+                  {t("onboarding.chooseAtLeastOne")}
+                </p>
+              )}
+
+              <p className="text-xs text-white/20 text-center mt-3">
+                {t("onboarding.canChangeLater")}
+              </p>
+
+              <Button
+                onClick={() => setStep("contact")}
+                disabled={!hasAnyCheckin}
+                className="w-full h-12 rounded-2xl text-[15px] font-semibold bg-[hsl(45_85%_55%)] text-[hsl(230_30%_5%)] hover:bg-[hsl(45_85%_65%)] shadow-[0_4px_20px_-4px_hsl(45_85%_55%/0.4)] hover:shadow-[0_6px_28px_-4px_hsl(45_85%_55%/0.5)] transition-all duration-300 mt-6 group disabled:opacity-30 disabled:shadow-none"
+              >
+                {t("common.continue")}
+                <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+              </Button>
+            </div>
+          )}
+
+          {/* Step 3: Contact (account creation) */}
+          {step === "contact" && (
+            <div className="animate-fade-in">
+              <button onClick={() => setStep("checkin")} className="inline-flex items-center gap-2 px-4 py-2 -ml-2 mb-8 rounded-full text-sm font-medium text-white/70 hover:text-white hover:bg-white/[0.06] transition-all">
+                <ArrowLeft className="h-4 w-4" />
+                {t("common.back")}
+              </button>
+
+              <h1 className="text-2xl md:text-3xl font-bold text-white font-display tracking-tight">
+                {t("signup.saveYourSetupTitle")}
+              </h1>
+              <p className="mt-2 text-sm text-white/40">
+                {t("signup.saveYourSetupSubtitle")}
               </p>
 
               {/* Social login FIRST */}
@@ -323,7 +450,6 @@ const Signup = () => {
                     />
                   </div>
                 )}
-
               </div>
 
               <Button
@@ -411,7 +537,7 @@ const Signup = () => {
           )}
 
           {/* Footer */}
-          {(step === "role" || step === "contact") && (
+          {showProgress && (
             <div className="mt-8 text-center">
               <Link to="/logga-in" className="text-sm text-white/30 hover:text-white/60 transition-colors">
                 {t("auth.hasAccount")} <span className="text-[hsl(45_85%_55%)] font-medium">{t("auth.logIn")}</span>
