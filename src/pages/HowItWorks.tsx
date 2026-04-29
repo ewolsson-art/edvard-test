@@ -1,6 +1,7 @@
 import { AuthNavbar } from "@/components/AuthNavbar";
 import { DarkNightBackground } from "@/components/DarkNightBackground";
 import { LandingFooter } from "@/components/landing/LandingFooter";
+import { SEO } from "@/components/seo/SEO";
 import { CalendarCheck, BarChart3, Share2, Brain, Shield, Bell, ArrowRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from 'react-i18next';

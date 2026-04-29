@@ -1,4 +1,5 @@
 import { AuthNavbar } from '@/components/AuthNavbar';
+import { SEO } from '@/components/seo/SEO';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 import { Heart, Eye, FileText, Bell, Shield, MessageCircle, ArrowRight } from 'lucide-react';
