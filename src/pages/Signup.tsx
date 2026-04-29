@@ -446,10 +446,22 @@ const Signup = () => {
               </button>
 
               <h1 className="text-2xl md:text-3xl font-bold text-white font-display tracking-tight">
-                {t("signup.saveYourSetupTitle")}
+                {t(
+                  role === "doctor"
+                    ? "signup.saveYourSetupTitleDoctor"
+                    : role === "relative"
+                    ? "signup.saveYourSetupTitleRelative"
+                    : "signup.saveYourSetupTitle"
+                )}
               </h1>
               <p className="mt-2 text-sm text-white/40">
-                {t("signup.saveYourSetupSubtitle")}
+                {t(
+                  role === "doctor"
+                    ? "signup.saveYourSetupSubtitleDoctor"
+                    : role === "relative"
+                    ? "signup.saveYourSetupSubtitleRelative"
+                    : "signup.saveYourSetupSubtitle"
+                )}
               </p>
 
               {/* Social login FIRST */}
