@@ -8,7 +8,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { DarkNightBackground } from "@/components/DarkNightBackground";
-import turtleDriving from "@/assets/turtle-driving.png";
+import { TurtleLogo } from "@/components/TurtleLogo";
 import {
   ArrowRight, ArrowLeft, Loader2, Mail, User, Users, Stethoscope,
   CheckCircle2, Phone, Smartphone, Brain, Pill, Moon, Utensils, Dumbbell,
@@ -218,14 +218,35 @@ const Signup = () => {
               </Link>
               <h1 className="text-2xl md:text-3xl font-bold text-white font-display tracking-tight flex items-center gap-3 flex-wrap">
                 <span>{t("auth.whoAreYou")}</span>
-                <img
-                  src={turtleDriving}
-                  alt=""
-                  width={512}
-                  height={512}
-                  loading="lazy"
-                  className="inline-block w-14 h-14 md:w-16 md:h-16 object-contain -translate-y-0.5"
-                />
+                <span className="relative inline-block w-20 h-14 md:w-24 md:h-16 shrink-0" aria-hidden="true">
+                  {/* Bil */}
+                  <svg viewBox="0 0 100 60" className="absolute inset-0 w-full h-full">
+                    {/* Karosseri */}
+                    <path
+                      d="M8 42 Q8 30 22 28 L40 22 Q50 18 62 22 L80 28 Q92 30 92 42 L92 48 Q92 52 88 52 L12 52 Q8 52 8 48 Z"
+                      fill="hsl(45 85% 55%)"
+                    />
+                    {/* Vindruta */}
+                    <path
+                      d="M40 24 Q50 20 60 24 L70 30 L36 30 Z"
+                      fill="hsl(220 50% 85% / 0.4)"
+                      stroke="hsl(45 60% 35%)"
+                      strokeWidth="1"
+                    />
+                    {/* Hjul */}
+                    <circle cx="28" cy="52" r="7" fill="hsl(230 30% 8%)" />
+                    <circle cx="28" cy="52" r="3" fill="hsl(230 20% 40%)" />
+                    <circle cx="72" cy="52" r="7" fill="hsl(230 30% 8%)" />
+                    <circle cx="72" cy="52" r="3" fill="hsl(230 20% 40%)" />
+                    {/* Fartlinjer */}
+                    <path d="M-2 36 L8 36" stroke="white" strokeOpacity="0.5" strokeWidth="2" strokeLinecap="round" />
+                    <path d="M-4 44 L6 44" stroke="white" strokeOpacity="0.3" strokeWidth="2" strokeLinecap="round" />
+                  </svg>
+                  {/* Sköldpadda som förare */}
+                  <span className="absolute left-1/2 -translate-x-1/2 -top-1 w-9 h-9 md:w-11 md:h-11">
+                    <TurtleLogo size="sm" animated className="w-full h-full" />
+                  </span>
+                </span>
               </h1>
               <p className="mt-2 text-sm text-white/40">
                 {t("auth.chooseHowToUse")}
