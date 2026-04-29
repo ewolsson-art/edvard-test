@@ -42,7 +42,7 @@ const Auth = () => {
   return (
     <div className="flex flex-col">
       <SEO
-        title="Toddy – stämningsdagbok för bipolär sjukdom"
+        title="Toddy"
         description="Toddy är en digital stämningsdagbok för dig som lever med bipolär sjukdom. Logga mående, sömn och mediciner – upptäck mönster och dela med vården."
         path="/"
       />
