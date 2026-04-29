@@ -105,7 +105,8 @@ export function LanguageSwitcher({ variant = 'navbar', className }: LanguageSwit
         className="flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-white/70 hover:text-white hover:bg-white/10 rounded-lg transition-all duration-200"
         aria-label={currentLang === 'sv' ? 'Byt språk' : 'Change language'}
       >
-        <span className="text-base">{current.flag}</span>
+        <Globe className="w-4 h-4" />
+        <span className="uppercase tracking-wide text-xs">{currentLang}</span>
         <ChevronDown className={cn("w-3.5 h-3.5 transition-transform", open && "rotate-180")} />
       </button>
       {open && (

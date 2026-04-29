@@ -42,12 +42,6 @@ export function AuthNavbar() {
                   {item.label}
                 </button>
               ))}
-              <button
-                onClick={() => navigate("/skapa-konto")}
-                className="px-4 py-2 text-sm font-medium text-white/70 hover:text-white hover:bg-white/10 rounded-lg transition-all duration-200"
-              >
-                {t('nav.getStarted')}
-              </button>
               <LanguageSwitcher variant="navbar" />
               <button
                 onClick={() => navigate("/logga-in")}
