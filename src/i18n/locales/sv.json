@@ -615,7 +615,7 @@
     "saved": "Profil uppdaterad!",
     "couldNotSave": "Kunde inte spara",
     "user": "Användare",
-    "rolePatient": "Patient",
+    "rolePatient": "Användare",
     "roleDoctor": "Läkare",
     "roleRelative": "Anhörig",
     "medicalInfo": "Medicinsk information",
