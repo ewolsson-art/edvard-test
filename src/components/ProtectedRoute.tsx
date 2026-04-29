@@ -39,11 +39,11 @@ export function ProtectedRoute({ children, skipOnboardingCheck = false }: Protec
     return <Navigate to="/slutfor-profil" replace />;
   }
 
-  // Doctors: Redirect to doctor onboarding if they haven't completed it
+  // Doctors: No onboarding step — patients invite doctors, not the other way around
   if (isDoctor) {
-    // Check if doctor needs onboarding (no preferences record or not completed)
-    if (!skipOnboardingCheck && needsOnboarding && location.pathname !== '/lakare-onboarding') {
-      return <Navigate to="/lakare-onboarding" replace />;
+    // If a doctor lands on the old onboarding route, send them home
+    if (location.pathname === '/lakare-onboarding') {
+      return <Navigate to="/lakare" replace />;
     }
     
     const patientOnlyPaths = ['/', '/oversikt', '/mediciner', '/chatt', '/onboarding', '/anhorig'];
