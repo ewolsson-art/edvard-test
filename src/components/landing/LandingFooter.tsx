@@ -63,9 +63,6 @@ export function LandingFooter() {
             <Link to="/for-anvandare" className="text-sm text-white/50 hover:text-white transition-colors">
               {t('footer.forUsers')}
             </Link>
-            <Link to="/blogg" className="text-sm text-white/50 hover:text-white transition-colors">
-              Blogg
-            </Link>
           </div>
         </div>
         <div className="h-px bg-white/[0.06] mb-5" />
