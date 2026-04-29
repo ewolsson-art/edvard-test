@@ -219,4 +219,28 @@ function formatShort(dateStr: string) {
   try { return format(new Date(dateStr), 'MMM yyyy', { locale: sv }); } catch { return dateStr; }
 }
 
+type EffGroup = {
+  key: 'good' | 'bad' | 'unclear';
+  label: string;
+  dotClass: string;
+  meds: Medication[];
+};
+
+function groupByEffectiveness(meds: Medication[]): EffGroup[] {
+  const good: Medication[] = [];
+  const bad: Medication[] = [];
+  const unclear: Medication[] = [];
+  for (const m of meds) {
+    const e = m.effectiveness;
+    if (e === 'works_well' || e === 'works_partially') good.push(m);
+    else if (e === 'no_effect' || e === 'made_worse') bad.push(m);
+    else unclear.push(m);
+  }
+  return [
+    { key: 'good', label: 'Fungerade bra', dotClass: 'bg-emerald-500', meds: good },
+    { key: 'bad', label: 'Fungerade dåligt', dotClass: 'bg-red-500', meds: bad },
+    { key: 'unclear', label: 'Oklart resultat', dotClass: 'bg-foreground/30', meds: unclear },
+  ];
+}
+
 export default MedicationCategory;
