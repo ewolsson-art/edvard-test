@@ -215,20 +215,14 @@ const Medications = () => {
       </header>
       <div className="p-5 md:p-8">
         <div className="max-w-2xl mx-auto md:mx-0 space-y-8">
-        <header className="flex items-start justify-between gap-4">
-          <div className="flex-1 space-y-1.5">
-            <h2 className="text-[20px] md:text-[22px] font-display font-semibold tracking-tight text-foreground/95 leading-snug">
-              <span className="mr-1.5" aria-hidden="true">🧭</span>
-              Följ och optimera din behandling
-            </h2>
-            <p className="text-[13px] text-foreground/45 leading-relaxed">
-              Små steg gör stor skillnad — registrera vad du tar, hur det känns, och se mönster över tid.
-            </p>
-          </div>
-          <Button onClick={openAdd} className="gap-2 rounded-full shrink-0">
-            <Plus className="h-4 w-4" />
-            <span className="hidden sm:inline">Lägg till</span>
-          </Button>
+        <header className="space-y-1.5">
+          <h2 className="text-[20px] md:text-[22px] font-display font-semibold tracking-tight text-foreground/95 leading-snug">
+            <span className="mr-1.5" aria-hidden="true">🧭</span>
+            Följ och optimera din behandling
+          </h2>
+          <p className="text-[13px] text-foreground/45 leading-relaxed">
+            Små steg gör stor skillnad — registrera vad du tar, hur det känns, och se mönster över tid.
+          </p>
         </header>
 
         {/* Snabb fördelning: regelbundet · vid behov · slutat */}
