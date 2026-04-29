@@ -65,7 +65,7 @@ const DoctorDashboard = () => {
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>
-                <DialogTitle>Bjud in användare att dela sin data med dig</DialogTitle>
+                <DialogTitle>Ange personens mejladress</DialogTitle>
               </DialogHeader>
               <div className="space-y-4 pt-2">
                 <Input id="patientEmail" type="email" placeholder="namn@example.com" value={patientEmail} onChange={(e) => setPatientEmail(e.target.value)} disabled={isRequesting} className="text-base" />
