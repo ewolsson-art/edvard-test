@@ -268,7 +268,7 @@ const Medications = () => {
             </button>
 
             <button
-              onClick={() => setTab('asneeded')}
+              onClick={() => navigate('/mediciner/vid-behov')}
               className={`group text-left rounded-2xl p-3.5 transition-all ${
                 tab === 'asneeded'
                   ? 'bg-gradient-to-br from-amber-500/15 to-amber-500/5 ring-1 ring-amber-500/30'
