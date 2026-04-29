@@ -132,6 +132,10 @@
   },
   "auth": {
     "welcomeBack": "Welcome back",
+    "welcomeBackSubtitle": "Continue your wellbeing journey",
+    "emailLabel": "Email",
+    "passwordLabel": "Password",
+    "secureLogin": "Secure sign-in — encrypted connection",
     "emailVerified": "Your email is verified. Log in to continue.",
     "continueWithGoogle": "Continue with Google",
     "continueWithApple": "Continue with Apple",

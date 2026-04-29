@@ -132,6 +132,10 @@
   },
   "auth": {
     "welcomeBack": "Välkommen tillbaka",
+    "welcomeBackSubtitle": "Fortsätt din mående-resa",
+    "emailLabel": "E-post",
+    "passwordLabel": "Lösenord",
+    "secureLogin": "Säker inloggning – krypterad anslutning",
     "emailVerified": "Din e-post är verifierad. Logga in för att fortsätta.",
     "continueWithGoogle": "Fortsätt med Google",
     "continueWithApple": "Fortsätt med Apple",
