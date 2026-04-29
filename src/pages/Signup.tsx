@@ -245,11 +245,11 @@ const Signup = () => {
                     </svg>
 
                     {/* Sköldpadda-förare — sitter nedsänkt i kupén vid ratten */}
-                    <div className="absolute left-[35%] bottom-[25%] w-[52px] h-[48px] md:w-[58px] md:h-[54px] z-10 overflow-hidden">
+                    <div className="absolute left-[35%] bottom-[13%] w-[52px] h-[52px] md:w-[58px] md:h-[58px] z-10 overflow-hidden">
                       <TurtleLogo
                         size="sm"
                         animated={false}
-                        className="absolute left-1/2 top-1/2 w-[72px] h-[78px] md:w-[80px] md:h-[86px] -translate-x-1/2 -translate-y-[43%] rotate-[3deg]"
+                        className="absolute left-1/2 top-2 w-[72px] h-[78px] md:w-[80px] md:h-[86px] -translate-x-1/2 rotate-[3deg]"
                       />
                     </div>
 
