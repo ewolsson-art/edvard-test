@@ -248,7 +248,7 @@ const Medications = () => {
         {hasAny && (
           <div className="grid grid-cols-3 gap-2.5">
             <button
-              onClick={() => setTab('regular')}
+              onClick={() => navigate('/mediciner/regelbundet')}
               className={`group text-left rounded-2xl p-3.5 transition-all ${
                 tab === 'regular'
                   ? 'bg-gradient-to-br from-primary/15 to-primary/5 ring-1 ring-primary/30'
