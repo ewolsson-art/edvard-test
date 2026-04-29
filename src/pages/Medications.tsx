@@ -1,5 +1,5 @@
-import { useState, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useMemo, useEffect } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { format } from 'date-fns';
 import { sv, enUS } from 'date-fns/locale';
 import {
@@ -101,6 +101,7 @@ const Medications = () => {
   const [editingMed, setEditingMed] = useState<Medication | null>(null);
   const [form, setForm] = useState<MedFormState>(emptyForm());
   const [detailMed, setDetailMed] = useState<Medication | null>(null);
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const today = format(new Date(), 'yyyy-MM-dd');
 
@@ -109,6 +110,24 @@ const Medications = () => {
     setForm(emptyForm());
     setIsFormOpen(true);
   };
+
+  // Handle ?open=<medId> and ?add=1 from category pages
+  useEffect(() => {
+    const openId = searchParams.get('open');
+    const addParam = searchParams.get('add');
+    if (openId && medications.length > 0) {
+      const found = medications.find(m => m.id === openId);
+      if (found) setDetailMed(found);
+      searchParams.delete('open');
+      setSearchParams(searchParams, { replace: true });
+    }
+    if (addParam) {
+      openAdd();
+      searchParams.delete('add');
+      setSearchParams(searchParams, { replace: true });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [medications, searchParams]);
 
   const openEdit = (med: Medication) => {
     setEditingMed(med);
@@ -229,7 +248,7 @@ const Medications = () => {
         {hasAny && (
           <div className="grid grid-cols-3 gap-2.5">
             <button
-              onClick={() => setTab('regular')}
+              onClick={() => navigate('/mediciner/regelbundet')}
               className={`group text-left rounded-2xl p-3.5 transition-all ${
                 tab === 'regular'
                   ? 'bg-gradient-to-br from-primary/15 to-primary/5 ring-1 ring-primary/30'
@@ -249,7 +268,7 @@ const Medications = () => {
             </button>
 
             <button
-              onClick={() => setTab('asneeded')}
+              onClick={() => navigate('/mediciner/vid-behov')}
               className={`group text-left rounded-2xl p-3.5 transition-all ${
                 tab === 'asneeded'
                   ? 'bg-gradient-to-br from-amber-500/15 to-amber-500/5 ring-1 ring-amber-500/30'
@@ -269,7 +288,7 @@ const Medications = () => {
             </button>
 
             <button
-              onClick={() => setTab('previous')}
+              onClick={() => navigate('/mediciner/slutat')}
               className={`group text-left rounded-2xl p-3.5 transition-all ${
                 tab === 'previous'
                   ? 'bg-gradient-to-br from-foreground/[0.08] to-foreground/[0.02] ring-1 ring-foreground/15'
