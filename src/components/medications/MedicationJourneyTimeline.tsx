@@ -6,9 +6,16 @@ import { Medication, EFFECTIVENESS_COLORS, EFFECTIVENESS_LABELS } from '@/types/
 import { useMoodData } from '@/hooks/useMoodData';
 import { MoodType } from '@/types/mood';
 
+interface MoodEntryLite {
+  date: string;
+  mood: MoodType;
+}
+
 interface Props {
   medications: Medication[];
   onSelect: (med: Medication) => void;
+  /** Optional override of entries (used in doctor/relative views with patient data) */
+  entries?: MoodEntryLite[];
 }
 
 const MOOD_SCORE: Record<MoodType, number> = {
