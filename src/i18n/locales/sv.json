@@ -1,4 +1,14 @@
 {
+  "home": {
+    "diagnosisPromptTitle": "Lägg till diagnos",
+    "diagnosisPromptDesc": "Få en in-checkning anpassad efter dig"
+  },
+  "signup": {
+    "checkinTitle": "Vad vill du följa?",
+    "checkinSubtitle": "Vi anpassar din dagliga in-checkning. Du kan ändra detta när som helst.",
+    "saveYourSetupTitle": "Spara din in-checkning",
+    "saveYourSetupSubtitle": "Skapa ett konto för att komma igång — det går snabbt."
+  },
   "common": {
     "save": "Spara",
     "cancel": "Avbryt",
