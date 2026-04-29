@@ -226,47 +226,48 @@ const Signup = () => {
                 <div className="absolute left-0 right-0 bottom-2 h-px bg-white/[0.06]" />
 
                 {/* Rörlig scen */}
-                <div className="turtle-car-scene absolute left-0 bottom-0 w-[88px] h-14 md:w-[104px] md:h-16">
+                <div className="turtle-car-scene absolute left-0 bottom-0 w-[112px] h-[70px] md:w-[132px] md:h-[78px]">
                   <div className="turtle-car-bounce relative w-full h-full">
-                    {/* Sköldpadda-förare — klippt vid midjan så bara huvud + skal syns */}
-                    <div
-                      className="absolute left-[26%] bottom-[34%] w-12 h-12 md:w-14 md:h-14 z-0"
-                      style={{ clipPath: "inset(0 0 38% 0)" }}
-                    >
-                      <TurtleLogo size="sm" animated={false} className="w-full h-full" />
+                    {/* Bilbas bakom föraren */}
+                    <svg viewBox="0 0 120 70" className="absolute inset-0 w-full h-full z-0 pointer-events-none overflow-visible">
+                      <path
+                        d="M5 50 C8 41 19 38 36 37 L49 29 C55 25 65 25 73 31 L84 38 C102 38 114 43 117 54 C118 58 115 61 110 61 L9 61 C3 61 1 56 5 50 Z"
+                        fill="hsl(var(--primary) / 0.92)"
+                      />
+                      <g>
+                        <circle cx="27" cy="61" r="8" fill="hsl(var(--background))" />
+                        <circle cx="27" cy="61" r="3.5" fill="hsl(var(--muted-foreground))" className="turtle-car-wheel" />
+                      </g>
+                      <g>
+                        <circle cx="94" cy="61" r="8" fill="hsl(var(--background))" />
+                        <circle cx="94" cy="61" r="3.5" fill="hsl(var(--muted-foreground))" className="turtle-car-wheel" />
+                      </g>
+                    </svg>
+
+                    {/* Sköldpadda-förare — sitter nedsänkt i kupén vid ratten */}
+                    <div className="absolute left-[35%] bottom-[13%] w-[52px] h-[52px] md:w-[58px] md:h-[58px] z-10 overflow-hidden">
+                      <TurtleLogo
+                        size="sm"
+                        animated={false}
+                        className="absolute left-1/2 top-2 w-[72px] h-[78px] md:w-[80px] md:h-[86px] -translate-x-1/2 rotate-[3deg]"
+                      />
                     </div>
 
-                    {/* Bil (karosseri ovanpå föraren) */}
-                    <svg viewBox="0 0 120 70" className="absolute inset-0 w-full h-full z-10 pointer-events-none overflow-visible">
-                      {/* Underrede */}
+                    {/* Dörr, sarg, ratt och front ovanpå föraren för sittande effekt */}
+                    <svg viewBox="0 0 120 70" className="absolute inset-0 w-full h-full z-20 pointer-events-none overflow-visible">
+                      <path d="M50 31 C56 28 64 29 70 36 L49 37 Z" fill="hsl(var(--background) / 0.36)" />
                       <path
-                        d="M4 52 L116 52 Q120 60 114 62 L6 62 Q0 62 4 54 Z"
-                        fill="hsl(45 70% 42%)"
+                        d="M7 49 C13 43 25 41 38 41 L84 41 C101 41 111 45 116 54 C117 58 114 61 109 61 L9 61 C3 61 1 55 7 49 Z"
+                        fill="hsl(var(--primary))"
                       />
-                      {/* Bakre karosseri (kort, bakom förarens rygg) */}
-                      <path
-                        d="M6 52 Q6 40 18 38 L36 36 L36 52 Z"
-                        fill="hsl(45 85% 55%)"
-                      />
-                      {/* Motorhuv (framför föraren, lutande nedåt) */}
-                      <path
-                        d="M62 38 L82 36 Q108 36 114 52 L62 52 Z"
-                        fill="hsl(45 85% 55%)"
-                      />
-                      {/* Strålkastare */}
-                      <ellipse cx="111" cy="46" rx="2.5" ry="2" fill="hsl(50 100% 88%)" />
-                      {/* Ratt */}
-                      <circle cx="52" cy="44" r="2.5" fill="hsl(230 30% 10%)" />
-                      {/* Bakhjul */}
-                      <g>
-                        <circle cx="26" cy="62" r="7" fill="hsl(230 30% 8%)" />
-                        <circle cx="26" cy="62" r="3" fill="hsl(230 20% 30%)" className="turtle-car-wheel" />
-                      </g>
-                      {/* Framhjul */}
-                      <g>
-                        <circle cx="94" cy="62" r="7" fill="hsl(230 30% 8%)" />
-                        <circle cx="94" cy="62" r="3" fill="hsl(230 20% 30%)" className="turtle-car-wheel" />
-                      </g>
+                      <path d="M40 41 L48 31 C55 26 66 27 74 38" stroke="hsl(var(--primary-foreground) / 0.28)" strokeWidth="2" strokeLinecap="round" fill="none" />
+                      {/* Ratt nära föraren */}
+                      <path d="M66 38 L60 48" stroke="hsl(var(--background))" strokeWidth="2" strokeLinecap="round" />
+                      <circle cx="59" cy="48" r="4" fill="none" stroke="hsl(var(--background))" strokeWidth="2" />
+                      {/* Strålkastare riktade framåt åt höger */}
+                      <path d="M116 49 L132 45 L132 53 Z" fill="hsl(50 100% 88% / 0.16)" />
+                      <ellipse cx="114" cy="49" rx="3" ry="2.3" fill="hsl(50 100% 88%)" />
+                      <path d="M18 43 C27 39 37 38 47 39" stroke="hsl(var(--primary-foreground) / 0.22)" strokeWidth="2" strokeLinecap="round" />
                     </svg>
 
                     {/* Fartlinjer bakom bilen */}
