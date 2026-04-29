@@ -249,7 +249,7 @@ const Signup = () => {
                       <TurtleLogo
                         size="sm"
                         animated={false}
-                        className="absolute left-1/2 top-2 w-[72px] h-[78px] md:w-[80px] md:h-[86px] -translate-x-1/2 rotate-[14deg] translate-x-[3px]"
+                        className="absolute left-1/2 top-2 w-[72px] h-[78px] md:w-[80px] md:h-[86px] translate-x-[calc(-50%+3px)] rotate-[14deg]"
                       />
                     </div>
 
