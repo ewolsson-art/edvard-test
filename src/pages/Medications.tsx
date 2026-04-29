@@ -344,13 +344,6 @@ const Medications = () => {
           </Card>
         )}
 
-        {/* Tidslinje över hela medicineringsresan — visas bara om man har 2+ mediciner */}
-        {medications.length >= 2 && (
-          <MedicationJourneyTimeline
-            medications={medications}
-            onSelect={(m) => setDetailMed(m)}
-          />
-        )}
 
       </div>
 
