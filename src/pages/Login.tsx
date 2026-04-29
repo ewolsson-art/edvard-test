@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 
 import { DarkNightBackground } from "@/components/DarkNightBackground";
-import { Eye, EyeOff, Loader2, Mail, CheckCircle2, Lock, ShieldCheck } from "lucide-react";
+import { Eye, EyeOff, Loader2, Mail, CheckCircle2, Lock, ShieldCheck, ArrowLeft } from "lucide-react";
 import { TurtleLogo } from "@/components/TurtleLogo";
 import { useTranslation } from 'react-i18next';
 
