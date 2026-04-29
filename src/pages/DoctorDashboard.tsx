@@ -144,8 +144,7 @@ const DoctorDashboard = () => {
             <div className="bg-foreground/[0.03] backdrop-blur-sm rounded-2xl p-12 text-center">
               <Users className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
               <h3 className="text-lg font-medium mb-2">{t('doctorDashboard.noUsersYet')}</h3>
-              <p className="text-muted-foreground mb-4">{t('doctorDashboard.requestAccessOrWait')}</p>
-              <Button onClick={() => setRequestDialogOpen(true)} variant="outline" className="gap-2"><UserPlus className="w-4 h-4" />{t('doctorDashboard.requestAccess')}</Button>
+              <p className="text-muted-foreground">{t('doctorDashboard.requestAccessOrWait')}</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
