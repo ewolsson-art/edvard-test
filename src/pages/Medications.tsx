@@ -353,288 +353,75 @@ const Medications = () => {
           <DialogHeader>
             <DialogTitle>{editingMed ? 'Redigera medicin' : 'Lägg till medicin'}</DialogTitle>
             <DialogDescription>
-              Fyll i så mycket eller lite du vill. Du kan alltid uppdatera senare.
+              Bara namnet behövs för att komma igång — du kan fylla på senare.
             </DialogDescription>
           </DialogHeader>
 
           <div className="space-y-5 py-2">
-            {/* Step 1: Status */}
-            <div className="space-y-2">
-              <Label className="flex items-center gap-1.5 text-sm">
-                <span className="flex items-center justify-center w-5 h-5 rounded-full bg-primary/10 text-primary text-xs font-bold">1</span>
-                Tar du den nu eller har du testat den?
-              </Label>
-              <div className="grid grid-cols-2 gap-2">
-                {(['current', 'previous'] as MedicationStatus[]).map(s => (
-                  <button
-                    key={s}
-                    type="button"
-                    onClick={() => setForm(f => ({ ...f, status: s }))}
-                    className={`p-3 rounded-lg border-2 text-sm font-medium transition-all ${
-                      form.status === s ? 'border-primary bg-primary/10 text-primary' : 'border-border bg-muted/30 hover:border-primary/30'
-                    }`}
-                  >
-                    {STATUS_LABELS[s]}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Step 2: Basic info */}
-            <div className="space-y-3">
-              <Label className="flex items-center gap-1.5 text-sm">
-                <span className="flex items-center justify-center w-5 h-5 rounded-full bg-primary/10 text-primary text-xs font-bold">2</span>
-                Grunduppgifter
-              </Label>
-              <div className="space-y-2">
-                <Input
-                  placeholder="Namn (t.ex. Lamotrigin)"
-                  value={form.name}
-                  onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
-                />
-                <Input
-                  placeholder="Dosering (t.ex. 100mg morgon & kväll)"
-                  value={form.dosage}
-                  onChange={e => setForm(f => ({ ...f, dosage: e.target.value }))}
-                />
-                <div className="space-y-1.5">
-                  <Label className="text-xs text-muted-foreground">
-                    Vad tar du den mot? <span className="opacity-60">(valfritt)</span>
-                  </Label>
-                  <div className="flex flex-wrap gap-1.5">
-                    {COMMON_INDICATIONS.map(ind => {
-                      const selected = form.indication === ind;
-                      return (
-                        <button
-                          key={ind}
-                          type="button"
-                          onClick={() => setForm(f => ({ ...f, indication: selected ? '' : ind, customIndication: ind === 'Annat' ? f.customIndication : '' }))}
-                          className={`px-3 py-1.5 rounded-full text-xs border transition-all ${
-                            selected
-                              ? 'bg-primary/15 border-primary/40 text-primary'
-                              : 'border-border bg-muted/30 hover:border-primary/30'
-                          }`}
-                        >
-                          {selected && <Check className="h-3 w-3 inline mr-1" />}
-                          {ind}
-                        </button>
-                      );
-                    })}
-                  </div>
-                  {form.indication === 'Annat' && (
-                    <Input
-                      placeholder="Skriv vad medicinen tas mot"
-                      value={form.customIndication}
-                      onChange={e => setForm(f => ({ ...f, customIndication: e.target.value }))}
-                      className="mt-2"
-                    />
-                  )}
-                </div>
-                <div className="grid grid-cols-2 gap-2">
-                  <div>
-                    <Label className="text-xs text-muted-foreground">
-                      Startade {form.status === 'previous' && <span className="opacity-60">(valfritt)</span>}
-                    </Label>
-                    <Input
-                      type="date"
-                      value={form.startedAt}
-                      onChange={e => setForm(f => ({ ...f, startedAt: e.target.value }))}
-                    />
-                  </div>
-                  <div>
-                    <Label className="text-xs text-muted-foreground">
-                      Slutade {form.status === 'previous' && <span className="opacity-60">(valfritt)</span>}
-                      {form.status !== 'previous' && <span className="opacity-60">(valfritt)</span>}
-                    </Label>
-                    <Input
-                      type="date"
-                      value={form.stoppedAt}
-                      onChange={e => setForm(f => ({ ...f, stoppedAt: e.target.value }))}
-                    />
-                  </div>
-                </div>
-                {form.status === 'previous' && (
-                  <div className="flex flex-wrap gap-1.5 pt-1">
-                    <p className="text-xs text-muted-foreground w-full">Kommer du inte ihåg datum? Välj en grov uppskattning:</p>
-                    {[
-                      { label: 'Senaste året', months: 12 },
-                      { label: '1–2 år sedan', months: 18 },
-                      { label: '2–5 år sedan', months: 42 },
-                      { label: 'Mer än 5 år sedan', months: 72 },
-                      { label: 'Vet ej', months: null },
-                    ].map(opt => (
-                      <button
-                        key={opt.label}
-                        type="button"
-                        onClick={() => {
-                          if (opt.months === null) {
-                            setForm(f => ({ ...f, startedAt: '', stoppedAt: '' }));
-                          } else {
-                            const d = new Date();
-                            d.setMonth(d.getMonth() - opt.months);
-                            setForm(f => ({ ...f, startedAt: format(d, 'yyyy-MM-dd'), stoppedAt: '' }));
-                          }
-                        }}
-                        className="px-3 py-1.5 rounded-full text-xs border border-border bg-muted/30 hover:border-primary/30 transition-all"
-                      >
-                        {opt.label}
-                      </button>
-                    ))}
-                  </div>
-                )}
-                <div>
-                  <Label className="text-xs text-muted-foreground">Hur ofta</Label>
-                  <Select value={form.frequency} onValueChange={(v) => setForm(f => ({ ...f, frequency: v as MedicationFrequency }))}>
-                    <SelectTrigger><SelectValue /></SelectTrigger>
-                    <SelectContent>
-                      {Object.entries(FREQUENCY_LABELS).map(([value, label]) => (
-                        <SelectItem key={value} value={value}>{label}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                {/* Trial / regular medication toggle */}
-                <button
-                  type="button"
-                  onClick={() => setForm(f => ({ ...f, isTrial: !f.isTrial }))}
-                  className={`w-full flex items-start gap-3 p-3 rounded-lg border-2 text-left transition-all ${
-                    form.isTrial
-                      ? 'border-amber-500/40 bg-amber-500/10'
-                      : 'border-border bg-muted/30 hover:border-amber-500/30'
-                  }`}
-                >
-                  <div className={`mt-0.5 flex-shrink-0 w-5 h-5 rounded border-2 flex items-center justify-center ${
-                    form.isTrial ? 'border-amber-500 bg-amber-500' : 'border-muted-foreground/40'
-                  }`}>
-                    {form.isTrial && <Check className="h-3 w-3 text-white" />}
-                  </div>
-                  <div className="flex-1">
-                    <div className="flex items-center gap-1.5">
-                      <FlaskConical className="h-4 w-4 text-amber-600 dark:text-amber-400" />
-                      <span className="text-sm font-medium">Provmedicin (nyinsatt / under utvärdering)</span>
-                    </div>
-                    <p className="text-xs text-muted-foreground mt-0.5">
-                      Markera om detta är en medicin du provar – så hålls den isär från dina grundmediciner när du rapporterar biverkningar.
-                    </p>
-                  </div>
-                </button>
-              </div>
-            </div>
-
-            {/* Step 3: Effectiveness */}
-            <div className="space-y-2">
-              <Label className="flex items-center gap-1.5 text-sm">
-                <span className="flex items-center justify-center w-5 h-5 rounded-full bg-primary/10 text-primary text-xs font-bold">3</span>
-                Hur fungerar/fungerade den för dig?
-              </Label>
-              <div className="grid grid-cols-2 gap-2">
-                {(Object.keys(EFFECTIVENESS_LABELS) as MedicationEffectiveness[]).map(eff => (
-                  <button
-                    key={eff}
-                    type="button"
-                    onClick={() => setForm(f => ({ ...f, effectiveness: f.effectiveness === eff ? '' : eff }))}
-                    className={`flex items-center gap-2 p-2.5 rounded-lg border text-sm transition-all text-left ${
-                      form.effectiveness === eff
-                        ? EFFECTIVENESS_COLORS[eff] + ' border-2'
-                        : 'border-border bg-muted/30 hover:bg-muted/60'
-                    }`}
-                  >
-                    {EFFECTIVENESS_ICONS[eff]}
-                    <span className="text-xs">{EFFECTIVENESS_LABELS[eff]}</span>
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Step 4: Side effects */}
-            <div className="space-y-2">
-              <Label className="flex items-center gap-1.5 text-sm">
-                <span className="flex items-center justify-center w-5 h-5 rounded-full bg-primary/10 text-primary text-xs font-bold">4</span>
-                Biverkningar du upplever/upplevde
-              </Label>
-              <p className="text-xs text-muted-foreground">Tryck på de som stämmer, eller skriv egna.</p>
-              <div className="flex flex-wrap gap-1.5">
-                {COMMON_SIDE_EFFECTS.map(effect => {
-                  const selected = form.sideEffects.includes(effect);
-                  return (
-                    <button
-                      key={effect}
-                      type="button"
-                      onClick={() => toggleSideEffect(effect)}
-                      className={`px-3 py-1.5 rounded-full text-xs border transition-all ${
-                        selected
-                          ? 'bg-amber-500/15 border-amber-500/40 text-amber-600 dark:text-amber-400'
-                          : 'border-border bg-muted/30 hover:border-amber-500/30'
-                      }`}
-                    >
-                      {selected && <Check className="h-3 w-3 inline mr-1" />}
-                      {effect}
-                    </button>
-                  );
-                })}
-              </div>
-              {form.sideEffects.filter(s => !COMMON_SIDE_EFFECTS.includes(s)).length > 0 && (
-                <div className="flex flex-wrap gap-1.5 pt-1">
-                  {form.sideEffects.filter(s => !COMMON_SIDE_EFFECTS.includes(s)).map(s => (
-                    <Badge key={s} variant="secondary" className="gap-1">
-                      {s}
-                      <button onClick={() => toggleSideEffect(s)}><X className="h-3 w-3" /></button>
-                    </Badge>
-                  ))}
-                </div>
-              )}
-              <div className="flex gap-2 pt-1">
-                <Input
-                  placeholder="Lägg till egen biverkning"
-                  value={form.customSideEffect}
-                  onChange={e => setForm(f => ({ ...f, customSideEffect: e.target.value }))}
-                  onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); addCustomSideEffect(); }}}
-                />
-                <Button type="button" variant="outline" size="sm" onClick={addCustomSideEffect}>
-                  <Plus className="h-4 w-4" />
-                </Button>
-              </div>
-            </div>
-
-            {/* Step 5: Reason for stopping (only when 'previous') */}
-            {form.status === 'previous' && (
-              <div className="space-y-2 p-3 rounded-lg border border-border bg-muted/30">
-                <Label className="flex items-center gap-1.5 text-sm">
-                  <span className="flex items-center justify-center w-5 h-5 rounded-full bg-primary/10 text-primary text-xs font-bold">5</span>
-                  Varför slutade du?
-                </Label>
-                <p className="text-xs text-muted-foreground">Slutdatum fyller du i ovan under Grunduppgifter.</p>
-                <Textarea
-                  placeholder="Orsak (t.ex. för biverkningar, byttes ut, ingen effekt)"
-                  value={form.stopReason}
-                  onChange={e => setForm(f => ({ ...f, stopReason: e.target.value }))}
-                  className="min-h-[60px]"
-                />
-              </div>
-            )}
-
-            {/* Notes */}
-            <div className="space-y-2">
-              <Label className="flex items-center gap-1.5 text-sm">
-                <FileText className="h-4 w-4 text-muted-foreground" />
-                Egna anteckningar (valfritt)
-              </Label>
-              <Textarea
-                placeholder="Allt du vill komma ihåg om denna medicin"
-                value={form.notes}
-                onChange={e => setForm(f => ({ ...f, notes: e.target.value }))}
-                className="min-h-[70px]"
+            {/* Namn */}
+            <div className="space-y-1.5">
+              <Label className="text-sm">Namn</Label>
+              <Input
+                placeholder="t.ex. Lamotrigin"
+                value={form.name}
+                onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
+                className="text-base"
+                autoFocus
               />
             </div>
+
+            {/* Dosering */}
+            <div className="space-y-1.5">
+              <Label className="text-sm">
+                Dosering <span className="text-muted-foreground font-normal">(valfritt)</span>
+              </Label>
+              <Input
+                placeholder="t.ex. 100mg morgon & kväll"
+                value={form.dosage}
+                onChange={e => setForm(f => ({ ...f, dosage: e.target.value }))}
+                className="text-base"
+              />
+            </div>
+
+            {/* Startdatum */}
+            <div className="space-y-1.5">
+              <Label className="text-sm">
+                Startade <span className="text-muted-foreground font-normal">(valfritt)</span>
+              </Label>
+              <Input
+                type="date"
+                value={form.startedAt}
+                onChange={e => setForm(f => ({ ...f, startedAt: e.target.value }))}
+                className="text-base"
+              />
+            </div>
+
+            {/* Hur ofta */}
+            <div className="space-y-1.5">
+              <Label className="text-sm">
+                Hur ofta <span className="text-muted-foreground font-normal">(valfritt)</span>
+              </Label>
+              <Select value={form.frequency} onValueChange={(v) => setForm(f => ({ ...f, frequency: v as MedicationFrequency }))}>
+                <SelectTrigger className="text-base"><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  {Object.entries(FREQUENCY_LABELS).map(([value, label]) => (
+                    <SelectItem key={value} value={value}>{label}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <p className="text-xs text-muted-foreground pt-1">
+              💡 Du kan lägga till biverkningar, effekt och anteckningar senare genom att klicka på medicinen.
+            </p>
           </div>
 
           <DialogFooter className="gap-2">
             <Button variant="outline" onClick={() => { setIsFormOpen(false); setEditingMed(null); }}>
               Avbryt
             </Button>
-            <Button onClick={handleSave} disabled={!form.name.trim() || !form.dosage.trim()}>
-              {editingMed ? 'Spara ändringar' : 'Lägg till'}
+            <Button onClick={handleSave} disabled={!form.name.trim()} className="rounded-full">
+              {editingMed ? 'Spara' : 'Lägg till'}
             </Button>
           </DialogFooter>
         </DialogContent>
