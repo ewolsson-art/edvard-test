@@ -339,43 +339,49 @@ const Medications = () => {
           />
         )}
 
-        {/* Tabs current vs previous */}
+        {/* Tabs: tar regelbundet · vid behov · slutat ta */}
         {hasAny && (
-          <Tabs value={tab} onValueChange={(v) => setTab(v as 'current' | 'previous')}>
-            <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="current" className="gap-2">
+          <Tabs value={tab} onValueChange={(v) => setTab(v as 'regular' | 'asneeded' | 'previous')}>
+            <TabsList className="grid w-full grid-cols-3">
+              <TabsTrigger value="regular" className="gap-1.5 text-[12.5px]">
                 <span aria-hidden="true">💊</span>
-                Aktuella ({allCurrent.length})
+                <span className="truncate">Regelbundet</span>
               </TabsTrigger>
-              <TabsTrigger value="previous" className="gap-2">
+              <TabsTrigger value="asneeded" className="gap-1.5 text-[12.5px]">
+                <span aria-hidden="true">⚡</span>
+                <span className="truncate">Vid behov</span>
+              </TabsTrigger>
+              <TabsTrigger value="previous" className="gap-1.5 text-[12.5px]">
                 <span aria-hidden="true">📚</span>
-                Har testat ({previousMedications.length})
+                <span className="truncate">Slutat ta</span>
               </TabsTrigger>
             </TabsList>
 
-            <TabsContent value="current" className="space-y-3 mt-4">
-              {allCurrent.length === 0 ? (
+            <TabsContent value="regular" className="space-y-3 mt-4">
+              {currentMedications.length === 0 ? (
                 <EmptyState
                   icon={<Pill className="h-10 w-10 text-muted-foreground/50" />}
-                  text="Inga aktuella mediciner"
-                  hint="Lägg till en medicin du tar just nu."
+                  text="Inga regelbundna mediciner"
+                  hint="Lägg till en medicin du tar dagligen eller på schema."
                 />
               ) : (
-                <>
-                  {currentMedications.map(med => (
-                    <MedCard key={med.id} med={med} onClick={() => setDetailMed(med)} />
-                  ))}
-                  {asNeededMedications.length > 0 && (
-                    <div className="pt-2">
-                      <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-2 px-1">
-                        Vid behov
-                      </p>
-                      {asNeededMedications.map(med => (
-                        <MedCard key={med.id} med={med} onClick={() => setDetailMed(med)} accent="amber" />
-                      ))}
-                    </div>
-                  )}
-                </>
+                currentMedications.map(med => (
+                  <MedCard key={med.id} med={med} onClick={() => setDetailMed(med)} />
+                ))
+              )}
+            </TabsContent>
+
+            <TabsContent value="asneeded" className="space-y-3 mt-4">
+              {asNeededMedications.length === 0 ? (
+                <EmptyState
+                  icon={<Pill className="h-10 w-10 text-muted-foreground/50" />}
+                  text="Inga vid behov-mediciner"
+                  hint="Lägg till mediciner du tar vid besvär (t.ex. ångest, sömnbesvär)."
+                />
+              ) : (
+                asNeededMedications.map(med => (
+                  <MedCard key={med.id} med={med} onClick={() => setDetailMed(med)} accent="amber" />
+                ))
               )}
             </TabsContent>
 
@@ -384,7 +390,7 @@ const Medications = () => {
                 <EmptyState
                   icon={<History className="h-10 w-10 text-muted-foreground/50" />}
                   text="Inga tidigare mediciner registrerade"
-                  hint="Lägg till mediciner du har testat förut – det hjälper läkaren att se vad som fungerat eller inte."
+                  hint="Lägg till mediciner du har testat men slutat ta – det hjälper läkaren att se vad som fungerat eller inte."
                 />
               ) : (
                 previousMedications.map(med => (
