@@ -703,7 +703,12 @@ const Medications = () => {
                   {detailMed.stopped_at && <InfoRow label="Slutade" value={formatDate(detailMed.stopped_at)} />}
                 </div>
 
-                {detailMed.effectiveness && (
+                {/* Grafiska insikter: mående + biverkningar under medicinens period */}
+                <div className="pt-2 border-t border-border/40">
+                  <MedicationInsights med={detailMed} />
+                </div>
+
+
                   <div className="space-y-1.5">
                     <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Effekt</p>
                     <div className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full border text-sm ${EFFECTIVENESS_COLORS[detailMed.effectiveness]}`}>
