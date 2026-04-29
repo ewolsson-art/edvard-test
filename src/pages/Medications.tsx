@@ -93,7 +93,7 @@ const Medications = () => {
   const {
     medications, currentMedications, asNeededMedications, previousMedications,
     isLoaded, addMedication, updateMedication, setMedicationStatus,
-    deleteMedication, logMedication, isMedicationTakenOnDate,
+    deleteMedication,
   } = useMedications();
 
   const [tab, setTab] = useState<'current' | 'previous'>('current');
