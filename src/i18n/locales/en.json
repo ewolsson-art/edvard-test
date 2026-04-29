@@ -610,7 +610,7 @@
     "saved": "Profile updated!",
     "couldNotSave": "Could not save",
     "user": "User",
-    "rolePatient": "Patient",
+    "rolePatient": "User",
     "roleDoctor": "Doctor",
     "roleRelative": "Relative",
     "medicalInfo": "Medical information",
