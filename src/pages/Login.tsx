@@ -110,7 +110,6 @@ const Login = () => {
               ← Toddy
             </Link>
           </div>
-        <div className="w-full max-w-sm">
 
           {/* Mascot + heading */}
           <div className="flex flex-col items-center text-center animate-fade-in">
