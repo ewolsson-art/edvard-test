@@ -459,8 +459,9 @@ export function PatientOverview({ connection, onBack, hideExtras = false }: Pati
       </div>
 
       {!hideExtras && (
-        <PatientPresentation
+        <PatientProfileCard
           patientName={patientName}
+          patientEmail={connection.patient_email}
           diagnoses={diagnoses}
           activeMedications={activeMedications}
           inactiveMedications={inactiveMedications}
