@@ -320,6 +320,14 @@ const Medications = () => {
           </div>
         )}
 
+        {/* Tidslinje över hela medicineringsresan — visas bara om man har 2+ mediciner */}
+        {medications.length >= 2 && (
+          <MedicationJourneyTimeline
+            medications={medications}
+            onSelect={(m) => setDetailMed(m)}
+          />
+        )}
+
         {/* Tabs current vs previous */}
         {hasAny && (
           <Tabs value={tab} onValueChange={(v) => setTab(v as 'current' | 'previous')}>
