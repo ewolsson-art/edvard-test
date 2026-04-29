@@ -219,7 +219,7 @@ export default function AskToddy() {
               <div className="max-w-md mx-auto mt-8 p-3.5 rounded-xl bg-muted/30 border border-border/30 flex items-start gap-2.5 text-left">
                 <AlertTriangle className="w-4 h-4 text-muted-foreground/70 shrink-0 mt-0.5" />
                 <p className="text-[12px] text-muted-foreground leading-relaxed">
-                  Toddy ger inga råd och tolkar inte ditt mående — bara siffror från din egen data. Vid akut psykisk ohälsa, ring 1177 eller 112.
+                  Toddy ger inga medicinska råd eller prognoser — bara siffror och mönster från din egen data. Vid akut psykisk ohälsa, ring 1177 eller 112.
                 </p>
               </div>
             </div>
