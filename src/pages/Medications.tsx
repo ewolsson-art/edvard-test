@@ -222,7 +222,7 @@ const Medications = () => {
               Hjälpmedel för att följa och optimera din medicinering
             </h2>
             <p className="text-[13px] text-foreground/45 leading-relaxed">
-              Små steg gör stor skillnad — registrera vad du tar, hur det känns, och se mönster över tid. ✨
+              Små steg gör stor skillnad — registrera vad du tar, hur det känns, och se mönster över tid.
             </p>
           </div>
           <Button onClick={openAdd} className="gap-2 rounded-full shrink-0">
