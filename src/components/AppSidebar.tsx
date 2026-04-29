@@ -55,6 +55,7 @@ const doctorNavGroups = [
     items: [
       { titleKey: "sidebar.home", url: "/lakare", icon: Home, primary: true },
       { titleKey: "sidebar.myUsers", url: "/mina-patienter", icon: Users },
+      { titleKey: "sidebar.notifications", url: "/notiser", icon: Bell },
     ],
   },
   {
