@@ -39,6 +39,14 @@ const roleInfo = {
   },
 };
 
+type CheckinSelections = {
+  include_mood: boolean;
+  include_medication: boolean;
+  include_sleep: boolean;
+  include_eating: boolean;
+  include_exercise: boolean;
+};
+
 const CHECKIN_OPTIONS: Array<{
   id: keyof CheckinSelections;
   labelKey: string;
@@ -52,22 +60,6 @@ const CHECKIN_OPTIONS: Array<{
   { id: "include_eating", labelKey: "onboarding.eating", descKey: "onboarding.eatingDesc", icon: Utensils },
   { id: "include_exercise", labelKey: "onboarding.exercise", descKey: "onboarding.exerciseDesc", icon: Dumbbell },
 ];
-
-type CheckinSelections = {
-  include_mood: boolean;
-  include_medication: boolean;
-  include_sleep: boolean;
-  include_eating: boolean;
-  include_exercise: boolean;
-};
-
-type CheckinSelections = {
-  include_mood: boolean;
-  include_medication: boolean;
-  include_sleep: boolean;
-  include_eating: boolean;
-  include_exercise: boolean;
-};
 
 const Signup = () => {
   const [step, setStep] = useState<Step>("role");
