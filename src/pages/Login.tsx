@@ -7,7 +7,7 @@ import { lovable } from "@/integrations/lovable/index";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
-import { AuthNavbar } from "@/components/AuthNavbar";
+
 import { DarkNightBackground } from "@/components/DarkNightBackground";
 import { Eye, EyeOff, Loader2, Mail, CheckCircle2, Lock, ShieldCheck } from "lucide-react";
 import { TurtleLogo } from "@/components/TurtleLogo";
