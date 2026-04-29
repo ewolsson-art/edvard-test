@@ -59,14 +59,16 @@ export function PatientOverview({ connection, onBack, hideExtras = false }: Pati
   const [currentWeek, setCurrentWeek] = useState(new Date());
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
+  const scrollableCalendarRef = useRef<ScrollableMonthsCalendarRef>(null);
   
   
   // State for relative comment dialog
   const [commentDialogOpen, setCommentDialogOpen] = useState(false);
   const [selectedDateForComment, setSelectedDateForComment] = useState<Date | null>(null);
   
-  // Check if this is a relative viewing
-  const isRelativeViewing = true; // simplified after chat removal
+  // Relatives use hideExtras=true. Doctors see everything.
+  const isRelativeViewing = hideExtras;
+  const isDoctorViewing = !hideExtras;
 
   const { entries, isLoaded: moodLoaded, getEntryForDate, getEntriesForMonth, getEntriesForYear, getStatsForYear } = usePatientMoodData({
     patientId: connection.patient_id,
@@ -77,6 +79,7 @@ export function PatientOverview({ connection, onBack, hideExtras = false }: Pati
   const { diagnoses, isLoading: diagnosesLoading } = usePatientDiagnoses({
     patientId: connection.patient_id,
   });
+  const { characteristics } = usePatientCharacteristics(connection.patient_id);
   
   // Relative comments - only fetch for relatives
   const { 
