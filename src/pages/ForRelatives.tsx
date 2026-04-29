@@ -27,6 +27,7 @@ const ForRelatives = () => {
 
   return (
     <div className="min-h-screen flex flex-col">
+      <SEO title="För anhöriga – stötta din närstående med Toddy" description="Följ måendet, generera rapporter och få insikt över tid – för dig som är anhörig till någon med bipolär sjukdom." path="/for-anhoriga" />
       <AuthNavbar />
       <main className="flex-1 pt-20">
         <section className="py-16 px-4 md:px-8 bg-gradient-to-br from-background via-primary/5 to-background">
