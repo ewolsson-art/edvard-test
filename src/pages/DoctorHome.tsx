@@ -1,15 +1,37 @@
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useProfile } from '@/hooks/useProfile';
 import { useDoctorConnections, PatientConnection } from '@/hooks/useDoctorConnections';
 import { Button } from '@/components/ui/button';
-import { Users, Clock, UserCheck, Eye, Loader2 } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Users, Clock, UserCheck, Eye, Loader2, UserPlus, Send, ShieldCheck, Mail, Sparkles } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { useToast } from '@/hooks/use-toast';
+import { z } from 'zod';
+import {
+  Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger,
+} from '@/components/ui/dialog';
 
 const DoctorHome = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const { toast } = useToast();
   const { firstName } = useProfile();
-  const { approvedConnections, pendingConnections, isLoading, updateConnectionStatus } = useDoctorConnections();
+  const {
+    approvedConnections,
+    pendingConnections,
+    pendingFromDoctor,
+    isLoading,
+    updateConnectionStatus,
+    requestPatientAccess,
+  } = useDoctorConnections();
+
+  const [inviteOpen, setInviteOpen] = useState(false);
+  const [patientEmail, setPatientEmail] = useState('');
+  const [isRequesting, setIsRequesting] = useState(false);
+
+  const emailSchema = z.string().email();
 
   const greeting = () => {
     const hour = new Date().getHours();
@@ -29,6 +51,22 @@ const DoctorHome = () => {
     if (connection.patient_profile?.first_name) return connection.patient_profile.first_name[0].toUpperCase();
     if (connection.patient_email) return connection.patient_email[0].toUpperCase();
     return 'A';
+  };
+
+  const handleSendRequest = async () => {
+    if (!emailSchema.safeParse(patientEmail).success) {
+      toast({ title: 'Ogiltig e-postadress', variant: 'destructive' });
+      return;
+    }
+    setIsRequesting(true);
+    const { success, error } = await requestPatientAccess(patientEmail.trim());
+    setIsRequesting(false);
+    if (success) {
+      setPatientEmail('');
+      setInviteOpen(false);
+    } else if (error) {
+      toast({ title: 'Kunde inte skicka förfrågan', description: error, variant: 'destructive' });
+    }
   };
 
   if (isLoading) {
@@ -66,6 +104,87 @@ const DoctorHome = () => {
           </div>
         </div>
 
+        {/* Invite CTA */}
+        <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-primary/15 via-primary/5 to-transparent border border-primary/20 p-6 md:p-8">
+          <div className="absolute -top-16 -right-16 w-64 h-64 rounded-full bg-primary/10 blur-3xl pointer-events-none" />
+          <div className="relative flex flex-col md:flex-row md:items-center gap-6 md:gap-8">
+            <div className="w-14 h-14 rounded-2xl bg-primary/20 flex items-center justify-center flex-shrink-0">
+              <UserPlus className="w-7 h-7 text-primary" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <h2 className="font-display text-xl md:text-2xl font-bold mb-1">Bjud in en patient</h2>
+              <p className="text-muted-foreground text-sm md:text-base">
+                Skicka en förfrågan med patientens e-post. De godkänner och väljer själva vad som delas med dig.
+              </p>
+            </div>
+            <Dialog open={inviteOpen} onOpenChange={setInviteOpen}>
+              <DialogTrigger asChild>
+                <Button
+                  size="lg"
+                  className="rounded-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold gap-2 shadow-lg shadow-primary/20 px-6 self-start md:self-center"
+                >
+                  <Send className="w-4 h-4" />
+                  Bjud in patient
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-md">
+                <DialogHeader>
+                  <div className="w-12 h-12 rounded-full bg-primary/15 flex items-center justify-center mb-3">
+                    <Sparkles className="w-6 h-6 text-primary" />
+                  </div>
+                  <DialogTitle className="font-display text-xl">Bjud in en patient</DialogTitle>
+                  <p className="text-sm text-muted-foreground pt-1">
+                    Vi skickar en förfrågan i appen. Patienten väljer själv vilken data som delas med dig.
+                  </p>
+                </DialogHeader>
+
+                <div className="space-y-5 pt-2">
+                  <div className="space-y-2">
+                    <Label htmlFor="patientEmail" className="text-sm font-medium">Patientens e-post</Label>
+                    <div className="relative">
+                      <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
+                      <Input
+                        id="patientEmail"
+                        type="email"
+                        autoComplete="email"
+                        inputMode="email"
+                        placeholder="namn@example.com"
+                        value={patientEmail}
+                        onChange={(e) => setPatientEmail(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') {
+                            e.preventDefault();
+                            handleSendRequest();
+                          }
+                        }}
+                        disabled={isRequesting}
+                        className="pl-10 text-base"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-3 p-3 rounded-xl bg-foreground/[0.03]">
+                    <ShieldCheck className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
+                    <p className="text-xs text-muted-foreground leading-relaxed">
+                      Patienten måste godkänna förfrågan innan du ser någon data. De kan när som helst dra tillbaka delningen.
+                    </p>
+                  </div>
+
+                  <Button
+                    onClick={handleSendRequest}
+                    disabled={isRequesting || !patientEmail.trim()}
+                    size="lg"
+                    className="w-full rounded-full font-semibold gap-2"
+                  >
+                    {isRequesting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
+                    {isRequesting ? 'Skickar…' : 'Skicka förfrågan'}
+                  </Button>
+                </div>
+              </DialogContent>
+            </Dialog>
+          </div>
+        </section>
+
         {pendingConnections.length > 0 && (
           <section className="bg-foreground/[0.03] backdrop-blur-sm rounded-2xl p-6">
             <div className="flex items-center gap-3 mb-4">
@@ -74,18 +193,25 @@ const DoctorHome = () => {
               <span className="bg-primary/15 text-primary text-xs font-medium px-2 py-1 rounded-full">{pendingConnections.length}</span>
             </div>
             <div className="space-y-3">
-              {pendingConnections.map((connection) => (
-                <div key={connection.id} className="flex items-center justify-between p-4 bg-foreground/[0.03] rounded-lg">
-                  <div>
-                    <p className="font-medium">{getPatientName(connection)}</p>
-                    <p className="text-sm text-muted-foreground">{t('doctorHome.wantsToShareData')}</p>
+              {pendingConnections.map((connection) => {
+                const sentByDoctor = pendingFromDoctor.some((c) => c.id === connection.id);
+                return (
+                  <div key={connection.id} className="flex items-center justify-between p-4 bg-foreground/[0.03] rounded-lg">
+                    <div>
+                      <p className="font-medium">{getPatientName(connection)}</p>
+                      <p className="text-sm text-muted-foreground">
+                        {sentByDoctor ? 'Väntar på patientens godkännande' : t('doctorHome.wantsToShareData')}
+                      </p>
+                    </div>
+                    {!sentByDoctor && (
+                      <div className="flex gap-2">
+                        <Button size="sm" onClick={() => updateConnectionStatus(connection.id, 'approved')}>{t('doctorHome.approve')}</Button>
+                        <Button size="sm" variant="outline" onClick={() => updateConnectionStatus(connection.id, 'rejected')}>{t('doctorHome.reject')}</Button>
+                      </div>
+                    )}
                   </div>
-                  <div className="flex gap-2">
-                    <Button size="sm" onClick={() => updateConnectionStatus(connection.id, 'approved')}>{t('doctorHome.approve')}</Button>
-                    <Button size="sm" variant="outline" onClick={() => updateConnectionStatus(connection.id, 'rejected')}>{t('doctorHome.reject')}</Button>
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </section>
         )}
@@ -100,7 +226,15 @@ const DoctorHome = () => {
             <div className="bg-foreground/[0.03] backdrop-blur-sm rounded-2xl p-12 text-center">
               <Users className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
               <h3 className="text-lg font-medium mb-2">{t('doctorHome.noUsersYet')}</h3>
-              <p className="text-muted-foreground">{t('doctorHome.usersWillAppearHere')}</p>
+              <p className="text-muted-foreground mb-6">{t('doctorHome.usersWillAppearHere')}</p>
+              <Button
+                onClick={() => setInviteOpen(true)}
+                size="lg"
+                className="rounded-full font-semibold gap-2"
+              >
+                <UserPlus className="w-4 h-4" />
+                Bjud in din första patient
+              </Button>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
