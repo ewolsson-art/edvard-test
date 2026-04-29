@@ -216,11 +216,11 @@ const Signup = () => {
                 <ArrowLeft className="h-4 w-4" />
                 {t("common.cancel")}
               </Link>
-              <div className="mb-5 w-16 h-16">
-                <TurtleLogo size="md" animated className="w-full h-full" />
-              </div>
-              <h1 className="text-2xl md:text-3xl font-bold text-white font-display tracking-tight">
-                {t("auth.whoAreYou")}
+              <h1 className="text-2xl md:text-3xl font-bold text-white font-display tracking-tight flex items-center gap-3 flex-wrap">
+                <span>{t("auth.whoAreYou")}</span>
+                <span className="inline-block w-10 h-10 md:w-12 md:h-12 -rotate-12 translate-y-0.5">
+                  <TurtleLogo size="md" animated className="w-full h-full" />
+                </span>
               </h1>
               <p className="mt-2 text-sm text-white/40">
                 {t("auth.chooseHowToUse")}
