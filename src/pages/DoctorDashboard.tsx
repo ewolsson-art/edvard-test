@@ -4,7 +4,7 @@ import { useDoctorConnections, PatientConnection } from '@/hooks/useDoctorConnec
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Loader2, Users, UserCheck, Clock, Eye, UserPlus, Send, X } from 'lucide-react';
+import { Loader2, Users, UserCheck, Clock, Eye, UserPlus, Send, X, Sparkles, Mail, ShieldCheck } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { z } from 'zod';
 import { useTranslation } from 'react-i18next';
