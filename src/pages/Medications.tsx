@@ -708,7 +708,7 @@ const Medications = () => {
                   <MedicationInsights med={detailMed} />
                 </div>
 
-
+                {detailMed.effectiveness && (
                   <div className="space-y-1.5">
                     <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Effekt</p>
                     <div className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full border text-sm ${EFFECTIVENESS_COLORS[detailMed.effectiveness]}`}>
