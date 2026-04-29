@@ -425,37 +425,39 @@ export function PatientOverview({ connection, onBack, hideExtras = false }: Pati
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center gap-3">
-        <Button variant="ghost" size="icon" onClick={onBack} className="shrink-0">
-          <ChevronLeft className="w-5 h-5" />
-        </Button>
-        <div className="flex-1 min-w-0">
-          <h2 className="font-display text-lg font-semibold">{patientName}</h2>
-          {latestMoodEntry && (
-            <p className="text-sm text-muted-foreground/60 mt-0.5">
-              Senaste: {MOOD_LABELS[latestMoodEntry.mood as MoodType]}
-              {latestMoodEntry.date && (
-                <span> · {format(new Date(latestMoodEntry.date), 'd MMM', { locale: sv })}</span>
-              )}
-            </p>
-          )}
-          {!latestMoodEntry && (
-            <p className="text-sm text-muted-foreground/40 mt-0.5">{t('patientOverview.noCheckinYet')}</p>
-          )}
+      {/* Header — sticky so name stays visible while scrolling */}
+      <div className="sticky top-0 z-30 -mx-5 md:-mx-8 px-5 md:px-8 py-3 bg-background/85 backdrop-blur-md border-b border-border/30">
+        <div className="flex items-center gap-3">
+          <Button variant="ghost" size="icon" onClick={onBack} className="shrink-0">
+            <ChevronLeft className="w-5 h-5" />
+          </Button>
+          <div className="flex-1 min-w-0">
+            <h2 className="font-display text-lg font-semibold truncate">{patientName}</h2>
+            {latestMoodEntry && (
+              <p className="text-sm text-muted-foreground/60 mt-0.5 truncate">
+                Senaste: {MOOD_LABELS[latestMoodEntry.mood as MoodType]}
+                {latestMoodEntry.date && (
+                  <span> · {format(new Date(latestMoodEntry.date), 'd MMM', { locale: sv })}</span>
+                )}
+              </p>
+            )}
+            {!latestMoodEntry && (
+              <p className="text-sm text-muted-foreground/40 mt-0.5">{t('patientOverview.noCheckinYet')}</p>
+            )}
+          </div>
+          <button
+            onClick={() => setShowStats(!showStats)}
+            className={cn(
+              "p-2 rounded-md transition-all shrink-0",
+              showStats
+                ? "bg-background text-foreground shadow-sm"
+                : "text-muted-foreground hover:text-foreground"
+            )}
+            aria-label={showStats ? "Kalender" : "Statistik"}
+          >
+            {showStats ? <CalendarDays className="w-5 h-5" /> : <BarChart3 className="w-5 h-5" />}
+          </button>
         </div>
-        <button
-          onClick={() => setShowStats(!showStats)}
-          className={cn(
-            "p-2 rounded-md transition-all shrink-0",
-            showStats
-              ? "bg-background text-foreground shadow-sm"
-              : "text-muted-foreground hover:text-foreground"
-          )}
-          aria-label={showStats ? "Kalender" : "Statistik"}
-        >
-          {showStats ? <CalendarDays className="w-5 h-5" /> : <BarChart3 className="w-5 h-5" />}
-        </button>
       </div>
 
       {!hideExtras && (
