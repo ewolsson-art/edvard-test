@@ -11,37 +11,37 @@ const faqs: FAQItem[] = [
   {
     question: "Vad är Toddy?",
     answer:
-      "Toddy är en digital stämningsdagbok byggd för dig som lever med bipolär sjukdom, depression eller andra former av psykisk ohälsa. Du loggar ditt mående, sömn, energi och mediciner — Toddy hjälper dig se mönster och dela datan med din läkare eller anhöriga.",
+      "Toddy är en stämningsdagbok byggd specifikt för dig som lever med bipolär sjukdom — typ I, typ II eller cyklotymi. Vi är inte en generell app för psykisk ohälsa. Allt — från mood-skalan med både uppvarvning och nedstämdhet, till sömn-, energi- och medicinspårning — är designat utifrån hur bipolära episoder ser ut och utvecklas över dagar och veckor. Du loggar dagligen och Toddy hjälper dig se mönster, fånga tidiga varningssignaler och dela datan med din läkare eller anhöriga.",
   },
   {
     question: "Vad kostar Toddy?",
     answer:
-      "Toddy är gratis att använda. Vi tror på att verktyg för psykisk hälsa ska vara tillgängliga för alla. Om vi i framtiden lägger till premium-funktioner kommer grundfunktionerna alltid förbli gratis.",
+      "Toddy är gratis att använda. Vi tror att verktyg för att hantera bipolär sjukdom ska vara tillgängliga för alla som behöver dem. Om vi i framtiden lägger till premium-funktioner kommer grundfunktionerna alltid förbli gratis.",
   },
   {
     question: "Hur lång tid tar det att fylla i en dagbok?",
     answer:
-      "Cirka 30 sekunder per dag. Vi har designat in-checkningen för att vara så snabb som möjligt — bara välj nivå för stämning, sömn och energi. Du kan lägga till fler detaljer om du vill, men det är aldrig krav.",
+      "Cirka 30 sekunder per dag. Vi har designat in-checkningen för att vara så snabb som möjligt — välj nivå för stämning (från kraftigt nedstämd till kraftigt uppvarvad), sömn och energi. Du kan lägga till fler detaljer om du vill, men det är aldrig krav. En check-in per dag räcker — bipolära episoder pågår över dagar och veckor, inte timmar.",
   },
   {
     question: "Är min data säker?",
     answer:
-      "Ja. Vi krypterar all data, lagrar den inom EU och delar aldrig med tredje part utan ditt uttryckliga samtycke. Du kan när som helst exportera eller radera all din data permanent från inställningar.",
+      "Ja. Vi krypterar all data, lagrar den inom EU och delar aldrig med tredje part utan ditt uttryckliga samtycke. Du kan när som helst exportera eller permanent radera all din data från inställningar.",
   },
   {
     question: "Kan min läkare se min data?",
     answer:
-      "Bara om du själv väljer att dela. Du kan generera en rapport för en specifik tidsperiod och dela med din vårdgivare via en säker länk, eller bjuda in din läkare till en koppling där hen får kontinuerlig insyn.",
+      "Bara om du själv väljer att dela. Du kan generera en rapport för en specifik tidsperiod och dela med din vårdgivare via en säker länk, eller bjuda in din läkare till en koppling där hen får kontinuerlig insyn — särskilt värdefullt vid uppföljning av medicin som litium eller lamotrigin, eller för att fånga episoder mellan besök.",
   },
   {
     question: "Funkar Toddy om jag inte har en diagnos?",
     answer:
-      "Absolut. Du behöver ingen diagnos för att använda Toddy. Många använder det för att förstå sin egen rytm bättre, för att hantera ångest eller stress, eller för att samla data inför ett första läkarbesök.",
+      "Toddy är specifikt framtaget för bipolär sjukdom — inte för psykisk ohälsa generellt. Men du behöver inte ha en formell diagnos för att använda appen. Många använder Toddy för att samla data inför ett första läkarbesök eller för att utreda om mönstren i deras mående tyder på bipolaritet (till exempel typ II som ofta missas som unipolär depression). Söker du ett verktyg för enbart ångest eller stress utan misstanke om bipolaritet finns det andra appar som passar bättre.",
   },
   {
     question: "Kan anhöriga följa min utveckling?",
     answer:
-      "Ja, om du själv bjuder in dem. Toddy har en speciell anhörigvy där en partner, förälder eller nära vän kan se ditt mående och få varningar om något ser oroande ut. Du bestämmer själv vilka detaljer som delas.",
+      "Ja, om du själv bjuder in dem. Toddy har en speciell anhörigvy där en partner, förälder eller nära vän kan se ditt mående och få varningar om något ser oroande ut. Detta är extra viktigt vid bipolär sjukdom eftersom insiktsbristen vid uppvarvade episoder kan göra det svårt att själv märka när något håller på att gå överstyr — anhöriga ser ofta tecknen först. Du bestämmer själv vilka detaljer som delas.",
   },
   {
     question: "Vad gör Toddy med min data?",
