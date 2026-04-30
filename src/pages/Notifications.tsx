@@ -124,6 +124,23 @@ const Notifications = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { notifications, isLoading, unreadCount, markAsRead, markAllAsRead, deleteNotification } = useNotifications();
+  const cleanupDoneRef = useRef(false);
+
+  // Auto-mark all as read on mount so sidebar badge clears once user visits the page.
+  // Also auto-delete purely informational notifications (connection_approved) — they have
+  // no actionable next step and should not linger after being seen.
+  useEffect(() => {
+    if (isLoading || cleanupDoneRef.current) return;
+    cleanupDoneRef.current = true;
+
+    if (unreadCount > 0) {
+      markAllAsRead();
+    }
+
+    notifications
+      .filter(n => n.type === 'connection_approved')
+      .forEach(n => deleteNotification(n.id));
+  }, [isLoading, notifications, unreadCount, markAllAsRead, deleteNotification]);
 
   const handleNavigate = (n: AppNotification) => {
     if (n.reference_type === 'community_post' && n.reference_id) navigate(`/forum/${n.reference_id}`);
