@@ -10,9 +10,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { 
   Loader2, Brain, Moon, Utensils, Dumbbell, Pill, 
-  ArrowRight, ArrowLeft, Sparkles, TrendingUp, 
-  Share2, MessageSquare, CheckCircle2,
-  Heart
+  ArrowRight, ArrowLeft, Sparkles, CheckCircle2
 } from 'lucide-react';
 import { Logo } from '@/components/Logo';
 import { TurtleLogo } from '@/components/TurtleLogo';
