@@ -666,6 +666,18 @@ export function TodayCheckin({
             </motion.div>
           )}
 
+          {/* Hint till översikten – visas alltid efter en klar incheckning */}
+          <motion.a
+            href="/oversikt"
+            initial={{ opacity: 0, y: 6 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.65, type: 'spring', stiffness: 260, damping: 24 }}
+            className="mb-3 inline-flex items-center gap-1.5 text-[13px] font-medium text-[hsl(45_85%_55%)] hover:text-[hsl(45_85%_65%)] transition-colors"
+          >
+            Du kan följa upp ditt mående i översikt
+            <ChevronRight className="w-3.5 h-3.5" />
+          </motion.a>
+
           {/* Edit-länk */}
           <motion.button
             initial={{ opacity: 0 }}
