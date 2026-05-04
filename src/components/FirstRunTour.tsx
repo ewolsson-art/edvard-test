@@ -33,9 +33,17 @@ export const FirstRunTour = () => {
 
   useEffect(() => {
     if (!user) return;
-    const key = `${STORAGE_KEY}.${user.id}`;
     if (typeof window === 'undefined') return;
+
+    // Visa endast för helt nya konton (skapade senaste 5 min) – inte för
+    // befintliga användare som loggar in på ny enhet eller rensat storage.
+    const createdAt = user.created_at ? new Date(user.created_at).getTime() : 0;
+    const isBrandNew = createdAt > 0 && Date.now() - createdAt < 5 * 60 * 1000;
+    if (!isBrandNew) return;
+
+    const key = `${STORAGE_KEY}.${user.id}`;
     if (localStorage.getItem(key) === '1') return;
+
     // Liten fördröjning så användaren först ser sidan, sedan touren
     const t = setTimeout(() => setOpen(true), 600);
     return () => clearTimeout(t);
