@@ -12,7 +12,7 @@ import { StreakBadge } from '@/components/StreakBadge';
 import { CheckinData } from '@/types/mood';
 import { TodayCheckin } from '@/components/TodayCheckin';
 import { MissedDayPrompt } from '@/components/MissedDayPrompt';
-import { DiagnosisPromptBanner } from '@/components/DiagnosisPromptBanner';
+
 import { FirstRunTour } from '@/components/FirstRunTour';
 
 const Index = () => {
@@ -121,9 +121,6 @@ const Index = () => {
     <AnimatedPage className="fixed inset-0 md:relative md:h-screen flex items-center justify-center md:py-4 md:px-5 overflow-hidden">
       <FirstRunTour />
       <div className="w-full h-full md:h-auto md:max-w-xl relative">
-        <div className="absolute top-0 left-0 right-0 z-10 px-4 md:px-0">
-          <DiagnosisPromptBanner />
-        </div>
         {shouldShowMissedPrompt ? (
           <MissedDayPrompt
             missedDays={streakData.missedDays}
