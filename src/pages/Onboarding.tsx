@@ -58,7 +58,7 @@ const CHECKIN_OPTIONS = [
 ];
 
 
-const TOTAL_STEPS = 4;
+const TOTAL_STEPS = 5;
 
 const Onboarding = () => {
   const { t } = useTranslation();
@@ -91,8 +91,8 @@ const Onboarding = () => {
   const hasAnySelection = Object.values(selections).some(Boolean);
 
   const handleNext = () => {
-    if (step === 3 && !selections.include_medication) {
-      // No medication step, submit directly
+    // Step 4 (categories) → if no medication chosen, submit instead of going to medication step
+    if (step === 4 && !selections.include_medication) {
       handleSubmit();
       return;
     }
