@@ -999,6 +999,34 @@ export type Database = {
         Args: { _role: Database["public"]["Enums"]["app_role"] }
         Returns: boolean
       }
+      get_community_posts_safe: {
+        Args: never
+        Returns: {
+          anonymous_name: string
+          category: string
+          content: string
+          created_at: string
+          id: string
+          image_url: string
+          is_anonymous: boolean
+          title: string
+          updated_at: string
+          user_id: string
+        }[]
+      }
+      get_community_replies_safe: {
+        Args: never
+        Returns: {
+          anonymous_name: string
+          content: string
+          created_at: string
+          id: string
+          is_anonymous: boolean
+          post_id: string
+          updated_at: string
+          user_id: string
+        }[]
+      }
       get_doctor_email_for_patient: {
         Args: { p_doctor_id: string; p_patient_id: string }
         Returns: string

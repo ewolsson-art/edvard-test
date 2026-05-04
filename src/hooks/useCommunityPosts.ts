@@ -67,9 +67,7 @@ export function useCommunityPosts() {
     setLoading(true);
 
     const { data: postsData, error } = await supabase
-      .from('community_posts')
-      .select('*')
-      .order('created_at', { ascending: false });
+      .rpc('get_community_posts_safe');
 
     if (error) {
       console.error('Error fetching posts:', error);
@@ -82,11 +80,9 @@ export function useCommunityPosts() {
       .from('community_reactions')
       .select('post_id, user_id');
 
-    // Fetch replies
+    // Fetch replies (server-side masked)
     const { data: repliesData } = await supabase
-      .from('community_replies')
-      .select('*')
-      .order('created_at', { ascending: true });
+      .rpc('get_community_replies_safe');
 
     // Fetch poll options and votes
     const { data: pollOptions } = await supabase
@@ -98,16 +94,18 @@ export function useCommunityPosts() {
       .from('poll_votes')
       .select('option_id, user_id');
 
-    // Mask user_id on anonymous posts/replies to prevent identity leaks
-    const safePosts = (postsData || []).map(p => ({
+    // Server already masks user_id (NULL) for anonymous posts/replies that don't belong to the caller.
+    // Fall back to a placeholder uuid for any null so existing UI logic keeps working.
+    const PLACEHOLDER = '00000000-0000-0000-0000-000000000000';
+    const safePosts = (postsData || []).map((p: any) => ({
       ...p,
-      user_id: p.is_anonymous && p.user_id !== user?.id ? '00000000-0000-0000-0000-000000000000' : p.user_id,
-      _real_user_id: p.user_id,
+      user_id: p.user_id ?? PLACEHOLDER,
+      _real_user_id: p.user_id ?? PLACEHOLDER,
     }));
-    const safeReplies = (repliesData || []).map(r => ({
+    const safeReplies = (repliesData || []).map((r: any) => ({
       ...r,
-      user_id: r.is_anonymous && r.user_id !== user?.id ? '00000000-0000-0000-0000-000000000000' : r.user_id,
-      _real_user_id: r.user_id,
+      user_id: r.user_id ?? PLACEHOLDER,
+      _real_user_id: r.user_id ?? PLACEHOLDER,
     }));
 
     // Fetch profile names for non-anonymous posts and replies
