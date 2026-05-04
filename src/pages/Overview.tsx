@@ -40,6 +40,7 @@ import { useCharacteristics } from '@/hooks/useCharacteristics';
 
 import { MoodStats as MoodStatsType, ExerciseType, QualityType } from '@/types/mood';
 import { Last30DaysOverview } from '@/components/Last30DaysOverview';
+import { NewUserOverviewHint } from '@/components/NewUserOverviewHint';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Dumbbell, Moon, Utensils } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
@@ -633,6 +634,7 @@ const Overview = () => {
         <div className="lg:flex lg:gap-8">
           {/* Main calendar area */}
           <div className="flex-1 min-w-0 space-y-6">
+            <NewUserOverviewHint entryCount={entries.length} />
             <PostElevatedReflection entries={entries} userId={user?.id ?? null} />
             {showMood && sectionView === 'calendar' && (
               <section>
