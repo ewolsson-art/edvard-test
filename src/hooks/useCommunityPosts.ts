@@ -67,9 +67,7 @@ export function useCommunityPosts() {
     setLoading(true);
 
     const { data: postsData, error } = await supabase
-      .from('community_posts')
-      .select('*')
-      .order('created_at', { ascending: false });
+      .rpc('get_community_posts_safe');
 
     if (error) {
       console.error('Error fetching posts:', error);
@@ -82,11 +80,9 @@ export function useCommunityPosts() {
       .from('community_reactions')
       .select('post_id, user_id');
 
-    // Fetch replies
+    // Fetch replies (server-side masked)
     const { data: repliesData } = await supabase
-      .from('community_replies')
-      .select('*')
-      .order('created_at', { ascending: true });
+      .rpc('get_community_replies_safe');
 
     // Fetch poll options and votes
     const { data: pollOptions } = await supabase
