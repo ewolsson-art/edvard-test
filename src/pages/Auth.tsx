@@ -70,6 +70,16 @@ const Auth = () => {
                   >
                     {t('nav.getStarted')}
                   </button>
+                  <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 text-[13px] md:text-sm text-white/70">
+                    <span className="inline-flex items-center gap-1.5">
+                      <span aria-hidden className="w-1.5 h-1.5 rounded-full bg-[hsl(140_60%_55%)]" />
+                      Kostnadsfritt
+                    </span>
+                    <span className="inline-flex items-center gap-1.5">
+                      <span aria-hidden className="w-1.5 h-1.5 rounded-full bg-[hsl(140_60%_55%)]" />
+                      Din data är krypterad och delas aldrig
+                    </span>
+                  </div>
                 </div>
               </div>
               <div className="hidden md:block flex-shrink-0 ml-6 lg:ml-12 self-end mb-4">
