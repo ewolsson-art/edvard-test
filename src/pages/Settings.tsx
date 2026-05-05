@@ -36,18 +36,28 @@ const Settings = () => {
   const [checkinSelections, setCheckinSelections] = useState({
     include_mood: true, include_sleep: true, include_eating: true,
     include_exercise: true, include_medication: true,
+    quick_include_sleep: false, quick_include_eating: false,
+    quick_include_exercise: false, quick_include_medication: false,
   });
   const [isSavingCheckin, setIsSavingCheckin] = useState(false);
   const [hasCheckinChanges, setHasCheckinChanges] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [deleteConfirmText, setDeleteConfirmText] = useState('');
 
-  const CHECKIN_OPTIONS = [
+  const DETAILED_OPTIONS = [
     { id: 'include_mood', label: t('settings.checkinMood'), description: t('settings.checkinMoodDesc'), icon: Brain, required: true },
     { id: 'include_sleep', label: t('settings.checkinSleep'), description: t('settings.checkinSleepDesc'), icon: Moon },
     { id: 'include_eating', label: t('settings.checkinEating'), description: t('settings.checkinEatingDesc'), icon: Utensils },
     { id: 'include_exercise', label: t('settings.checkinExercise'), description: t('settings.checkinExerciseDesc'), icon: Dumbbell },
     { id: 'include_medication', label: t('settings.checkinMedication'), description: t('settings.checkinMedicationDesc'), icon: Pill },
+  ];
+
+  const QUICK_OPTIONS = [
+    { id: 'include_mood', label: t('settings.checkinMood'), description: t('settings.checkinMoodDesc'), icon: Brain, required: true },
+    { id: 'quick_include_sleep', label: t('settings.checkinSleep'), description: t('settings.checkinSleepDesc'), icon: Moon },
+    { id: 'quick_include_eating', label: t('settings.checkinEating'), description: t('settings.checkinEatingDesc'), icon: Utensils },
+    { id: 'quick_include_exercise', label: t('settings.checkinExercise'), description: t('settings.checkinExerciseDesc'), icon: Dumbbell },
+    { id: 'quick_include_medication', label: t('settings.checkinMedication'), description: t('settings.checkinMedicationDesc'), icon: Pill },
   ];
 
   useEffect(() => {
@@ -56,6 +66,10 @@ const Settings = () => {
         include_mood: preferences.include_mood, include_sleep: preferences.include_sleep,
         include_eating: preferences.include_eating, include_exercise: preferences.include_exercise,
         include_medication: preferences.include_medication,
+        quick_include_sleep: preferences.quick_include_sleep ?? false,
+        quick_include_eating: preferences.quick_include_eating ?? false,
+        quick_include_exercise: preferences.quick_include_exercise ?? false,
+        quick_include_medication: preferences.quick_include_medication ?? false,
       });
     }
   }, [preferences]);
@@ -67,7 +81,11 @@ const Settings = () => {
         checkinSelections.include_sleep !== preferences.include_sleep ||
         checkinSelections.include_eating !== preferences.include_eating ||
         checkinSelections.include_exercise !== preferences.include_exercise ||
-        checkinSelections.include_medication !== preferences.include_medication;
+        checkinSelections.include_medication !== preferences.include_medication ||
+        checkinSelections.quick_include_sleep !== (preferences.quick_include_sleep ?? false) ||
+        checkinSelections.quick_include_eating !== (preferences.quick_include_eating ?? false) ||
+        checkinSelections.quick_include_exercise !== (preferences.quick_include_exercise ?? false) ||
+        checkinSelections.quick_include_medication !== (preferences.quick_include_medication ?? false);
       setHasCheckinChanges(changed);
     }
   }, [checkinSelections, preferences]);
