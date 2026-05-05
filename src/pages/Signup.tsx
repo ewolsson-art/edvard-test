@@ -618,7 +618,7 @@ const Signup = () => {
 
           {/* Footer */}
           {showProgress && (
-            <div className="mt-8 text-center">
+            <div className="mt-5 text-center">
               <Link to="/logga-in" className="text-sm text-white/30 hover:text-white/60 transition-colors">
                 {t("auth.hasAccount")} <span className="text-[hsl(45_85%_55%)] font-medium">{t("auth.logIn")}</span>
               </Link>
