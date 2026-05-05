@@ -1,78 +1,95 @@
-<svg viewBox="0 0 260 280" fill="none" xmlns="http://www.w3.org/2000/svg">
+<svg viewBox="0 0 200 280" fill="none" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <linearGradient id="sg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="hsl(45 85% 55%)" />
-      <stop offset="100%" stop-color="hsl(45 85% 55% / 0.65)" />
+    <linearGradient id="shellGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="hsl(45,85%,55%)" />
+      <stop offset="100%" stop-color="hsl(45,85%,55%,0.65)" />
     </linearGradient>
-    <linearGradient id="spg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="hsl(45 85% 55% / 0.4)" />
-      <stop offset="100%" stop-color="hsl(45 85% 55% / 0.2)" />
+    <linearGradient id="shellPatternGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="hsl(45,85%,55%,0.4)" />
+      <stop offset="100%" stop-color="hsl(45,85%,55%,0.2)" />
     </linearGradient>
-    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="hsl(160 40% 38%)" />
-      <stop offset="100%" stop-color="hsl(160 35% 28%)" />
+    <linearGradient id="bodyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="hsl(160,40%,38%)" />
+      <stop offset="100%" stop-color="hsl(160,35%,28%)" />
     </linearGradient>
-    <linearGradient id="blg" x1="50%" y1="0%" x2="50%" y2="100%">
-      <stop offset="0%" stop-color="hsl(50 35% 65%)" />
-      <stop offset="100%" stop-color="hsl(45 30% 50%)" />
+    <linearGradient id="bellyGrad" x1="50%" y1="0%" x2="50%" y2="100%">
+      <stop offset="0%" stop-color="hsl(50,35%,65%)" />
+      <stop offset="100%" stop-color="hsl(45,30%,50%)" />
     </linearGradient>
-    <linearGradient id="bc" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="hsl(220 55% 35%)" />
-      <stop offset="100%" stop-color="hsl(225 50% 25%)" />
+    <linearGradient id="bookCover" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="hsl(220,55%,35%)" />
+      <stop offset="100%" stop-color="hsl(225,50%,25%)" />
     </linearGradient>
-    <linearGradient id="bp" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="hsl(45 30% 90%)" />
-      <stop offset="100%" stop-color="hsl(40 25% 82%)" />
+    <linearGradient id="bookPages" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="hsl(45,30%,90%)" />
+      <stop offset="100%" stop-color="hsl(40,25%,82%)" />
     </linearGradient>
   </defs>
-  <ellipse cx="68" cy="150" rx="14" ry="10" fill="url(#bg)" transform="rotate(-15 68 150)" />
-  <circle cx="57" cy="145" r="5" fill="url(#bg)" />
-  <ellipse cx="132" cy="150" rx="14" ry="10" fill="url(#bg)" transform="rotate(15 132 150)" />
-  <circle cx="143" cy="145" r="5" fill="url(#bg)" />
-  <ellipse cx="80" cy="250" rx="16" ry="8" fill="url(#bg)" />
-  <ellipse cx="120" cy="250" rx="16" ry="8" fill="url(#bg)" />
-  <rect x="72" y="225" width="16" height="28" rx="8" fill="url(#bg)" />
-  <rect x="112" y="225" width="16" height="28" rx="8" fill="url(#bg)" />
-  <ellipse cx="100" cy="165" rx="48" ry="55" fill="url(#sg)" />
-  <path d="M100 118 L118 130 L118 150 L100 162 L82 150 L82 130 Z" fill="url(#spg)" stroke="hsl(45 85% 55% / 0.3)" stroke-width="1.5" />
-  <path d="M82 130 L65 140 L65 158 L82 166 L82 150 Z" fill="url(#spg)" stroke="hsl(45 85% 55% / 0.3)" stroke-width="1" />
-  <path d="M118 130 L135 140 L135 158 L118 166 L118 150 Z" fill="url(#spg)" stroke="hsl(45 85% 55% / 0.3)" stroke-width="1" />
-  <path d="M100 162 L118 170 L118 188 L100 198 L82 188 L82 170 Z" fill="url(#spg)" stroke="hsl(45 85% 55% / 0.3)" stroke-width="1" />
+
+  <ellipse cx="68" cy="150" rx="14" ry="10" fill="url(#bodyGrad)" transform="rotate(-15 68 150)" />
+  <circle cx="57" cy="145" r="5" fill="url(#bodyGrad)" />
+  <ellipse cx="132" cy="150" rx="14" ry="10" fill="url(#bodyGrad)" transform="rotate(15 132 150)" />
+  <circle cx="143" cy="145" r="5" fill="url(#bodyGrad)" />
+  <ellipse cx="80" cy="250" rx="16" ry="8" fill="url(#bodyGrad)" />
+  <ellipse cx="120" cy="250" rx="16" ry="8" fill="url(#bodyGrad)" />
+  <rect x="72" y="225" width="16" height="28" rx="8" fill="url(#bodyGrad)" />
+  <rect x="112" y="225" width="16" height="28" rx="8" fill="url(#bodyGrad)" />
+
+  <ellipse cx="100" cy="165" rx="48" ry="55" fill="url(#shellGrad)" />
+  <path d="M100 118 L118 130 L118 150 L100 162 L82 150 L82 130 Z" fill="url(#shellPatternGrad)" stroke="hsl(45,85%,55%,0.3)" stroke-width="1.5" />
+  <path d="M82 130 L65 140 L65 158 L82 166 L82 150 Z" fill="url(#shellPatternGrad)" stroke="hsl(45,85%,55%,0.3)" stroke-width="1" />
+  <path d="M118 130 L135 140 L135 158 L118 166 L118 150 Z" fill="url(#shellPatternGrad)" stroke="hsl(45,85%,55%,0.3)" stroke-width="1" />
+  <path d="M100 162 L118 170 L118 188 L100 198 L82 188 L82 170 Z" fill="url(#shellPatternGrad)" stroke="hsl(45,85%,55%,0.3)" stroke-width="1" />
   <ellipse cx="90" cy="135" rx="12" ry="8" fill="white" opacity="0.12" transform="rotate(-20 90 135)" />
-  <ellipse cx="100" cy="185" rx="30" ry="42" fill="url(#blg)" />
-  <path d="M118 108 C125 120, 135 140, 138 160 C140 175, 135 190, 125 200 C118 206, 108 208, 100 202" stroke="hsl(0 0% 25%)" stroke-width="4" stroke-linecap="round" fill="none" />
-  <path d="M82 108 C75 120, 65 140, 62 160 C60 175, 65 190, 75 200 C82 206, 92 208, 100 202" stroke="hsl(0 0% 25%)" stroke-width="4" stroke-linecap="round" fill="none" />
-  <circle cx="100" cy="205" r="10" fill="hsl(0 0% 30%)" stroke="hsl(0 0% 55%)" stroke-width="2" />
-  <circle cx="100" cy="205" r="5.5" fill="hsl(0 0% 50%)" />
-  <circle cx="100" cy="205" r="2.5" fill="hsl(0 0% 60%)" />
-  <path d="M100 220 C95 228, 88 230, 85 225" stroke="hsl(160 35% 28%)" stroke-width="5" stroke-linecap="round" fill="none" />
+
+  <ellipse cx="100" cy="185" rx="30" ry="42" fill="url(#bellyGrad)" />
+
+  <path d="M118 108 C125 120, 135 140, 138 160 C140 175, 135 190, 125 200 C118 206, 108 208, 100 202" stroke="hsl(0,0%,25%)" stroke-width="4" stroke-linecap="round" fill="none" />
+  <path d="M82 108 C75 120, 65 140, 62 160 C60 175, 65 190, 75 200 C82 206, 92 208, 100 202" stroke="hsl(0,0%,25%)" stroke-width="4" stroke-linecap="round" fill="none" />
+  <circle cx="100" cy="205" r="10" fill="hsl(0,0%,30%)" stroke="hsl(0,0%,55%)" stroke-width="2" />
+  <circle cx="100" cy="205" r="5.5" fill="hsl(0,0%,50%)" />
+  <circle cx="100" cy="205" r="2.5" fill="hsl(0,0%,60%)" />
+  <circle cx="78" cy="105" r="4" fill="hsl(0,0%,30%)" stroke="hsl(0,0%,50%)" stroke-width="1" />
+  <circle cx="86" cy="103" r="4" fill="hsl(0,0%,30%)" stroke="hsl(0,0%,50%)" stroke-width="1" />
+
+  <path d="M100 220 C95 228, 88 230, 85 225" stroke="hsl(160,35%,28%)" stroke-width="5" stroke-linecap="round" fill="none" />
+
   <g>
-    <rect x="48" y="128" width="60" height="42" rx="3" fill="url(#bc)" transform="rotate(-5 78 149)" />
-    <rect x="50" y="130" width="56" height="38" rx="2" fill="url(#bp)" transform="rotate(-5 78 149)" />
-    <rect x="46" y="128" width="6" height="42" rx="2" fill="hsl(225 50% 22%)" transform="rotate(-5 49 149)" />
-    <rect x="62" y="131" width="28" height="2" rx="1" fill="hsl(45 70% 55%)" transform="rotate(-5 76 132)" opacity="0.8" />
+    <rect x="48" y="128" width="60" height="42" rx="3" fill="url(#bookCover)" transform="rotate(-5 78 149)" />
+    <rect x="50" y="130" width="56" height="38" rx="2" fill="url(#bookPages)" transform="rotate(-5 78 149)" />
+    <line x1="58" y1="140" x2="98" y2="138" stroke="hsl(220,15%,65%)" stroke-width="0.8" />
+    <line x1="58" y1="146" x2="98" y2="144" stroke="hsl(220,15%,65%)" stroke-width="0.8" />
+    <line x1="58" y1="152" x2="98" y2="150" stroke="hsl(220,15%,65%)" stroke-width="0.8" />
+    <line x1="58" y1="158" x2="90" y2="156" stroke="hsl(220,15%,65%)" stroke-width="0.8" />
+    <rect x="46" y="128" width="6" height="42" rx="2" fill="hsl(225,50%,22%)" transform="rotate(-5 49 149)" />
+    <rect x="62" y="131" width="28" height="2" rx="1" fill="hsl(45,70%,55%)" transform="rotate(-5 76 132)" opacity="0.8" />
   </g>
+
   <g>
-    <rect x="88" y="95" width="24" height="22" rx="12" fill="url(#bg)" />
-    <ellipse cx="100" cy="70" rx="32" ry="30" fill="url(#bg)" />
-    <ellipse cx="75" cy="77" rx="7" ry="5" fill="hsl(0 65% 80%)" opacity="0.45" />
-    <ellipse cx="125" cy="77" rx="7" ry="5" fill="hsl(0 65% 80%)" opacity="0.45" />
-    <circle cx="86" cy="63" r="15" fill="none" stroke="hsl(30 35% 30%)" stroke-width="2.5" />
-    <circle cx="114" cy="63" r="15" fill="none" stroke="hsl(30 35% 30%)" stroke-width="2.5" />
-    <line x1="97" y1="61" x2="101" y2="61" stroke="hsl(30 35% 30%)" stroke-width="2" />
+    <rect x="88" y="95" width="24" height="22" rx="12" fill="url(#bodyGrad)" />
+    <ellipse cx="100" cy="70" rx="32" ry="30" fill="url(#bodyGrad)" />
+    <ellipse cx="75" cy="77" rx="7" ry="5" fill="hsl(0,65%,80%)" opacity="0.45" />
+    <ellipse cx="125" cy="77" rx="7" ry="5" fill="hsl(0,65%,80%)" opacity="0.45" />
+
+    <circle cx="86" cy="63" r="15" fill="none" stroke="hsl(30,35%,30%)" stroke-width="2.5" />
+    <circle cx="114" cy="63" r="15" fill="none" stroke="hsl(30,35%,30%)" stroke-width="2.5" />
+    <line x1="97" y1="61" x2="101" y2="61" stroke="hsl(30,35%,30%)" stroke-width="2" />
+
     <ellipse cx="86" cy="63" rx="9" ry="10" fill="white" />
-    <ellipse cx="89" cy="64" rx="5" ry="6" fill="hsl(220 35% 25%)" />
-    <ellipse cx="90" cy="63" rx="2.5" ry="3" fill="hsl(220 30% 10%)" />
+    <ellipse cx="89" cy="64" rx="5" ry="6" fill="hsl(220,35%,25%)" />
+    <ellipse cx="90" cy="63" rx="2.5" ry="3" fill="hsl(220,30%,10%)" />
     <circle cx="91" cy="60" r="2" fill="white" />
     <ellipse cx="114" cy="63" rx="9" ry="10" fill="white" />
-    <ellipse cx="111" cy="64" rx="5" ry="6" fill="hsl(220 35% 25%)" />
-    <ellipse cx="110" cy="63" rx="2.5" ry="3" fill="hsl(220 30% 10%)" />
+    <ellipse cx="111" cy="64" rx="5" ry="6" fill="hsl(220,35%,25%)" />
+    <ellipse cx="110" cy="63" rx="2.5" ry="3" fill="hsl(220,30%,10%)" />
     <circle cx="109" cy="60" r="2" fill="white" />
-    <ellipse cx="100" cy="73" rx="3" ry="2.5" fill="hsl(160 40% 30%)" />
-    <path d="M88 80 Q94 88 100 88 Q106 88 112 80" stroke="hsl(220 20% 25%)" stroke-width="2.5" stroke-linecap="round" fill="none" />
-    <path d="M68 55 Q72 30 100 24 Q128 30 132 55" fill="hsl(45 85% 55%)" stroke="hsl(40 80% 45%)" stroke-width="1" />
-    <ellipse cx="100" cy="55" rx="35" ry="5" fill="hsl(40 80% 48%)" />
-    <circle cx="100" cy="26" r="8" fill="hsl(0 0% 85%)" stroke="hsl(0 0% 60%)" stroke-width="1.5" />
-    <circle cx="100" cy="26" r="5" fill="hsl(0 0% 92%)" />
+
+    <ellipse cx="100" cy="73" rx="3" ry="2.5" fill="hsl(160,40%,30%)" />
+    <path d="M88 80 Q94 88 100 88 Q106 88 112 80" stroke="hsl(220,20%,25%)" stroke-width="2.5" stroke-linecap="round" fill="none" />
+
+    <path d="M68 55 Q72 30 100 24 Q128 30 132 55" fill="hsl(45,85%,55%)" stroke="hsl(40,80%,45%)" stroke-width="1" />
+    <ellipse cx="100" cy="55" rx="35" ry="5" fill="hsl(40,80%,48%)" />
+    <circle cx="100" cy="26" r="8" fill="hsl(0,0%,85%)" stroke="hsl(0,0%,60%)" stroke-width="1.5" />
+    <circle cx="100" cy="26" r="5" fill="hsl(0,0%,92%)" />
   </g>
 </svg>
