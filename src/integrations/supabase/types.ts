@@ -848,6 +848,10 @@ export type Database = {
           include_mood: boolean
           include_sleep: boolean
           onboarding_completed: boolean
+          quick_include_eating: boolean
+          quick_include_exercise: boolean
+          quick_include_medication: boolean
+          quick_include_sleep: boolean
           updated_at: string
           user_id: string
         }
@@ -860,6 +864,10 @@ export type Database = {
           include_mood?: boolean
           include_sleep?: boolean
           onboarding_completed?: boolean
+          quick_include_eating?: boolean
+          quick_include_exercise?: boolean
+          quick_include_medication?: boolean
+          quick_include_sleep?: boolean
           updated_at?: string
           user_id: string
         }
@@ -872,6 +880,10 @@ export type Database = {
           include_mood?: boolean
           include_sleep?: boolean
           onboarding_completed?: boolean
+          quick_include_eating?: boolean
+          quick_include_exercise?: boolean
+          quick_include_medication?: boolean
+          quick_include_sleep?: boolean
           updated_at?: string
           user_id?: string
         }
