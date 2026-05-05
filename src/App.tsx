@@ -112,7 +112,7 @@ const AppLayout = ({ children }: { children: React.ReactNode }) => (
 
 // Root: show landing page (Auth) for logged-out, dashboard (Index) for logged-in.
 const RootRoute = () => {
-  const { useAuth } = require('@/hooks/useAuth');
+  // useAuth imported at top
   const { user, loading } = useAuth();
   if (loading) {
     return (
