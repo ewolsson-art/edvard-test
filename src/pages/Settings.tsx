@@ -36,18 +36,28 @@ const Settings = () => {
   const [checkinSelections, setCheckinSelections] = useState({
     include_mood: true, include_sleep: true, include_eating: true,
     include_exercise: true, include_medication: true,
+    quick_include_sleep: false, quick_include_eating: false,
+    quick_include_exercise: false, quick_include_medication: false,
   });
   const [isSavingCheckin, setIsSavingCheckin] = useState(false);
   const [hasCheckinChanges, setHasCheckinChanges] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [deleteConfirmText, setDeleteConfirmText] = useState('');
 
-  const CHECKIN_OPTIONS = [
+  const DETAILED_OPTIONS = [
     { id: 'include_mood', label: t('settings.checkinMood'), description: t('settings.checkinMoodDesc'), icon: Brain, required: true },
     { id: 'include_sleep', label: t('settings.checkinSleep'), description: t('settings.checkinSleepDesc'), icon: Moon },
     { id: 'include_eating', label: t('settings.checkinEating'), description: t('settings.checkinEatingDesc'), icon: Utensils },
     { id: 'include_exercise', label: t('settings.checkinExercise'), description: t('settings.checkinExerciseDesc'), icon: Dumbbell },
     { id: 'include_medication', label: t('settings.checkinMedication'), description: t('settings.checkinMedicationDesc'), icon: Pill },
+  ];
+
+  const QUICK_OPTIONS = [
+    { id: 'include_mood', label: t('settings.checkinMood'), description: t('settings.checkinMoodDesc'), icon: Brain, required: true },
+    { id: 'quick_include_sleep', label: t('settings.checkinSleep'), description: t('settings.checkinSleepDesc'), icon: Moon },
+    { id: 'quick_include_eating', label: t('settings.checkinEating'), description: t('settings.checkinEatingDesc'), icon: Utensils },
+    { id: 'quick_include_exercise', label: t('settings.checkinExercise'), description: t('settings.checkinExerciseDesc'), icon: Dumbbell },
+    { id: 'quick_include_medication', label: t('settings.checkinMedication'), description: t('settings.checkinMedicationDesc'), icon: Pill },
   ];
 
   useEffect(() => {
@@ -56,6 +66,10 @@ const Settings = () => {
         include_mood: preferences.include_mood, include_sleep: preferences.include_sleep,
         include_eating: preferences.include_eating, include_exercise: preferences.include_exercise,
         include_medication: preferences.include_medication,
+        quick_include_sleep: preferences.quick_include_sleep ?? false,
+        quick_include_eating: preferences.quick_include_eating ?? false,
+        quick_include_exercise: preferences.quick_include_exercise ?? false,
+        quick_include_medication: preferences.quick_include_medication ?? false,
       });
     }
   }, [preferences]);
@@ -67,7 +81,11 @@ const Settings = () => {
         checkinSelections.include_sleep !== preferences.include_sleep ||
         checkinSelections.include_eating !== preferences.include_eating ||
         checkinSelections.include_exercise !== preferences.include_exercise ||
-        checkinSelections.include_medication !== preferences.include_medication;
+        checkinSelections.include_medication !== preferences.include_medication ||
+        checkinSelections.quick_include_sleep !== (preferences.quick_include_sleep ?? false) ||
+        checkinSelections.quick_include_eating !== (preferences.quick_include_eating ?? false) ||
+        checkinSelections.quick_include_exercise !== (preferences.quick_include_exercise ?? false) ||
+        checkinSelections.quick_include_medication !== (preferences.quick_include_medication ?? false);
       setHasCheckinChanges(changed);
     }
   }, [checkinSelections, preferences]);
@@ -121,37 +139,52 @@ const Settings = () => {
   }
 
   if (view === 'checkin') {
+    const renderOptionList = (options: typeof DETAILED_OPTIONS) => (
+      <div className="space-y-3">
+        {options.map((option) => {
+          const Icon = option.icon;
+          const isChecked = checkinSelections[option.id as keyof typeof checkinSelections];
+          const isDisabled = option.required;
+          return (
+            <div
+              key={option.id}
+              className={cn(
+                "flex items-center gap-4 p-4 rounded-xl border-2 transition-all",
+                isDisabled ? 'cursor-not-allowed opacity-75' : 'cursor-pointer',
+                isChecked ? 'border-primary bg-primary/5' : 'border-border bg-muted/30 hover:border-muted-foreground/30'
+              )}
+              onClick={() => !isDisabled && handleCheckinToggle(option.id)}
+            >
+              <Checkbox id={option.id} checked={isChecked} onCheckedChange={() => !isDisabled && handleCheckinToggle(option.id)} disabled={isDisabled} className="pointer-events-none" />
+              <div className={cn("p-2 rounded-lg", isChecked ? 'bg-primary/10' : 'bg-muted')}>
+                <Icon className={cn("w-5 h-5", isChecked ? 'text-primary' : 'text-muted-foreground')} />
+              </div>
+              <div className="flex-1">
+                <Label htmlFor={option.id} className={cn("font-medium flex items-center gap-2", isDisabled ? 'cursor-not-allowed' : 'cursor-pointer')}>
+                  {option.label}
+                  {option.required && <span className="text-xs bg-muted text-muted-foreground px-2 py-0.5 rounded-full">{t('settings.required')}</span>}
+                </Label>
+                <p className="text-sm text-muted-foreground">{option.description}</p>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    );
+
     return (
       <SubPage title={t('settings.customizeCheckinTitle')} onBack={() => setView('main')}>
-        <div className="space-y-3 mb-6">
-          {CHECKIN_OPTIONS.map((option) => {
-            const Icon = option.icon;
-            const isChecked = checkinSelections[option.id as keyof typeof checkinSelections];
-            const isDisabled = option.required;
-            return (
-              <div
-                key={option.id}
-                className={cn(
-                  "flex items-center gap-4 p-4 rounded-xl border-2 transition-all",
-                  isDisabled ? 'cursor-not-allowed opacity-75' : 'cursor-pointer',
-                  isChecked ? 'border-primary bg-primary/5' : 'border-border bg-muted/30 hover:border-muted-foreground/30'
-                )}
-                onClick={() => !isDisabled && handleCheckinToggle(option.id)}
-              >
-                <Checkbox id={option.id} checked={isChecked} onCheckedChange={() => !isDisabled && handleCheckinToggle(option.id)} disabled={isDisabled} className="pointer-events-none" />
-                <div className={cn("p-2 rounded-lg", isChecked ? 'bg-primary/10' : 'bg-muted')}>
-                  <Icon className={cn("w-5 h-5", isChecked ? 'text-primary' : 'text-muted-foreground')} />
-                </div>
-                <div className="flex-1">
-                  <Label htmlFor={option.id} className={cn("font-medium flex items-center gap-2", isDisabled ? 'cursor-not-allowed' : 'cursor-pointer')}>
-                    {option.label}
-                    {option.required && <span className="text-xs bg-muted text-muted-foreground px-2 py-0.5 rounded-full">{t('settings.required')}</span>}
-                  </Label>
-                  <p className="text-sm text-muted-foreground">{option.description}</p>
-                </div>
-              </div>
-            );
-          })}
+        <div className="space-y-8 mb-6">
+          <section>
+            <h2 className="font-display text-base font-semibold mb-1">{t('settings.checkinModeQuickTitle')}</h2>
+            <p className="text-[13px] text-foreground/40 mb-3">{t('settings.checkinModeQuickDesc')}</p>
+            {renderOptionList(QUICK_OPTIONS)}
+          </section>
+          <section>
+            <h2 className="font-display text-base font-semibold mb-1">{t('settings.checkinModeDetailedTitle')}</h2>
+            <p className="text-[13px] text-foreground/40 mb-3">{t('settings.checkinModeDetailedDesc')}</p>
+            {renderOptionList(DETAILED_OPTIONS)}
+          </section>
         </div>
         <Button onClick={handleSaveCheckin} className="w-full gap-2 mb-8" disabled={isSavingCheckin || !hasCheckinChanges}>
           {isSavingCheckin ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}

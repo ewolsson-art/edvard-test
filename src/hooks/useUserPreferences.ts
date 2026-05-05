@@ -11,6 +11,10 @@ export interface UserPreferences {
   include_eating: boolean;
   include_exercise: boolean;
   include_medication: boolean;
+  quick_include_sleep: boolean;
+  quick_include_eating: boolean;
+  quick_include_exercise: boolean;
+  quick_include_medication: boolean;
   onboarding_completed: boolean;
   created_at: string;
   updated_at: string;
