@@ -63,16 +63,13 @@ const Auth = () => {
                 <p className="text-[0.95rem] sm:text-lg md:text-xl text-white/80 leading-relaxed">
                   {t('landing.heroSubtitle')}
                 </p>
-                <div className="flex flex-col items-start gap-3 pt-2 md:pt-4">
+                <div className="flex flex-col gap-3 pt-2 md:pt-4">
                   <button
-                    className="px-10 md:px-14 py-3.5 md:py-4 rounded-full bg-[hsl(45_85%_55%)] text-[hsl(225_30%_7%)] font-bold text-base md:text-lg tracking-wide shadow-[0_4px_24px_hsl(45_85%_55%/0.35)] hover:shadow-[0_8px_32px_hsl(45_85%_55%/0.5)] hover:bg-[hsl(45_85%_62%)] hover:scale-105 active:scale-[0.98] transition-all duration-200"
+                    className="px-10 md:px-14 py-3.5 md:py-4 rounded-full bg-[hsl(45_85%_55%)] text-[hsl(225_30%_7%)] font-bold text-base md:text-lg tracking-wide shadow-[0_4px_24px_hsl(45_85%_55%/0.35)] hover:shadow-[0_8px_32px_hsl(45_85%_55%/0.5)] hover:bg-[hsl(45_85%_62%)] hover:scale-105 active:scale-[0.98] transition-all duration-200 w-fit"
                     onClick={() => navigate("/skapa-konto")}
                   >
                     {t('nav.getStarted')}
                   </button>
-                  <p className="text-[12px] md:text-[13px] text-white/55 tracking-wide pl-1">
-                    Kostnadsfritt · Krypterat · Delas aldrig
-                  </p>
                 </div>
               </div>
               <div className="hidden md:block flex-shrink-0 ml-6 lg:ml-12 self-end mb-4">
