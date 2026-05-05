@@ -174,6 +174,12 @@ const Settings = () => {
 
     return (
       <SubPage title={t('settings.customizeCheckinTitle')} onBack={() => setView('main')}>
+        <div
+          className="mb-6 rounded-2xl bg-foreground/[0.03] border border-border/30 p-4 text-[13px] leading-relaxed text-foreground/70"
+          dangerouslySetInnerHTML={{
+            __html: t('settings.checkinModeIntro').replace(/\*\*(.+?)\*\*/g, '<strong class="text-foreground/90 font-semibold">$1</strong>'),
+          }}
+        />
         <div className="space-y-8 mb-6">
           <section>
             <h2 className="font-display text-base font-semibold mb-1">{t('settings.checkinModeQuickTitle')}</h2>
