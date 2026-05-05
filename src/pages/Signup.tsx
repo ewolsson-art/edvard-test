@@ -64,7 +64,7 @@ const CHECKIN_OPTIONS: Array<{
 
 const Signup = () => {
   const [step, setStep] = useState<Step>("role");
-  const [role, setRole] = useState<AccountRole | null>(null);
+  const [role, setRole] = useState<AccountRole | null>("patient");
   const [checkinSelections, setCheckinSelections] = useState<CheckinSelections>({
     include_mood: true,
     include_medication: false,
