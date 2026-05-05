@@ -226,7 +226,6 @@ export function TodayCheckin({
   // Form data
   const [checkinData, setCheckinData] = useState<CheckinData>({ mood: 'stable', sleepQuality: 'okay' });
   const [customAnswersState, setCustomAnswersState] = useState<Record<string, string>>(initialCustomAnswers);
-  const [checkinMode, setCheckinMode] = useState<'quick' | 'detailed'>('detailed');
 
   // Auto-mark scheduled medications as taken when entering medication step for the first time.
   // Vid behov-mediciner är frivilliga och förkryssas aldrig.
