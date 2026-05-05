@@ -174,11 +174,7 @@ const App = () => (
                 <AppLayout><RelativeReports /></AppLayout>
               </ProtectedRoute>
             } />
-            <Route path="/" element={
-              <ProtectedRoute>
-                <AppLayout><Index /></AppLayout>
-              </ProtectedRoute>
-            } />
+            <Route path="/" element={<RootRoute />} />
             <Route path="/oversikt" element={
               <ProtectedRoute>
                 <AppLayout><Overview /></AppLayout>
