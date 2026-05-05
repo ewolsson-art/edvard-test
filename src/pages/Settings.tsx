@@ -139,37 +139,52 @@ const Settings = () => {
   }
 
   if (view === 'checkin') {
+    const renderOptionList = (options: typeof DETAILED_OPTIONS) => (
+      <div className="space-y-3">
+        {options.map((option) => {
+          const Icon = option.icon;
+          const isChecked = checkinSelections[option.id as keyof typeof checkinSelections];
+          const isDisabled = option.required;
+          return (
+            <div
+              key={option.id}
+              className={cn(
+                "flex items-center gap-4 p-4 rounded-xl border-2 transition-all",
+                isDisabled ? 'cursor-not-allowed opacity-75' : 'cursor-pointer',
+                isChecked ? 'border-primary bg-primary/5' : 'border-border bg-muted/30 hover:border-muted-foreground/30'
+              )}
+              onClick={() => !isDisabled && handleCheckinToggle(option.id)}
+            >
+              <Checkbox id={option.id} checked={isChecked} onCheckedChange={() => !isDisabled && handleCheckinToggle(option.id)} disabled={isDisabled} className="pointer-events-none" />
+              <div className={cn("p-2 rounded-lg", isChecked ? 'bg-primary/10' : 'bg-muted')}>
+                <Icon className={cn("w-5 h-5", isChecked ? 'text-primary' : 'text-muted-foreground')} />
+              </div>
+              <div className="flex-1">
+                <Label htmlFor={option.id} className={cn("font-medium flex items-center gap-2", isDisabled ? 'cursor-not-allowed' : 'cursor-pointer')}>
+                  {option.label}
+                  {option.required && <span className="text-xs bg-muted text-muted-foreground px-2 py-0.5 rounded-full">{t('settings.required')}</span>}
+                </Label>
+                <p className="text-sm text-muted-foreground">{option.description}</p>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    );
+
     return (
       <SubPage title={t('settings.customizeCheckinTitle')} onBack={() => setView('main')}>
-        <div className="space-y-3 mb-6">
-          {CHECKIN_OPTIONS.map((option) => {
-            const Icon = option.icon;
-            const isChecked = checkinSelections[option.id as keyof typeof checkinSelections];
-            const isDisabled = option.required;
-            return (
-              <div
-                key={option.id}
-                className={cn(
-                  "flex items-center gap-4 p-4 rounded-xl border-2 transition-all",
-                  isDisabled ? 'cursor-not-allowed opacity-75' : 'cursor-pointer',
-                  isChecked ? 'border-primary bg-primary/5' : 'border-border bg-muted/30 hover:border-muted-foreground/30'
-                )}
-                onClick={() => !isDisabled && handleCheckinToggle(option.id)}
-              >
-                <Checkbox id={option.id} checked={isChecked} onCheckedChange={() => !isDisabled && handleCheckinToggle(option.id)} disabled={isDisabled} className="pointer-events-none" />
-                <div className={cn("p-2 rounded-lg", isChecked ? 'bg-primary/10' : 'bg-muted')}>
-                  <Icon className={cn("w-5 h-5", isChecked ? 'text-primary' : 'text-muted-foreground')} />
-                </div>
-                <div className="flex-1">
-                  <Label htmlFor={option.id} className={cn("font-medium flex items-center gap-2", isDisabled ? 'cursor-not-allowed' : 'cursor-pointer')}>
-                    {option.label}
-                    {option.required && <span className="text-xs bg-muted text-muted-foreground px-2 py-0.5 rounded-full">{t('settings.required')}</span>}
-                  </Label>
-                  <p className="text-sm text-muted-foreground">{option.description}</p>
-                </div>
-              </div>
-            );
-          })}
+        <div className="space-y-8 mb-6">
+          <section>
+            <h2 className="font-display text-base font-semibold mb-1">{t('settings.checkinModeQuickTitle')}</h2>
+            <p className="text-[13px] text-foreground/40 mb-3">{t('settings.checkinModeQuickDesc')}</p>
+            {renderOptionList(QUICK_OPTIONS)}
+          </section>
+          <section>
+            <h2 className="font-display text-base font-semibold mb-1">{t('settings.checkinModeDetailedTitle')}</h2>
+            <p className="text-[13px] text-foreground/40 mb-3">{t('settings.checkinModeDetailedDesc')}</p>
+            {renderOptionList(DETAILED_OPTIONS)}
+          </section>
         </div>
         <Button onClick={handleSaveCheckin} className="w-full gap-2 mb-8" disabled={isSavingCheckin || !hasCheckinChanges}>
           {isSavingCheckin ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
