@@ -14,6 +14,7 @@ import { NotificationSchedulerProvider } from "@/components/NotificationSchedule
 import { BottomTabBar } from "@/components/native/BottomTabBar";
 import { NativeShellInit } from "@/components/native/NativeShellInit";
 import { NativeAppGate } from "@/components/native/NativeAppGate";
+import { useAuth } from "@/hooks/useAuth";
 
 import { preloadCriticalRoutes } from "@/lib/routePreload";
 
