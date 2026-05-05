@@ -353,7 +353,7 @@ const Signup = () => {
           {/* Step 3: Contact (account creation) */}
           {step === "contact" && (
             <div className="animate-fade-in">
-              <button onClick={() => setStep(role === "doctor" ? "role" : "checkin")} className="inline-flex items-center gap-2 px-4 py-2 -ml-2 mb-8 rounded-full text-sm font-medium text-white/70 hover:text-white hover:bg-white/[0.06] transition-all">
+              <button onClick={() => navigate("/")} className="inline-flex items-center gap-2 px-4 py-2 -ml-2 mb-8 rounded-full text-sm font-medium text-white/70 hover:text-white hover:bg-white/[0.06] transition-all">
                 <ArrowLeft className="h-4 w-4" />
                 {t("common.back")}
               </button>
