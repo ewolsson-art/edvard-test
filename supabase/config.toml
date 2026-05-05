@@ -1,13 +1,11 @@
 project_id = "phudximaihknfsmkizix"
 
-
-
-
-[functions.delete-account]
-verify_jwt = false
-
-[functions.get-shared-report]
-verify_jwt = false
-
-[functions.process-email-queue]
-verify_jwt = true
+[functions]
+  [functions.auth-email-hook]
+    verify_jwt = false
+  [functions.delete-account]
+    verify_jwt = false
+  [functions.get-shared-report]
+    verify_jwt = false
+  [functions.process-email-queue]
+    verify_jwt = true
