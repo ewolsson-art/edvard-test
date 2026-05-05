@@ -338,7 +338,7 @@ const Signup = () => {
               </div>
 
               <Button
-                onClick={() => role && setStep(role === "doctor" ? "contact" : "checkin")}
+                onClick={() => role && setStep("contact")}
                 disabled={!role}
                 className="w-full h-12 rounded-2xl text-[15px] font-semibold bg-[hsl(45_85%_55%)] text-[hsl(230_30%_5%)] hover:bg-[hsl(45_85%_65%)] shadow-[0_4px_20px_-4px_hsl(45_85%_55%/0.4)] hover:shadow-[0_6px_28px_-4px_hsl(45_85%_55%/0.5)] transition-all duration-300 mt-5 group disabled:opacity-30 disabled:shadow-none"
               >
