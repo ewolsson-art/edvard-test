@@ -28,7 +28,7 @@ export function ProtectedRoute({ children, skipOnboardingCheck = false }: Protec
   }
 
   if (!user) {
-    return <Navigate to="/auth" replace />;
+    return <Navigate to="/" replace />;
   }
 
   // Check if user needs to complete their profile (OTP signup flow)

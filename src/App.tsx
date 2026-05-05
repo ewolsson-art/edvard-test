@@ -14,6 +14,7 @@ import { NotificationSchedulerProvider } from "@/components/NotificationSchedule
 import { BottomTabBar } from "@/components/native/BottomTabBar";
 import { NativeShellInit } from "@/components/native/NativeShellInit";
 import { NativeAppGate } from "@/components/native/NativeAppGate";
+import { useAuth } from "@/hooks/useAuth";
 
 import { preloadCriticalRoutes } from "@/lib/routePreload";
 
@@ -109,6 +110,25 @@ const AppLayout = ({ children }: { children: React.ReactNode }) => (
   </SidebarProvider>
 );
 
+// Root: show landing page (Auth) for logged-out, dashboard (Index) for logged-in.
+const RootRoute = () => {
+  // useAuth imported at top
+  const { user, loading } = useAuth();
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="h-6 w-6 rounded-full border-2 border-white/15 border-t-white/60 animate-spin" />
+      </div>
+    );
+  }
+  if (!user) return <Auth />;
+  return (
+    <ProtectedRoute>
+      <AppLayout><Index /></AppLayout>
+    </ProtectedRoute>
+  );
+};
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false} forcedTheme="dark">
@@ -127,7 +147,7 @@ const App = () => (
               </div>
             }>
             <Routes>
-            <Route path="/auth" element={<Auth />} />
+            <Route path="/auth" element={<Navigate to="/" replace />} />
             <Route path="/sa-funkar-det" element={<HowItWorksPage />} />
             <Route path="/om-oss" element={<AboutUs />} />
             <Route path="/for-anvandare" element={<ForPatients />} />
@@ -174,11 +194,7 @@ const App = () => (
                 <AppLayout><RelativeReports /></AppLayout>
               </ProtectedRoute>
             } />
-            <Route path="/" element={
-              <ProtectedRoute>
-                <AppLayout><Index /></AppLayout>
-              </ProtectedRoute>
-            } />
+            <Route path="/" element={<RootRoute />} />
             <Route path="/oversikt" element={
               <ProtectedRoute>
                 <AppLayout><Overview /></AppLayout>
