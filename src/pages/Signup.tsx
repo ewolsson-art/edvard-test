@@ -195,12 +195,12 @@ const Signup = () => {
 
   return (
     <DarkNightBackground>
-      <div className="flex flex-1 items-start justify-center px-6 pt-10 md:pt-14 pb-12" role="main">
+      <div className="flex flex-1 items-start justify-center px-6 pt-5 md:pt-6 pb-5" role="main">
         <div className="w-full max-w-sm">
 
           {/* Subtle progress bar */}
           {showProgress && (
-            <div className="mb-10 animate-fade-in">
+            <div className="mb-5 animate-fade-in">
               <div className="h-[2px] w-full bg-white/[0.06] rounded-full overflow-hidden">
                 <div
                   className="h-full bg-[hsl(45_85%_55%)] rounded-full transition-all duration-700 ease-out"
@@ -213,7 +213,7 @@ const Signup = () => {
           {/* Step 1: Role */}
           {step === "role" && (
             <div className="animate-fade-in">
-              <Link to="/auth" className="inline-flex items-center gap-2 px-4 py-2 -ml-2 mb-8 rounded-full text-sm font-medium text-white/70 hover:text-white hover:bg-white/[0.06] transition-all">
+              <Link to="/auth" className="inline-flex items-center gap-2 px-4 py-2 -ml-2 mb-4 rounded-full text-sm font-medium text-white/70 hover:text-white hover:bg-white/[0.06] transition-all">
                 <ArrowLeft className="h-4 w-4" />
                 {t("common.cancel")}
               </Link>
@@ -222,7 +222,7 @@ const Signup = () => {
               </h1>
 
               {/* Sköldpaddan kör bil från vänster till höger */}
-              <div className="turtle-car-track relative mt-5 h-16 md:h-20 w-full" aria-hidden="true">
+              <div className="turtle-car-track relative mt-3 h-14 w-full" aria-hidden="true">
                 {/* Mark / väg-linje */}
                 <div className="absolute left-0 right-0 bottom-2 h-px bg-white/[0.06]" />
 
@@ -284,7 +284,7 @@ const Signup = () => {
                 {t("auth.chooseHowToUse")}
               </p>
 
-              <div className="mt-8 space-y-3" role="radiogroup">
+              <div className="mt-4 space-y-2" role="radiogroup">
                 {(Object.keys(roleInfo) as AccountRole[]).map((roleKey) => {
                   const info = roleInfo[roleKey];
                   const Icon = info.icon;
@@ -298,7 +298,7 @@ const Signup = () => {
                       role="radio"
                       aria-checked={isSelected}
                       className={cn(
-                        "w-full p-4 rounded-2xl text-left transition-all duration-300 group",
+                        "w-full p-3 rounded-2xl text-left transition-all duration-300 group",
                         isSelected
                           ? "bg-white/[0.08] ring-2 ring-[hsl(45_85%_55%)] shadow-[0_0_24px_-6px_hsl(45_85%_55%/0.2)]"
                           : "bg-white/[0.03] hover:bg-white/[0.06] ring-1 ring-white/[0.06]"
@@ -306,7 +306,7 @@ const Signup = () => {
                     >
                       <div className="flex items-center gap-4">
                         <div className={cn(
-                          "w-11 h-11 rounded-xl flex-shrink-0 flex items-center justify-center transition-all duration-300",
+                           "w-10 h-10 rounded-xl flex-shrink-0 flex items-center justify-center transition-all duration-300",
                           isSelected ? "bg-[hsl(45_85%_55%)] text-[hsl(230_30%_5%)]" : "bg-white/[0.06] text-white/40"
                         )}>
                           <Icon className="h-5 w-5" />
@@ -314,7 +314,7 @@ const Signup = () => {
                         <div className="flex-1 min-w-0">
                           <span className="text-[11px] font-medium text-white/30 uppercase tracking-wider">{t(info.prefix)}</span>
                           <h3 className={cn(
-                            "text-lg font-semibold capitalize -mt-0.5 transition-colors",
+                            "text-base font-semibold capitalize -mt-0.5 transition-colors",
                             isSelected ? "text-white" : "text-white/70"
                           )}>
                              {t(info.title)}
@@ -340,7 +340,7 @@ const Signup = () => {
               <Button
                 onClick={() => role && setStep(role === "doctor" ? "contact" : "checkin")}
                 disabled={!role}
-                className="w-full h-12 rounded-2xl text-[15px] font-semibold bg-[hsl(45_85%_55%)] text-[hsl(230_30%_5%)] hover:bg-[hsl(45_85%_65%)] shadow-[0_4px_20px_-4px_hsl(45_85%_55%/0.4)] hover:shadow-[0_6px_28px_-4px_hsl(45_85%_55%/0.5)] transition-all duration-300 mt-8 group disabled:opacity-30 disabled:shadow-none"
+                className="w-full h-12 rounded-2xl text-[15px] font-semibold bg-[hsl(45_85%_55%)] text-[hsl(230_30%_5%)] hover:bg-[hsl(45_85%_65%)] shadow-[0_4px_20px_-4px_hsl(45_85%_55%/0.4)] hover:shadow-[0_6px_28px_-4px_hsl(45_85%_55%/0.5)] transition-all duration-300 mt-5 group disabled:opacity-30 disabled:shadow-none"
               >
                 {t("common.continue")}
                 <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
