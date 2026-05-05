@@ -195,7 +195,7 @@ const Signup = () => {
 
   return (
     <DarkNightBackground>
-      <div className="flex flex-1 items-start justify-center px-6 pt-5 md:pt-6 pb-5" role="main">
+      <div className={`flex flex-1 justify-center px-6 pb-5 ${step === "email-sent" ? "items-center pt-5" : "items-start pt-5 md:pt-6"}`} role="main">
         <div className="w-full max-w-sm">
 
           {/* Subtle progress bar */}
