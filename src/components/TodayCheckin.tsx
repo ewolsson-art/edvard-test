@@ -175,18 +175,24 @@ export function TodayCheckin({
       ? t('common.yesterday') 
       : format(displayDate, "EEEE d MMMM", { locale: sv });
 
-  // Build dynamic steps based on preferences
+  // Build dynamic steps based on preferences (separate sets for quick vs detailed)
   const STEPS = useMemo(() => {
     const steps: Step[] = ['mood', 'tags']; // Mood + Tags always included
-    
-    if (preferences?.include_sleep) steps.push('sleep');
-    if (preferences?.include_eating) steps.push('eating');
-    if (preferences?.include_exercise) steps.push('exercise');
-    if (preferences?.include_medication) steps.push('medication');
-    if (customQuestions.length > 0) steps.push('custom_questions');
-    
+    const isQuick = checkinMode === 'quick';
+
+    const includeSleep = isQuick ? preferences?.quick_include_sleep : preferences?.include_sleep;
+    const includeEating = isQuick ? preferences?.quick_include_eating : preferences?.include_eating;
+    const includeExercise = isQuick ? preferences?.quick_include_exercise : preferences?.include_exercise;
+    const includeMedication = isQuick ? preferences?.quick_include_medication : preferences?.include_medication;
+
+    if (includeSleep) steps.push('sleep');
+    if (includeEating) steps.push('eating');
+    if (includeExercise) steps.push('exercise');
+    if (includeMedication) steps.push('medication');
+    if (!isQuick && customQuestions.length > 0) steps.push('custom_questions');
+
     return steps;
-  }, [preferences, customQuestions.length]);
+  }, [preferences, customQuestions.length, checkinMode]);
 
   // Calculate encouragement data for depressed mood
   const encouragementData = useMemo(() => {
