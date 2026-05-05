@@ -466,7 +466,6 @@ export function TodayCheckin({
     return config[mood];
   };
 
-  const [checkinMode, setCheckinMode] = useState<'quick' | 'detailed'>('detailed');
 
   // Show complete state
   if (isCheckinComplete && !isEditing && currentStep !== 'success-animation') {
