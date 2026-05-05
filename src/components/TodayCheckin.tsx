@@ -175,7 +175,7 @@ export function TodayCheckin({
       ? t('common.yesterday') 
       : format(displayDate, "EEEE d MMMM", { locale: sv });
 
-  const [checkinMode, setCheckinMode] = useState<'quick' | 'detailed'>('detailed');
+  const [checkinMode, setCheckinMode] = useState<'quick' | 'detailed'>('quick');
 
   // Build dynamic steps based on preferences (separate sets for quick vs detailed)
   const STEPS = useMemo(() => {
