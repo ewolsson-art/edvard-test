@@ -127,7 +127,7 @@ const App = () => (
               </div>
             }>
             <Routes>
-            <Route path="/auth" element={<Auth />} />
+            <Route path="/auth" element={<Navigate to="/" replace />} />
             <Route path="/sa-funkar-det" element={<HowItWorksPage />} />
             <Route path="/om-oss" element={<AboutUs />} />
             <Route path="/for-anvandare" element={<ForPatients />} />
