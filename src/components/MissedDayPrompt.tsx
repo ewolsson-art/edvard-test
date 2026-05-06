@@ -57,9 +57,11 @@ export function MissedDayPrompt({
         <h1 className="font-display text-[28px] sm:text-3xl font-bold tracking-tight mb-3">
           {headline}
         </h1>
-        <p className="text-[15px] text-muted-foreground max-w-[340px] leading-relaxed">
-          {sub}
-        </p>
+        {sub && (
+          <p className="text-[15px] text-muted-foreground max-w-[340px] leading-relaxed">
+            {sub}
+          </p>
+        )}
 
         {currentStreak > 0 && (
           <div className="mt-5 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[hsl(45_85%_55%/0.12)] border border-[hsl(45_85%_55%/0.25)]">
