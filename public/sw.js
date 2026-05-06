@@ -23,11 +23,26 @@ self.addEventListener('activate', (event) => {
 
 self.addEventListener('fetch', (event) => {
   const { request } = event;
-  
+
   // Skip non-GET and API requests
   if (request.method !== 'GET') return;
   const url = new URL(request.url);
   if (url.pathname.startsWith('/rest/') || url.pathname.startsWith('/auth/') || url.hostname.includes('supabase')) return;
+
+  // NEVER intercept OAuth broker paths or any navigation that carries auth callback params.
+  // The Lovable OAuth proxy lives at /~oauth/* and must always hit the network.
+  if (url.pathname.startsWith('/~oauth')) return;
+  if (request.mode === 'navigate') {
+    const search = url.search || '';
+    const hash = url.hash || '';
+    if (
+      /[?&](code|token_hash|provider_token|error)=/.test(search) ||
+      hash.includes('access_token') ||
+      hash.includes('type=')
+    ) {
+      return;
+    }
+  }
 
   event.respondWith(
     fetch(request)
