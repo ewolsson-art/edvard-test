@@ -1,6 +1,6 @@
 import { format, parseISO, isYesterday } from 'date-fns';
 import { sv } from 'date-fns/locale';
-import { CalendarDays, ArrowRight, Flame } from 'lucide-react';
+import { CalendarDays, ArrowRight, Flame, AlertTriangle } from 'lucide-react';
 import { TurtleLogo } from '@/components/TurtleLogo';
 
 interface MissedDayPromptProps {
