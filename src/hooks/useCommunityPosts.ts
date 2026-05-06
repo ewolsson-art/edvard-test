@@ -179,8 +179,8 @@ export function useCommunityPosts() {
         author_name: post.is_anonymous 
           ? (post.anonymous_name || getAnonymousName(post._real_user_id))
           : (profileMap[post.user_id] || 'Användare'),
-        reaction_count: postReactions.length,
-        user_has_reacted: user ? postReactions.some(r => r.user_id === user.id) : false,
+        reaction_count: reactionCountMap.get(post.id) || 0,
+        user_has_reacted: myReactedPostIds.has(post.id),
         replies: postReplies,
         poll_options: postPollOptions,
         user_voted_option_id: userVote?.option_id || null,
