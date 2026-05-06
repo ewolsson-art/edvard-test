@@ -37,7 +37,7 @@ export function MissedDayPrompt({
       : `Du missade ${count} dagar`;
 
   const sub = onlyYesterday
-    ? 'Inga problem — fyll i hur igår var, så är du i fas igen. Det tar bara en halv minut.'
+    ? null
     : currentStreak > 0
       ? `Fyll i de missade dagarna för att rädda din streak på ${currentStreak} ${currentStreak === 1 ? 'dag' : 'dagar'}.`
       : 'Fyll i hur dagarna var så får du en mer rättvis bild över tid.';
@@ -57,9 +57,11 @@ export function MissedDayPrompt({
         <h1 className="font-display text-[28px] sm:text-3xl font-bold tracking-tight mb-3">
           {headline}
         </h1>
-        <p className="text-[15px] text-muted-foreground max-w-[340px] leading-relaxed">
-          {sub}
-        </p>
+        {sub && (
+          <p className="text-[15px] text-muted-foreground max-w-[340px] leading-relaxed">
+            {sub}
+          </p>
+        )}
 
         {currentStreak > 0 && (
           <div className="mt-5 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[hsl(45_85%_55%/0.12)] border border-[hsl(45_85%_55%/0.25)]">
