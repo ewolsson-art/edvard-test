@@ -1,6 +1,6 @@
 import { format, parseISO, isYesterday } from 'date-fns';
 import { sv } from 'date-fns/locale';
-import { CalendarDays, ArrowRight, Flame } from 'lucide-react';
+import { CalendarDays, ArrowRight, Flame, AlertTriangle } from 'lucide-react';
 import { TurtleLogo } from '@/components/TurtleLogo';
 
 interface MissedDayPromptProps {
@@ -114,16 +114,31 @@ export function MissedDayPrompt({
           </div>
         )}
 
-        {/* Secondary action — skip to today */}
-        <button
-          onClick={onCheckInToday}
-          className="w-full mt-5 py-3 text-[14px] font-medium text-muted-foreground/70 hover:text-foreground transition-colors"
-        >
-          Hoppa över och checka in för idag
-        </button>
-        <p className="text-[12px] text-muted-foreground/40 text-center mt-1 leading-relaxed">
-          Du kan alltid fylla i missade dagar senare via kalendern.
-        </p>
+        {/* Secondary action — warn about streak loss */}
+        <div className="mt-6 pt-5 border-t border-border/40">
+          {currentStreak > 0 ? (
+            <div className="flex items-start gap-2.5 mb-3 px-1">
+              <AlertTriangle className="w-4 h-4 text-[hsl(45_85%_55%)] flex-shrink-0 mt-0.5" />
+              <p className="text-[13px] text-muted-foreground leading-relaxed">
+                Hoppar du över förlorar du din streak på{' '}
+                <span className="font-semibold text-foreground tabular-nums">
+                  {currentStreak} {currentStreak === 1 ? 'dag' : 'dagar'}
+                </span>
+                . Den nollställs och börjar om från noll.
+              </p>
+            </div>
+          ) : (
+            <p className="text-[12px] text-muted-foreground/50 text-center mb-3 leading-relaxed px-2">
+              Hoppar du över räknas dagen som missad i din översikt.
+            </p>
+          )}
+          <button
+            onClick={onCheckInToday}
+            className="w-full py-2.5 text-[14px] font-medium text-muted-foreground/60 hover:text-muted-foreground transition-colors"
+          >
+            Hoppa över ändå
+          </button>
+        </div>
       </div>
     </div>
   );
