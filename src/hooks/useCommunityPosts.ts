@@ -130,8 +130,13 @@ export function useCommunityPosts() {
       });
     }
 
+    const reactionCountMap = new Map<string, number>(
+      (reactionCounts || []).map((r: any) => [r.post_id, Number(r.reaction_count)])
+    );
+    const myReactedPostIds = new Set((myReactions || []).map((r: any) => r.post_id));
+
     const enrichedPosts: CommunityPost[] = safePosts.map(post => {
-      const postReactions = (reactions || []).filter(r => r.post_id === post.id);
+
       const postReplies: CommunityReply[] = safeReplies
         .filter(r => r.post_id === post.id)
         .map(r => ({
