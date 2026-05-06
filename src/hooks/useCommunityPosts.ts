@@ -75,10 +75,14 @@ export function useCommunityPosts() {
       return;
     }
 
-    // Fetch reactions counts
-    const { data: reactions } = await supabase
-      .from('community_reactions')
-      .select('post_id, user_id');
+    // Fetch aggregated reaction counts (privacy-preserving) + the current user's own reactions
+    const { data: reactionCounts } = await supabase.rpc('get_post_reaction_counts');
+    const { data: myReactions } = user
+      ? await supabase
+          .from('community_reactions')
+          .select('post_id')
+          .eq('user_id', user.id)
+      : { data: [] as { post_id: string }[] };
 
     // Fetch replies (server-side masked)
     const { data: repliesData } = await supabase
