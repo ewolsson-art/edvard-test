@@ -37,7 +37,7 @@ export function MissedDayPrompt({
       : `Du missade ${count} dagar`;
 
   const sub = onlyYesterday
-    ? 'Inga problem — fyll i hur igår var, så är du i fas igen. Det tar bara en halv minut.'
+    ? null
     : currentStreak > 0
       ? `Fyll i de missade dagarna för att rädda din streak på ${currentStreak} ${currentStreak === 1 ? 'dag' : 'dagar'}.`
       : 'Fyll i hur dagarna var så får du en mer rättvis bild över tid.';
