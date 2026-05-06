@@ -15,10 +15,20 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// Check if the current URL has auth callback hash params
+// Check if the current URL has auth callback params (hash OR query string).
+// Lovable's OAuth broker on custom domains can return tokens via either path,
+// so we must wait for Supabase to process them before declaring "no session".
 function hasAuthCallbackParams(): boolean {
-  const hash = window.location.hash;
-  return hash.includes('access_token') || hash.includes('type=magiclink') || hash.includes('type=recovery') || hash.includes('type=signup');
+  const hash = window.location.hash || '';
+  const search = window.location.search || '';
+  if (hash.includes('access_token') || hash.includes('type=magiclink') || hash.includes('type=recovery') || hash.includes('type=signup') || hash.includes('error=')) {
+    return true;
+  }
+  // PKCE / code-exchange flow used by some OAuth callbacks
+  if (/[?&](code|token_hash|provider_token)=/.test(search)) {
+    return true;
+  }
+  return false;
 }
 
 export function AuthProvider({ children }: { children: ReactNode }) {
