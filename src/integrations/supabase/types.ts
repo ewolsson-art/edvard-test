@@ -1187,6 +1187,13 @@ export type Database = {
         Args: { patient_email: string }
         Returns: string
       }
+      get_post_reaction_counts: {
+        Args: never
+        Returns: {
+          post_id: string
+          reaction_count: number
+        }[]
+      }
       get_relative_email_for_patient: {
         Args: { p_patient_id: string; p_relative_id: string }
         Returns: string

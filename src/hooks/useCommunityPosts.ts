@@ -75,10 +75,14 @@ export function useCommunityPosts() {
       return;
     }
 
-    // Fetch reactions counts
-    const { data: reactions } = await supabase
-      .from('community_reactions')
-      .select('post_id, user_id');
+    // Fetch aggregated reaction counts (privacy-preserving) + the current user's own reactions
+    const { data: reactionCounts } = await supabase.rpc('get_post_reaction_counts');
+    const { data: myReactions } = user
+      ? await supabase
+          .from('community_reactions')
+          .select('post_id')
+          .eq('user_id', user.id)
+      : { data: [] as { post_id: string }[] };
 
     // Fetch replies (server-side masked)
     const { data: repliesData } = await supabase
@@ -126,8 +130,13 @@ export function useCommunityPosts() {
       });
     }
 
+    const reactionCountMap = new Map<string, number>(
+      (reactionCounts || []).map((r: any) => [r.post_id, Number(r.reaction_count)])
+    );
+    const myReactedPostIds = new Set((myReactions || []).map((r: any) => r.post_id));
+
     const enrichedPosts: CommunityPost[] = safePosts.map(post => {
-      const postReactions = (reactions || []).filter(r => r.post_id === post.id);
+
       const postReplies: CommunityReply[] = safeReplies
         .filter(r => r.post_id === post.id)
         .map(r => ({
@@ -170,8 +179,8 @@ export function useCommunityPosts() {
         author_name: post.is_anonymous 
           ? (post.anonymous_name || getAnonymousName(post._real_user_id))
           : (profileMap[post.user_id] || 'Användare'),
-        reaction_count: postReactions.length,
-        user_has_reacted: user ? postReactions.some(r => r.user_id === user.id) : false,
+        reaction_count: reactionCountMap.get(post.id) || 0,
+        user_has_reacted: myReactedPostIds.has(post.id),
         replies: postReplies,
         poll_options: postPollOptions,
         user_voted_option_id: userVote?.option_id || null,
