@@ -137,26 +137,6 @@ const Onboarding = () => {
         await supabase.from('diagnoses').insert(diagnosesToInsert);
       }
 
-      // 3. Save medications
-      if (selectedMedications.length > 0) {
-        const today = new Date().toISOString().split('T')[0];
-        const timingToFrequency: Record<string, string> = {
-          morning: 'daily',
-          evening: 'daily',
-          both: 'twice_daily',
-          as_needed: 'as_needed',
-        };
-        const medicationsToInsert = selectedMedications.map(med => ({
-          user_id: user.id,
-          name: med.name,
-          dosage: med.dosage || t('onboarding.notSpecified'),
-          started_at: today,
-          frequency: timingToFrequency[med.timing || 'morning'] || 'daily',
-        }));
-        await supabase.from('medications').insert(medicationsToInsert);
-        await queryClient.invalidateQueries({ queryKey: ['medications'] });
-      }
-
 
 
       toast({
