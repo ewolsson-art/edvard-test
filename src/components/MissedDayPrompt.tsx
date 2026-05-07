@@ -95,20 +95,20 @@ export function MissedDayPrompt({
 
         <button
           onClick={onCheckInToday}
-          className="w-full px-6 py-4 rounded-full border border-border/60 bg-card/40 text-foreground font-semibold text-base hover:bg-card/70 active:scale-[0.98] transition-all duration-200"
+          className="w-full px-6 py-4 rounded-full border border-destructive/30 bg-destructive/5 text-foreground/80 font-semibold text-base hover:bg-destructive/10 hover:border-destructive/40 active:scale-[0.98] transition-all duration-200"
         >
-          Hoppa över
+          Hoppa över och förlora streak
         </button>
 
-        {currentStreak > 0 && (
-          <div className="pt-2 flex items-center justify-center gap-1.5 text-[12.5px] text-muted-foreground/70 leading-relaxed">
-            <Flame className="w-3.5 h-3.5 text-[hsl(45_85%_55%)]/70" />
+        {potentialStreak > 0 && (
+          <div className="pt-2 flex items-start justify-center gap-2 text-[13px] text-destructive/80 leading-relaxed text-center">
+            <AlertTriangle className="w-4 h-4 mt-0.5 flex-shrink-0" />
             <span>
-              Då nollställs din streak på{' '}
-              <span className="font-semibold text-foreground/90 tabular-nums">
-                {currentStreak} {currentStreak === 1 ? 'dag' : 'dagar'}
-              </span>
-              .
+              Hoppar du över förlorar du din streak på{' '}
+              <span className="font-bold tabular-nums">
+                {potentialStreak} {potentialStreak === 1 ? 'dag' : 'dagar'}
+              </span>{' '}
+              och börjar om från noll.
             </span>
           </div>
         )}
