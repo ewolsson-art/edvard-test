@@ -3,6 +3,69 @@ import { useNavigate } from "react-router-dom";
 import { Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 
+const splitDisplayName = (name?: string) => {
+  const parts = (name || "").trim().split(/\s+/).filter(Boolean);
+  return {
+    first_name: parts[0] || null,
+    last_name: parts.length > 1 ? parts.slice(1).join(" ") : "",
+  };
+};
+
+const ensureGoogleAccountCanEnterApp = async () => {
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return;
+
+  const fullName = user.user_metadata?.full_name || user.user_metadata?.name || "";
+  const { first_name, last_name } = splitDisplayName(fullName);
+
+  const { data: existingProfile } = await supabase
+    .from("profiles")
+    .select("id")
+    .eq("user_id", user.id)
+    .maybeSingle();
+
+  if (!existingProfile) {
+    await supabase
+    .from("profiles")
+    .insert({
+      user_id: user.id,
+      first_name,
+      last_name,
+      avatar_url: user.user_metadata?.avatar_url || user.user_metadata?.picture || null,
+    });
+  }
+
+  await supabase.rpc("assign_initial_role", { _role: "patient" });
+
+  const { data: existingPreferences } = await supabase
+    .from("user_preferences")
+    .select("id")
+    .eq("user_id", user.id)
+    .maybeSingle();
+
+  if (!existingPreferences) {
+    await supabase
+    .from("user_preferences")
+    .insert({
+      user_id: user.id,
+      include_mood: true,
+      include_sleep: false,
+      include_eating: false,
+      include_exercise: false,
+      include_medication: false,
+      quick_include_sleep: false,
+      quick_include_eating: false,
+      quick_include_exercise: false,
+      quick_include_medication: false,
+      onboarding_completed: true,
+    });
+  }
+
+  if (!user.user_metadata?.profile_completed) {
+    await supabase.auth.updateUser({ data: { profile_completed: true } });
+  }
+};
+
 const AuthCallback = () => {
   const navigate = useNavigate();
   const handledRef = useRef(false);
@@ -34,6 +97,7 @@ const AuthCallback = () => {
       for (let attempt = 0; attempt < 10; attempt += 1) {
         const { data: { session } } = await supabase.auth.getSession();
         if (session) {
+          await ensureGoogleAccountCanEnterApp();
           window.history.replaceState({}, document.title, "/auth/callback");
           navigate("/oversikt", { replace: true });
           return;

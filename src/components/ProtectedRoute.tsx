@@ -17,6 +17,7 @@ export function ProtectedRoute({ children, skipOnboardingCheck = false }: Protec
   const { role, isDoctor, isRelative, isLoading: roleLoading } = useUserRole();
   const { profile, isLoading: profileLoading } = useProfile();
   const location = useLocation();
+  const isOAuthAccount = Boolean(user?.app_metadata?.provider || user?.user_metadata?.provider_id || user?.user_metadata?.iss);
 
   // Wait for all loading states to complete
   if (authLoading || prefsLoading || roleLoading || profileLoading) {
@@ -35,7 +36,7 @@ export function ProtectedRoute({ children, skipOnboardingCheck = false }: Protec
   // Skip if user already has a profile with a first_name in the profiles table
   const profileCompleted = user.user_metadata?.profile_completed;
   const hasProfileInDb = profile?.first_name;
-  if (!profileCompleted && !user.user_metadata?.first_name && !hasProfileInDb && location.pathname !== '/slutfor-profil') {
+  if (!isOAuthAccount && !profileCompleted && !user.user_metadata?.first_name && !hasProfileInDb && location.pathname !== '/slutfor-profil') {
     return <Navigate to="/slutfor-profil" replace />;
   }
 
@@ -75,7 +76,7 @@ export function ProtectedRoute({ children, skipOnboardingCheck = false }: Protec
   }
 
   // Patients: Redirect to onboarding if user hasn't completed it
-  if (!skipOnboardingCheck && needsOnboarding && location.pathname !== '/onboarding') {
+  if (!isOAuthAccount && !skipOnboardingCheck && needsOnboarding && location.pathname !== '/onboarding') {
     return <Navigate to="/onboarding" replace />;
   }
 
