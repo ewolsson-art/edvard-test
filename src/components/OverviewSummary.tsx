@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { MoodStats as MoodStatsType, MoodEntry } from '@/types/mood';
 import { Flame, Sun, CloudRain, CalendarCheck, TrendingUp } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { TurtleLogo } from '@/components/TurtleLogo';
 
 interface OverviewSummaryProps {
   stats: MoodStatsType;
