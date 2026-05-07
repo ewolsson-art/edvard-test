@@ -58,7 +58,7 @@ const MOOD_SHELL: Record<TurtleMood, { from: string; to: string; pattern: string
 const isElevatedMood = (m?: TurtleMood) => m === 'elevated' || m === 'severe_elevated' || m === 'somewhat_elevated';
 const isDepressedMood = (m?: TurtleMood) => m === 'depressed' || m === 'severe_depressed' || m === 'somewhat_depressed';
 
-export function TurtleLogo({ size = 'md', animated = true, className, mood }: TurtleLogoProps) {
+export function TurtleLogo({ size = 'md', animated = true, className, mood, framing = 'full' }: TurtleLogoProps) {
   const rawId = useId().replace(/[^a-zA-Z0-9_-]/g, '');
   const id = (name: string) => `${name}-${rawId}`;
   const sizes = {
@@ -74,10 +74,13 @@ export function TurtleLogo({ size = 'md', animated = true, className, mood }: Tu
   const patternFill = shell ? shell.pattern : 'hsl(var(--primary) / 0.4)';
   const patternStroke = shell ? shell.patternStroke : 'hsl(var(--primary) / 0.3)';
 
+  // 'face' framing crops the SVG viewBox to the head area so the expression dominates.
+  const viewBox = framing === 'face' ? '52 12 96 90' : '0 0 260 280';
+
   return (
     <div className={cn("relative", sizes[size], className)}>
       <svg
-        viewBox="0 0 260 280"
+        viewBox={viewBox}
         className={cn("w-full h-full", animated && "turtle-idle")}
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
