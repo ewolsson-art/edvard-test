@@ -30,11 +30,14 @@ export function MissedDayPrompt({
   const count = missedDays.length;
   const onlyYesterday = count === 1 && isYesterday(parseISO(missedDays[0]));
 
+  const numberWords = ['noll', 'en', 'två', 'tre', 'fyra', 'fem', 'sex', 'sju', 'åtta', 'nio', 'tio', 'elva', 'tolv'];
+  const countWord = count <= 12 ? numberWords[count] : String(count);
+
   const headline = onlyYesterday
     ? 'Du glömde checka in igår'
     : count === 1
-      ? '1 missad dag'
-      : `${count} missade dagar`;
+      ? 'En missad dag'
+      : `${countWord} missade dagar`;
 
   const sub = onlyYesterday
     ? null
