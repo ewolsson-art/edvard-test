@@ -125,6 +125,7 @@ const Index = () => {
           <MissedDayPrompt
             missedDays={streakData.missedDays}
             currentStreak={streakData.currentStreak}
+            potentialStreak={streakData.potentialStreak}
             onPickMissedDay={handlePickMissedDay}
             onCheckInToday={handleCheckInToday}
           />

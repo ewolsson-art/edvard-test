@@ -19,6 +19,8 @@ export interface StreakData {
   milestone: MilestoneInfo;
   /** Recent missed days (yyyy-MM-dd), most recent first. Up to 3 days, only past days, excluding today. */
   missedDays: string[];
+  /** Streak the user would restore by filling in all missed days (excluding today). */
+  potentialStreak: number;
 }
 
 function getMilestoneInfo(streak: number): MilestoneInfo {
@@ -50,6 +52,7 @@ export function useStreak(entries: MoodEntry[]): StreakData {
         lastCheckinDate: null,
         milestone: getMilestoneInfo(0),
         missedDays: [],
+        potentialStreak: 0,
       };
     }
 
@@ -97,6 +100,20 @@ export function useStreak(entries: MoodEntry[]): StreakData {
       missedDays.push(d);
     }
 
+    // Potential streak: simulate filling in all missed days and recomputing.
+    const simulated = new Set(entryDates);
+    missedDays.forEach(d => simulated.add(d));
+    let potentialStreak = 0;
+    let pCheck = hasCheckedInToday ? today : yesterday;
+    if (simulated.has(pCheck)) {
+      potentialStreak = 1;
+      let prev = format(subDays(parseISO(pCheck), 1), 'yyyy-MM-dd');
+      while (simulated.has(prev)) {
+        potentialStreak++;
+        prev = format(subDays(parseISO(prev), 1), 'yyyy-MM-dd');
+      }
+    }
+
     return {
       currentStreak,
       longestStreak,
@@ -104,6 +121,7 @@ export function useStreak(entries: MoodEntry[]): StreakData {
       lastCheckinDate,
       milestone: getMilestoneInfo(currentStreak),
       missedDays,
+      potentialStreak,
     };
   }, [entries]);
 }
