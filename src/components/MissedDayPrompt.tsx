@@ -25,6 +25,7 @@ function formatSubLabel(dateStr: string): string {
 export function MissedDayPrompt({
   missedDays,
   currentStreak,
+  potentialStreak = 0,
   onPickMissedDay,
   onCheckInToday,
 }: MissedDayPromptProps) {
