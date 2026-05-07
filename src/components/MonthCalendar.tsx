@@ -92,22 +92,6 @@ export function MonthCalendar({
     return { moodStats: stats, perMoodCounts: counts };
   }, [moodData]);
 
-  const groupColorClass: Record<MoodGroup, string> = {
-    elevated: 'bg-[hsl(45_95%_55%)]',
-    stable: 'bg-[hsl(142_70%_45%)]',
-    depressed: 'bg-[hsl(0_75%_55%)]',
-  };
-
-  const moodDotClass: Record<MoodType, string> = {
-    severe_elevated: 'bg-[hsl(45_95%_55%)]',
-    elevated: 'bg-[hsl(45_95%_55%/0.7)]',
-    somewhat_elevated: 'bg-[hsl(45_95%_55%/0.5)]',
-    stable: 'bg-[hsl(142_70%_45%)]',
-    somewhat_depressed: 'bg-[hsl(0_75%_55%/0.5)]',
-    depressed: 'bg-[hsl(0_75%_55%/0.7)]',
-    severe_depressed: 'bg-[hsl(0_75%_55%)]',
-  };
-
   const groupLabel: Record<MoodGroup, string> = {
     elevated: 'uppvarvad',
     stable: moodLabels.stable.toLowerCase(),
@@ -162,7 +146,7 @@ export function MonthCalendar({
                 )}
                 aria-label={`${percent}% ${groupLabel[group]}${isGroup ? ' — visa fördelning' : ''}`}
               >
-                <span className={cn('h-2 w-2 rounded-full', groupColorClass[group])} aria-hidden="true" />
+                  <TurtleLogo size="sm" animated={false} mood={group} className="h-5 w-5 shrink-0" />
                 <span className="text-[12px] text-foreground/70">
                   <span className="font-semibold text-foreground/85">{percent}%</span>{' '}
                   <span className="text-foreground/55">{groupLabel[group]}</span>
@@ -187,7 +171,7 @@ export function MonthCalendar({
                       return (
                         <div key={mood} className="flex items-center justify-between gap-3 text-[13px]">
                           <div className="flex items-center gap-2 min-w-0">
-                            <span className={cn('h-2 w-2 rounded-full shrink-0', moodDotClass[mood])} aria-hidden="true" />
+                            <TurtleLogo size="sm" animated={false} mood={getTurtleMoodForMood(mood)} className="h-5 w-5 shrink-0" />
                             <span className="truncate text-foreground/80">{moodLabels[mood]}</span>
                           </div>
                           <span className="text-foreground/60 tabular-nums shrink-0">
