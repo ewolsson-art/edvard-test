@@ -267,46 +267,61 @@ export function TurtleLogo({ size = 'md', animated = true, className, mood, fram
           {/* Nose */}
           <ellipse cx="100" cy="73" rx="3" ry="2.5" fill="hsl(160 40% 30%)" />
 
-          {/* Eyebrows — tydliggör uttrycket: arga sneda vid uppvarvad,
-              ledsna sneda vid nedstämd, lugna raka vid stabil */}
+          {/* Eyebrows — stabil = lugna raka, uppvarvad = höjda (överraskad/wired),
+              nedstämd = sneda nedåt (ledsna). */}
           {mood && (
             <g stroke="hsl(220 25% 18%)" strokeWidth="3" strokeLinecap="round" fill="none">
               {isElevatedMood(mood) ? (
                 <>
-                  <path d="M76 47 L96 53" />
-                  <path d="M124 47 L104 53" />
+                  {/* höjda ögonbryn — uppspelt/överenergisk */}
+                  <path d="M76 44 Q86 40 96 44" />
+                  <path d="M124 44 Q114 40 104 44" />
                 </>
               ) : isDepressedMood(mood) ? (
                 <>
+                  {/* sneda nedåt mot ytterkanterna — ledsen */}
                   <path d="M76 53 L96 47" />
                   <path d="M124 53 L104 47" />
                 </>
               ) : (
                 <>
-                  <path d="M76 50 L96 50" />
-                  <path d="M124 50 L104 50" />
+                  {/* lugna mjukt böjda — avslappnat nöjd */}
+                  <path d="M76 51 Q86 48 96 51" />
+                  <path d="M124 51 Q114 48 104 51" />
                 </>
               )}
             </g>
           )}
 
-          {/* Mouth — mer markerad: stort leende, neutral linje eller tydlig sorgsen båge */}
-          <path
-            d={
-              isDepressedMood(mood)
-                ? 'M82 88 Q100 74 118 88'
-                : isElevatedMood(mood)
-                ? 'M80 78 Q92 98 100 98 Q108 98 120 78'
-                : 'M86 86 L114 86'
-            }
-            stroke="hsl(220 25% 18%)"
-            strokeWidth="3.5"
-            strokeLinecap="round"
-            fill={isElevatedMood(mood) ? 'hsl(0 60% 35%)' : 'none'}
-            fillOpacity={isElevatedMood(mood) ? 0.5 : 1}
-            className={animated ? 'turtle-smile' : ''}
-          />
-
+          {/* Mouth:
+              stable    = mjukt litet leende (lugnt nöjd, "bra")
+              elevated  = vidöppen O-mun (uppvarvad/för mycket energi, fortfarande positiv)
+              depressed = sorgsen båge nedåt */}
+          {isElevatedMood(mood) ? (
+            <ellipse
+              cx="100"
+              cy="88"
+              rx="9"
+              ry="11"
+              fill="hsl(0 55% 28%)"
+              fillOpacity={0.55}
+              stroke="hsl(220 25% 18%)"
+              strokeWidth="3"
+            />
+          ) : (
+            <path
+              d={
+                isDepressedMood(mood)
+                  ? 'M82 88 Q100 74 118 88'
+                  : 'M84 82 Q100 94 116 82'
+              }
+              stroke="hsl(220 25% 18%)"
+              strokeWidth="3.5"
+              strokeLinecap="round"
+              fill="none"
+              className={animated ? 'turtle-smile' : ''}
+            />
+          )}
           {/* Yellow hat */}
           <path
             d="M68 55 Q72 30 100 24 Q128 30 132 55"
