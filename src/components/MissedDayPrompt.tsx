@@ -82,7 +82,7 @@ export function MissedDayPrompt({
           onClick={() => onPickMissedDay(parseISO(primaryDay))}
           className="w-full px-6 py-4 rounded-full bg-[hsl(45_85%_55%)] text-[hsl(225_30%_7%)] font-bold text-base tracking-wide shadow-[0_4px_24px_hsl(45_85%_55%/0.35)] hover:bg-[hsl(45_85%_62%)] hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 inline-flex items-center justify-center gap-2"
         >
-          Fyll i {formatLabel(primaryDay).toLowerCase()}
+          {currentStreak > 0 ? 'Fyll i missade dagar och behåll streak' : `Fyll i ${formatLabel(primaryDay).toLowerCase()}`}
           <ArrowRight className="w-4 h-4" />
         </button>
 
@@ -139,7 +139,7 @@ export function MissedDayPrompt({
             onClick={onCheckInToday}
             className="w-full py-2.5 text-[14px] font-medium text-muted-foreground/60 hover:text-muted-foreground transition-colors"
           >
-            Hoppa över ändå
+            {currentStreak > 0 ? 'Hoppa över och förlora streak' : 'Hoppa över ändå'}
           </button>
         </div>
       </div>
