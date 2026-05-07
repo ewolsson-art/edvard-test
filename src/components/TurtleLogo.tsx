@@ -1,12 +1,45 @@
 import { cn } from '@/lib/utils';
 
+export type TurtleMood = 'elevated' | 'stable' | 'depressed';
+
 interface TurtleLogoProps {
   size?: 'sm' | 'md' | 'lg' | 'hero';
   animated?: boolean;
   className?: string;
+  /**
+   * Optional mood variant. When set, the shell color and facial expression
+   * change to communicate mood state — same exact turtle, just different
+   * outfit/expression. Always reuse this component, never render a separate
+   * "similar" turtle.
+   */
+  mood?: TurtleMood;
 }
 
-export function TurtleLogo({ size = 'md', animated = true, className }: TurtleLogoProps) {
+const MOOD_SHELL: Record<TurtleMood, { from: string; to: string; pattern: string; patternStroke: string }> = {
+  // Glad gul sköldpadda — uppåt
+  elevated: {
+    from: 'hsl(45 90% 58%)',
+    to: 'hsl(40 85% 45%)',
+    pattern: 'hsl(45 80% 50% / 0.5)',
+    patternStroke: 'hsl(40 70% 35% / 0.5)',
+  },
+  // Neutral grön sköldpadda — jämn
+  stable: {
+    from: 'hsl(142 55% 48%)',
+    to: 'hsl(150 50% 35%)',
+    pattern: 'hsl(145 50% 38% / 0.5)',
+    patternStroke: 'hsl(150 50% 28% / 0.5)',
+  },
+  // Ledsen röd sköldpadda — nedåt
+  depressed: {
+    from: 'hsl(0 70% 58%)',
+    to: 'hsl(0 65% 42%)',
+    pattern: 'hsl(0 60% 45% / 0.5)',
+    patternStroke: 'hsl(0 60% 30% / 0.5)',
+  },
+};
+
+export function TurtleLogo({ size = 'md', animated = true, className, mood }: TurtleLogoProps) {
   const sizes = {
     sm: 'w-9 h-9',
     md: 'w-12 h-12',
