@@ -297,40 +297,42 @@ export function TurtleLogo({ size = 'md', animated = true, className, mood, fram
               stable    = mjukt litet leende (lugnt nöjd, "bra")
               elevated  = vidöppen O-mun (uppvarvad/för mycket energi, fortfarande positiv)
               depressed = sorgsen båge nedåt */}
-          {isElevatedMood(mood) ? (
-            <g className={animated ? 'turtle-smile' : ''}>
-              {/* Brett spänt flin — uppvarvad/speedad, mungipor uppåt */}
+          <path
+            d={
+              isDepressedMood(mood)
+                ? 'M82 88 Q100 74 118 88'
+                : 'M84 82 Q100 94 116 82'
+            }
+            stroke="hsl(220 25% 18%)"
+            strokeWidth="3.5"
+            strokeLinecap="round"
+            fill="none"
+            className={animated ? 'turtle-smile' : ''}
+          />
+
+          {/* Uppvarvad-signaler i ansiktet (normalt leende kvar):
+              intensivare kindrodnad, svettdroppe vid tinningen, och
+              små energilinjer runt huvudet. */}
+          {isElevatedMood(mood) && (
+            <g>
+              <ellipse cx="75" cy="78" rx="7" ry="4.5" fill="hsl(0 75% 65%)" opacity="0.55" />
+              <ellipse cx="125" cy="78" rx="7" ry="4.5" fill="hsl(0 75% 65%)" opacity="0.55" />
               <path
-                d="M78 80 Q100 102 122 80"
-                fill="hsl(0 55% 28%)"
-                fillOpacity={0.5}
-                stroke="hsl(220 25% 18%)"
-                strokeWidth="3.5"
-                strokeLinejoin="round"
+                d="M138 48 Q134 56 138 60 Q142 56 138 48 Z"
+                fill="hsl(200 85% 70%)"
+                stroke="hsl(210 60% 45%)"
+                strokeWidth="1"
               />
-              {/* Tändrad — vit linje som antyder tänder */}
-              <path
-                d="M82 84 Q100 92 118 84"
-                stroke="white"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-                fill="none"
-              />
+              <ellipse cx="136.5" cy="52" rx="0.9" ry="1.6" fill="white" opacity="0.8" />
+              <g stroke="hsl(45 90% 55%)" strokeWidth="2" strokeLinecap="round" fill="none">
+                <path d="M58 40 L52 34" />
+                <path d="M66 32 L63 25" />
+                <path d="M142 40 L148 34" />
+                <path d="M134 32 L137 25" />
+              </g>
             </g>
-          ) : (
-            <path
-              d={
-                isDepressedMood(mood)
-                  ? 'M82 88 Q100 74 118 88'
-                  : 'M84 82 Q100 94 116 82'
-              }
-              stroke="hsl(220 25% 18%)"
-              strokeWidth="3.5"
-              strokeLinecap="round"
-              fill="none"
-              className={animated ? 'turtle-smile' : ''}
-            />
           )}
+
           {/* Yellow hat */}
           <path
             d="M68 55 Q72 30 100 24 Q128 30 132 55"
