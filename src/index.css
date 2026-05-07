@@ -786,6 +786,37 @@
     transform-origin: 100px 84px;
     animation: turtle-smile 4.5s ease-in-out infinite;
   }
+
+  /* Rastlös: snabb hackig vibration — för uppvarvad-läge */
+  @keyframes turtle-jitter {
+    0%, 100% { transform: translate(0, 0) rotate(0deg); }
+    20% { transform: translate(-0.6px, 0.4px) rotate(-1deg); }
+    40% { transform: translate(0.7px, -0.3px) rotate(1.2deg); }
+    60% { transform: translate(-0.4px, -0.5px) rotate(-0.8deg); }
+    80% { transform: translate(0.5px, 0.6px) rotate(0.9deg); }
+  }
+  .turtle-jitter {
+    animation: turtle-jitter 0.45s linear infinite;
+  }
+
+  @keyframes turtle-energy-flicker {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.85); }
+  }
+  .turtle-energy-flicker {
+    transform-origin: center;
+    animation: turtle-energy-flicker 0.35s ease-in-out infinite;
+  }
+
+  @keyframes turtle-eye-dart {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-1.2px); }
+    50% { transform: translateX(0); }
+    75% { transform: translateX(1.2px); }
+  }
+  .turtle-eye-dart {
+    animation: turtle-eye-dart 1.1s ease-in-out infinite;
+  }
 }
 
 @layer utilities {
