@@ -37,9 +37,16 @@ const DIAGNOSIS_GROUPS: Record<string, string[]> = {
     'Autismspektrumtillstånd (AST)',
     'Tourettes',
   ],
+  'Ätstörningar': [
+    'Anorexia nervosa',
+    'Bulimia nervosa',
+    'Hetsätningsstörning (BED)',
+    'ARFID (selektiv ätstörning)',
+    'Ortorexi',
+    'UNS – ätstörning utan närmare specifikation',
+  ],
   'Personlighet & övrigt': [
     'Borderline personlighetssyndrom',
-    'Ätstörning',
     'Schizofreni',
     'Schizoaffektivt syndrom',
   ],
