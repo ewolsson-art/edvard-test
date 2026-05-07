@@ -332,7 +332,13 @@ export function TurtleLogo({ size = 'md', animated = true, className, mood, fram
                 strokeWidth="1"
               />
               <ellipse cx="136.5" cy="52" rx="0.9" ry="1.6" fill="white" opacity="0.8" />
-              <g stroke="hsl(45 90% 55%)" strokeWidth="2" strokeLinecap="round" fill="none">
+              <g
+                stroke="hsl(45 90% 55%)"
+                strokeWidth="2"
+                strokeLinecap="round"
+                fill="none"
+                className={animated ? 'turtle-energy-flicker' : ''}
+              >
                 <path d="M58 40 L52 34" />
                 <path d="M66 32 L63 25" />
                 <path d="M142 40 L148 34" />
