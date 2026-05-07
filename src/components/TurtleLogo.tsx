@@ -309,10 +309,12 @@ export function TurtleLogo({ size = 'md', animated = true, className, mood, fram
             d={
               isDepressedMood(mood)
                 ? 'M82 88 Q100 74 118 88'
-                : 'M84 82 Q100 94 116 82'
+                : isElevatedMood(mood)
+                  ? 'M78 80 Q100 100 122 80'
+                  : 'M84 82 Q100 94 116 82'
             }
             stroke="hsl(220 25% 18%)"
-            strokeWidth="3.5"
+            strokeWidth={isElevatedMood(mood) ? 4 : 3.5}
             strokeLinecap="round"
             fill="none"
             className={animated ? 'turtle-smile' : ''}
