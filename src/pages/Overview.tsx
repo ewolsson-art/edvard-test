@@ -28,7 +28,7 @@ import { SleepYearHeatmap } from '@/components/SleepYearHeatmap';
 import { EatingYearHeatmap } from '@/components/EatingYearHeatmap';
 import { ExerciseYearHeatmap } from '@/components/ExerciseYearHeatmap';
 import { SeasonalPatterns } from '@/components/SeasonalPatterns';
-import { PostElevatedReflection } from '@/components/PostElevatedReflection';
+
 import { useAuth } from '@/hooks/useAuth';
 
 import { DayDetailDialog } from '@/components/DayDetailDialog';
@@ -635,7 +635,7 @@ const Overview = () => {
           {/* Main calendar area */}
           <div className="flex-1 min-w-0 space-y-6">
             <NewUserOverviewHint entryCount={entries.length} />
-            <PostElevatedReflection entries={entries} userId={user?.id ?? null} />
+            
             {showMood && sectionView === 'calendar' && (
               <section>
                      {view === 'week' && (
