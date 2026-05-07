@@ -94,15 +94,13 @@ export function MissedDayPrompt({
         </button>
 
         {currentStreak > 0 && (
-          <div className="flex items-start gap-2.5 pt-3 px-1">
-            <AlertTriangle className="w-4 h-4 text-[hsl(45_85%_55%)] flex-shrink-0 mt-0.5" />
-            <p className="text-[13px] text-muted-foreground leading-relaxed">
-              Hoppar du över förlorar du din streak på{' '}
-              <span className="font-semibold text-foreground tabular-nums">
-                {currentStreak} {currentStreak === 1 ? 'dag' : 'dagar'}
-              </span>.
-            </p>
-          </div>
+          <p className="text-[12.5px] text-muted-foreground/70 text-center leading-relaxed pt-1">
+            Hoppar du över nollställs din streak på{' '}
+            <span className="font-semibold text-foreground/90 tabular-nums">
+              {currentStreak} {currentStreak === 1 ? 'dag' : 'dagar'}
+            </span>
+            .
+          </p>
         )}
       </div>
     </div>
