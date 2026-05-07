@@ -289,9 +289,9 @@ export function TurtleLogo({ size = 'md', animated = true, className, mood }: Tu
           {/* Mouth — varies with mood (frown when depressed, big grin when elevated) */}
           <path
             d={
-              mood === 'depressed'
+              isDepressedMood(mood)
                 ? 'M88 86 Q100 78 112 86'
-                : mood === 'elevated'
+                : isElevatedMood(mood)
                 ? 'M86 78 Q94 92 100 92 Q106 92 114 78'
                 : 'M88 80 Q94 88 100 88 Q106 88 112 80'
             }
