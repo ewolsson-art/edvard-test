@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { lovable } from "@/integrations/lovable/index";
-import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -64,11 +63,8 @@ const CHECKIN_OPTIONS: Array<{
 ];
 
 const getOAuthRedirectUri = () => {
-  return `${window.location.origin}/auth/callback`;
+  return window.location.origin;
 };
-
-const isPublishedToddyDomain = () =>
-  window.location.hostname === "www.toddy.se" || window.location.hostname === "toddy.se";
 
 const Signup = () => {
   const [step, setStep] = useState<Step>("role");
@@ -159,20 +155,6 @@ const Signup = () => {
   const handleSocialLogin = async (provider: "google" | "apple") => {
     persistPreSignupData();
     const redirectUri = getOAuthRedirectUri();
-    if (isPublishedToddyDomain()) {
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider,
-        options: { redirectTo: redirectUri },
-      });
-      if (error) {
-        toast({
-          title: t("common.somethingWrong"),
-          description: error.message || t("auth.loginError"),
-          variant: "destructive",
-        });
-      }
-      return;
-    }
     const result = await lovable.auth.signInWithOAuth(provider, {
       redirect_uri: redirectUri,
     });
