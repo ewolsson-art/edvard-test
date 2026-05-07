@@ -36,8 +36,8 @@ export function MissedDayPrompt({
   const headline = onlyYesterday
     ? 'Du glömde checka in igår'
     : count === 1
-      ? 'En missad dag'
-      : `${countWord.charAt(0).toUpperCase()}${countWord.slice(1)} missade dagar`;
+      ? 'Du har missat en dag'
+      : `Du har missat ${countWord} dagar`;
 
   const sub = onlyYesterday
     ? null
