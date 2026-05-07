@@ -65,12 +65,21 @@ export function useStreak(entries: MoodEntry[]): StreakData {
     const sortedDates = [...entryDates].sort((a, b) => b.localeCompare(a));
     const lastCheckinDate = sortedDates[0] || null;
 
+    // Streak walks back from the most recent check-in (today, yesterday, or the
+    // last entry within a small grace window). This way, filling in older missed
+    // days retroactively *extends* the existing streak instead of resetting it
+    // because of an intermediate gap (e.g. day -2 filled before day -1).
     let currentStreak = 0;
-    let checkDate = hasCheckedInToday ? today : yesterday;
-    
-    if (entryDates.has(checkDate)) {
+    const GRACE_DAYS = 3;
+    let anchor: string | null = null;
+    for (let i = 0; i <= GRACE_DAYS; i++) {
+      const d = format(subDays(new Date(), i), 'yyyy-MM-dd');
+      if (entryDates.has(d)) { anchor = d; break; }
+    }
+
+    if (anchor) {
       currentStreak = 1;
-      let prevDate = format(subDays(parseISO(checkDate), 1), 'yyyy-MM-dd');
+      let prevDate = format(subDays(parseISO(anchor), 1), 'yyyy-MM-dd');
       while (entryDates.has(prevDate)) {
         currentStreak++;
         prevDate = format(subDays(parseISO(prevDate), 1), 'yyyy-MM-dd');
