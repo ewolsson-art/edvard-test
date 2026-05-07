@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { MoodStats as MoodStatsType, MoodEntry } from '@/types/mood';
 import { Flame, Sun, CloudRain, CalendarCheck, TrendingUp } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { TurtleLogo } from '@/components/TurtleLogo';
 
 interface OverviewSummaryProps {
   stats: MoodStatsType;
@@ -111,7 +112,12 @@ export function OverviewSummary({ stats, entries, periodLabel }: OverviewSummary
         <section className="rounded-2xl bg-card/60 border border-border/40 p-5">
           <SectionHeader icon={TrendingUp} title={t('overviewSummary.currentState')} />
           <div className={`mt-3 rounded-xl ${currentStreak.group.bgClass} border ${currentStreak.group.borderClass} p-4 flex items-center gap-4`}>
-            <currentStreak.group.icon className={`w-8 h-8 ${currentStreak.group.colorClass}`} />
+            <TurtleLogo
+              size="lg"
+              animated={false}
+              mood={currentStreak.group.key as 'elevated' | 'stable' | 'depressed'}
+              className="shrink-0"
+            />
             <div>
               <p className="text-lg font-bold">{moodGroupLabels[currentStreak.group.key]}</p>
               <p className="text-sm text-muted-foreground">

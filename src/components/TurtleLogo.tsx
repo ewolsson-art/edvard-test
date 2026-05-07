@@ -1,18 +1,57 @@
 import { cn } from '@/lib/utils';
 
+export type TurtleMood = 'elevated' | 'stable' | 'depressed';
+
 interface TurtleLogoProps {
   size?: 'sm' | 'md' | 'lg' | 'hero';
   animated?: boolean;
   className?: string;
+  /**
+   * Optional mood variant. When set, the shell color and facial expression
+   * change to communicate mood state — same exact turtle, just different
+   * outfit/expression. Always reuse this component, never render a separate
+   * "similar" turtle.
+   */
+  mood?: TurtleMood;
 }
 
-export function TurtleLogo({ size = 'md', animated = true, className }: TurtleLogoProps) {
+const MOOD_SHELL: Record<TurtleMood, { from: string; to: string; pattern: string; patternStroke: string }> = {
+  // Glad gul sköldpadda — uppåt
+  elevated: {
+    from: 'hsl(45 90% 58%)',
+    to: 'hsl(40 85% 45%)',
+    pattern: 'hsl(45 80% 50% / 0.5)',
+    patternStroke: 'hsl(40 70% 35% / 0.5)',
+  },
+  // Neutral grön sköldpadda — jämn
+  stable: {
+    from: 'hsl(142 55% 48%)',
+    to: 'hsl(150 50% 35%)',
+    pattern: 'hsl(145 50% 38% / 0.5)',
+    patternStroke: 'hsl(150 50% 28% / 0.5)',
+  },
+  // Ledsen röd sköldpadda — nedåt
+  depressed: {
+    from: 'hsl(0 70% 58%)',
+    to: 'hsl(0 65% 42%)',
+    pattern: 'hsl(0 60% 45% / 0.5)',
+    patternStroke: 'hsl(0 60% 30% / 0.5)',
+  },
+};
+
+export function TurtleLogo({ size = 'md', animated = true, className, mood }: TurtleLogoProps) {
   const sizes = {
     sm: 'w-9 h-9',
     md: 'w-12 h-12',
     lg: 'w-16 h-16',
     hero: 'w-48 h-48 md:w-64 md:h-64',
   };
+
+  const shell = mood ? MOOD_SHELL[mood] : null;
+  const shellFrom = shell ? shell.from : 'hsl(var(--primary))';
+  const shellTo = shell ? shell.to : 'hsl(var(--primary) / 0.65)';
+  const patternFill = shell ? shell.pattern : 'hsl(var(--primary) / 0.4)';
+  const patternStroke = shell ? shell.patternStroke : 'hsl(var(--primary) / 0.3)';
 
   return (
     <div className={cn("relative", sizes[size], className)}>
@@ -24,12 +63,12 @@ export function TurtleLogo({ size = 'md', animated = true, className }: TurtleLo
       >
         <defs>
           <linearGradient id="shellGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="hsl(var(--primary))" />
-            <stop offset="100%" stopColor="hsl(var(--primary) / 0.65)" />
+            <stop offset="0%" stopColor={shellFrom} />
+            <stop offset="100%" stopColor={shellTo} />
           </linearGradient>
           <linearGradient id="shellPatternGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="hsl(var(--primary) / 0.4)" />
-            <stop offset="100%" stopColor="hsl(var(--primary) / 0.2)" />
+            <stop offset="0%" stopColor={patternFill} />
+            <stop offset="100%" stopColor={patternFill} />
           </linearGradient>
           <linearGradient id="bodyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
             <stop offset="0%" stopColor="hsl(160 40% 38%)" />
@@ -86,13 +125,13 @@ export function TurtleLogo({ size = 'md', animated = true, className }: TurtleLo
 
         {/* Shell pattern */}
         <path d="M100 118 L118 130 L118 150 L100 162 L82 150 L82 130 Z"
-          fill="url(#shellPatternGrad)" stroke="hsl(var(--primary) / 0.3)" strokeWidth="1.5" />
+          fill="url(#shellPatternGrad)" stroke={patternStroke} strokeWidth="1.5" />
         <path d="M82 130 L65 140 L65 158 L82 166 L82 150 Z"
-          fill="url(#shellPatternGrad)" stroke="hsl(var(--primary) / 0.3)" strokeWidth="1" />
+          fill="url(#shellPatternGrad)" stroke={patternStroke} strokeWidth="1" />
         <path d="M118 130 L135 140 L135 158 L118 166 L118 150 Z"
-          fill="url(#shellPatternGrad)" stroke="hsl(var(--primary) / 0.3)" strokeWidth="1" />
+          fill="url(#shellPatternGrad)" stroke={patternStroke} strokeWidth="1" />
         <path d="M100 162 L118 170 L118 188 L100 198 L82 188 L82 170 Z"
-          fill="url(#shellPatternGrad)" stroke="hsl(var(--primary) / 0.3)" strokeWidth="1" />
+          fill="url(#shellPatternGrad)" stroke={patternStroke} strokeWidth="1" />
 
         {/* Shell shine */}
         <ellipse cx="90" cy="135" rx="12" ry="8" fill="white" opacity="0.12" transform="rotate(-20 90 135)" />
@@ -204,9 +243,15 @@ export function TurtleLogo({ size = 'md', animated = true, className }: TurtleLo
           {/* Nose */}
           <ellipse cx="100" cy="73" rx="3" ry="2.5" fill="hsl(160 40% 30%)" />
 
-          {/* Smile - content reading smile */}
+          {/* Mouth — varies with mood (frown when depressed, big grin when elevated) */}
           <path
-            d="M88 80 Q94 88 100 88 Q106 88 112 80"
+            d={
+              mood === 'depressed'
+                ? 'M88 86 Q100 78 112 86'
+                : mood === 'elevated'
+                ? 'M86 78 Q94 92 100 92 Q106 92 114 78'
+                : 'M88 80 Q94 88 100 88 Q106 88 112 80'
+            }
             stroke="hsl(220 20% 25%)"
             strokeWidth="2.5"
             strokeLinecap="round"
