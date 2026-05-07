@@ -87,8 +87,8 @@ const Onboarding = () => {
   const hasAnySelection = Object.values(selections).some(Boolean);
 
   const handleNext = () => {
-    // Step 4 (categories) → if no medication chosen, submit instead of going to medication step
-    if (step === 4 && !selections.include_medication) {
+    // Step 4 (categories) is the last step → submit
+    if (step === 4) {
       handleSubmit();
       return;
     }
