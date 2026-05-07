@@ -40,7 +40,7 @@ export function MissedDayPrompt({
     ? null
     : currentStreak > 0
       ? `Fyll i de missade dagarna för att rädda din streak på ${currentStreak} ${currentStreak === 1 ? 'dag' : 'dagar'}.`
-      : 'Fyll i hur dagarna var så får du en mer rättvis bild över tid.';
+      : null;
 
   const primaryDay = missedDays[0];
   const restDays = missedDays.slice(1);
