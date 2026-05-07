@@ -63,7 +63,7 @@ const CHECKIN_OPTIONS: Array<{
 ];
 
 const getOAuthRedirectUri = () => {
-  return `${window.location.origin}/auth/callback`;
+  return window.location.origin;
 };
 
 const Signup = () => {
