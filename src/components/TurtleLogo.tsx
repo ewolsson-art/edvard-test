@@ -21,6 +21,8 @@ interface TurtleLogoProps {
    * "similar" turtle.
    */
   mood?: TurtleMood;
+  /** 'full' (default) shows the whole turtle. 'face' zooms in on head + expression. */
+  framing?: 'full' | 'face';
 }
 
 // Bara tre färger: röd (nedstämd), gul (uppvarvad), grön (stabil).
