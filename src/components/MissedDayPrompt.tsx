@@ -102,11 +102,7 @@ export function MissedDayPrompt({
 
         {potentialStreak > 0 && (
           <p className="pt-2 text-[12.5px] text-muted-foreground/60 leading-relaxed text-center">
-            Då förlorar du din streak på{' '}
-            <span className="font-semibold text-muted-foreground/90 tabular-nums">
-              {potentialStreak} {potentialStreak === 1 ? 'dag' : 'dagar'}
-            </span>
-            .
+            Du förlorar då din streak.
           </p>
         )}
       </div>
