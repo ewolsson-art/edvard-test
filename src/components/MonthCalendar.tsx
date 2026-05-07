@@ -210,6 +210,15 @@ export function MonthCalendar({
               const isTodayDate = isToday(day);
               const isPastDay = isCurrentMonth && !isTodayDate && isBefore(day, startOfDay(new Date()));
               const showMissed = isPastDay && !mood;
+              const turtleMood = getTurtleMoodForMood(mood);
+              const moodBg =
+                turtleMood === 'elevated'
+                  ? 'bg-[hsl(45_85%_55%/0.22)] ring-1 ring-[hsl(45_85%_55%/0.55)]'
+                  : turtleMood === 'depressed'
+                    ? 'bg-[hsl(0_70%_55%/0.22)] ring-1 ring-[hsl(0_70%_55%/0.55)]'
+                    : turtleMood === 'stable'
+                      ? 'bg-[hsl(142_55%_45%/0.22)] ring-1 ring-[hsl(142_55%_45%/0.55)]'
+                      : '';
 
               const tooltipText = mood
                 ? `${format(day, 'd MMMM', { locale: sv })} — ${moodLabels[mood]}`
