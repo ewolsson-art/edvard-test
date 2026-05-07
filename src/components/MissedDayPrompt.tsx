@@ -76,72 +76,34 @@ export function MissedDayPrompt({
         )}
       </div>
 
-      {/* Primary CTA — fill in the missed day */}
-      <div className="max-w-md w-full mx-auto">
+      {/* Two clear choices */}
+      <div className="max-w-md w-full mx-auto space-y-3">
         <button
           onClick={() => onPickMissedDay(parseISO(primaryDay))}
           className="w-full px-6 py-4 rounded-full bg-[hsl(45_85%_55%)] text-[hsl(225_30%_7%)] font-bold text-base tracking-wide shadow-[0_4px_24px_hsl(45_85%_55%/0.35)] hover:bg-[hsl(45_85%_62%)] hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 inline-flex items-center justify-center gap-2"
         >
-          {currentStreak > 0 ? 'Fyll i missade dagar och behåll streak' : `Fyll i ${formatLabel(primaryDay).toLowerCase()}`}
+          Fyll i missade dagar
           <ArrowRight className="w-4 h-4" />
         </button>
 
-        {/* Other missed days as secondary list */}
-        {restDays.length > 0 && (
-          <div className="mt-5 space-y-2">
-            <p className="text-[12px] tracking-[0.1em] uppercase font-medium text-muted-foreground/60 px-1 mb-2">
-              Andra missade dagar
+        <button
+          onClick={onCheckInToday}
+          className="w-full px-6 py-4 rounded-full border border-border/60 bg-card/40 text-foreground font-semibold text-base hover:bg-card/70 active:scale-[0.98] transition-all duration-200"
+        >
+          Hoppa över
+        </button>
+
+        {currentStreak > 0 && (
+          <div className="flex items-start gap-2.5 pt-3 px-1">
+            <AlertTriangle className="w-4 h-4 text-[hsl(45_85%_55%)] flex-shrink-0 mt-0.5" />
+            <p className="text-[13px] text-muted-foreground leading-relaxed">
+              Hoppar du över förlorar du din streak på{' '}
+              <span className="font-semibold text-foreground tabular-nums">
+                {currentStreak} {currentStreak === 1 ? 'dag' : 'dagar'}
+              </span>.
             </p>
-            {restDays.map((d) => (
-              <button
-                key={d}
-                onClick={() => onPickMissedDay(parseISO(d))}
-                className="w-full flex items-center justify-between gap-3 px-4 py-3 rounded-xl border border-border/50 bg-card/50 hover:bg-card hover:border-border transition-all active:scale-[0.99] text-left"
-              >
-                <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-lg bg-muted/40 flex items-center justify-center">
-                    <CalendarDays className="w-4 h-4 text-muted-foreground/70" />
-                  </div>
-                  <div>
-                    <p className="text-[15px] font-medium text-foreground capitalize leading-tight">
-                      {formatLabel(d)}
-                    </p>
-                    <p className="text-[12px] text-muted-foreground/60 mt-0.5">
-                      {formatSubLabel(d)}
-                    </p>
-                  </div>
-                </div>
-                <ArrowRight className="w-4 h-4 text-muted-foreground/40" />
-              </button>
-            ))}
           </div>
         )}
-
-        {/* Secondary action — warn about streak loss */}
-        <div className="mt-6 pt-5 border-t border-border/40">
-          {currentStreak > 0 ? (
-            <div className="flex items-start gap-2.5 mb-3 px-1">
-              <AlertTriangle className="w-4 h-4 text-[hsl(45_85%_55%)] flex-shrink-0 mt-0.5" />
-              <p className="text-[13px] text-muted-foreground leading-relaxed">
-                Hoppar du över förlorar du din streak på{' '}
-                <span className="font-semibold text-foreground tabular-nums">
-                  {currentStreak} {currentStreak === 1 ? 'dag' : 'dagar'}
-                </span>
-                . Den nollställs och börjar om från noll.
-              </p>
-            </div>
-          ) : (
-            <p className="text-[12px] text-muted-foreground/50 text-center mb-3 leading-relaxed px-2">
-              Hoppar du över räknas dagen som missad i din översikt.
-            </p>
-          )}
-          <button
-            onClick={onCheckInToday}
-            className="w-full py-2.5 text-[14px] font-medium text-muted-foreground/60 hover:text-muted-foreground transition-colors"
-          >
-            {currentStreak > 0 ? 'Hoppa över och förlora streak' : 'Hoppa över ändå'}
-          </button>
-        </div>
       </div>
     </div>
   );
