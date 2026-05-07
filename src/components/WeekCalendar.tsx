@@ -78,14 +78,15 @@ export function WeekCalendar({
           const showMissed = isPastDay && !entry;
           const mood = entry?.mood as MoodType | undefined;
           const turtleMood = getTurtleMoodForMood(mood);
-          const moodBg =
-            turtleMood === 'elevated'
-              ? 'bg-[hsl(45_85%_55%/0.22)] ring-1 ring-[hsl(45_85%_55%/0.55)]'
-              : turtleMood === 'depressed'
-                ? 'bg-[hsl(0_70%_55%/0.22)] ring-1 ring-[hsl(0_70%_55%/0.55)]'
-                : turtleMood === 'stable'
-                  ? 'bg-[hsl(142_55%_45%/0.22)] ring-1 ring-[hsl(142_55%_45%/0.55)]'
-                  : '';
+          const isElevated = turtleMood === 'elevated' || turtleMood === 'somewhat_elevated' || turtleMood === 'severe_elevated';
+          const isDepressed = turtleMood === 'depressed' || turtleMood === 'somewhat_depressed' || turtleMood === 'severe_depressed';
+          const moodBg = isElevated
+            ? 'bg-[hsl(45_85%_55%/0.22)] ring-1 ring-[hsl(45_85%_55%/0.55)]'
+            : isDepressed
+              ? 'bg-[hsl(0_70%_55%/0.22)] ring-1 ring-[hsl(0_70%_55%/0.55)]'
+              : turtleMood === 'stable'
+                ? 'bg-[hsl(142_55%_45%/0.22)] ring-1 ring-[hsl(142_55%_45%/0.55)]'
+                : '';
 
           const tooltipText = mood
             ? `${format(day, 'd MMMM', { locale: sv })} — ${moodLabels[mood]}`
