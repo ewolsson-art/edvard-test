@@ -1,7 +1,14 @@
 import { useId } from 'react';
 import { cn } from '@/lib/utils';
 
-export type TurtleMood = 'elevated' | 'stable' | 'depressed';
+export type TurtleMood =
+  | 'severe_elevated'
+  | 'elevated'
+  | 'somewhat_elevated'
+  | 'stable'
+  | 'somewhat_depressed'
+  | 'depressed'
+  | 'severe_depressed';
 
 interface TurtleLogoProps {
   size?: 'sm' | 'md' | 'lg' | 'hero';
@@ -16,29 +23,62 @@ interface TurtleLogoProps {
   mood?: TurtleMood;
 }
 
+// 7-stegs färgskala — varje stämningsläge har en tydligt egen färg
+// så det syns på en blick vilken nivå sköldpaddan visar.
 const MOOD_SHELL: Record<TurtleMood, { from: string; to: string; pattern: string; patternStroke: string }> = {
-  // Glad gul sköldpadda — uppåt
+  // Mest intensivt uppåt — varm orange-röd
+  severe_elevated: {
+    from: 'hsl(20 95% 60%)',
+    to: 'hsl(15 90% 45%)',
+    pattern: 'hsl(18 85% 50% / 0.55)',
+    patternStroke: 'hsl(15 80% 32% / 0.6)',
+  },
+  // Uppåt — gyllene gul
   elevated: {
-    from: 'hsl(45 90% 58%)',
-    to: 'hsl(40 85% 45%)',
-    pattern: 'hsl(45 80% 50% / 0.5)',
-    patternStroke: 'hsl(40 70% 35% / 0.5)',
+    from: 'hsl(45 95% 60%)',
+    to: 'hsl(38 90% 45%)',
+    pattern: 'hsl(42 85% 50% / 0.55)',
+    patternStroke: 'hsl(38 75% 32% / 0.6)',
   },
-  // Neutral grön sköldpadda — jämn
+  // Lite uppåt — ljus citron/lime
+  somewhat_elevated: {
+    from: 'hsl(70 80% 60%)',
+    to: 'hsl(78 70% 42%)',
+    pattern: 'hsl(72 70% 45% / 0.55)',
+    patternStroke: 'hsl(78 65% 28% / 0.6)',
+  },
+  // Jämn — frisk grön
   stable: {
-    from: 'hsl(142 55% 48%)',
-    to: 'hsl(150 50% 35%)',
-    pattern: 'hsl(145 50% 38% / 0.5)',
-    patternStroke: 'hsl(150 50% 28% / 0.5)',
+    from: 'hsl(142 60% 50%)',
+    to: 'hsl(150 55% 35%)',
+    pattern: 'hsl(145 55% 38% / 0.55)',
+    patternStroke: 'hsl(150 55% 25% / 0.6)',
   },
-  // Ledsen röd sköldpadda — nedåt
+  // Lite nedåt — mjuk turkos
+  somewhat_depressed: {
+    from: 'hsl(190 55% 55%)',
+    to: 'hsl(200 55% 38%)',
+    pattern: 'hsl(195 50% 42% / 0.55)',
+    patternStroke: 'hsl(200 55% 28% / 0.6)',
+  },
+  // Nedåt — blå
   depressed: {
-    from: 'hsl(0 70% 58%)',
-    to: 'hsl(0 65% 42%)',
-    pattern: 'hsl(0 60% 45% / 0.5)',
-    patternStroke: 'hsl(0 60% 30% / 0.5)',
+    from: 'hsl(220 65% 58%)',
+    to: 'hsl(225 60% 38%)',
+    pattern: 'hsl(222 60% 42% / 0.55)',
+    patternStroke: 'hsl(225 60% 25% / 0.6)',
+  },
+  // Mest intensivt nedåt — djup indigo/lila
+  severe_depressed: {
+    from: 'hsl(255 50% 50%)',
+    to: 'hsl(260 55% 30%)',
+    pattern: 'hsl(258 50% 35% / 0.55)',
+    patternStroke: 'hsl(260 55% 20% / 0.65)',
   },
 };
+
+const isElevatedMood = (m?: TurtleMood) => m === 'elevated' || m === 'severe_elevated' || m === 'somewhat_elevated';
+const isDepressedMood = (m?: TurtleMood) => m === 'depressed' || m === 'severe_depressed' || m === 'somewhat_depressed';
 
 export function TurtleLogo({ size = 'md', animated = true, className, mood }: TurtleLogoProps) {
   const rawId = useId().replace(/[^a-zA-Z0-9_-]/g, '');
