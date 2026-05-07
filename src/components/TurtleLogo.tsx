@@ -47,11 +47,25 @@ export function TurtleLogo({ size = 'md', animated = true, className, mood }: Tu
     hero: 'w-48 h-48 md:w-64 md:h-64',
   };
 
+  const shell = mood ? MOOD_SHELL[mood] : null;
+  const shellFrom = shell ? shell.from : 'hsl(var(--primary))';
+  const shellTo = shell ? shell.to : 'hsl(var(--primary) / 0.65)';
+  const patternFill = shell ? shell.pattern : 'hsl(var(--primary) / 0.4)';
+  const patternStroke = shell ? shell.patternStroke : 'hsl(var(--primary) / 0.3)';
+
   return (
     <div className={cn("relative", sizes[size], className)}>
       <svg
         viewBox="0 0 260 280"
         className={cn("w-full h-full", animated && "turtle-idle")}
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <defs>
+          <linearGradient id="shellGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor={shellFrom} />
+            <stop offset="100%" stopColor={shellTo} />
+          </linearGradient>
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
       >
