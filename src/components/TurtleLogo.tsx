@@ -66,17 +66,9 @@ export function TurtleLogo({ size = 'md', animated = true, className, mood }: Tu
             <stop offset="0%" stopColor={shellFrom} />
             <stop offset="100%" stopColor={shellTo} />
           </linearGradient>
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <defs>
-          <linearGradient id="shellGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="hsl(var(--primary))" />
-            <stop offset="100%" stopColor="hsl(var(--primary) / 0.65)" />
-          </linearGradient>
           <linearGradient id="shellPatternGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="hsl(var(--primary) / 0.4)" />
-            <stop offset="100%" stopColor="hsl(var(--primary) / 0.2)" />
+            <stop offset="0%" stopColor={patternFill} />
+            <stop offset="100%" stopColor={patternFill} />
           </linearGradient>
           <linearGradient id="bodyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
             <stop offset="0%" stopColor="hsl(160 40% 38%)" />
