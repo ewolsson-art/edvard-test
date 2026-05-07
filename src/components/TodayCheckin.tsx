@@ -141,6 +141,7 @@ export function TodayCheckin({
   onToggleMedication,
   preferences,
   streakData,
+  retroProgress,
   customQuestions = [],
   customAnswers: initialCustomAnswers = {},
   onSaveCustomAnswers,
