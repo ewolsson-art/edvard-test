@@ -267,19 +267,43 @@ export function TurtleLogo({ size = 'md', animated = true, className, mood, fram
           {/* Nose */}
           <ellipse cx="100" cy="73" rx="3" ry="2.5" fill="hsl(160 40% 30%)" />
 
-          {/* Mouth — varies with mood (frown when depressed, big grin when elevated) */}
+          {/* Eyebrows — tydliggör uttrycket: arga sneda vid uppvarvad,
+              ledsna sneda vid nedstämd, lugna raka vid stabil */}
+          {mood && (
+            <g stroke="hsl(220 25% 18%)" strokeWidth="3" strokeLinecap="round" fill="none">
+              {isElevatedMood(mood) ? (
+                <>
+                  <path d="M76 47 L96 53" />
+                  <path d="M124 47 L104 53" />
+                </>
+              ) : isDepressedMood(mood) ? (
+                <>
+                  <path d="M76 53 L96 47" />
+                  <path d="M124 53 L104 47" />
+                </>
+              ) : (
+                <>
+                  <path d="M76 50 L96 50" />
+                  <path d="M124 50 L104 50" />
+                </>
+              )}
+            </g>
+          )}
+
+          {/* Mouth — mer markerad: stort leende, neutral linje eller tydlig sorgsen båge */}
           <path
             d={
               isDepressedMood(mood)
-                ? 'M88 86 Q100 78 112 86'
+                ? 'M82 88 Q100 74 118 88'
                 : isElevatedMood(mood)
-                ? 'M86 78 Q94 92 100 92 Q106 92 114 78'
-                : 'M88 80 Q94 88 100 88 Q106 88 112 80'
+                ? 'M80 78 Q92 98 100 98 Q108 98 120 78'
+                : 'M86 86 L114 86'
             }
-            stroke="hsl(220 20% 25%)"
-            strokeWidth="2.5"
+            stroke="hsl(220 25% 18%)"
+            strokeWidth="3.5"
             strokeLinecap="round"
-            fill="none"
+            fill={isElevatedMood(mood) ? 'hsl(0 60% 35%)' : 'none'}
+            fillOpacity={isElevatedMood(mood) ? 0.5 : 1}
             className={animated ? 'turtle-smile' : ''}
           />
 
