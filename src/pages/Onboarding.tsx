@@ -75,7 +75,6 @@ const Onboarding = () => {
     include_exercise: false,
     include_medication: false,
   });
-  const [selectedMedications, setSelectedMedications] = useState<MedicationInput[]>([]);
   const [selectedDiagnoses, setSelectedDiagnoses] = useState<string[]>([]);
 
   const handleToggle = (id: string) => {
