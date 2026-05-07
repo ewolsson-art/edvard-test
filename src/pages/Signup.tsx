@@ -151,7 +151,7 @@ const Signup = () => {
   const handleSocialLogin = async (provider: "google" | "apple") => {
     persistPreSignupData();
     const result = await lovable.auth.signInWithOAuth(provider, {
-      redirect_uri: `${window.location.origin}/oversikt`,
+      redirect_uri: `${window.location.origin}/auth/callback`,
     });
     if (result.error) {
       toast({
