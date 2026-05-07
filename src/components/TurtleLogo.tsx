@@ -298,16 +298,25 @@ export function TurtleLogo({ size = 'md', animated = true, className, mood, fram
               elevated  = vidöppen O-mun (uppvarvad/för mycket energi, fortfarande positiv)
               depressed = sorgsen båge nedåt */}
           {isElevatedMood(mood) ? (
-            <ellipse
-              cx="100"
-              cy="88"
-              rx="9"
-              ry="11"
-              fill="hsl(0 55% 28%)"
-              fillOpacity={0.55}
-              stroke="hsl(220 25% 18%)"
-              strokeWidth="3"
-            />
+            <g className={animated ? 'turtle-smile' : ''}>
+              {/* Brett spänt flin — uppvarvad/speedad, mungipor uppåt */}
+              <path
+                d="M78 80 Q100 102 122 80"
+                fill="hsl(0 55% 28%)"
+                fillOpacity={0.5}
+                stroke="hsl(220 25% 18%)"
+                strokeWidth="3.5"
+                strokeLinejoin="round"
+              />
+              {/* Tändrad — vit linje som antyder tänder */}
+              <path
+                d="M82 84 Q100 92 118 84"
+                stroke="white"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                fill="none"
+              />
+            </g>
           ) : (
             <path
               d={
