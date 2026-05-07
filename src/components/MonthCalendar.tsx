@@ -211,14 +211,17 @@ export function MonthCalendar({
               const isPastDay = isCurrentMonth && !isTodayDate && isBefore(day, startOfDay(new Date()));
               const showMissed = isPastDay && !mood;
               const turtleMood = getTurtleMoodForMood(mood);
+              const elevatedBg = 'bg-[hsl(45_90%_55%/0.22)] ring-1 ring-[hsl(45_90%_55%/0.55)]';
+              const stableBg = 'bg-[hsl(142_55%_45%/0.22)] ring-1 ring-[hsl(142_55%_45%/0.55)]';
+              const depressedBg = 'bg-[hsl(0_70%_55%/0.22)] ring-1 ring-[hsl(0_70%_55%/0.55)]';
               const moodBgMap: Record<string, string> = {
-                severe_elevated: 'bg-[hsl(20_90%_55%/0.22)] ring-1 ring-[hsl(20_90%_55%/0.55)]',
-                elevated: 'bg-[hsl(45_90%_55%/0.22)] ring-1 ring-[hsl(45_90%_55%/0.55)]',
-                somewhat_elevated: 'bg-[hsl(72_75%_50%/0.22)] ring-1 ring-[hsl(72_75%_50%/0.55)]',
-                stable: 'bg-[hsl(142_55%_45%/0.22)] ring-1 ring-[hsl(142_55%_45%/0.55)]',
-                somewhat_depressed: 'bg-[hsl(192_55%_48%/0.22)] ring-1 ring-[hsl(192_55%_48%/0.55)]',
-                depressed: 'bg-[hsl(222_60%_52%/0.22)] ring-1 ring-[hsl(222_60%_52%/0.55)]',
-                severe_depressed: 'bg-[hsl(258_50%_45%/0.25)] ring-1 ring-[hsl(258_50%_45%/0.6)]',
+                severe_elevated: elevatedBg,
+                elevated: elevatedBg,
+                somewhat_elevated: elevatedBg,
+                stable: stableBg,
+                somewhat_depressed: depressedBg,
+                depressed: depressedBg,
+                severe_depressed: depressedBg,
               };
               const moodBg = turtleMood ? moodBgMap[turtleMood] ?? '' : '';
 
