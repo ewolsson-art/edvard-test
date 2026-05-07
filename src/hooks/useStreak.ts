@@ -19,6 +19,8 @@ export interface StreakData {
   milestone: MilestoneInfo;
   /** Recent missed days (yyyy-MM-dd), most recent first. Up to 3 days, only past days, excluding today. */
   missedDays: string[];
+  /** Streak the user would restore by filling in all missed days (excluding today). */
+  potentialStreak: number;
 }
 
 function getMilestoneInfo(streak: number): MilestoneInfo {
