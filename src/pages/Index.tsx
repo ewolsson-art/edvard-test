@@ -41,6 +41,15 @@ const Index = () => {
 
   const [customAnswers, setCustomAnswers] = useState<Record<string, string>>({});
   const [missedPromptDismissed, setMissedPromptDismissed] = useState(false);
+  // Batch over missed days the user has chosen to fill in.
+  // dates is sorted oldest -> newest, current index points to date in flight.
+  // baselineStreak is the streak the user is *trying to restore* (current + missed
+  // count) — we keep displaying that during the whole batch so it feels continuous.
+  const [retroBatch, setRetroBatch] = useState<{
+    dates: string[];
+    index: number;
+    baselineStreak: number;
+  } | null>(null);
   const [selectedDate, setSelectedDate] = useState<Date>(() => {
     if (dateParam) {
       try { return parseISO(dateParam); } catch { return new Date(); }
