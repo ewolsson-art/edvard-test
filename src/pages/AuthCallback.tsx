@@ -18,20 +18,35 @@ const ensureGoogleAccountCanEnterApp = async () => {
   const fullName = user.user_metadata?.full_name || user.user_metadata?.name || "";
   const { first_name, last_name } = splitDisplayName(fullName);
 
-  await supabase
+  const { data: existingProfile } = await supabase
     .from("profiles")
-    .upsert({
+    .select("id")
+    .eq("user_id", user.id)
+    .maybeSingle();
+
+  if (!existingProfile) {
+    await supabase
+    .from("profiles")
+    .insert({
       user_id: user.id,
       first_name,
       last_name,
       avatar_url: user.user_metadata?.avatar_url || user.user_metadata?.picture || null,
-    }, { onConflict: "user_id" });
+    });
+  }
 
   await supabase.rpc("assign_initial_role", { _role: "patient" });
 
-  await supabase
+  const { data: existingPreferences } = await supabase
     .from("user_preferences")
-    .upsert({
+    .select("id")
+    .eq("user_id", user.id)
+    .maybeSingle();
+
+  if (!existingPreferences) {
+    await supabase
+    .from("user_preferences")
+    .insert({
       user_id: user.id,
       include_mood: true,
       include_sleep: false,
@@ -43,7 +58,8 @@ const ensureGoogleAccountCanEnterApp = async () => {
       quick_include_exercise: false,
       quick_include_medication: false,
       onboarding_completed: true,
-    }, { onConflict: "user_id" });
+    });
+  }
 
   if (!user.user_metadata?.profile_completed) {
     await supabase.auth.updateUser({ data: { profile_completed: true } });
