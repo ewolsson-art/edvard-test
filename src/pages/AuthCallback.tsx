@@ -24,9 +24,11 @@ const AuthCallback = () => {
       }
 
       if (accessToken && refreshToken) {
-        await supabase.auth.setSession({ access_token: accessToken, refresh_token: refreshToken });
+        const { error } = await supabase.auth.setSession({ access_token: accessToken, refresh_token: refreshToken });
+        if (error) throw error;
       } else if (searchParams.get("code")) {
-        await supabase.auth.exchangeCodeForSession(window.location.href);
+        const { error } = await supabase.auth.exchangeCodeForSession(searchParams.get("code")!);
+        if (error) throw error;
       }
 
       for (let attempt = 0; attempt < 10; attempt += 1) {
