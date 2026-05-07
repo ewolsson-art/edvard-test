@@ -37,7 +37,7 @@ export function MissedDayPrompt({
     ? 'Du glömde checka in igår'
     : count === 1
       ? 'En missad dag'
-      : `${countWord} missade dagar`;
+      : `${countWord.charAt(0).toUpperCase()}${countWord.slice(1)} missade dagar`;
 
   const sub = onlyYesterday
     ? null
