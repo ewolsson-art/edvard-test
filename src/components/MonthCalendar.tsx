@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { format, startOfMonth, endOfMonth, startOfWeek, endOfWeek, eachDayOfInterval, isSameMonth, isToday, isBefore, startOfDay } from 'date-fns';
 import { sv } from 'date-fns/locale';
-import { ChevronLeft, Pill, MessageCircle, X } from 'lucide-react';
+import { ChevronLeft, Pill, MessageCircle, X, ArrowUp, ArrowDown, Minus } from 'lucide-react';
 import { MoodType } from '@/types/mood';
 import { useDiagnosisConfig } from '@/hooks/useDiagnosisConfig';
 import { cn } from '@/lib/utils';
@@ -252,6 +252,22 @@ export function MonthCalendar({
                       <span className="absolute top-2 right-3 text-sm font-bold leading-none text-foreground drop-shadow-[0_1px_2px_hsl(var(--background))]">
                         {dayOfMonth}
                       </span>
+                      {(() => {
+                        const tm = getTurtleMoodForMood(mood);
+                        const isUp = tm === 'elevated' || tm === 'severe_elevated' || tm === 'somewhat_elevated';
+                        const isDown = tm === 'depressed' || tm === 'severe_depressed' || tm === 'somewhat_depressed';
+                        const Icon = isUp ? ArrowUp : isDown ? ArrowDown : Minus;
+                        const color = isUp
+                          ? 'bg-[hsl(45_90%_55%)] text-[hsl(40_90%_15%)]'
+                          : isDown
+                            ? 'bg-[hsl(0_75%_55%)] text-white'
+                            : 'bg-[hsl(142_55%_42%)] text-white';
+                        return (
+                          <span className={cn('absolute top-2 left-2 flex h-4 w-4 items-center justify-center rounded-full shadow-sm', color)}>
+                            <Icon className="h-2.5 w-2.5" strokeWidth={3.5} />
+                          </span>
+                        );
+                      })()}
                     </>
                   ) : (
                     <span className={cn(
