@@ -1316,25 +1316,6 @@ export function TodayCheckin({
 
             {renderCommentSection('medication')}
 
-            {/* Status summary — visar bara schemalagda mediciner */}
-            {scheduledMedications.length > 0 && (
-              <div className="flex items-center justify-center gap-2 mt-4">
-                <div className="flex gap-1">
-                  {scheduledMedications.map(med => (
-                    <div
-                      key={med.id}
-                      className={cn(
-                        "w-2 h-2 rounded-full transition-all",
-                        medicationsTakenToday.includes(med.id) ? "bg-mood-stable" : "bg-muted-foreground/20"
-                      )}
-                    />
-                  ))}
-                </div>
-                <span className="text-xs text-muted-foreground/50">
-                  {t('checkin.takenCount', { count: scheduledTakenCount, total: scheduledMedications.length })}
-                </span>
-              </div>
-            )}
 
             {isLastStep('medication') ? (
               <Button onClick={handleComplete} className="w-full mt-4 py-6 text-base font-semibold gap-2">
