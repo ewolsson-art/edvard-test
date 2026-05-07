@@ -8,6 +8,8 @@ import { cn } from '@/lib/utils';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { useTranslation } from 'react-i18next';
+import { TurtleLogo } from '@/components/TurtleLogo';
+import { getTurtleMoodForMood } from '@/lib/moodTurtle';
 
 interface MonthCalendarProps {
   currentDate: Date;
@@ -90,22 +92,6 @@ export function MonthCalendar({
     return { moodStats: stats, perMoodCounts: counts };
   }, [moodData]);
 
-  const groupColorClass: Record<MoodGroup, string> = {
-    elevated: 'bg-[hsl(45_95%_55%)]',
-    stable: 'bg-[hsl(142_70%_45%)]',
-    depressed: 'bg-[hsl(0_75%_55%)]',
-  };
-
-  const moodDotClass: Record<MoodType, string> = {
-    severe_elevated: 'bg-[hsl(45_95%_55%)]',
-    elevated: 'bg-[hsl(45_95%_55%/0.7)]',
-    somewhat_elevated: 'bg-[hsl(45_95%_55%/0.5)]',
-    stable: 'bg-[hsl(142_70%_45%)]',
-    somewhat_depressed: 'bg-[hsl(0_75%_55%/0.5)]',
-    depressed: 'bg-[hsl(0_75%_55%/0.7)]',
-    severe_depressed: 'bg-[hsl(0_75%_55%)]',
-  };
-
   const groupLabel: Record<MoodGroup, string> = {
     elevated: 'uppvarvad',
     stable: moodLabels.stable.toLowerCase(),
@@ -160,7 +146,7 @@ export function MonthCalendar({
                 )}
                 aria-label={`${percent}% ${groupLabel[group]}${isGroup ? ' — visa fördelning' : ''}`}
               >
-                <span className={cn('h-2 w-2 rounded-full', groupColorClass[group])} aria-hidden="true" />
+                  <TurtleLogo size="sm" animated={false} mood={group} className="h-5 w-5 shrink-0" />
                 <span className="text-[12px] text-foreground/70">
                   <span className="font-semibold text-foreground/85">{percent}%</span>{' '}
                   <span className="text-foreground/55">{groupLabel[group]}</span>
@@ -185,7 +171,7 @@ export function MonthCalendar({
                       return (
                         <div key={mood} className="flex items-center justify-between gap-3 text-[13px]">
                           <div className="flex items-center gap-2 min-w-0">
-                            <span className={cn('h-2 w-2 rounded-full shrink-0', moodDotClass[mood])} aria-hidden="true" />
+                            <TurtleLogo size="sm" animated={false} mood={getTurtleMoodForMood(mood)} className="h-5 w-5 shrink-0" />
                             <span className="truncate text-foreground/80">{moodLabels[mood]}</span>
                           </div>
                           <span className="text-foreground/60 tabular-nums shrink-0">
@@ -238,30 +224,30 @@ export function MonthCalendar({
                   onDoubleClick={() => isCurrentMonth && onDayDoubleClick?.(day)}
                   disabled={!isCurrentMonth}
                   className={cn(
-                    "relative flex flex-col items-center justify-center py-4 rounded-md transition-all duration-150",
+                    "relative flex min-h-20 flex-col items-center justify-center rounded-md py-2 transition-all duration-150",
                     !isCurrentMonth && "opacity-15",
                     isCurrentMonth && "hover:scale-105 hover:z-10",
-                    // Yellow = elevated (severe stronger)
-                    !isTodayDate && mood === 'severe_elevated' && "bg-[hsl(45_95%_55%/0.6)]",
-                    !isTodayDate && (mood === 'elevated' || mood === 'somewhat_elevated') && "bg-[hsl(45_95%_55%/0.3)]",
-                    // Green = stable
-                    !isTodayDate && mood === 'stable' && "bg-[hsl(142_70%_45%/0.3)]",
-                    // Red = depressed (severe stronger)
-                    !isTodayDate && (mood === 'depressed' || mood === 'somewhat_depressed') && "bg-[hsl(0_75%_55%/0.3)]",
-                    !isTodayDate && mood === 'severe_depressed' && "bg-[hsl(0_75%_55%/0.6)]",
                     showMissed && "bg-muted-foreground/10",
-                    isTodayDate && "bg-foreground/15 ring-1 ring-foreground/30",
+                    isTodayDate && "ring-1 ring-foreground/30",
                   )}
                 >
-                  <span className={cn(
-                    "flex items-center justify-center text-base font-semibold leading-none",
-                    isTodayDate && "text-foreground font-bold text-lg",
-                    !isTodayDate && mood && "text-white",
-                    !isTodayDate && !mood && isCurrentMonth && "text-foreground/60",
-                    !isCurrentMonth && "text-muted-foreground"
-                  )}>
-                    {dayOfMonth}
-                  </span>
+                  {mood ? (
+                    <>
+                      <TurtleLogo size="lg" animated={false} mood={getTurtleMoodForMood(mood)} className="h-14 w-14" />
+                      <span className="absolute top-2 right-3 text-sm font-bold leading-none text-foreground drop-shadow-[0_1px_2px_hsl(var(--background))]">
+                        {dayOfMonth}
+                      </span>
+                    </>
+                  ) : (
+                    <span className={cn(
+                      "flex items-center justify-center text-base font-semibold leading-none",
+                      isTodayDate && "text-foreground font-bold text-lg",
+                      isCurrentMonth && "text-foreground/60",
+                      !isCurrentMonth && "text-muted-foreground"
+                    )}>
+                      {dayOfMonth}
+                    </span>
+                  )}
 
                   {showMissed && (
                     <X className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-8 w-8 text-muted-foreground opacity-25" strokeWidth={1.5} />
@@ -270,10 +256,10 @@ export function MonthCalendar({
                   {/* Indicators */}
                   <div className="flex gap-1 mt-1 h-3">
                     {medCount && medCount > 0 && (
-                      <Pill className={cn("h-3 w-3", mood ? "text-white/80" : "text-primary/50")} />
+                      <Pill className="h-3 w-3 text-primary/60" />
                     )}
                     {hasRelativeComment && (
-                      <MessageCircle className={cn("h-3 w-3", mood ? "text-white/80 fill-white/30" : "text-accent-foreground/50 fill-accent/50")} />
+                      <MessageCircle className="h-3 w-3 text-accent-foreground/50 fill-accent/50" />
                     )}
                   </div>
                 </button>

@@ -6,6 +6,8 @@ import { useDiagnosisConfig } from '@/hooks/useDiagnosisConfig';
 import { cn } from '@/lib/utils';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { useTranslation } from 'react-i18next';
+import { TurtleLogo } from '@/components/TurtleLogo';
+import { getTurtleMoodForMood } from '@/lib/moodTurtle';
 
 interface WeekCalendarProps {
   weekDays: Date[];
@@ -88,26 +90,28 @@ export function WeekCalendar({
               onClick={() => onDayClick?.(day)}
               onDoubleClick={() => onDayDoubleClick?.(day)}
               className={cn(
-                "relative flex flex-col items-center justify-center py-4 rounded-md transition-all duration-150",
+                "relative flex min-h-20 flex-col items-center justify-center rounded-md py-2 transition-all duration-150",
                 "hover:scale-105 hover:z-10",
-                mood === 'severe_elevated' && "bg-[hsl(45_95%_55%/0.6)]",
-                (mood === 'elevated' || mood === 'somewhat_elevated') && "bg-[hsl(45_95%_55%/0.3)]",
-                mood === 'stable' && "bg-[hsl(142_70%_45%/0.3)]",
-                (mood === 'depressed' || mood === 'somewhat_depressed') && "bg-[hsl(0_75%_55%/0.3)]",
-                mood === 'severe_depressed' && "bg-[hsl(0_75%_55%/0.6)]",
                 showMissed && "bg-muted-foreground/10",
-                isTodayDate && !mood && "bg-foreground/15",
                 isTodayDate && "ring-1 ring-foreground/30",
               )}
             >
-              <span className={cn(
-                "flex items-center justify-center text-base font-semibold leading-none",
-                isTodayDate && !mood && "text-foreground font-bold text-lg",
-                mood && "text-white",
-                !isTodayDate && !mood && "text-foreground/60",
-              )}>
-                {format(day, 'd')}
-              </span>
+              {mood ? (
+                <>
+                  <TurtleLogo size="lg" animated={false} mood={getTurtleMoodForMood(mood)} className="h-14 w-14" />
+                  <span className="absolute top-2 right-3 text-sm font-bold leading-none text-foreground drop-shadow-[0_1px_2px_hsl(var(--background))]">
+                    {format(day, 'd')}
+                  </span>
+                </>
+              ) : (
+                <span className={cn(
+                  "flex items-center justify-center text-base font-semibold leading-none",
+                  isTodayDate && "text-foreground font-bold text-lg",
+                  !isTodayDate && "text-foreground/60",
+                )}>
+                  {format(day, 'd')}
+                </span>
+              )}
 
               {showMissed && (
                 <X className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-8 w-8 text-muted-foreground opacity-25" strokeWidth={1.5} />
@@ -116,7 +120,7 @@ export function WeekCalendar({
               {/* Indicators */}
               <div className="flex gap-1 mt-1 h-3">
                 {hasMeds && (
-                  <Pill className={cn("h-3 w-3", mood ? "text-white/80" : "text-primary/50")} />
+                  <Pill className="h-3 w-3 text-primary/60" />
                 )}
               </div>
             </button>
