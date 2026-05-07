@@ -5,6 +5,8 @@ import { ChevronLeft } from 'lucide-react';
 import { MoodEntry, MoodType } from '@/types/mood';
 import { cn } from '@/lib/utils';
 import { useTranslation } from 'react-i18next';
+import { TurtleLogo } from '@/components/TurtleLogo';
+import { getTurtleMoodForMood } from '@/lib/moodTurtle';
 
 interface YearHeatmapProps {
   year: number;
@@ -136,16 +138,15 @@ export const YearHeatmap = memo(function YearHeatmap({ year, entries, medication
                           {...(isTodayDate ? { 'data-today': 'true' } : {})}
                         >
                           <span className={cn(
-                            "flex items-center justify-center text-[10px] w-5 h-5 rounded-full leading-none font-medium",
-                            isTodayDate && "bg-primary text-primary-foreground font-bold",
-                            !isTodayDate && mood === 'severe_elevated' && "bg-[hsl(45_95%_55%/0.85)] text-white",
-                            !isTodayDate && (mood === 'elevated' || mood === 'somewhat_elevated') && "bg-[hsl(45_95%_55%/0.5)] text-white",
-                            !isTodayDate && mood === 'stable' && "bg-[hsl(142_70%_45%/0.5)] text-white",
-                            !isTodayDate && (mood === 'depressed' || mood === 'somewhat_depressed') && "bg-[hsl(0_75%_55%/0.5)] text-white",
-                            !isTodayDate && mood === 'severe_depressed' && "bg-[hsl(0_75%_55%/0.85)] text-white",
+                            "relative flex items-center justify-center text-[10px] w-5 h-5 rounded-full leading-none font-medium",
+                            isTodayDate && "ring-1 ring-primary",
                             !isTodayDate && !mood && "text-muted-foreground/70"
                           )}>
-                            {day.getDate()}
+                            {mood ? (
+                              <TurtleLogo size="sm" animated={false} mood={getTurtleMoodForMood(mood)} className="h-5 w-5" />
+                            ) : (
+                              day.getDate()
+                            )}
                           </span>
                         </div>
                       );
@@ -161,15 +162,15 @@ export const YearHeatmap = memo(function YearHeatmap({ year, entries, medication
       {/* Legend */}
       <div className="flex flex-wrap items-center gap-4 mt-8 pt-4 border-t border-border/30 justify-center">
         <div className="flex items-center gap-1.5">
-          <div className="w-2.5 h-2.5 rounded-full bg-[hsl(45_95%_55%)]" />
+          <TurtleLogo size="sm" animated={false} mood="elevated" className="h-5 w-5" />
           <span className="text-[11px] text-muted-foreground">Uppvarvad</span>
         </div>
         <div className="flex items-center gap-1.5">
-          <div className="w-2.5 h-2.5 rounded-full bg-[hsl(142_70%_45%)]" />
+          <TurtleLogo size="sm" animated={false} mood="stable" className="h-5 w-5" />
           <span className="text-[11px] text-muted-foreground">Stabil</span>
         </div>
         <div className="flex items-center gap-1.5">
-          <div className="w-2.5 h-2.5 rounded-full bg-[hsl(0_75%_55%)]" />
+          <TurtleLogo size="sm" animated={false} mood="depressed" className="h-5 w-5" />
           <span className="text-[11px] text-muted-foreground">Nedstämd</span>
         </div>
       </div>
