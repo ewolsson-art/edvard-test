@@ -365,46 +365,8 @@ const Onboarding = () => {
                   {isSubmitting ? (
                     <Loader2 className="w-4 h-4 animate-spin mr-1" />
                   ) : null}
-                  {selections.include_medication ? 'Fortsätt' : 'Starta min dagbok'}
+                  Starta min dagbok
                   {!isSubmitting && <ArrowRight className="w-4 h-4 ml-1" />}
-                </Button>
-              </div>
-            </div>
-          )}
-
-          {/* Step 5: Medications */}
-          {step === 5 && (
-            <div className="animate-fade-in">
-              <h1 className="text-2xl md:text-3xl font-bold text-white font-display tracking-tight">
-                Dina mediciner
-              </h1>
-              <p className="mt-2 text-sm text-white/50 leading-relaxed">
-                Vi hjälper dig komma ihåg dem och se hur de påverkar ditt mående över tid. Lägg till nu eller senare.
-              </p>
-
-              <div className="mt-6 max-h-[50vh] overflow-y-auto">
-                <MedicationStep 
-                  selectedMedications={selectedMedications}
-                  onMedicationsChange={setSelectedMedications}
-                />
-              </div>
-
-              <div className="flex gap-3 mt-6">
-                <button onClick={handleBack} className="h-12 px-5 rounded-2xl text-sm font-medium text-white/50 hover:text-white/80 bg-white/[0.04] ring-1 ring-white/[0.08] hover:bg-white/[0.06] transition-all">
-                  <ArrowLeft className="w-4 h-4" />
-                </button>
-                <Button 
-                  onClick={handleSubmit} 
-                  className="flex-1 h-12 rounded-2xl text-[15px] font-semibold bg-[hsl(45_85%_55%)] text-[hsl(230_30%_5%)] hover:bg-[hsl(45_85%_65%)] shadow-[0_4px_20px_-4px_hsl(45_85%_55%/0.4)] transition-all duration-300"
-                  disabled={isSubmitting}
-                >
-                  {isSubmitting ? (
-                    <Loader2 className="w-4 h-4 animate-spin mr-1" />
-                  ) : (
-                    <Sparkles className="w-4 h-4 mr-1" />
-                  )}
-                  {selectedMedications.length === 0 ? 'Hoppa över och starta' : 'Starta min dagbok'}
-                  <ArrowRight className="w-4 h-4 ml-1" />
                 </Button>
               </div>
             </div>
