@@ -103,44 +103,44 @@ export function TurtleLogo({ size = 'md', animated = true, className, mood }: Tu
 
         {/* Left arm holding book */}
         <g className={animated ? 'turtle-wave' : ''}>
-          <ellipse cx="68" cy="150" rx="14" ry="10" fill="url(#{id('bodyGrad')})" transform="rotate(-15 68 150)" />
-          <circle cx="57" cy="145" r="5" fill="url(#{id('bodyGrad')})" />
+          <ellipse cx="68" cy="150" rx="14" ry="10" fill={`url(#${id('bodyGrad')})`} transform="rotate(-15 68 150)" />
+          <circle cx="57" cy="145" r="5" fill={`url(#${id('bodyGrad')})`} />
         </g>
 
         {/* Right arm holding book */}
-        <ellipse cx="132" cy="150" rx="14" ry="10" fill="url(#{id('bodyGrad')})" transform="rotate(15 132 150)" />
-        <circle cx="143" cy="145" r="5" fill="url(#{id('bodyGrad')})" />
+        <ellipse cx="132" cy="150" rx="14" ry="10" fill={`url(#${id('bodyGrad')})`} transform="rotate(15 132 150)" />
+        <circle cx="143" cy="145" r="5" fill={`url(#${id('bodyGrad')})`} />
 
         {/* Left foot */}
-        <ellipse cx="80" cy="250" rx="16" ry="8" fill="url(#{id('bodyGrad')})" />
+        <ellipse cx="80" cy="250" rx="16" ry="8" fill={`url(#${id('bodyGrad')})`} />
         {/* Right foot */}
-        <ellipse cx="120" cy="250" rx="16" ry="8" fill="url(#{id('bodyGrad')})" />
+        <ellipse cx="120" cy="250" rx="16" ry="8" fill={`url(#${id('bodyGrad')})`} />
 
         {/* Left leg */}
-        <rect x="72" y="225" width="16" height="28" rx="8" fill="url(#{id('bodyGrad')})" />
+        <rect x="72" y="225" width="16" height="28" rx="8" fill={`url(#${id('bodyGrad')})`} />
         {/* Right leg */}
-        <rect x="112" y="225" width="16" height="28" rx="8" fill="url(#{id('bodyGrad')})" />
+        <rect x="112" y="225" width="16" height="28" rx="8" fill={`url(#${id('bodyGrad')})`} />
 
         {/* (coat removed) */}
 
         {/* Shell */}
-        <ellipse cx="100" cy="165" rx="48" ry="55" fill="url(#{id('shellGrad')})" />
+        <ellipse cx="100" cy="165" rx="48" ry="55" fill={`url(#${id('shellGrad')})`} />
 
         {/* Shell pattern */}
         <path d="M100 118 L118 130 L118 150 L100 162 L82 150 L82 130 Z"
-          fill="url(#{id('shellPatternGrad')})" stroke={patternStroke} strokeWidth="1.5" />
+          fill={`url(#${id('shellPatternGrad')})`} stroke={patternStroke} strokeWidth="1.5" />
         <path d="M82 130 L65 140 L65 158 L82 166 L82 150 Z"
-          fill="url(#{id('shellPatternGrad')})" stroke={patternStroke} strokeWidth="1" />
+          fill={`url(#${id('shellPatternGrad')})`} stroke={patternStroke} strokeWidth="1" />
         <path d="M118 130 L135 140 L135 158 L118 166 L118 150 Z"
-          fill="url(#{id('shellPatternGrad')})" stroke={patternStroke} strokeWidth="1" />
+          fill={`url(#${id('shellPatternGrad')})`} stroke={patternStroke} strokeWidth="1" />
         <path d="M100 162 L118 170 L118 188 L100 198 L82 188 L82 170 Z"
-          fill="url(#{id('shellPatternGrad')})" stroke={patternStroke} strokeWidth="1" />
+          fill={`url(#${id('shellPatternGrad')})`} stroke={patternStroke} strokeWidth="1" />
 
         {/* Shell shine */}
         <ellipse cx="90" cy="135" rx="12" ry="8" fill="white" opacity="0.12" transform="rotate(-20 90 135)" />
 
         {/* Belly */}
-        <ellipse cx="100" cy="185" rx="30" ry="42" fill="url(#{id('bellyGrad')})" />
+        <ellipse cx="100" cy="185" rx="30" ry="42" fill={`url(#${id('bellyGrad')})`} />
 
         {/* === STETHOSCOPE - more prominent === */}
         {/* Stethoscope tubing - right side draping */}
@@ -185,9 +185,9 @@ export function TurtleLogo({ size = 'md', animated = true, className, mood }: Tu
         {/* === THICK BOOK held in front === */}
         <g>
           {/* Book back cover */}
-          <rect x="48" y="128" width="60" height="42" rx="3" fill="url(#{id('bookCover')})" transform="rotate(-5 78 149)" />
+          <rect x="48" y="128" width="60" height="42" rx="3" fill={`url(#${id('bookCover')})`} transform="rotate(-5 78 149)" />
           {/* Book pages (thick) */}
-          <rect x="50" y="130" width="56" height="38" rx="2" fill="url(#{id('bookPages')})" transform="rotate(-5 78 149)" />
+          <rect x="50" y="130" width="56" height="38" rx="2" fill={`url(#${id('bookPages')})`} transform="rotate(-5 78 149)" />
           {/* Page lines */}
           <line x1="58" y1="140" x2="98" y2="138" stroke="hsl(220 15% 65%)" strokeWidth="0.8" />
           <line x1="58" y1="146" x2="98" y2="144" stroke="hsl(220 15% 65%)" strokeWidth="0.8" />
@@ -205,10 +205,10 @@ export function TurtleLogo({ size = 'md', animated = true, className, mood }: Tu
         {/* Head */}
         <g className={animated ? 'turtle-head-bob' : ''}>
           {/* Neck */}
-          <rect x="88" y="95" width="24" height="22" rx="12" fill="url(#{id('bodyGrad')})" />
+          <rect x="88" y="95" width="24" height="22" rx="12" fill={`url(#${id('bodyGrad')})`} />
           
           {/* Head shape */}
-          <ellipse cx="100" cy="70" rx="32" ry="30" fill="url(#{id('bodyGrad')})" />
+          <ellipse cx="100" cy="70" rx="32" ry="30" fill={`url(#${id('bodyGrad')})`} />
           
           {/* Cheek blush */}
           <ellipse cx="75" cy="77" rx="7" ry="5" fill="hsl(0 65% 80%)" opacity="0.45" />
