@@ -243,7 +243,7 @@ export function MonthCalendar({
                 >
                   {mood ? (
                     <>
-                      <TurtleLogo size="lg" animated={false} mood={getTurtleMoodForMood(mood)} className="h-14 w-14" />
+                      <TurtleLogo size="lg" animated={false} mood={getTurtleMoodForMood(mood)} className="h-16 w-16 drop-shadow-[0_2px_3px_hsl(0_0%_0%/0.45)]" />
                       <span className="absolute top-2 right-3 text-sm font-bold leading-none text-foreground drop-shadow-[0_1px_2px_hsl(var(--background))]">
                         {dayOfMonth}
                       </span>
