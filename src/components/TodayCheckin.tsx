@@ -44,6 +44,8 @@ interface TodayCheckinProps {
   onToggleMedication: (medicationId: string, taken: boolean) => void;
   preferences: UserPreferences | null;
   streakData: StreakData;
+  /** When inside a retroactive multi-day batch: { current: 1-based, total } */
+  retroProgress?: { current: number; total: number };
   customQuestions?: CustomQuestion[];
   customAnswers?: Record<string, string>;
   onSaveCustomAnswers?: (answers: Record<string, string>) => Promise<boolean>;
