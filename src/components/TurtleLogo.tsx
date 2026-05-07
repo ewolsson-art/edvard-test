@@ -1,3 +1,4 @@
+import { useId } from 'react';
 import { cn } from '@/lib/utils';
 
 export type TurtleMood = 'elevated' | 'stable' | 'depressed';
@@ -40,6 +41,8 @@ const MOOD_SHELL: Record<TurtleMood, { from: string; to: string; pattern: string
 };
 
 export function TurtleLogo({ size = 'md', animated = true, className, mood }: TurtleLogoProps) {
+  const rawId = useId().replace(/[^a-zA-Z0-9_-]/g, '');
+  const id = (name: string) => `${name}-${rawId}`;
   const sizes = {
     sm: 'w-9 h-9',
     md: 'w-12 h-12',
@@ -62,35 +65,35 @@ export function TurtleLogo({ size = 'md', animated = true, className, mood }: Tu
         xmlns="http://www.w3.org/2000/svg"
       >
         <defs>
-          <linearGradient id="shellGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <linearGradient id={id('shellGrad')} x1="0%" y1="0%" x2="100%" y2="100%">
             <stop offset="0%" stopColor={shellFrom} />
             <stop offset="100%" stopColor={shellTo} />
           </linearGradient>
-          <linearGradient id="shellPatternGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <linearGradient id={id('shellPatternGrad')} x1="0%" y1="0%" x2="100%" y2="100%">
             <stop offset="0%" stopColor={patternFill} />
             <stop offset="100%" stopColor={patternFill} />
           </linearGradient>
-          <linearGradient id="bodyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <linearGradient id={id('bodyGrad')} x1="0%" y1="0%" x2="100%" y2="100%">
             <stop offset="0%" stopColor="hsl(160 40% 38%)" />
             <stop offset="100%" stopColor="hsl(160 35% 28%)" />
           </linearGradient>
-          <linearGradient id="bellyGrad" x1="50%" y1="0%" x2="50%" y2="100%">
+          <linearGradient id={id('bellyGrad')} x1="50%" y1="0%" x2="50%" y2="100%">
             <stop offset="0%" stopColor="hsl(50 35% 65%)" />
             <stop offset="100%" stopColor="hsl(45 30% 50%)" />
           </linearGradient>
-          <linearGradient id="bookCover" x1="0%" y1="0%" x2="100%" y2="100%">
+          <linearGradient id={id('bookCover')} x1="0%" y1="0%" x2="100%" y2="100%">
             <stop offset="0%" stopColor="hsl(220 55% 35%)" />
             <stop offset="100%" stopColor="hsl(225 50% 25%)" />
           </linearGradient>
-          <linearGradient id="bookPages" x1="0%" y1="0%" x2="100%" y2="100%">
+          <linearGradient id={id('bookPages')} x1="0%" y1="0%" x2="100%" y2="100%">
             <stop offset="0%" stopColor="hsl(45 30% 90%)" />
             <stop offset="100%" stopColor="hsl(40 25% 82%)" />
           </linearGradient>
-          <linearGradient id="coatGrad" x1="50%" y1="0%" x2="50%" y2="100%">
+          <linearGradient id={id('coatGrad')} x1="50%" y1="0%" x2="50%" y2="100%">
             <stop offset="0%" stopColor="hsl(0 0% 97%)" />
             <stop offset="100%" stopColor="hsl(0 0% 90%)" />
           </linearGradient>
-          <linearGradient id="stethGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <linearGradient id={id('stethGrad')} x1="0%" y1="0%" x2="100%" y2="100%">
             <stop offset="0%" stopColor="hsl(0 0% 35%)" />
             <stop offset="100%" stopColor="hsl(0 0% 20%)" />
           </linearGradient>
