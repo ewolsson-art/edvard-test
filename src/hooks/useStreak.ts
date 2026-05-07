@@ -52,6 +52,7 @@ export function useStreak(entries: MoodEntry[]): StreakData {
         lastCheckinDate: null,
         milestone: getMilestoneInfo(0),
         missedDays: [],
+        potentialStreak: 0,
       };
     }
 
