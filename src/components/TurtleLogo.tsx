@@ -125,13 +125,13 @@ export function TurtleLogo({ size = 'md', animated = true, className, mood }: Tu
 
         {/* Shell pattern */}
         <path d="M100 118 L118 130 L118 150 L100 162 L82 150 L82 130 Z"
-          fill="url(#shellPatternGrad)" stroke="hsl(var(--primary) / 0.3)" strokeWidth="1.5" />
+          fill="url(#shellPatternGrad)" stroke={patternStroke} strokeWidth="1.5" />
         <path d="M82 130 L65 140 L65 158 L82 166 L82 150 Z"
-          fill="url(#shellPatternGrad)" stroke="hsl(var(--primary) / 0.3)" strokeWidth="1" />
+          fill="url(#shellPatternGrad)" stroke={patternStroke} strokeWidth="1" />
         <path d="M118 130 L135 140 L135 158 L118 166 L118 150 Z"
-          fill="url(#shellPatternGrad)" stroke="hsl(var(--primary) / 0.3)" strokeWidth="1" />
+          fill="url(#shellPatternGrad)" stroke={patternStroke} strokeWidth="1" />
         <path d="M100 162 L118 170 L118 188 L100 198 L82 188 L82 170 Z"
-          fill="url(#shellPatternGrad)" stroke="hsl(var(--primary) / 0.3)" strokeWidth="1" />
+          fill="url(#shellPatternGrad)" stroke={patternStroke} strokeWidth="1" />
 
         {/* Shell shine */}
         <ellipse cx="90" cy="135" rx="12" ry="8" fill="white" opacity="0.12" transform="rotate(-20 90 135)" />
