@@ -259,13 +259,17 @@ export function TurtleLogo({ size = 'md', animated = true, className, mood, fram
           <g className={animated ? 'turtle-blink' : ''}>
             <ellipse cx="86" cy="63" rx="9" ry="10" fill="white" />
             <ellipse cx="89" cy="64" rx="5" ry="6" fill="hsl(220 35% 25%)" />
-            <ellipse cx="90" cy="63" rx="2.5" ry="3" fill="hsl(220 30% 10%)" />
-            <circle cx="91" cy="60" r="2" fill="white" />
+            <g className={animated && isElevatedMood(mood) ? 'turtle-eye-dart' : ''}>
+              <ellipse cx="90" cy="63" rx="2.5" ry="3" fill="hsl(220 30% 10%)" />
+              <circle cx="91" cy="60" r="2" fill="white" />
+            </g>
             
             <ellipse cx="114" cy="63" rx="9" ry="10" fill="white" />
             <ellipse cx="111" cy="64" rx="5" ry="6" fill="hsl(220 35% 25%)" />
-            <ellipse cx="110" cy="63" rx="2.5" ry="3" fill="hsl(220 30% 10%)" />
-            <circle cx="109" cy="60" r="2" fill="white" />
+            <g className={animated && isElevatedMood(mood) ? 'turtle-eye-dart' : ''}>
+              <ellipse cx="110" cy="63" rx="2.5" ry="3" fill="hsl(220 30% 10%)" />
+              <circle cx="109" cy="60" r="2" fill="white" />
+            </g>
           </g>
 
           {/* Nose */}
