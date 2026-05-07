@@ -232,9 +232,6 @@ const Medications = () => {
           <h1 className="text-xl font-display font-semibold tracking-tight">Mediciner</h1>
         </div>
       </header>
-      <div className="p-5 md:p-8">
-        <div className="max-w-2xl mx-auto md:mx-0 space-y-8">
-      </div>
 
       {/* Add / Edit form dialog */}
       <Dialog open={isFormOpen} onOpenChange={(open) => { if (!open) { setIsFormOpen(false); setEditingMed(null); } }}>
