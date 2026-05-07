@@ -6,6 +6,7 @@ import { TurtleLogo } from '@/components/TurtleLogo';
 interface MissedDayPromptProps {
   missedDays: string[];           // yyyy-MM-dd, most recent first
   currentStreak: number;
+  potentialStreak?: number;
   onPickMissedDay: (date: Date) => void;
   onCheckInToday: () => void;
 }
