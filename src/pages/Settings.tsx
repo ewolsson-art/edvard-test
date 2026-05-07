@@ -270,7 +270,6 @@ const Settings = () => {
 
         {isPatient && (
           <SettingsGroup label={t('settings.yourCheckin')}>
-            <SettingsRow icon={SettingsIcon} label={t('settings.customizeCheckin')} description={t('settings.chooseCategories')} onClick={() => setView('checkin')} />
             <SettingsRow icon={Bell} label={t('settings.notificationsLabel')} description={t('settings.notificationsDesc')} onClick={() => setView('notifications')} />
           </SettingsGroup>
         )}
