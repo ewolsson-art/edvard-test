@@ -151,7 +151,7 @@ const Signup = () => {
   const handleSocialLogin = async (provider: "google" | "apple") => {
     persistPreSignupData();
     const result = await lovable.auth.signInWithOAuth(provider, {
-      redirect_uri: window.location.origin,
+      redirect_uri: `${window.location.origin}/oversikt`,
     });
     if (result.error) {
       toast({
@@ -159,7 +159,9 @@ const Signup = () => {
         description: result.error.message || t("auth.loginError"),
         variant: "destructive",
       });
+      return;
     }
+    if (!result.redirected) navigate("/oversikt", { replace: true });
   };
 
   const handleVerifyPhone = async () => {

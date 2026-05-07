@@ -40,7 +40,7 @@ const Login = () => {
       if (!profileCompleted && !user.user_metadata?.first_name && !hasProfileInDb) {
         navigate("/slutfor-profil");
       } else {
-        navigate("/");
+        navigate("/oversikt", { replace: true });
       }
     }
   }, [user, loading, profileLoading, profile, navigate]);
@@ -136,8 +136,9 @@ const Login = () => {
             <button
               type="button"
               onClick={async () => {
-                const result = await lovable.auth.signInWithOAuth("google", { redirect_uri: window.location.origin });
+                const result = await lovable.auth.signInWithOAuth("google", { redirect_uri: `${window.location.origin}/oversikt` });
                 if (result.error) toast({ title: t("common.somethingWrong"), variant: "destructive" });
+                if (!result.redirected && !result.error) navigate("/oversikt", { replace: true });
               }}
               className="w-full h-14 rounded-2xl bg-white/[0.10] ring-1 ring-white/[0.12] hover:ring-white/[0.24] hover:bg-white/[0.14] hover:shadow-[0_4px_20px_-4px_rgba(255,255,255,0.08)] text-white text-[15px] font-semibold flex items-center justify-center gap-3 transition-all duration-300"
             >
@@ -152,8 +153,9 @@ const Login = () => {
             <button
               type="button"
               onClick={async () => {
-                const result = await lovable.auth.signInWithOAuth("apple", { redirect_uri: window.location.origin });
+                const result = await lovable.auth.signInWithOAuth("apple", { redirect_uri: `${window.location.origin}/oversikt` });
                 if (result.error) toast({ title: t("common.somethingWrong"), variant: "destructive" });
+                if (!result.redirected && !result.error) navigate("/oversikt", { replace: true });
               }}
               className="w-full h-14 rounded-2xl bg-white/[0.10] ring-1 ring-white/[0.12] hover:ring-white/[0.24] hover:bg-white/[0.14] hover:shadow-[0_4px_20px_-4px_rgba(255,255,255,0.08)] text-white text-[15px] font-semibold flex items-center justify-center gap-3 transition-all duration-300"
             >
