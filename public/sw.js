@@ -1,4 +1,4 @@
-const CACHE_NAME = 'toddy-v1';
+const CACHE_NAME = 'toddy-v2-oauth-safe';
 const STATIC_ASSETS = [
   '/',
   '/manifest.json',
@@ -29,16 +29,17 @@ self.addEventListener('fetch', (event) => {
   const url = new URL(request.url);
   if (url.pathname.startsWith('/rest/') || url.pathname.startsWith('/auth/') || url.hostname.includes('supabase')) return;
 
-  // NEVER intercept OAuth broker paths or any navigation that carries auth callback params.
-  // The Lovable OAuth proxy lives at /~oauth/* and must always hit the network.
-  if (url.pathname.startsWith('/~oauth')) return;
+  // NEVER intercept OAuth broker paths or auth callbacks/errors — these must always hit the network.
+  // A cached/navigation fallback here can break Google's one-time authorization code exchange.
+  if (url.pathname.startsWith('/~oauth') || url.hostname === 'oauth.lovable.app') return;
   if (request.mode === 'navigate') {
     const search = url.search || '';
     const hash = url.hash || '';
     if (
       /[?&](code|token_hash|provider_token|error)=/.test(search) ||
       hash.includes('access_token') ||
-      hash.includes('type=')
+      hash.includes('type=') ||
+      hash.includes('error=')
     ) {
       return;
     }
