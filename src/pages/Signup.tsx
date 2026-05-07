@@ -62,6 +62,13 @@ const CHECKIN_OPTIONS: Array<{
   { id: "include_exercise", labelKey: "onboarding.exercise", descKey: "onboarding.exerciseDesc", icon: Dumbbell },
 ];
 
+const getOAuthRedirectUri = () => {
+  const { protocol, hostname, port } = window.location;
+  const host = hostname === "www.toddy.se" ? "toddy.se" : hostname;
+  const portPart = port ? `:${port}` : "";
+  return `${protocol}//${host}${portPart}/auth/callback`;
+};
+
 const Signup = () => {
   const [step, setStep] = useState<Step>("role");
   const [role, setRole] = useState<AccountRole | null>("patient");
@@ -151,7 +158,7 @@ const Signup = () => {
   const handleSocialLogin = async (provider: "google" | "apple") => {
     persistPreSignupData();
     const result = await lovable.auth.signInWithOAuth(provider, {
-      redirect_uri: `${window.location.origin}/auth/callback`,
+      redirect_uri: getOAuthRedirectUri(),
     });
     if (result.error) {
       toast({
