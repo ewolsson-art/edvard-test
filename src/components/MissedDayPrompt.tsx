@@ -95,16 +95,17 @@ export function MissedDayPrompt({
 
         <button
           onClick={onCheckInToday}
-          className="w-full px-6 py-4 rounded-full border border-border/60 bg-card/40 text-foreground/80 font-semibold text-base hover:bg-card/70 active:scale-[0.98] transition-all duration-200"
+          className="w-full px-6 py-3.5 rounded-full border border-border/60 bg-card/40 hover:bg-card/70 active:scale-[0.98] transition-all duration-200 flex flex-col items-center justify-center gap-0.5"
         >
-          Hoppa över
+          <span className="text-foreground/80 font-semibold text-base leading-tight">
+            Hoppa över
+          </span>
+          {potentialStreak > 0 && (
+            <span className="text-[12px] text-muted-foreground/60 leading-tight">
+              Du förlorar då din streak
+            </span>
+          )}
         </button>
-
-        {potentialStreak > 0 && (
-          <p className="pt-2 text-[12.5px] text-muted-foreground/60 leading-relaxed text-center">
-            Du förlorar då din streak.
-          </p>
-        )}
       </div>
     </div>
   );
