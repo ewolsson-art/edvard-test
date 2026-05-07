@@ -243,9 +243,15 @@ export function TurtleLogo({ size = 'md', animated = true, className, mood }: Tu
           {/* Nose */}
           <ellipse cx="100" cy="73" rx="3" ry="2.5" fill="hsl(160 40% 30%)" />
 
-          {/* Smile - content reading smile */}
+          {/* Mouth — varies with mood (frown when depressed, big grin when elevated) */}
           <path
-            d="M88 80 Q94 88 100 88 Q106 88 112 80"
+            d={
+              mood === 'depressed'
+                ? 'M88 86 Q100 78 112 86'
+                : mood === 'elevated'
+                ? 'M86 78 Q94 92 100 92 Q106 92 114 78'
+                : 'M88 80 Q94 88 100 88 Q106 88 112 80'
+            }
             stroke="hsl(220 20% 25%)"
             strokeWidth="2.5"
             strokeLinecap="round"
