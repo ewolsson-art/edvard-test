@@ -64,6 +64,7 @@ const SharedReport = lazy(() => import("./pages/SharedReport"));
 const Reports = lazy(() => import("./pages/Reports"));
 const ResetPassword = lazy(() => import("./pages/ResetPassword"));
 const ForgotPassword = lazy(() => import("./pages/ForgotPassword"));
+const AuthCallback = lazy(() => import("./pages/AuthCallback"));
 const Characteristics = lazy(() => import("./pages/Characteristics"));
 const CharacteristicDetail = lazy(() => import("./pages/CharacteristicDetail"));
 const CompleteProfile = lazy(() => import("./pages/CompleteProfile"));
@@ -163,6 +164,7 @@ const App = () => (
             <Route path="/skapa-konto" element={<Signup />} />
             <Route path="/glomt-losenord" element={<ForgotPassword />} />
             <Route path="/aterstall-losenord" element={<ResetPassword />} />
+            <Route path="/auth/callback" element={<AuthCallback />} />
             <Route path="/slutfor-profil" element={<CompleteProfile />} />
             <Route path="/onboarding" element={
               <ProtectedRoute skipOnboardingCheck>
