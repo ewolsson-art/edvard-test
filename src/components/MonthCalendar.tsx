@@ -236,6 +236,7 @@ export function MonthCalendar({
                     "relative flex min-h-20 flex-col items-center justify-center rounded-md py-2 transition-all duration-150",
                     !isCurrentMonth && "opacity-15",
                     isCurrentMonth && "hover:scale-105 hover:z-10",
+                    moodBg,
                     showMissed && "bg-muted-foreground/10",
                     isTodayDate && "ring-1 ring-foreground/30",
                   )}
