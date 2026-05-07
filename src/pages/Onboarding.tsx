@@ -157,7 +157,7 @@ const Onboarding = () => {
     }
   };
 
-  const actualTotalSteps = selections.include_medication ? TOTAL_STEPS : TOTAL_STEPS - 1;
+  const actualTotalSteps = TOTAL_STEPS;
   const actualStep = step;
 
   return (
