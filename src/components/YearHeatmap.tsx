@@ -143,7 +143,7 @@ export const YearHeatmap = memo(function YearHeatmap({ year, entries, medication
                             !isTodayDate && !mood && "text-muted-foreground/70"
                           )}>
                             {mood ? (
-                              <TurtleLogo size="sm" animated={false} mood={getTurtleMoodForMood(mood)} className="h-5 w-5" />
+                              <TurtleLogo size="sm" animated={false} mood={getTurtleMoodForMood(mood)} framing="face" className="h-5 w-5" />
                             ) : (
                               day.getDate()
                             )}
@@ -162,15 +162,15 @@ export const YearHeatmap = memo(function YearHeatmap({ year, entries, medication
       {/* Legend */}
       <div className="flex flex-wrap items-center gap-4 mt-8 pt-4 border-t border-border/30 justify-center">
         <div className="flex items-center gap-1.5">
-          <TurtleLogo size="sm" animated={false} mood="elevated" className="h-5 w-5" />
+          <TurtleLogo size="sm" animated={false} mood="elevated" framing="face" className="h-5 w-5" />
           <span className="text-[11px] text-muted-foreground">Uppvarvad</span>
         </div>
         <div className="flex items-center gap-1.5">
-          <TurtleLogo size="sm" animated={false} mood="stable" className="h-5 w-5" />
+          <TurtleLogo size="sm" animated={false} mood="stable" framing="face" className="h-5 w-5" />
           <span className="text-[11px] text-muted-foreground">Stabil</span>
         </div>
         <div className="flex items-center gap-1.5">
-          <TurtleLogo size="sm" animated={false} mood="depressed" className="h-5 w-5" />
+          <TurtleLogo size="sm" animated={false} mood="depressed" framing="face" className="h-5 w-5" />
           <span className="text-[11px] text-muted-foreground">Nedstämd</span>
         </div>
       </div>
