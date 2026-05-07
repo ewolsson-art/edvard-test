@@ -81,7 +81,11 @@ export function TurtleLogo({ size = 'md', animated = true, className, mood, fram
     <div className={cn("relative", sizes[size], className)}>
       <svg
         viewBox={viewBox}
-        className={cn("w-full h-full", animated && "turtle-idle")}
+        className={cn(
+          "w-full h-full",
+          animated && "turtle-idle",
+          animated && isElevatedMood(mood) && "turtle-jitter",
+        )}
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
       >
