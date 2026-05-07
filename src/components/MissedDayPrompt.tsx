@@ -139,7 +139,7 @@ export function MissedDayPrompt({
             onClick={onCheckInToday}
             className="w-full py-2.5 text-[14px] font-medium text-muted-foreground/60 hover:text-muted-foreground transition-colors"
           >
-            Hoppa över ändå
+            {currentStreak > 0 ? 'Hoppa över och förlora streak' : 'Hoppa över ändå'}
           </button>
         </div>
       </div>
