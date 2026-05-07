@@ -55,7 +55,7 @@ const CHECKIN_OPTIONS = [
 ];
 
 
-const TOTAL_STEPS = 5;
+const TOTAL_STEPS = 4;
 
 const Onboarding = () => {
   const { t } = useTranslation();
