@@ -21,7 +21,12 @@ const COMMON_DIAGNOSES = [
   'PTSD',
   'Borderline personlighetssyndrom',
   'OCD (Tvångssyndrom)',
-  'Ätstörning',
+  'Anorexia nervosa',
+  'Bulimia nervosa',
+  'Hetsätningsstörning (BED)',
+  'ARFID (selektiv ätstörning)',
+  'Ortorexi',
+  'UNS – ätstörning utan närmare specifikation',
   'Schizofreni',
   'Schizoaffektivt syndrom',
 ];
