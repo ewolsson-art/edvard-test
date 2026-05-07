@@ -44,6 +44,8 @@ interface TodayCheckinProps {
   onToggleMedication: (medicationId: string, taken: boolean) => void;
   preferences: UserPreferences | null;
   streakData: StreakData;
+  /** When inside a retroactive multi-day batch: { current: 1-based, total } */
+  retroProgress?: { current: number; total: number };
   customQuestions?: CustomQuestion[];
   customAnswers?: Record<string, string>;
   onSaveCustomAnswers?: (answers: Record<string, string>) => Promise<boolean>;
@@ -139,6 +141,7 @@ export function TodayCheckin({
   onToggleMedication,
   preferences,
   streakData,
+  retroProgress,
   customQuestions = [],
   customAnswers: initialCustomAnswers = {},
   onSaveCustomAnswers,
@@ -698,8 +701,32 @@ export function TodayCheckin({
 
   return (
     <div className="fade-in h-full md:h-auto flex flex-col justify-center px-5 pt-12 pb-4 md:pt-4 overflow-hidden md:overflow-y-auto md:glass-card md:p-12 md:max-h-[calc(100vh-4rem)] md:border md:border-foreground/10 md:bg-foreground/[0.03] md:backdrop-blur-sm md:rounded-2xl md:shadow-sm">
-      {/* Date removed from here - now shown inline with each step heading */}
-
+      {/* Retro batch progress banner — shown while filling in missed days */}
+      {retroProgress && retroProgress.total > 1 && currentStep !== 'success-animation' && (
+        <div className="mb-3 -mt-6 md:mt-0 flex items-center justify-between gap-3 px-4 py-2.5 rounded-full border border-foreground/10 bg-foreground/[0.04] backdrop-blur-sm">
+          <div className="flex items-center gap-2 min-w-0">
+            <CalendarIcon className="w-3.5 h-3.5 text-[hsl(45_85%_55%)] shrink-0" />
+            <span className="text-[12.5px] font-medium text-foreground/80 truncate">
+              Missade dagar — {retroProgress.current} av {retroProgress.total}
+            </span>
+          </div>
+          <div className="flex items-center gap-1 shrink-0">
+            {Array.from({ length: retroProgress.total }).map((_, i) => (
+              <span
+                key={i}
+                className={cn(
+                  'h-1.5 rounded-full transition-all',
+                  i < retroProgress.current - 1
+                    ? 'w-3 bg-[hsl(45_85%_55%)]'
+                    : i === retroProgress.current - 1
+                      ? 'w-5 bg-[hsl(45_85%_55%)]'
+                      : 'w-3 bg-foreground/15'
+                )}
+              />
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Step: Mood */}
       {currentStep === 'mood' && (

@@ -41,6 +41,15 @@ const Index = () => {
 
   const [customAnswers, setCustomAnswers] = useState<Record<string, string>>({});
   const [missedPromptDismissed, setMissedPromptDismissed] = useState(false);
+  // Batch over missed days the user has chosen to fill in.
+  // dates is sorted oldest -> newest, current index points to date in flight.
+  // baselineStreak is the streak the user is *trying to restore* (current + missed
+  // count) — we keep displaying that during the whole batch so it feels continuous.
+  const [retroBatch, setRetroBatch] = useState<{
+    dates: string[];
+    index: number;
+    baselineStreak: number;
+  } | null>(null);
   const [selectedDate, setSelectedDate] = useState<Date>(() => {
     if (dateParam) {
       try { return parseISO(dateParam); } catch { return new Date(); }
@@ -74,11 +83,22 @@ const Index = () => {
   const handleSaveCheckin = async (data: CheckinData): Promise<boolean> => {
     const result = await saveCheckin(selectedDateStr, data);
     if (result && !isSelectedToday) {
-      // After completing a retroactive check-in, return to today so the user
-      // can continue with their normal flow.
+      // We're inside a retroactive flow.
       setTimeout(() => {
-        setSelectedDate(new Date());
-        setSearchParams({});
+        if (retroBatch && retroBatch.index < retroBatch.dates.length - 1) {
+          // More missed days to fill in — jump to the next one.
+          const nextIndex = retroBatch.index + 1;
+          const nextDateStr = retroBatch.dates[nextIndex];
+          const nextDate = parseISO(nextDateStr);
+          setRetroBatch({ ...retroBatch, index: nextIndex });
+          setSelectedDate(nextDate);
+          setSearchParams({ date: nextDateStr });
+        } else {
+          // Batch complete (or single retro day) — return to today.
+          setRetroBatch(null);
+          setSelectedDate(new Date());
+          setSearchParams({});
+        }
       }, 3600);
     }
     return result ?? false;
@@ -108,14 +128,31 @@ const Index = () => {
     streakData.missedDays.length > 0;
 
   const handlePickMissedDay = (date: Date) => {
-    setSelectedDate(date);
-    setSearchParams({ date: format(date, 'yyyy-MM-dd') });
+    // Build batch: oldest -> newest, so streak restores naturally as we go.
+    const dates = [...streakData.missedDays].sort((a, b) => a.localeCompare(b));
+    // Baseline streak = what the user is restoring to (potentialStreak captures
+    // "if you fill in all missed days"). Falls back to current+missedCount.
+    const baseline = streakData.potentialStreak || (streakData.currentStreak + dates.length);
+    setRetroBatch({ dates, index: 0, baselineStreak: baseline });
+    const firstDateStr = dates[0];
+    setSelectedDate(parseISO(firstDateStr));
+    setSearchParams({ date: firstDateStr });
     setMissedPromptDismissed(true);
   };
 
   const handleCheckInToday = () => {
     setMissedPromptDismissed(true);
   };
+
+  // While in a retro batch, show baseline streak so the user feels their
+  // original streak is being preserved, not restarted at 1.
+  const effectiveStreakData = retroBatch
+    ? { ...streakData, currentStreak: Math.max(streakData.currentStreak, retroBatch.baselineStreak) }
+    : streakData;
+
+  const retroProgress = retroBatch
+    ? { current: retroBatch.index + 1, total: retroBatch.dates.length }
+    : undefined;
 
   return (
     <AnimatedPage className="fixed inset-0 md:relative md:h-screen flex items-center justify-center md:py-4 md:px-5 overflow-hidden">
@@ -139,7 +176,8 @@ const Index = () => {
             onSaveCheckin={handleSaveCheckin}
             onToggleMedication={handleToggleMedication}
             preferences={preferences}
-            streakData={streakData}
+            streakData={effectiveStreakData}
+            retroProgress={retroProgress}
             customQuestions={customQuestions}
             customAnswers={customAnswers}
             onSaveCustomAnswers={async (answers) => saveAnswers(selectedDateStr, answers)}
