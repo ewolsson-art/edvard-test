@@ -33,8 +33,8 @@ export function MissedDayPrompt({
   const headline = onlyYesterday
     ? 'Du glömde checka in igår'
     : count === 1
-      ? 'Du missade en dag'
-      : `Du missade ${count} dagar`;
+      ? 'Du har missat en dag'
+      : `Du har missat ${count} dagar`;
 
   const sub = onlyYesterday
     ? null
