@@ -4,6 +4,7 @@ import { z } from "zod";
 import { useAuth } from "@/hooks/useAuth";
 import { useProfile } from "@/hooks/useProfile";
 import { lovable } from "@/integrations/lovable/index";
+import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
@@ -19,11 +20,11 @@ const loginSchema = z.object({
 });
 
 const getOAuthRedirectUri = () => {
-  const { protocol, hostname, port } = window.location;
-  const host = hostname === "www.toddy.se" ? "toddy.se" : hostname;
-  const portPart = port ? `:${port}` : "";
-  return `${protocol}//${host}${portPart}/auth/callback`;
+  return `${window.location.origin}/auth/callback`;
 };
+
+const isPublishedToddyDomain = () =>
+  window.location.hostname === "www.toddy.se" || window.location.hostname === "toddy.se";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -143,7 +144,16 @@ const Login = () => {
             <button
               type="button"
               onClick={async () => {
-                const result = await lovable.auth.signInWithOAuth("google", { redirect_uri: getOAuthRedirectUri() });
+                const redirectUri = getOAuthRedirectUri();
+                if (isPublishedToddyDomain()) {
+                  const { error } = await supabase.auth.signInWithOAuth({
+                    provider: "google",
+                    options: { redirectTo: redirectUri },
+                  });
+                  if (error) toast({ title: t("common.somethingWrong"), variant: "destructive" });
+                  return;
+                }
+                const result = await lovable.auth.signInWithOAuth("google", { redirect_uri: redirectUri });
                 if (result.error) toast({ title: t("common.somethingWrong"), variant: "destructive" });
                 if (!result.redirected && !result.error) navigate("/oversikt", { replace: true });
               }}
@@ -160,7 +170,16 @@ const Login = () => {
             <button
               type="button"
               onClick={async () => {
-                const result = await lovable.auth.signInWithOAuth("apple", { redirect_uri: getOAuthRedirectUri() });
+                const redirectUri = getOAuthRedirectUri();
+                if (isPublishedToddyDomain()) {
+                  const { error } = await supabase.auth.signInWithOAuth({
+                    provider: "apple",
+                    options: { redirectTo: redirectUri },
+                  });
+                  if (error) toast({ title: t("common.somethingWrong"), variant: "destructive" });
+                  return;
+                }
+                const result = await lovable.auth.signInWithOAuth("apple", { redirect_uri: redirectUri });
                 if (result.error) toast({ title: t("common.somethingWrong"), variant: "destructive" });
                 if (!result.redirected && !result.error) navigate("/oversikt", { replace: true });
               }}
