@@ -68,12 +68,17 @@ export function MissedDayPrompt({
           </p>
         )}
 
-        {currentStreak > 0 && (
+        {potentialStreak > 0 && (
           <div className="mt-5 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[hsl(45_85%_55%/0.12)] border border-[hsl(45_85%_55%/0.25)]">
             <Flame className="w-4 h-4 text-[hsl(45_85%_55%)]" />
             <span className="text-[14px] font-semibold text-[hsl(45_85%_55%)] tabular-nums">
-              {currentStreak} {currentStreak === 1 ? 'dag' : 'dagar'} i rad
+              {potentialStreak} {potentialStreak === 1 ? 'dag' : 'dagar'} i rad
             </span>
+            {potentialStreak > currentStreak && (
+              <span className="text-[12px] font-medium text-[hsl(45_85%_55%)]/70">
+                om du fyller i
+              </span>
+            )}
           </div>
         )}
       </div>
