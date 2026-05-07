@@ -18,6 +18,13 @@ const loginSchema = z.object({
   password: z.string().min(6),
 });
 
+const getOAuthRedirectUri = () => {
+  const { protocol, hostname, port } = window.location;
+  const host = hostname === "www.toddy.se" ? "toddy.se" : hostname;
+  const portPart = port ? `:${port}` : "";
+  return `${protocol}//${host}${portPart}/auth/callback`;
+};
+
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -136,7 +143,7 @@ const Login = () => {
             <button
               type="button"
               onClick={async () => {
-                const result = await lovable.auth.signInWithOAuth("google", { redirect_uri: `${window.location.origin}/auth/callback` });
+                const result = await lovable.auth.signInWithOAuth("google", { redirect_uri: getOAuthRedirectUri() });
                 if (result.error) toast({ title: t("common.somethingWrong"), variant: "destructive" });
                 if (!result.redirected && !result.error) navigate("/oversikt", { replace: true });
               }}
@@ -153,7 +160,7 @@ const Login = () => {
             <button
               type="button"
               onClick={async () => {
-                const result = await lovable.auth.signInWithOAuth("apple", { redirect_uri: `${window.location.origin}/auth/callback` });
+                const result = await lovable.auth.signInWithOAuth("apple", { redirect_uri: getOAuthRedirectUri() });
                 if (result.error) toast({ title: t("common.somethingWrong"), variant: "destructive" });
                 if (!result.redirected && !result.error) navigate("/oversikt", { replace: true });
               }}
