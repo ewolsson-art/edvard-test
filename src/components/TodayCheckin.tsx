@@ -1168,78 +1168,43 @@ export function TodayCheckin({
             </h1>
           </div>
 
-          {/* Medication checklist */}
+          {/* Simple Yes / No */}
           {hasMedications ? (
-            <div className="max-w-md space-y-2.5">
-              {/* Quick toggle: mark all (scheduled only) */}
-              {scheduledMedications.length > 1 && (
+            <div className="max-w-md space-y-3">
+              <div className="grid grid-cols-2 gap-3">
                 <button
                   onClick={() => {
-                    scheduledMedications.forEach(med => {
-                      onToggleMedication(med.id, !allScheduledTaken);
-                    });
+                    scheduledMedications.forEach(med => onToggleMedication(med.id, true));
                   }}
                   className={cn(
-                    "w-full flex items-center justify-center gap-2 py-2 rounded-xl text-sm font-medium transition-all",
+                    "flex flex-col items-center justify-center gap-2 p-6 rounded-2xl border transition-all active:scale-[0.98]",
                     allScheduledTaken
-                      ? "text-mood-stable bg-mood-stable/10"
-                      : "text-muted-foreground/60 hover:text-foreground hover:bg-muted/30"
+                      ? "border-mood-stable/40 bg-mood-stable/10 text-mood-stable"
+                      : "border-border/30 bg-card/20 text-foreground/70 hover:border-mood-stable/30"
                   )}
                 >
-                  {allScheduledTaken ? (
-                    <>
-                      <CheckCircle2 className="w-4 h-4" />
-                      {t('checkin.allTaken')}
-                    </>
-                  ) : (
-                    <>
-                      <Check className="w-4 h-4" />
-                      {t('checkin.markAll')}
-                    </>
-                  )}
+                  <CheckCircle2 className="w-7 h-7" />
+                  <span className="text-base font-semibold">{t('common.yes')}</span>
                 </button>
-              )}
+                <button
+                  onClick={() => {
+                    scheduledMedications.forEach(med => onToggleMedication(med.id, false));
+                  }}
+                  className={cn(
+                    "flex flex-col items-center justify-center gap-2 p-6 rounded-2xl border transition-all active:scale-[0.98]",
+                    noScheduledTaken
+                      ? "border-amber-500/40 bg-amber-500/10 text-amber-400"
+                      : "border-border/30 bg-card/20 text-foreground/70 hover:border-amber-500/30"
+                  )}
+                >
+                  <X className="w-7 h-7" />
+                  <span className="text-base font-semibold">{t('common.no')}</span>
+                </button>
+              </div>
 
-              {/* Scheduled medications */}
-              {scheduledMedications.map(med => {
-                const isTaken = medicationsTakenToday.includes(med.id);
-                return (
-                  <button
-                    key={med.id}
-                    onClick={() => onToggleMedication(med.id, !isTaken)}
-                    className={cn(
-                      "w-full flex items-center gap-4 p-4 rounded-2xl border transition-all text-left",
-                      "active:scale-[0.98]",
-                      isTaken 
-                        ? "border-mood-stable/20 bg-mood-stable/5" 
-                        : "border-border/30 bg-card/20 hover:border-muted-foreground/20"
-                    )}
-                  >
-                    <div className={cn(
-                      "w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 transition-all",
-                      isTaken ? "bg-mood-stable text-white" : "bg-muted/30 border border-border/50"
-                    )}>
-                      {isTaken && <Check className="w-4 h-4" />}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className={cn(
-                        "font-medium text-[15px] transition-colors",
-                        isTaken ? "text-foreground" : "text-foreground/70"
-                      )}>
-                        {med.name}
-                      </p>
-                      <p className="text-xs text-muted-foreground/50 mt-0.5">{med.dosage}</p>
-                    </div>
-                    {isTaken && (
-                      <span className="text-xs text-mood-stable/80 font-medium flex-shrink-0">{t('checkin.takenCheck')}</span>
-                    )}
-                  </button>
-                );
-              })}
-
-              {/* Missed scheduled medication reason */}
-              {scheduledMedications.length > 0 && scheduledTakenCount < scheduledMedications.length && (
-                <div className="pt-3">
+              {/* Missed dose reason */}
+              {noScheduledTaken && (
+                <div className="pt-3 animate-fade-in">
                   <p className="text-xs text-muted-foreground/50 mb-2">{t('checkin.missedDoseReason')}</p>
                   <div className="flex flex-wrap gap-2">
                     {[
@@ -1266,57 +1231,6 @@ export function TodayCheckin({
                         {reason.label}
                       </button>
                     ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Vid behov-mediciner — frivillig sektion, ingen "missad" logik */}
-              {asNeededMedications.length > 0 && (
-                <div className="pt-5">
-                  <p className="text-[11px] font-semibold uppercase tracking-[0.15em] text-foreground/30 mb-2 px-1">
-                    Vid behov
-                  </p>
-                  <p className="text-xs text-muted-foreground/50 mb-3 px-1">
-                    Markera om du tagit någon av dessa idag.
-                  </p>
-                  <div className="space-y-2.5">
-                    {asNeededMedications.map(med => {
-                      const isTaken = medicationsTakenToday.includes(med.id);
-                      return (
-                        <button
-                          key={med.id}
-                          onClick={() => onToggleMedication(med.id, !isTaken)}
-                          className={cn(
-                            "w-full flex items-center gap-4 p-4 rounded-2xl border transition-all text-left",
-                            "active:scale-[0.98]",
-                            isTaken
-                              ? "border-mood-stable/20 bg-mood-stable/5"
-                              : "border-border/30 bg-card/20 hover:border-muted-foreground/20"
-                          )}
-                        >
-                          <div className={cn(
-                            "w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 transition-all",
-                            isTaken ? "bg-mood-stable text-white" : "bg-muted/30 border border-border/50"
-                          )}>
-                            {isTaken && <Check className="w-4 h-4" />}
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <p className={cn(
-                              "font-medium text-[15px] transition-colors",
-                              isTaken ? "text-foreground" : "text-foreground/70"
-                            )}>
-                              {med.name}
-                            </p>
-                            <p className="text-xs text-muted-foreground/50 mt-0.5">
-                              {med.dosage} · Vid behov
-                            </p>
-                          </div>
-                          {isTaken && (
-                            <span className="text-xs text-mood-stable/80 font-medium flex-shrink-0">{t('checkin.takenCheck')}</span>
-                          )}
-                        </button>
-                      );
-                    })}
                   </div>
                 </div>
               )}

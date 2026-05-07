@@ -15,7 +15,6 @@ import {
 import { Logo } from '@/components/Logo';
 import { TurtleLogo } from '@/components/TurtleLogo';
 import { DarkNightBackground } from '@/components/DarkNightBackground';
-import { MedicationStep, MedicationInput } from '@/components/onboarding/MedicationStep';
 import { DiagnosisStep } from '@/components/onboarding/DiagnosisStep';
 import { HowItWorksStep } from '@/components/onboarding/HowItWorksStep';
 import { cn } from '@/lib/utils';
@@ -56,7 +55,7 @@ const CHECKIN_OPTIONS = [
 ];
 
 
-const TOTAL_STEPS = 5;
+const TOTAL_STEPS = 4;
 
 const Onboarding = () => {
   const { t } = useTranslation();
@@ -76,7 +75,6 @@ const Onboarding = () => {
     include_exercise: false,
     include_medication: false,
   });
-  const [selectedMedications, setSelectedMedications] = useState<MedicationInput[]>([]);
   const [selectedDiagnoses, setSelectedDiagnoses] = useState<string[]>([]);
 
   const handleToggle = (id: string) => {
@@ -89,8 +87,8 @@ const Onboarding = () => {
   const hasAnySelection = Object.values(selections).some(Boolean);
 
   const handleNext = () => {
-    // Step 4 (categories) → if no medication chosen, submit instead of going to medication step
-    if (step === 4 && !selections.include_medication) {
+    // Step 4 (categories) is the last step → submit
+    if (step === 4) {
       handleSubmit();
       return;
     }
@@ -139,26 +137,6 @@ const Onboarding = () => {
         await supabase.from('diagnoses').insert(diagnosesToInsert);
       }
 
-      // 3. Save medications
-      if (selectedMedications.length > 0) {
-        const today = new Date().toISOString().split('T')[0];
-        const timingToFrequency: Record<string, string> = {
-          morning: 'daily',
-          evening: 'daily',
-          both: 'twice_daily',
-          as_needed: 'as_needed',
-        };
-        const medicationsToInsert = selectedMedications.map(med => ({
-          user_id: user.id,
-          name: med.name,
-          dosage: med.dosage || t('onboarding.notSpecified'),
-          started_at: today,
-          frequency: timingToFrequency[med.timing || 'morning'] || 'daily',
-        }));
-        await supabase.from('medications').insert(medicationsToInsert);
-        await queryClient.invalidateQueries({ queryKey: ['medications'] });
-      }
-
 
 
       toast({
@@ -179,7 +157,7 @@ const Onboarding = () => {
     }
   };
 
-  const actualTotalSteps = selections.include_medication ? TOTAL_STEPS : TOTAL_STEPS - 1;
+  const actualTotalSteps = TOTAL_STEPS;
   const actualStep = step;
 
   return (
@@ -387,46 +365,8 @@ const Onboarding = () => {
                   {isSubmitting ? (
                     <Loader2 className="w-4 h-4 animate-spin mr-1" />
                   ) : null}
-                  {selections.include_medication ? 'Fortsätt' : 'Starta min dagbok'}
+                  Starta min dagbok
                   {!isSubmitting && <ArrowRight className="w-4 h-4 ml-1" />}
-                </Button>
-              </div>
-            </div>
-          )}
-
-          {/* Step 5: Medications */}
-          {step === 5 && (
-            <div className="animate-fade-in">
-              <h1 className="text-2xl md:text-3xl font-bold text-white font-display tracking-tight">
-                Dina mediciner
-              </h1>
-              <p className="mt-2 text-sm text-white/50 leading-relaxed">
-                Vi hjälper dig komma ihåg dem och se hur de påverkar ditt mående över tid. Lägg till nu eller senare.
-              </p>
-
-              <div className="mt-6 max-h-[50vh] overflow-y-auto">
-                <MedicationStep 
-                  selectedMedications={selectedMedications}
-                  onMedicationsChange={setSelectedMedications}
-                />
-              </div>
-
-              <div className="flex gap-3 mt-6">
-                <button onClick={handleBack} className="h-12 px-5 rounded-2xl text-sm font-medium text-white/50 hover:text-white/80 bg-white/[0.04] ring-1 ring-white/[0.08] hover:bg-white/[0.06] transition-all">
-                  <ArrowLeft className="w-4 h-4" />
-                </button>
-                <Button 
-                  onClick={handleSubmit} 
-                  className="flex-1 h-12 rounded-2xl text-[15px] font-semibold bg-[hsl(45_85%_55%)] text-[hsl(230_30%_5%)] hover:bg-[hsl(45_85%_65%)] shadow-[0_4px_20px_-4px_hsl(45_85%_55%/0.4)] transition-all duration-300"
-                  disabled={isSubmitting}
-                >
-                  {isSubmitting ? (
-                    <Loader2 className="w-4 h-4 animate-spin mr-1" />
-                  ) : (
-                    <Sparkles className="w-4 h-4 mr-1" />
-                  )}
-                  {selectedMedications.length === 0 ? 'Hoppa över och starta' : 'Starta min dagbok'}
-                  <ArrowRight className="w-4 h-4 ml-1" />
                 </Button>
               </div>
             </div>
