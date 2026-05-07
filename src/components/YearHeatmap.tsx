@@ -143,7 +143,7 @@ export const YearHeatmap = memo(function YearHeatmap({ year, entries, medication
                             !isTodayDate && !mood && "text-muted-foreground/70"
                           )}>
                             {mood ? (
-                              <TurtleLogo size="sm" animated={false} mood={getTurtleMoodForMood(mood)} className="h-5 w-5" />
+                              <TurtleLogo size="sm" animated={false} mood={getTurtleMoodForMood(mood)} framing="face" className="h-5 w-5" />
                             ) : (
                               day.getDate()
                             )}
