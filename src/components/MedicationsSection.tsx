@@ -13,6 +13,7 @@ import { useMedications } from '@/hooks/useMedications';
 import { MedicationFrequency, FREQUENCY_LABELS } from '@/types/medication';
 import { EmptyState } from '@/components/EmptyState';
 import {
+  Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
