@@ -553,7 +553,7 @@ export function TodayCheckin({
             initial={{ opacity: 0, y: 16, scale: 0.9 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             transition={{ type: 'spring', stiffness: 220, damping: 22, mass: 0.8 }}
-            className="relative mb-6 translate-x-[14px] md:translate-x-[18px]"
+            className="relative mb-6 translate-x-[6px]"
           >
             {/* Mjuk färgad glow bakom sköldpaddan */}
             <div
