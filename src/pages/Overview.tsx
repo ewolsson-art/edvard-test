@@ -583,10 +583,10 @@ const Overview = () => {
           <div className="flex items-center gap-3">
             {sectionView === 'calendar' && (
               <Tabs value={view} onValueChange={handleViewChange} className="flex-1">
-                <TabsList className="inline-flex w-full h-9 bg-muted/80 p-0.5 rounded-full gap-0">
-                  <TabsTrigger value="week" className="flex-1 text-xs font-semibold px-2 py-1 rounded-full data-[state=active]:bg-muted-foreground/30 data-[state=active]:text-foreground data-[state=active]:shadow-none">V</TabsTrigger>
-                  <TabsTrigger value="month" className="flex-1 text-xs font-semibold px-2 py-1 rounded-full data-[state=active]:bg-muted-foreground/30 data-[state=active]:text-foreground data-[state=active]:shadow-none">M</TabsTrigger>
-                  <TabsTrigger value="year" className="flex-1 text-xs font-semibold px-2 py-1 rounded-full data-[state=active]:bg-muted-foreground/30 data-[state=active]:text-foreground data-[state=active]:shadow-none">ÅR</TabsTrigger>
+                <TabsList className="inline-flex w-full h-9 bg-foreground/[0.03] p-0.5 rounded-full gap-0">
+                  <TabsTrigger value="week" className="flex-1 text-xs font-semibold px-2 py-1 rounded-full hover:bg-foreground/[0.05] data-[state=active]:bg-foreground/[0.06] data-[state=active]:text-foreground data-[state=active]:shadow-none">V</TabsTrigger>
+                  <TabsTrigger value="month" className="flex-1 text-xs font-semibold px-2 py-1 rounded-full hover:bg-foreground/[0.05] data-[state=active]:bg-foreground/[0.06] data-[state=active]:text-foreground data-[state=active]:shadow-none">M</TabsTrigger>
+                  <TabsTrigger value="year" className="flex-1 text-xs font-semibold px-2 py-1 rounded-full hover:bg-foreground/[0.05] data-[state=active]:bg-foreground/[0.06] data-[state=active]:text-foreground data-[state=active]:shadow-none">ÅR</TabsTrigger>
                 </TabsList>
               </Tabs>
             )}
