@@ -563,7 +563,8 @@ export function TodayCheckin({
             />
             <TurtleLogo
               size="hero"
-              animated={false}
+              animated
+              staticPose
               mood={todayEntry ? getTurtleMoodForMood(todayEntry.mood) : undefined}
               holding={streakData.currentStreak > 0 ? 'sign' : 'book'}
               signValue={streakData.currentStreak > 0 ? streakData.currentStreak : undefined}
