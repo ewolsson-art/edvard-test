@@ -35,7 +35,7 @@ import { DayDetailDialog } from '@/components/DayDetailDialog';
 import { ExerciseTypeDialog } from '@/components/ExerciseTypeDialog';
 import { AIInsights } from '@/components/AIInsights';
 import { OverviewSummary } from '@/components/OverviewSummary';
-import { LessonsFromPast } from '@/components/LessonsFromPast';
+
 import { useCharacteristics } from '@/hooks/useCharacteristics';
 
 import { MoodStats as MoodStatsType, ExerciseType, QualityType } from '@/types/mood';
