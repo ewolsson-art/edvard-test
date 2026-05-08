@@ -109,21 +109,20 @@ const MedicationCategory = () => {
           </section>
 
           {meds.length === 0 ? (
-            <div className="rounded-2xl bg-foreground/[0.03] backdrop-blur-sm py-10 text-center">
-              <div className="flex justify-center mb-3">
-                <Pill className="h-8 w-8 text-foreground/20" />
-              </div>
-              <p className="text-[14px] font-medium text-foreground/60">{meta.emptyText}</p>
-              <p className="text-[13px] text-foreground/30 mt-1 px-6">{meta.emptyHint}</p>
-              <Button
-                onClick={() => navigate('/mediciner?add=1')}
-                className="mt-5 gap-2 rounded-full"
-                size="sm"
-              >
-                <Plus className="h-4 w-4" />
-                Lägg till medicin
-              </Button>
-            </div>
+            <EmptyState
+              title={meta.emptyText}
+              description={meta.emptyHint}
+              action={
+                <Button
+                  onClick={() => navigate('/mediciner?add=1')}
+                  className="gap-2 rounded-full"
+                  size="sm"
+                >
+                  <Plus className="h-4 w-4" />
+                  Lägg till medicin
+                </Button>
+              }
+            />
           ) : (
             <div className="space-y-6">
               <Button
