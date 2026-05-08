@@ -567,8 +567,8 @@ export function TodayCheckin({
               mood={todayEntry ? getTurtleMoodForMood(todayEntry.mood) : undefined}
               holding={streakData.currentStreak > 0 ? 'sign' : 'book'}
               signValue={streakData.currentStreak > 0 ? streakData.currentStreak : undefined}
-              signLabel={streakData.currentStreak > 0 ? t('checkin.inARow').toUpperCase() : undefined}
-              className="w-44 h-44 md:w-56 md:h-56 drop-shadow-[0_12px_28px_hsl(0_0%_0%/0.45)]"
+              signLabel={streakData.currentStreak > 0 ? `${streakData.currentStreak === 1 ? 'DAG' : 'DAGAR'} I RAD` : undefined}
+              className="w-60 h-60 md:w-80 md:h-80 drop-shadow-[0_14px_32px_hsl(0_0%_0%/0.5)]"
             />
           </motion.div>
 
