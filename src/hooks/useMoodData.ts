@@ -4,6 +4,7 @@ import { MoodEntry, MoodType, MoodStats, CheckinData, QualityType, ExerciseType,
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
+import { toast as sonnerToast } from 'sonner';
 
 const MOOD_ENTRIES_KEY = 'mood-entries';
 
