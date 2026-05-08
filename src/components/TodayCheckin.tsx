@@ -764,10 +764,13 @@ export function TodayCheckin({
             </div>
           </div>
 
-          {/* Date label + Heading + Streak */}
-          <div className="mb-10">
-            <div className="flex items-center justify-between mb-3">
-              <p className="text-muted-foreground/50 text-[13px] tracking-[0.08em] uppercase font-semibold">
+          {/* Date label + Streak — mjukare typografi */}
+          <div className="mb-6">
+            <div className="flex items-center justify-between mb-2">
+              <p
+                className="text-[12.5px] font-medium tracking-tight first-letter:uppercase lowercase transition-colors duration-500"
+                style={{ color: checkinData.mood ? activeMoodColor.replace(')', ' / 0.7)') : 'hsl(var(--muted-foreground) / 0.55)' }}
+              >
                 {isDisplayToday ? format(displayDate, "EEEE d MMMM", { locale: sv }) : formattedDate}
               </p>
               {streakData.currentStreak > 0 && (
