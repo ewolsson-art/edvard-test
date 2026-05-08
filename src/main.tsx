@@ -18,9 +18,9 @@ if (
     window.location.hash;
   window.location.replace(target);
 } else {
-
-createRoot(document.getElementById("root")!).render(
-  <HelmetProvider>
-    <App />
-  </HelmetProvider>
-);
+  createRoot(document.getElementById("root")!).render(
+    <HelmetProvider>
+      <App />
+    </HelmetProvider>
+  );
+}
