@@ -18,6 +18,7 @@ interface ScrollableMonthsCalendarProps {
 
 export interface ScrollableMonthsCalendarRef {
   scrollToToday: () => void;
+  scrollToMonth: (monthIndex: number, behavior?: ScrollBehavior) => void;
 }
 
 export const ScrollableMonthsCalendar = forwardRef<ScrollableMonthsCalendarRef, ScrollableMonthsCalendarProps>(({
@@ -28,30 +29,32 @@ export const ScrollableMonthsCalendar = forwardRef<ScrollableMonthsCalendarRef, 
   getEntriesForMonth,
   onDayClick,
 }, ref) => {
-  const currentMonthRef = useRef<HTMLDivElement>(null);
+  const monthRefs = useRef<Array<HTMLDivElement | null>>([]);
   const currentMonth = new Date().getMonth();
   const currentYear = new Date().getFullYear();
 
-  const scrollToCurrentMonth = useCallback(() => {
-    if (year === currentYear && currentMonthRef.current) {
+  const scrollToMonth = useCallback((monthIndex: number, behavior: ScrollBehavior = 'smooth') => {
+    const el = monthRefs.current[monthIndex];
+    if (el) {
       requestAnimationFrame(() => {
-        currentMonthRef.current?.scrollIntoView({ block: 'center', behavior: 'smooth' });
+        el.scrollIntoView({ block: 'start', behavior });
       });
     }
-  }, [year, currentYear]);
+  }, []);
+
+  const scrollToCurrentMonth = useCallback(() => {
+    if (year === currentYear) scrollToMonth(currentMonth, 'smooth');
+  }, [year, currentYear, currentMonth, scrollToMonth]);
 
   useImperativeHandle(ref, () => ({
     scrollToToday: scrollToCurrentMonth,
-  }), [scrollToCurrentMonth]);
+    scrollToMonth,
+  }), [scrollToCurrentMonth, scrollToMonth]);
 
-  // Scroll on mount
+  // Scroll to current month on mount
   useEffect(() => {
-    if (year === currentYear && currentMonthRef.current) {
-      requestAnimationFrame(() => {
-        currentMonthRef.current?.scrollIntoView({ block: 'center', behavior: 'auto' });
-      });
-    }
-  }, [year, currentYear]);
+    if (year === currentYear) scrollToMonth(currentMonth, 'auto');
+  }, [year, currentYear, currentMonth, scrollToMonth]);
 
   const months = useMemo(() => {
     return Array.from({ length: 12 }, (_, i) => {
@@ -108,7 +111,7 @@ export const ScrollableMonthsCalendar = forwardRef<ScrollableMonthsCalendarRef, 
       {months.map((data, i) => {
         const isCurrentMonth = year === currentYear && i === currentMonth;
         return (
-          <div key={i} ref={isCurrentMonth ? currentMonthRef : undefined}>
+          <div key={i} ref={(el) => { monthRefs.current[i] = el; }}>
             {type === 'mood' && 'moodData' in data && (
               <MonthCalendar
                 currentDate={data.monthDate}
