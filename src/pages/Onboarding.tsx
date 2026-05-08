@@ -158,6 +158,11 @@ const Onboarding = () => {
 
 
 
+      // Clear draft on successful completion
+      if (DRAFT_KEY) {
+        try { localStorage.removeItem(DRAFT_KEY); } catch { /* ignore */ }
+      }
+
       toast({
         title: t('onboarding.welcomeToToddy'),
         description: t('onboarding.diaryReady'),
