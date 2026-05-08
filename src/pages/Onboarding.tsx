@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -64,18 +64,37 @@ const Onboarding = () => {
   const { createPreferences } = useUserPreferences();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const [step, setStep] = useState(1);
+
+  const DRAFT_KEY = user ? `toddy_onboarding_draft_${user.id}` : null;
+  const loadDraft = () => {
+    if (typeof window === 'undefined' || !DRAFT_KEY) return null;
+    try {
+      const raw = localStorage.getItem(DRAFT_KEY);
+      return raw ? JSON.parse(raw) : null;
+    } catch { return null; }
+  };
+  const draft = loadDraft();
+
+  const [step, setStep] = useState<number>(draft?.step ?? 1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   
   // Step data
-  const [selections, setSelections] = useState({
+  const [selections, setSelections] = useState(draft?.selections ?? {
     include_mood: true,
     include_sleep: false,
     include_eating: false,
     include_exercise: false,
     include_medication: false,
   });
-  const [selectedDiagnoses, setSelectedDiagnoses] = useState<string[]>([]);
+  const [selectedDiagnoses, setSelectedDiagnoses] = useState<string[]>(draft?.selectedDiagnoses ?? []);
+
+  // Autosave draft on every change
+  useEffect(() => {
+    if (!DRAFT_KEY) return;
+    try {
+      localStorage.setItem(DRAFT_KEY, JSON.stringify({ step, selections, selectedDiagnoses }));
+    } catch { /* ignore quota */ }
+  }, [DRAFT_KEY, step, selections, selectedDiagnoses]);
 
   const handleToggle = (id: string) => {
     setSelections(prev => ({
@@ -138,6 +157,11 @@ const Onboarding = () => {
       }
 
 
+
+      // Clear draft on successful completion
+      if (DRAFT_KEY) {
+        try { localStorage.removeItem(DRAFT_KEY); } catch { /* ignore */ }
+      }
 
       toast({
         title: t('onboarding.welcomeToToddy'),

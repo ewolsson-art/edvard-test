@@ -4,6 +4,7 @@ import { MoodEntry, MoodType, MoodStats, CheckinData, QualityType, ExerciseType,
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
+import { toast as sonnerToast } from 'sonner';
 
 const MOOD_ENTRIES_KEY = 'mood-entries';
 
@@ -59,7 +60,7 @@ export function useMoodData() {
   );
 
   const saveCheckinMutation = useMutation({
-    mutationFn: async ({ date, data }: { date: string; data: CheckinData }) => {
+    mutationFn: async ({ date, data, previous }: { date: string; data: CheckinData; previous?: MoodEntry }) => {
       if (!user) throw new Error('No user');
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const upsertData: any = {
@@ -87,9 +88,9 @@ export function useMoodData() {
         console.error('[saveCheckin] supabase error:', error);
         throw error;
       }
-      return { date, data };
+      return { date, data, previous };
     },
-    onSuccess: ({ date, data }) => {
+    onSuccess: ({ date, data, previous }) => {
       const newEntry: MoodEntry = {
         date,
         mood: data.mood!,
@@ -111,7 +112,50 @@ export function useMoodData() {
         const filtered = prev.filter(e => e.date !== date);
         return [...filtered, newEntry];
       });
-      toast({ title: "Incheckning sparad!" });
+
+      // Sonner toast with 5s undo action
+      sonnerToast("Incheckning sparad", {
+        duration: 5000,
+        action: {
+          label: "Ångra",
+          onClick: async () => {
+            if (!user) return;
+            try {
+              if (previous) {
+                // Restore previous entry
+                const restoreData = {
+                  user_id: user.id,
+                  date,
+                  mood: previous.mood,
+                  energy_level: previous.energyLevel || null,
+                  comment: previous.comment || null,
+                  sleep_quality: previous.sleepQuality || null,
+                  sleep_comment: previous.sleepComment || null,
+                  eating_quality: previous.eatingQuality || null,
+                  eating_comment: previous.eatingComment || null,
+                  exercised: previous.exercised ?? null,
+                  exercise_comment: previous.exerciseComment || null,
+                  exercise_types: previous.exerciseTypes || null,
+                  medication_comment: previous.medicationComment || null,
+                  medication_side_effects: previous.medicationSideEffects || null,
+                  tags: previous.tags || null,
+                };
+                await supabase.from('mood_entries').upsert(restoreData, { onConflict: 'user_id,date' });
+                setEntries(prev => {
+                  const filtered = prev.filter(e => e.date !== date);
+                  return [...filtered, previous];
+                });
+              } else {
+                await supabase.from('mood_entries').delete().eq('user_id', user.id).eq('date', date);
+                setEntries(prev => prev.filter(e => e.date !== date));
+              }
+              sonnerToast("Ångrat");
+            } catch {
+              sonnerToast.error("Kunde inte ångra");
+            }
+          },
+        },
+      });
     },
     onError: (err: unknown) => {
       const msg = err instanceof Error ? err.message : 'Försök igen.';
@@ -122,12 +166,13 @@ export function useMoodData() {
 
   const saveCheckin = useCallback(async (date: string, data: CheckinData): Promise<boolean> => {
     try {
-      await saveCheckinMutation.mutateAsync({ date, data });
+      const previous = entries.find(e => e.date === date);
+      await saveCheckinMutation.mutateAsync({ date, data, previous });
       return true;
     } catch {
       return false;
     }
-  }, [saveCheckinMutation]);
+  }, [saveCheckinMutation, entries]);
 
   const updateExerciseTypes = useCallback(async (date: string, exerciseTypes: ExerciseType[]): Promise<boolean> => {
     if (!user) return false;

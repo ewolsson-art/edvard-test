@@ -4,6 +4,7 @@ import { Medication, MedicationLog, MedicationFrequency, MedicationStatus, Medic
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
+import { toast as sonnerToast } from 'sonner';
 
 const MEDICATIONS_KEY = 'medications';
 const MEDICATION_LOGS_KEY = 'medication-logs';
@@ -209,8 +210,10 @@ export function useMedications() {
     }
   }, [user, toast, setMedications, setLogs]);
 
-  const logMedication = useCallback(async (medicationId: string, date: string, taken: boolean) => {
+  const logMedication = useCallback(async (medicationId: string, date: string, taken: boolean, options?: { silent?: boolean }) => {
     if (!user) return;
+    const wasTaken = logs.some(l => l.medication_id === medicationId && l.date === date);
+    const med = medications.find(m => m.id === medicationId);
     if (taken) {
       const { data, error } = await supabase
         .from('medication_logs')
@@ -222,6 +225,28 @@ export function useMedications() {
           const filtered = prev.filter(l => !(l.medication_id === medicationId && l.date === date));
           return [...filtered, data as MedicationLog];
         });
+        if (!wasTaken && !options?.silent && med) {
+          sonnerToast(`${med.name} markerad som tagen`, {
+            duration: 5000,
+            action: {
+              label: "Ångra",
+              onClick: async () => {
+                const { error: undoErr } = await supabase
+                  .from('medication_logs')
+                  .delete()
+                  .eq('user_id', user.id)
+                  .eq('medication_id', medicationId)
+                  .eq('date', date);
+                if (!undoErr) {
+                  setLogs(prev => prev.filter(l => !(l.medication_id === medicationId && l.date === date)));
+                  sonnerToast("Ångrat");
+                } else {
+                  sonnerToast.error("Kunde inte ångra");
+                }
+              },
+            },
+          });
+        }
       }
     } else {
       const { error } = await supabase
@@ -234,7 +259,7 @@ export function useMedications() {
         setLogs(prev => prev.filter(l => !(l.medication_id === medicationId && l.date === date)));
       }
     }
-  }, [user, setLogs]);
+  }, [user, setLogs, logs, medications]);
 
   const getLogsForDate = useCallback((date: string): MedicationLog[] => {
     return logs.filter(l => l.date === date);
