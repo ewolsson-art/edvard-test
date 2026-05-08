@@ -590,30 +590,6 @@ export function TodayCheckin({
             {heroSub}
           </motion.p>
 
-          {/* Status pills */}
-          {summaryItems.length > 0 && (
-            <motion.div
-              initial="hidden"
-              animate="visible"
-              variants={{ visible: { transition: { staggerChildren: 0.06, delayChildren: 0.4 } } }}
-              className="flex flex-wrap items-center justify-center gap-2 mb-6 max-w-[340px]"
-            >
-              {summaryItems.map((item) => (
-                <motion.span
-                  key={item.label}
-                  variants={{
-                    hidden: { opacity: 0, y: 8, scale: 0.9 },
-                    visible: { opacity: 1, y: 0, scale: 1, transition: { type: 'spring', stiffness: 320, damping: 22 } },
-                  }}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-foreground/[0.04] border border-foreground/10 backdrop-blur-sm text-[12.5px]"
-                >
-                  <span className="text-foreground/35 text-[10.5px] uppercase tracking-wider font-medium">{item.label}</span>
-                  <span className={cn('font-semibold', item.colorClass || 'text-foreground/85')}>{item.value}</span>
-                </motion.span>
-              ))}
-            </motion.div>
-          )}
-
           {/* Empatiskt budskap för låga mood — pedagogiskt & varmt */}
           {isLowMood && encouragementData.goodDaysCount > 0 && (
             <motion.div
