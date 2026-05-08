@@ -664,8 +664,21 @@ export function TodayCheckin({
     );
   }
 
+  // Mood-färgad ambient backdrop tied to current selection (subtle, calming)
+  const activeMoodColorVar = checkinData.mood ? moodColorVars[checkinData.mood] : 'var(--primary)';
+  const activeMoodColor = `hsl(${activeMoodColorVar})`;
+
   return (
-    <div className="fade-in h-full md:h-auto flex flex-col justify-center px-5 pt-12 pb-4 md:pt-4 overflow-hidden md:overflow-y-auto md:glass-card md:p-12 md:max-h-[calc(100vh-4rem)] md:border md:border-foreground/10 md:bg-foreground/[0.03] md:backdrop-blur-sm md:rounded-2xl md:shadow-sm">
+    <div className="fade-in relative h-full md:h-auto flex flex-col justify-center px-5 pt-12 pb-4 md:pt-4 overflow-hidden md:overflow-y-auto md:glass-card md:p-12 md:max-h-[calc(100vh-4rem)] md:border md:border-foreground/10 md:rounded-2xl md:shadow-sm md:bg-gradient-to-b md:from-foreground/[0.045] md:to-foreground/[0.015] md:backdrop-blur-sm">
+      {/* Mood-färgad ambient backdrop — andas med vald känsla */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 -z-10 transition-opacity duration-700"
+        style={{
+          background: `radial-gradient(circle at 50% 30%, ${activeMoodColor.replace(')', ' / 0.10)')} 0%, transparent 55%)`,
+          opacity: checkinData.mood ? 1 : 0.5,
+        }}
+      />
       {/* Retro batch progress banner — shown while filling in missed days */}
       {retroProgress && retroProgress.total > 1 && currentStep !== 'success-animation' && (
         <div className="mb-3 -mt-6 md:mt-0 flex items-center justify-between gap-3 px-4 py-2.5 rounded-full border border-foreground/10 bg-foreground/[0.04] backdrop-blur-sm">
@@ -751,10 +764,13 @@ export function TodayCheckin({
             </div>
           </div>
 
-          {/* Date label + Heading + Streak */}
-          <div className="mb-10">
-            <div className="flex items-center justify-between mb-3">
-              <p className="text-muted-foreground/50 text-[13px] tracking-[0.08em] uppercase font-semibold">
+          {/* Date label + Streak — mjukare typografi */}
+          <div className="mb-6">
+            <div className="flex items-center justify-between mb-2">
+              <p
+                className="text-[12.5px] font-medium tracking-tight first-letter:uppercase lowercase transition-colors duration-500"
+                style={{ color: checkinData.mood ? activeMoodColor.replace(')', ' / 0.7)') : 'hsl(var(--muted-foreground) / 0.55)' }}
+              >
                 {isDisplayToday ? format(displayDate, "EEEE d MMMM", { locale: sv }) : formattedDate}
               </p>
               {streakData.currentStreak > 0 && (

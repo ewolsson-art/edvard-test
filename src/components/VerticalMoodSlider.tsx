@@ -226,9 +226,10 @@ export function VerticalMoodSlider({ options, value, onSelect }: VerticalMoodSli
             }}
           />
 
-          {/* Step dots */}
+          {/* Step dots — inaktiva = ljusa neutrala, aktiv = mood-färgad */}
           {options.map((opt, i) => {
             const isActive = activeIndex === i;
+            const isEndpoint = i === 0 || i === stepCount - 1;
             return (
               <div
                 key={opt.mood}
@@ -238,10 +239,12 @@ export function VerticalMoodSlider({ options, value, onSelect }: VerticalMoodSli
                 <div
                   className={cn(
                     "rounded-full border-2 border-background transition-all duration-200",
-                    isActive ? "w-4 h-4" : "w-2.5 h-2.5"
+                    isActive ? "w-4 h-4" : isEndpoint ? "w-2 h-2" : "w-1.5 h-1.5"
                   )}
                   style={{
-                    backgroundColor: `hsl(${moodColorVars[opt.mood]})`,
+                    backgroundColor: isActive
+                      ? `hsl(${moodColorVars[opt.mood]})`
+                      : `hsl(0 0% 100% / ${isEndpoint ? 0.45 : 0.3})`,
                     boxShadow: isActive ? `0 0 12px hsl(${moodColorVars[opt.mood]} / 0.5)` : 'none',
                   }}
                 />
