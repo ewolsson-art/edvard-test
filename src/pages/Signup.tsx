@@ -63,6 +63,7 @@ const CHECKIN_OPTIONS: Array<{
 ];
 
 const getOAuthRedirectUri = () => {
+  if (window.location.hostname === "www.toddy.se") return "https://toddy.se";
   return window.location.origin;
 };
 
@@ -86,6 +87,12 @@ const Signup = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { toast } = useToast();
+
+  useEffect(() => {
+    if (window.location.hostname === "www.toddy.se") {
+      window.location.replace(`https://toddy.se${window.location.pathname}${window.location.search}`);
+    }
+  }, []);
 
   useEffect(() => {
     if (!loading && user) {
