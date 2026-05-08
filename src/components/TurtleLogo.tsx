@@ -74,7 +74,10 @@ const MOOD_SHELL: Record<TurtleMood, { from: string; to: string; pattern: string
 const isElevatedMood = (m?: TurtleMood) => m === 'elevated' || m === 'severe_elevated' || m === 'somewhat_elevated';
 const isDepressedMood = (m?: TurtleMood) => m === 'depressed' || m === 'severe_depressed' || m === 'somewhat_depressed';
 
-export function TurtleLogo({ size = 'md', animated = true, className, mood, framing = 'full', holding = 'book', signValue, signLabel }: TurtleLogoProps) {
+export function TurtleLogo({ size = 'md', animated = true, className, mood, framing = 'full', holding = 'book', signValue, signLabel, staticPose = false }: TurtleLogoProps) {
+  // Body movement gate (idle bob, wave, head-bob, tail-wag, jitter, eye-dart, energy-flicker).
+  // When staticPose is set, only the eye blink remains.
+  const moves = animated && !staticPose;
   const rawId = useId().replace(/[^a-zA-Z0-9_-]/g, '');
   const id = (name: string) => `${name}-${rawId}`;
   const sizes = {
