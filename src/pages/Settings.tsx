@@ -275,7 +275,7 @@ const Settings = () => {
         )}
 
         <SettingsGroup label={t('settings.accountSecurity')}>
-          <SettingsRow icon={UserCircle} label={t('sidebar.myProfile')} onClick={() => navigate('/profil')} />
+          
           <SettingsRow icon={Lock} label={t('settings.changePassword')} onClick={() => setView('password')} />
           <SettingsRow icon={Download} label={t('settings.exportData')} description={t('settings.exportDesc')} onClick={() => setView('export')} />
           <SettingsRow icon={Trash2} label={t('settings.deleteAccount')} destructive onClick={() => setView('delete')} />
