@@ -27,7 +27,7 @@ import { YearHeatmap } from '@/components/YearHeatmap';
 import { SleepYearHeatmap } from '@/components/SleepYearHeatmap';
 import { EatingYearHeatmap } from '@/components/EatingYearHeatmap';
 import { ExerciseYearHeatmap } from '@/components/ExerciseYearHeatmap';
-import { SeasonalPatterns } from '@/components/SeasonalPatterns';
+
 
 import { useAuth } from '@/hooks/useAuth';
 
@@ -667,7 +667,6 @@ const Overview = () => {
                     )}
                     {view === 'year' && (
                       <div className="space-y-8">
-                        <SeasonalPatterns entries={entries} />
                         <YearHeatmap year={currentYear} entries={yearEntries}
                           medicationDates={yearMedicationDates}
                           onPrevYear={() => setCurrentYear(prev => prev - 1)}
