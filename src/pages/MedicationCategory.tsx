@@ -13,6 +13,7 @@ import {
   EFFECTIVENESS_LABELS,
   Medication,
 } from '@/types/medication';
+import { EmptyState } from '@/components/EmptyState';
 
 type CategorySlug = 'regelbundet' | 'vid-behov' | 'slutat';
 
