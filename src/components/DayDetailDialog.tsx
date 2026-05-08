@@ -178,14 +178,9 @@ export function DayDetailDialog({
                 <Pill className="w-4 h-4 text-primary" />
                 <p className="text-xs text-muted-foreground uppercase tracking-wide">{t('dayDetail.medication', 'Medicin')}</p>
               </div>
-              <div className="space-y-1">
-                {medicationsTaken.map((med, index) => (
-                  <div key={index} className="flex items-center gap-2 text-sm">
-                    <Check className="w-3.5 h-3.5 text-mood-stable" />
-                    <span className="font-medium">{med.name}</span>
-                    <span className="text-muted-foreground">{med.dosage}</span>
-                  </div>
-                ))}
+              <div className="flex items-center gap-2 text-sm">
+                <Check className="w-3.5 h-3.5 text-mood-stable" />
+                <span className="font-medium">Ja</span>
               </div>
             </div>
           )}
