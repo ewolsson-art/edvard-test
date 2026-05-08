@@ -23,7 +23,18 @@ interface TurtleLogoProps {
   mood?: TurtleMood;
   /** 'full' (default) shows the whole turtle. 'face' zooms in on head + expression. */
   framing?: 'full' | 'face';
+  /**
+   * What the turtle is holding in its hands.
+   *  - 'book' (default): the journal/book.
+   *  - 'sign': a streak sign rendered in the same spot. Use `signValue` + `signLabel`.
+   */
+  holding?: 'book' | 'sign';
+  /** Big number shown on the sign (e.g. streak count). */
+  signValue?: number | string;
+  /** Small caption under the number on the sign (e.g. "I RAD"). */
+  signLabel?: string;
 }
+
 
 // Bara tre färger: röd (nedstämd), gul (uppvarvad), grön (stabil).
 const ELEVATED_SHELL = {
@@ -58,7 +69,7 @@ const MOOD_SHELL: Record<TurtleMood, { from: string; to: string; pattern: string
 const isElevatedMood = (m?: TurtleMood) => m === 'elevated' || m === 'severe_elevated' || m === 'somewhat_elevated';
 const isDepressedMood = (m?: TurtleMood) => m === 'depressed' || m === 'severe_depressed' || m === 'somewhat_depressed';
 
-export function TurtleLogo({ size = 'md', animated = true, className, mood, framing = 'full' }: TurtleLogoProps) {
+export function TurtleLogo({ size = 'md', animated = true, className, mood, framing = 'full', holding = 'book', signValue, signLabel }: TurtleLogoProps) {
   const rawId = useId().replace(/[^a-zA-Z0-9_-]/g, '');
   const id = (name: string) => `${name}-${rawId}`;
   const sizes = {
@@ -207,25 +218,96 @@ export function TurtleLogo({ size = 'md', animated = true, className, mood, fram
           className={animated ? 'turtle-tail-wag' : ''}
         />
 
-        {/* === THICK BOOK held in front === */}
-        <g>
-          {/* Book back cover */}
-          <rect x="48" y="128" width="60" height="42" rx="3" fill={`url(#${id('bookCover')})`} transform="rotate(-5 78 149)" />
-          {/* Book pages (thick) */}
-          <rect x="50" y="130" width="56" height="38" rx="2" fill={`url(#${id('bookPages')})`} transform="rotate(-5 78 149)" />
-          {/* Page lines */}
-          <line x1="58" y1="140" x2="98" y2="138" stroke="hsl(220 15% 65%)" strokeWidth="0.8" />
-          <line x1="58" y1="146" x2="98" y2="144" stroke="hsl(220 15% 65%)" strokeWidth="0.8" />
-          <line x1="58" y1="152" x2="98" y2="150" stroke="hsl(220 15% 65%)" strokeWidth="0.8" />
-          <line x1="58" y1="158" x2="90" y2="156" stroke="hsl(220 15% 65%)" strokeWidth="0.8" />
-          {/* Book spine (thick) */}
-          <rect x="46" y="128" width="6" height="42" rx="2" fill="hsl(225 50% 22%)" transform="rotate(-5 49 149)" />
-          {/* Book front cover edge */}
-          <rect x="48" y="128" width="60" height="3" rx="1" fill="hsl(220 55% 30%)" transform="rotate(-5 78 129)" />
-          <rect x="48" y="167" width="60" height="3" rx="1" fill="hsl(220 55% 30%)" transform="rotate(-5 78 168)" />
-          {/* Book title decoration */}
-          <rect x="62" y="131" width="28" height="2" rx="1" fill="hsl(45 70% 55%)" transform="rotate(-5 76 132)" opacity="0.8" />
-        </g>
+        {/* === HÅLLER FRAMFÖR SIG: bok ELLER streak-skylt === */}
+        {holding === 'book' ? (
+          <g>
+            {/* Book back cover */}
+            <rect x="48" y="128" width="60" height="42" rx="3" fill={`url(#${id('bookCover')})`} transform="rotate(-5 78 149)" />
+            {/* Book pages (thick) */}
+            <rect x="50" y="130" width="56" height="38" rx="2" fill={`url(#${id('bookPages')})`} transform="rotate(-5 78 149)" />
+            {/* Page lines */}
+            <line x1="58" y1="140" x2="98" y2="138" stroke="hsl(220 15% 65%)" strokeWidth="0.8" />
+            <line x1="58" y1="146" x2="98" y2="144" stroke="hsl(220 15% 65%)" strokeWidth="0.8" />
+            <line x1="58" y1="152" x2="98" y2="150" stroke="hsl(220 15% 65%)" strokeWidth="0.8" />
+            <line x1="58" y1="158" x2="90" y2="156" stroke="hsl(220 15% 65%)" strokeWidth="0.8" />
+            {/* Book spine (thick) */}
+            <rect x="46" y="128" width="6" height="42" rx="2" fill="hsl(225 50% 22%)" transform="rotate(-5 49 149)" />
+            {/* Book front cover edge */}
+            <rect x="48" y="128" width="60" height="3" rx="1" fill="hsl(220 55% 30%)" transform="rotate(-5 78 129)" />
+            <rect x="48" y="167" width="60" height="3" rx="1" fill="hsl(220 55% 30%)" transform="rotate(-5 78 168)" />
+            {/* Book title decoration */}
+            <rect x="62" y="131" width="28" height="2" rx="1" fill="hsl(45 70% 55%)" transform="rotate(-5 76 132)" opacity="0.8" />
+          </g>
+        ) : (
+          <g transform="rotate(-5 78 149)">
+            {/* Glow bakom skylten */}
+            <rect
+              x="44"
+              y="124"
+              width="68"
+              height="50"
+              rx="10"
+              fill="hsl(45 85% 55%)"
+              opacity="0.18"
+              filter="blur(2px)"
+            />
+            {/* Skyltplatta */}
+            <rect
+              x="46"
+              y="126"
+              width="64"
+              height="46"
+              rx="8"
+              fill="hsl(220 25% 8%)"
+              stroke="hsl(45 85% 55%)"
+              strokeWidth="1.5"
+              strokeOpacity="0.55"
+            />
+            {/* Inre highlight */}
+            <rect
+              x="48"
+              y="128"
+              width="60"
+              height="14"
+              rx="6"
+              fill="hsl(0 0% 100%)"
+              opacity="0.04"
+            />
+            {/* Stort streak-tal */}
+            {signValue !== undefined && signValue !== null && (
+              <text
+                x="78"
+                y="156"
+                textAnchor="middle"
+                fontSize="26"
+                fontWeight="800"
+                fill="hsl(0 0% 98%)"
+                fontFamily="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif"
+                letterSpacing="-1"
+                style={{ fontVariantNumeric: 'tabular-nums' }}
+              >
+                {String(signValue)}
+              </text>
+            )}
+            {/* Liten "I RAD"-rad med flame-prick */}
+            {signLabel && (
+              <g>
+                <circle cx="62" cy="166" r="1.6" fill="hsl(45 85% 55%)" />
+                <text
+                  x="66"
+                  y="168.5"
+                  fontSize="6"
+                  fontWeight="700"
+                  fill="hsl(0 0% 75%)"
+                  fontFamily="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif"
+                  letterSpacing="1"
+                >
+                  {signLabel}
+                </text>
+              </g>
+            )}
+          </g>
+        )}
 
         {/* Head */}
         <g className={animated ? 'turtle-head-bob' : ''}>
