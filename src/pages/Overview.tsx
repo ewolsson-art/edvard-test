@@ -472,6 +472,8 @@ const Overview = () => {
   const handleMonthClick = (month: number) => {
     setCurrentMonth(new Date(currentYear, month, 1));
     setView('month');
+    setSearchParams({ view: 'month' });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleViewChange = (newView: string) => {
