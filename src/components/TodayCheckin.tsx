@@ -549,47 +549,65 @@ export function TodayCheckin({
         </div>
 
         <div className="relative flex flex-col items-center text-center w-full max-w-md">
-          {/* Hero: mood-ikon i färgad cirkel + ev. streak */}
+          {/* Hero: stor stående sköldpadda som speglar dagens mående,
+              med streak-tal som glödande badge i högra hörnet. */}
           <motion.div
-            initial={{ opacity: 0, y: 12, scale: 0.92 }}
+            initial={{ opacity: 0, y: 16, scale: 0.9 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            transition={{ type: 'spring', stiffness: 240, damping: 22, mass: 0.7 }}
-            className="flex items-center gap-4 md:gap-6 mb-8"
+            transition={{ type: 'spring', stiffness: 220, damping: 22, mass: 0.8 }}
+            className="relative mb-6"
           >
+            {/* Mjuk färgad glow bakom sköldpaddan */}
             <div
-              className="w-24 h-24 md:w-28 md:h-28 rounded-full flex items-center justify-center"
-              style={{
-                backgroundColor: moodColor.replace(')', ' / 0.12)'),
-                boxShadow: `0 0 40px ${moodColor.replace(')', ' / 0.3)')}, inset 0 0 0 1px ${moodColor.replace(')', ' / 0.25)')}`,
-              }}
-            >
-              <MoodIcon
-                className="w-12 h-12 md:w-14 md:h-14"
-                style={{ color: moodColor }}
-                strokeWidth={1.75}
-              />
-            </div>
+              aria-hidden
+              className="absolute inset-0 -z-10 blur-3xl rounded-full opacity-50"
+              style={{ background: `radial-gradient(circle, ${moodColor.replace(')', ' / 0.45)')}, transparent 70%)` }}
+            />
+            <TurtleLogo
+              size="hero"
+              animated
+              mood={todayEntry ? getTurtleMoodForMood(todayEntry.mood) : undefined}
+              className="w-44 h-44 md:w-56 md:h-56 drop-shadow-[0_12px_28px_hsl(0_0%_0%/0.45)]"
+            />
+
+            {/* Streak-badge — sköldpaddans "trofé" */}
             {streakData.currentStreak > 0 && (
-              <div className="text-left">
-                <motion.span
-                  initial={{ opacity: 0, scale: 0.5 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: 0.15, type: 'spring', stiffness: 280, damping: 18 }}
-                  className="block text-[72px] md:text-[88px] font-bold tabular-nums leading-[0.8] tracking-tighter bg-gradient-to-br from-foreground via-foreground to-foreground/55 bg-clip-text text-transparent"
-                >
+              <motion.div
+                initial={{ opacity: 0, scale: 0.4, rotate: -8 }}
+                animate={{ opacity: 1, scale: 1, rotate: 0 }}
+                transition={{ delay: 0.35, type: 'spring', stiffness: 300, damping: 16 }}
+                className="absolute -top-2 -right-3 md:-top-3 md:-right-6 flex flex-col items-center justify-center min-w-[68px] md:min-w-[80px] px-3 py-2 rounded-2xl border border-[hsl(45_85%_55%/0.35)] bg-background/85 backdrop-blur-md shadow-[0_8px_24px_hsl(45_85%_55%/0.25)]"
+              >
+                <span className="text-[34px] md:text-[40px] font-bold tabular-nums leading-none tracking-tight bg-gradient-to-br from-foreground via-foreground to-foreground/60 bg-clip-text text-transparent">
                   {streakData.currentStreak}
-                </motion.span>
-                <div className="flex items-center gap-1.5 mt-2 ml-1">
-                  <Flame className="w-3 h-3 text-primary/70" />
-                  <p className="text-[11px] uppercase tracking-[0.18em] text-foreground/40 font-medium">
-                    {streakData.currentStreak === 1 ? t('checkin.dayStreak') : t('checkin.daysStreak')} {t('checkin.inARow')}
+                </span>
+                <div className="flex items-center gap-1 mt-1">
+                  <Flame className="w-2.5 h-2.5 text-[hsl(45_85%_55%)]" />
+                  <p className="text-[9px] uppercase tracking-[0.18em] text-foreground/55 font-semibold">
+                    {t('checkin.inARow')}
                   </p>
                 </div>
-              </div>
+              </motion.div>
             )}
           </motion.div>
 
-          {/* Personlig hälsning borttagen */}
+          {/* Hjälte-titel under sköldpaddan */}
+          <motion.h2
+            initial={{ opacity: 0, y: 6 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.25, duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+            className="text-[20px] md:text-[22px] font-semibold text-foreground/90 tracking-tight mb-1.5 max-w-[300px]"
+          >
+            {heroTitle}
+          </motion.h2>
+          <motion.p
+            initial={{ opacity: 0, y: 6 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.32, duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+            className="text-[13.5px] text-foreground/50 leading-relaxed max-w-[300px] mb-6"
+          >
+            {heroSub}
+          </motion.p>
 
           {/* Status pills */}
           {summaryItems.length > 0 && (
