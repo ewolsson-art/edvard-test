@@ -111,7 +111,7 @@ export const ScrollableMonthsCalendar = forwardRef<ScrollableMonthsCalendarRef, 
       {months.map((data, i) => {
         const isCurrentMonth = year === currentYear && i === currentMonth;
         return (
-          <div key={i} ref={isCurrentMonth ? currentMonthRef : undefined}>
+          <div key={i} ref={(el) => { monthRefs.current[i] = el; }}>
             {type === 'mood' && 'moodData' in data && (
               <MonthCalendar
                 currentDate={data.monthDate}
