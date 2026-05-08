@@ -20,6 +20,7 @@ import { VerticalMoodSlider } from '@/components/VerticalMoodSlider';
 import { VerticalScaleSlider, ScaleOption } from '@/components/VerticalScaleSlider';
 import { MoodTapButtons } from '@/components/MoodTapButtons';
 import { TurtleLogo } from '@/components/TurtleLogo';
+import { getTurtleMoodForMood } from '@/lib/moodTurtle';
 import { FullscreenComment } from '@/components/FullscreenComment';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { MilestoneInfo } from '@/hooks/useStreak';
