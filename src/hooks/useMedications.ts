@@ -4,6 +4,7 @@ import { Medication, MedicationLog, MedicationFrequency, MedicationStatus, Medic
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
+import { toast as sonnerToast } from 'sonner';
 
 const MEDICATIONS_KEY = 'medications';
 const MEDICATION_LOGS_KEY = 'medication-logs';
