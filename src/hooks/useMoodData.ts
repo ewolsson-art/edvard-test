@@ -166,12 +166,13 @@ export function useMoodData() {
 
   const saveCheckin = useCallback(async (date: string, data: CheckinData): Promise<boolean> => {
     try {
-      await saveCheckinMutation.mutateAsync({ date, data });
+      const previous = entries.find(e => e.date === date);
+      await saveCheckinMutation.mutateAsync({ date, data, previous });
       return true;
     } catch {
       return false;
     }
-  }, [saveCheckinMutation]);
+  }, [saveCheckinMutation, entries]);
 
   const updateExerciseTypes = useCallback(async (date: string, exerciseTypes: ExerciseType[]): Promise<boolean> => {
     if (!user) return false;
