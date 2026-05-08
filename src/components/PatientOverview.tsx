@@ -5,7 +5,7 @@ import { getPatientDiagnosisConfig } from '@/hooks/useDiagnosisConfig';
 import { cn } from '@/lib/utils';
 import { format, startOfMonth, endOfMonth, eachDayOfInterval, subMonths, addMonths, startOfWeek, endOfWeek, addWeeks, subWeeks } from 'date-fns';
 import { ScrollableMonthsCalendar, ScrollableMonthsCalendarRef } from '@/components/ScrollableMonthsCalendar';
-import { SeasonalPatterns } from '@/components/SeasonalPatterns';
+
 import { LessonsFromPast } from '@/components/LessonsFromPast';
 import { usePatientCharacteristics } from '@/hooks/usePatientCharacteristics';
 import { sv } from 'date-fns/locale';
@@ -626,7 +626,6 @@ export function PatientOverview({ connection, onBack, hideExtras = false }: Pati
               )}
               {view === 'year' && (
                 <div className="space-y-8">
-                  <SeasonalPatterns entries={entries} />
                   <YearHeatmap
                     year={currentYear}
                     entries={yearEntries}
