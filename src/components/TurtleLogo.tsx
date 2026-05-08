@@ -23,7 +23,18 @@ interface TurtleLogoProps {
   mood?: TurtleMood;
   /** 'full' (default) shows the whole turtle. 'face' zooms in on head + expression. */
   framing?: 'full' | 'face';
+  /**
+   * What the turtle is holding in its hands.
+   *  - 'book' (default): the journal/book.
+   *  - 'sign': a streak sign rendered in the same spot. Use `signValue` + `signLabel`.
+   */
+  holding?: 'book' | 'sign';
+  /** Big number shown on the sign (e.g. streak count). */
+  signValue?: number | string;
+  /** Small caption under the number on the sign (e.g. "I RAD"). */
+  signLabel?: string;
 }
+
 
 // Bara tre färger: röd (nedstämd), gul (uppvarvad), grön (stabil).
 const ELEVATED_SHELL = {
