@@ -213,7 +213,11 @@ export const MedicationsSection = () => {
       {/* Today's check-in removed — this section is for managing medications, not logging them */}
 
       {medications.length === 0 ? (
-        <p className="text-sm text-muted-foreground">Inga mediciner tillagda ännu.</p>
+        <EmptyState
+          title="Inga mediciner ännu"
+          description="Lägg till dina mediciner så håller Toddy koll på doser och biverkningar åt dig."
+          size="sm"
+        />
       ) : (
         <div className="space-y-4 pt-1">
           {/* Pågående (ongoing base meds) */}
