@@ -140,6 +140,7 @@ const App = () => (
           <NativeShellInit />
           <Toaster />
           <Sonner />
+          <OfflineBanner />
           <NativeAppGate>
           <BrowserRouter>
             <div className="min-h-screen" role="application" aria-label="Toddy - Moodtracker">
