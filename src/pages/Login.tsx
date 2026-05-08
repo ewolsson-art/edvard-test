@@ -19,6 +19,7 @@ const loginSchema = z.object({
 });
 
 const getOAuthRedirectUri = () => {
+  if (window.location.hostname === "www.toddy.se") return "https://toddy.se";
   return window.location.origin;
 };
 
@@ -36,6 +37,12 @@ const Login = () => {
   const { profile, isLoading: profileLoading } = useProfile();
   const navigate = useNavigate();
   const { toast } = useToast();
+
+  useEffect(() => {
+    if (window.location.hostname === "www.toddy.se") {
+      window.location.replace(`https://toddy.se${window.location.pathname}${window.location.search}`);
+    }
+  }, []);
 
   useEffect(() => {
     if (!loading && !profileLoading && user) {
