@@ -203,12 +203,7 @@ export function AppSidebar() {
                           aria-current={active ? "page" : undefined}
                           onClick={() => { if (isMobile) setOpenMobile(false); }}
                         >
-                          {item.url === '/profil' && avatarUrl ? (
-                            <Avatar className="h-[22px] w-[22px] shrink-0">
-                              <AvatarImage src={avatarUrl} alt="Profilbild" className="object-cover" />
-                              <AvatarFallback className="text-[10px] bg-white/[0.08] text-white/60">{getInitials()}</AvatarFallback>
-                            </Avatar>
-                          ) : (
+                          {false ? null : (
                             <div className="relative">
                               <item.icon 
                                 className={`shrink-0 transition-all duration-300 ${
