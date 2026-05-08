@@ -102,8 +102,8 @@ export function TurtleLogo({ size = 'md', animated = true, className, mood, fram
         viewBox={viewBox}
         className={cn(
           "w-full h-full",
-          animated && "turtle-idle",
-          animated && isElevatedMood(mood) && "turtle-jitter",
+          moves && "turtle-idle",
+          moves && isElevatedMood(mood) && "turtle-jitter",
         )}
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
@@ -146,7 +146,7 @@ export function TurtleLogo({ size = 'md', animated = true, className, mood, fram
         {/* === STANDING TURTLE WITH BOOK & GLASSES === */}
 
         {/* Left arm holding book */}
-        <g className={animated ? 'turtle-wave' : ''}>
+        <g className={moves ? 'turtle-wave' : ''}>
           <ellipse cx="68" cy="150" rx="14" ry="10" fill={`url(#${id('bodyGrad')})`} transform="rotate(-15 68 150)" />
           <circle cx="57" cy="145" r="5" fill={`url(#${id('bodyGrad')})`} />
         </g>
@@ -223,7 +223,7 @@ export function TurtleLogo({ size = 'md', animated = true, className, mood, fram
           strokeWidth="5"
           strokeLinecap="round"
           fill="none"
-          className={animated ? 'turtle-tail-wag' : ''}
+          className={moves ? 'turtle-tail-wag' : ''}
         />
 
         {/* === HÅLLER FRAMFÖR SIG: bok ELLER streak-skylt === */}
@@ -318,7 +318,7 @@ export function TurtleLogo({ size = 'md', animated = true, className, mood, fram
         )}
 
         {/* Head */}
-        <g className={animated ? 'turtle-head-bob' : ''}>
+        <g className={moves ? 'turtle-head-bob' : ''}>
           {/* Neck */}
           <rect x="88" y="95" width="24" height="22" rx="12" fill={`url(#${id('bodyGrad')})`} />
           
@@ -349,14 +349,14 @@ export function TurtleLogo({ size = 'md', animated = true, className, mood, fram
           <g className={animated ? 'turtle-blink' : ''}>
             <ellipse cx="86" cy="63" rx="9" ry="10" fill="white" />
             <ellipse cx="89" cy="64" rx="5" ry="6" fill="hsl(220 35% 25%)" />
-            <g className={animated && isElevatedMood(mood) ? 'turtle-eye-dart' : ''}>
+            <g className={moves && isElevatedMood(mood) ? 'turtle-eye-dart' : ''}>
               <ellipse cx="90" cy="63" rx="2.5" ry="3" fill="hsl(220 30% 10%)" />
               <circle cx="91" cy="60" r="2" fill="white" />
             </g>
             
             <ellipse cx="114" cy="63" rx="9" ry="10" fill="white" />
             <ellipse cx="111" cy="64" rx="5" ry="6" fill="hsl(220 35% 25%)" />
-            <g className={animated && isElevatedMood(mood) ? 'turtle-eye-dart' : ''}>
+            <g className={moves && isElevatedMood(mood) ? 'turtle-eye-dart' : ''}>
               <ellipse cx="110" cy="63" rx="2.5" ry="3" fill="hsl(220 30% 10%)" />
               <circle cx="109" cy="60" r="2" fill="white" />
             </g>
@@ -429,7 +429,7 @@ export function TurtleLogo({ size = 'md', animated = true, className, mood, fram
                 strokeWidth="2"
                 strokeLinecap="round"
                 fill="none"
-                className={animated ? 'turtle-energy-flicker' : ''}
+                className={moves ? 'turtle-energy-flicker' : ''}
               >
                 <path d="M58 40 L52 34" />
                 <path d="M66 32 L63 25" />
