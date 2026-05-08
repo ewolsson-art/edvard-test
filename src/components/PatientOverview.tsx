@@ -483,7 +483,6 @@ export function PatientOverview({ connection, onBack, hideExtras = false }: Pati
             sleepBadDays={0}
             showSleep={false}
           />
-          <LessonsFromPast entries={entries} characteristics={characteristics} />
         </>
       )}
 

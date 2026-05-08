@@ -688,9 +688,6 @@ const Overview = () => {
               />
             )}
 
-            {sectionView === 'stats' && (
-              <LessonsFromPast entries={entries} characteristics={characteristics} />
-            )}
           </div>
 
 
