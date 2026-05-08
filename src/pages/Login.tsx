@@ -19,7 +19,7 @@ const loginSchema = z.object({
 });
 
 const getOAuthRedirectUri = () => {
-  return `${window.location.origin}/auth/callback`;
+  return window.location.origin;
 };
 
 const Login = () => {
