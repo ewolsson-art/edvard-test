@@ -33,6 +33,11 @@ interface TurtleLogoProps {
   signValue?: number | string;
   /** Small caption under the number on the sign (e.g. "I RAD"). */
   signLabel?: string;
+  /**
+   * If true the body stays still (no idle bob, head-bob, tail-wag, wave or jitter)
+   * but the eyes still blink. Use for "calm hero" placements where motion is distracting.
+   */
+  staticPose?: boolean;
 }
 
 
