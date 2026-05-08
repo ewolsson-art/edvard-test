@@ -73,21 +73,21 @@ export const YearHeatmap = memo(function YearHeatmap({ year, entries, medication
   }, [year]);
 
   return (
-    <div className="fade-in">
-      {/* Year header - Apple style */}
-      <div className="flex items-center gap-3 mb-6">
+    <div className="fade-in mx-auto max-w-5xl">
+      {/* Year header — Apple Calendar style */}
+      <div className="flex items-center gap-3 mb-5">
         <button
           onClick={onPrevYear}
-          className="flex items-center gap-1 text-primary hover:opacity-70 transition-opacity"
+          className="flex items-center justify-center h-9 w-9 -ml-2 rounded-full text-primary hover:bg-primary/10 transition-colors"
           aria-label="Föregående år"
         >
           <ChevronLeft className="w-5 h-5" />
         </button>
-        <h2 className="font-display text-3xl font-bold text-primary">{year}</h2>
+        <h2 className="font-display text-3xl font-bold text-primary tracking-tight">{year}</h2>
         {year < currentYear + 5 && (
           <button
             onClick={onNextYear}
-            className="text-primary hover:opacity-70 transition-opacity rotate-180"
+            className="flex items-center justify-center h-9 w-9 rounded-full text-primary hover:bg-primary/10 transition-colors rotate-180"
             aria-label="Nästa år"
           >
             <ChevronLeft className="w-5 h-5" />
@@ -95,33 +95,43 @@ export const YearHeatmap = memo(function YearHeatmap({ year, entries, medication
         )}
       </div>
 
-      <div className="border-t border-border/50 mb-6" />
+      <div className="border-t border-border/40 mb-6" />
 
-      {/* 3-column month grid */}
-      <div className="grid grid-cols-3 gap-x-4 gap-y-8">
+      {/* Responsive month grid: 1 col on phone, 2 on tablet, 3 on desktop, 4 on wide */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-x-6 gap-y-7">
         {monthGrids.map(({ monthIdx, weeks }) => {
           const isActive = isCurrentYear && monthIdx === currentMonth;
 
           return (
             <div
               key={monthIdx}
-              className="cursor-pointer group"
+              className="cursor-pointer group select-none"
               onClick={() => onMonthClick?.(monthIdx)}
             >
-              {/* Month name */}
+              {/* Month name — refined hierarchy */}
               <h3 className={cn(
-                "text-sm font-semibold mb-2 transition-colors",
-                isActive ? "text-primary" : "text-foreground group-hover:text-primary"
+                "text-[13px] font-semibold mb-2 tracking-wide transition-colors",
+                isActive ? "text-primary" : "text-foreground/90 group-hover:text-primary"
               )}>
                 {monthNames[monthIdx]}
               </h3>
 
-              {/* Day headers - hidden to save space, Apple doesn't show them in year view */}
+              {/* Weekday header row — quiet orientation aid */}
+              <div className="grid grid-cols-7 mb-1.5">
+                {dayHeaders.map((d, i) => (
+                  <div
+                    key={i}
+                    className="text-center text-[9px] font-medium text-muted-foreground/50 uppercase tracking-wider"
+                  >
+                    {d}
+                  </div>
+                ))}
+              </div>
 
-              {/* Day grid */}
-              <div className="space-y-0">
+              {/* Day grid — tight, uniform, capped tile size */}
+              <div className="space-y-[2px]">
                 {weeks.map((week, wIdx) => (
-                  <div key={wIdx} className="grid grid-cols-7">
+                  <div key={wIdx} className="grid grid-cols-7 gap-[2px]">
                     {week.map((day, dIdx) => {
                       if (!day) {
                         return <div key={`empty-${dIdx}`} className="w-full aspect-square" />;
@@ -134,29 +144,30 @@ export const YearHeatmap = memo(function YearHeatmap({ year, entries, medication
                       const isUp = tm === 'elevated' || tm === 'severe_elevated' || tm === 'somewhat_elevated';
                       const isDown = tm === 'depressed' || tm === 'severe_depressed' || tm === 'somewhat_depressed';
                       const isStable = tm === 'stable';
-                      // Stronger, more saturated tile behind the turtle for clear at-a-glance distinction
+                      // Solid soft-saturation tiles — strong enough to read at a glance, quiet enough to not shout
                       const moodBg = isUp
-                        ? 'bg-[hsl(45_92%_55%/0.55)] ring-1 ring-[hsl(45_92%_55%/0.9)]'
+                        ? 'bg-[hsl(45_92%_55%/0.7)]'
                         : isDown
-                          ? 'bg-[hsl(0_75%_52%/0.55)] ring-1 ring-[hsl(0_75%_52%/0.9)]'
+                          ? 'bg-[hsl(0_75%_52%/0.7)]'
                           : isStable
-                            ? 'bg-[hsl(142_60%_42%/0.55)] ring-1 ring-[hsl(142_60%_42%/0.9)]'
+                            ? 'bg-[hsl(142_60%_42%/0.7)]'
                             : '';
 
                       return (
                         <div
                           key={dateStr}
-                          className="flex items-center justify-center p-[1px]"
+                          className="flex items-center justify-center"
                           {...(isTodayDate ? { 'data-today': 'true' } : {})}
                         >
                           <span className={cn(
-                            "relative flex items-center justify-center text-[10px] w-full aspect-square rounded-md leading-none font-medium",
+                            "relative flex items-center justify-center w-full aspect-square max-w-[34px] rounded-md leading-none font-medium tabular-nums transition-transform group-hover:scale-[1.01]",
                             moodBg,
-                            isTodayDate && "ring-2 ring-primary",
-                            !isTodayDate && !mood && "text-muted-foreground/70"
+                            isTodayDate && !mood && "ring-2 ring-primary",
+                            isTodayDate && mood && "ring-2 ring-primary ring-offset-1 ring-offset-background",
+                            !mood && "text-[10px] text-muted-foreground/55"
                           )}>
                             {mood ? (
-                              <TurtleLogo size="sm" animated={false} mood={tm} framing="face" className="h-[80%] w-[80%]" />
+                              <TurtleLogo size="sm" animated={false} mood={tm} framing="face" className="h-[78%] w-[78%]" />
                             ) : (
                               day.getDate()
                             )}
@@ -172,19 +183,23 @@ export const YearHeatmap = memo(function YearHeatmap({ year, entries, medication
         })}
       </div>
 
-      {/* Legend */}
-      <div className="flex flex-wrap items-center gap-4 mt-8 pt-4 border-t border-border/30 justify-center">
+      {/* Legend — compact, centered, secondary */}
+      <div className="flex flex-wrap items-center gap-x-5 gap-y-2 mt-10 pt-5 border-t border-border/30 justify-center">
         <div className="flex items-center gap-1.5">
-          <TurtleLogo size="sm" animated={false} mood="elevated" framing="face" className="h-5 w-5" />
+          <span className="w-3 h-3 rounded-[3px] bg-[hsl(45_92%_55%/0.7)]" />
           <span className="text-[11px] text-muted-foreground">Uppvarvad</span>
         </div>
         <div className="flex items-center gap-1.5">
-          <TurtleLogo size="sm" animated={false} mood="stable" framing="face" className="h-5 w-5" />
+          <span className="w-3 h-3 rounded-[3px] bg-[hsl(142_60%_42%/0.7)]" />
           <span className="text-[11px] text-muted-foreground">Stabil</span>
         </div>
         <div className="flex items-center gap-1.5">
-          <TurtleLogo size="sm" animated={false} mood="depressed" framing="face" className="h-5 w-5" />
+          <span className="w-3 h-3 rounded-[3px] bg-[hsl(0_75%_52%/0.7)]" />
           <span className="text-[11px] text-muted-foreground">Nedstämd</span>
+        </div>
+        <div className="flex items-center gap-1.5">
+          <span className="w-3 h-3 rounded-[3px] border border-border/50" />
+          <span className="text-[11px] text-muted-foreground">Ingen check-in</span>
         </div>
       </div>
     </div>
