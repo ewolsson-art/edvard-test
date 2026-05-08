@@ -102,7 +102,10 @@ export function MonthCalendar({
     <div className="fade-in">
       {/* Navigation */}
       {/* Month title with navigation */}
-      <div className="flex items-center gap-3 mb-2 flex-wrap">
+      <div className={cn(
+        "flex items-center gap-3 mb-2 flex-wrap",
+        hideNavigation && "sticky top-[180px] sm:top-[190px] md:top-[140px] z-10 bg-background/95 backdrop-blur-sm -mx-2 px-2 py-1 rounded"
+      )}>
         {!hideNavigation && (
           <button
             onClick={onPrevMonth}
