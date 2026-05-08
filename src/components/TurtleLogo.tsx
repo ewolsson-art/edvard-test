@@ -277,30 +277,30 @@ export function TurtleLogo({ size = 'md', animated = true, className, mood, fram
             {signValue !== undefined && signValue !== null && (
               <text
                 x="78"
-                y="156"
+                y="155"
                 textAnchor="middle"
-                fontSize="26"
+                fontSize="30"
                 fontWeight="800"
                 fill="hsl(0 0% 98%)"
                 fontFamily="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif"
-                letterSpacing="-1"
+                letterSpacing="-1.2"
                 style={{ fontVariantNumeric: 'tabular-nums' }}
               >
                 {String(signValue)}
               </text>
             )}
-            {/* Liten "I RAD"-rad med flame-prick */}
+            {/* Centrerad "DAGAR I RAD"-rad med flame-prick */}
             {signLabel && (
               <g>
-                <circle cx="62" cy="166" r="1.6" fill="hsl(45 85% 55%)" />
                 <text
-                  x="66"
-                  y="168.5"
-                  fontSize="6"
+                  x="78"
+                  y="167"
+                  textAnchor="middle"
+                  fontSize="6.2"
                   fontWeight="700"
-                  fill="hsl(0 0% 75%)"
+                  fill="hsl(0 0% 80%)"
                   fontFamily="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif"
-                  letterSpacing="1"
+                  letterSpacing="1.1"
                 >
                   {signLabel}
                 </text>
