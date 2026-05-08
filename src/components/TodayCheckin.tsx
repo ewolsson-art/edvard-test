@@ -578,7 +578,7 @@ export function TodayCheckin({
             initial={{ opacity: 0, y: 6 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.25, duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-            className="text-[20px] md:text-[22px] font-semibold text-foreground/90 tracking-tight mb-1.5 max-w-[300px]"
+            className="text-[20px] md:text-[22px] font-semibold text-foreground/90 tracking-tight mb-1.5 max-w-[340px] mx-auto text-center"
           >
             {heroTitle}
           </motion.h2>
@@ -586,7 +586,7 @@ export function TodayCheckin({
             initial={{ opacity: 0, y: 6 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.32, duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-            className="text-[13.5px] text-foreground/50 leading-relaxed max-w-[300px] mb-6"
+            className="text-[13.5px] text-foreground/50 leading-relaxed max-w-[340px] mx-auto text-center mb-6"
           >
             {heroSub}
           </motion.p>
