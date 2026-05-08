@@ -134,31 +134,28 @@ export const YearHeatmap = memo(function YearHeatmap({ year, entries, medication
                       const isUp = tm === 'elevated' || tm === 'severe_elevated' || tm === 'somewhat_elevated';
                       const isDown = tm === 'depressed' || tm === 'severe_depressed' || tm === 'somewhat_depressed';
                       const isStable = tm === 'stable';
+                      // Solid, saturated tiles for clear at-a-glance distinction
                       const moodBg = isUp
-                        ? 'bg-[hsl(45_90%_55%/0.28)] ring-1 ring-[hsl(45_90%_55%/0.6)]'
+                        ? 'bg-[hsl(45_92%_55%)] text-black'
                         : isDown
-                          ? 'bg-[hsl(0_70%_55%/0.28)] ring-1 ring-[hsl(0_70%_55%/0.6)]'
+                          ? 'bg-[hsl(0_75%_52%)] text-white'
                           : isStable
-                            ? 'bg-[hsl(142_55%_45%/0.28)] ring-1 ring-[hsl(142_55%_45%/0.6)]'
+                            ? 'bg-[hsl(142_60%_42%)] text-white'
                             : '';
 
                       return (
                         <div
                           key={dateStr}
-                          className="flex items-center justify-center"
+                          className="flex items-center justify-center p-[1px]"
                           {...(isTodayDate ? { 'data-today': 'true' } : {})}
                         >
                           <span className={cn(
-                            "relative flex items-center justify-center text-[10px] w-5 h-5 rounded-md leading-none font-medium",
+                            "relative flex items-center justify-center text-[10px] w-full aspect-square rounded-[4px] leading-none font-semibold",
                             moodBg,
-                            isTodayDate && "ring-1 ring-primary",
-                            !isTodayDate && !mood && "text-muted-foreground/70"
+                            isTodayDate && "ring-2 ring-primary ring-offset-1 ring-offset-background",
+                            !mood && "text-muted-foreground/60"
                           )}>
-                            {mood ? (
-                              <TurtleLogo size="sm" animated={false} mood={tm} framing="face" className="h-5 w-5" />
-                            ) : (
-                              day.getDate()
-                            )}
+                            {mood ? '' : day.getDate()}
                           </span>
                         </div>
                       );
