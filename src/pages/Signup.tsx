@@ -62,11 +62,6 @@ const CHECKIN_OPTIONS: Array<{
   { id: "include_exercise", labelKey: "onboarding.exercise", descKey: "onboarding.exerciseDesc", icon: Dumbbell },
 ];
 
-const getOAuthRedirectUri = () => {
-  if (window.location.hostname === "www.toddy.se") return "https://toddy.se";
-  return window.location.origin;
-};
-
 const Signup = () => {
   const [step, setStep] = useState<Step>("role");
   const [role, setRole] = useState<AccountRole | null>("patient");
@@ -87,12 +82,6 @@ const Signup = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { toast } = useToast();
-
-  useEffect(() => {
-    if (window.location.hostname === "www.toddy.se") {
-      window.location.replace(`https://toddy.se${window.location.pathname}${window.location.search}`);
-    }
-  }, []);
 
   useEffect(() => {
     if (!loading && user) {
@@ -161,10 +150,7 @@ const Signup = () => {
 
   const handleSocialLogin = async (provider: "google" | "apple") => {
     persistPreSignupData();
-    const redirectUri = getOAuthRedirectUri();
-    const result = await lovable.auth.signInWithOAuth(provider, {
-      redirect_uri: redirectUri,
-    });
+    const result = await lovable.auth.signInWithOAuth(provider);
     if (result.error) {
       toast({
         title: t("common.somethingWrong"),
