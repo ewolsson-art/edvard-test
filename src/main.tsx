@@ -1,12 +1,7 @@
-import { createRoot } from "react-dom/client";
-import { HelmetProvider } from "react-helmet-async";
-import App from "./App.tsx";
 import "./index.css";
-import "./i18n";
 
-// Tvinga www.toddy.se -> toddy.se INNAN appen laddas.
-// Annars sparas OAuth PKCE-state på fel origin och Google-login fastnar
-// med "failed to exchange authorization code" efter callback.
+// Tvinga www.toddy.se -> toddy.se innan React/Supabase/Lovable-auth laddas.
+// OAuth PKCE-state är origin-bundet, så www och root-domänen får inte blandas.
 if (
   typeof window !== "undefined" &&
   window.location.hostname === "www.toddy.se"
@@ -18,9 +13,16 @@ if (
     window.location.hash;
   window.location.replace(target);
 } else {
-  createRoot(document.getElementById("root")!).render(
-    <HelmetProvider>
-      <App />
-    </HelmetProvider>
-  );
+  Promise.all([
+    import("react-dom/client"),
+    import("react-helmet-async"),
+    import("./App.tsx"),
+    import("./i18n"),
+  ]).then(([{ createRoot }, { HelmetProvider }, { default: App }]) => {
+    createRoot(document.getElementById("root")!).render(
+      <HelmetProvider>
+        <App />
+      </HelmetProvider>
+    );
+  });
 }
