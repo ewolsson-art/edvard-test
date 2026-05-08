@@ -45,7 +45,7 @@ export function EatingMonthCalendar({
         />
       )}
       {hideNavigation && (
-        <h3 className="font-display text-xl font-semibold capitalize mb-4 sticky top-[180px] sm:top-[190px] md:top-[140px] z-10 bg-background/95 backdrop-blur-sm -mx-2 px-2 py-1 rounded">{monthYear}</h3>
+        <h3 className="font-display text-xl font-semibold capitalize mb-4 sticky top-[180px] sm:top-[190px] md:top-[140px] z-10 bg-background -mx-2 px-2 pt-2 pb-3">{monthYear}</h3>
       )}
 
       <div className="grid grid-cols-7 gap-2 mb-2">
