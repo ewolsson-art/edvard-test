@@ -100,7 +100,7 @@ export function OverviewSummary({ stats, entries, periodLabel }: OverviewSummary
 
   if (entries.length === 0) {
     return (
-      <div className="rounded-2xl bg-card/60 border border-border/40 p-6 text-center">
+      <div className="rounded-2xl bg-foreground/[0.03] backdrop-blur-sm p-6 text-center">
         <p className="text-muted-foreground">{t('overviewSummary.noDataYet')}</p>
       </div>
     );
@@ -109,7 +109,7 @@ export function OverviewSummary({ stats, entries, periodLabel }: OverviewSummary
   return (
     <div className="space-y-5">
       {currentStreak && (
-        <section className="rounded-2xl bg-card/60 border border-border/40 p-5">
+        <section className="rounded-2xl bg-foreground/[0.03] backdrop-blur-sm p-5">
           <SectionHeader icon={TrendingUp} title={t('overviewSummary.currentState')} />
           <div className={`mt-3 rounded-xl ${currentStreak.group.bgClass} border ${currentStreak.group.borderClass} p-4 flex items-center gap-4`}>
             <TurtleLogo
@@ -152,7 +152,7 @@ export function OverviewSummary({ stats, entries, periodLabel }: OverviewSummary
         </section>
       )}
 
-      <section className="rounded-2xl bg-card/60 border border-border/40 p-5">
+      <section className="rounded-2xl bg-foreground/[0.03] backdrop-blur-sm p-5">
         <SectionHeader icon={CalendarCheck} title={t('overviewSummary.daysSinceLast')} />
         <p className="text-xs text-muted-foreground mt-1 mb-3">{t('overviewSummary.daysSinceDesc')}</p>
         <div className="grid grid-cols-3 gap-3">
@@ -172,7 +172,7 @@ export function OverviewSummary({ stats, entries, periodLabel }: OverviewSummary
       </section>
 
       {allTimeDistribution && (
-        <section className="rounded-2xl bg-card/60 border border-border/40 p-5">
+        <section className="rounded-2xl bg-foreground/[0.03] backdrop-blur-sm p-5">
           <SectionHeader icon={CalendarCheck} title={t('overviewSummary.sinceStart')} />
           <p className="text-xs text-muted-foreground mt-1 mb-3">
             {t('overviewSummary.distributionOf', { count: entries.length })} {entries.length === 1 ? t('common.day') : t('common.days')}.
@@ -195,7 +195,7 @@ export function OverviewSummary({ stats, entries, periodLabel }: OverviewSummary
       )}
 
       {allTimeDistribution && (
-        <section className="rounded-2xl bg-card/60 border border-border/40 p-5">
+        <section className="rounded-2xl bg-foreground/[0.03] backdrop-blur-sm p-5">
           <SectionHeader icon={TrendingUp} title={t('overviewSummary.avgEpisodeLength')} />
           <p className="text-xs text-muted-foreground mt-1 mb-3">{t('overviewSummary.avgEpisodeLengthDesc')}</p>
           <div className="space-y-3">
@@ -221,7 +221,7 @@ export function OverviewSummary({ stats, entries, periodLabel }: OverviewSummary
         </section>
       )}
 
-      <section className="rounded-2xl bg-card/60 border border-border/40 p-4 flex items-center justify-between">
+      <section className="rounded-2xl bg-foreground/[0.03] backdrop-blur-sm p-4 flex items-center justify-between">
         <div>
           <p className="text-sm font-medium">{t('overviewSummary.registeredDays')}</p>
           <p className="text-xs text-muted-foreground">{t('overviewSummary.sinceFirstCheckin')}</p>
