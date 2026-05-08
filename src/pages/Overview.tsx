@@ -473,7 +473,10 @@ const Overview = () => {
     setCurrentMonth(new Date(currentYear, month, 1));
     setView('month');
     setSearchParams({ view: 'month' });
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    // Wait for month view to render, then scroll to the clicked month
+    setTimeout(() => {
+      scrollableCalendarRef.current?.scrollToMonth(month, 'auto');
+    }, 50);
   };
 
   const handleViewChange = (newView: string) => {
