@@ -168,11 +168,11 @@ export function DelegatesSection() {
       </div>
 
       {delegates.length === 0 ? (
-        <div className="text-center py-8 text-muted-foreground">
-          <Users className="w-10 h-10 mx-auto mb-3 opacity-30" />
-          <p>Du har inga ombud ännu.</p>
-          <p className="text-sm">Lägg till en assistent eller sköterska för att dela meddelanden.</p>
-        </div>
+        <EmptyState
+          title="Inga ombud ännu"
+          description="Lägg till en assistent eller sköterska för att dela meddelanden."
+          size="sm"
+        />
       ) : (
         <div className="space-y-3">
           {delegates.map((delegate) => (
