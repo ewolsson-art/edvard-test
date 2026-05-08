@@ -568,20 +568,20 @@ export function TodayCheckin({
               className="w-44 h-44 md:w-56 md:h-56 drop-shadow-[0_12px_28px_hsl(0_0%_0%/0.45)]"
             />
 
-            {/* Streak-badge — sköldpaddans "trofé" */}
+            {/* Streak-skylt — sköldpaddan håller den i framsidan (där boken annars sitter) */}
             {streakData.currentStreak > 0 && (
               <motion.div
-                initial={{ opacity: 0, scale: 0.4, rotate: -8 }}
-                animate={{ opacity: 1, scale: 1, rotate: 0 }}
-                transition={{ delay: 0.35, type: 'spring', stiffness: 300, damping: 16 }}
-                className="absolute -top-2 -right-3 md:-top-3 md:-right-6 flex flex-col items-center justify-center min-w-[68px] md:min-w-[80px] px-3 py-2 rounded-2xl border border-[hsl(45_85%_55%/0.35)] bg-background/85 backdrop-blur-md shadow-[0_8px_24px_hsl(45_85%_55%/0.25)]"
+                initial={{ opacity: 0, scale: 0.4, y: 10, rotate: -12 }}
+                animate={{ opacity: 1, scale: 1, y: 0, rotate: -5 }}
+                transition={{ delay: 0.4, type: 'spring', stiffness: 280, damping: 18 }}
+                className="absolute left-[6%] bottom-[26%] md:left-[4%] md:bottom-[28%] flex flex-col items-center justify-center min-w-[64px] md:min-w-[76px] px-2.5 py-1.5 rounded-xl border border-[hsl(45_85%_55%/0.45)] bg-background/90 backdrop-blur-md shadow-[0_10px_28px_hsl(45_85%_55%/0.35),0_2px_6px_hsl(0_0%_0%/0.4)]"
               >
-                <span className="text-[34px] md:text-[40px] font-bold tabular-nums leading-none tracking-tight bg-gradient-to-br from-foreground via-foreground to-foreground/60 bg-clip-text text-transparent">
+                <span className="text-[30px] md:text-[36px] font-bold tabular-nums leading-none tracking-tight bg-gradient-to-br from-foreground via-foreground to-foreground/60 bg-clip-text text-transparent">
                   {streakData.currentStreak}
                 </span>
-                <div className="flex items-center gap-1 mt-1">
+                <div className="flex items-center gap-1 mt-0.5">
                   <Flame className="w-2.5 h-2.5 text-[hsl(45_85%_55%)]" />
-                  <p className="text-[9px] uppercase tracking-[0.18em] text-foreground/55 font-semibold">
+                  <p className="text-[8.5px] uppercase tracking-[0.16em] text-foreground/60 font-semibold">
                     {t('checkin.inARow')}
                   </p>
                 </div>
