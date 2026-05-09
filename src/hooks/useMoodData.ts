@@ -60,7 +60,7 @@ export function useMoodData() {
   );
 
   const saveCheckinMutation = useMutation({
-    mutationFn: async ({ date, data, previous }: { date: string; data: CheckinData; previous?: MoodEntry }) => {
+    mutationFn: async ({ date, data }: { date: string; data: CheckinData; previous?: MoodEntry }) => {
       if (!user) throw new Error('No user');
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const upsertData: any = {
@@ -80,17 +80,13 @@ export function useMoodData() {
         medication_side_effects: data.medicationSideEffects || null,
         tags: data.tags || null,
       };
-      console.log('[saveCheckin] upserting:', upsertData);
       const { error } = await supabase
         .from('mood_entries')
         .upsert(upsertData, { onConflict: 'user_id,date' });
-      if (error) {
-        console.error('[saveCheckin] supabase error:', error);
-        throw error;
-      }
-      return { date, data, previous };
+      if (error) throw error;
     },
-    onSuccess: ({ date, data, previous }) => {
+    // Optimistic update: write to cache BEFORE network call so UI reacts instantly.
+    onMutate: async ({ date, data, previous }) => {
       const newEntry: MoodEntry = {
         date,
         mood: data.mood!,
@@ -112,7 +108,9 @@ export function useMoodData() {
         const filtered = prev.filter(e => e.date !== date);
         return [...filtered, newEntry];
       });
-
+      return { date, previous };
+    },
+    onSuccess: (_void, { date, data, previous }) => {
       // Sonner toast with 5s undo action
       sonnerToast("Incheckning sparad", {
         duration: 5000,
@@ -122,7 +120,6 @@ export function useMoodData() {
             if (!user) return;
             try {
               if (previous) {
-                // Restore previous entry
                 const restoreData = {
                   user_id: user.id,
                   date,
@@ -157,7 +154,14 @@ export function useMoodData() {
         },
       });
     },
-    onError: (err: unknown) => {
+    onError: (err, { date }, context) => {
+      // Roll back optimistic update
+      if (context) {
+        setEntries(prev => {
+          const filtered = prev.filter(e => e.date !== date);
+          return context.previous ? [...filtered, context.previous] : filtered;
+        });
+      }
       const msg = err instanceof Error ? err.message : 'Försök igen.';
       console.error('[saveCheckin] mutation error:', err);
       toast({ title: "Kunde inte spara", description: msg, variant: "destructive" });
@@ -176,64 +180,80 @@ export function useMoodData() {
 
   const updateExerciseTypes = useCallback(async (date: string, exerciseTypes: ExerciseType[]): Promise<boolean> => {
     if (!user) return false;
+    const newValue = exerciseTypes.length > 0 ? exerciseTypes : undefined;
+    let prevValue: ExerciseType[] | undefined;
+    setEntries(prev => prev.map(e => {
+      if (e.date === date) { prevValue = e.exerciseTypes; return { ...e, exerciseTypes: newValue }; }
+      return e;
+    }));
     const { error } = await supabase
       .from('mood_entries')
       .update({ exercise_types: exerciseTypes.length > 0 ? exerciseTypes : null })
       .eq('user_id', user.id)
       .eq('date', date);
     if (error) {
+      // rollback
+      setEntries(prev => prev.map(e => e.date === date ? { ...e, exerciseTypes: prevValue } : e));
       toast({ title: "Kunde inte uppdatera", description: "Försök igen.", variant: "destructive" });
       return false;
     }
-    setEntries(prev => prev.map(e =>
-      e.date === date ? { ...e, exerciseTypes: exerciseTypes.length > 0 ? exerciseTypes : undefined } : e
-    ));
     toast({ title: "Träningstyp sparad!" });
     return true;
   }, [user, toast, setEntries]);
 
   const addEntry = useCallback(async (date: string, mood: MoodType, comment?: string) => {
     if (!user) return;
+    let snapshot: MoodEntry[] = [];
+    setEntries(prev => {
+      snapshot = prev;
+      const existing = prev.find(e => e.date === date);
+      const filtered = prev.filter(e => e.date !== date);
+      return [...filtered, { ...existing, date, mood, comment, timestamp: Date.now() }];
+    });
     const { error } = await supabase
       .from('mood_entries')
       .upsert({ user_id: user.id, date, mood, comment: comment || null }, { onConflict: 'user_id,date' });
     if (error) {
+      setEntries(() => snapshot);
       toast({ title: "Kunde inte spara", description: "Försök igen.", variant: "destructive" });
-    } else {
-      setEntries(prev => {
-        const existing = prev.find(e => e.date === date);
-        const filtered = prev.filter(e => e.date !== date);
-        return [...filtered, { ...existing, date, mood, comment, timestamp: Date.now() }];
-      });
     }
   }, [user, toast, setEntries]);
 
   const updateComment = useCallback(async (date: string, comment: string) => {
     if (!user) return;
+    let prevComment: string | undefined;
+    setEntries(prev => prev.map(e => {
+      if (e.date === date) { prevComment = e.comment; return { ...e, comment }; }
+      return e;
+    }));
     const { error } = await supabase
       .from('mood_entries')
       .update({ comment: comment || null })
       .eq('user_id', user.id)
       .eq('date', date);
     if (error) {
+      setEntries(prev => prev.map(e => e.date === date ? { ...e, comment: prevComment } : e));
       toast({ title: "Kunde inte uppdatera", description: "Försök igen.", variant: "destructive" });
     } else {
-      setEntries(prev => prev.map(e => e.date === date ? { ...e, comment } : e));
       toast({ title: "Kommentar sparad" });
     }
   }, [user, toast, setEntries]);
 
   const removeEntry = useCallback(async (date: string) => {
     if (!user) return;
+    let removed: MoodEntry | undefined;
+    setEntries(prev => {
+      removed = prev.find(e => e.date === date);
+      return prev.filter(e => e.date !== date);
+    });
     const { error } = await supabase
       .from('mood_entries')
       .delete()
       .eq('user_id', user.id)
       .eq('date', date);
     if (error) {
+      if (removed) setEntries(prev => [...prev, removed!]);
       toast({ title: "Kunde inte ta bort", description: "Försök igen.", variant: "destructive" });
-    } else {
-      setEntries(prev => prev.filter(e => e.date !== date));
     }
   }, [user, toast, setEntries]);
 
