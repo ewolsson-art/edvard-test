@@ -191,7 +191,23 @@ export function EpisodeBands({ entries, days = 14 }: EpisodeBandsProps) {
     <>
       {/* === CRISIS TURTLE INDICATOR for mixed episodes === */}
       {mixedEpisode && (
-        <CrisisTurtleButton onClick={() => setCrisisOpen(true)} />
+        <CrisisTurtleButton
+          subtle={acknowledged.has(`${mixedEpisode.kind}-${mixedEpisode.startDate}`)}
+          onClick={() => {
+            setCrisisOpen(true);
+            const key = `${mixedEpisode.kind}-${mixedEpisode.startDate}`;
+            setAcknowledged((prev) => {
+              if (prev.has(key)) return prev;
+              const next = new Set(prev).add(key);
+              try {
+                localStorage.setItem('toddy-crisis-ack', JSON.stringify([...next]));
+              } catch {
+                /* noop */
+              }
+              return next;
+            });
+          }}
+        />
       )}
       {mixedEpisode && crisisOpen && (
         <CrisisDialog episode={mixedEpisode} entries={entries} onClose={() => setCrisisOpen(false)} />
