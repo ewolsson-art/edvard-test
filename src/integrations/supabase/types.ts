@@ -952,6 +952,39 @@ export type Database = {
         }
         Relationships: []
       }
+      user_pattern_profile: {
+        Row: {
+          baseline: Json
+          created_at: string
+          episode_fingerprints: Json
+          id: string
+          last_computed_at: string | null
+          stats: Json
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          baseline?: Json
+          created_at?: string
+          episode_fingerprints?: Json
+          id?: string
+          last_computed_at?: string | null
+          stats?: Json
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          baseline?: Json
+          created_at?: string
+          episode_fingerprints?: Json
+          id?: string
+          last_computed_at?: string | null
+          stats?: Json
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_preferences: {
         Row: {
           created_at: string
