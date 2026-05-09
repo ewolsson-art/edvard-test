@@ -669,7 +669,7 @@ export function TodayCheckin({
   const activeMoodColor = `hsl(${activeMoodColorVar})`;
 
   return (
-    <div className="fade-in relative h-full md:h-auto flex flex-col justify-center px-5 pt-12 pb-4 md:pt-4 overflow-hidden md:overflow-y-auto md:glass-card md:p-12 md:max-h-[calc(100vh-4rem)] md:border md:border-foreground/10 md:rounded-2xl md:shadow-sm md:bg-gradient-to-b md:from-foreground/[0.045] md:to-foreground/[0.015] md:backdrop-blur-sm">
+    <div className="fade-in relative h-full md:h-auto flex flex-col justify-center px-5 pt-12 pb-4 md:pt-4 overflow-hidden md:overflow-y-auto md:glass-card md:p-12 md:max-h-[calc(100vh-4rem)] md:rounded-2xl md:shadow-sm md:bg-foreground/[0.03] md:backdrop-blur-sm">
       {/* Mood-färgad ambient backdrop — andas med vald känsla */}
       <div
         aria-hidden
