@@ -71,6 +71,33 @@ export function VerticalScaleSlider<T extends string>({ options, value, onSelect
 
   return (
     <div className="flex flex-col items-center w-full select-none mx-auto" style={{ maxWidth: '420px' }}>
+      {/* Active label area — above the slider, matching mood card */}
+      <div className="mb-8 min-h-[72px] w-full flex items-center justify-center">
+        {activeOpt && ActiveIcon ? (
+          <div
+            key={activeOpt.value}
+            className="flex items-center gap-3 rounded-2xl px-5 py-3 bg-white/5 backdrop-blur-sm animate-fade-in"
+          >
+            <ActiveIcon
+              className="w-7 h-7 flex-shrink-0"
+              style={{ color: `hsl(${activeOpt.color})` }}
+            />
+            <div className="min-w-0 text-left">
+              <span className="block text-base font-semibold leading-tight text-foreground">
+                {activeOpt.label}
+              </span>
+              <span className="block text-xs leading-tight text-muted-foreground mt-0.5">
+                {activeOpt.sublabel}
+              </span>
+            </div>
+          </div>
+        ) : (
+          <p className="text-sm text-muted-foreground/60">
+            Tryck eller dra på skalan
+          </p>
+        )}
+      </div>
+
       {/* Horizontal slider track — hero element */}
       <div className="relative flex items-center w-full px-4" style={{ height: '64px' }}>
         <div
@@ -135,33 +162,6 @@ export function VerticalScaleSlider<T extends string>({ options, value, onSelect
             </div>
           )}
         </div>
-      </div>
-
-      {/* Active label area — only renders once a value is selected */}
-      <div className="mt-8 min-h-[72px] w-full flex items-center justify-center">
-        {activeOpt && ActiveIcon ? (
-          <div
-            key={activeOpt.value}
-            className="flex items-center gap-3 rounded-2xl px-5 py-3 bg-white/5 backdrop-blur-sm animate-fade-in"
-          >
-            <ActiveIcon
-              className="w-7 h-7 flex-shrink-0"
-              style={{ color: `hsl(${activeOpt.color})` }}
-            />
-            <div className="min-w-0 text-left">
-              <span className="block text-base font-semibold leading-tight text-foreground">
-                {activeOpt.label}
-              </span>
-              <span className="block text-xs leading-tight text-muted-foreground mt-0.5">
-                {activeOpt.sublabel}
-              </span>
-            </div>
-          </div>
-        ) : (
-          <p className="text-sm text-muted-foreground/60">
-            Tryck eller dra på skalan
-          </p>
-        )}
       </div>
     </div>
   );
