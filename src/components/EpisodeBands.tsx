@@ -11,6 +11,7 @@ import { sv } from 'date-fns/locale';
 import { AlertTriangle, Phone, X, ChevronDown, ChevronUp } from 'lucide-react';
 import type { MoodEntry } from '@/types/mood';
 import { detectEpisodes, EPISODE_META, type Episode, type EpisodeKind } from '@/lib/episodeDetection';
+import { findSimilarPastPeriod, type SimilarPastPeriod } from '@/lib/userPatternProfile';
 import { TurtleLogo } from '@/components/TurtleLogo';
 
 interface EpisodeBandsProps {
@@ -127,6 +128,9 @@ export function EpisodeBands({ entries, days = 14 }: EpisodeBandsProps) {
   // === TIDIGA SIGNALER (prodromer) — diskreta rader, inga varningar ===
   const earlySignals = useMemo(() => detectEarlySignals(entries), [entries]);
 
+  // === SIMILARITY: påminner nuvarande tid om en tidigare period? ===
+  const similarPast = useMemo(() => findSimilarPastPeriod(entries), [entries]);
+
 
   // För varje aktuell episod: hitta senaste tidigare episod av SAMMA typ (innan fönstret),
   // och se vad som följde inom 30 dagar.
@@ -174,7 +178,7 @@ export function EpisodeBands({ entries, days = 14 }: EpisodeBandsProps) {
   // No episodes detected → render a calm, reassuring strip (no scary empty state)
   if (episodes.length === 0) {
     return (
-      <div className="rounded-2xl bg-foreground/[0.03] border border-border/30 px-4 py-3">
+      <div className="rounded-2xl bg-foreground/[0.03] border border-border/30 px-4 py-3 space-y-2.5">
         <div className="flex items-center justify-between gap-3">
           <span className="text-sm text-muted-foreground">
             Inga episoder upptäckta de senaste {days} dagarna.
@@ -183,6 +187,7 @@ export function EpisodeBands({ entries, days = 14 }: EpisodeBandsProps) {
             {windowEntries.length} check-ins
           </span>
         </div>
+        {similarPast && <SimilarPastRow match={similarPast} />}
       </div>
     );
   }
@@ -253,6 +258,7 @@ export function EpisodeBands({ entries, days = 14 }: EpisodeBandsProps) {
                 ))}
               </ul>
             )}
+            {similarPast && <SimilarPastRow match={similarPast} />}
             {episodes.map((ep, i) => (
               <EpisodeRow
                 key={`${ep.kind}-${ep.startDate}-${i}`}
@@ -344,6 +350,30 @@ function EpisodeRow({
             )}
           </p>
         </div>
+      )}
+    </div>
+  );
+}
+
+function SimilarPastRow({ match }: { match: SimilarPastPeriod }) {
+  const { pastEpisode, sharedSignals } = match;
+  const dateLabel = format(parseISO(pastEpisode.startDate), 'd MMM yyyy', { locale: sv });
+  const kindLabel = EPISODE_META[pastEpisode.kind].label.toLowerCase();
+  const signalsText = sharedSignals.slice(0, 3).join(', ');
+  return (
+    <div className="rounded-xl border border-border/30 bg-foreground/[0.02] p-3">
+      <p className="text-[11px] uppercase tracking-wide text-muted-foreground/70 mb-1">
+        Liknande tidigare period
+      </p>
+      <p className="text-xs text-foreground/85 leading-relaxed">
+        Den senaste tiden påminner om perioden runt{' '}
+        <span className="font-medium text-foreground">{dateLabel}</span> — då följde en period av{' '}
+        <span className="font-medium text-foreground">{kindLabel}</span>.
+      </p>
+      {signalsText && (
+        <p className="text-[11px] text-muted-foreground/75 leading-relaxed mt-1.5">
+          Gemensamma signaler: {signalsText}.
+        </p>
       )}
     </div>
   );
