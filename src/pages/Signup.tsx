@@ -510,26 +510,40 @@ const Signup = () => {
           {/* Email sent confirmation */}
           {step === "email-sent" && (
             <div className="animate-fade-in text-center">
-              <div className="flex justify-center mb-6">
-                <div className="h-16 w-16 rounded-2xl bg-[hsl(45_85%_55%/0.1)] flex items-center justify-center">
-                  <CheckCircle2 className="h-8 w-8 text-[hsl(45_85%_55%)] animate-scale-in" />
+              <div className="flex justify-center mb-8">
+                <div className="h-24 w-24 rounded-3xl bg-[hsl(45_85%_55%/0.12)] flex items-center justify-center shadow-[0_8px_40px_-8px_hsl(45_85%_55%/0.4)]">
+                  <CheckCircle2 className="h-12 w-12 text-[hsl(45_85%_55%)] animate-scale-in" strokeWidth={2.2} />
                 </div>
               </div>
 
-              <h2 className="text-2xl font-bold text-white font-display tracking-tight">{t("auth.checkYourEmail")}</h2>
-              <p className="mt-3 text-sm text-white/40 leading-relaxed">
-                {t("auth.weSentVerificationTo")}<br />
-                <span className="text-white/70">{email}</span>
+              <h2 className="text-3xl md:text-4xl font-bold text-white font-display tracking-tight">
+                {t("auth.checkYourEmail")}
+              </h2>
+              <p className="mt-4 text-lg text-white/70 leading-relaxed">
+                {t("auth.weSentVerificationTo")}
               </p>
-              <p className="mt-2 text-xs text-white/20">
-                {t("auth.checkSpam")}
+              <p className="mt-1 text-xl font-semibold text-[hsl(45_85%_55%)] break-all">
+                {email}
               </p>
 
-              <Link to="/logga-in" className="block mt-8">
-                <Button variant="outline" className="w-full h-12 rounded-2xl border-0 ring-1 ring-white/[0.08] text-white/60 hover:text-white hover:bg-white/[0.06] transition-all">
-                   {t("auth.backToLogin")}
-                </Button>
-              </Link>
+              <div className="mt-8 space-y-4 text-left bg-white/[0.04] ring-1 ring-white/[0.08] rounded-2xl p-5">
+                <div className="flex items-start gap-3">
+                  <div className="flex-shrink-0 h-7 w-7 rounded-full bg-[hsl(45_85%_55%/0.15)] text-[hsl(45_85%_55%)] flex items-center justify-center text-sm font-semibold">1</div>
+                  <p className="text-base text-white/85 leading-relaxed pt-0.5">Öppna mejlet vi just skickade till dig.</p>
+                </div>
+                <div className="flex items-start gap-3">
+                  <div className="flex-shrink-0 h-7 w-7 rounded-full bg-[hsl(45_85%_55%/0.15)] text-[hsl(45_85%_55%)] flex items-center justify-center text-sm font-semibold">2</div>
+                  <p className="text-base text-white/85 leading-relaxed pt-0.5">Klicka på den gula knappen för att bekräfta din e-post.</p>
+                </div>
+                <div className="flex items-start gap-3">
+                  <div className="flex-shrink-0 h-7 w-7 rounded-full bg-[hsl(45_85%_55%/0.15)] text-[hsl(45_85%_55%)] flex items-center justify-center text-sm font-semibold">3</div>
+                  <p className="text-base text-white/85 leading-relaxed pt-0.5">Du skickas tillbaka hit och kan fortsätta skapa ditt konto.</p>
+                </div>
+              </div>
+
+              <p className="mt-5 text-sm text-white/50">
+                Hittar du inte mejlet? Kolla skräpposten — det kan ta upp till en minut.
+              </p>
             </div>
           )}
 
