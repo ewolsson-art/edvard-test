@@ -107,6 +107,17 @@ function buildContext(args: {
   lines.push(`Nedstämd: ${charsByType.depressed.join(", ") || "(inga)"}`);
 
   lines.push("");
+  lines.push("=== ANVÄNDARENS EGNA INSIKTER (lärt Toddy via chatten) ===");
+  if (learnedInsights.length === 0) {
+    lines.push("(inga ännu)");
+  } else {
+    for (const li of learnedInsights) {
+      const cat = li.category ? `[${li.category}] ` : "";
+      lines.push(`- ${cat}${li.insight}`);
+    }
+  }
+
+  lines.push("");
   lines.push(`=== INCHECKNINGAR (senaste ${compactEntries.length} dagar, nyast först) ===`);
   lines.push(compactEntries.length ? compactEntries.join("\n") : "(inga incheckningar)");
 
