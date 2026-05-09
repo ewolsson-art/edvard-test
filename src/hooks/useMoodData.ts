@@ -60,7 +60,7 @@ export function useMoodData() {
   );
 
   const saveCheckinMutation = useMutation({
-    mutationFn: async ({ date, data, previous }: { date: string; data: CheckinData; previous?: MoodEntry }) => {
+    mutationFn: async ({ date, data }: { date: string; data: CheckinData; previous?: MoodEntry }) => {
       if (!user) throw new Error('No user');
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const upsertData: any = {
@@ -80,17 +80,13 @@ export function useMoodData() {
         medication_side_effects: data.medicationSideEffects || null,
         tags: data.tags || null,
       };
-      console.log('[saveCheckin] upserting:', upsertData);
       const { error } = await supabase
         .from('mood_entries')
         .upsert(upsertData, { onConflict: 'user_id,date' });
-      if (error) {
-        console.error('[saveCheckin] supabase error:', error);
-        throw error;
-      }
-      return { date, data, previous };
+      if (error) throw error;
     },
-    onSuccess: ({ date, data, previous }) => {
+    // Optimistic update: write to cache BEFORE network call so UI reacts instantly.
+    onMutate: async ({ date, data, previous }) => {
       const newEntry: MoodEntry = {
         date,
         mood: data.mood!,
@@ -112,7 +108,9 @@ export function useMoodData() {
         const filtered = prev.filter(e => e.date !== date);
         return [...filtered, newEntry];
       });
-
+      return { date, previous };
+    },
+    onSuccess: (_void, { date, data, previous }) => {
       // Sonner toast with 5s undo action
       sonnerToast("Incheckning sparad", {
         duration: 5000,
@@ -122,7 +120,6 @@ export function useMoodData() {
             if (!user) return;
             try {
               if (previous) {
-                // Restore previous entry
                 const restoreData = {
                   user_id: user.id,
                   date,
@@ -157,7 +154,14 @@ export function useMoodData() {
         },
       });
     },
-    onError: (err: unknown) => {
+    onError: (err, { date }, context) => {
+      // Roll back optimistic update
+      if (context) {
+        setEntries(prev => {
+          const filtered = prev.filter(e => e.date !== date);
+          return context.previous ? [...filtered, context.previous] : filtered;
+        });
+      }
       const msg = err instanceof Error ? err.message : 'Försök igen.';
       console.error('[saveCheckin] mutation error:', err);
       toast({ title: "Kunde inte spara", description: msg, variant: "destructive" });
