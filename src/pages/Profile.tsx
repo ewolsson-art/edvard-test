@@ -212,7 +212,7 @@ const Profile = () => {
         </button>
 
         {/* Patient sections */}
-        {isPatient && (
+        {showPatientSections && (
           <SettingsGroup label={t('profile.medicalInfo')}>
             
             <SettingsRow icon={ClipboardList} label={t('profile.diagnoses')} description={t('profile.yourDiagnoses')} onClick={() => setView('diagnoses')} />
@@ -221,7 +221,7 @@ const Profile = () => {
           </SettingsGroup>
         )}
 
-        {isPatient && (
+        {showPatientSections && (
           <SettingsGroup label={t('profile.connectionsLabel')}>
             <SettingsRow icon={Stethoscope} label={t('profile.caregivers')} description={t('profile.connectedDoctors')} onClick={() => setView('doctors')} />
             <SettingsRow icon={Heart} label={t('profile.relatives')} description={t('profile.connectedRelatives')} onClick={() => setView('relatives')} />
