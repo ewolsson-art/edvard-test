@@ -314,7 +314,6 @@ function EpisodeRow({
   const dateLabel = startLabel === endLabel ? startLabel : `${startLabel} – ${endLabel}`;
 
   const observations = summarizeEpisode(episode);
-  const actions = ACTIONS[episode.kind];
 
   const priorLabel = history
     ? format(parseISO(history.priorDate), 'd MMM yyyy', { locale: sv })
@@ -336,10 +335,10 @@ function EpisodeRow({
       {/* Mini-graf över episodens dagar */}
       {episode.entries.length > 1 && <EpisodeMiniChart entries={episode.entries} />}
 
-      {/* Vad vi sett — konkreta observationer ur datan */}
+      {/* Fynd ur datan */}
       {observations.length > 0 && (
         <div className="space-y-1">
-          <p className="text-[10px] uppercase tracking-wide text-foreground/50 font-medium">Vad jag ser i din data</p>
+          <p className="text-[10px] uppercase tracking-wide text-foreground/50 font-medium">Fynd</p>
           <ul className="space-y-0.5">
             {observations.map((o, i) => (
               <li key={i} className="text-xs text-foreground/80 leading-relaxed flex gap-2">
@@ -354,56 +353,14 @@ function EpisodeRow({
       {/* Förklaring */}
       <p className="text-xs text-muted-foreground leading-relaxed">{meta.description}</p>
 
-      {/* Vad du kan göra — 3 konkreta råd */}
-      <div className="space-y-1.5">
-        <p className="text-[10px] uppercase tracking-wide text-foreground/50 font-medium">Vad du kan göra nu</p>
-        <div className="grid grid-cols-3 gap-1.5">
-          {actions.map((a, i) => (
-            <div
-              key={i}
-              className="rounded-lg bg-foreground/[0.05] border border-border/20 p-2 text-center"
-            >
-              <div className="text-base mb-0.5">{a.emoji}</div>
-              <div className="text-[10px] text-foreground/75 leading-tight">{a.text}</div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Stödresurser för tunga perioder */}
-      {NEEDS_SUPPORT_LINK.includes(episode.kind) && (
-        <div className="flex flex-wrap gap-1.5 pt-1">
-          <a
-            href="tel:1177"
-            className="text-[11px] px-2.5 py-1 rounded-full bg-foreground/[0.06] border border-border/30 text-foreground/80 hover:bg-foreground/[0.1] transition-colors"
-          >
-            📞 1177
-          </a>
-          <a
-            href="tel:90101"
-            className="text-[11px] px-2.5 py-1 rounded-full bg-foreground/[0.06] border border-border/30 text-foreground/80 hover:bg-foreground/[0.1] transition-colors"
-          >
-            🆘 Mind 90101
-          </a>
-          {episode.kind === 'mixed' && (
-            <a
-              href="tel:112"
-              className="text-[11px] px-2.5 py-1 rounded-full bg-red-500/10 border border-red-500/30 text-red-300 hover:bg-red-500/20 transition-colors"
-            >
-              112 — akut
-            </a>
-          )}
-        </div>
-      )}
-
       {/* Historiskt mönster */}
       {history && priorLabel && (
         <div className="pt-2 border-t border-foreground/[0.06]">
           <p className="text-[11px] text-muted-foreground/85 leading-relaxed">
-            <span className="text-foreground/70 font-medium">Tidigare gång: </span>
+            <span className="text-foreground/70 font-medium">Tidigare mönster: </span>
             {followedKindLabel ? (
               <>
-                Sist du visade ett liknande mönster ({priorLabel}) följdes det av en period av{' '}
+                Liknande period sågs runt {priorLabel} och följdes då av{' '}
                 <span className="text-foreground/80">{followedKindLabel}</span>.
               </>
             ) : (
