@@ -34,13 +34,14 @@ import { useTranslation } from 'react-i18next';
      title: string;
      description: string;
    }[];
-   weeklyComparison: {
-     metric: string;
-     current: number;
-     previous: number;
-     change: number;
-   }[];
- }
+  weeklyComparison: {
+    metric: string;
+    current: number;
+    previous: number;
+    change: number;
+  }[];
+  topInsights?: string[];
+}
  
  interface VisualInsightsProps {
    structured: StructuredInsight | null;
@@ -104,16 +105,40 @@ import { useTranslation } from 'react-i18next';
    // Sort risk indicators by risk level
    const sortedRisks = [...structured.riskIndicators].sort((a, b) => b.riskLevel - a.riskLevel);
  
-   return (
-     <div className="space-y-6">
-       {/* Summary Card */}
-       <InsightsSummaryCard
-         status={structured.summary.status}
-         title={structured.summary.title}
-         description={structured.summary.description}
-         moodTrend={structured.moodTrend}
-       />
- 
+  return (
+    <div className="space-y-6">
+      {/* Top personal insights — concrete sentences derived from user history */}
+      {structured.topInsights && structured.topInsights.length > 0 && (
+        <Card className="border-[hsl(45_85%_55%/0.25)] bg-gradient-to-br from-[hsl(45_85%_55%/0.06)] to-transparent">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-base flex items-center gap-2">
+              <span className="bg-[hsl(45_85%_55%/0.15)] p-1.5 rounded-lg">
+                <Sparkles className="w-4 h-4 text-[hsl(45_85%_55%)]" />
+              </span>
+              Personliga insikter
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            {structured.topInsights.map((insight, i) => (
+              <div key={i} className="flex gap-3 items-start">
+                <div className="flex-shrink-0 w-6 h-6 rounded-full bg-[hsl(45_85%_55%/0.15)] text-[hsl(45_85%_55%)] flex items-center justify-center text-xs font-semibold mt-0.5">
+                  {i + 1}
+                </div>
+                <p className="text-sm leading-relaxed text-foreground/90 flex-1">{insight}</p>
+              </div>
+            ))}
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Summary Card */}
+      <InsightsSummaryCard
+        status={structured.summary.status}
+        title={structured.summary.title}
+        description={structured.summary.description}
+        moodTrend={structured.moodTrend}
+      />
+
        {/* Main Grid */}
        <div className="grid md:grid-cols-2 gap-6">
          {/* Risk Indicators */}
