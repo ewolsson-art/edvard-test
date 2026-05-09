@@ -205,6 +205,31 @@ const TOOLS = [
       },
     },
   },
+  {
+    type: "function",
+    function: {
+      name: "add_user_insight",
+      description:
+        "Spara en personlig insikt om användarens eget mående, mönster, triggers eller tidiga signaler — det användaren just lärt Toddy. T.ex. 'mår alltid sämre på söndagar' eller 'kort sömn två nätter brukar göra mig uppvarvad'. Använd detta för att lära dig om användaren över tid.",
+      parameters: {
+        type: "object",
+        properties: {
+          insight: {
+            type: "string",
+            description:
+              "Den lärda observationen, kort och konkret formulerad. T.ex. 'Mår sämre på söndagar', 'Stress på jobbet är en trigger', 'Korta nätter två i rad föregår uppvarvade perioder'.",
+          },
+          category: {
+            type: "string",
+            description:
+              "Valfri kategori. Förslag: 'trigger', 'tidig signal', 'mönster', 'sömn', 'vad som hjälper', 'undvik'.",
+          },
+        },
+        required: ["insight"],
+        additionalProperties: false,
+      },
+    },
+  },
 ];
 
 async function executeTool(
