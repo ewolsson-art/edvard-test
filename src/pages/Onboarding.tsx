@@ -245,7 +245,7 @@ const Onboarding = () => {
               <div className="flex justify-center mb-4 animate-scale-in">
                 <div className="relative w-20 h-20">
                   <div className="absolute inset-0 rounded-full bg-[hsl(45_85%_55%/0.08)] blur-xl" />
-                  <TurtleLogo size="md" mood="content" className="relative w-20 h-20 drop-shadow-[0_4px_16px_hsl(45_85%_55%/0.15)]" />
+                  <TurtleLogo size="md" mood="stable" className="relative w-20 h-20 drop-shadow-[0_4px_16px_hsl(45_85%_55%/0.15)]" />
                 </div>
               </div>
               <h1 className="text-2xl md:text-3xl font-bold text-white font-display tracking-tight text-center">
@@ -318,7 +318,7 @@ const Onboarding = () => {
               <div className="flex justify-center mb-4 animate-scale-in">
                 <div className="relative w-20 h-20">
                   <div className="absolute inset-0 rounded-full bg-[hsl(45_85%_55%/0.08)] blur-xl" />
-                  <TurtleLogo size="md" mood="happy" className="relative w-20 h-20 drop-shadow-[0_4px_16px_hsl(45_85%_55%/0.15)]" />
+                  <TurtleLogo size="md" mood="somewhat_elevated" className="relative w-20 h-20 drop-shadow-[0_4px_16px_hsl(45_85%_55%/0.15)]" />
                 </div>
               </div>
               <h1 className="text-2xl md:text-3xl font-bold text-white font-display tracking-tight text-center">
