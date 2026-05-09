@@ -175,18 +175,35 @@ export function EpisodeBands({ entries, days = 14 }: EpisodeBandsProps) {
   // Don't render anything until we have at least 3 entries — the bands would be misleading
   if (windowEntries.length < 3) return null;
 
-  // No episodes detected → render a calm, reassuring strip (no scary empty state)
+  // No episodes detected → render a calm, reassuring strip with positive framing
   if (episodes.length === 0) {
+    const stableDays = windowEntries.filter((e) => e.mood === 'stable' || e.mood === 'somewhat_elevated' || e.mood === 'somewhat_depressed').length;
     return (
-      <div className="rounded-2xl bg-foreground/[0.03] border border-border/30 px-4 py-3 space-y-2.5">
-        <div className="flex items-center justify-between gap-3">
-          <span className="text-sm text-muted-foreground">
-            Inga episoder upptäckta de senaste {days} dagarna.
-          </span>
-          <span className="text-xs text-muted-foreground/60">
-            {windowEntries.length} check-ins
+      <div className="rounded-2xl bg-foreground/[0.03] border border-border/30 px-4 py-3.5 space-y-2">
+        <div className="flex items-center gap-2">
+          <span className="text-base">🌿</span>
+          <span className="text-sm font-medium text-foreground/85">
+            Stabil period
           </span>
         </div>
+        <p className="text-xs text-muted-foreground leading-relaxed">
+          Inga tydliga episoder de senaste {days} dagarna
+          {stableDays > 0 && ` — ${stableDays} av ${windowEntries.length} dagar inom ditt vanliga spann`}.
+          Fortsätt checka in så fångar vi tidiga signaler om något ändras.
+        </p>
+        {earlySignals.length > 0 && (
+          <div className="pt-2 mt-1 border-t border-border/20 space-y-1">
+            <p className="text-[10px] uppercase tracking-wide text-foreground/45 font-medium">Värt att hålla ögonen på</p>
+            <ul className="space-y-0.5">
+              {earlySignals.map((s, i) => (
+                <li key={i} className="text-xs text-muted-foreground leading-relaxed flex gap-2">
+                  <span className="text-foreground/40 shrink-0">·</span>
+                  <span>{s}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
         {similarPast && <SimilarPastRow match={similarPast} />}
       </div>
     );
@@ -307,6 +324,63 @@ function Timeline({ episodes, startDate, days }: { episodes: Episode[]; startDat
   );
 }
 
+// === Per-episod observationer ur faktiska data ===
+function summarizeEpisode(ep: Episode): string[] {
+  const out: string[] = [];
+  const total = ep.entries.length;
+  if (total === 0) return out;
+
+  const lowSleep = ep.entries.filter((e) => e.sleepQuality && ['very_little', 'little'].includes(e.sleepQuality)).length;
+  const longSleep = ep.entries.filter((e) => e.sleepQuality === 'very_good').length;
+  const highEnergy = ep.entries.filter((e) => e.energyLevel === 'high').length;
+  const lowEnergy = ep.entries.filter((e) => e.energyLevel === 'low').length;
+  const lowEat = ep.entries.filter((e) => e.eatingQuality && ['very_little', 'little'].includes(e.eatingQuality)).length;
+  const suicidalDays = ep.entries.filter((e) => e.tags?.includes('suicidtankar')).length;
+
+  if (ep.kind === 'hypomanic' || ep.kind === 'manic') {
+    if (lowSleep > 0) out.push(`Sömnen var kortare än vanligt ${lowSleep} av ${total} nätter`);
+    if (highEnergy > 0) out.push(`Hög energi ${highEnergy} av ${total} dagar`);
+    if (lowEat > 0) out.push(`Lägre aptit ${lowEat} av ${total} dagar`);
+  } else if (ep.kind === 'depressive') {
+    if (lowEnergy > 0) out.push(`Låg energi ${lowEnergy} av ${total} dagar`);
+    if (longSleep > 0) out.push(`Längre sömn än vanligt ${longSleep} nätter`);
+    else if (lowSleep > 0) out.push(`Kortare sömn än vanligt ${lowSleep} nätter`);
+    if (lowEat > 0) out.push(`Lägre aptit ${lowEat} av ${total} dagar`);
+  } else if (ep.kind === 'mixed') {
+    if (suicidalDays > 0) out.push(`Mörka tankar registrerade ${suicidalDays} ${suicidalDays === 1 ? 'dag' : 'dagar'}`);
+    if (highEnergy > 0) out.push(`Hög energi ${highEnergy} av ${total} dagar samtidigt`);
+    if (lowSleep > 0) out.push(`Kort sömn ${lowSleep} nätter — förstärker risken`);
+  }
+
+  return out.slice(0, 3);
+}
+
+// === Konkreta råd per typ ===
+const ACTIONS: Record<EpisodeKind, { emoji: string; text: string }[]> = {
+  hypomanic: [
+    { emoji: '😴', text: 'Skydda sömnen ikväll' },
+    { emoji: '⏸️', text: 'Pausa stora beslut' },
+    { emoji: '💬', text: 'Berätta för någon nära' },
+  ],
+  manic: [
+    { emoji: '📞', text: 'Kontakta vården' },
+    { emoji: '🐢', text: 'Sänk takten medvetet' },
+    { emoji: '👥', text: 'Be någon hålla koll' },
+  ],
+  depressive: [
+    { emoji: '🚶', text: '10 min rörelse räcker' },
+    { emoji: '💬', text: 'Hör av dig till någon' },
+    { emoji: '🛏️', text: 'Behåll sömnrutinen' },
+  ],
+  mixed: [
+    { emoji: '📞', text: 'Ring 1177 eller jouren' },
+    { emoji: '⏸️', text: 'Pausa stora beslut' },
+    { emoji: '👥', text: 'Var inte ensam ikväll' },
+  ],
+};
+
+const NEEDS_SUPPORT_LINK: EpisodeKind[] = ['depressive', 'mixed'];
+
 function EpisodeRow({
   episode,
   history,
@@ -319,6 +393,9 @@ function EpisodeRow({
   const endLabel = format(parseISO(episode.endDate), 'd MMM', { locale: sv });
   const dateLabel = startLabel === endLabel ? startLabel : `${startLabel} – ${endLabel}`;
 
+  const observations = summarizeEpisode(episode);
+  const actions = ACTIONS[episode.kind];
+
   const priorLabel = history
     ? format(parseISO(history.priorDate), 'd MMM yyyy', { locale: sv })
     : null;
@@ -327,30 +404,127 @@ function EpisodeRow({
     : null;
 
   return (
-    <div className={`rounded-xl border ${meta.border} ${meta.bg} p-3`}>
-      <div className="flex items-center justify-between gap-3 mb-1">
+    <div className={`rounded-xl border ${meta.border} ${meta.bg} p-3.5 space-y-3`}>
+      {/* Rubrik */}
+      <div className="flex items-center justify-between gap-3">
         <span className={`text-sm font-semibold ${meta.color}`}>{meta.label}</span>
-        <span className="text-xs text-muted-foreground/80">
+        <span className="text-[11px] text-muted-foreground/80">
           {dateLabel} · {episode.days} {episode.days === 1 ? 'dag' : 'dagar'}
         </span>
       </div>
+
+      {/* Mini-graf över episodens dagar */}
+      {episode.entries.length > 1 && <EpisodeMiniChart entries={episode.entries} />}
+
+      {/* Vad vi sett — konkreta observationer ur datan */}
+      {observations.length > 0 && (
+        <div className="space-y-1">
+          <p className="text-[10px] uppercase tracking-wide text-foreground/50 font-medium">Vad jag ser i din data</p>
+          <ul className="space-y-0.5">
+            {observations.map((o, i) => (
+              <li key={i} className="text-xs text-foreground/80 leading-relaxed flex gap-2">
+                <span className="text-foreground/40 shrink-0">·</span>
+                <span>{o}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {/* Förklaring */}
       <p className="text-xs text-muted-foreground leading-relaxed">{meta.description}</p>
 
+      {/* Vad du kan göra — 3 konkreta råd */}
+      <div className="space-y-1.5">
+        <p className="text-[10px] uppercase tracking-wide text-foreground/50 font-medium">Vad du kan göra nu</p>
+        <div className="grid grid-cols-3 gap-1.5">
+          {actions.map((a, i) => (
+            <div
+              key={i}
+              className="rounded-lg bg-foreground/[0.05] border border-border/20 p-2 text-center"
+            >
+              <div className="text-base mb-0.5">{a.emoji}</div>
+              <div className="text-[10px] text-foreground/75 leading-tight">{a.text}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Stödresurser för tunga perioder */}
+      {NEEDS_SUPPORT_LINK.includes(episode.kind) && (
+        <div className="flex flex-wrap gap-1.5 pt-1">
+          <a
+            href="tel:1177"
+            className="text-[11px] px-2.5 py-1 rounded-full bg-foreground/[0.06] border border-border/30 text-foreground/80 hover:bg-foreground/[0.1] transition-colors"
+          >
+            📞 1177
+          </a>
+          <a
+            href="tel:90101"
+            className="text-[11px] px-2.5 py-1 rounded-full bg-foreground/[0.06] border border-border/30 text-foreground/80 hover:bg-foreground/[0.1] transition-colors"
+          >
+            🆘 Mind 90101
+          </a>
+          {episode.kind === 'mixed' && (
+            <a
+              href="tel:112"
+              className="text-[11px] px-2.5 py-1 rounded-full bg-red-500/10 border border-red-500/30 text-red-300 hover:bg-red-500/20 transition-colors"
+            >
+              112 — akut
+            </a>
+          )}
+        </div>
+      )}
+
+      {/* Historiskt mönster */}
       {history && priorLabel && (
-        <div className="mt-2.5 pt-2.5 border-t border-foreground/[0.06]">
+        <div className="pt-2 border-t border-foreground/[0.06]">
           <p className="text-[11px] text-muted-foreground/85 leading-relaxed">
-            <span className="text-foreground/70 font-medium">Historiskt mönster: </span>
+            <span className="text-foreground/70 font-medium">Tidigare gång: </span>
             {followedKindLabel ? (
               <>
-                Sist du visade ett liknande mönster ({priorLabel}) följdes det inom kort
-                av en period av <span className="text-foreground/80">{followedKindLabel}</span>.
+                Sist du visade ett liknande mönster ({priorLabel}) följdes det av en period av{' '}
+                <span className="text-foreground/80">{followedKindLabel}</span>.
               </>
             ) : (
-              <>Du visade ett liknande mönster senast {priorLabel}.</>
+              <>Liknande mönster senast {priorLabel}.</>
             )}
           </p>
         </div>
       )}
+    </div>
+  );
+}
+
+// Kompakt graf över episodens dagar — energi över nollinje, nedstämdhet under
+function EpisodeMiniChart({ entries }: { entries: MoodEntry[] }) {
+  const sorted = [...entries].sort((a, b) => a.date.localeCompare(b.date));
+  return (
+    <div className="flex items-stretch gap-1 h-10">
+      {sorted.map((e) => {
+        const energy = ENERGY_LEVEL[e.energyLevel ?? 'normal'] ?? 1;
+        const elevation = MOOD_ELEVATION_LEVEL[e.mood] ?? 0;
+        const depression = MOOD_DEPRESSION_LEVEL[e.mood] ?? 0;
+        const upMag = Math.max(energy / 2, elevation / 3);
+        const downMag = depression / 3;
+        return (
+          <div key={e.date} className="flex-1 flex flex-col items-center min-w-0">
+            <div className="w-full h-1/2 flex flex-col justify-end">
+              <div
+                className="w-full rounded-t-sm"
+                style={{ height: `${upMag * 100}%`, backgroundColor: 'hsl(28 85% 60%)', opacity: 0.75 }}
+              />
+            </div>
+            <div className="w-full h-px bg-foreground/15" />
+            <div className="w-full h-1/2 flex flex-col justify-start">
+              <div
+                className="w-full rounded-b-sm"
+                style={{ height: `${downMag * 100}%`, backgroundColor: 'hsl(215 75% 60%)', opacity: 0.75 }}
+              />
+            </div>
+          </div>
+        );
+      })}
     </div>
   );
 }
