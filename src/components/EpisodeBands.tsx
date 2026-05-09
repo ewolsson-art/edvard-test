@@ -152,7 +152,13 @@ export function EpisodeBands({ entries, days = 14 }: EpisodeBandsProps) {
     return map;
   }, [episodes, allEpisodes, startDate]);
 
-  const mixedEpisode = episodes.find((e) => e.kind === 'mixed');
+  // Visa bara varning för pågående eller nyss avslutad blandepisod (≤2 dagar sedan).
+  // En episod som slutade för en vecka sedan är inte längre akut.
+  const mixedEpisode = episodes.find((e) => {
+    if (e.kind !== 'mixed') return false;
+    const daysSinceEnd = differenceInDays(today, parseISO(e.endDate));
+    return daysSinceEnd <= 2;
+  });
 
   // Don't render anything until we have at least 3 entries — the bands would be misleading
   if (windowEntries.length < 3) return null;
