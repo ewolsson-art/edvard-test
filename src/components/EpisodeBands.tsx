@@ -339,13 +339,19 @@ function CrisisTurtleButton({ onClick }: { onClick: () => void }) {
 
 
 function CrisisDialog({ episode, onClose }: { episode: Episode; onClose: () => void }) {
+  const startLabel = format(parseISO(episode.startDate), 'd MMM', { locale: sv });
+  const endLabel = format(parseISO(episode.endDate), 'd MMM', { locale: sv });
   return (
     <div
       role="dialog"
       aria-modal="true"
       className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-background/80 backdrop-blur-sm animate-in fade-in"
+      onClick={onClose}
     >
-      <div className="relative w-full max-w-md rounded-2xl border border-red-500/40 bg-card p-6 shadow-2xl">
+      <div
+        className="relative w-full max-w-md rounded-2xl border border-border/50 bg-card p-6 shadow-2xl"
+        onClick={(e) => e.stopPropagation()}
+      >
         <button
           onClick={onClose}
           className="absolute top-3 right-3 p-1.5 rounded-full text-muted-foreground/60 hover:text-foreground hover:bg-white/[0.06] transition-colors"
@@ -355,59 +361,28 @@ function CrisisDialog({ episode, onClose }: { episode: Episode; onClose: () => v
         </button>
 
         <div className="flex items-start gap-3 mb-4">
-          <div className="shrink-0 mt-0.5 h-10 w-10 rounded-full bg-red-500/15 flex items-center justify-center">
-            <AlertTriangle className="h-5 w-5 text-red-400" />
+          <div className="shrink-0 mt-0.5 h-10 w-10 rounded-full bg-foreground/[0.06] flex items-center justify-center">
+            <AlertTriangle className="h-5 w-5 text-foreground/70" />
           </div>
           <div>
             <h2 className="text-base font-semibold text-foreground">
-              Vi ser några varningstecken
+              Tecken på blandepisod
             </h2>
             <p className="text-sm text-muted-foreground mt-1 leading-relaxed">
-              Du har varit uppvarvad samtidigt som du registrerat mörka tankar. Det är en period
-              då många mår sämre än de tror — du förtjänar att prata med någon nu.
+              Hög energi och nedstämdhet förekommer samtidigt i dina senaste in-checkningar.
             </p>
           </div>
         </div>
 
-        <div className="space-y-2 mb-4">
-          <a
-            href="tel:112"
-            className="flex items-center gap-3 w-full px-4 py-3 rounded-xl bg-red-500/15 hover:bg-red-500/20 border border-red-500/30 transition-colors"
-          >
-            <Phone className="h-4 w-4 text-red-400 shrink-0" />
-            <div className="flex-1 text-left">
-              <div className="text-sm font-semibold text-foreground">112 — vid akut fara</div>
-              <div className="text-xs text-muted-foreground">Ring direkt om du eller någon annan är i fara</div>
-            </div>
-          </a>
-          <a
-            href="tel:90101"
-            className="flex items-center gap-3 w-full px-4 py-3 rounded-xl bg-foreground/[0.04] hover:bg-foreground/[0.07] border border-border/40 transition-colors"
-          >
-            <Phone className="h-4 w-4 text-foreground/80 shrink-0" />
-            <div className="flex-1 text-left">
-              <div className="text-sm font-semibold text-foreground">90101 — Mind Självmordslinjen</div>
-              <div className="text-xs text-muted-foreground">Anonym samtalspartner, dygnet runt</div>
-            </div>
-          </a>
-          <a
-            href="tel:1177"
-            className="flex items-center gap-3 w-full px-4 py-3 rounded-xl bg-foreground/[0.04] hover:bg-foreground/[0.07] border border-border/40 transition-colors"
-          >
-            <Phone className="h-4 w-4 text-foreground/80 shrink-0" />
-            <div className="flex-1 text-left">
-              <div className="text-sm font-semibold text-foreground">1177 — Vårdguiden</div>
-              <div className="text-xs text-muted-foreground">Sjukvårdsrådgivning dygnet runt</div>
-            </div>
-          </a>
+        <div className="rounded-xl bg-foreground/[0.04] border border-border/40 p-4">
+          <div className="text-[11px] uppercase tracking-wide text-muted-foreground/70 mb-1.5">
+            Baseras på
+          </div>
+          <p className="text-xs text-muted-foreground leading-relaxed">
+            {episode.days} {episode.days === 1 ? 'dag' : 'dagar'} ({startLabel}–{endLabel}) med
+            samtidiga tecken på uppvarvning och nedstämdhet i dina egna in-checkningar.
+          </p>
         </div>
-
-        <button
-          onClick={onClose}
-          className="w-full text-xs text-muted-foreground/70 hover:text-foreground py-2 transition-colors"
-        >
-          Jag är trygg just nu — stäng
-        </button>
       </div>
     </div>
   );
