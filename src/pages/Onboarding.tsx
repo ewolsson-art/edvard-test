@@ -55,7 +55,7 @@ const CHECKIN_OPTIONS = [
 ];
 
 
-const TOTAL_STEPS = 4;
+const TOTAL_STEPS = 2;
 
 const Onboarding = () => {
   const { t } = useTranslation();
@@ -106,8 +106,8 @@ const Onboarding = () => {
   const hasAnySelection = Object.values(selections).some(Boolean);
 
   const handleNext = () => {
-    // Step 4 (categories) is the last step → submit
-    if (step === 4) {
+    // Step 2 (categories) is the last step → submit
+    if (step === 2) {
       handleSubmit();
       return;
     }
@@ -312,8 +312,8 @@ const Onboarding = () => {
             </div>
           )}
 
-          {/* Step 4: Choose categories */}
-          {step === 4 && (
+          {/* Step 2: Choose categories */}
+          {step === 2 && (
             <div className="animate-fade-in">
               <div className="flex justify-center mb-4 animate-scale-in">
                 <div className="relative w-20 h-20">
