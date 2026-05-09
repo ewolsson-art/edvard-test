@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo, useRef, KeyboardEvent } from 'react';
 import { format, differenceInDays, parseISO, isToday, isYesterday } from 'date-fns';
 import { sv } from 'date-fns/locale';
-import { Flame, Zap, Sun, Cloud, CloudRain, MessageSquarePlus, CheckCircle2, Pill, Pencil, Moon, MoonStar, CloudMoon, Utensils, Dumbbell, ThumbsUp, ThumbsDown, Check, X, ChevronRight, ChevronLeft, Heart, AlertTriangle, HelpCircle, CalendarIcon, Plus, Trophy } from 'lucide-react';
+import { Flame, Zap, Sun, Cloud, CloudRain, MessageSquarePlus, CheckCircle2, Pill, Pencil, Moon, MoonStar, CloudMoon, Utensils, Dumbbell, ThumbsUp, ThumbsDown, Check, X, ChevronRight, ChevronLeft, Heart, AlertTriangle, HelpCircle, CalendarIcon, Plus, Trophy, ListChecks } from 'lucide-react';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { MoodType, MoodEntry, MOOD_LABELS, ENERGY_LABELS, QualityType, QUALITY_LABELS, CheckinData, EnergyType } from '@/types/mood';
@@ -718,34 +718,35 @@ export function TodayCheckin({
               </Button>
             ) : <div />}
 
-            {/* Minimal segmented mode toggle */}
+            {/* Segmented mode toggle — golden thumb, icons + text */}
             <div
               role="tablist"
               aria-label={t('checkin.checkinMode')}
-              className="relative inline-flex items-center rounded-full bg-foreground/[0.05] p-0.5 text-[11px] font-medium tracking-wide"
+              className="relative inline-flex items-center rounded-full bg-foreground/[0.04] ring-1 ring-foreground/[0.06] p-1 text-[12px] font-semibold tracking-tight"
             >
-              {/* Sliding thumb */}
+              {/* Sliding thumb — golden accent for active selection */}
               <motion.div
                 aria-hidden
-                className="absolute top-0.5 bottom-0.5 rounded-full bg-foreground/[0.08] border border-foreground/10"
+                className="absolute top-1 bottom-1 rounded-full bg-[hsl(45_85%_55%)] shadow-[0_2px_10px_hsl(45_85%_55%/0.35)]"
                 initial={false}
                 animate={{
-                  left: checkinMode === 'quick' ? 2 : '50%',
-                  right: checkinMode === 'quick' ? '50%' : 2,
+                  left: checkinMode === 'quick' ? 4 : '50%',
+                  right: checkinMode === 'quick' ? '50%' : 4,
                 }}
-                transition={{ type: 'spring', stiffness: 420, damping: 36, mass: 0.6 }}
+                transition={{ type: 'spring', stiffness: 380, damping: 32, mass: 0.55 }}
               />
               <button
                 role="tab"
                 aria-selected={checkinMode === 'quick'}
                 onClick={() => setCheckinMode('quick')}
                 className={cn(
-                  "relative z-10 px-3 py-1 rounded-full transition-colors duration-200",
+                  "relative z-10 inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full transition-colors duration-200",
                   checkinMode === 'quick'
-                    ? "text-foreground"
-                    : "text-muted-foreground/55 hover:text-foreground/80"
+                    ? "text-[hsl(225_30%_7%)]"
+                    : "text-muted-foreground/60 hover:text-foreground/85"
                 )}
               >
+                <Zap className="w-3.5 h-3.5" strokeWidth={2.5} />
                 {t('checkin.quickCheckin')}
               </button>
               <button
@@ -753,12 +754,13 @@ export function TodayCheckin({
                 aria-selected={checkinMode === 'detailed'}
                 onClick={() => setCheckinMode('detailed')}
                 className={cn(
-                  "relative z-10 px-3 py-1 rounded-full transition-colors duration-200",
+                  "relative z-10 inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full transition-colors duration-200",
                   checkinMode === 'detailed'
-                    ? "text-foreground"
-                    : "text-muted-foreground/55 hover:text-foreground/80"
+                    ? "text-[hsl(225_30%_7%)]"
+                    : "text-muted-foreground/60 hover:text-foreground/85"
                 )}
               >
+                <ListChecks className="w-3.5 h-3.5" strokeWidth={2.5} />
                 {t('checkin.detailedCheckin')}
               </button>
             </div>
