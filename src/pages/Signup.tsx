@@ -85,7 +85,13 @@ const Signup = () => {
 
   useEffect(() => {
     if (!loading && user) {
-      navigate("/");
+      const profileCompleted = user.user_metadata?.profile_completed;
+      const hasFirstName = user.user_metadata?.first_name;
+      if (!profileCompleted && !hasFirstName) {
+        navigate("/slutfor-profil", { replace: true });
+      } else {
+        navigate("/", { replace: true });
+      }
     }
   }, [user, loading, navigate]);
 
