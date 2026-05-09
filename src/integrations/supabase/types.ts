@@ -82,6 +82,7 @@ export type Database = {
           id: string
           image_url: string | null
           is_anonymous: boolean
+          status: string
           title: string | null
           updated_at: string
           user_id: string
@@ -94,6 +95,7 @@ export type Database = {
           id?: string
           image_url?: string | null
           is_anonymous?: boolean
+          status?: string
           title?: string | null
           updated_at?: string
           user_id: string
@@ -106,6 +108,7 @@ export type Database = {
           id?: string
           image_url?: string | null
           is_anonymous?: boolean
+          status?: string
           title?: string | null
           updated_at?: string
           user_id?: string
@@ -1140,6 +1143,7 @@ export type Database = {
           id: string
           image_url: string
           is_anonymous: boolean
+          status: string
           title: string
           updated_at: string
           user_id: string
