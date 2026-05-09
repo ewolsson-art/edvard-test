@@ -11,6 +11,7 @@ import { sv } from 'date-fns/locale';
 import { AlertTriangle, Phone, X, ChevronDown, ChevronUp } from 'lucide-react';
 import type { MoodEntry } from '@/types/mood';
 import { detectEpisodes, EPISODE_META, type Episode, type EpisodeKind } from '@/lib/episodeDetection';
+import { TurtleLogo } from '@/components/TurtleLogo';
 
 interface EpisodeBandsProps {
   entries: MoodEntry[];
@@ -27,7 +28,7 @@ const KIND_FILL: Record<EpisodeKind, string> = {
 
 export function EpisodeBands({ entries, days = 30 }: EpisodeBandsProps) {
   const [expanded, setExpanded] = useState(false);
-  const [crisisDismissed, setCrisisDismissed] = useState(false);
+  const [crisisOpen, setCrisisOpen] = useState(false);
 
   const today = useMemo(() => new Date(), []);
   const startDate = useMemo(() => subDays(today, days - 1), [today, days]);
@@ -63,9 +64,12 @@ export function EpisodeBands({ entries, days = 30 }: EpisodeBandsProps) {
 
   return (
     <>
-      {/* === CRISIS POPUP for mixed episodes === */}
-      {mixedEpisode && !crisisDismissed && (
-        <CrisisDialog episode={mixedEpisode} onClose={() => setCrisisDismissed(true)} />
+      {/* === CRISIS TURTLE INDICATOR for mixed episodes === */}
+      {mixedEpisode && (
+        <CrisisTurtleButton onClick={() => setCrisisOpen(true)} />
+      )}
+      {mixedEpisode && crisisOpen && (
+        <CrisisDialog episode={mixedEpisode} onClose={() => setCrisisOpen(false)} />
       )}
 
       <div className="rounded-2xl bg-foreground/[0.03] border border-border/30 overflow-hidden">
@@ -151,6 +155,24 @@ function EpisodeRow({ episode }: { episode: Episode }) {
       </div>
       <p className="text-xs text-muted-foreground leading-relaxed">{meta.description}</p>
     </div>
+  );
+}
+
+function CrisisTurtleButton({ onClick }: { onClick: () => void }) {
+  return (
+    <button
+      onClick={onClick}
+      aria-label="Vi ser några varningstecken — visa stödresurser"
+      className="fixed bottom-24 right-5 z-[90] group flex items-center gap-2 rounded-full bg-card/90 backdrop-blur-md border border-red-500/40 shadow-lg shadow-red-500/10 pl-1.5 pr-3 py-1.5 hover:border-red-500/70 hover:bg-card transition-all animate-in fade-in slide-in-from-bottom-2"
+    >
+      <span className="relative">
+        <TurtleLogo size="sm" mood="severe_depressed" framing="face" staticPose />
+        <span className="absolute -top-0.5 -right-0.5 h-3 w-3 rounded-full bg-red-500 border-2 border-card animate-pulse" />
+      </span>
+      <span className="text-xs font-medium text-foreground/90 group-hover:text-foreground">
+        Varning
+      </span>
+    </button>
   );
 }
 
