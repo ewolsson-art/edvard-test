@@ -10,13 +10,11 @@ import { useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { 
   Loader2, Brain, Moon, Utensils, Dumbbell, Pill, 
-  ArrowRight, ArrowLeft, Sparkles, CheckCircle2
+  ArrowRight, ArrowLeft, CheckCircle2
 } from 'lucide-react';
 import { Logo } from '@/components/Logo';
 import { TurtleLogo } from '@/components/TurtleLogo';
 import { DarkNightBackground } from '@/components/DarkNightBackground';
-import { DiagnosisStep } from '@/components/onboarding/DiagnosisStep';
-import { HowItWorksStep } from '@/components/onboarding/HowItWorksStep';
 import { cn } from '@/lib/utils';
 import { useTranslation } from 'react-i18next';
 
