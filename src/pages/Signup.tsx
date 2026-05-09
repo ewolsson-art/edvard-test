@@ -302,8 +302,8 @@ const Signup = () => {
                       className={cn(
                         "w-full p-3 rounded-2xl text-left transition-all duration-300 group",
                         isSelected
-                          ? "bg-white/[0.08] ring-2 ring-[hsl(45_85%_55%)] shadow-[0_0_24px_-6px_hsl(45_85%_55%/0.2)]"
-                          : "bg-white/[0.03] hover:bg-white/[0.06] ring-1 ring-white/[0.06]"
+                          ? "bg-foreground/[0.03] ring-2 ring-[hsl(45_85%_55%)] shadow-[0_0_24px_-6px_hsl(45_85%_55%/0.2)]"
+                          : "bg-foreground/[0.03] hover:bg-foreground/[0.05] ring-1 ring-white/[0.06]"
                       )}
                     >
                       <div className="flex items-center gap-4">
