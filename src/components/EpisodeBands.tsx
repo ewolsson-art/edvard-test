@@ -44,6 +44,10 @@ export function EpisodeBands({ entries, days = 14 }: EpisodeBandsProps) {
   // ALLA historiska episoder — för att hitta "sist du visade detta mönster ledde det till..."
   const allEpisodes = useMemo(() => detectEpisodes(entries), [entries]);
 
+  // === TIDIGA SIGNALER (prodromer) — diskreta rader, inga varningar ===
+  const earlySignals = useMemo(() => detectEarlySignals(entries), [entries]);
+
+
   // För varje aktuell episod: hitta senaste tidigare episod av SAMMA typ (innan fönstret),
   // och se vad som följde inom 30 dagar.
   const historicalContext = useMemo(() => {
