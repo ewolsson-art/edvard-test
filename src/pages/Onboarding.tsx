@@ -125,13 +125,8 @@ const Onboarding = () => {
 
 
   const handleSubmit = async () => {
-    if (!hasAnySelection) {
-      toast({
-        title: t('onboarding.chooseAtLeast'),
-        description: t('onboarding.needOneCategory'),
-      });
-      return;
-    }
+    // hasAnySelection no longer blocks – include_mood är förvalt, och om allt är av
+    // så respekterar vi det. Användaren kan alltid ändra senare i inställningar.
 
     if (!user) return;
 
@@ -215,17 +210,17 @@ const Onboarding = () => {
               </div>
 
               <h1 className="text-2xl md:text-3xl font-bold text-white font-display tracking-tight leading-snug">
-                Välkommen. Vi är glada att du är här.
+                Hej. Vad fint att du är här.
               </h1>
               <p className="mt-3 text-sm text-white/60 max-w-xs leading-relaxed">
-                Toddy är en lugn plats för dig som lever med bipolär sjukdom. Vi hjälper dig att se mönster i ditt mående – så att både du och din vård kan agera tidigare.
+                Toddy är en lugn liten plats för dig som lever med bipolär. Vi hjälper dig att se mönster i ditt mående – inget krav, inga rätt eller fel.
               </p>
 
               <div className="mt-6 flex flex-col gap-2 w-full text-left">
                 {[
-                  'Tar 1 minut om dagen',
-                  'Du delar bara det du vill dela',
-                  'Designat tillsammans med människor med bipolär'
+                  'Tar ungefär 1 minut om dagen',
+                  'Du delar bara det du själv vill',
+                  'Byggt med människor som lever med bipolär'
                 ].map((line) => (
                   <div key={line} className="flex items-center gap-2.5 text-xs text-white/55">
                     <CheckCircle2 className="w-3.5 h-3.5 text-[hsl(45_85%_55%)] shrink-0" />
@@ -238,7 +233,7 @@ const Onboarding = () => {
                 onClick={handleNext} 
                 className="w-full h-14 rounded-2xl text-base font-semibold bg-[hsl(45_85%_55%)] text-[hsl(230_30%_5%)] hover:bg-[hsl(45_85%_65%)] shadow-[0_4px_20px_-4px_hsl(45_85%_55%/0.4)] hover:shadow-[0_6px_28px_-4px_hsl(45_85%_55%/0.5)] hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 mt-8"
               >
-                Kom igång
+                Då börjar vi
                 <ArrowRight className="w-5 h-5 ml-2" />
               </Button>
             </div>
@@ -247,11 +242,17 @@ const Onboarding = () => {
           {/* Step 2: Diagnosis */}
           {step === 2 && (
             <div className="animate-fade-in">
-              <h1 className="text-2xl md:text-3xl font-bold text-white font-display tracking-tight">
+              <div className="flex justify-center mb-4 animate-scale-in">
+                <div className="relative w-20 h-20">
+                  <div className="absolute inset-0 rounded-full bg-[hsl(45_85%_55%/0.08)] blur-xl" />
+                  <TurtleLogo size="md" mood="stable" className="relative w-20 h-20 drop-shadow-[0_4px_16px_hsl(45_85%_55%/0.15)]" />
+                </div>
+              </div>
+              <h1 className="text-2xl md:text-3xl font-bold text-white font-display tracking-tight text-center">
                 Berätta lite om dig
               </h1>
-              <p className="mt-2 text-sm text-white/50 leading-relaxed">
-                Toddy anpassar sig efter din diagnos – mood-skalan, frågorna och vad vi tittar efter blir mer relevant. Du kan hoppa över och lägga till senare.
+              <p className="mt-2 text-sm text-white/55 leading-relaxed text-center">
+                Berätta gärna om din diagnos – då kan jag anpassa frågorna efter just dig. Men det är helt okej att hoppa över.
               </p>
 
               <div className="mt-6 max-h-[50vh] overflow-y-auto [&_input]:bg-white/[0.06] [&_input]:border-white/[0.1] [&_input]:text-white [&_input]:placeholder:text-white/30 [&_button]:text-white/70 [&_.text-muted-foreground]:text-white/40 [&_.text-primary]:text-[hsl(45_85%_55%)] [&_.bg-popover]:bg-[hsl(230_30%_12%)] [&_.border-border]:border-white/10 [&_.hover\\:bg-muted]:hover:bg-white/[0.06] [&_.bg-card]:bg-white/[0.04] [&_.border-border]:border-white/10">
@@ -279,11 +280,17 @@ const Onboarding = () => {
           {/* Step 3: How it works */}
           {step === 3 && (
             <div className="animate-fade-in">
-              <h1 className="text-2xl md:text-3xl font-bold text-white font-display tracking-tight">
+              <div className="flex justify-center mb-4 animate-scale-in">
+                <div className="relative w-20 h-20">
+                  <div className="absolute inset-0 rounded-full bg-[hsl(45_85%_55%/0.08)] blur-xl" />
+                  <TurtleLogo size="md" holding="book" className="relative w-20 h-20 drop-shadow-[0_4px_16px_hsl(45_85%_55%/0.15)]" />
+                </div>
+              </div>
+              <h1 className="text-2xl md:text-3xl font-bold text-white font-display tracking-tight text-center">
                 Så funkar Toddy
               </h1>
-              <p className="mt-2 text-sm text-white/50 leading-relaxed">
-                Inget krångel. Bara dig, dagen och en vänlig sköldpadda.
+              <p className="mt-2 text-sm text-white/55 leading-relaxed text-center">
+                Inget krångel. Bara du, dagen och en sköldpadda som lyssnar.
               </p>
 
               <div className="mt-6">
@@ -308,11 +315,17 @@ const Onboarding = () => {
           {/* Step 4: Choose categories */}
           {step === 4 && (
             <div className="animate-fade-in">
-              <h1 className="text-2xl md:text-3xl font-bold text-white font-display tracking-tight">
-                Vad vill du följa?
+              <div className="flex justify-center mb-4 animate-scale-in">
+                <div className="relative w-20 h-20">
+                  <div className="absolute inset-0 rounded-full bg-[hsl(45_85%_55%/0.08)] blur-xl" />
+                  <TurtleLogo size="md" mood="somewhat_elevated" className="relative w-20 h-20 drop-shadow-[0_4px_16px_hsl(45_85%_55%/0.15)]" />
+                </div>
+              </div>
+              <h1 className="text-2xl md:text-3xl font-bold text-white font-display tracking-tight text-center">
+                Vad känns viktigt för dig?
               </h1>
-              <p className="mt-2 text-sm text-white/50 leading-relaxed">
-                Välj det som känns viktigt för dig. Sömn och aptit är ofta tidiga signaler vid bipolär – men du bestämmer.
+              <p className="mt-2 text-sm text-white/55 leading-relaxed text-center">
+                Bocka i det du vill följa. Du kan ändra när som helst – inget är hugget i sten.
               </p>
 
               <div className="mt-6 space-y-2.5">
@@ -367,14 +380,8 @@ const Onboarding = () => {
                 })}
               </div>
 
-              {!hasAnySelection && (
-                <p className="text-xs text-red-400/80 text-center mt-3">
-                  {t('onboarding.chooseAtLeastOne')}
-                </p>
-              )}
-
-              <p className="text-xs text-white/30 text-center mt-3">
-                Du kan ändra det här när du vill i inställningar.
+              <p className="text-xs text-white/40 text-center mt-4">
+                Inget måste vara perfekt. Du kan justera allt i inställningar när som helst.
               </p>
 
               <div className="flex gap-3 mt-6">
@@ -384,12 +391,12 @@ const Onboarding = () => {
                 <Button 
                   onClick={handleNext} 
                   className="flex-1 h-12 rounded-2xl text-[15px] font-semibold bg-[hsl(45_85%_55%)] text-[hsl(230_30%_5%)] hover:bg-[hsl(45_85%_65%)] shadow-[0_4px_20px_-4px_hsl(45_85%_55%/0.4)] transition-all duration-300" 
-                  disabled={!hasAnySelection || isSubmitting}
+                  disabled={isSubmitting}
                 >
                   {isSubmitting ? (
                     <Loader2 className="w-4 h-4 animate-spin mr-1" />
                   ) : null}
-                  Starta min dagbok
+                  Sätt igång
                   {!isSubmitting && <ArrowRight className="w-4 h-4 ml-1" />}
                 </Button>
               </div>
