@@ -308,6 +308,34 @@ async function executeTool(
       return { ok: true, message: `La till "${cname}" som kännetecken för ${label}.` };
     }
 
+    if (name === "add_user_insight") {
+      const insight = String(args?.insight ?? "").trim();
+      const category = args?.category ? String(args.category).trim().slice(0, 60) : null;
+      if (!insight) return { ok: false, message: "Insikten är tom." };
+      if (insight.length > 500) {
+        return { ok: false, message: "Insikten är för lång (max 500 tecken)." };
+      }
+      // Avoid near-duplicate (case-insensitive exact match)
+      const { data: existing } = await admin
+        .from("user_learned_insights")
+        .select("id, insight")
+        .eq("user_id", userId);
+      if (
+        Array.isArray(existing) &&
+        existing.some((e: any) => e.insight.toLowerCase() === insight.toLowerCase())
+      ) {
+        return { ok: true, message: `Den insikten är redan sparad.` };
+      }
+      const { error: insErr } = await admin
+        .from("user_learned_insights")
+        .insert({ user_id: userId, insight, category });
+      if (insErr) return { ok: false, message: `DB-fel: ${insErr.message}` };
+      return {
+        ok: true,
+        message: `Sparade insikt: "${insight}"${category ? ` (${category})` : ""}.`,
+      };
+    }
+
     return { ok: false, message: `Okänt verktyg: ${name}` };
   } catch (e) {
     return { ok: false, message: e instanceof Error ? e.message : "Fel vid verktygsexekvering." };
