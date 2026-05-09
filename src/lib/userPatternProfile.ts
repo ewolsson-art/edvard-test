@@ -182,16 +182,15 @@ export async function refreshUserPatternProfile(userId: string, entries: MoodEnt
         : sorted.length,
   };
 
-  await supabase.from('user_pattern_profile').upsert(
-    [
-      {
-        user_id: userId,
-        baseline: baseline as unknown as Record<string, unknown>,
-        episode_fingerprints: fingerprints as unknown as Record<string, unknown>[],
-        stats: stats as unknown as Record<string, unknown>,
-        last_computed_at: new Date().toISOString(),
-      },
-    ],
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  await (supabase.from('user_pattern_profile') as any).upsert(
+    {
+      user_id: userId,
+      baseline: JSON.parse(JSON.stringify(baseline)),
+      episode_fingerprints: JSON.parse(JSON.stringify(fingerprints)),
+      stats: JSON.parse(JSON.stringify(stats)),
+      last_computed_at: new Date().toISOString(),
+    },
     { onConflict: 'user_id' },
   );
 }
