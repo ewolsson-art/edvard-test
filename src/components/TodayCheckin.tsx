@@ -974,7 +974,7 @@ export function TodayCheckin({
           <div className="flex-1 flex flex-col justify-center">
             <VerticalScaleSlider<QualityType>
               options={sleepSliderOptions}
-              value={checkinData.sleepQuality}
+              value={checkinData.sleepQuality ?? 'good'}
               onSelect={handleSleepSelect}
             />
           </div>
