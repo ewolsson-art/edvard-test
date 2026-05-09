@@ -44,6 +44,7 @@ interface StructuredInsight {
     previous: number;
     change: number;
   }[];
+  topInsights?: string[];
 }
 
 export function AIInsights({ entries, stats, periodLabel, view }: AIInsightsProps) {
