@@ -67,6 +67,7 @@ const Reports = lazy(() => import("./pages/Reports"));
 const ResetPassword = lazy(() => import("./pages/ResetPassword"));
 const ForgotPassword = lazy(() => import("./pages/ForgotPassword"));
 const AuthCallback = lazy(() => import("./pages/AuthCallback"));
+const ConfirmEmail = lazy(() => import("./pages/ConfirmEmail"));
 const Characteristics = lazy(() => import("./pages/Characteristics"));
 const CharacteristicDetail = lazy(() => import("./pages/CharacteristicDetail"));
 const CompleteProfile = lazy(() => import("./pages/CompleteProfile"));
