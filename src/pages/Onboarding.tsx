@@ -380,14 +380,8 @@ const Onboarding = () => {
                 })}
               </div>
 
-              {!hasAnySelection && (
-                <p className="text-xs text-red-400/80 text-center mt-3">
-                  {t('onboarding.chooseAtLeastOne')}
-                </p>
-              )}
-
-              <p className="text-xs text-white/30 text-center mt-3">
-                Du kan ändra det här när du vill i inställningar.
+              <p className="text-xs text-white/40 text-center mt-4">
+                Inget måste vara perfekt. Du kan justera allt i inställningar när som helst.
               </p>
 
               <div className="flex gap-3 mt-6">
@@ -397,12 +391,12 @@ const Onboarding = () => {
                 <Button 
                   onClick={handleNext} 
                   className="flex-1 h-12 rounded-2xl text-[15px] font-semibold bg-[hsl(45_85%_55%)] text-[hsl(230_30%_5%)] hover:bg-[hsl(45_85%_65%)] shadow-[0_4px_20px_-4px_hsl(45_85%_55%/0.4)] transition-all duration-300" 
-                  disabled={!hasAnySelection || isSubmitting}
+                  disabled={isSubmitting}
                 >
                   {isSubmitting ? (
                     <Loader2 className="w-4 h-4 animate-spin mr-1" />
                   ) : null}
-                  Starta min dagbok
+                  Sätt igång
                   {!isSubmitting && <ArrowRight className="w-4 h-4 ml-1" />}
                 </Button>
               </div>
