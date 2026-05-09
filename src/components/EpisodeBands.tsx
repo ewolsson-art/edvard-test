@@ -101,6 +101,14 @@ function detectEarlySignals(entries: MoodEntry[]): string[] {
 export function EpisodeBands({ entries, days = 14 }: EpisodeBandsProps) {
   const [expanded, setExpanded] = useState(false);
   const [crisisOpen, setCrisisOpen] = useState(false);
+  const [acknowledged, setAcknowledged] = useState<Set<string>>(() => {
+    try {
+      const raw = localStorage.getItem('toddy-crisis-ack');
+      return raw ? new Set(JSON.parse(raw)) : new Set();
+    } catch {
+      return new Set();
+    }
+  });
 
   const today = useMemo(() => new Date(), []);
   const startDate = useMemo(() => subDays(today, days - 1), [today, days]);
