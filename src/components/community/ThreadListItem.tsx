@@ -46,6 +46,12 @@ export const ThreadListItem = ({ post }: ThreadListItemProps) => {
         {post.is_anonymous && (
           <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-white/[0.06] text-muted-foreground/50">anonym</span>
         )}
+        {post.status === 'pending' && (
+          <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-yellow-500/15 text-yellow-400">väntar på granskning</span>
+        )}
+        {post.status === 'rejected' && (
+          <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-red-500/15 text-red-400">avvisat</span>
+        )}
       </div>
 
       {/* Title */}
