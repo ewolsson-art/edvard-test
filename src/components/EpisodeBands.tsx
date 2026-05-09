@@ -370,10 +370,6 @@ function CrisisDialog({
   entries: MoodEntry[];
   onClose: () => void;
 }) {
-  const startLabel = format(parseISO(episode.startDate), 'd MMM', { locale: sv });
-  const endLabel = format(parseISO(episode.endDate), 'd MMM', { locale: sv });
-
-  // Hämta dagar inom episoden, kronologiskt
   const epStart = parseISO(episode.startDate);
   const epEnd = parseISO(episode.endDate);
   const episodeEntries = entries
@@ -391,7 +387,7 @@ function CrisisDialog({
       onClick={onClose}
     >
       <div
-        className="relative w-full max-w-md max-h-[90vh] overflow-y-auto rounded-2xl border border-border/50 bg-card p-6 shadow-2xl"
+        className="relative w-full max-w-sm rounded-3xl border border-border/50 bg-card p-6 shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
         <button
@@ -402,122 +398,70 @@ function CrisisDialog({
           <X className="h-4 w-4" />
         </button>
 
-        {/* Header */}
-        <div className="flex items-start gap-3 mb-5">
-          <div className="shrink-0 mt-0.5 h-10 w-10 rounded-full bg-foreground/[0.06] flex items-center justify-center">
-            <AlertTriangle className="h-5 w-5 text-foreground/70" />
-          </div>
-          <div>
-            <h2 className="text-base font-semibold text-foreground">
-              Tecken på blandepisod
-            </h2>
-            <p className="text-xs text-muted-foreground/80 mt-0.5">
-              {startLabel}–{endLabel} · {episode.days} {episode.days === 1 ? 'dag' : 'dagar'}
-            </p>
-          </div>
-        </div>
+        {/* 1. VAD: rubrik + mini-graf */}
+        <h2 className="text-base font-semibold text-foreground pr-6">
+          Hög energi och mörka tankar samtidigt
+        </h2>
 
-        {/* Pedagogisk förklaring */}
-        <div className="mb-5">
-          <p className="text-sm text-foreground/85 leading-relaxed">
-            En <span className="font-medium text-foreground">blandepisod</span> är när tecken
-            på uppvarvning (hög energi, rastlöshet) finns samtidigt som nedstämdhet eller mörka
-            tankar — istället för att ta ut varandra.
-          </p>
-          <p className="text-xs text-muted-foreground mt-2 leading-relaxed">
-            Det är ett mönster som forskning kopplar till en <span className="text-foreground/85">högre risk för impulsivitet och självmordstankar</span> än
-            ren depression eller ren mani — just för att energin finns kvar att agera på mörka känslor.
-          </p>
-        </div>
-
-        {/* Diverging mini-chart: energi uppåt, nedstämdhet nedåt */}
         {episodeEntries.length > 0 && (
-          <div className="rounded-xl bg-foreground/[0.04] border border-border/40 p-4 mb-4">
-            <div className="flex items-center justify-between mb-3">
-              <div className="text-[11px] uppercase tracking-wide text-muted-foreground/70">
-                Vad vi ser i din data
-              </div>
-              <div className="flex items-center gap-3 text-[10px] text-muted-foreground/70">
-                <span className="flex items-center gap-1">
-                  <span className="h-2 w-2 rounded-sm" style={{ backgroundColor: 'hsl(28 85% 60%)' }} />
-                  Energi
-                </span>
-                <span className="flex items-center gap-1">
-                  <span className="h-2 w-2 rounded-sm" style={{ backgroundColor: 'hsl(215 75% 60%)' }} />
-                  Nedstämdhet
-                </span>
-              </div>
-            </div>
-
-            <div className="flex items-stretch gap-1.5 h-28">
-              {episodeEntries.map((e) => {
-                const energy = ENERGY_LEVEL[e.energyLevel ?? 'normal'] ?? 1; // 0..2
-                const depression = MOOD_DEPRESSION_LEVEL[e.mood] ?? 0; // 0..3
-                const elevation = MOOD_ELEVATION_LEVEL[e.mood] ?? 0; // 0..3
-                const isMixedDay = (energy >= 2 || elevation >= 1) && depression >= 1;
-                return (
-                  <div
-                    key={e.date}
-                    className="flex-1 flex flex-col items-center justify-center min-w-0"
-                    title={`${format(parseISO(e.date), 'd MMM', { locale: sv })} — ${MOOD_LABELS_local[e.mood] ?? e.mood}`}
-                  >
-                    {/* Övre halva: energi uppåt */}
-                    <div className="w-full h-1/2 flex flex-col justify-end">
-                      <div
-                        className="w-full rounded-t-sm transition-all"
-                        style={{
-                          height: `${(energy / 2) * 100}%`,
-                          backgroundColor: 'hsl(28 85% 60%)',
-                          opacity: isMixedDay ? 1 : 0.5,
-                        }}
-                      />
-                    </div>
-                    {/* Mitt-axel */}
-                    <div className="w-full h-px bg-foreground/20" />
-                    {/* Nedre halva: nedstämdhet nedåt */}
-                    <div className="w-full h-1/2 flex flex-col justify-start">
-                      <div
-                        className="w-full rounded-b-sm transition-all"
-                        style={{
-                          height: `${(depression / 3) * 100}%`,
-                          backgroundColor: 'hsl(215 75% 60%)',
-                          opacity: isMixedDay ? 1 : 0.5,
-                        }}
-                      />
-                    </div>
+          <div className="mt-4 flex items-stretch gap-1.5 h-16">
+            {episodeEntries.map((e) => {
+              const energy = ENERGY_LEVEL[e.energyLevel ?? 'normal'] ?? 1;
+              const elevation = MOOD_ELEVATION_LEVEL[e.mood] ?? 0;
+              const depression = MOOD_DEPRESSION_LEVEL[e.mood] ?? 0;
+              const isMixedDay = (energy >= 2 || elevation >= 1) && depression >= 1;
+              return (
+                <div key={e.date} className="flex-1 flex flex-col items-center min-w-0">
+                  <div className="w-full h-1/2 flex flex-col justify-end">
+                    <div
+                      className="w-full rounded-t-sm"
+                      style={{
+                        height: `${(energy / 2) * 100}%`,
+                        backgroundColor: 'hsl(28 85% 60%)',
+                        opacity: isMixedDay ? 1 : 0.35,
+                      }}
+                    />
                   </div>
-                );
-              })}
-            </div>
-
-            <div className="flex items-center justify-between mt-2 text-[10px] text-muted-foreground/60">
-              <span>{format(parseISO(episodeEntries[0].date), 'd MMM', { locale: sv })}</span>
-              <span>{format(parseISO(episodeEntries[episodeEntries.length - 1].date), 'd MMM', { locale: sv })}</span>
-            </div>
-
-            <p className="text-[11px] text-muted-foreground/80 leading-relaxed mt-3 pt-3 border-t border-border/30">
-              Staplarna som går både upp <span className="text-foreground/85">och</span> ner samma
-              dag är de som triggar varningen — energin är hög samtidigt som måendet är lågt.
-            </p>
+                  <div className="w-full h-px bg-foreground/15" />
+                  <div className="w-full h-1/2 flex flex-col justify-start">
+                    <div
+                      className="w-full rounded-b-sm"
+                      style={{
+                        height: `${(depression / 3) * 100}%`,
+                        backgroundColor: 'hsl(215 75% 60%)',
+                        opacity: isMixedDay ? 1 : 0.35,
+                      }}
+                    />
+                  </div>
+                </div>
+              );
+            })}
           </div>
         )}
 
-        {/* Vad du själv kan göra */}
-        <div className="rounded-xl bg-foreground/[0.04] border border-border/40 p-4 mb-4">
-          <div className="text-[11px] uppercase tracking-wide text-muted-foreground/70 mb-2">
-            Vad det här brukar betyda i praktiken
+        {/* 2. VAD DET KAN BETYDA — en mening */}
+        <p className="mt-5 text-sm text-foreground/80 leading-relaxed">
+          När båda finns samtidigt är risken för <span className="text-foreground">impulsiva beslut</span> större än vanligt.
+        </p>
+
+        {/* 3. VAD DU KAN TÄNKA PÅ — tre korta */}
+        <div className="mt-5 grid grid-cols-3 gap-2">
+          <div className="rounded-2xl bg-foreground/[0.04] border border-border/30 p-3 text-center">
+            <div className="text-xl mb-1">😴</div>
+            <div className="text-[11px] text-muted-foreground leading-snug">Skydda sömnen</div>
           </div>
-          <ul className="space-y-1.5 text-xs text-muted-foreground leading-relaxed">
-            <li className="flex gap-2"><span className="text-foreground/40">·</span><span>Skydda sömnen — kort sömn förvärrar både energin och de mörka tankarna.</span></li>
-            <li className="flex gap-2"><span className="text-foreground/40">·</span><span>Undvik stora beslut, alkohol och nya åtaganden under perioden.</span></li>
-            <li className="flex gap-2"><span className="text-foreground/40">·</span><span>Berätta för någon du litar på att du är i en sårbar fas just nu.</span></li>
-            <li className="flex gap-2"><span className="text-foreground/40">·</span><span>Ta kontakt med vården om mönstret håller i sig — särskilt om mörka tankar fördjupas.</span></li>
-          </ul>
+          <div className="rounded-2xl bg-foreground/[0.04] border border-border/30 p-3 text-center">
+            <div className="text-xl mb-1">⏸️</div>
+            <div className="text-[11px] text-muted-foreground leading-snug">Pausa stora beslut</div>
+          </div>
+          <div className="rounded-2xl bg-foreground/[0.04] border border-border/30 p-3 text-center">
+            <div className="text-xl mb-1">💬</div>
+            <div className="text-[11px] text-muted-foreground leading-snug">Hör av dig till någon</div>
+          </div>
         </div>
 
-        <p className="text-[11px] text-muted-foreground/60 leading-relaxed">
-          Detta är en teknisk observation i din egen data — inte en diagnos eller medicinsk
-          bedömning. Använd den som underlag för en samtal, inte som facit.
+        <p className="mt-4 text-[10px] text-muted-foreground/55 text-center">
+          Mönster i din egen data — inte en diagnos.
         </p>
       </div>
     </div>
