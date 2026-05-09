@@ -526,7 +526,7 @@ const Signup = () => {
                 {email}
               </p>
 
-              <div className="mt-8 space-y-4 text-left bg-white/[0.04] ring-1 ring-white/[0.08] rounded-2xl p-5">
+              <div className="mt-8 space-y-4 text-left bg-foreground/[0.03] ring-1 ring-white/[0.08] rounded-2xl p-5">
                 <div className="flex items-start gap-3">
                   <div className="flex-shrink-0 h-7 w-7 rounded-full bg-[hsl(45_85%_55%/0.15)] text-[hsl(45_85%_55%)] flex items-center justify-center text-sm font-semibold">1</div>
                   <p className="text-base text-white/85 leading-relaxed pt-0.5">Öppna mejlet vi just skickade till dig.</p>
