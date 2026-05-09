@@ -51,7 +51,7 @@ const ConfirmEmail = () => {
 
     const type = ALLOWED_TYPES.includes(typeParam) ? typeParam : "signup";
 
-    const { error } = await supabase.auth.verifyOtp({
+    const { data, error } = await supabase.auth.verifyOtp({
       token_hash: tokenHash,
       type: type as any,
     });
@@ -65,6 +65,18 @@ const ConfirmEmail = () => {
           : error.message || "Något gick fel. Försök igen.";
       setErrorMsg(friendly);
       return;
+    }
+
+    // Wait for session to be fully persisted before navigating, otherwise
+    // CompleteProfile's auth-state check can fire before useAuth updates and
+    // bounce the user to /logga-in.
+    let session = data.session;
+    if (!session) {
+      for (let i = 0; i < 20; i++) {
+        const { data: s } = await supabase.auth.getSession();
+        if (s.session) { session = s.session; break; }
+        await new Promise((r) => setTimeout(r, 100));
+      }
     }
 
     // Recovery flows go to reset-password; everything else to next.
