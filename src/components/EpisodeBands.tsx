@@ -138,6 +138,19 @@ export function EpisodeBands({ entries, days = 14 }: EpisodeBandsProps) {
 
         {expanded && (
           <div className="border-t border-border/20 p-4 space-y-2.5">
+            {earlySignals.length > 0 && (
+              <ul className="space-y-1 pb-1">
+                {earlySignals.map((s, i) => (
+                  <li
+                    key={i}
+                    className="text-xs text-muted-foreground/80 leading-relaxed"
+                  >
+                    <span className="text-foreground/55 mr-1.5">·</span>
+                    {s}
+                  </li>
+                ))}
+              </ul>
+            )}
             {episodes.map((ep, i) => (
               <EpisodeRow
                 key={`${ep.kind}-${ep.startDate}-${i}`}
