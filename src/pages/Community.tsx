@@ -3,6 +3,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Send, Eye, EyeOff, MessageCircle, ChevronDown, ChevronUp, Plus, X, Heart, TrendingUp, ImagePlus, BarChart3, Minus } from 'lucide-react';
 import { useCommunityPosts } from '@/hooks/useCommunityPosts';
 import { useAuth } from '@/hooks/useAuth';
+import { useUserRole } from '@/hooks/useUserRole';
+import { Check, X as XIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
