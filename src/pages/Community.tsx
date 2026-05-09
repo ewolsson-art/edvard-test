@@ -235,7 +235,7 @@ const Community = () => {
 
               {imagePreview && (
                 <div className="relative mx-3 mb-3 rounded-lg overflow-hidden border border-white/20 max-h-48">
-                  <img src={imagePreview} alt={t('communityPage.preview')} className="w-full h-full object-cover max-h-48" />
+                  <img src={imagePreview} alt={t('communityPage.preview')} loading="lazy" decoding="async" className="w-full h-full object-cover max-h-48" />
                   <button onClick={clearImage} className="absolute top-2 right-2 bg-black/60 text-white rounded-full p-1 hover:bg-black/80 transition-colors">
                     <X className="h-4 w-4" />
                   </button>
