@@ -181,7 +181,7 @@ export default function AskToddy() {
       <header className="sticky top-0 z-20 px-5 md:px-8 pt-[max(env(safe-area-inset-top),0.875rem)] md:pt-5 pb-3 md:pb-4 bg-background/80 backdrop-blur-xl shrink-0">
         <div className="max-w-2xl mx-auto flex items-center gap-3">
           <div className="w-9 h-9 md:w-10 md:h-10 rounded-full bg-foreground/[0.04] ring-1 ring-foreground/10 flex items-center justify-center shrink-0 overflow-hidden">
-            <TurtleLogo size="sm" className="w-7 h-7 md:w-8 md:h-8" />
+            <TurtleLogo size="sm" staticPose className="w-7 h-7 md:w-8 md:h-8" />
           </div>
           <div className="min-w-0 flex-1">
             <h1 className="font-display text-[17px] md:text-xl font-semibold tracking-tight leading-tight">
@@ -204,7 +204,7 @@ export default function AskToddy() {
             // Empty state — generous, centered, friendly
             <div className="min-h-full flex flex-col items-center justify-center text-center pt-8 pb-4">
               <div className="mb-6">
-                <TurtleLogo size="lg" animated className="w-24 h-24 md:w-28 md:h-28" />
+                <TurtleLogo size="lg" staticPose className="w-24 h-24 md:w-28 md:h-28" />
               </div>
               <h2 className="font-display text-[26px] md:text-3xl font-bold tracking-tight mb-2">
                 Hej{firstName ? ` ${firstName}` : ""}
@@ -247,7 +247,7 @@ export default function AskToddy() {
                     // Assistant: no bubble — text directly on page, with a small turtle avatar
                     <div className="flex gap-3">
                       <div className="w-7 h-7 rounded-full bg-foreground/[0.04] ring-1 ring-foreground/10 flex items-center justify-center shrink-0 overflow-hidden mt-0.5">
-                        <TurtleLogo size="sm" className="w-5 h-5" />
+                        <TurtleLogo size="sm" staticPose className="w-5 h-5" />
                       </div>
                       <div className="flex-1 min-w-0 prose-toddy text-[15px] leading-relaxed text-foreground/95">
                         <ReactMarkdown>{m.content || "…"}</ReactMarkdown>
@@ -260,7 +260,7 @@ export default function AskToddy() {
               {showThinking && (
                 <div className="flex gap-3">
                   <div className="w-7 h-7 rounded-full bg-foreground/[0.04] ring-1 ring-foreground/10 flex items-center justify-center shrink-0 overflow-hidden mt-0.5">
-                    <TurtleLogo size="sm" className="w-5 h-5" />
+                    <TurtleLogo size="sm" staticPose className="w-5 h-5" />
                   </div>
                   <div className="flex items-center gap-1.5 pt-2 text-muted-foreground/70 text-[13.5px]">
                     <span className="w-1.5 h-1.5 rounded-full bg-current animate-pulse" />
