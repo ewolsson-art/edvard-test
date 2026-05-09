@@ -26,7 +26,9 @@ const Profile = () => {
   const { t } = useTranslation();
   const { user } = useAuth();
   const { profile, isLoading: profileLoading, avatarUrl, updateAvatarUrl } = useProfile();
-  const { isDoctor, isRelative, isPatient, isLoading: roleLoading } = useUserRole();
+  const { isDoctor, isRelative, isPatient, isAdmin, isLoading: roleLoading } = useUserRole();
+  // Admins see the same sections as patients (so internal/test accounts don't lose access).
+  const showPatientSections = isPatient || isAdmin;
   const { toast } = useToast();
 
   const [view, setView] = useState<ProfileView>('main');
@@ -210,7 +212,7 @@ const Profile = () => {
         </button>
 
         {/* Patient sections */}
-        {isPatient && (
+        {showPatientSections && (
           <SettingsGroup label={t('profile.medicalInfo')}>
             
             <SettingsRow icon={ClipboardList} label={t('profile.diagnoses')} description={t('profile.yourDiagnoses')} onClick={() => setView('diagnoses')} />
@@ -219,7 +221,7 @@ const Profile = () => {
           </SettingsGroup>
         )}
 
-        {isPatient && (
+        {showPatientSections && (
           <SettingsGroup label={t('profile.connectionsLabel')}>
             <SettingsRow icon={Stethoscope} label={t('profile.caregivers')} description={t('profile.connectedDoctors')} onClick={() => setView('doctors')} />
             <SettingsRow icon={Heart} label={t('profile.relatives')} description={t('profile.connectedRelatives')} onClick={() => setView('relatives')} />
