@@ -41,7 +41,8 @@ const Community = () => {
   const { t, i18n } = useTranslation();
   const { user } = useAuth();
   const navigate = useNavigate();
-  const { posts, loading, createPost } = useCommunityPosts();
+  const { isAdmin } = useUserRole();
+  const { posts, loading, createPost, approvePost, rejectPost, deletePost } = useCommunityPosts();
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [isAnonymous, setIsAnonymous] = useState(true);
