@@ -114,7 +114,7 @@ const Community = () => {
               <p className="text-sm text-muted-foreground mt-1">{t('communityPage.subtitle')}</p>
             </div>
 
-            <div className="bg-card/40 backdrop-blur-sm rounded-xl border border-border/20 overflow-hidden">
+            <div className="bg-foreground/[0.03] backdrop-blur-sm rounded-xl border border-border/20 overflow-hidden">
               <button onClick={() => setRulesOpen(!rulesOpen)} className="w-full flex items-center justify-between px-4 py-3 hover:bg-white/[0.02] transition-colors">
                 <div className="flex items-center gap-2">
                   <span className="text-sm font-medium text-foreground/90">
@@ -168,7 +168,7 @@ const Community = () => {
                   {t('communityPage.postButton')}
                 </Button>
               )}
-              <div className="bg-card/40 backdrop-blur-sm rounded-xl border border-border/20 p-4">
+              <div className="bg-foreground/[0.03] backdrop-blur-sm rounded-xl border border-border/20 p-4">
                 <div className="flex items-center gap-2 mb-4">
                   <TrendingUp className="h-4 w-4 text-primary" />
                   <h2 className="text-sm font-semibold text-foreground/90">{t('communityPage.popularThreads')}</h2>
@@ -200,7 +200,7 @@ const Community = () => {
                 )}
               </div>
 
-              <div className="bg-card/40 backdrop-blur-sm rounded-xl border border-border/20 p-4">
+              <div className="bg-foreground/[0.03] backdrop-blur-sm rounded-xl border border-border/20 p-4">
                 <h2 className="text-sm font-semibold text-foreground/90 mb-3">{t('communityPage.categories')}</h2>
                 <div className="space-y-1">
                   {CATEGORY_IDS.map(id => {

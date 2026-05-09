@@ -35,7 +35,7 @@ export const ThreadListItem = ({ post }: ThreadListItemProps) => {
   return (
     <button
       onClick={() => navigate(`/forum/${post.id}`)}
-      className="w-full text-left rounded-2xl bg-card/60 border border-border/40 p-5 hover:bg-card/80 transition-all active:scale-[0.99]"
+      className="w-full text-left rounded-2xl bg-foreground/[0.03] border border-border/40 p-5 hover:bg-foreground/[0.05] transition-all active:scale-[0.99]"
     >
       {/* Author info */}
       <div className="flex items-center gap-2.5 mb-2">
