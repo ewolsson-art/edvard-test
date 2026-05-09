@@ -47,7 +47,7 @@ export function ProtectedRoute({ children, skipOnboardingCheck = false }: Protec
       return <Navigate to="/lakare" replace />;
     }
     
-    const patientOnlyPaths = ['/', '/oversikt', '/mediciner', '/chatt', '/onboarding', '/anhorig'];
+    const patientOnlyPaths = ['/', '/oversikt', '/mediciner', '/onboarding', '/anhorig'];
     if (patientOnlyPaths.includes(location.pathname)) {
       return <Navigate to="/lakare" replace />;
     }
