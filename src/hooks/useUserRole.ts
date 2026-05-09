@@ -63,12 +63,14 @@ export function useUserRole() {
   const isDoctor = role === 'doctor';
   const isPatient = role === 'patient';
   const isRelative = role === 'relative';
+  const isAdmin = role === 'admin';
 
   return {
     role,
     isDoctor,
     isPatient,
     isRelative,
+    isAdmin,
     isLoading,
     setUserRole,
   };
