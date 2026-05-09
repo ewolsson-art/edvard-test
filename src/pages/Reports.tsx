@@ -67,8 +67,8 @@ const Reports = () => {
   const [endDate, setEndDate] = useState<Date>(defaultEnd);
   const [includeMood, setIncludeMood] = useState(true);
   const [includeSleep, setIncludeSleep] = useState(true);
-  const [includeEating, setIncludeEating] = useState(true);
-  const [includeExercise, setIncludeExercise] = useState(true);
+  const [includeEating, setIncludeEating] = useState(false);
+  const [includeExercise, setIncludeExercise] = useState(false);
   const [includeMedication, setIncludeMedication] = useState(true);
   const [reportGenerated, setReportGenerated] = useState(false);
 
