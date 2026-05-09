@@ -170,6 +170,7 @@ const App = () => (
             <Route path="/glomt-losenord" element={<ForgotPassword />} />
             <Route path="/aterstall-losenord" element={<ResetPassword />} />
             <Route path="/auth/callback" element={<AuthCallback />} />
+            <Route path="/bekrafta" element={<ConfirmEmail />} />
             <Route path="/slutfor-profil" element={<CompleteProfile />} />
             <Route path="/onboarding" element={
               <ProtectedRoute skipOnboardingCheck>
