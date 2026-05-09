@@ -56,7 +56,7 @@ export function MedicationWeekCalendar({
             <button
               key={day.toISOString()}
               onClick={() => onDayClick?.(day)}
-              title={data?.medicationNames?.join(', ')}
+              title={hasData ? (allTaken ? 'Medicin tagen' : 'Medicin ej tagen') : undefined}
               className={cn(
                 "calendar-day relative flex flex-col items-center justify-center cursor-pointer",
                 !hasData && "calendar-day-empty",
@@ -112,12 +112,7 @@ export function MedicationWeekCalendar({
                   </span>
                 </div>
                 <p className="text-sm text-muted-foreground mt-1">
-                  {data.taken}/{data.total} mediciner
-                  {data.medicationNames.length > 0 && (
-                    <span className="block text-xs mt-0.5">
-                      {data.medicationNames.join(', ')}
-                    </span>
-                  )}
+                  {allTaken ? 'Medicin tagen' : 'Medicin ej tagen'}
                 </p>
               </div>
             </div>
