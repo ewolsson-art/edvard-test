@@ -101,39 +101,20 @@ function detectEarlySignals(entries: MoodEntry[]): string[] {
 
 export function EpisodeBands({ entries, days = 14 }: EpisodeBandsProps) {
   const [expanded, setExpanded] = useState(false);
-  const [crisisOpen, setCrisisOpen] = useState(false);
-  const [acknowledged, setAcknowledged] = useState<Set<string>>(() => {
-    try {
-      const raw = localStorage.getItem('toddy-crisis-ack');
-      return raw ? new Set(JSON.parse(raw)) : new Set();
-    } catch {
-      return new Set();
-    }
-  });
 
   const today = useMemo(() => new Date(), []);
   const startDate = useMemo(() => subDays(today, days - 1), [today, days]);
 
-  // Senaste 14 dagarna — vad vi visar i tidslinjen
   const windowEntries = useMemo(
     () => entries.filter((e) => parseISO(e.date) >= startDate),
     [entries, startDate],
   );
 
   const episodes = useMemo(() => detectEpisodes(windowEntries), [windowEntries]);
-
-  // ALLA historiska episoder — för att hitta "sist du visade detta mönster ledde det till..."
   const allEpisodes = useMemo(() => detectEpisodes(entries), [entries]);
-
-  // === TIDIGA SIGNALER (prodromer) — diskreta rader, inga varningar ===
   const earlySignals = useMemo(() => detectEarlySignals(entries), [entries]);
-
-  // === SIMILARITY: påminner nuvarande tid om en tidigare period? ===
   const similarPast = useMemo(() => findSimilarPastPeriod(entries), [entries]);
 
-
-  // För varje aktuell episod: hitta senaste tidigare episod av SAMMA typ (innan fönstret),
-  // och se vad som följde inom 30 dagar.
   const historicalContext = useMemo(() => {
     const map = new Map<string, { priorDate: string; followedBy?: Episode }>();
     for (const current of episodes) {
@@ -164,18 +145,8 @@ export function EpisodeBands({ entries, days = 14 }: EpisodeBandsProps) {
     return map;
   }, [episodes, allEpisodes, startDate]);
 
-  // Visa bara varning för pågående eller nyss avslutad blandepisod (≤2 dagar sedan).
-  // En episod som slutade för en vecka sedan är inte längre akut.
-  const mixedEpisode = episodes.find((e) => {
-    if (e.kind !== 'mixed') return false;
-    const daysSinceEnd = differenceInDays(today, parseISO(e.endDate));
-    return daysSinceEnd <= 2;
-  });
-
-  // Don't render anything until we have at least 3 entries — the bands would be misleading
   if (windowEntries.length < 3) return null;
 
-  // No episodes detected → render a calm, reassuring strip with positive framing
   if (episodes.length === 0) {
     const stableDays = windowEntries.filter((e) => e.mood === 'stable' || e.mood === 'somewhat_elevated' || e.mood === 'somewhat_depressed').length;
     return (
@@ -187,13 +158,12 @@ export function EpisodeBands({ entries, days = 14 }: EpisodeBandsProps) {
           </span>
         </div>
         <p className="text-xs text-muted-foreground leading-relaxed">
-          Inga tydliga episoder de senaste {days} dagarna
+          Inga tydliga mönster de senaste {days} dagarna
           {stableDays > 0 && ` — ${stableDays} av ${windowEntries.length} dagar inom ditt vanliga spann`}.
-          Fortsätt checka in så fångar vi tidiga signaler om något ändras.
         </p>
         {earlySignals.length > 0 && (
           <div className="pt-2 mt-1 border-t border-border/20 space-y-1">
-            <p className="text-[10px] uppercase tracking-wide text-foreground/45 font-medium">Värt att hålla ögonen på</p>
+            <p className="text-[10px] uppercase tracking-wide text-foreground/45 font-medium">Trender just nu</p>
             <ul className="space-y-0.5">
               {earlySignals.map((s, i) => (
                 <li key={i} className="text-xs text-muted-foreground leading-relaxed flex gap-2">
@@ -210,87 +180,62 @@ export function EpisodeBands({ entries, days = 14 }: EpisodeBandsProps) {
   }
 
   return (
-    <>
-      {/* === CRISIS TURTLE INDICATOR for mixed episodes === */}
-      {mixedEpisode && (
-        <CrisisTurtleButton
-          subtle={acknowledged.has(`${mixedEpisode.kind}-${mixedEpisode.startDate}`)}
-          onClick={() => {
-            setCrisisOpen(true);
-            const key = `${mixedEpisode.kind}-${mixedEpisode.startDate}`;
-            setAcknowledged((prev) => {
-              if (prev.has(key)) return prev;
-              const next = new Set(prev).add(key);
-              try {
-                localStorage.setItem('toddy-crisis-ack', JSON.stringify([...next]));
-              } catch {
-                /* noop */
-              }
-              return next;
-            });
-          }}
-        />
-      )}
-      {mixedEpisode && crisisOpen && (
-        <CrisisDialog episode={mixedEpisode} entries={entries} onClose={() => setCrisisOpen(false)} />
-      )}
-
-      <div className="rounded-2xl bg-foreground/[0.03] border border-border/30 overflow-hidden">
-        <button
-          onClick={() => setExpanded((v) => !v)}
-          className="w-full px-4 py-3 flex items-center justify-between gap-3 hover:bg-white/[0.02] transition-colors text-left"
-        >
-          <div className="flex items-center gap-2 min-w-0">
-            <span className="text-sm font-semibold text-foreground/90">
-              Mönster senaste {days} dagarna
-            </span>
-            <span className="text-xs text-muted-foreground/70">
-              {episodes.length} {episodes.length === 1 ? 'period' : 'perioder'}
-            </span>
-          </div>
-          {expanded ? (
-            <ChevronUp className="h-4 w-4 text-muted-foreground/60 shrink-0" />
-          ) : (
-            <ChevronDown className="h-4 w-4 text-muted-foreground/60 shrink-0" />
-          )}
-        </button>
-
-        {/* Timeline strip — always visible */}
-        <div className="px-4 pb-3">
-          <Timeline episodes={episodes} startDate={startDate} days={days} />
+    <div className="rounded-2xl bg-foreground/[0.03] border border-border/30 overflow-hidden">
+      <button
+        onClick={() => setExpanded((v) => !v)}
+        className="w-full px-4 py-3 flex items-center justify-between gap-3 hover:bg-white/[0.02] transition-colors text-left"
+      >
+        <div className="flex items-center gap-2 min-w-0">
+          <span className="text-sm font-semibold text-foreground/90">
+            Mönster senaste {days} dagarna
+          </span>
+          <span className="text-xs text-muted-foreground/70">
+            {episodes.length} {episodes.length === 1 ? 'period' : 'perioder'}
+          </span>
         </div>
+        {expanded ? (
+          <ChevronUp className="h-4 w-4 text-muted-foreground/60 shrink-0" />
+        ) : (
+          <ChevronDown className="h-4 w-4 text-muted-foreground/60 shrink-0" />
+        )}
+      </button>
 
-        {expanded && (
-          <div className="border-t border-border/20 p-4 space-y-2.5">
-            {earlySignals.length > 0 && (
-              <ul className="space-y-1 pb-1">
+      <div className="px-4 pb-3">
+        <Timeline episodes={episodes} startDate={startDate} days={days} />
+      </div>
+
+      {expanded && (
+        <div className="border-t border-border/20 p-4 space-y-2.5">
+          {earlySignals.length > 0 && (
+            <div className="space-y-1 pb-1">
+              <p className="text-[10px] uppercase tracking-wide text-foreground/45 font-medium">Trender</p>
+              <ul className="space-y-0.5">
                 {earlySignals.map((s, i) => (
                   <li
                     key={i}
-                    className="text-xs text-muted-foreground/80 leading-relaxed"
+                    className="text-xs text-muted-foreground/85 leading-relaxed flex gap-2"
                   >
-                    <span className="text-foreground/55 mr-1.5">·</span>
-                    {s}
+                    <span className="text-foreground/50 shrink-0">·</span>
+                    <span>{s}</span>
                   </li>
                 ))}
               </ul>
-            )}
-            {similarPast && <SimilarPastRow match={similarPast} />}
-            {episodes.map((ep, i) => (
-              <EpisodeRow
-                key={`${ep.kind}-${ep.startDate}-${i}`}
-                episode={ep}
-                history={historicalContext.get(`${ep.kind}-${ep.startDate}`)}
-              />
-            ))}
-            <p className="text-[11px] leading-relaxed text-muted-foreground/70 pt-1.5 border-t border-border/15">
-              Detta är inga läkarråd eller en klinisk bedömning — bara tekniska spaningar
-              i din egen data. Se det som en hjälp att uppmärksamma mönster, inget annat.
-            </p>
-          </div>
-        )}
-      </div>
-    </>
+            </div>
+          )}
+          {similarPast && <SimilarPastRow match={similarPast} />}
+          {episodes.map((ep, i) => (
+            <EpisodeRow
+              key={`${ep.kind}-${ep.startDate}-${i}`}
+              episode={ep}
+              history={historicalContext.get(`${ep.kind}-${ep.startDate}`)}
+            />
+          ))}
+          <p className="text-[11px] leading-relaxed text-muted-foreground/70 pt-1.5 border-t border-border/15">
+            Mönster i din egen data — inte en klinisk bedömning.
+          </p>
+        </div>
+      )}
+    </div>
   );
 }
 
