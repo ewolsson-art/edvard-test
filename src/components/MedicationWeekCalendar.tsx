@@ -112,12 +112,7 @@ export function MedicationWeekCalendar({
                   </span>
                 </div>
                 <p className="text-sm text-muted-foreground mt-1">
-                  {data.taken}/{data.total} mediciner
-                  {data.medicationNames.length > 0 && (
-                    <span className="block text-xs mt-0.5">
-                      {data.medicationNames.join(', ')}
-                    </span>
-                  )}
+                  {allTaken ? 'Medicin tagen' : 'Medicin ej tagen'}
                 </p>
               </div>
             </div>
