@@ -355,6 +355,30 @@ function EpisodeRow({
   );
 }
 
+function SimilarPastRow({ match }: { match: SimilarPastPeriod }) {
+  const { pastEpisode, sharedSignals } = match;
+  const dateLabel = format(parseISO(pastEpisode.startDate), 'd MMM yyyy', { locale: sv });
+  const kindLabel = EPISODE_META[pastEpisode.kind].label.toLowerCase();
+  const signalsText = sharedSignals.slice(0, 3).join(', ');
+  return (
+    <div className="rounded-xl border border-border/30 bg-foreground/[0.02] p-3">
+      <p className="text-[11px] uppercase tracking-wide text-muted-foreground/70 mb-1">
+        Liknande tidigare period
+      </p>
+      <p className="text-xs text-foreground/85 leading-relaxed">
+        Den senaste tiden påminner om perioden runt{' '}
+        <span className="font-medium text-foreground">{dateLabel}</span> — då följde en period av{' '}
+        <span className="font-medium text-foreground">{kindLabel}</span>.
+      </p>
+      {signalsText && (
+        <p className="text-[11px] text-muted-foreground/75 leading-relaxed mt-1.5">
+          Gemensamma signaler: {signalsText}.
+        </p>
+      )}
+    </div>
+  );
+}
+
 function CrisisTurtleButton({ onClick, subtle = false }: { onClick: () => void; subtle?: boolean }) {
   return (
     <button
