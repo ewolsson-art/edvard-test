@@ -26,20 +26,55 @@ const KIND_FILL: Record<EpisodeKind, string> = {
   mixed: 'hsl(0 75% 55%)',
 };
 
-export function EpisodeBands({ entries, days = 30 }: EpisodeBandsProps) {
+export function EpisodeBands({ entries, days = 14 }: EpisodeBandsProps) {
   const [expanded, setExpanded] = useState(false);
   const [crisisOpen, setCrisisOpen] = useState(false);
 
   const today = useMemo(() => new Date(), []);
   const startDate = useMemo(() => subDays(today, days - 1), [today, days]);
 
-  // Only consider entries inside the visible window
+  // Senaste 14 dagarna — vad vi visar i tidslinjen
   const windowEntries = useMemo(
     () => entries.filter((e) => parseISO(e.date) >= startDate),
     [entries, startDate],
   );
 
   const episodes = useMemo(() => detectEpisodes(windowEntries), [windowEntries]);
+
+  // ALLA historiska episoder — för att hitta "sist du visade detta mönster ledde det till..."
+  const allEpisodes = useMemo(() => detectEpisodes(entries), [entries]);
+
+  // För varje aktuell episod: hitta senaste tidigare episod av SAMMA typ (innan fönstret),
+  // och se vad som följde inom 30 dagar.
+  const historicalContext = useMemo(() => {
+    const map = new Map<string, { priorDate: string; followedBy?: Episode }>();
+    for (const current of episodes) {
+      const priorSameKind = [...allEpisodes]
+        .filter(
+          (e) =>
+            e.kind === current.kind &&
+            parseISO(e.endDate) < startDate,
+        )
+        .sort((a, b) => b.endDate.localeCompare(a.endDate))[0];
+
+      if (!priorSameKind) continue;
+
+      const priorEnd = parseISO(priorSameKind.endDate);
+      const followedBy = allEpisodes
+        .filter((e) => {
+          const start = parseISO(e.startDate);
+          const diff = (start.getTime() - priorEnd.getTime()) / 86_400_000;
+          return diff > 0 && diff <= 30 && e.kind !== priorSameKind.kind;
+        })
+        .sort((a, b) => a.startDate.localeCompare(b.startDate))[0];
+
+      map.set(`${current.kind}-${current.startDate}`, {
+        priorDate: priorSameKind.startDate,
+        followedBy,
+      });
+    }
+    return map;
+  }, [episodes, allEpisodes, startDate]);
 
   const mixedEpisode = episodes.find((e) => e.kind === 'mixed');
 
@@ -100,8 +135,16 @@ export function EpisodeBands({ entries, days = 30 }: EpisodeBandsProps) {
         {expanded && (
           <div className="border-t border-border/20 p-4 space-y-2.5">
             {episodes.map((ep, i) => (
-              <EpisodeRow key={`${ep.kind}-${ep.startDate}-${i}`} episode={ep} />
+              <EpisodeRow
+                key={`${ep.kind}-${ep.startDate}-${i}`}
+                episode={ep}
+                history={historicalContext.get(`${ep.kind}-${ep.startDate}`)}
+              />
             ))}
+            <p className="text-[11px] leading-relaxed text-muted-foreground/70 pt-1.5 border-t border-border/15">
+              Detta är inga läkarråd eller en klinisk bedömning — bara tekniska spaningar
+              i din egen data. Se det som en hjälp att uppmärksamma mönster, inget annat.
+            </p>
           </div>
         )}
       </div>
@@ -139,11 +182,24 @@ function Timeline({ episodes, startDate, days }: { episodes: Episode[]; startDat
   );
 }
 
-function EpisodeRow({ episode }: { episode: Episode }) {
+function EpisodeRow({
+  episode,
+  history,
+}: {
+  episode: Episode;
+  history?: { priorDate: string; followedBy?: Episode };
+}) {
   const meta = EPISODE_META[episode.kind];
   const startLabel = format(parseISO(episode.startDate), 'd MMM', { locale: sv });
   const endLabel = format(parseISO(episode.endDate), 'd MMM', { locale: sv });
   const dateLabel = startLabel === endLabel ? startLabel : `${startLabel} – ${endLabel}`;
+
+  const priorLabel = history
+    ? format(parseISO(history.priorDate), 'd MMM yyyy', { locale: sv })
+    : null;
+  const followedKindLabel = history?.followedBy
+    ? EPISODE_META[history.followedBy.kind].label.toLowerCase()
+    : null;
 
   return (
     <div className={`rounded-xl border ${meta.border} ${meta.bg} p-3`}>
@@ -154,6 +210,22 @@ function EpisodeRow({ episode }: { episode: Episode }) {
         </span>
       </div>
       <p className="text-xs text-muted-foreground leading-relaxed">{meta.description}</p>
+
+      {history && priorLabel && (
+        <div className="mt-2.5 pt-2.5 border-t border-foreground/[0.06]">
+          <p className="text-[11px] text-muted-foreground/85 leading-relaxed">
+            <span className="text-foreground/70 font-medium">Historiskt mönster: </span>
+            {followedKindLabel ? (
+              <>
+                Sist du visade ett liknande mönster ({priorLabel}) följdes det inom kort
+                av en period av <span className="text-foreground/80">{followedKindLabel}</span>.
+              </>
+            ) : (
+              <>Du visade ett liknande mönster senast {priorLabel}.</>
+            )}
+          </p>
+        </div>
+      )}
     </div>
   );
 }

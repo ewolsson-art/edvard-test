@@ -647,7 +647,7 @@ const Overview = () => {
             {showMood && sectionView === 'calendar' && (
               <section className="space-y-4">
                 {/* === EPISODE BANDS START === (safe to delete this block to remove the feature) */}
-                <EpisodeBands entries={entries} days={30} />
+                <EpisodeBands entries={entries} days={14} />
                 {/* === EPISODE BANDS END === */}
 
                      {view === 'week' && (
