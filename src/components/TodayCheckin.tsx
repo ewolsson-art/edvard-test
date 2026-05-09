@@ -260,7 +260,7 @@ export function TodayCheckin({
         mood: todayEntry.mood,
         energyLevel: todayEntry.energyLevel,
         moodComment: todayEntry.comment,
-        sleepQuality: todayEntry.sleepQuality,
+        sleepQuality: todayEntry.sleepQuality ?? 'good',
         sleepComment: todayEntry.sleepComment,
         eatingQuality: todayEntry.eatingQuality,
         eatingComment: todayEntry.eatingComment,
