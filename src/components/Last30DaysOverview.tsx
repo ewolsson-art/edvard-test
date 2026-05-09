@@ -122,8 +122,8 @@ export function Last30DaysOverview({
 
   const showMood = preferences?.include_mood !== false;
   const showSleep = preferences?.include_sleep !== false;
-  const showEating = preferences?.include_eating !== false;
-  const showExercise = preferences?.include_exercise !== false;
+  const showEating = preferences?.include_eating === true;
+  const showExercise = preferences?.include_exercise === true;
   const showMedication = preferences?.include_medication !== false && activeMedicationsCount > 0;
 
   const getMoodColor = (mood: MoodType) => {
