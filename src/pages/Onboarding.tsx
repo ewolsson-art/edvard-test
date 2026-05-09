@@ -242,11 +242,17 @@ const Onboarding = () => {
           {/* Step 2: Diagnosis */}
           {step === 2 && (
             <div className="animate-fade-in">
-              <h1 className="text-2xl md:text-3xl font-bold text-white font-display tracking-tight">
-                Berätta lite om dig
+              <div className="flex justify-center mb-4 animate-scale-in">
+                <div className="relative w-20 h-20">
+                  <div className="absolute inset-0 rounded-full bg-[hsl(45_85%_55%/0.08)] blur-xl" />
+                  <TurtleLogo size="md" mood="content" className="relative w-20 h-20 drop-shadow-[0_4px_16px_hsl(45_85%_55%/0.15)]" />
+                </div>
+              </div>
+              <h1 className="text-2xl md:text-3xl font-bold text-white font-display tracking-tight text-center">
+                Vad ska jag kalla dig?
               </h1>
-              <p className="mt-2 text-sm text-white/50 leading-relaxed">
-                Toddy anpassar sig efter din diagnos – mood-skalan, frågorna och vad vi tittar efter blir mer relevant. Du kan hoppa över och lägga till senare.
+              <p className="mt-2 text-sm text-white/55 leading-relaxed text-center">
+                Berätta gärna om din diagnos – då kan jag anpassa frågorna efter just dig. Men det är helt okej att hoppa över.
               </p>
 
               <div className="mt-6 max-h-[50vh] overflow-y-auto [&_input]:bg-white/[0.06] [&_input]:border-white/[0.1] [&_input]:text-white [&_input]:placeholder:text-white/30 [&_button]:text-white/70 [&_.text-muted-foreground]:text-white/40 [&_.text-primary]:text-[hsl(45_85%_55%)] [&_.bg-popover]:bg-[hsl(230_30%_12%)] [&_.border-border]:border-white/10 [&_.hover\\:bg-muted]:hover:bg-white/[0.06] [&_.bg-card]:bg-white/[0.04] [&_.border-border]:border-white/10">
@@ -274,11 +280,17 @@ const Onboarding = () => {
           {/* Step 3: How it works */}
           {step === 3 && (
             <div className="animate-fade-in">
-              <h1 className="text-2xl md:text-3xl font-bold text-white font-display tracking-tight">
+              <div className="flex justify-center mb-4 animate-scale-in">
+                <div className="relative w-20 h-20">
+                  <div className="absolute inset-0 rounded-full bg-[hsl(45_85%_55%/0.08)] blur-xl" />
+                  <TurtleLogo size="md" holding="book" className="relative w-20 h-20 drop-shadow-[0_4px_16px_hsl(45_85%_55%/0.15)]" />
+                </div>
+              </div>
+              <h1 className="text-2xl md:text-3xl font-bold text-white font-display tracking-tight text-center">
                 Så funkar Toddy
               </h1>
-              <p className="mt-2 text-sm text-white/50 leading-relaxed">
-                Inget krångel. Bara dig, dagen och en vänlig sköldpadda.
+              <p className="mt-2 text-sm text-white/55 leading-relaxed text-center">
+                Inget krångel. Bara du, dagen och en sköldpadda som lyssnar.
               </p>
 
               <div className="mt-6">
@@ -303,11 +315,17 @@ const Onboarding = () => {
           {/* Step 4: Choose categories */}
           {step === 4 && (
             <div className="animate-fade-in">
-              <h1 className="text-2xl md:text-3xl font-bold text-white font-display tracking-tight">
-                Vad vill du följa?
+              <div className="flex justify-center mb-4 animate-scale-in">
+                <div className="relative w-20 h-20">
+                  <div className="absolute inset-0 rounded-full bg-[hsl(45_85%_55%/0.08)] blur-xl" />
+                  <TurtleLogo size="md" mood="happy" className="relative w-20 h-20 drop-shadow-[0_4px_16px_hsl(45_85%_55%/0.15)]" />
+                </div>
+              </div>
+              <h1 className="text-2xl md:text-3xl font-bold text-white font-display tracking-tight text-center">
+                Vad känns viktigt för dig?
               </h1>
-              <p className="mt-2 text-sm text-white/50 leading-relaxed">
-                Välj det som känns viktigt för dig. Sömn och aptit är ofta tidiga signaler vid bipolär – men du bestämmer.
+              <p className="mt-2 text-sm text-white/55 leading-relaxed text-center">
+                Bocka i det du vill följa. Du kan ändra när som helst – inget är hugget i sten.
               </p>
 
               <div className="mt-6 space-y-2.5">
