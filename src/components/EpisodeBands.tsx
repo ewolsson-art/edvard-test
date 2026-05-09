@@ -135,8 +135,16 @@ export function EpisodeBands({ entries, days = 14 }: EpisodeBandsProps) {
         {expanded && (
           <div className="border-t border-border/20 p-4 space-y-2.5">
             {episodes.map((ep, i) => (
-              <EpisodeRow key={`${ep.kind}-${ep.startDate}-${i}`} episode={ep} />
+              <EpisodeRow
+                key={`${ep.kind}-${ep.startDate}-${i}`}
+                episode={ep}
+                history={historicalContext.get(`${ep.kind}-${ep.startDate}`)}
+              />
             ))}
+            <p className="text-[11px] leading-relaxed text-muted-foreground/70 pt-1.5 border-t border-border/15">
+              Detta är inga läkarråd eller en klinisk bedömning — bara tekniska spaningar
+              i din egen data. Se det som en hjälp att uppmärksamma mönster, inget annat.
+            </p>
           </div>
         )}
       </div>
