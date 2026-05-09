@@ -8,7 +8,7 @@
 import { useMemo, useState } from 'react';
 import { format, subDays, parseISO, differenceInDays } from 'date-fns';
 import { sv } from 'date-fns/locale';
-import { AlertTriangle, Phone, X, ChevronDown, ChevronUp } from 'lucide-react';
+import { ChevronDown, ChevronUp } from 'lucide-react';
 import type { MoodEntry } from '@/types/mood';
 import { detectEpisodes, EPISODE_META, type Episode, type EpisodeKind } from '@/lib/episodeDetection';
 import { findSimilarPastPeriod, type SimilarPastPeriod } from '@/lib/userPatternProfile';
