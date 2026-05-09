@@ -300,31 +300,6 @@ function summarizeEpisode(ep: Episode): string[] {
   return out.slice(0, 3);
 }
 
-// === Konkreta råd per typ ===
-const ACTIONS: Record<EpisodeKind, { emoji: string; text: string }[]> = {
-  hypomanic: [
-    { emoji: '😴', text: 'Skydda sömnen ikväll' },
-    { emoji: '⏸️', text: 'Pausa stora beslut' },
-    { emoji: '💬', text: 'Berätta för någon nära' },
-  ],
-  manic: [
-    { emoji: '📞', text: 'Kontakta vården' },
-    { emoji: '🐢', text: 'Sänk takten medvetet' },
-    { emoji: '👥', text: 'Be någon hålla koll' },
-  ],
-  depressive: [
-    { emoji: '🚶', text: '10 min rörelse räcker' },
-    { emoji: '💬', text: 'Hör av dig till någon' },
-    { emoji: '🛏️', text: 'Behåll sömnrutinen' },
-  ],
-  mixed: [
-    { emoji: '📞', text: 'Ring 1177 eller jouren' },
-    { emoji: '⏸️', text: 'Pausa stora beslut' },
-    { emoji: '👥', text: 'Var inte ensam ikväll' },
-  ],
-};
-
-const NEEDS_SUPPORT_LINK: EpisodeKind[] = ['depressive', 'mixed'];
 
 function EpisodeRow({
   episode,
