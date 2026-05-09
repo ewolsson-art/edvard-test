@@ -100,8 +100,13 @@ const Community = () => {
 
   const filteredPosts = filterCategory ? posts.filter(p => p.category === filterCategory) : posts;
 
+  // Hide non-approved posts from the main list (authors still see their own pending posts via the badge in detail view)
+  const visiblePosts = filteredPosts.filter(p => p.status === 'approved' || (user && p.user_id === user.id) || isAdmin);
+  const pendingPosts = useMemo(() => posts.filter(p => p.status === 'pending'), [posts]);
+
   const popularPosts = useMemo(() => {
     return [...posts]
+      .filter(p => p.status === 'approved')
       .sort((a, b) => (b.reaction_count + b.replies.length) - (a.reaction_count + a.replies.length))
       .filter(p => p.reaction_count + p.replies.length > 0)
       .slice(0, 5);
