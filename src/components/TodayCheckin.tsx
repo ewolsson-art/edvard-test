@@ -57,11 +57,11 @@ interface TodayCheckinProps {
 const useSleepSliderOptions = () => {
   const { t } = useTranslation();
   return useMemo((): ScaleOption<QualityType>[] => [
-    // 'bad' = för mycket sömn (kan vara symptom på depression / utmattning)
+    // U-form: extremerna (för mycket / för lite) är varningstecken vid bipolär.
+    // 'good' (lagom) är förvalt mittenläge.
     { value: 'bad', label: t('checkin.tooMuchSleep'), sublabel: t('checkin.tooMuchSleepSub'), icon: MoonStar, color: '25 70% 50%' },
     { value: 'very_good', label: t('checkin.deepCalm'), sublabel: t('checkin.deepCalmSub'), icon: MoonStar, color: '160 70% 40%' },
     { value: 'good', label: t('checkin.goodEnough'), sublabel: t('checkin.goodEnoughSub'), icon: MoonStar, color: '150 55% 48%' },
-    { value: 'okay', label: t('checkin.justOkay'), sublabel: t('checkin.justOkaySub'), icon: Moon, color: '45 70% 50%' },
     { value: 'little', label: t('checkin.unusuallyLittle'), sublabel: t('checkin.unusuallyLittleSub'), icon: CloudMoon, color: '25 70% 50%' },
     { value: 'very_little', label: t('checkin.almostNothing'), sublabel: t('checkin.almostNothingSub'), icon: CloudMoon, color: '0 65% 50%' },
   ], [t]);
@@ -222,7 +222,7 @@ export function TodayCheckin({
   const commentRef = useRef<HTMLDivElement>(null);
   
   // Form data
-  const [checkinData, setCheckinData] = useState<CheckinData>({ mood: 'stable', sleepQuality: 'okay' });
+  const [checkinData, setCheckinData] = useState<CheckinData>({ mood: 'stable', sleepQuality: 'good' });
   const [customAnswersState, setCustomAnswersState] = useState<Record<string, string>>(initialCustomAnswers);
 
   // Auto-mark scheduled medications as taken when entering medication step for the first time.
@@ -269,7 +269,7 @@ export function TodayCheckin({
         tags: todayEntry.tags,
       });
     } else {
-      setCheckinData({ mood: 'stable', sleepQuality: 'okay' });
+      setCheckinData({ mood: 'stable', sleepQuality: 'good' });
     }
   }, [todayEntry, displayDate.toDateString()]);
 
