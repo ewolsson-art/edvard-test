@@ -952,6 +952,30 @@ export type Database = {
         }
         Relationships: []
       }
+      user_learned_insights: {
+        Row: {
+          category: string | null
+          created_at: string
+          id: string
+          insight: string
+          user_id: string
+        }
+        Insert: {
+          category?: string | null
+          created_at?: string
+          id?: string
+          insight: string
+          user_id: string
+        }
+        Update: {
+          category?: string | null
+          created_at?: string
+          id?: string
+          insight?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_pattern_profile: {
         Row: {
           baseline: Json
