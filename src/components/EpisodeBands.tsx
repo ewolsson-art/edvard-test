@@ -28,7 +28,7 @@ const KIND_FILL: Record<EpisodeKind, string> = {
 
 export function EpisodeBands({ entries, days = 30 }: EpisodeBandsProps) {
   const [expanded, setExpanded] = useState(false);
-  const [crisisDismissed, setCrisisDismissed] = useState(false);
+  const [crisisOpen, setCrisisOpen] = useState(false);
 
   const today = useMemo(() => new Date(), []);
   const startDate = useMemo(() => subDays(today, days - 1), [today, days]);
