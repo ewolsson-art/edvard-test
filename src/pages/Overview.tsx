@@ -645,7 +645,11 @@ const Overview = () => {
             <NewUserOverviewHint entryCount={entries.length} />
             
             {showMood && sectionView === 'calendar' && (
-              <section>
+              <section className="space-y-4">
+                {/* === EPISODE BANDS START === (safe to delete this block to remove the feature) */}
+                <EpisodeBands entries={entries} days={30} />
+                {/* === EPISODE BANDS END === */}
+
                      {view === 'week' && (
                        <WeekCalendar
                          weekDays={weekDays}
