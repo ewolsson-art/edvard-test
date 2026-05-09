@@ -384,7 +384,7 @@ const Signup = () => {
                 <button
                   type="button"
                   onClick={() => handleSocialLogin("google")}
-                  className="w-full h-14 rounded-2xl bg-white/[0.10] ring-1 ring-white/[0.12] hover:ring-white/[0.24] hover:bg-white/[0.14] hover:shadow-[0_4px_20px_-4px_rgba(255,255,255,0.08)] text-white text-[15px] font-semibold flex items-center justify-center gap-3 transition-all duration-300"
+                  className="w-full h-14 rounded-2xl bg-foreground/[0.03] ring-1 ring-white/[0.08] hover:ring-white/[0.18] hover:bg-foreground/[0.05] text-white text-[15px] font-semibold flex items-center justify-center gap-3 transition-all duration-300"
                 >
                   <svg className="h-[22px] w-[22px]" viewBox="0 0 24 24">
                     <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/>
