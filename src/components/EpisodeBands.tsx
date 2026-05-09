@@ -11,6 +11,7 @@ import { sv } from 'date-fns/locale';
 import { AlertTriangle, Phone, X, ChevronDown, ChevronUp } from 'lucide-react';
 import type { MoodEntry } from '@/types/mood';
 import { detectEpisodes, EPISODE_META, type Episode, type EpisodeKind } from '@/lib/episodeDetection';
+import { TurtleLogo } from '@/components/TurtleLogo';
 
 interface EpisodeBandsProps {
   entries: MoodEntry[];
