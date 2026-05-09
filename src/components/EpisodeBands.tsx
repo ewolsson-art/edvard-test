@@ -26,6 +26,78 @@ const KIND_FILL: Record<EpisodeKind, string> = {
   mixed: 'hsl(0 75% 55%)',
 };
 
+// === TIDIGA SIGNALER (prodromer) ===
+// Diskreta observationer i den senaste veckan jämfört med personlig baseline (60 d).
+// Returnerar 0–3 enradiga svenska meningar. Aldrig varningar — bara konstateranden.
+function detectEarlySignals(entries: MoodEntry[]): string[] {
+  if (!entries || entries.length < 14) return [];
+
+  const sorted = [...entries].sort((a, b) => a.date.localeCompare(b.date));
+  const recent = sorted.slice(-7); // senaste 7 in-checkningarna
+  const baseline = sorted.slice(-67, -7); // föregående ~60 dagar
+  if (baseline.length < 14) return [];
+
+  const SHORT_SLEEP = new Set(['very_little', 'little']);
+  const LOW_EAT = new Set(['very_little', 'little']);
+  const HIGH_EAT = new Set(['very_good']); // proxy för "äter mycket mer än vanligt"
+
+  const signals: string[] = [];
+
+  // Sömn: hur många nätter i rad senast har varit korta?
+  let shortRun = 0;
+  for (let i = recent.length - 1; i >= 0; i--) {
+    if (recent[i].sleepQuality && SHORT_SLEEP.has(recent[i].sleepQuality!)) shortRun++;
+    else break;
+  }
+  const baselineShortRate =
+    baseline.filter((e) => e.sleepQuality && SHORT_SLEEP.has(e.sleepQuality!)).length /
+    baseline.length;
+  if (shortRun >= 3 && baselineShortRate < 0.4) {
+    signals.push(`Sömnen har varit kortare än ditt snitt ${shortRun} nätter i rad.`);
+  }
+
+  // Energi: hög energi flera dagar i rad
+  let highEnergyRun = 0;
+  for (let i = recent.length - 1; i >= 0; i--) {
+    if (recent[i].energyLevel === 'high') highEnergyRun++;
+    else break;
+  }
+  const baselineHighRate =
+    baseline.filter((e) => e.energyLevel === 'high').length / baseline.length;
+  if (highEnergyRun >= 3 && baselineHighRate < 0.4) {
+    signals.push(`Energin har legat högt ${highEnergyRun} dagar i rad.`);
+  }
+
+  // Aptit: minskad aptit flera dagar i rad
+  let lowEatRun = 0;
+  for (let i = recent.length - 1; i >= 0; i--) {
+    if (recent[i].eatingQuality && LOW_EAT.has(recent[i].eatingQuality!)) lowEatRun++;
+    else break;
+  }
+  const baselineLowEatRate =
+    baseline.filter((e) => e.eatingQuality && LOW_EAT.has(e.eatingQuality!)).length /
+    baseline.length;
+  if (lowEatRun >= 3 && baselineLowEatRate < 0.4) {
+    signals.push(`Aptiten har varit lägre än ditt snitt ${lowEatRun} dagar i rad.`);
+  }
+
+  // Ökad aptit (hyperfagi-signal)
+  let highEatRun = 0;
+  for (let i = recent.length - 1; i >= 0; i--) {
+    if (recent[i].eatingQuality && HIGH_EAT.has(recent[i].eatingQuality!)) highEatRun++;
+    else break;
+  }
+  const baselineHighEatRate =
+    baseline.filter((e) => e.eatingQuality && HIGH_EAT.has(e.eatingQuality!)).length /
+    baseline.length;
+  if (highEatRun >= 3 && baselineHighEatRate < 0.3) {
+    signals.push(`Aptiten har varit högre än ditt snitt ${highEatRun} dagar i rad.`);
+  }
+
+  return signals.slice(0, 3);
+}
+
+
 export function EpisodeBands({ entries, days = 14 }: EpisodeBandsProps) {
   const [expanded, setExpanded] = useState(false);
   const [crisisOpen, setCrisisOpen] = useState(false);
@@ -43,6 +115,10 @@ export function EpisodeBands({ entries, days = 14 }: EpisodeBandsProps) {
 
   // ALLA historiska episoder — för att hitta "sist du visade detta mönster ledde det till..."
   const allEpisodes = useMemo(() => detectEpisodes(entries), [entries]);
+
+  // === TIDIGA SIGNALER (prodromer) — diskreta rader, inga varningar ===
+  const earlySignals = useMemo(() => detectEarlySignals(entries), [entries]);
+
 
   // För varje aktuell episod: hitta senaste tidigare episod av SAMMA typ (innan fönstret),
   // och se vad som följde inom 30 dagar.
@@ -134,6 +210,19 @@ export function EpisodeBands({ entries, days = 14 }: EpisodeBandsProps) {
 
         {expanded && (
           <div className="border-t border-border/20 p-4 space-y-2.5">
+            {earlySignals.length > 0 && (
+              <ul className="space-y-1 pb-1">
+                {earlySignals.map((s, i) => (
+                  <li
+                    key={i}
+                    className="text-xs text-muted-foreground/80 leading-relaxed"
+                  >
+                    <span className="text-foreground/55 mr-1.5">·</span>
+                    {s}
+                  </li>
+                ))}
+              </ul>
+            )}
             {episodes.map((ep, i) => (
               <EpisodeRow
                 key={`${ep.kind}-${ep.startDate}-${i}`}
