@@ -180,13 +180,19 @@ export function useMedications() {
       updates.stopped_at = null;
       updates.stop_reason = null;
     }
+    // Optimistic
+    let prev: Medication | undefined;
+    setMedications(list => list.map(m => {
+      if (m.id === id) { prev = m; return { ...m, ...updates } as Medication; }
+      return m;
+    }));
     const { error } = await supabase
       .from('medications')
       .update(updates)
       .eq('id', id)
       .eq('user_id', user.id);
-    if (!error) {
-      setMedications(prev => prev.map(m => m.id === id ? { ...m, ...updates } as Medication : m));
+    if (error && prev) {
+      setMedications(list => list.map(m => m.id === id ? prev! : m));
     }
   }, [user, setMedications]);
 
@@ -196,16 +202,27 @@ export function useMedications() {
 
   const deleteMedication = useCallback(async (id: string) => {
     if (!user) return;
+    // Optimistic remove
+    let removedMed: Medication | undefined;
+    let removedLogs: MedicationLog[] = [];
+    setMedications(prev => {
+      removedMed = prev.find(m => m.id === id);
+      return prev.filter(m => m.id !== id);
+    });
+    setLogs(prev => {
+      removedLogs = prev.filter(l => l.medication_id === id);
+      return prev.filter(l => l.medication_id !== id);
+    });
     const { error } = await supabase
       .from('medications')
       .delete()
       .eq('id', id)
       .eq('user_id', user.id);
     if (error) {
+      if (removedMed) setMedications(prev => [...prev, removedMed!]);
+      if (removedLogs.length) setLogs(prev => [...prev, ...removedLogs]);
       toast({ title: "Kunde inte ta bort medicin", variant: "destructive" });
     } else {
-      setMedications(prev => prev.filter(m => m.id !== id));
-      setLogs(prev => prev.filter(l => l.medication_id !== id));
       toast({ title: "Medicin borttagen" });
     }
   }, [user, toast, setMedications, setLogs]);
@@ -215,48 +232,71 @@ export function useMedications() {
     const wasTaken = logs.some(l => l.medication_id === medicationId && l.date === date);
     const med = medications.find(m => m.id === medicationId);
     if (taken) {
+      // Optimistic insert with placeholder log
+      const optimisticLog: MedicationLog = {
+        id: `optimistic-${medicationId}-${date}`,
+        user_id: user.id,
+        medication_id: medicationId,
+        date,
+        taken: true,
+        created_at: new Date().toISOString(),
+      } as MedicationLog;
+      setLogs(prev => {
+        const filtered = prev.filter(l => !(l.medication_id === medicationId && l.date === date));
+        return [...filtered, optimisticLog];
+      });
       const { data, error } = await supabase
         .from('medication_logs')
         .upsert({ user_id: user.id, medication_id: medicationId, date, taken: true }, { onConflict: 'user_id,medication_id,date' })
         .select()
         .single();
-      if (!error) {
-        setLogs(prev => {
-          const filtered = prev.filter(l => !(l.medication_id === medicationId && l.date === date));
-          return [...filtered, data as MedicationLog];
-        });
-        if (!wasTaken && !options?.silent && med) {
-          sonnerToast(`${med.name} markerad som tagen`, {
-            duration: 5000,
-            action: {
-              label: "Ångra",
-              onClick: async () => {
-                const { error: undoErr } = await supabase
-                  .from('medication_logs')
-                  .delete()
-                  .eq('user_id', user.id)
-                  .eq('medication_id', medicationId)
-                  .eq('date', date);
-                if (!undoErr) {
-                  setLogs(prev => prev.filter(l => !(l.medication_id === medicationId && l.date === date)));
-                  sonnerToast("Ångrat");
-                } else {
-                  sonnerToast.error("Kunde inte ångra");
-                }
-              },
+      if (error) {
+        // rollback
+        setLogs(prev => prev.filter(l => l.id !== optimisticLog.id));
+        return;
+      }
+      // Replace optimistic log with real one
+      setLogs(prev => {
+        const filtered = prev.filter(l => !(l.medication_id === medicationId && l.date === date));
+        return [...filtered, data as MedicationLog];
+      });
+      if (!wasTaken && !options?.silent && med) {
+        sonnerToast(`${med.name} markerad som tagen`, {
+          duration: 5000,
+          action: {
+            label: "Ångra",
+            onClick: async () => {
+              const { error: undoErr } = await supabase
+                .from('medication_logs')
+                .delete()
+                .eq('user_id', user.id)
+                .eq('medication_id', medicationId)
+                .eq('date', date);
+              if (!undoErr) {
+                setLogs(prev => prev.filter(l => !(l.medication_id === medicationId && l.date === date)));
+                sonnerToast("Ångrat");
+              } else {
+                sonnerToast.error("Kunde inte ångra");
+              }
             },
-          });
-        }
+          },
+        });
       }
     } else {
+      // Optimistic delete
+      let removed: MedicationLog | undefined;
+      setLogs(prev => {
+        removed = prev.find(l => l.medication_id === medicationId && l.date === date);
+        return prev.filter(l => !(l.medication_id === medicationId && l.date === date));
+      });
       const { error } = await supabase
         .from('medication_logs')
         .delete()
         .eq('user_id', user.id)
         .eq('medication_id', medicationId)
         .eq('date', date);
-      if (!error) {
-        setLogs(prev => prev.filter(l => !(l.medication_id === medicationId && l.date === date)));
+      if (error && removed) {
+        setLogs(prev => [...prev, removed!]);
       }
     }
   }, [user, setLogs, logs, medications]);
