@@ -1,13 +1,11 @@
 import { useEffect, useRef, useState } from "react";
-import { Sparkles, Send, Loader2, AlertTriangle } from "lucide-react";
+import { Send, Loader2, AlertTriangle, ArrowUp } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import { AnimatedPage } from "@/components/AnimatedPage";
-import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
+import { TurtleLogo } from "@/components/TurtleLogo";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import { useProfile } from "@/hooks/useProfile";
-import { supabase } from "@/integrations/supabase/client";
 import { cn } from "@/lib/utils";
 
 type Msg = { role: "user" | "assistant"; content: string };
@@ -15,8 +13,8 @@ type Msg = { role: "user" | "assistant"; content: string };
 const SUGGESTIONS = [
   "Hur många dagar var jag nedstämd i år?",
   "Lägg till illamående som biverkning på min medicin",
-  "Lägg till 'pratar mycket' som kännetecken när jag är uppvarvad",
   "Hur många dagar har jag tränat senaste 30 dagarna?",
+  "Lägg till 'pratar mycket' som kännetecken när jag är uppvarvad",
 ];
 
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/chat-stats`;
@@ -44,6 +42,11 @@ export default function AskToddy() {
     el.style.height = Math.min(el.scrollHeight, 160) + "px";
   }, [input]);
 
+  // Focus textarea on mount
+  useEffect(() => {
+    textareaRef.current?.focus();
+  }, []);
+
   const send = async (text: string) => {
     const trimmed = text.trim();
     if (!trimmed || isLoading) return;
@@ -57,6 +60,8 @@ export default function AskToddy() {
     setMessages(nextMessages);
     setInput("");
     setIsLoading(true);
+    // Refocus shortly after to keep typing flow
+    requestAnimationFrame(() => textareaRef.current?.focus());
 
     let assistantBuffer = "";
     const upsertAssistant = (chunk: string) => {
@@ -149,6 +154,7 @@ export default function AskToddy() {
       toast({ title: "Nätverksfel", description: "Kunde inte ansluta.", variant: "destructive" });
     } finally {
       setIsLoading(false);
+      requestAnimationFrame(() => textareaRef.current?.focus());
     }
   };
 
@@ -160,130 +166,146 @@ export default function AskToddy() {
   };
 
   const isEmpty = messages.length === 0;
+  const showThinking = isLoading && messages[messages.length - 1]?.role === "user";
 
-  // Mobile chat shell:
-  // - Page itself fills the viewport (dvh) and is a flex column
-  // - Header sticks to top, input docks to bottom (above the BottomTabBar via pb-tabbar offset)
-  // - Only the message list scrolls
-  // The parent <main> already adds pb-tabbar on mobile, so a normal flex column fills correctly.
   return (
     <AnimatedPage
       className={cn(
-        // Mobile: lock to viewport, sit above the BottomTabBar (~4.5rem + safe-area)
+        // Mobile: lock to viewport, sit above the BottomTabBar
         "fixed inset-x-0 top-0 bottom-[calc(env(safe-area-inset-bottom)+4.5rem)] z-10 flex flex-col bg-background",
-        // Desktop: normal in-flow page filling its parent
+        // Desktop: in-flow page filling its parent
         "md:static md:inset-auto md:bottom-auto md:h-screen md:z-auto",
       )}
     >
-      <header className="sticky top-0 z-20 px-5 md:px-8 pt-[max(env(safe-area-inset-top),0.75rem)] md:pt-6 pb-3 md:pb-4 border-b border-border/30 bg-background/85 backdrop-blur-xl shrink-0">
-        <div className="max-w-3xl mx-auto flex items-center gap-3">
-          <div className="w-9 h-9 md:w-10 md:h-10 rounded-2xl bg-[hsl(45_85%_55%/0.15)] border border-[hsl(45_85%_55%/0.25)] flex items-center justify-center shrink-0">
-            <Sparkles className="w-[18px] h-[18px] md:w-5 md:h-5 text-[hsl(45_85%_55%)]" />
+      {/* === Header === */}
+      <header className="sticky top-0 z-20 px-5 md:px-8 pt-[max(env(safe-area-inset-top),0.875rem)] md:pt-5 pb-3 md:pb-4 bg-background/80 backdrop-blur-xl shrink-0">
+        <div className="max-w-2xl mx-auto flex items-center gap-3">
+          <div className="w-9 h-9 md:w-10 md:h-10 rounded-full bg-foreground/[0.04] ring-1 ring-foreground/10 flex items-center justify-center shrink-0 overflow-hidden">
+            <TurtleLogo size="sm" className="w-7 h-7 md:w-8 md:h-8" />
           </div>
-          <div className="min-w-0">
-            <h1 className="font-display text-lg md:text-2xl font-bold tracking-tight leading-tight truncate">Chatta</h1>
-            <p className="text-[11px] md:text-[12px] text-muted-foreground/70 truncate">AI-assistent som kan din statistik</p>
+          <div className="min-w-0 flex-1">
+            <h1 className="font-display text-[17px] md:text-xl font-semibold tracking-tight leading-tight">
+              Toddy
+            </h1>
+            <p className="text-[11.5px] md:text-[12px] text-muted-foreground/60 leading-tight">
+              {showThinking ? "Skriver…" : "Din statistik, dina mönster"}
+            </p>
           </div>
         </div>
       </header>
 
-      <div ref={scrollRef} className="flex-1 min-h-0 overflow-y-auto overscroll-contain px-4 md:px-8 py-5 md:py-6">
-        <div className="max-w-3xl mx-auto space-y-4 md:space-y-5">
-          {isEmpty && (
-            <div className="text-center py-8 md:py-12">
-              <div className="w-16 h-16 mx-auto mb-5 rounded-3xl bg-[hsl(45_85%_55%/0.1)] border border-[hsl(45_85%_55%/0.2)] flex items-center justify-center">
-                <Sparkles className="w-7 h-7 text-[hsl(45_85%_55%)]" />
+      {/* === Transcript === */}
+      <div
+        ref={scrollRef}
+        className="flex-1 min-h-0 overflow-y-auto overscroll-contain px-4 md:px-8 pb-6"
+      >
+        <div className="max-w-2xl mx-auto">
+          {isEmpty ? (
+            // Empty state — generous, centered, friendly
+            <div className="min-h-full flex flex-col items-center justify-center text-center pt-8 pb-4">
+              <div className="mb-6">
+                <TurtleLogo size="lg" animated className="w-24 h-24 md:w-28 md:h-28" />
               </div>
-              <h2 className="font-display text-2xl font-bold mb-2">
-                Hej{firstName ? ` ${firstName}` : ""}!
+              <h2 className="font-display text-[26px] md:text-3xl font-bold tracking-tight mb-2">
+                Hej{firstName ? ` ${firstName}` : ""}
               </h2>
-              <p className="text-muted-foreground max-w-md mx-auto leading-relaxed mb-8">
-                Jag svarar på frågor om din statistik och kan hjälpa dig att registrera biverkningar på mediciner och lägga till kännetecken för olika stämningslägen.
+              <p className="text-[15px] text-muted-foreground/80 max-w-sm leading-relaxed mb-8 px-4">
+                Fråga mig om din statistik. Jag kan också registrera biverkningar och kännetecken åt dig.
               </p>
 
-              <div className="grid gap-2.5 max-w-md mx-auto">
-                <p className="text-[11px] tracking-[0.12em] uppercase font-medium text-muted-foreground/50 text-left mb-1">
-                  Förslag
-                </p>
+              <div className="w-full max-w-md grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                 {SUGGESTIONS.map((s) => (
                   <button
                     key={s}
                     onClick={() => send(s)}
-                    className="text-left px-4 py-3 rounded-xl border border-border/50 bg-card/40 hover:bg-card hover:border-border transition-all text-[14px] text-foreground/90 active:scale-[0.99]"
+                    className="text-left px-4 py-3 rounded-2xl bg-foreground/[0.03] ring-1 ring-foreground/[0.06] hover:bg-foreground/[0.06] hover:ring-foreground/10 active:scale-[0.985] transition-all text-[13.5px] text-foreground/85 leading-snug"
                   >
                     {s}
                   </button>
                 ))}
               </div>
 
-              <div className="max-w-md mx-auto mt-8 p-3.5 rounded-xl bg-muted/30 border border-border/30 flex items-start gap-2.5 text-left">
-                <AlertTriangle className="w-4 h-4 text-muted-foreground/70 shrink-0 mt-0.5" />
-                <p className="text-[12px] text-muted-foreground leading-relaxed">
-                  Toddy ger inga medicinska råd eller prognoser — bara siffror och mönster från din egen data. Vid akut psykisk ohälsa, ring 1177 eller 112.
+              <div className="max-w-md mt-8 px-4 flex items-start gap-2 text-left">
+                <AlertTriangle className="w-3.5 h-3.5 text-muted-foreground/50 shrink-0 mt-1" />
+                <p className="text-[11.5px] text-muted-foreground/60 leading-relaxed">
+                  Toddy ger inga medicinska råd. Vid akut psykisk ohälsa, ring 1177 eller 112.
                 </p>
               </div>
             </div>
-          )}
+          ) : (
+            <div className="space-y-5 md:space-y-6 pt-4">
+              {messages.map((m, i) => (
+                <div key={i}>
+                  {m.role === "user" ? (
+                    // User: golden pill, right-aligned
+                    <div className="flex justify-end">
+                      <div className="max-w-[85%] md:max-w-[75%] rounded-3xl rounded-br-lg px-4 py-2.5 text-[15px] leading-relaxed bg-[hsl(45_85%_55%)] text-[hsl(225_30%_7%)] font-medium">
+                        <p className="whitespace-pre-wrap">{m.content}</p>
+                      </div>
+                    </div>
+                  ) : (
+                    // Assistant: no bubble — text directly on page, with a small turtle avatar
+                    <div className="flex gap-3">
+                      <div className="w-7 h-7 rounded-full bg-foreground/[0.04] ring-1 ring-foreground/10 flex items-center justify-center shrink-0 overflow-hidden mt-0.5">
+                        <TurtleLogo size="sm" className="w-5 h-5" />
+                      </div>
+                      <div className="flex-1 min-w-0 prose-toddy text-[15px] leading-relaxed text-foreground/95">
+                        <ReactMarkdown>{m.content || "…"}</ReactMarkdown>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ))}
 
-          {messages.map((m, i) => (
-            <div
-              key={i}
-              className={cn(
-                "flex",
-                m.role === "user" ? "justify-end" : "justify-start",
-              )}
-            >
-              <div
-                className={cn(
-                  "max-w-[88%] md:max-w-[80%] rounded-2xl px-4 py-3 text-[15px] leading-relaxed",
-                  m.role === "user"
-                    ? "bg-[hsl(45_85%_55%)] text-[hsl(225_30%_7%)] font-medium"
-                    : "bg-card border border-border/40 text-foreground",
-                )}
-              >
-                {m.role === "user" ? (
-                  <p className="whitespace-pre-wrap">{m.content}</p>
-                ) : (
-                  <div className="prose-toddy">
-                    <ReactMarkdown>{m.content || "…"}</ReactMarkdown>
+              {showThinking && (
+                <div className="flex gap-3">
+                  <div className="w-7 h-7 rounded-full bg-foreground/[0.04] ring-1 ring-foreground/10 flex items-center justify-center shrink-0 overflow-hidden mt-0.5">
+                    <TurtleLogo size="sm" className="w-5 h-5" />
                   </div>
-                )}
-              </div>
-            </div>
-          ))}
-
-          {isLoading && messages[messages.length - 1]?.role === "user" && (
-            <div className="flex justify-start">
-              <div className="bg-card border border-border/40 rounded-2xl px-4 py-3 inline-flex items-center gap-2 text-muted-foreground">
-                <Loader2 className="w-4 h-4 animate-spin" />
-                <span className="text-[13px]">Toddy tänker…</span>
-              </div>
+                  <div className="flex items-center gap-1.5 pt-2 text-muted-foreground/70 text-[13.5px]">
+                    <span className="w-1.5 h-1.5 rounded-full bg-current animate-pulse" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-current animate-pulse [animation-delay:150ms]" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-current animate-pulse [animation-delay:300ms]" />
+                  </div>
+                </div>
+              )}
             </div>
           )}
         </div>
       </div>
 
-      <div className="shrink-0 border-t border-border/30 bg-background/85 backdrop-blur-xl px-4 md:px-8 py-3 md:py-4">
-        <div className="max-w-3xl mx-auto flex items-end gap-2">
-          <Textarea
-            ref={textareaRef}
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={handleKeyDown}
-            placeholder="Fråga om din statistik…"
-            rows={1}
-            disabled={isLoading}
-            className="resize-none min-h-[48px] max-h-40 text-base rounded-2xl bg-card border-border/50 focus-visible:ring-1 focus-visible:ring-primary/30"
-          />
-          <Button
-            onClick={() => send(input)}
-            disabled={!input.trim() || isLoading}
-            size="icon"
-            className="h-12 w-12 rounded-2xl bg-[hsl(45_85%_55%)] text-[hsl(225_30%_7%)] hover:bg-[hsl(45_85%_62%)] shrink-0"
-            aria-label="Skicka"
-          >
-            {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
-          </Button>
+      {/* === Composer === */}
+      <div className="shrink-0 px-3 md:px-8 pt-2 pb-3 md:pb-5 bg-gradient-to-t from-background via-background/95 to-background/0">
+        <div className="max-w-2xl mx-auto">
+          <div className="relative flex items-end rounded-[28px] bg-foreground/[0.04] ring-1 ring-foreground/10 focus-within:ring-foreground/25 transition-all">
+            <textarea
+              ref={textareaRef}
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={handleKeyDown}
+              placeholder="Fråga Toddy…"
+              rows={1}
+              disabled={isLoading}
+              className="flex-1 resize-none bg-transparent border-0 outline-none text-base leading-6 px-5 py-3.5 pr-14 max-h-40 placeholder:text-muted-foreground/50 disabled:opacity-60"
+              style={{ minHeight: "52px" }}
+            />
+            <button
+              onClick={() => send(input)}
+              disabled={!input.trim() || isLoading}
+              aria-label="Skicka"
+              className={cn(
+                "absolute right-2 bottom-2 h-9 w-9 rounded-full flex items-center justify-center transition-all",
+                input.trim() && !isLoading
+                  ? "bg-[hsl(45_85%_55%)] text-[hsl(225_30%_7%)] hover:bg-[hsl(45_85%_62%)] active:scale-95 shadow-[0_2px_12px_hsl(45_85%_55%/0.35)]"
+                  : "bg-foreground/10 text-foreground/30 cursor-not-allowed",
+              )}
+            >
+              {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <ArrowUp className="w-4 h-4" strokeWidth={2.5} />}
+            </button>
+          </div>
+          <p className="text-center text-[10.5px] text-muted-foreground/40 mt-2 px-4">
+            Toddy kan göra fel. Verifiera viktig information.
+          </p>
         </div>
       </div>
     </AnimatedPage>
