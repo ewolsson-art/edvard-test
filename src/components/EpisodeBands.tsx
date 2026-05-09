@@ -467,14 +467,3 @@ function CrisisDialog({
     </div>
   );
 }
-
-// Lokal mood-etikett för tooltips (undviker import-loop)
-const MOOD_LABELS_local: Record<string, string> = {
-  severe_elevated: 'Svår uppvarvning',
-  elevated: 'Måttlig uppvarvning',
-  somewhat_elevated: 'Lindrig uppvarvning',
-  stable: 'Normalt stämningsläge',
-  somewhat_depressed: 'Lindrig nedstämdhet',
-  depressed: 'Måttlig nedstämdhet',
-  severe_depressed: 'Svår nedstämdhet',
-};
