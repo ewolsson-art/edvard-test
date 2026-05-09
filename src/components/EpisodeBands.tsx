@@ -178,7 +178,7 @@ export function EpisodeBands({ entries, days = 14 }: EpisodeBandsProps) {
   // No episodes detected → render a calm, reassuring strip (no scary empty state)
   if (episodes.length === 0) {
     return (
-      <div className="rounded-2xl bg-foreground/[0.03] border border-border/30 px-4 py-3">
+      <div className="rounded-2xl bg-foreground/[0.03] border border-border/30 px-4 py-3 space-y-2.5">
         <div className="flex items-center justify-between gap-3">
           <span className="text-sm text-muted-foreground">
             Inga episoder upptäckta de senaste {days} dagarna.
@@ -187,6 +187,7 @@ export function EpisodeBands({ entries, days = 14 }: EpisodeBandsProps) {
             {windowEntries.length} check-ins
           </span>
         </div>
+        {similarPast && <SimilarPastRow match={similarPast} />}
       </div>
     );
   }
