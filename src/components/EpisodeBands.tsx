@@ -182,11 +182,24 @@ function Timeline({ episodes, startDate, days }: { episodes: Episode[]; startDat
   );
 }
 
-function EpisodeRow({ episode }: { episode: Episode }) {
+function EpisodeRow({
+  episode,
+  history,
+}: {
+  episode: Episode;
+  history?: { priorDate: string; followedBy?: Episode };
+}) {
   const meta = EPISODE_META[episode.kind];
   const startLabel = format(parseISO(episode.startDate), 'd MMM', { locale: sv });
   const endLabel = format(parseISO(episode.endDate), 'd MMM', { locale: sv });
   const dateLabel = startLabel === endLabel ? startLabel : `${startLabel} – ${endLabel}`;
+
+  const priorLabel = history
+    ? format(parseISO(history.priorDate), 'd MMM yyyy', { locale: sv })
+    : null;
+  const followedKindLabel = history?.followedBy
+    ? EPISODE_META[history.followedBy.kind].label.toLowerCase()
+    : null;
 
   return (
     <div className={`rounded-xl border ${meta.border} ${meta.bg} p-3`}>
@@ -197,6 +210,22 @@ function EpisodeRow({ episode }: { episode: Episode }) {
         </span>
       </div>
       <p className="text-xs text-muted-foreground leading-relaxed">{meta.description}</p>
+
+      {history && priorLabel && (
+        <div className="mt-2.5 pt-2.5 border-t border-foreground/[0.06]">
+          <p className="text-[11px] text-muted-foreground/85 leading-relaxed">
+            <span className="text-foreground/70 font-medium">Historiskt mönster: </span>
+            {followedKindLabel ? (
+              <>
+                Sist du visade ett liknande mönster ({priorLabel}) följdes det inom kort
+                av en period av <span className="text-foreground/80">{followedKindLabel}</span>.
+              </>
+            ) : (
+              <>Du visade ett liknande mönster senast {priorLabel}.</>
+            )}
+          </p>
+        </div>
+      )}
     </div>
   );
 }
