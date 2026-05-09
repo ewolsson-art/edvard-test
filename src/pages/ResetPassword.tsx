@@ -41,7 +41,7 @@ const ResetPassword = () => {
           description: t("auth.requestNewLink"),
           variant: "destructive",
         });
-        navigate("/auth");
+        navigate("/logga-in");
       }
     };
     checkSession();
@@ -111,9 +111,9 @@ const ResetPassword = () => {
                 </div>
                 <Button
                   className="w-full bg-[hsl(45_85%_55%)] text-[hsl(230_30%_5%)] hover:bg-[hsl(45_85%_65%)]"
-                  onClick={() => navigate("/auth")}
+                  onClick={() => navigate("/")}
                 >
-                  {t("auth.logIn")}
+                  {t("auth.continue") || "Fortsätt"}
                 </Button>
               </div>
             ) : (
@@ -177,7 +177,7 @@ const ResetPassword = () => {
                 <div className="mt-6 text-center">
                   <button
                     type="button"
-                    onClick={() => navigate("/auth")}
+                    onClick={() => navigate("/logga-in")}
                     className="text-sm text-white/60 hover:text-white transition-colors inline-flex items-center gap-1"
                   >
                     <ArrowLeft className="w-3 h-3" />
