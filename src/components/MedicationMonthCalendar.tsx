@@ -132,14 +132,21 @@ export function MedicationMonthCalendar({
               >
                 <div className="space-y-1">
                   <p className="text-xs font-medium text-muted-foreground mb-2">
-                    {format(day, 'd MMMM', { locale: sv })} – {medData!.taken}/{medData!.total} tagna
+                    {format(day, 'd MMMM', { locale: sv })}
                   </p>
-                  {medData!.medicationNames.map((name, idx) => (
-                    <div key={idx} className="flex items-center gap-2 text-sm">
-                      <Check className="h-3 w-3 text-mood-stable" />
-                      <span>{name}</span>
-                    </div>
-                  ))}
+                  <div className="flex items-center gap-2 text-sm">
+                    {allTaken ? (
+                      <>
+                        <Check className="h-3 w-3 text-mood-stable" />
+                        <span>Medicin tagen</span>
+                      </>
+                    ) : (
+                      <>
+                        <X className="h-3 w-3 text-mood-depressed" />
+                        <span>Medicin ej tagen</span>
+                      </>
+                    )}
+                  </div>
                 </div>
               </PopoverContent>
             </Popover>
