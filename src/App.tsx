@@ -142,6 +142,7 @@ const App = () => (
           <Toaster />
           <Sonner />
           <OfflineBanner />
+          <MobileWebNotice />
           <NativeAppGate>
           <BrowserRouter>
             <div className="min-h-screen" role="application" aria-label="Toddy - Moodtracker">
