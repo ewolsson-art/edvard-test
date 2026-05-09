@@ -73,6 +73,7 @@ interface StructuredInsight {
     previous: number;
     change: number;
   }[];
+  topInsights: string[];
 }
 
  serve(async (req) => {
@@ -814,11 +815,62 @@ function buildStructuredInsights(
     description = `${dominantPercentage}% stabila dagar. Dina rutiner fungerar.`;
   }
   
+  // Build top personal insights — concrete, evidence-based sentences (max 3)
+  const topInsights: string[] = [];
+
+  // Sleep → mood pattern (most actionable)
+  const sleepToBadMood = patterns.find(p => p.trigger.includes('sömn') && p.consequence.toLowerCase().includes('nedstämd'));
+  const sleepToElevated = patterns.find(p => p.trigger.includes('sömn') && p.consequence.toLowerCase().includes('uppvarvad'));
+  if (sleepToBadMood && sleepToBadMood.occurrences >= 2) {
+    topInsights.push(
+      `Dina ${sleepToBadMood.occurrences} senaste nedstämda perioder började i snitt ${sleepToBadMood.averageDaysToConsequence} dagar efter att sömnen blev sämre. Värt att prioritera sömnen nu.`
+    );
+  } else if (sleepToElevated && sleepToElevated.occurrences >= 2) {
+    topInsights.push(
+      `${sleepToElevated.occurrences} gånger har dålig sömn under flera dagar lett till en uppvarvad period i snitt ${sleepToElevated.averageDaysToConsequence} dagar senare hos dig.`
+    );
+  }
+
+  // Exercise pattern
+  const exerciseToMood = patterns.find(p => p.trigger.includes('träning'));
+  if (exerciseToMood && exerciseToMood.occurrences >= 2 && topInsights.length < 3) {
+    topInsights.push(
+      `${exerciseToMood.occurrences} gånger har långa pauser från träning sammanfallit med fler nedstämda dagar.`
+    );
+  }
+
+  // Mood transition pattern (rapid cycling / stable→elevated)
+  const moodTransition = patterns.find(p => p.trigger.includes('Stabil') || p.trigger.includes('Snabb'));
+  if (moodTransition && topInsights.length < 3) {
+    topInsights.push(
+      `Mönster: ${moodTransition.trigger.toLowerCase()} har ${moodTransition.occurrences} gånger lett till ${moodTransition.consequence.toLowerCase()}.`
+    );
+  }
+
+  // Fallback: trend-based insight if no historical patterns yet
+  if (topInsights.length === 0 && data.totalDaysWithData >= 7) {
+    if (dominantMood === 'stable' && dominantPercentage >= 60) {
+      topInsights.push(`${dominantPercentage}% av dina senaste dagar har varit stabila. Det du gör fungerar.`);
+    } else if (dominantMood === 'depressed' && dominantPercentage >= 40) {
+      topInsights.push(`${data.moodCounts.depressed} av ${data.totalDaysWithData} dagar har varit nedstämda. Värt att höra av sig till någon.`);
+    } else if (dominantMood === 'elevated' && dominantPercentage >= 40) {
+      topInsights.push(`${data.moodCounts.elevated} av ${data.totalDaysWithData} dagar har varit uppvarvade. Bevaka sömnen extra noga.`);
+    }
+    if (data.sleepMoodCorrelation.badSleepDepressed >= 3) {
+      topInsights.push(`Dålig sömn och nedstämdhet har sammanfallit ${data.sleepMoodCorrelation.badSleepDepressed} gånger den här perioden.`);
+    }
+  }
+
+  if (topInsights.length === 0) {
+    topInsights.push('För få datapunkter för personliga mönster ännu — fortsätt logga några veckor till så hittar vi tydliga samband.');
+  }
+
   return {
     summary: { status, title, description },
     moodTrend: { direction, percentage: dominantPercentage, dominantMood },
     riskIndicators,
     recommendations,
-    weeklyComparison
+    weeklyComparison,
+    topInsights: topInsights.slice(0, 3)
   };
 }
