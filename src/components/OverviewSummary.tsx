@@ -44,6 +44,17 @@ export function OverviewSummary({ stats, entries, periodLabel }: OverviewSummary
     return { days: count, group: currentGroup };
   }, [entries]);
 
+  const longestStableStreak = useMemo(() => {
+    if (entries.length === 0) return 0;
+    const sorted = [...entries].sort((a, b) => a.date.localeCompare(b.date));
+    let best = 0, current = 0;
+    for (const e of sorted) {
+      if (e.mood === 'stable') { current++; if (current > best) best = current; }
+      else current = 0;
+    }
+    return best;
+  }, [entries]);
+
   const daysSinceGroup = useMemo(() => {
     if (entries.length === 0) return [];
     const sorted = [...entries].sort((a, b) => b.date.localeCompare(a.date));
@@ -230,6 +241,16 @@ export function OverviewSummary({ stats, entries, periodLabel }: OverviewSummary
           <p className="text-xl font-bold">{entries.length}<span className="text-muted-foreground font-normal text-sm">/{totalDaysSinceStart}</span></p>
           <p className="text-xs text-muted-foreground">{registrationRate}%</p>
         </div>
+      </section>
+      <section className="rounded-2xl bg-foreground/[0.03] backdrop-blur-sm p-4 flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <Sun className="w-5 h-5 text-mood-stable" />
+          <div>
+            <p className="text-sm font-medium">Flest stabila dagar i rad</p>
+            <p className="text-xs text-muted-foreground">{t('overviewSummary.sinceFirstCheckin')}</p>
+          </div>
+        </div>
+        <p className="text-xl font-bold">{longestStableStreak}<span className="text-muted-foreground font-normal text-sm"> d</span></p>
       </section>
     </div>
   );
