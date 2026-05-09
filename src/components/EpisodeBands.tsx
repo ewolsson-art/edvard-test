@@ -180,7 +180,7 @@ export function EpisodeBands({ entries, days = 14 }: EpisodeBandsProps) {
         <CrisisTurtleButton onClick={() => setCrisisOpen(true)} />
       )}
       {mixedEpisode && crisisOpen && (
-        <CrisisDialog episode={mixedEpisode} onClose={() => setCrisisOpen(false)} />
+        <CrisisDialog episode={mixedEpisode} entries={entries} onClose={() => setCrisisOpen(false)} />
       )}
 
       <div className="rounded-2xl bg-foreground/[0.03] border border-border/30 overflow-hidden">
