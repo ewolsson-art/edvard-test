@@ -26,20 +26,55 @@ const KIND_FILL: Record<EpisodeKind, string> = {
   mixed: 'hsl(0 75% 55%)',
 };
 
-export function EpisodeBands({ entries, days = 30 }: EpisodeBandsProps) {
+export function EpisodeBands({ entries, days = 14 }: EpisodeBandsProps) {
   const [expanded, setExpanded] = useState(false);
   const [crisisOpen, setCrisisOpen] = useState(false);
 
   const today = useMemo(() => new Date(), []);
   const startDate = useMemo(() => subDays(today, days - 1), [today, days]);
 
-  // Only consider entries inside the visible window
+  // Senaste 14 dagarna — vad vi visar i tidslinjen
   const windowEntries = useMemo(
     () => entries.filter((e) => parseISO(e.date) >= startDate),
     [entries, startDate],
   );
 
   const episodes = useMemo(() => detectEpisodes(windowEntries), [windowEntries]);
+
+  // ALLA historiska episoder — för att hitta "sist du visade detta mönster ledde det till..."
+  const allEpisodes = useMemo(() => detectEpisodes(entries), [entries]);
+
+  // För varje aktuell episod: hitta senaste tidigare episod av SAMMA typ (innan fönstret),
+  // och se vad som följde inom 30 dagar.
+  const historicalContext = useMemo(() => {
+    const map = new Map<string, { priorDate: string; followedBy?: Episode }>();
+    for (const current of episodes) {
+      const priorSameKind = [...allEpisodes]
+        .filter(
+          (e) =>
+            e.kind === current.kind &&
+            parseISO(e.endDate) < startDate,
+        )
+        .sort((a, b) => b.endDate.localeCompare(a.endDate))[0];
+
+      if (!priorSameKind) continue;
+
+      const priorEnd = parseISO(priorSameKind.endDate);
+      const followedBy = allEpisodes
+        .filter((e) => {
+          const start = parseISO(e.startDate);
+          const diff = (start.getTime() - priorEnd.getTime()) / 86_400_000;
+          return diff > 0 && diff <= 30 && e.kind !== priorSameKind.kind;
+        })
+        .sort((a, b) => a.startDate.localeCompare(b.startDate))[0];
+
+      map.set(`${current.kind}-${current.startDate}`, {
+        priorDate: priorSameKind.startDate,
+        followedBy,
+      });
+    }
+    return map;
+  }, [episodes, allEpisodes, startDate]);
 
   const mixedEpisode = episodes.find((e) => e.kind === 'mixed');
 
