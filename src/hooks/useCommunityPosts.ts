@@ -20,6 +20,10 @@ function getAnonymousName(userId: string, postId?: string): string {
   return ANIMAL_NAMES[Math.abs(hash) % ANIMAL_NAMES.length];
 }
 
+function getRandomAnonymousName(): string {
+  return ANIMAL_NAMES[Math.floor(Math.random() * ANIMAL_NAMES.length)];
+}
+
 export interface CommunityReply {
   id: string;
   post_id: string;
