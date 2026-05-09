@@ -79,7 +79,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const signUp = async (email: string, password: string, metadata?: { role?: string; first_name?: string; last_name?: string }) => {
-    const redirectUrl = `${window.location.origin}/slutfor-profil`;
+    const redirectUrl = `${window.location.origin}/auth/callback?next=${encodeURIComponent("/slutfor-profil")}`;
     
     const { error, data } = await supabase.auth.signUp({
       email,
@@ -112,7 +112,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const { error } = await supabase.auth.signInWithOtp({
         email: emailOrPhone,
         options: {
-          emailRedirectTo: `${window.location.origin}/slutfor-profil`,
+          emailRedirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent("/slutfor-profil")}`,
           data: { role },
           shouldCreateUser: true,
         }

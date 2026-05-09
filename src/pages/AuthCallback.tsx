@@ -79,10 +79,15 @@ const AuthCallback = () => {
       const searchParams = new URLSearchParams(window.location.search);
       const accessToken = hashParams.get("access_token");
       const refreshToken = hashParams.get("refresh_token");
+      const errorCode = hashParams.get("error_code") || searchParams.get("error_code");
       const errorDescription = hashParams.get("error_description") || searchParams.get("error_description");
+      const next = searchParams.get("next") || "/oversikt";
 
-      if (errorDescription) {
-        navigate(`/logga-in?error=${encodeURIComponent(errorDescription)}`, { replace: true });
+      if (errorCode === "otp_expired" || errorDescription) {
+        const msg = errorCode === "otp_expired"
+          ? "Bekräftelselänken har gått ut eller redan använts. Begär en ny inloggningslänk."
+          : errorDescription || "Inloggningen misslyckades.";
+        navigate(`/logga-in?error=${encodeURIComponent(msg)}`, { replace: true });
         return;
       }
 
@@ -99,7 +104,7 @@ const AuthCallback = () => {
         if (session) {
           await ensureGoogleAccountCanEnterApp();
           window.history.replaceState({}, document.title, "/auth/callback");
-          navigate("/oversikt", { replace: true });
+          navigate(next, { replace: true });
           return;
         }
         await new Promise((resolve) => setTimeout(resolve, 150));
