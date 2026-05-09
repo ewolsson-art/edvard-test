@@ -397,7 +397,7 @@ const Signup = () => {
                 <button
                   type="button"
                   onClick={() => handleSocialLogin("apple")}
-                  className="w-full h-14 rounded-2xl bg-white/[0.10] ring-1 ring-white/[0.12] hover:ring-white/[0.24] hover:bg-white/[0.14] hover:shadow-[0_4px_20px_-4px_rgba(255,255,255,0.08)] text-white text-[15px] font-semibold flex items-center justify-center gap-3 transition-all duration-300"
+                  className="w-full h-14 rounded-2xl bg-foreground/[0.03] ring-1 ring-white/[0.08] hover:ring-white/[0.18] hover:bg-foreground/[0.05] text-white text-[15px] font-semibold flex items-center justify-center gap-3 transition-all duration-300"
                 >
                   <svg className="h-[22px] w-[22px]" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M17.05 20.28c-.98.95-2.05.88-3.08.4-1.09-.5-2.08-.48-3.24 0-1.44.62-2.2.44-3.06-.4C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/>
