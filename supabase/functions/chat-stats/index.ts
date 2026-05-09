@@ -36,8 +36,9 @@ function buildContext(args: {
   medications: any[];
   diagnoses: any[];
   characteristics: any[];
+  learnedInsights: any[];
 }): string {
-  const { firstName, todayStr, moodEntries, medications, diagnoses, characteristics } = args;
+  const { firstName, todayStr, moodEntries, medications, diagnoses, characteristics, learnedInsights } = args;
 
   const sortedEntries = [...moodEntries]
     .sort((a, b) => (a.date < b.date ? 1 : -1))
