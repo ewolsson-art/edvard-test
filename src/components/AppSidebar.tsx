@@ -203,6 +203,9 @@ export function AppSidebar() {
                           aria-label={item.url === '/profil' && hasPending ? `${t(item.titleKey)} - Du har nya notifikationer` : t(item.titleKey)}
                           aria-current={active ? "page" : undefined}
                           onClick={() => { if (isMobile) setOpenMobile(false); }}
+                          onMouseEnter={() => preloadRoute(item.url)}
+                          onTouchStart={() => preloadRoute(item.url)}
+                          onFocus={() => preloadRoute(item.url)}
                         >
                           {false ? null : (
                             <div className="relative">
