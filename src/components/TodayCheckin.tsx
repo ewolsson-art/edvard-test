@@ -724,10 +724,10 @@ export function TodayCheckin({
               aria-label={t('checkin.checkinMode')}
               className="relative inline-flex items-center rounded-full bg-foreground/[0.04] ring-1 ring-foreground/[0.06] p-1 text-[12px] font-semibold tracking-tight"
             >
-              {/* Sliding thumb — golden accent for active selection */}
+              {/* Sliding thumb — neutral surface, låter den gyllene CTA:n behålla fokus */}
               <motion.div
                 aria-hidden
-                className="absolute top-1 bottom-1 rounded-full bg-[hsl(45_85%_55%)] shadow-[0_2px_10px_hsl(45_85%_55%/0.35)]"
+                className="absolute top-1 bottom-1 rounded-full bg-foreground/[0.09] ring-1 ring-foreground/[0.08] shadow-sm"
                 initial={false}
                 animate={{
                   left: checkinMode === 'quick' ? 4 : '50%',
@@ -742,8 +742,8 @@ export function TodayCheckin({
                 className={cn(
                   "relative z-10 inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full transition-colors duration-200",
                   checkinMode === 'quick'
-                    ? "text-[hsl(225_30%_7%)]"
-                    : "text-muted-foreground/60 hover:text-foreground/85"
+                    ? "text-foreground"
+                    : "text-muted-foreground/55 hover:text-foreground/80"
                 )}
               >
                 <Zap className="w-3.5 h-3.5" strokeWidth={2.5} />
@@ -756,8 +756,8 @@ export function TodayCheckin({
                 className={cn(
                   "relative z-10 inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full transition-colors duration-200",
                   checkinMode === 'detailed'
-                    ? "text-[hsl(225_30%_7%)]"
-                    : "text-muted-foreground/60 hover:text-foreground/85"
+                    ? "text-foreground"
+                    : "text-muted-foreground/55 hover:text-foreground/80"
                 )}
               >
                 <ListChecks className="w-3.5 h-3.5" strokeWidth={2.5} />
