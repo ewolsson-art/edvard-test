@@ -101,6 +101,14 @@ function detectEarlySignals(entries: MoodEntry[]): string[] {
 export function EpisodeBands({ entries, days = 14 }: EpisodeBandsProps) {
   const [expanded, setExpanded] = useState(false);
   const [crisisOpen, setCrisisOpen] = useState(false);
+  const [acknowledged, setAcknowledged] = useState<Set<string>>(() => {
+    try {
+      const raw = localStorage.getItem('toddy-crisis-ack');
+      return raw ? new Set(JSON.parse(raw)) : new Set();
+    } catch {
+      return new Set();
+    }
+  });
 
   const today = useMemo(() => new Date(), []);
   const startDate = useMemo(() => subDays(today, days - 1), [today, days]);
@@ -183,7 +191,23 @@ export function EpisodeBands({ entries, days = 14 }: EpisodeBandsProps) {
     <>
       {/* === CRISIS TURTLE INDICATOR for mixed episodes === */}
       {mixedEpisode && (
-        <CrisisTurtleButton onClick={() => setCrisisOpen(true)} />
+        <CrisisTurtleButton
+          subtle={acknowledged.has(`${mixedEpisode.kind}-${mixedEpisode.startDate}`)}
+          onClick={() => {
+            setCrisisOpen(true);
+            const key = `${mixedEpisode.kind}-${mixedEpisode.startDate}`;
+            setAcknowledged((prev) => {
+              if (prev.has(key)) return prev;
+              const next = new Set(prev).add(key);
+              try {
+                localStorage.setItem('toddy-crisis-ack', JSON.stringify([...next]));
+              } catch {
+                /* noop */
+              }
+              return next;
+            });
+          }}
+        />
       )}
       {mixedEpisode && crisisOpen && (
         <CrisisDialog episode={mixedEpisode} entries={entries} onClose={() => setCrisisOpen(false)} />
@@ -325,18 +349,24 @@ function EpisodeRow({
   );
 }
 
-function CrisisTurtleButton({ onClick }: { onClick: () => void }) {
+function CrisisTurtleButton({ onClick, subtle = false }: { onClick: () => void; subtle?: boolean }) {
   return (
     <button
       onClick={onClick}
       aria-label="Vi ser några varningstecken — visa stödresurser"
-      className="fixed bottom-24 right-5 z-[90] group flex items-end gap-2 rounded-2xl bg-card/90 backdrop-blur-md border border-red-500/40 shadow-lg shadow-red-500/10 p-2 pr-3 hover:border-red-500/70 hover:bg-card transition-all animate-in fade-in slide-in-from-bottom-2"
+      className={
+        subtle
+          ? 'fixed bottom-24 right-5 z-[90] group flex items-end gap-2 rounded-2xl bg-card/80 backdrop-blur-md border border-border/40 p-2 pr-3 hover:border-border/70 hover:bg-card transition-all animate-in fade-in slide-in-from-bottom-2'
+          : 'fixed bottom-24 right-5 z-[90] group flex items-end gap-2 rounded-2xl bg-card/90 backdrop-blur-md border border-red-500/40 shadow-lg shadow-red-500/10 p-2 pr-3 hover:border-red-500/70 hover:bg-card transition-all animate-in fade-in slide-in-from-bottom-2'
+      }
     >
       <span className="relative block">
         <TurtleLogo size="md" staticPose />
-        <span className="absolute -top-1 -right-1 h-3.5 w-3.5 rounded-full bg-red-500 border-2 border-card animate-pulse" />
+        {!subtle && (
+          <span className="absolute -top-1 -right-1 h-3.5 w-3.5 rounded-full bg-red-500 border-2 border-card animate-pulse" />
+        )}
       </span>
-      <span className="text-xs font-medium text-foreground/90 group-hover:text-foreground pb-1">
+      <span className={`text-xs font-medium pb-1 ${subtle ? 'text-muted-foreground group-hover:text-foreground/80' : 'text-foreground/90 group-hover:text-foreground'}`}>
         Varning
       </span>
     </button>
