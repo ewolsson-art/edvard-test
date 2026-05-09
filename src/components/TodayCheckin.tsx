@@ -1304,13 +1304,7 @@ export function TodayCheckin({
               </Button>
             ) : (
               <Button onClick={() => navigateStep(getNextStep('medication') as Step)} className="w-full mt-4 py-6 text-base font-semibold gap-2">
-                {scheduledMedications.length === 0
-                  ? t('common.continue')
-                  : allScheduledTaken
-                    ? t('common.yes')
-                    : noScheduledTaken
-                      ? t('common.no')
-                      : t('checkin.notAll')}
+                {t('common.continue')}
                 <ChevronRight className="w-4 h-4" />
               </Button>
             )}
