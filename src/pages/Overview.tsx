@@ -111,6 +111,22 @@ const Overview = () => {
     }
   }, [view, isLoaded]);
 
+  // === TYST LÄRANDE ===
+  // När data laddats, räkna om personlig mönsterprofil i bakgrunden.
+  // Skriver till user_pattern_profile (max 1 gång per 6h, hanteras i hjälparen).
+  useEffect(() => {
+    if (!isLoaded || !user?.id || entries.length < 7) return;
+    const handle = (window as Window & { requestIdleCallback?: (cb: () => void) => number }).requestIdleCallback
+      ?? ((cb: () => void) => window.setTimeout(cb, 1500));
+    handle(() => {
+      import('@/lib/userPatternProfile').then(({ refreshUserPatternProfile }) => {
+        refreshUserPatternProfile(user.id, entries).catch(() => {
+          /* tyst — det här är ett bakgrundsjobb */
+        });
+      });
+    });
+  }, [isLoaded, user?.id, entries]);
+
   // Week data
   const weekDays = useMemo(() => {
     const start = startOfWeek(currentWeek, { weekStartsOn: 1 });
