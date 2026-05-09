@@ -40,6 +40,9 @@ import { useCharacteristics } from '@/hooks/useCharacteristics';
 
 import { MoodStats as MoodStatsType, ExerciseType, QualityType } from '@/types/mood';
 import { Last30DaysOverview } from '@/components/Last30DaysOverview';
+// === EPISODE BANDS START === (delete this import + the JSX block below to remove the feature)
+import { EpisodeBands } from '@/components/EpisodeBands';
+// === EPISODE BANDS END ===
 import { NewUserOverviewHint } from '@/components/NewUserOverviewHint';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Dumbbell, Moon, Utensils } from 'lucide-react';
@@ -642,7 +645,11 @@ const Overview = () => {
             <NewUserOverviewHint entryCount={entries.length} />
             
             {showMood && sectionView === 'calendar' && (
-              <section>
+              <section className="space-y-4">
+                {/* === EPISODE BANDS START === (safe to delete this block to remove the feature) */}
+                <EpisodeBands entries={entries} days={30} />
+                {/* === EPISODE BANDS END === */}
+
                      {view === 'week' && (
                        <WeekCalendar
                          weekDays={weekDays}
