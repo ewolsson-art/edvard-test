@@ -152,6 +152,84 @@ function buildFingerprint(episode: Episode, allEntries: MoodEntry[], allEpisodes
   };
 }
 
+// === SIMILARITY MATCHING ===
+// Bygg en "lead-up signatur" för senaste N dagarna och jämför mot
+// historiska prodromer. Returnera bästa matchningen om den är stark nog.
+
+export interface SimilarPastPeriod {
+  pastEpisode: EpisodeFingerprint;
+  similarity: number; // 0..1
+  sharedSignals: string[]; // mänskligt läsbara fragment
+}
+
+function leadUpSignature(entries: MoodEntry[], windowDays = PRODROME_WINDOW_DAYS) {
+  const cutoff = subDays(new Date(), windowDays);
+  const recent = entries.filter((e) => parseISO(e.date) >= cutoff);
+  return {
+    shortSleepNights: recent.filter((e) => e.sleepQuality && SHORT_SLEEP.has(e.sleepQuality)).length,
+    longSleepNights: recent.filter((e) => e.sleepQuality && LONG_SLEEP.has(e.sleepQuality)).length,
+    highEnergyDays: recent.filter((e) => e.energyLevel === 'high').length,
+    lowEnergyDays: recent.filter((e) => e.energyLevel === 'low').length,
+    lowAppetiteDays: recent.filter((e) => e.eatingQuality && LOW_APPETITE.has(e.eatingQuality)).length,
+    highAppetiteDays: recent.filter((e) => e.eatingQuality && HIGH_APPETITE.has(e.eatingQuality)).length,
+    suicidalTagDays: recent.filter((e) => e.tags?.includes('suicidtankar')).length,
+  };
+}
+
+function cosine(a: number[], b: number[]): number {
+  let dot = 0, na = 0, nb = 0;
+  for (let i = 0; i < a.length; i++) {
+    dot += a[i] * b[i];
+    na += a[i] * a[i];
+    nb += b[i] * b[i];
+  }
+  if (na === 0 || nb === 0) return 0;
+  return dot / (Math.sqrt(na) * Math.sqrt(nb));
+}
+
+const SIGNAL_LABELS: Record<keyof ReturnType<typeof leadUpSignature>, string> = {
+  shortSleepNights: 'kort sömn',
+  longSleepNights: 'för lång sömn',
+  highEnergyDays: 'hög energi',
+  lowEnergyDays: 'låg energi',
+  lowAppetiteDays: 'låg aptit',
+  highAppetiteDays: 'hög aptit',
+  suicidalTagDays: 'mörka tankar',
+};
+
+export function findSimilarPastPeriod(entries: MoodEntry[]): SimilarPastPeriod | null {
+  if (entries.length < 14) return null;
+  const current = leadUpSignature(entries);
+  const currentVec = Object.values(current);
+  const totalCurrent = currentVec.reduce((s, n) => s + n, 0);
+  if (totalCurrent < 3) return null; // för lite att jämföra med
+
+  const allEpisodes = detectEpisodes(entries);
+  // exkludera episoder som överlappar nuvarande fönster
+  const cutoff = subDays(new Date(), PRODROME_WINDOW_DAYS);
+  const past = allEpisodes.filter((ep) => parseISO(ep.endDate) < cutoff);
+  if (past.length === 0) return null;
+
+  const fingerprints = past.map((ep) => buildFingerprint(ep, entries, allEpisodes));
+
+  let best: { fp: EpisodeFingerprint; score: number } | null = null;
+  for (const fp of fingerprints) {
+    const fpVec = Object.values(fp.prodromes);
+    const score = cosine(currentVec, fpVec);
+    if (!best || score > best.score) best = { fp, score };
+  }
+  if (!best || best.score < 0.75) return null;
+
+  // Hitta gemensamma "starka" signaler (där båda har minst 2 dagar)
+  const shared: string[] = [];
+  (Object.keys(SIGNAL_LABELS) as (keyof typeof SIGNAL_LABELS)[]).forEach((k) => {
+    if (current[k] >= 2 && best!.fp.prodromes[k] >= 2) shared.push(SIGNAL_LABELS[k]);
+  });
+  if (shared.length === 0) return null;
+
+  return { pastEpisode: best.fp, similarity: best.score, sharedSignals: shared };
+}
+
 export async function refreshUserPatternProfile(userId: string, entries: MoodEntry[]): Promise<void> {
   if (!userId || entries.length < 7) return;
 
