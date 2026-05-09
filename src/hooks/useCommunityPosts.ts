@@ -179,6 +179,7 @@ export function useCommunityPosts() {
         is_anonymous: post.is_anonymous,
         anonymous_name: post.anonymous_name,
         image_url: post.image_url,
+        status: (post.status as CommunityPost['status']) || 'approved',
         created_at: post.created_at,
         updated_at: post.updated_at,
         author_name: post.is_anonymous 
