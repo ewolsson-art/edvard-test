@@ -163,18 +163,19 @@ function CrisisTurtleButton({ onClick }: { onClick: () => void }) {
     <button
       onClick={onClick}
       aria-label="Vi ser några varningstecken — visa stödresurser"
-      className="fixed bottom-24 right-5 z-[90] group flex items-center gap-2 rounded-full bg-card/90 backdrop-blur-md border border-red-500/40 shadow-lg shadow-red-500/10 pl-1.5 pr-3 py-1.5 hover:border-red-500/70 hover:bg-card transition-all animate-in fade-in slide-in-from-bottom-2"
+      className="fixed bottom-24 right-5 z-[90] group flex items-end gap-2 rounded-2xl bg-card/90 backdrop-blur-md border border-red-500/40 shadow-lg shadow-red-500/10 p-2 pr-3 hover:border-red-500/70 hover:bg-card transition-all animate-in fade-in slide-in-from-bottom-2"
     >
-      <span className="relative">
-        <TurtleLogo size="sm" mood="severe_depressed" framing="face" staticPose />
-        <span className="absolute -top-0.5 -right-0.5 h-3 w-3 rounded-full bg-red-500 border-2 border-card animate-pulse" />
+      <span className="relative block">
+        <TurtleLogo size="md" staticPose />
+        <span className="absolute -top-1 -right-1 h-3.5 w-3.5 rounded-full bg-red-500 border-2 border-card animate-pulse" />
       </span>
-      <span className="text-xs font-medium text-foreground/90 group-hover:text-foreground">
+      <span className="text-xs font-medium text-foreground/90 group-hover:text-foreground pb-1">
         Varning
       </span>
     </button>
   );
 }
+
 
 function CrisisDialog({ episode, onClose }: { episode: Episode; onClose: () => void }) {
   return (
