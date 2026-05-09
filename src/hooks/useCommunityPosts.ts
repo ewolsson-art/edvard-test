@@ -51,6 +51,7 @@ export interface CommunityPost {
   is_anonymous: boolean;
   anonymous_name: string | null;
   image_url: string | null;
+  status: 'pending' | 'approved' | 'rejected';
   created_at: string;
   updated_at: string;
   author_name?: string;
