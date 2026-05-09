@@ -26,7 +26,9 @@ const Profile = () => {
   const { t } = useTranslation();
   const { user } = useAuth();
   const { profile, isLoading: profileLoading, avatarUrl, updateAvatarUrl } = useProfile();
-  const { isDoctor, isRelative, isPatient, isLoading: roleLoading } = useUserRole();
+  const { isDoctor, isRelative, isPatient, isAdmin, isLoading: roleLoading } = useUserRole();
+  // Admins see the same sections as patients (so internal/test accounts don't lose access).
+  const showPatientSections = isPatient || isAdmin;
   const { toast } = useToast();
 
   const [view, setView] = useState<ProfileView>('main');
