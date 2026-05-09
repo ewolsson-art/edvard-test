@@ -127,49 +127,7 @@ export function DayDetailDialog({
               </div>
             )}
 
-            {/* Eating */}
-            {entry.eatingQuality && (
-              <div className="p-3 rounded-xl bg-muted/30">
-                <div className="flex items-center gap-2 mb-1">
-                  <Utensils className="w-4 h-4 text-primary" />
-                  <p className="text-xs text-muted-foreground uppercase tracking-wide">{t('dayDetail.eating', 'Mat')}</p>
-                </div>
-                <div className="flex items-center gap-1.5">
-                  {getQualityIcon(entry.eatingQuality)}
-                  <span className="text-sm font-medium">{QUALITY_LABELS[entry.eatingQuality]}</span>
-                </div>
-                {entry.eatingComment && (
-                  <p className="text-xs text-muted-foreground mt-2 line-clamp-2">{entry.eatingComment}</p>
-                )}
-              </div>
-            )}
           </div>
-
-          {/* Exercise */}
-          {entry.exercised !== undefined && (
-            <div className="p-3 rounded-xl bg-muted/30">
-              <div className="flex items-center gap-2 mb-1">
-                <Dumbbell className="w-4 h-4 text-primary" />
-                <p className="text-xs text-muted-foreground uppercase tracking-wide">{t('dayDetail.exercise', 'Träning')}</p>
-              </div>
-              <div className="flex items-center gap-1.5">
-                {entry.exercised 
-                  ? <Check className="w-5 h-5 text-mood-stable" />
-                  : <X className="w-5 h-5 text-muted-foreground" />
-                }
-                <span className="text-sm font-medium">{entry.exercised ? t('dayDetail.yes', 'Ja') : t('dayDetail.no', 'Nej')}</span>
-              </div>
-              {entry.exerciseTypes && entry.exerciseTypes.length > 0 && (
-                <div className="flex flex-wrap gap-1.5 mt-2">
-                  {entry.exerciseTypes.map(type => (
-                    <Badge key={type} variant="secondary" className="text-xs">
-                      {EXERCISE_TYPE_LABELS[type]}
-                    </Badge>
-                  ))}
-                </div>
-              )}
-            </div>
-          )}
 
           {/* Medications */}
           {medicationsTaken.length > 0 && (
