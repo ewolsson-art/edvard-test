@@ -125,13 +125,8 @@ const Onboarding = () => {
 
 
   const handleSubmit = async () => {
-    if (!hasAnySelection) {
-      toast({
-        title: t('onboarding.chooseAtLeast'),
-        description: t('onboarding.needOneCategory'),
-      });
-      return;
-    }
+    // hasAnySelection no longer blocks – include_mood är förvalt, och om allt är av
+    // så respekterar vi det. Användaren kan alltid ändra senare i inställningar.
 
     if (!user) return;
 
@@ -215,17 +210,17 @@ const Onboarding = () => {
               </div>
 
               <h1 className="text-2xl md:text-3xl font-bold text-white font-display tracking-tight leading-snug">
-                Välkommen. Vi är glada att du är här.
+                Hej. Vad fint att du är här.
               </h1>
               <p className="mt-3 text-sm text-white/60 max-w-xs leading-relaxed">
-                Toddy är en lugn plats för dig som lever med bipolär sjukdom. Vi hjälper dig att se mönster i ditt mående – så att både du och din vård kan agera tidigare.
+                Toddy är en lugn liten plats för dig som lever med bipolär. Vi hjälper dig att se mönster i ditt mående – inget krav, inga rätt eller fel.
               </p>
 
               <div className="mt-6 flex flex-col gap-2 w-full text-left">
                 {[
-                  'Tar 1 minut om dagen',
-                  'Du delar bara det du vill dela',
-                  'Designat tillsammans med människor med bipolär'
+                  'Tar ungefär 1 minut om dagen',
+                  'Du delar bara det du själv vill',
+                  'Byggt med människor som lever med bipolär'
                 ].map((line) => (
                   <div key={line} className="flex items-center gap-2.5 text-xs text-white/55">
                     <CheckCircle2 className="w-3.5 h-3.5 text-[hsl(45_85%_55%)] shrink-0" />
@@ -238,7 +233,7 @@ const Onboarding = () => {
                 onClick={handleNext} 
                 className="w-full h-14 rounded-2xl text-base font-semibold bg-[hsl(45_85%_55%)] text-[hsl(230_30%_5%)] hover:bg-[hsl(45_85%_65%)] shadow-[0_4px_20px_-4px_hsl(45_85%_55%/0.4)] hover:shadow-[0_6px_28px_-4px_hsl(45_85%_55%/0.5)] hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 mt-8"
               >
-                Kom igång
+                Då börjar vi
                 <ArrowRight className="w-5 h-5 ml-2" />
               </Button>
             </div>
