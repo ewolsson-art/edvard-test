@@ -196,7 +196,7 @@ const Profile = () => {
         >
           <div className="w-14 h-14 rounded-full bg-foreground/[0.06] flex items-center justify-center overflow-hidden flex-shrink-0">
             {avatarUrl ? (
-              <img src={avatarUrl} alt="" className="w-full h-full object-cover" />
+              <img src={avatarUrl} alt="" decoding="async" className="w-full h-full object-cover" />
             ) : (
               <User className="w-6 h-6 text-foreground/40" />
             )}

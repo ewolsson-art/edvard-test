@@ -13,6 +13,7 @@ import { useNotifications } from "@/hooks/useNotifications";
 import { Button } from "@/components/ui/button";
 import { Logo } from "@/components/Logo";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { preloadRoute } from "@/lib/routePreload";
 import {
   Sidebar,
   SidebarContent,
@@ -202,6 +203,9 @@ export function AppSidebar() {
                           aria-label={item.url === '/profil' && hasPending ? `${t(item.titleKey)} - Du har nya notifikationer` : t(item.titleKey)}
                           aria-current={active ? "page" : undefined}
                           onClick={() => { if (isMobile) setOpenMobile(false); }}
+                          onMouseEnter={() => preloadRoute(item.url)}
+                          onTouchStart={() => preloadRoute(item.url)}
+                          onFocus={() => preloadRoute(item.url)}
                         >
                           {false ? null : (
                             <div className="relative">

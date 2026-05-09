@@ -49,6 +49,8 @@ export const HowItWorks = () => {
                 <img 
                   src={step.image} 
                   alt={step.title}
+                  loading="lazy"
+                  decoding="async"
                   className="w-full h-auto object-cover"
                 />
               </div>
