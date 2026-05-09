@@ -183,13 +183,15 @@ export async function refreshUserPatternProfile(userId: string, entries: MoodEnt
   };
 
   await supabase.from('user_pattern_profile').upsert(
-    {
-      user_id: userId,
-      baseline: baseline as unknown as Record<string, unknown>,
-      episode_fingerprints: fingerprints as unknown as Record<string, unknown>[],
-      stats: stats as unknown as Record<string, unknown>,
-      last_computed_at: new Date().toISOString(),
-    },
+    [
+      {
+        user_id: userId,
+        baseline: baseline as unknown as Record<string, unknown>,
+        episode_fingerprints: fingerprints as unknown as Record<string, unknown>[],
+        stats: stats as unknown as Record<string, unknown>,
+        last_computed_at: new Date().toISOString(),
+      },
+    ],
     { onConflict: 'user_id' },
   );
 }
