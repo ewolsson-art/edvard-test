@@ -249,7 +249,7 @@ const Onboarding = () => {
                 </div>
               </div>
               <h1 className="text-2xl md:text-3xl font-bold text-white font-display tracking-tight text-center">
-                Vad ska jag kalla dig?
+                Berätta lite om dig
               </h1>
               <p className="mt-2 text-sm text-white/55 leading-relaxed text-center">
                 Berätta gärna om din diagnos – då kan jag anpassa frågorna efter just dig. Men det är helt okej att hoppa över.
