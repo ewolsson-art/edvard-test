@@ -398,10 +398,17 @@ function CrisisDialog({
           <X className="h-4 w-4" />
         </button>
 
-        {/* 1. VAD: rubrik + mini-graf */}
+        {/* 1. VAD: rubrik + datum + mini-graf */}
         <h2 className="text-base font-semibold text-foreground pr-6">
           Hög energi och mörka tankar samtidigt
         </h2>
+        <p className="mt-1 text-xs text-muted-foreground">
+          {format(epStart, 'd MMM', { locale: sv })}
+          {format(epStart, 'yyyy-MM-dd') !== format(epEnd, 'yyyy-MM-dd') &&
+            `–${format(epEnd, 'd MMM', { locale: sv })}`}
+          {' · '}
+          {episode.days} {episode.days === 1 ? 'dag' : 'dagar'}
+        </p>
 
         {episodeEntries.length > 0 && (
           <div className="mt-4 flex items-stretch gap-1.5 h-16">
