@@ -168,7 +168,7 @@ const Community = () => {
                   {t('communityPage.postButton')}
                 </Button>
               )}
-              <div className="bg-card/40 backdrop-blur-sm rounded-xl border border-border/20 p-4">
+              <div className="bg-foreground/[0.03] backdrop-blur-sm rounded-xl border border-border/20 p-4">
                 <div className="flex items-center gap-2 mb-4">
                   <TrendingUp className="h-4 w-4 text-primary" />
                   <h2 className="text-sm font-semibold text-foreground/90">{t('communityPage.popularThreads')}</h2>
@@ -200,7 +200,7 @@ const Community = () => {
                 )}
               </div>
 
-              <div className="bg-card/40 backdrop-blur-sm rounded-xl border border-border/20 p-4">
+              <div className="bg-foreground/[0.03] backdrop-blur-sm rounded-xl border border-border/20 p-4">
                 <h2 className="text-sm font-semibold text-foreground/90 mb-3">{t('communityPage.categories')}</h2>
                 <div className="space-y-1">
                   {CATEGORY_IDS.map(id => {
