@@ -338,9 +338,51 @@ function CrisisTurtleButton({ onClick }: { onClick: () => void }) {
 }
 
 
-function CrisisDialog({ episode, onClose }: { episode: Episode; onClose: () => void }) {
+// Map mood → "depression-magnitud" 0..3 (negativ sida av en symmetrisk skala)
+const MOOD_DEPRESSION_LEVEL: Record<string, number> = {
+  severe_depressed: 3,
+  depressed: 2,
+  somewhat_depressed: 1,
+  stable: 0,
+  somewhat_elevated: 0,
+  elevated: 0,
+  severe_elevated: 0,
+};
+// Map mood → "uppvarvnings-magnitud" 0..3
+const MOOD_ELEVATION_LEVEL: Record<string, number> = {
+  severe_elevated: 3,
+  elevated: 2,
+  somewhat_elevated: 1,
+  stable: 0,
+  somewhat_depressed: 0,
+  depressed: 0,
+  severe_depressed: 0,
+};
+// Energi → 0..2
+const ENERGY_LEVEL: Record<string, number> = { low: 0, normal: 1, high: 2 };
+
+function CrisisDialog({
+  episode,
+  entries,
+  onClose,
+}: {
+  episode: Episode;
+  entries: MoodEntry[];
+  onClose: () => void;
+}) {
   const startLabel = format(parseISO(episode.startDate), 'd MMM', { locale: sv });
   const endLabel = format(parseISO(episode.endDate), 'd MMM', { locale: sv });
+
+  // Hämta dagar inom episoden, kronologiskt
+  const epStart = parseISO(episode.startDate);
+  const epEnd = parseISO(episode.endDate);
+  const episodeEntries = entries
+    .filter((e) => {
+      const d = parseISO(e.date);
+      return d >= epStart && d <= epEnd;
+    })
+    .sort((a, b) => a.date.localeCompare(b.date));
+
   return (
     <div
       role="dialog"
@@ -349,7 +391,7 @@ function CrisisDialog({ episode, onClose }: { episode: Episode; onClose: () => v
       onClick={onClose}
     >
       <div
-        className="relative w-full max-w-md rounded-2xl border border-border/50 bg-card p-6 shadow-2xl"
+        className="relative w-full max-w-md max-h-[90vh] overflow-y-auto rounded-2xl border border-border/50 bg-card p-6 shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
         <button
@@ -360,7 +402,8 @@ function CrisisDialog({ episode, onClose }: { episode: Episode; onClose: () => v
           <X className="h-4 w-4" />
         </button>
 
-        <div className="flex items-start gap-3 mb-4">
+        {/* Header */}
+        <div className="flex items-start gap-3 mb-5">
           <div className="shrink-0 mt-0.5 h-10 w-10 rounded-full bg-foreground/[0.06] flex items-center justify-center">
             <AlertTriangle className="h-5 w-5 text-foreground/70" />
           </div>
@@ -368,22 +411,126 @@ function CrisisDialog({ episode, onClose }: { episode: Episode; onClose: () => v
             <h2 className="text-base font-semibold text-foreground">
               Tecken på blandepisod
             </h2>
-            <p className="text-sm text-muted-foreground mt-1 leading-relaxed">
-              Hög energi och nedstämdhet förekommer samtidigt i dina senaste in-checkningar.
+            <p className="text-xs text-muted-foreground/80 mt-0.5">
+              {startLabel}–{endLabel} · {episode.days} {episode.days === 1 ? 'dag' : 'dagar'}
             </p>
           </div>
         </div>
 
-        <div className="rounded-xl bg-foreground/[0.04] border border-border/40 p-4">
-          <div className="text-[11px] uppercase tracking-wide text-muted-foreground/70 mb-1.5">
-            Baseras på
-          </div>
-          <p className="text-xs text-muted-foreground leading-relaxed">
-            {episode.days} {episode.days === 1 ? 'dag' : 'dagar'} ({startLabel}–{endLabel}) med
-            samtidiga tecken på uppvarvning och nedstämdhet i dina egna in-checkningar.
+        {/* Pedagogisk förklaring */}
+        <div className="mb-5">
+          <p className="text-sm text-foreground/85 leading-relaxed">
+            En <span className="font-medium text-foreground">blandepisod</span> är när tecken
+            på uppvarvning (hög energi, rastlöshet) finns samtidigt som nedstämdhet eller mörka
+            tankar — istället för att ta ut varandra.
+          </p>
+          <p className="text-xs text-muted-foreground mt-2 leading-relaxed">
+            Det är ett mönster som forskning kopplar till en <span className="text-foreground/85">högre risk för impulsivitet och självmordstankar</span> än
+            ren depression eller ren mani — just för att energin finns kvar att agera på mörka känslor.
           </p>
         </div>
+
+        {/* Diverging mini-chart: energi uppåt, nedstämdhet nedåt */}
+        {episodeEntries.length > 0 && (
+          <div className="rounded-xl bg-foreground/[0.04] border border-border/40 p-4 mb-4">
+            <div className="flex items-center justify-between mb-3">
+              <div className="text-[11px] uppercase tracking-wide text-muted-foreground/70">
+                Vad vi ser i din data
+              </div>
+              <div className="flex items-center gap-3 text-[10px] text-muted-foreground/70">
+                <span className="flex items-center gap-1">
+                  <span className="h-2 w-2 rounded-sm" style={{ backgroundColor: 'hsl(28 85% 60%)' }} />
+                  Energi
+                </span>
+                <span className="flex items-center gap-1">
+                  <span className="h-2 w-2 rounded-sm" style={{ backgroundColor: 'hsl(215 75% 60%)' }} />
+                  Nedstämdhet
+                </span>
+              </div>
+            </div>
+
+            <div className="flex items-stretch gap-1.5 h-28">
+              {episodeEntries.map((e) => {
+                const energy = ENERGY_LEVEL[e.energyLevel ?? 'normal'] ?? 1; // 0..2
+                const depression = MOOD_DEPRESSION_LEVEL[e.mood] ?? 0; // 0..3
+                const elevation = MOOD_ELEVATION_LEVEL[e.mood] ?? 0; // 0..3
+                const isMixedDay = (energy >= 2 || elevation >= 1) && depression >= 1;
+                return (
+                  <div
+                    key={e.date}
+                    className="flex-1 flex flex-col items-center justify-center min-w-0"
+                    title={`${format(parseISO(e.date), 'd MMM', { locale: sv })} — ${MOOD_LABELS_local[e.mood] ?? e.mood}`}
+                  >
+                    {/* Övre halva: energi uppåt */}
+                    <div className="w-full h-1/2 flex flex-col justify-end">
+                      <div
+                        className="w-full rounded-t-sm transition-all"
+                        style={{
+                          height: `${(energy / 2) * 100}%`,
+                          backgroundColor: 'hsl(28 85% 60%)',
+                          opacity: isMixedDay ? 1 : 0.5,
+                        }}
+                      />
+                    </div>
+                    {/* Mitt-axel */}
+                    <div className="w-full h-px bg-foreground/20" />
+                    {/* Nedre halva: nedstämdhet nedåt */}
+                    <div className="w-full h-1/2 flex flex-col justify-start">
+                      <div
+                        className="w-full rounded-b-sm transition-all"
+                        style={{
+                          height: `${(depression / 3) * 100}%`,
+                          backgroundColor: 'hsl(215 75% 60%)',
+                          opacity: isMixedDay ? 1 : 0.5,
+                        }}
+                      />
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            <div className="flex items-center justify-between mt-2 text-[10px] text-muted-foreground/60">
+              <span>{format(parseISO(episodeEntries[0].date), 'd MMM', { locale: sv })}</span>
+              <span>{format(parseISO(episodeEntries[episodeEntries.length - 1].date), 'd MMM', { locale: sv })}</span>
+            </div>
+
+            <p className="text-[11px] text-muted-foreground/80 leading-relaxed mt-3 pt-3 border-t border-border/30">
+              Staplarna som går både upp <span className="text-foreground/85">och</span> ner samma
+              dag är de som triggar varningen — energin är hög samtidigt som måendet är lågt.
+            </p>
+          </div>
+        )}
+
+        {/* Vad du själv kan göra */}
+        <div className="rounded-xl bg-foreground/[0.04] border border-border/40 p-4 mb-4">
+          <div className="text-[11px] uppercase tracking-wide text-muted-foreground/70 mb-2">
+            Vad det här brukar betyda i praktiken
+          </div>
+          <ul className="space-y-1.5 text-xs text-muted-foreground leading-relaxed">
+            <li className="flex gap-2"><span className="text-foreground/40">·</span><span>Skydda sömnen — kort sömn förvärrar både energin och de mörka tankarna.</span></li>
+            <li className="flex gap-2"><span className="text-foreground/40">·</span><span>Undvik stora beslut, alkohol och nya åtaganden under perioden.</span></li>
+            <li className="flex gap-2"><span className="text-foreground/40">·</span><span>Berätta för någon du litar på att du är i en sårbar fas just nu.</span></li>
+            <li className="flex gap-2"><span className="text-foreground/40">·</span><span>Ta kontakt med vården om mönstret håller i sig — särskilt om mörka tankar fördjupas.</span></li>
+          </ul>
+        </div>
+
+        <p className="text-[11px] text-muted-foreground/60 leading-relaxed">
+          Detta är en teknisk observation i din egen data — inte en diagnos eller medicinsk
+          bedömning. Använd den som underlag för en samtal, inte som facit.
+        </p>
       </div>
     </div>
   );
 }
+
+// Lokal mood-etikett för tooltips (undviker import-loop)
+const MOOD_LABELS_local: Record<string, string> = {
+  severe_elevated: 'Svår uppvarvning',
+  elevated: 'Måttlig uppvarvning',
+  somewhat_elevated: 'Lindrig uppvarvning',
+  stable: 'Normalt stämningsläge',
+  somewhat_depressed: 'Lindrig nedstämdhet',
+  depressed: 'Måttlig nedstämdhet',
+  severe_depressed: 'Svår nedstämdhet',
+};
