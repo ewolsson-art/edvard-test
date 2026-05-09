@@ -239,78 +239,8 @@ const Onboarding = () => {
             </div>
           )}
 
-          {/* Step 2: Diagnosis */}
-          {step === 2 && (
-            <div className="animate-fade-in">
-              <div className="flex justify-center mb-4 animate-scale-in">
-                <div className="relative w-20 h-20">
-                  <div className="absolute inset-0 rounded-full bg-[hsl(45_85%_55%/0.08)] blur-xl" />
-                  <TurtleLogo size="md" mood="stable" className="relative w-20 h-20 drop-shadow-[0_4px_16px_hsl(45_85%_55%/0.15)]" />
-                </div>
-              </div>
-              <h1 className="text-2xl md:text-3xl font-bold text-white font-display tracking-tight text-center">
-                Berätta lite om dig
-              </h1>
-              <p className="mt-2 text-sm text-white/55 leading-relaxed text-center">
-                Berätta gärna om din diagnos – då kan jag anpassa frågorna efter just dig. Men det är helt okej att hoppa över.
-              </p>
-
-              <div className="mt-6 max-h-[50vh] overflow-y-auto [&_input]:bg-white/[0.06] [&_input]:border-white/[0.1] [&_input]:text-white [&_input]:placeholder:text-white/30 [&_button]:text-white/70 [&_.text-muted-foreground]:text-white/40 [&_.text-primary]:text-[hsl(45_85%_55%)] [&_.bg-popover]:bg-[hsl(230_30%_12%)] [&_.border-border]:border-white/10 [&_.hover\\:bg-muted]:hover:bg-white/[0.06] [&_.bg-card]:bg-white/[0.04] [&_.border-border]:border-white/10">
-                <DiagnosisStep
-                  selectedDiagnoses={selectedDiagnoses}
-                  onDiagnosesChange={setSelectedDiagnoses}
-                />
-              </div>
-
-              <div className="flex gap-3 mt-6">
-                <button onClick={handleBack} className="h-12 px-5 rounded-2xl text-sm font-medium text-white/50 hover:text-white/80 bg-white/[0.04] ring-1 ring-white/[0.08] hover:bg-white/[0.06] transition-all">
-                  <ArrowLeft className="w-4 h-4" />
-                </button>
-                <Button 
-                  onClick={handleNext} 
-                  className="flex-1 h-12 rounded-2xl text-[15px] font-semibold bg-[hsl(45_85%_55%)] text-[hsl(230_30%_5%)] hover:bg-[hsl(45_85%_65%)] shadow-[0_4px_20px_-4px_hsl(45_85%_55%/0.4)] transition-all duration-300" 
-                >
-                  {selectedDiagnoses.length === 0 ? 'Hoppa över' : 'Fortsätt'}
-                  <ArrowRight className="w-4 h-4 ml-1" />
-                </Button>
-              </div>
-            </div>
-          )}
-
-          {/* Step 3: How it works */}
-          {step === 3 && (
-            <div className="animate-fade-in">
-              <div className="flex justify-center mb-4 animate-scale-in">
-                <div className="relative w-20 h-20">
-                  <div className="absolute inset-0 rounded-full bg-[hsl(45_85%_55%/0.08)] blur-xl" />
-                  <TurtleLogo size="md" holding="book" className="relative w-20 h-20 drop-shadow-[0_4px_16px_hsl(45_85%_55%/0.15)]" />
-                </div>
-              </div>
-              <h1 className="text-2xl md:text-3xl font-bold text-white font-display tracking-tight text-center">
-                Så funkar Toddy
-              </h1>
-              <p className="mt-2 text-sm text-white/55 leading-relaxed text-center">
-                Inget krångel. Bara du, dagen och en sköldpadda som lyssnar.
-              </p>
-
-              <div className="mt-6">
-                <HowItWorksStep />
-              </div>
-
-              <div className="flex gap-3 mt-6">
-                <button onClick={handleBack} className="h-12 px-5 rounded-2xl text-sm font-medium text-white/50 hover:text-white/80 bg-white/[0.04] ring-1 ring-white/[0.08] hover:bg-white/[0.06] transition-all">
-                  <ArrowLeft className="w-4 h-4" />
-                </button>
-                <Button 
-                  onClick={handleNext} 
-                  className="flex-1 h-12 rounded-2xl text-[15px] font-semibold bg-[hsl(45_85%_55%)] text-[hsl(230_30%_5%)] hover:bg-[hsl(45_85%_65%)] shadow-[0_4px_20px_-4px_hsl(45_85%_55%/0.4)] transition-all duration-300" 
-                >
-                  Jag är med
-                  <ArrowRight className="w-4 h-4 ml-1" />
-                </Button>
-              </div>
-            </div>
-          )}
+          {/* Diagnosis & "How it works" steps removed — diagnosis is handled later via
+              DiagnosisPromptBanner on Home; welcome already covers the essence. */}
 
           {/* Step 2: Choose categories */}
           {step === 2 && (
