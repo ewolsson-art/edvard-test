@@ -50,15 +50,21 @@ const CompleteProfile = () => {
 
     // No user and no auth callback in URL → redirect to login
     if (!user) {
-      const hash = window.location.hash;
-      const hasAuthParams = hash.includes('access_token') || hash.includes('type=magiclink');
+      const hash = window.location.hash || '';
+      const search = window.location.search || '';
+      const hasAuthParams =
+        hash.includes('access_token') ||
+        hash.includes('type=magiclink') ||
+        hash.includes('type=signup') ||
+        hash.includes('type=recovery') ||
+        /[?&](code|token_hash|provider_token)=/.test(search);
       if (!hasAuthParams) {
         navigate("/logga-in");
       } else {
-        // Wait for auth to process magic link
+        // Wait for auth to process magic link / PKCE code exchange
         const timeout = setTimeout(() => {
-          navigate("/logga-in");
-        }, 3000);
+          if (!user) navigate("/logga-in");
+        }, 5000);
         return () => clearTimeout(timeout);
       }
     }
