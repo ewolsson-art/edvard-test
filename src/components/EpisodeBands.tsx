@@ -175,18 +175,35 @@ export function EpisodeBands({ entries, days = 14 }: EpisodeBandsProps) {
   // Don't render anything until we have at least 3 entries — the bands would be misleading
   if (windowEntries.length < 3) return null;
 
-  // No episodes detected → render a calm, reassuring strip (no scary empty state)
+  // No episodes detected → render a calm, reassuring strip with positive framing
   if (episodes.length === 0) {
+    const stableDays = windowEntries.filter((e) => e.mood === 'stable' || e.mood === 'somewhat_elevated' || e.mood === 'somewhat_depressed').length;
     return (
-      <div className="rounded-2xl bg-foreground/[0.03] border border-border/30 px-4 py-3 space-y-2.5">
-        <div className="flex items-center justify-between gap-3">
-          <span className="text-sm text-muted-foreground">
-            Inga episoder upptäckta de senaste {days} dagarna.
-          </span>
-          <span className="text-xs text-muted-foreground/60">
-            {windowEntries.length} check-ins
+      <div className="rounded-2xl bg-foreground/[0.03] border border-border/30 px-4 py-3.5 space-y-2">
+        <div className="flex items-center gap-2">
+          <span className="text-base">🌿</span>
+          <span className="text-sm font-medium text-foreground/85">
+            Stabil period
           </span>
         </div>
+        <p className="text-xs text-muted-foreground leading-relaxed">
+          Inga tydliga episoder de senaste {days} dagarna
+          {stableDays > 0 && ` — ${stableDays} av ${windowEntries.length} dagar inom ditt vanliga spann`}.
+          Fortsätt checka in så fångar vi tidiga signaler om något ändras.
+        </p>
+        {earlySignals.length > 0 && (
+          <div className="pt-2 mt-1 border-t border-border/20 space-y-1">
+            <p className="text-[10px] uppercase tracking-wide text-foreground/45 font-medium">Värt att hålla ögonen på</p>
+            <ul className="space-y-0.5">
+              {earlySignals.map((s, i) => (
+                <li key={i} className="text-xs text-muted-foreground leading-relaxed flex gap-2">
+                  <span className="text-foreground/40 shrink-0">·</span>
+                  <span>{s}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
         {similarPast && <SimilarPastRow match={similarPast} />}
       </div>
     );
