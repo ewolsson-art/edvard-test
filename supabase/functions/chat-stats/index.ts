@@ -36,8 +36,9 @@ function buildContext(args: {
   medications: any[];
   diagnoses: any[];
   characteristics: any[];
+  learnedInsights: any[];
 }): string {
-  const { firstName, todayStr, moodEntries, medications, diagnoses, characteristics } = args;
+  const { firstName, todayStr, moodEntries, medications, diagnoses, characteristics, learnedInsights } = args;
 
   const sortedEntries = [...moodEntries]
     .sort((a, b) => (a.date < b.date ? 1 : -1))
@@ -106,6 +107,17 @@ function buildContext(args: {
   lines.push(`Nedstämd: ${charsByType.depressed.join(", ") || "(inga)"}`);
 
   lines.push("");
+  lines.push("=== ANVÄNDARENS EGNA INSIKTER (lärt Toddy via chatten) ===");
+  if (learnedInsights.length === 0) {
+    lines.push("(inga ännu)");
+  } else {
+    for (const li of learnedInsights) {
+      const cat = li.category ? `[${li.category}] ` : "";
+      lines.push(`- ${cat}${li.insight}`);
+    }
+  }
+
+  lines.push("");
   lines.push(`=== INCHECKNINGAR (senaste ${compactEntries.length} dagar, nyast först) ===`);
   lines.push(compactEntries.length ? compactEntries.join("\n") : "(inga incheckningar)");
 
@@ -120,6 +132,9 @@ const SYSTEM_PROMPT = (context: string) => `Du är "Toddy", en assistent för en
 REGISTRERING — VERKTYG:
 - När användaren vill **lägga till biverkningar** för en medicin (t.ex. "lägg till illamående som biverkning på Lamictal"), använd verktyget \`add_medication_side_effects\`. Identifiera medicinen via dess id i listan ovan. Om flera mediciner matchar eller namnet är otydligt — fråga först. Lägg bara till biverkningar som användaren tydligt nämnt.
 - När användaren vill **lägga till ett kännetecken** för uppvarvad / stabil / nedstämd (t.ex. "lägg till 'pratar mycket' som kännetecken när jag är uppvarvad"), använd \`add_characteristic\`. mood_type måste vara exakt "elevated" (uppvarvad), "stable" (stabil) eller "depressed" (nedstämd).
+- När användaren **lär dig något om sitt eget mående eller mönster** — t.ex. "jag mår alltid sämre på söndagar", "kort sömn två nätter i rad brukar göra mig uppvarvad", "stress på jobbet triggar mig", "alkohol förvärrar nedstämdhet hos mig", "min varning är när jag börjar prata snabbt" — använd verktyget \`add_user_insight\`. Formulera om till en kort, tydlig observation i tredje person eller "användaren ..."-form. Sätt en kategori om en passar (t.ex. "trigger", "sömn", "tidig signal", "mönster", "vad som hjälper").
+- Föreslå \`add_user_insight\` proaktivt men försiktigt om användaren beskriver ett personligt mönster — fråga kort: "Vill du att jag sparar det här som en insikt så jag minns det framöver?" och spara först efter ja.
+- Insikter du sparat finns i avsnittet ANVÄNDARENS EGNA INSIKTER. Använd dem aktivt i framtida svar och historiska sammanställningar.
 - Bekräfta kort efteråt vad du har lagt till. Hitta inte på saker — använd bara det användaren faktiskt sagt.
 - Svenska terminologi: använd "uppvarvad" (inte mani) och "nedstämdhet" (inte depression) i svar till användaren.
 
@@ -186,6 +201,31 @@ const TOOLS = [
           },
         },
         required: ["name", "mood_type"],
+        additionalProperties: false,
+      },
+    },
+  },
+  {
+    type: "function",
+    function: {
+      name: "add_user_insight",
+      description:
+        "Spara en personlig insikt om användarens eget mående, mönster, triggers eller tidiga signaler — det användaren just lärt Toddy. T.ex. 'mår alltid sämre på söndagar' eller 'kort sömn två nätter brukar göra mig uppvarvad'. Använd detta för att lära dig om användaren över tid.",
+      parameters: {
+        type: "object",
+        properties: {
+          insight: {
+            type: "string",
+            description:
+              "Den lärda observationen, kort och konkret formulerad. T.ex. 'Mår sämre på söndagar', 'Stress på jobbet är en trigger', 'Korta nätter två i rad föregår uppvarvade perioder'.",
+          },
+          category: {
+            type: "string",
+            description:
+              "Valfri kategori. Förslag: 'trigger', 'tidig signal', 'mönster', 'sömn', 'vad som hjälper', 'undvik'.",
+          },
+        },
+        required: ["insight"],
         additionalProperties: false,
       },
     },
@@ -268,6 +308,34 @@ async function executeTool(
       return { ok: true, message: `La till "${cname}" som kännetecken för ${label}.` };
     }
 
+    if (name === "add_user_insight") {
+      const insight = String(args?.insight ?? "").trim();
+      const category = args?.category ? String(args.category).trim().slice(0, 60) : null;
+      if (!insight) return { ok: false, message: "Insikten är tom." };
+      if (insight.length > 500) {
+        return { ok: false, message: "Insikten är för lång (max 500 tecken)." };
+      }
+      // Avoid near-duplicate (case-insensitive exact match)
+      const { data: existing } = await admin
+        .from("user_learned_insights")
+        .select("id, insight")
+        .eq("user_id", userId);
+      if (
+        Array.isArray(existing) &&
+        existing.some((e: any) => e.insight.toLowerCase() === insight.toLowerCase())
+      ) {
+        return { ok: true, message: `Den insikten är redan sparad.` };
+      }
+      const { error: insErr } = await admin
+        .from("user_learned_insights")
+        .insert({ user_id: userId, insight, category });
+      if (insErr) return { ok: false, message: `DB-fel: ${insErr.message}` };
+      return {
+        ok: true,
+        message: `Sparade insikt: "${insight}"${category ? ` (${category})` : ""}.`,
+      };
+    }
+
     return { ok: false, message: `Okänt verktyg: ${name}` };
   } catch (e) {
     return { ok: false, message: e instanceof Error ? e.message : "Fel vid verktygsexekvering." };
@@ -338,7 +406,7 @@ Deno.serve(async (req: Request) => {
 
     // Build initial context (will be rebuilt after any tool call so model sees fresh data)
     const buildPromptMessages = async () => {
-      const [moodRes, medsRes, diagRes, profRes, charRes] = await Promise.all([
+      const [moodRes, medsRes, diagRes, profRes, charRes, insightsRes] = await Promise.all([
         admin
           .from("mood_entries")
           .select("*")
@@ -349,6 +417,12 @@ Deno.serve(async (req: Request) => {
         admin.from("diagnoses").select("*").eq("user_id", userId),
         admin.from("profiles").select("first_name").eq("user_id", userId).maybeSingle(),
         admin.from("characteristics").select("*").eq("user_id", userId),
+        admin
+          .from("user_learned_insights")
+          .select("insight, category, created_at")
+          .eq("user_id", userId)
+          .order("created_at", { ascending: false })
+          .limit(50),
       ]);
       const todayStr = new Date().toISOString().slice(0, 10);
       const context = buildContext({
@@ -358,6 +432,7 @@ Deno.serve(async (req: Request) => {
         medications: medsRes.data ?? [],
         diagnoses: diagRes.data ?? [],
         characteristics: charRes.data ?? [],
+        learnedInsights: insightsRes.data ?? [],
       });
       return [{ role: "system", content: SYSTEM_PROMPT(context) }, ...safeMessages] as any[];
     };
