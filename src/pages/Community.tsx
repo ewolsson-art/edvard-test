@@ -114,7 +114,7 @@ const Community = () => {
               <p className="text-sm text-muted-foreground mt-1">{t('communityPage.subtitle')}</p>
             </div>
 
-            <div className="bg-card/40 backdrop-blur-sm rounded-xl border border-border/20 overflow-hidden">
+            <div className="bg-foreground/[0.03] backdrop-blur-sm rounded-xl border border-border/20 overflow-hidden">
               <button onClick={() => setRulesOpen(!rulesOpen)} className="w-full flex items-center justify-between px-4 py-3 hover:bg-white/[0.02] transition-colors">
                 <div className="flex items-center gap-2">
                   <span className="text-sm font-medium text-foreground/90">
