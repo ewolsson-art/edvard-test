@@ -102,7 +102,12 @@ const AuthCallback = () => {
       for (let attempt = 0; attempt < 10; attempt += 1) {
         const { data: { session } } = await supabase.auth.getSession();
         if (session) {
-          await ensureGoogleAccountCanEnterApp();
+          // Only auto-complete profile for OAuth flows (Google/Apple) where the
+          // user already has a display name. For email magic-link signups
+          // (next=/slutfor-profil), let CompleteProfile collect name + password.
+          if (next !== "/slutfor-profil") {
+            await ensureGoogleAccountCanEnterApp();
+          }
           window.history.replaceState({}, document.title, "/auth/callback");
           navigate(next, { replace: true });
           return;
