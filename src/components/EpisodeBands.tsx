@@ -292,9 +292,9 @@ function summarizeEpisode(ep: Episode): string[] {
     else if (lowSleep > 0) out.push(`Kortare sömn än vanligt ${lowSleep} nätter`);
     if (lowEat > 0) out.push(`Lägre aptit ${lowEat} av ${total} dagar`);
   } else if (ep.kind === 'mixed') {
+    if (highEnergy > 0) out.push(`Hög energi ${highEnergy} av ${total} dagar`);
+    if (lowSleep > 0) out.push(`Kort sömn ${lowSleep} nätter`);
     if (suicidalDays > 0) out.push(`Mörka tankar registrerade ${suicidalDays} ${suicidalDays === 1 ? 'dag' : 'dagar'}`);
-    if (highEnergy > 0) out.push(`Hög energi ${highEnergy} av ${total} dagar samtidigt`);
-    if (lowSleep > 0) out.push(`Kort sömn ${lowSleep} nätter — förstärker risken`);
   }
 
   return out.slice(0, 3);
