@@ -90,7 +90,7 @@ const DoctorHome = () => {
             className="rounded-full font-semibold gap-2"
           >
             <UserPlus className="w-4 h-4" />
-            Bjud in patient
+            Bjud in användare
           </Button>
         </div>
 
@@ -129,15 +129,15 @@ const DoctorHome = () => {
               <div className="w-12 h-12 rounded-full bg-primary/15 flex items-center justify-center mb-3">
                 <Sparkles className="w-6 h-6 text-primary" />
               </div>
-              <DialogTitle className="font-display text-xl">Bjud in en patient</DialogTitle>
+              <DialogTitle className="font-display text-xl">Bjud in en användare</DialogTitle>
               <p className="text-sm text-muted-foreground pt-1">
-                Vi skickar en förfrågan i appen. Patienten väljer själv vilken data som delas med dig.
+                Vi skickar en förfrågan i appen. Användaren väljer själv vilken data som delas med dig.
               </p>
             </DialogHeader>
 
             <div className="space-y-5 pt-2">
               <div className="space-y-2">
-                <Label htmlFor="patientEmail" className="text-sm font-medium">Patientens e-post</Label>
+                <Label htmlFor="patientEmail" className="text-sm font-medium">Användarens e-post</Label>
                 <div className="relative">
                   <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
                   <Input
@@ -163,7 +163,7 @@ const DoctorHome = () => {
               <div className="flex items-start gap-3 p-3 rounded-xl bg-foreground/[0.03]">
                 <ShieldCheck className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
                 <p className="text-xs text-muted-foreground leading-relaxed">
-                  Patienten måste godkänna förfrågan innan du ser någon data. De kan när som helst dra tillbaka delningen.
+                  Användaren måste godkänna förfrågan innan du ser någon data. De kan när som helst dra tillbaka delningen.
                 </p>
               </div>
 
@@ -195,7 +195,7 @@ const DoctorHome = () => {
                     <div>
                       <p className="font-medium">{getPatientName(connection)}</p>
                       <p className="text-sm text-muted-foreground">
-                        {sentByDoctor ? 'Väntar på patientens godkännande' : t('doctorHome.wantsToShareData')}
+                        {sentByDoctor ? 'Väntar på godkännande' : t('doctorHome.wantsToShareData')}
                       </p>
                     </div>
                     {!sentByDoctor && (
@@ -228,7 +228,7 @@ const DoctorHome = () => {
                 className="rounded-full font-semibold gap-2"
               >
                 <UserPlus className="w-4 h-4" />
-                Bjud in din första patient
+                Bjud in din första användare
               </Button>
             </div>
           ) : (
