@@ -12,7 +12,7 @@ import { ChevronDown, ChevronUp } from 'lucide-react';
 import type { MoodEntry } from '@/types/mood';
 import { detectEpisodes, EPISODE_META, type Episode, type EpisodeKind } from '@/lib/episodeDetection';
 import { findSimilarPastPeriod, type SimilarPastPeriod } from '@/lib/userPatternProfile';
-import { TurtleLogo } from '@/components/TurtleLogo';
+
 
 interface EpisodeBandsProps {
   entries: MoodEntry[];
