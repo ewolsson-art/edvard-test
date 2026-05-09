@@ -67,6 +67,7 @@ const Reports = lazy(() => import("./pages/Reports"));
 const ResetPassword = lazy(() => import("./pages/ResetPassword"));
 const ForgotPassword = lazy(() => import("./pages/ForgotPassword"));
 const AuthCallback = lazy(() => import("./pages/AuthCallback"));
+const ConfirmEmail = lazy(() => import("./pages/ConfirmEmail"));
 const Characteristics = lazy(() => import("./pages/Characteristics"));
 const CharacteristicDetail = lazy(() => import("./pages/CharacteristicDetail"));
 const CompleteProfile = lazy(() => import("./pages/CompleteProfile"));
@@ -169,6 +170,7 @@ const App = () => (
             <Route path="/glomt-losenord" element={<ForgotPassword />} />
             <Route path="/aterstall-losenord" element={<ResetPassword />} />
             <Route path="/auth/callback" element={<AuthCallback />} />
+            <Route path="/bekrafta" element={<ConfirmEmail />} />
             <Route path="/slutfor-profil" element={<CompleteProfile />} />
             <Route path="/onboarding" element={
               <ProtectedRoute skipOnboardingCheck>
