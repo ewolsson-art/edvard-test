@@ -3,6 +3,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Send, Eye, EyeOff, MessageCircle, ChevronDown, ChevronUp, Plus, X, Heart, TrendingUp, ImagePlus, BarChart3, Minus } from 'lucide-react';
 import { useCommunityPosts } from '@/hooks/useCommunityPosts';
 import { useAuth } from '@/hooks/useAuth';
+import { useUserRole } from '@/hooks/useUserRole';
+import { Check, X as XIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
@@ -39,7 +41,8 @@ const Community = () => {
   const { t, i18n } = useTranslation();
   const { user } = useAuth();
   const navigate = useNavigate();
-  const { posts, loading, createPost } = useCommunityPosts();
+  const { isAdmin } = useUserRole();
+  const { posts, loading, createPost, approvePost, rejectPost, deletePost } = useCommunityPosts();
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [isAnonymous, setIsAnonymous] = useState(true);
@@ -97,8 +100,13 @@ const Community = () => {
 
   const filteredPosts = filterCategory ? posts.filter(p => p.category === filterCategory) : posts;
 
+  // Hide non-approved posts from the main list (authors still see their own pending posts via the badge in detail view)
+  const visiblePosts = filteredPosts.filter(p => p.status === 'approved' || (user && p.user_id === user.id) || isAdmin);
+  const pendingPosts = useMemo(() => posts.filter(p => p.status === 'pending'), [posts]);
+
   const popularPosts = useMemo(() => {
     return [...posts]
+      .filter(p => p.status === 'approved')
       .sort((a, b) => (b.reaction_count + b.replies.length) - (a.reaction_count + a.replies.length))
       .filter(p => p.reaction_count + p.replies.length > 0)
       .slice(0, 5);
@@ -144,16 +152,65 @@ const Community = () => {
               )}
             </div>
 
+            {isAdmin && pendingPosts.length > 0 && (
+              <div className="rounded-2xl border border-yellow-500/30 bg-yellow-500/[0.04] p-4 space-y-3">
+                <div className="flex items-center justify-between">
+                  <h2 className="text-sm font-semibold text-yellow-400">
+                    Väntar på godkännande ({pendingPosts.length})
+                  </h2>
+                </div>
+                <div className="space-y-2">
+                  {pendingPosts.map(p => {
+                    const previewTitle = p.title || p.content.slice(0, 80) + (p.content.length > 80 ? '…' : '');
+                    return (
+                      <div key={p.id} className="rounded-xl bg-foreground/[0.04] border border-border/30 p-3">
+                        <button
+                          onClick={() => navigate(`/forum/${p.id}`)}
+                          className="text-left w-full mb-2"
+                        >
+                          <div className="text-xs text-muted-foreground mb-1">{p.author_name}</div>
+                          <div className="text-sm font-medium text-foreground/90 leading-snug">{previewTitle}</div>
+                          {p.title && (
+                            <div className="text-xs text-muted-foreground/70 mt-1 line-clamp-2">{p.content}</div>
+                          )}
+                        </button>
+                        <div className="flex gap-2">
+                          <button
+                            onClick={() => approvePost(p.id)}
+                            className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg bg-green-500/20 text-green-400 hover:bg-green-500/30 text-xs font-medium transition-colors"
+                          >
+                            <Check className="h-3.5 w-3.5" /> Godkänn
+                          </button>
+                          <button
+                            onClick={() => rejectPost(p.id)}
+                            className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/[0.04] text-muted-foreground hover:text-foreground hover:bg-white/[0.08] text-xs font-medium transition-colors"
+                          >
+                            <XIcon className="h-3.5 w-3.5" /> Avvisa
+                          </button>
+                          <button
+                            onClick={() => deletePost(p.id)}
+                            className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500/20 text-xs font-medium transition-colors"
+                          >
+                            Radera
+                          </button>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
             {loading ? (
               <div className="flex justify-center py-12"><div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin" /></div>
-            ) : filteredPosts.length === 0 ? (
+            ) : visiblePosts.length === 0 ? (
               <div className="text-center py-16 space-y-3">
                 <MessageCircle className="h-10 w-10 mx-auto text-muted-foreground/30" />
                 <p className="text-muted-foreground text-sm">{t('communityPage.noThreads')}</p>
               </div>
             ) : (
               <div className="space-y-2 md:space-y-3">
-                {filteredPosts.map(post => (
+                {visiblePosts.map(post => (
                   <ThreadListItem key={post.id} post={post} />
                 ))}
               </div>

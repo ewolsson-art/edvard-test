@@ -51,6 +51,7 @@ export interface CommunityPost {
   is_anonymous: boolean;
   anonymous_name: string | null;
   image_url: string | null;
+  status: 'pending' | 'approved' | 'rejected';
   created_at: string;
   updated_at: string;
   author_name?: string;
@@ -178,6 +179,7 @@ export function useCommunityPosts() {
         is_anonymous: post.is_anonymous,
         anonymous_name: post.anonymous_name,
         image_url: post.image_url,
+        status: (post.status as CommunityPost['status']) || 'approved',
         created_at: post.created_at,
         updated_at: post.updated_at,
         author_name: post.is_anonymous 
@@ -245,8 +247,39 @@ export function useCommunityPosts() {
       await supabase.from('poll_options').insert(options as any);
     }
 
+    toast({
+      title: 'Skickat för granskning',
+      description: 'Ditt inlägg syns när en moderator har godkänt det.',
+    });
+
     await fetchPosts();
     return true;
+  };
+
+  const approvePost = async (postId: string) => {
+    const { error } = await supabase
+      .from('community_posts')
+      .update({ status: 'approved' } as any)
+      .eq('id', postId);
+    if (error) {
+      toast({ title: 'Kunde inte godkänna inlägg', variant: 'destructive' });
+      return;
+    }
+    toast({ title: 'Inlägg godkänt' });
+    await fetchPosts();
+  };
+
+  const rejectPost = async (postId: string) => {
+    const { error } = await supabase
+      .from('community_posts')
+      .update({ status: 'rejected' } as any)
+      .eq('id', postId);
+    if (error) {
+      toast({ title: 'Kunde inte avvisa inlägg', variant: 'destructive' });
+      return;
+    }
+    toast({ title: 'Inlägg avvisat' });
+    await fetchPosts();
   };
 
   const votePoll = async (postId: string, optionId: string) => {
@@ -344,5 +377,5 @@ export function useCommunityPosts() {
     await fetchPosts();
   };
 
-  return { posts, loading, createPost, createReply, deleteReply, toggleReaction, deletePost, votePoll };
+  return { posts, loading, createPost, createReply, deleteReply, toggleReaction, deletePost, votePoll, approvePost, rejectPost };
 }

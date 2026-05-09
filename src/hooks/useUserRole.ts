@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from './useAuth';
 
-export type AppRole = 'patient' | 'doctor' | 'relative';
+export type AppRole = 'patient' | 'doctor' | 'relative' | 'admin';
 
 export function useUserRole() {
   const { user } = useAuth();
@@ -63,12 +63,14 @@ export function useUserRole() {
   const isDoctor = role === 'doctor';
   const isPatient = role === 'patient';
   const isRelative = role === 'relative';
+  const isAdmin = role === 'admin';
 
   return {
     role,
     isDoctor,
     isPatient,
     isRelative,
+    isAdmin,
     isLoading,
     setUserRole,
   };

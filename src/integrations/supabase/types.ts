@@ -82,6 +82,7 @@ export type Database = {
           id: string
           image_url: string | null
           is_anonymous: boolean
+          status: string
           title: string | null
           updated_at: string
           user_id: string
@@ -94,6 +95,7 @@ export type Database = {
           id?: string
           image_url?: string | null
           is_anonymous?: boolean
+          status?: string
           title?: string | null
           updated_at?: string
           user_id: string
@@ -106,6 +108,7 @@ export type Database = {
           id?: string
           image_url?: string | null
           is_anonymous?: boolean
+          status?: string
           title?: string | null
           updated_at?: string
           user_id?: string
@@ -1140,6 +1143,7 @@ export type Database = {
           id: string
           image_url: string
           is_anonymous: boolean
+          status: string
           title: string
           updated_at: string
           user_id: string
@@ -1239,7 +1243,7 @@ export type Database = {
       }
     }
     Enums: {
-      app_role: "patient" | "doctor" | "relative"
+      app_role: "patient" | "doctor" | "relative" | "admin"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -1367,7 +1371,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      app_role: ["patient", "doctor", "relative"],
+      app_role: ["patient", "doctor", "relative", "admin"],
     },
   },
 } as const
