@@ -112,7 +112,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const { error } = await supabase.auth.signInWithOtp({
         email: emailOrPhone,
         options: {
-          emailRedirectTo: `${window.location.origin}/slutfor-profil`,
+          emailRedirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent("/slutfor-profil")}`,
           data: { role },
           shouldCreateUser: true,
         }
