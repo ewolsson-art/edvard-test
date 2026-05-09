@@ -258,6 +258,7 @@ export function EpisodeBands({ entries, days = 14 }: EpisodeBandsProps) {
                 ))}
               </ul>
             )}
+            {similarPast && <SimilarPastRow match={similarPast} />}
             {episodes.map((ep, i) => (
               <EpisodeRow
                 key={`${ep.kind}-${ep.startDate}-${i}`}
