@@ -67,8 +67,8 @@ const Reports = () => {
   const [endDate, setEndDate] = useState<Date>(defaultEnd);
   const [includeMood, setIncludeMood] = useState(true);
   const [includeSleep, setIncludeSleep] = useState(true);
-  const [includeEating, setIncludeEating] = useState(true);
-  const [includeExercise, setIncludeExercise] = useState(true);
+  const [includeEating, setIncludeEating] = useState(false);
+  const [includeExercise, setIncludeExercise] = useState(false);
   const [includeMedication, setIncludeMedication] = useState(true);
   const [reportGenerated, setReportGenerated] = useState(false);
 
@@ -361,8 +361,8 @@ const Reports = () => {
   const CATEGORY_OPTIONS = [
     { id: 'mood', icon: Heart, label: t('reports.mood'), checked: includeMood, setChecked: setIncludeMood, show: true },
     { id: 'sleep', icon: Moon, label: t('reports.sleep'), checked: includeSleep, setChecked: setIncludeSleep, show: true },
-    { id: 'eating', icon: Utensils, label: t('reports.diet'), checked: includeEating, setChecked: setIncludeEating, show: true },
-    { id: 'exercise', icon: Dumbbell, label: t('reports.exercise'), checked: includeExercise, setChecked: setIncludeExercise, show: true },
+    { id: 'eating', icon: Utensils, label: t('reports.diet'), checked: includeEating, setChecked: setIncludeEating, show: false },
+    { id: 'exercise', icon: Dumbbell, label: t('reports.exercise'), checked: includeExercise, setChecked: setIncludeExercise, show: false },
     { id: 'medication', icon: Pill, label: t('reports.medication'), checked: includeMedication, setChecked: setIncludeMedication, show: activeMedications.length > 0 },
   ];
 
