@@ -2,6 +2,7 @@ import { lazy, Suspense } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { OfflineBanner } from "@/components/OfflineBanner";
+import { MobileWebNotice } from "@/components/MobileWebNotice";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
@@ -141,6 +142,7 @@ const App = () => (
           <Toaster />
           <Sonner />
           <OfflineBanner />
+          <MobileWebNotice />
           <NativeAppGate>
           <BrowserRouter>
             <div className="min-h-screen" role="application" aria-label="Toddy - Moodtracker">
