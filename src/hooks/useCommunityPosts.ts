@@ -247,8 +247,39 @@ export function useCommunityPosts() {
       await supabase.from('poll_options').insert(options as any);
     }
 
+    toast({
+      title: 'Skickat för granskning',
+      description: 'Ditt inlägg syns när en moderator har godkänt det.',
+    });
+
     await fetchPosts();
     return true;
+  };
+
+  const approvePost = async (postId: string) => {
+    const { error } = await supabase
+      .from('community_posts')
+      .update({ status: 'approved' } as any)
+      .eq('id', postId);
+    if (error) {
+      toast({ title: 'Kunde inte godkänna inlägg', variant: 'destructive' });
+      return;
+    }
+    toast({ title: 'Inlägg godkänt' });
+    await fetchPosts();
+  };
+
+  const rejectPost = async (postId: string) => {
+    const { error } = await supabase
+      .from('community_posts')
+      .update({ status: 'rejected' } as any)
+      .eq('id', postId);
+    if (error) {
+      toast({ title: 'Kunde inte avvisa inlägg', variant: 'destructive' });
+      return;
+    }
+    toast({ title: 'Inlägg avvisat' });
+    await fetchPosts();
   };
 
   const votePoll = async (postId: string, optionId: string) => {
