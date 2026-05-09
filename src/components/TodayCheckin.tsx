@@ -260,7 +260,7 @@ export function TodayCheckin({
         mood: todayEntry.mood,
         energyLevel: todayEntry.energyLevel,
         moodComment: todayEntry.comment,
-        sleepQuality: todayEntry.sleepQuality,
+        sleepQuality: todayEntry.sleepQuality ?? 'good',
         sleepComment: todayEntry.sleepComment,
         eatingQuality: todayEntry.eatingQuality,
         eatingComment: todayEntry.eatingComment,
@@ -974,7 +974,7 @@ export function TodayCheckin({
           <div className="flex-1 flex flex-col justify-center">
             <VerticalScaleSlider<QualityType>
               options={sleepSliderOptions}
-              value={checkinData.sleepQuality}
+              value={checkinData.sleepQuality ?? 'good'}
               onSelect={handleSleepSelect}
             />
           </div>
