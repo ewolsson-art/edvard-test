@@ -218,12 +218,31 @@ async function handleWebhook(req: Request): Promise<Response> {
     )
   }
 
+  // Build a confirmation URL that points to OUR domain (not Supabase's direct
+  // verify endpoint). This protects against email scanners (Outlook Safe Links,
+  // Defender, etc.) that pre-fetch links and burn the single-use token before
+  // the user can click it. Our /bekrafta page requires a manual button click,
+  // then calls supabase.auth.verifyOtp({ token_hash, type }).
+  const tokenHash = (payload.data as any).token_hash || (payload.data as any).token
+  const redirectTo = (payload.data as any).redirect_to || ''
+  let next = '/slutfor-profil'
+  try {
+    if (redirectTo) {
+      const u = new URL(redirectTo)
+      next = u.searchParams.get('next') || u.pathname || next
+    }
+  } catch (_) { /* ignore */ }
+
+  const confirmationUrl = tokenHash
+    ? `https://${ROOT_DOMAIN}/bekrafta?token_hash=${encodeURIComponent(tokenHash)}&type=${encodeURIComponent(emailType)}&next=${encodeURIComponent(next)}`
+    : payload.data.url
+
   // Build template props from payload.data (HookData structure)
   const templateProps = {
     siteName: SITE_NAME,
     siteUrl: `https://${ROOT_DOMAIN}`,
     recipient: payload.data.email,
-    confirmationUrl: payload.data.url,
+    confirmationUrl,
     token: payload.data.token,
     email: payload.data.email,
     oldEmail: payload.data.old_email,
