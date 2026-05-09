@@ -13,6 +13,7 @@ import { useNotifications } from "@/hooks/useNotifications";
 import { Button } from "@/components/ui/button";
 import { Logo } from "@/components/Logo";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { preloadRoute } from "@/lib/routePreload";
 import {
   Sidebar,
   SidebarContent,
