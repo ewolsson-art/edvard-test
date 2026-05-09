@@ -64,9 +64,12 @@ export function EpisodeBands({ entries, days = 30 }: EpisodeBandsProps) {
 
   return (
     <>
-      {/* === CRISIS POPUP for mixed episodes === */}
-      {mixedEpisode && !crisisDismissed && (
-        <CrisisDialog episode={mixedEpisode} onClose={() => setCrisisDismissed(true)} />
+      {/* === CRISIS TURTLE INDICATOR for mixed episodes === */}
+      {mixedEpisode && (
+        <CrisisTurtleButton onClick={() => setCrisisOpen(true)} />
+      )}
+      {mixedEpisode && crisisOpen && (
+        <CrisisDialog episode={mixedEpisode} onClose={() => setCrisisOpen(false)} />
       )}
 
       <div className="rounded-2xl bg-foreground/[0.03] border border-border/30 overflow-hidden">
