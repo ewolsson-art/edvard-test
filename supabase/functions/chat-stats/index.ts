@@ -406,7 +406,7 @@ Deno.serve(async (req: Request) => {
 
     // Build initial context (will be rebuilt after any tool call so model sees fresh data)
     const buildPromptMessages = async () => {
-      const [moodRes, medsRes, diagRes, profRes, charRes] = await Promise.all([
+      const [moodRes, medsRes, diagRes, profRes, charRes, insightsRes] = await Promise.all([
         admin
           .from("mood_entries")
           .select("*")
@@ -417,6 +417,12 @@ Deno.serve(async (req: Request) => {
         admin.from("diagnoses").select("*").eq("user_id", userId),
         admin.from("profiles").select("first_name").eq("user_id", userId).maybeSingle(),
         admin.from("characteristics").select("*").eq("user_id", userId),
+        admin
+          .from("user_learned_insights")
+          .select("insight, category, created_at")
+          .eq("user_id", userId)
+          .order("created_at", { ascending: false })
+          .limit(50),
       ]);
       const todayStr = new Date().toISOString().slice(0, 10);
       const context = buildContext({
@@ -426,6 +432,7 @@ Deno.serve(async (req: Request) => {
         medications: medsRes.data ?? [],
         diagnoses: diagRes.data ?? [],
         characteristics: charRes.data ?? [],
+        learnedInsights: insightsRes.data ?? [],
       });
       return [{ role: "system", content: SYSTEM_PROMPT(context) }, ...safeMessages] as any[];
     };
