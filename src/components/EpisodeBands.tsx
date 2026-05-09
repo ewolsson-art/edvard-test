@@ -158,6 +158,24 @@ function EpisodeRow({ episode }: { episode: Episode }) {
   );
 }
 
+function CrisisTurtleButton({ onClick }: { onClick: () => void }) {
+  return (
+    <button
+      onClick={onClick}
+      aria-label="Vi ser några varningstecken — visa stödresurser"
+      className="fixed bottom-24 right-5 z-[90] group flex items-center gap-2 rounded-full bg-card/90 backdrop-blur-md border border-red-500/40 shadow-lg shadow-red-500/10 pl-1.5 pr-3 py-1.5 hover:border-red-500/70 hover:bg-card transition-all animate-in fade-in slide-in-from-bottom-2"
+    >
+      <span className="relative">
+        <TurtleLogo size="sm" mood="severe_depressed" framing="face" staticPose />
+        <span className="absolute -top-0.5 -right-0.5 h-3 w-3 rounded-full bg-red-500 border-2 border-card animate-pulse" />
+      </span>
+      <span className="text-xs font-medium text-foreground/90 group-hover:text-foreground">
+        Varning
+      </span>
+    </button>
+  );
+}
+
 function CrisisDialog({ episode, onClose }: { episode: Episode; onClose: () => void }) {
   return (
     <div
