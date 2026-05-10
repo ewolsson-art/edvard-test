@@ -226,9 +226,9 @@ export function PatternInsightsSection() {
             <h2 className="text-[17px] font-semibold leading-tight">Upptäckter</h2>
             {(lastRun?.entries_analyzed || lastRunLabel) && (
               <p className="text-[11px] text-muted-foreground/80 leading-tight">
-                {lastRun?.entries_analyzed ? `${lastRun.entries_analyzed} check-ins` : ''}
+                {lastRun?.entries_analyzed ? `Baserat på dina ${lastRun.entries_analyzed} check-ins` : ''}
                 {lastRun?.entries_analyzed && lastRunLabel ? ' · ' : ''}
-                {lastRunLabel ?? ''}
+                {lastRunLabel ? `uppdaterat ${lastRunLabel}` : ''}
               </p>
             )}
           </div>
