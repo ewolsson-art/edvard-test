@@ -1365,6 +1365,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      mood_to_mood_type: { Args: { _mood: string }; Returns: string }
       move_to_dlq: {
         Args: {
           dlq_name: string
