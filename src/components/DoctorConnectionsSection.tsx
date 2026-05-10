@@ -287,15 +287,13 @@ export const DoctorConnectionsSection = () => {
             <div className="space-y-4">
                <Label>{t("doctorConnections.shareFollowingData")}</Label>
                <div className="space-y-3">
-                 {[
-                   { key: 'share_mood', label: t("doctorConnections.mood") },
-                   { key: 'share_sleep', label: t("doctorConnections.sleep") },
-                   { key: 'share_eating', label: t("doctorConnections.eating") },
-                   { key: 'share_exercise', label: t("doctorConnections.exercise") },
-                   { key: 'share_medication', label: t("doctorConnections.medication") },
-                   { key: 'share_comments', label: t("doctorConnections.comments") },
-                   { key: 'share_ai_insights', label: t("doctorConnections.aiInsights") },
-                 ].map(({ key, label }) => (
+                  {[
+                    { key: 'share_mood', label: t("doctorConnections.mood") },
+                    { key: 'share_sleep', label: t("doctorConnections.sleep") },
+                    { key: 'share_medication', label: t("doctorConnections.medication") },
+                    { key: 'share_comments', label: t("doctorConnections.comments") },
+                    { key: 'share_ai_insights', label: t("doctorConnections.aiInsights") },
+                  ].map(({ key, label }) => (
                   <div key={key} className="flex items-center justify-between">
                     <span className="text-sm">{label}</span>
                     <Switch
