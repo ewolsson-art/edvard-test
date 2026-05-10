@@ -1,7 +1,6 @@
 import { PatternInsightsSection } from '@/components/PatternInsightsSection';
 import { TurtleLogo } from '@/components/TurtleLogo';
 import { OverviewSummary } from '@/components/OverviewSummary';
-import { EpisodeBands } from '@/components/EpisodeBands';
 import { useMoodData } from '@/hooks/useMoodData';
 
 export default function Patterns() {
@@ -57,7 +56,7 @@ export default function Patterns() {
         {/* Statistik flyttad från Översikt */}
         {isLoaded && (
           <section className="space-y-6">
-            <EpisodeBands entries={entries} days={14} />
+            
             <OverviewSummary
               stats={stats}
               entries={entries}
