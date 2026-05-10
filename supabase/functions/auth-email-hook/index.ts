@@ -246,10 +246,15 @@ async function handleWebhook(req: Request): Promise<Response> {
     )
   }
 
-  // The email button should be the actual verification action. After the user
-  // clicks it, auth redirects to /auth/callback and then straight to the
-  // profile-completion step where they choose username and password.
-  const confirmationUrl = payload.data.url
+  // IMPORTANT: Do NOT link directly to Supabase's verify endpoint. Email
+  // security scanners (Outlook Safe Links etc.) pre-fetch links and would
+  // burn the single-use token before the user clicks. Instead, send users to
+  // an intermediate page on our domain that runs verifyOtp() in JS — scanners
+  // don't execute JS, so the token survives until the real click.
+  const tokenHash = payload.data.token_hash
+  const actionType = payload.data.email_action_type || emailType
+  const next = actionType === 'recovery' ? '/aterstall-losenord' : '/slutfor-profil'
+  const confirmationUrl = `https://${ROOT_DOMAIN}/bekrafta?token_hash=${encodeURIComponent(tokenHash)}&type=${encodeURIComponent(actionType)}&next=${encodeURIComponent(next)}`
 
   // Build template props from payload.data (HookData structure)
   const templateProps = {
