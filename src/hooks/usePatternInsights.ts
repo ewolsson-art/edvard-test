@@ -22,6 +22,7 @@ export interface PatternInsight {
   confidence: number;
   severity: PatternSeverity;
   supporting_dates: string[];
+  supporting_data: { why_it_matters?: string; what_to_do?: string } | null;
   occurrences: number;
   first_seen_at: string | null;
   last_seen_at: string | null;
