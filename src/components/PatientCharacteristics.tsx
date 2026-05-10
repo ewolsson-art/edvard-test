@@ -68,6 +68,18 @@ export const PatientCharacteristics = ({ patientId, latestMood, isShared, patien
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
         {sections.map(s => {
           const Icon = s.icon;
+          const manualChars = s.chars.filter(c => (c.source ?? 'manual') === 'manual');
+          // Slå ihop check-in-kännetecken (samma namn räknas samman)
+          const checkinMap = new Map<string, { name: string; count: number; id: string }>();
+          s.chars
+            .filter(c => c.source === 'checkin')
+            .forEach(c => {
+              const key = c.name.trim().toLowerCase();
+              const existing = checkinMap.get(key);
+              if (existing) existing.count += 1;
+              else checkinMap.set(key, { name: c.name, count: 1, id: c.id });
+            });
+          const checkinChars = Array.from(checkinMap.values()).sort((a, b) => b.count - a.count);
           return (
             <Card key={s.key} className={cn(s.borderColor, "transition-all duration-300", latestMood === s.mood && `ring-2 ${s.ringColor}`)}>
               <CardHeader className="pb-3">
@@ -77,13 +89,31 @@ export const PatientCharacteristics = ({ patientId, latestMood, isShared, patien
                   <div><CardTitle className="text-base">{s.title}</CardTitle></div>
                 </div>
               </CardHeader>
-              <CardContent>
-                <div className="flex flex-wrap gap-2">
-                  {s.chars.length === 0 ? (
-                    <p className="text-sm text-muted-foreground italic">{t('patientChars.noCharacteristics')}</p>
-                  ) : s.chars.map(char => (
-                    <Badge key={char.id} variant="secondary" className={`${s.badgeStyle} py-1.5 px-3`}>{char.name}</Badge>
-                  ))}
+              <CardContent className="space-y-4">
+                <div>
+                  <p className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground mb-2">Egna</p>
+                  <div className="flex flex-wrap gap-2">
+                    {manualChars.length === 0 ? (
+                      <p className="text-sm text-muted-foreground italic">{t('patientChars.noCharacteristics')}</p>
+                    ) : manualChars.map(char => (
+                      <Badge key={char.id} variant="secondary" className={`${s.badgeStyle} py-1.5 px-3`}>{char.name}</Badge>
+                    ))}
+                  </div>
+                </div>
+                <div>
+                  <p className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground mb-2">Från in-checkningar</p>
+                  <div className="flex flex-wrap gap-2">
+                    {checkinChars.length === 0 ? (
+                      <p className="text-sm text-muted-foreground italic">Inga ännu</p>
+                    ) : checkinChars.map(c => (
+                      <Badge key={c.id} variant="outline" className="py-1.5 px-3 gap-1.5 border-dashed">
+                        <span>{c.name}</span>
+                        {c.count > 1 && (
+                          <span className="text-[10px] font-semibold text-muted-foreground">×{c.count}</span>
+                        )}
+                      </Badge>
+                    ))}
+                  </div>
                 </div>
               </CardContent>
             </Card>
