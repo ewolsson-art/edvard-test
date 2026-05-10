@@ -71,6 +71,15 @@ export default function Patterns() {
           </section>
         )}
 
+        {/* Kännetecken */}
+        {user?.id && (
+          <PatientCharacteristics
+            patientId={user.id}
+            latestMood={latestMood as any}
+            isShared={true}
+          />
+        )}
+
         {/* AI-mönster */}
         <PatternInsightsSection />
       </div>
