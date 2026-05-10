@@ -601,58 +601,13 @@ const Overview = () => {
           </div>
           
           <div className="flex items-center gap-3">
-            {sectionView === 'calendar' && (
-              <Tabs value={view} onValueChange={handleViewChange} className="flex-1">
-                <TabsList className="inline-flex w-full h-9 bg-foreground/[0.03] p-0.5 rounded-full gap-0">
-                  <TabsTrigger value="week" className="flex-1 text-xs font-semibold px-2 py-1 rounded-full hover:bg-foreground/[0.05] data-[state=active]:bg-foreground/[0.06] data-[state=active]:text-foreground data-[state=active]:shadow-none">V</TabsTrigger>
-                  <TabsTrigger value="month" className="flex-1 text-xs font-semibold px-2 py-1 rounded-full hover:bg-foreground/[0.05] data-[state=active]:bg-foreground/[0.06] data-[state=active]:text-foreground data-[state=active]:shadow-none">M</TabsTrigger>
-                  <TabsTrigger value="year" className="flex-1 text-xs font-semibold px-2 py-1 rounded-full hover:bg-foreground/[0.05] data-[state=active]:bg-foreground/[0.06] data-[state=active]:text-foreground data-[state=active]:shadow-none">ÅR</TabsTrigger>
-                </TabsList>
-              </Tabs>
-            )}
-
-            <div className="flex items-center gap-0.5 p-1 bg-muted/50 rounded-lg ml-auto">
-                <button
-                  onClick={() => {
-                    setSectionView('calendar');
-                    if (view === 'year') {
-                      setTimeout(() => {
-                        const todayEl = document.querySelector('[data-today="true"]');
-                        if (todayEl) {
-                          todayEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                        }
-                      }, 100);
-                    }
-                  }}
-                  className={`p-2 rounded-md transition-all ${
-                    sectionView === 'calendar'
-                      ? 'bg-background text-foreground shadow-sm'
-                      : 'text-muted-foreground hover:text-foreground'
-                  }`}
-                  aria-label="Kalender"
-                >
-                  <CalendarDays className="w-5 h-5" />
-                </button>
-                <button
-                  onClick={() => {
-                    setSectionView('stats');
-                    setTimeout(() => {
-                      window.scrollTo({ top: 0, behavior: 'smooth' });
-                      // Fallback: also try scrolling the main content container
-                      const mainEl = document.querySelector('main');
-                      if (mainEl) mainEl.scrollTo({ top: 0, behavior: 'smooth' });
-                    }, 50);
-                  }}
-                  className={`p-2 rounded-md transition-all ${
-                    sectionView === 'stats'
-                      ? 'bg-background text-foreground shadow-sm'
-                      : 'text-muted-foreground hover:text-foreground'
-                  }`}
-                  aria-label="Statistik"
-                >
-                  <BarChart3 className="w-5 h-5" />
-                </button>
-              </div>
+            <Tabs value={view} onValueChange={handleViewChange} className="flex-1">
+              <TabsList className="inline-flex w-full h-9 bg-foreground/[0.03] p-0.5 rounded-full gap-0">
+                <TabsTrigger value="week" className="flex-1 text-xs font-semibold px-2 py-1 rounded-full hover:bg-foreground/[0.05] data-[state=active]:bg-foreground/[0.06] data-[state=active]:text-foreground data-[state=active]:shadow-none">V</TabsTrigger>
+                <TabsTrigger value="month" className="flex-1 text-xs font-semibold px-2 py-1 rounded-full hover:bg-foreground/[0.05] data-[state=active]:bg-foreground/[0.06] data-[state=active]:text-foreground data-[state=active]:shadow-none">M</TabsTrigger>
+                <TabsTrigger value="year" className="flex-1 text-xs font-semibold px-2 py-1 rounded-full hover:bg-foreground/[0.05] data-[state=active]:bg-foreground/[0.06] data-[state=active]:text-foreground data-[state=active]:shadow-none">ÅR</TabsTrigger>
+              </TabsList>
+            </Tabs>
           </div>
         </header>
 
