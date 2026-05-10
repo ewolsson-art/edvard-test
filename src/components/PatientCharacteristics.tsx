@@ -66,7 +66,14 @@ export const PatientCharacteristics = ({ patientId, latestMood, isShared, patien
 
   return (
     <div className="space-y-4">
-      <h3 className="text-lg font-semibold">{t('patientChars.characteristics')}</h3>
+      <div className="space-y-1">
+        <h3 className="text-lg font-semibold">{t('patientChars.characteristics')}</h3>
+        {checkinOnly && (
+          <p className="text-sm text-muted-foreground">
+            Kännetecken du själv angett i tidigare in-checkningar, grupperade efter mående.
+          </p>
+        )}
+      </div>
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
         {sections.map(s => {
           const Icon = s.icon;
