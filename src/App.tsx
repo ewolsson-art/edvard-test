@@ -209,6 +209,11 @@ const App = () => (
                 <AppLayout><Overview /></AppLayout>
               </ProtectedRoute>
             } />
+            <Route path="/monster" element={
+              <ProtectedRoute>
+                <AppLayout><Patterns /></AppLayout>
+              </ProtectedRoute>
+            } />
             <Route path="/kannetecken" element={
               <ProtectedRoute>
                 <AppLayout><Characteristics /></AppLayout>
