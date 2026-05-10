@@ -227,6 +227,35 @@ export function TodayCheckin({
   const [checkinData, setCheckinData] = useState<CheckinData>({ mood: 'stable', sleepQuality: 'good' });
   const [customAnswersState, setCustomAnswersState] = useState<Record<string, string>>(initialCustomAnswers);
 
+  // Förslag baserade på användarens egna tidigare in-checkningar
+  const { user } = useAuth();
+  const { characteristics: userCheckinChars } = usePatientCharacteristics(user?.id);
+  const moodTypeForSuggestions = useMemo(() => {
+    const m = checkinData.mood;
+    if (!m) return null;
+    if (['severe_elevated', 'elevated', 'somewhat_elevated'].includes(m)) return 'elevated';
+    if (['severe_depressed', 'depressed', 'somewhat_depressed'].includes(m)) return 'depressed';
+    return null;
+  }, [checkinData.mood]);
+  const suggestedPriorTags = useMemo(() => {
+    if (!moodTypeForSuggestions || !checkinData.mood) return [] as { name: string; count: number }[];
+    const presetValues = new Set(
+      MOOD_TAGS[checkinData.mood].flatMap(o => [o.value.toLowerCase(), o.label.toLowerCase()])
+    );
+    const selectedLower = new Set((checkinData.tags || []).map(t => t.toLowerCase()));
+    const counts = new Map<string, { name: string; count: number }>();
+    userCheckinChars
+      .filter(c => c.source === 'checkin' && c.mood_type === moodTypeForSuggestions)
+      .forEach(c => {
+        const key = c.name.trim().toLowerCase();
+        if (!key || presetValues.has(key) || selectedLower.has(key)) return;
+        const existing = counts.get(key);
+        if (existing) existing.count += 1;
+        else counts.set(key, { name: c.name.trim(), count: 1 });
+      });
+    return Array.from(counts.values()).sort((a, b) => b.count - a.count).slice(0, 6);
+  }, [userCheckinChars, moodTypeForSuggestions, checkinData.mood, checkinData.tags, MOOD_TAGS]);
+
   // Auto-mark scheduled medications as taken when entering medication step for the first time.
   // Vid behov-mediciner är frivilliga och förkryssas aldrig.
   const hasPrefilled = useRef(false);
