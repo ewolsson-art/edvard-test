@@ -336,7 +336,7 @@ export const DoctorConnectionsSection = () => {
 
       {/* Existing connections */}
       {connections.filter(c => !(c.status === 'pending' && c.initiated_by === 'doctor')).length === 0 && pendingFromDoctors.length === 0 ? (
-        <div className="text-center py-6 bg-muted/50 rounded-xl">
+        <div className="text-center py-6 rounded-2xl bg-foreground/[0.03] backdrop-blur-sm">
           <Users className="w-8 h-8 text-muted-foreground mx-auto mb-2" />
            <p className="text-sm text-muted-foreground">{t("doctorConnections.noDoctorsYet")}</p>
            <Button 
