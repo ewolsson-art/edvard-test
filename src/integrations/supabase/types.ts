@@ -758,6 +758,87 @@ export type Database = {
         }
         Relationships: []
       }
+      pattern_analysis_runs: {
+        Row: {
+          entries_analyzed: number
+          error_message: string | null
+          id: string
+          last_run_at: string
+          patterns_found: number
+          status: string
+          user_id: string
+        }
+        Insert: {
+          entries_analyzed?: number
+          error_message?: string | null
+          id?: string
+          last_run_at?: string
+          patterns_found?: number
+          status?: string
+          user_id: string
+        }
+        Update: {
+          entries_analyzed?: number
+          error_message?: string | null
+          id?: string
+          last_run_at?: string
+          patterns_found?: number
+          status?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      pattern_insights: {
+        Row: {
+          confidence: number
+          created_at: string
+          description: string
+          first_seen_at: string | null
+          id: string
+          last_seen_at: string | null
+          occurrences: number
+          pattern_type: string
+          severity: string
+          supporting_data: Json | null
+          supporting_dates: string[] | null
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          confidence?: number
+          created_at?: string
+          description: string
+          first_seen_at?: string | null
+          id?: string
+          last_seen_at?: string | null
+          occurrences?: number
+          pattern_type: string
+          severity?: string
+          supporting_data?: Json | null
+          supporting_dates?: string[] | null
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          confidence?: number
+          created_at?: string
+          description?: string
+          first_seen_at?: string | null
+          id?: string
+          last_seen_at?: string | null
+          occurrences?: number
+          pattern_type?: string
+          severity?: string
+          supporting_data?: Json | null
+          supporting_dates?: string[] | null
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       poll_options: {
         Row: {
           created_at: string
