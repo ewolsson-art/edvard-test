@@ -116,6 +116,28 @@ function PatternCard({ insight }: { insight: PatternInsight }) {
             </DialogDescription>
           </DialogHeader>
 
+          {insight.supporting_data?.why_it_matters && (
+            <div className="rounded-2xl bg-foreground/[0.04] border border-border/30 p-3 space-y-1">
+              <p className="text-[11px] uppercase tracking-wider text-muted-foreground font-medium">
+                Varför det spelar roll
+              </p>
+              <p className="text-[14px] text-foreground/85 leading-relaxed">
+                {insight.supporting_data.why_it_matters}
+              </p>
+            </div>
+          )}
+
+          {insight.supporting_data?.what_to_do && (
+            <div className="rounded-2xl bg-[hsl(45_85%_55%/0.08)] border border-[hsl(45_85%_55%/0.3)] p-3 space-y-1">
+              <p className="text-[11px] uppercase tracking-wider text-[hsl(45_85%_65%)] font-medium">
+                Vad du kan göra
+              </p>
+              <p className="text-[14px] text-foreground/90 leading-relaxed">
+                {insight.supporting_data.what_to_do}
+              </p>
+            </div>
+          )}
+
           {insight.supporting_dates.length > 0 && (
             <div className="space-y-2 pt-1">
               <p className="text-[11px] uppercase tracking-wider text-muted-foreground font-medium">
