@@ -1,7 +1,31 @@
 import { PatternInsightsSection } from '@/components/PatternInsightsSection';
 import { TurtleLogo } from '@/components/TurtleLogo';
+import { OverviewSummary } from '@/components/OverviewSummary';
+import { EpisodeBands } from '@/components/EpisodeBands';
+import { useMoodData } from '@/hooks/useMoodData';
 
 export default function Patterns() {
+  const { entries, isLoaded } = useMoodData();
+
+  // Build aggregate stats across all entries (used by OverviewSummary header).
+  const stats = (() => {
+    let severe_elevated = 0, elevated = 0, somewhat_elevated = 0, stable = 0,
+        somewhat_depressed = 0, depressed = 0, severe_depressed = 0;
+    entries.forEach(e => {
+      switch (e.mood) {
+        case 'severe_elevated': severe_elevated++; break;
+        case 'elevated': elevated++; break;
+        case 'somewhat_elevated': somewhat_elevated++; break;
+        case 'stable': stable++; break;
+        case 'somewhat_depressed': somewhat_depressed++; break;
+        case 'depressed': depressed++; break;
+        case 'severe_depressed': severe_depressed++; break;
+      }
+    });
+    const total = severe_elevated + elevated + somewhat_elevated + stable + somewhat_depressed + depressed + severe_depressed;
+    return { severe_elevated, elevated, somewhat_elevated, stable, somewhat_depressed, depressed, severe_depressed, unregistered: 0, total, totalDays: total };
+  })();
+
   return (
     <div className="min-h-screen w-full relative overflow-hidden">
       {/* Lekfulla bakgrundsformer */}
@@ -30,7 +54,21 @@ export default function Patterns() {
           </div>
         </header>
 
-        {/* Sektion */}
+        {/* Statistik flyttad från Översikt */}
+        {isLoaded && (
+          <section className="space-y-6">
+            <EpisodeBands entries={entries} days={14} />
+            <OverviewSummary
+              stats={stats}
+              entries={entries}
+              periodLabel="Hela din historik"
+              sleepBadDays={0}
+              showSleep={false}
+            />
+          </section>
+        )}
+
+        {/* AI-mönster */}
         <PatternInsightsSection />
       </div>
     </div>
