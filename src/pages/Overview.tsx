@@ -35,6 +35,7 @@ import { DayDetailDialog } from '@/components/DayDetailDialog';
 import { ExerciseTypeDialog } from '@/components/ExerciseTypeDialog';
 import { AIInsights } from '@/components/AIInsights';
 import { OverviewSummary } from '@/components/OverviewSummary';
+import { PatternInsightsSection } from '@/components/PatternInsightsSection';
 
 import { useCharacteristics } from '@/hooks/useCharacteristics';
 
