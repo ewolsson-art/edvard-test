@@ -11,9 +11,11 @@ interface PatientCharacteristicsProps {
   latestMood?: MoodType | null;
   isShared: boolean;
   patientName?: string;
+  /** Show only check-in derived characteristics (hide "Egna") */
+  checkinOnly?: boolean;
 }
 
-export const PatientCharacteristics = ({ patientId, latestMood, isShared, patientName }: PatientCharacteristicsProps) => {
+export const PatientCharacteristics = ({ patientId, latestMood, isShared, patientName, checkinOnly = false }: PatientCharacteristicsProps) => {
   const { t } = useTranslation();
   const defaultName = patientName || t('common.noData');
   const { elevatedCharacteristics, depressedCharacteristics, stableCharacteristics, isLoading } = usePatientCharacteristics(patientId);
