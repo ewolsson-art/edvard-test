@@ -696,15 +696,20 @@ const Overview = () => {
               </section>
             )}
 
-            {/* Summary Card - only in stats view */}
+            {/* Stats view: pattern detection + summary */}
             {sectionView === 'stats' && (
-              <OverviewSummary
-                stats={stats}
-                entries={entries}
-                periodLabel={label}
-                sleepBadDays={0}
-                showSleep={false}
-              />
+              <>
+                {/* === EPISODE BANDS START === (safe to delete this block to remove the feature) */}
+                <EpisodeBands entries={entries} days={14} />
+                {/* === EPISODE BANDS END === */}
+                <OverviewSummary
+                  stats={stats}
+                  entries={entries}
+                  periodLabel={label}
+                  sleepBadDays={0}
+                  showSleep={false}
+                />
+              </>
             )}
 
           </div>
