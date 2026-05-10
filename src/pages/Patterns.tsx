@@ -1,10 +1,14 @@
 import { PatternInsightsSection } from '@/components/PatternInsightsSection';
 import { TurtleLogo } from '@/components/TurtleLogo';
 import { OverviewSummary } from '@/components/OverviewSummary';
+import { PatientCharacteristics } from '@/components/PatientCharacteristics';
 import { useMoodData } from '@/hooks/useMoodData';
+import { useAuth } from '@/hooks/useAuth';
 
 export default function Patterns() {
   const { entries, isLoaded } = useMoodData();
+  const { user } = useAuth();
+  const latestMood = entries.length > 0 ? entries[entries.length - 1].mood : null;
 
   // Build aggregate stats across all entries (used by OverviewSummary header).
   const stats = (() => {
