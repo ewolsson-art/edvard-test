@@ -287,25 +287,30 @@ async function executeTool(
       if (!cname || !["elevated", "stable", "depressed"].includes(moodType)) {
         return { ok: false, message: "Ogiltiga argument." };
       }
-      // Avoid duplicates (case-insensitive) within same mood_type
+      // Hoppa över endast om personen redan lagt in det själv (manual).
+      // Tillåt flera 'checkin'-registreringar så AI:n kan räkna samman förekomster.
       const { data: existing } = await admin
         .from("characteristics")
-        .select("id, name")
+        .select("id, name, source")
         .eq("user_id", userId)
         .eq("mood_type", moodType);
       if (
         Array.isArray(existing) &&
-        existing.some((c: any) => c.name.toLowerCase() === cname.toLowerCase())
+        existing.some(
+          (c: any) =>
+            c.source === "manual" &&
+            c.name.toLowerCase() === cname.toLowerCase(),
+        )
       ) {
-        return { ok: true, message: `"${cname}" finns redan som kännetecken.` };
+        return { ok: true, message: `"${cname}" finns redan som eget kännetecken.` };
       }
       const { error: insErr } = await admin
         .from("characteristics")
-        .insert({ user_id: userId, name: cname, mood_type: moodType });
+        .insert({ user_id: userId, name: cname, mood_type: moodType, source: "checkin" });
       if (insErr) return { ok: false, message: `DB-fel: ${insErr.message}` };
       const label =
         moodType === "elevated" ? "uppvarvad" : moodType === "stable" ? "stabil" : "nedstämd";
-      return { ok: true, message: `La till "${cname}" som kännetecken för ${label}.` };
+      return { ok: true, message: `Registrerade "${cname}" från in-checkning som ${label}.` };
     }
 
     if (name === "add_user_insight") {

@@ -7,6 +7,7 @@ export interface Characteristic {
   id: string;
   name: string;
   mood_type: 'elevated' | 'depressed' | 'stable';
+  source?: 'manual' | 'checkin';
   created_at: string;
 }
 
@@ -59,6 +60,7 @@ export function useCharacteristics() {
           user_id: user.id,
           name: name.trim(),
           mood_type: moodType,
+          source: 'manual',
         })
         .select()
         .single();
