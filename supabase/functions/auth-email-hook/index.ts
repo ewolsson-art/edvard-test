@@ -41,6 +41,34 @@ const SENDER_DOMAIN = "notify.www.toddy.se"
 const ROOT_DOMAIN = "www.toddy.se"
 const FROM_DOMAIN = "notify.www.toddy.se" // Domain shown in From address (may be root or sender subdomain)
 
+async function triggerImmediateQueueProcessing(): Promise<void> {
+  const supabaseUrl = Deno.env.get('SUPABASE_URL')
+  const serviceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')
+
+  if (!supabaseUrl || !serviceRoleKey) return
+
+  try {
+    const response = await fetch(`${supabaseUrl}/functions/v1/process-email-queue`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${serviceRoleKey}`,
+        apikey: serviceRoleKey,
+        'Content-Type': 'application/json',
+      },
+      body: '{}',
+    })
+
+    if (!response.ok) {
+      console.warn('Immediate auth email queue processing skipped', {
+        status: response.status,
+        body: await response.text(),
+      })
+    }
+  } catch (error) {
+    console.warn('Immediate auth email queue processing failed', { error })
+  }
+}
+
 // Sample data for preview mode ONLY (not used in actual email sending).
 // URLs are baked in at scaffold time from the project's real data.
 // The sample email uses a fixed placeholder (RFC 6761 .test TLD) so the Go backend
@@ -304,6 +332,11 @@ async function handleWebhook(req: Request): Promise<Response> {
   }
 
   console.log('Auth email enqueued', { emailType, email: payload.data.email, run_id })
+
+  const queueProcessing = triggerImmediateQueueProcessing()
+  if (typeof EdgeRuntime !== 'undefined' && 'waitUntil' in EdgeRuntime) {
+    EdgeRuntime.waitUntil(queueProcessing)
+  }
 
   return new Response(
     JSON.stringify({ success: true, queued: true }),
