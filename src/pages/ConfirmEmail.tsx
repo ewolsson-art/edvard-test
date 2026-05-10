@@ -27,6 +27,9 @@ const ConfirmEmail = () => {
   const navigate = useNavigate();
   const [status, setStatus] = useState<"idle" | "verifying" | "error">("idle");
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [resendEmail, setResendEmail] = useState("");
+  const [resending, setResending] = useState(false);
+  const [resent, setResent] = useState(false);
 
   const tokenHash = params.get("token_hash") || params.get("token");
   const typeParam = (params.get("type") || "signup") as EmailOtpType;
@@ -108,11 +111,52 @@ const ConfirmEmail = () => {
           </p>
 
           {status === "error" && errorMsg && (
-            <div className="mt-2 p-4 rounded-xl bg-white/[0.04] ring-1 ring-white/[0.08] text-left">
+            <div className="mt-2 p-5 rounded-2xl bg-white/[0.04] ring-1 ring-white/[0.08] text-left space-y-4">
               <p className="text-sm text-white/80">{errorMsg}</p>
+
+              <div className="space-y-2">
+                <label htmlFor="resend-email" className="text-xs font-medium text-white/60">
+                  Få en ny länk
+                </label>
+                <input
+                  id="resend-email"
+                  type="email"
+                  inputMode="email"
+                  autoComplete="email"
+                  placeholder="din@epost.se"
+                  value={resendEmail}
+                  onChange={(e) => setResendEmail(e.target.value)}
+                  className="w-full h-12 px-4 rounded-xl bg-white/[0.06] ring-1 ring-white/[0.08] text-base text-white placeholder:text-white/30 focus:outline-none focus:ring-[hsl(45_85%_55%)]/60"
+                  disabled={resending || resent}
+                />
+                <button
+                  onClick={async () => {
+                    if (!resendEmail || resending) return;
+                    setResending(true);
+                    const { error } = await supabase.auth.signInWithOtp({
+                      email: resendEmail,
+                      options: {
+                        emailRedirectTo: `${window.location.origin}/bekrafta?next=%2Fslutfor-profil`,
+                      },
+                    });
+                    setResending(false);
+                    if (!error) setResent(true);
+                  }}
+                  disabled={!resendEmail || resending || resent}
+                  className="w-full h-12 rounded-full bg-[hsl(45_85%_55%)] text-[hsl(230_30%_5%)] font-semibold text-sm hover:bg-[hsl(45_85%_65%)] transition-colors disabled:opacity-60"
+                >
+                  {resent ? "Länk skickad ✓" : resending ? "Skickar…" : "Skicka ny länk"}
+                </button>
+                {resent && (
+                  <p className="text-xs text-white/60 pt-1">
+                    Kolla din inkorg (och skräppost) efter den nya länken.
+                  </p>
+                )}
+              </div>
+
               <button
                 onClick={() => navigate("/logga-in")}
-                className="mt-3 text-sm text-[hsl(45_85%_55%)] hover:text-[hsl(45_85%_65%)] font-medium"
+                className="block text-sm text-white/50 hover:text-white/80 transition-colors"
               >
                 Gå till inloggning →
               </button>
