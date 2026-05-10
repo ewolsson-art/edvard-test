@@ -40,6 +40,7 @@ const HowItWorksPage = lazy(() => import("./pages/HowItWorks"));
 const Login = lazy(() => import("./pages/Login"));
 const Signup = lazy(() => import("./pages/Signup"));
 const Overview = lazy(() => import("./pages/Overview"));
+const Patterns = lazy(() => import("./pages/Patterns"));
 const Settings = lazy(() => import("./pages/Settings"));
 const Medications = lazy(() => import("./pages/Medications"));
 const MedicationCategory = lazy(() => import("./pages/MedicationCategory"));
