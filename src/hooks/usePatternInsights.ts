@@ -71,7 +71,7 @@ export function usePatternInsights() {
   });
 
   const analyzeMutation = useMutation({
-    mutationFn: async (force = false) => {
+    mutationFn: async (force: boolean) => {
       const { data, error } = await supabase.functions.invoke('analyze-patterns', {
         body: { force },
       });
