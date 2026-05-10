@@ -223,7 +223,7 @@ export function PatternInsightsSection() {
         <div className="flex items-center gap-2.5 min-w-0">
           <TurtleLogo size="sm" animated={false} className="h-7 w-7 shrink-0" />
           <div className="min-w-0">
-            <h2 className="text-[17px] font-semibold leading-tight">Mönster</h2>
+            <h2 className="text-[17px] font-semibold leading-tight">Upptäckter</h2>
             {(lastRun?.entries_analyzed || lastRunLabel) && (
               <p className="text-[11px] text-muted-foreground/80 leading-tight">
                 {lastRun?.entries_analyzed ? `${lastRun.entries_analyzed} check-ins` : ''}
