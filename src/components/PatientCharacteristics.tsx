@@ -83,9 +83,8 @@ export const PatientCharacteristics = ({ patientId, latestMood, isShared, patien
             });
           const checkinChars = Array.from(checkinMap.values()).sort((a, b) => b.count - a.count);
           return (
-            <Card key={s.key} className={cn("bg-foreground/[0.03] backdrop-blur-sm border-transparent transition-all duration-300", latestMood === s.mood && `ring-2 ${s.ringColor}`)}>
+            <Card key={s.key} className="bg-foreground/[0.03] backdrop-blur-sm border-transparent transition-all duration-300">
               <CardHeader className="pb-3">
-                {latestMood === s.mood && <Badge className={`${s.badgeBg} text-white text-xs w-fit mb-2`}>{t('patientChars.currentState')}</Badge>}
                 <div className="flex items-center gap-2">
                   <div className={`p-2 rounded-lg ${s.iconBg}`}><Icon className={`h-4 w-4 ${s.iconColor}`} /></div>
                   <div><CardTitle className="text-base">{s.title}</CardTitle></div>
