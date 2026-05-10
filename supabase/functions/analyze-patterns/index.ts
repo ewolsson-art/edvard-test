@@ -296,7 +296,8 @@ Hitta de starkaste, mest faktabaserade mönstren. Returnera JSON:
     } catch {
       parsed = { patterns: [] };
     }
-    const patterns = Array.isArray(parsed.patterns) ? parsed.patterns : [];
+    const patterns = (Array.isArray(parsed.patterns) ? parsed.patterns : [])
+      .filter((p: any) => String(p?.pattern_type ?? "").toLowerCase() !== "medication");
 
     // Wipe gamla insikter och skriv nya
     await sb.from("pattern_insights").delete().eq("user_id", userId);
