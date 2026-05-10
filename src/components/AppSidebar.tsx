@@ -31,6 +31,7 @@ const patientNavGroups = [
     items: [
       { titleKey: "sidebar.today", url: "/", icon: CalendarDays, primary: true },
       { titleKey: "sidebar.overview", url: "/oversikt", icon: BarChart3 },
+      { titleKey: "sidebar.patterns", url: "/monster", icon: Sparkles },
       { titleKey: "sidebar.forum", url: "/forum", icon: MessageCircle },
       { titleKey: "sidebar.notifications", url: "/notiser", icon: Bell },
     ],
