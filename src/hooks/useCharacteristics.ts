@@ -7,6 +7,7 @@ export interface Characteristic {
   id: string;
   name: string;
   mood_type: 'elevated' | 'depressed' | 'stable';
+  source?: 'manual' | 'checkin';
   created_at: string;
 }
 
