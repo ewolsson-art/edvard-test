@@ -1,7 +1,7 @@
 import { useState, useMemo, useCallback, useRef, useEffect } from 'react';
-import { CalendarDays, BarChart3 } from 'lucide-react';
+
 import { AnimatedPage } from '@/components/AnimatedPage';
-import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { format, startOfWeek, endOfWeek, addWeeks, subWeeks, eachDayOfInterval, addMonths, subMonths, startOfMonth, endOfMonth, isBefore, startOfDay, isToday } from 'date-fns';
 import { sv } from 'date-fns/locale';
 import { useMoodData } from '@/hooks/useMoodData';
@@ -34,16 +34,12 @@ import { useAuth } from '@/hooks/useAuth';
 import { DayDetailDialog } from '@/components/DayDetailDialog';
 import { ExerciseTypeDialog } from '@/components/ExerciseTypeDialog';
 import { AIInsights } from '@/components/AIInsights';
-import { OverviewSummary } from '@/components/OverviewSummary';
 import { PatternInsightsSection } from '@/components/PatternInsightsSection';
 
 import { useCharacteristics } from '@/hooks/useCharacteristics';
 
 import { MoodStats as MoodStatsType, ExerciseType, QualityType } from '@/types/mood';
 import { Last30DaysOverview } from '@/components/Last30DaysOverview';
-// === EPISODE BANDS START === (delete this import + the JSX block below to remove the feature)
-import { EpisodeBands } from '@/components/EpisodeBands';
-// === EPISODE BANDS END ===
 import { NewUserOverviewHint } from '@/components/NewUserOverviewHint';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Dumbbell, Moon, Utensils } from 'lucide-react';
@@ -90,7 +86,7 @@ const Overview = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [exerciseDialogOpen, setExerciseDialogOpen] = useState(false);
   const [exerciseDialogDate, setExerciseDialogDate] = useState<Date | null>(null);
-  const [sectionView, setSectionView] = useState<'calendar' | 'stats'>('calendar');
+  
   const scrollableCalendarRef = useRef<ScrollableMonthsCalendarRef>(null);
   const navigate = useNavigate();
 
@@ -579,21 +575,19 @@ const Overview = () => {
             <div className="flex items-baseline justify-between mb-1">
               <h1 className="font-display text-2xl font-bold text-foreground">Översikt</h1>
               <div className="flex items-center gap-4">
-                {sectionView === 'calendar' && (
-                  <button
-                    onClick={() => {
-                      const now = new Date();
-                      setCurrentYear(now.getFullYear());
-                      setCurrentMonth(new Date(now.getFullYear(), now.getMonth(), 1));
-                      setTimeout(() => {
-                        scrollableCalendarRef.current?.scrollToToday();
-                      }, 50);
-                    }}
-                    className="text-sm font-semibold text-primary px-3 py-1 rounded-full border border-primary/30 bg-primary/5 hover:bg-primary/10 transition-colors"
-                  >
-                    Idag
-                  </button>
-                )}
+                <button
+                  onClick={() => {
+                    const now = new Date();
+                    setCurrentYear(now.getFullYear());
+                    setCurrentMonth(new Date(now.getFullYear(), now.getMonth(), 1));
+                    setTimeout(() => {
+                      scrollableCalendarRef.current?.scrollToToday();
+                    }, 50);
+                  }}
+                  className="text-sm font-semibold text-primary px-3 py-1 rounded-full border border-primary/30 bg-primary/5 hover:bg-primary/10 transition-colors"
+                >
+                  Idag
+                </button>
                 <span className="text-xl font-semibold text-muted-foreground">{currentYear}</span>
               </div>
             </div>
@@ -601,58 +595,13 @@ const Overview = () => {
           </div>
           
           <div className="flex items-center gap-3">
-            {sectionView === 'calendar' && (
-              <Tabs value={view} onValueChange={handleViewChange} className="flex-1">
-                <TabsList className="inline-flex w-full h-9 bg-foreground/[0.03] p-0.5 rounded-full gap-0">
-                  <TabsTrigger value="week" className="flex-1 text-xs font-semibold px-2 py-1 rounded-full hover:bg-foreground/[0.05] data-[state=active]:bg-foreground/[0.06] data-[state=active]:text-foreground data-[state=active]:shadow-none">V</TabsTrigger>
-                  <TabsTrigger value="month" className="flex-1 text-xs font-semibold px-2 py-1 rounded-full hover:bg-foreground/[0.05] data-[state=active]:bg-foreground/[0.06] data-[state=active]:text-foreground data-[state=active]:shadow-none">M</TabsTrigger>
-                  <TabsTrigger value="year" className="flex-1 text-xs font-semibold px-2 py-1 rounded-full hover:bg-foreground/[0.05] data-[state=active]:bg-foreground/[0.06] data-[state=active]:text-foreground data-[state=active]:shadow-none">ÅR</TabsTrigger>
-                </TabsList>
-              </Tabs>
-            )}
-
-            <div className="flex items-center gap-0.5 p-1 bg-muted/50 rounded-lg ml-auto">
-                <button
-                  onClick={() => {
-                    setSectionView('calendar');
-                    if (view === 'year') {
-                      setTimeout(() => {
-                        const todayEl = document.querySelector('[data-today="true"]');
-                        if (todayEl) {
-                          todayEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                        }
-                      }, 100);
-                    }
-                  }}
-                  className={`p-2 rounded-md transition-all ${
-                    sectionView === 'calendar'
-                      ? 'bg-background text-foreground shadow-sm'
-                      : 'text-muted-foreground hover:text-foreground'
-                  }`}
-                  aria-label="Kalender"
-                >
-                  <CalendarDays className="w-5 h-5" />
-                </button>
-                <button
-                  onClick={() => {
-                    setSectionView('stats');
-                    setTimeout(() => {
-                      window.scrollTo({ top: 0, behavior: 'smooth' });
-                      // Fallback: also try scrolling the main content container
-                      const mainEl = document.querySelector('main');
-                      if (mainEl) mainEl.scrollTo({ top: 0, behavior: 'smooth' });
-                    }, 50);
-                  }}
-                  className={`p-2 rounded-md transition-all ${
-                    sectionView === 'stats'
-                      ? 'bg-background text-foreground shadow-sm'
-                      : 'text-muted-foreground hover:text-foreground'
-                  }`}
-                  aria-label="Statistik"
-                >
-                  <BarChart3 className="w-5 h-5" />
-                </button>
-              </div>
+            <Tabs value={view} onValueChange={handleViewChange} className="flex-1">
+              <TabsList className="inline-flex w-full h-9 bg-foreground/[0.03] p-0.5 rounded-full gap-0">
+                <TabsTrigger value="week" className="flex-1 text-xs font-semibold px-2 py-1 rounded-full hover:bg-foreground/[0.05] data-[state=active]:bg-foreground/[0.06] data-[state=active]:text-foreground data-[state=active]:shadow-none">V</TabsTrigger>
+                <TabsTrigger value="month" className="flex-1 text-xs font-semibold px-2 py-1 rounded-full hover:bg-foreground/[0.05] data-[state=active]:bg-foreground/[0.06] data-[state=active]:text-foreground data-[state=active]:shadow-none">M</TabsTrigger>
+                <TabsTrigger value="year" className="flex-1 text-xs font-semibold px-2 py-1 rounded-full hover:bg-foreground/[0.05] data-[state=active]:bg-foreground/[0.06] data-[state=active]:text-foreground data-[state=active]:shadow-none">ÅR</TabsTrigger>
+              </TabsList>
+            </Tabs>
           </div>
         </header>
 
@@ -661,7 +610,7 @@ const Overview = () => {
           <div className="flex-1 min-w-0 space-y-6">
             <NewUserOverviewHint entryCount={entries.length} />
             
-            {showMood && sectionView === 'calendar' && (
+            {showMood && (
               <section className="space-y-4">
                      {view === 'week' && (
                        <WeekCalendar
@@ -695,37 +644,6 @@ const Overview = () => {
                       </div>
                     )}
               </section>
-            )}
-
-            {/* Stats view: episode bands + summary + patterns CTA */}
-            {sectionView === 'stats' && (
-              <div className="space-y-6">
-                {/* === EPISODE BANDS START === (safe to delete this block to remove the feature) */}
-                <EpisodeBands entries={entries} days={14} />
-                {/* === EPISODE BANDS END === */}
-                <OverviewSummary
-                  stats={stats}
-                  entries={entries}
-                  periodLabel={label}
-                  sleepBadDays={0}
-                  showSleep={false}
-                />
-                <Link
-                  to="/monster"
-                  className="group flex items-center gap-4 p-4 rounded-2xl bg-gradient-to-br from-[hsl(280_70%_60%/0.08)] to-[hsl(45_85%_55%/0.08)] border border-border/30 hover:border-border/60 transition-colors"
-                >
-                  <div className="h-11 w-11 shrink-0 rounded-2xl bg-gradient-to-br from-[hsl(45_85%_60%)] to-[hsl(280_70%_60%)] grid place-items-center text-xl shadow-sm">
-                    ✨
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-[14px] font-semibold text-foreground/90">Dina mönster</p>
-                    <p className="text-[12px] text-muted-foreground leading-snug">
-                      AI:n hittar återkommande sekvenser i din historik
-                    </p>
-                  </div>
-                  <span className="text-muted-foreground/60 group-hover:text-foreground/80 transition-colors">→</span>
-                </Link>
-              </div>
             )}
 
           </div>
