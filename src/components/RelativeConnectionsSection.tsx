@@ -156,11 +156,9 @@ export const RelativeConnectionsSection = () => {
    const shareOptions = [
      { key: 'share_mood', label: t("relativeConnections.mood") },
      { key: 'share_sleep', label: t("relativeConnections.sleep") },
-     { key: 'share_eating', label: t("relativeConnections.eating") },
-     { key: 'share_exercise', label: t("relativeConnections.exercise") },
      { key: 'share_medication', label: t("relativeConnections.medication") },
-     { key: 'share_comments', label: t("relativeConnections.comments") },
      { key: 'share_characteristics', label: t("relativeConnections.characteristics") },
+     { key: 'share_comments', label: t("relativeConnections.comments") },
    ];
 
    const notificationOptions = [
