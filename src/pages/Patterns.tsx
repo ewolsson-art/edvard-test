@@ -56,7 +56,7 @@ export default function Patterns() {
         {/* Statistik flyttad från Översikt */}
         {isLoaded && (
           <section className="space-y-6">
-            <EpisodeBands entries={entries} days={14} />
+            
             <OverviewSummary
               stats={stats}
               entries={entries}
