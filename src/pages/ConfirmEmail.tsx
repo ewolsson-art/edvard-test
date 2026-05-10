@@ -27,6 +27,9 @@ const ConfirmEmail = () => {
   const navigate = useNavigate();
   const [status, setStatus] = useState<"idle" | "verifying" | "error">("idle");
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [resendEmail, setResendEmail] = useState("");
+  const [resending, setResending] = useState(false);
+  const [resent, setResent] = useState(false);
 
   const tokenHash = params.get("token_hash") || params.get("token");
   const typeParam = (params.get("type") || "signup") as EmailOtpType;
