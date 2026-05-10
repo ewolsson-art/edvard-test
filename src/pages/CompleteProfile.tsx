@@ -48,16 +48,10 @@ const CompleteProfile = () => {
       return;
     }
 
-    // No user yet — give the auth client a grace period to hydrate the
-    // session that was just created by /bekrafta (verifyOtp). Without this,
-    // the very first render after navigation sees user=null and bounces the
-    // user back to login before Supabase finishes restoring the session.
-    if (!user) {
-      const timeout = setTimeout(() => {
-        if (!user) navigate("/logga-in");
-      }, 3000);
-      return () => clearTimeout(timeout);
-    }
+    // Intentionally do NOT auto-redirect to login if there's no user yet.
+    // The user just landed here from the email confirmation link; the
+    // session may still be hydrating, and they should remain on this page
+    // until they choose to leave.
   }, [user, loading, profileLoading, profile, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
