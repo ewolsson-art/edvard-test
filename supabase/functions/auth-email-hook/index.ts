@@ -251,10 +251,28 @@ async function handleWebhook(req: Request): Promise<Response> {
   // burn the single-use token before the user clicks. Instead, send users to
   // an intermediate page on our domain that runs verifyOtp() in JS — scanners
   // don't execute JS, so the token survives until the real click.
-  const tokenHash = payload.data.token_hash
-  const actionType = payload.data.email_action_type || emailType
+  // The Lovable webhook payload provides `data.url` (the full Supabase verify
+  // link with token_hash) and `data.token` (the raw OTP). Extract token_hash
+  // from the URL so we can route users through our own /bekrafta page.
+  const rawUrl: string | undefined = (payload.data as any).url
+  let tokenHash: string | undefined = (payload.data as any).token_hash
+  let actionType: string = (payload.data as any).email_action_type || emailType
+  if (rawUrl) {
+    try {
+      const parsed = new URL(rawUrl)
+      tokenHash = tokenHash || parsed.searchParams.get('token_hash') || undefined
+      actionType = parsed.searchParams.get('type') || actionType
+    } catch (_) {
+      // ignore parse errors, fall through to fallback
+    }
+  }
   const next = actionType === 'recovery' ? '/aterstall-losenord' : '/slutfor-profil'
-  const confirmationUrl = `https://${ROOT_DOMAIN}/bekrafta?token_hash=${encodeURIComponent(tokenHash)}&type=${encodeURIComponent(actionType)}&next=${encodeURIComponent(next)}`
+  const confirmationUrl = tokenHash
+    ? `https://${ROOT_DOMAIN}/bekrafta?token_hash=${encodeURIComponent(tokenHash)}&type=${encodeURIComponent(actionType)}&next=${encodeURIComponent(next)}`
+    : (rawUrl || `https://${ROOT_DOMAIN}/logga-in`)
+  if (!tokenHash) {
+    console.warn('Auth email missing token_hash; falling back to raw URL', { run_id, emailType, hasRawUrl: Boolean(rawUrl) })
+  }
 
   // Build template props from payload.data (HookData structure)
   const templateProps = {
