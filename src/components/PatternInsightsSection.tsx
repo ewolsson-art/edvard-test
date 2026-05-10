@@ -74,7 +74,7 @@ function PatternCard({ insight }: { insight: PatternInsight }) {
               <span className="text-[10px] text-muted-foreground/70">· {insight.occurrences}×</span>
             )}
           </div>
-          <h3 className="text-[14px] font-semibold text-foreground/90 leading-snug truncate">
+          <h3 className="text-[14px] font-semibold text-foreground/90 leading-snug line-clamp-2">
             {insight.title}
           </h3>
         </div>
