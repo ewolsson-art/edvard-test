@@ -34,16 +34,12 @@ import { useAuth } from '@/hooks/useAuth';
 import { DayDetailDialog } from '@/components/DayDetailDialog';
 import { ExerciseTypeDialog } from '@/components/ExerciseTypeDialog';
 import { AIInsights } from '@/components/AIInsights';
-import { OverviewSummary } from '@/components/OverviewSummary';
 import { PatternInsightsSection } from '@/components/PatternInsightsSection';
 
 import { useCharacteristics } from '@/hooks/useCharacteristics';
 
 import { MoodStats as MoodStatsType, ExerciseType, QualityType } from '@/types/mood';
 import { Last30DaysOverview } from '@/components/Last30DaysOverview';
-// === EPISODE BANDS START === (delete this import + the JSX block below to remove the feature)
-import { EpisodeBands } from '@/components/EpisodeBands';
-// === EPISODE BANDS END ===
 import { NewUserOverviewHint } from '@/components/NewUserOverviewHint';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Dumbbell, Moon, Utensils } from 'lucide-react';
