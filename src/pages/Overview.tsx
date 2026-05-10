@@ -579,21 +579,19 @@ const Overview = () => {
             <div className="flex items-baseline justify-between mb-1">
               <h1 className="font-display text-2xl font-bold text-foreground">Översikt</h1>
               <div className="flex items-center gap-4">
-                {sectionView === 'calendar' && (
-                  <button
-                    onClick={() => {
-                      const now = new Date();
-                      setCurrentYear(now.getFullYear());
-                      setCurrentMonth(new Date(now.getFullYear(), now.getMonth(), 1));
-                      setTimeout(() => {
-                        scrollableCalendarRef.current?.scrollToToday();
-                      }, 50);
-                    }}
-                    className="text-sm font-semibold text-primary px-3 py-1 rounded-full border border-primary/30 bg-primary/5 hover:bg-primary/10 transition-colors"
-                  >
-                    Idag
-                  </button>
-                )}
+                <button
+                  onClick={() => {
+                    const now = new Date();
+                    setCurrentYear(now.getFullYear());
+                    setCurrentMonth(new Date(now.getFullYear(), now.getMonth(), 1));
+                    setTimeout(() => {
+                      scrollableCalendarRef.current?.scrollToToday();
+                    }, 50);
+                  }}
+                  className="text-sm font-semibold text-primary px-3 py-1 rounded-full border border-primary/30 bg-primary/5 hover:bg-primary/10 transition-colors"
+                >
+                  Idag
+                </button>
                 <span className="text-xl font-semibold text-muted-foreground">{currentYear}</span>
               </div>
             </div>
