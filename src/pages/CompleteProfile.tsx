@@ -48,25 +48,15 @@ const CompleteProfile = () => {
       return;
     }
 
-    // No user and no auth callback in URL → redirect to login
+    // No user yet — give the auth client a grace period to hydrate the
+    // session that was just created by /bekrafta (verifyOtp). Without this,
+    // the very first render after navigation sees user=null and bounces the
+    // user back to login before Supabase finishes restoring the session.
     if (!user) {
-      const hash = window.location.hash || '';
-      const search = window.location.search || '';
-      const hasAuthParams =
-        hash.includes('access_token') ||
-        hash.includes('type=magiclink') ||
-        hash.includes('type=signup') ||
-        hash.includes('type=recovery') ||
-        /[?&](code|token_hash|provider_token)=/.test(search);
-      if (!hasAuthParams) {
-        navigate("/logga-in");
-      } else {
-        // Wait for auth to process magic link / PKCE code exchange
-        const timeout = setTimeout(() => {
-          if (!user) navigate("/logga-in");
-        }, 5000);
-        return () => clearTimeout(timeout);
-      }
+      const timeout = setTimeout(() => {
+        if (!user) navigate("/logga-in");
+      }, 3000);
+      return () => clearTimeout(timeout);
     }
   }, [user, loading, profileLoading, profile, navigate]);
 
