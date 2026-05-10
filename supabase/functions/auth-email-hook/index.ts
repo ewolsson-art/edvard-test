@@ -334,8 +334,11 @@ async function handleWebhook(req: Request): Promise<Response> {
   console.log('Auth email enqueued', { emailType, email: payload.data.email, run_id })
 
   const queueProcessing = triggerImmediateQueueProcessing()
-  if (typeof EdgeRuntime !== 'undefined' && 'waitUntil' in EdgeRuntime) {
-    EdgeRuntime.waitUntil(queueProcessing)
+  const edgeRuntime = (globalThis as typeof globalThis & {
+    EdgeRuntime?: { waitUntil?: (promise: Promise<void>) => void }
+  }).EdgeRuntime
+  if (edgeRuntime?.waitUntil) {
+    edgeRuntime.waitUntil(queueProcessing)
   }
 
   return new Response(
