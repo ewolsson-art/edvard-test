@@ -60,6 +60,7 @@ export function useCharacteristics() {
           user_id: user.id,
           name: name.trim(),
           mood_type: moodType,
+          source: 'manual',
         })
         .select()
         .single();
