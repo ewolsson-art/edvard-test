@@ -302,8 +302,14 @@ Returnera JSON:
     } catch {
       parsed = { patterns: [] };
     }
+    const BANNED = /(instabil|blandat tillstånd|blandepisod|manisk|deprimerad|patient|diagnos|klinisk|prodrom|affektiv|psykiatrisk)/i;
     const patterns = (Array.isArray(parsed.patterns) ? parsed.patterns : [])
-      .filter((p: any) => String(p?.pattern_type ?? "").toLowerCase() !== "medication");
+      .filter((p: any) => String(p?.pattern_type ?? "").toLowerCase() !== "medication")
+      .filter((p: any) => (Number(p?.occurrences) || 0) >= 2)
+      .filter((p: any) => {
+        const txt = `${p?.title ?? ""} ${p?.description ?? ""} ${p?.why_it_matters ?? ""} ${p?.what_to_do ?? ""}`;
+        return !BANNED.test(txt);
+      });
 
     // Wipe gamla insikter och skriv nya
     await sb.from("pattern_insights").delete().eq("user_id", userId);
@@ -319,8 +325,11 @@ Returnera JSON:
         supporting_dates: Array.isArray(p.supporting_dates)
           ? p.supporting_dates.filter((d: any) => /^\d{4}-\d{2}-\d{2}$/.test(d)).slice(0, 30)
           : [],
-        supporting_data: {},
-        occurrences: Math.max(1, Number(p.occurrences) || 1),
+        supporting_data: {
+          why_it_matters: typeof p.why_it_matters === "string" ? p.why_it_matters.slice(0, 400) : null,
+          what_to_do: typeof p.what_to_do === "string" ? p.what_to_do.slice(0, 400) : null,
+        },
+        occurrences: Math.max(2, Number(p.occurrences) || 2),
         first_seen_at: /^\d{4}-\d{2}-\d{2}$/.test(p.first_seen) ? p.first_seen : null,
         last_seen_at: /^\d{4}-\d{2}-\d{2}$/.test(p.last_seen) ? p.last_seen : null,
       }));
