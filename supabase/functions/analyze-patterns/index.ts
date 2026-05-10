@@ -211,8 +211,12 @@ LETA EFTER (men begränsa dig inte till):
 - CYKLER: "Episoder varar i snitt N dagar med M dagar emellan"
 - SÄSONG/VECKODAG: "Höstmånader fler nedåtperioder", "söndagar oftare nedstämda"
 - ÅTERHÄMTNING: "Efter nedåtperiod tar det ~N dagar att återgå till stabilt"
-- MEDICIN: "Dagar med missad [medicin] följs av nedstämdhet 2x oftare"
 - KARAKTÄRSKEDJOR: "Irritabilitet → 2 dagar senare ofta uppvarvad"
+
+VIKTIGT — UTESLUT MEDICIN-MÖNSTER:
+- Generera ALDRIG mönster av typen "medication".
+- Nämn inte mediciner, missade doser eller medicinjusteringar i title/description.
+- Medicindata är endast bakgrundskontext, aldrig egna mönster.
 - BLANDEPISOD: hög energi + nedstämdhet samtidigt = HÖGSTA suicidrisken, severity:"warning"
 - HYPOMANI MISSAD: vid bipolär typ II — fånga kortvariga uppvarvade perioder
 
