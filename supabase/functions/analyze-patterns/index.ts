@@ -211,8 +211,12 @@ LETA EFTER (men begränsa dig inte till):
 - CYKLER: "Episoder varar i snitt N dagar med M dagar emellan"
 - SÄSONG/VECKODAG: "Höstmånader fler nedåtperioder", "söndagar oftare nedstämda"
 - ÅTERHÄMTNING: "Efter nedåtperiod tar det ~N dagar att återgå till stabilt"
-- MEDICIN: "Dagar med missad [medicin] följs av nedstämdhet 2x oftare"
 - KARAKTÄRSKEDJOR: "Irritabilitet → 2 dagar senare ofta uppvarvad"
+
+VIKTIGT — UTESLUT MEDICIN-MÖNSTER:
+- Generera ALDRIG mönster av typen "medication".
+- Nämn inte mediciner, missade doser eller medicinjusteringar i title/description.
+- Medicindata är endast bakgrundskontext, aldrig egna mönster.
 - BLANDEPISOD: hög energi + nedstämdhet samtidigt = HÖGSTA suicidrisken, severity:"warning"
 - HYPOMANI MISSAD: vid bipolär typ II — fånga kortvariga uppvarvade perioder
 
@@ -232,7 +236,7 @@ Hitta de starkaste, mest faktabaserade mönstren. Returnera JSON:
 {
   "patterns": [
     {
-      "pattern_type": "transition|trigger|cycle|seasonal|recovery|medication|characteristic_chain|general",
+      "pattern_type": "transition|trigger|cycle|seasonal|recovery|characteristic_chain|general",
       "title": "Kort rubrik (max 60 tecken)",
       "description": "1–3 meningar som förklarar mönstret konkret med siffror/exempel.",
       "confidence": 0.0-1.0,
@@ -292,7 +296,8 @@ Hitta de starkaste, mest faktabaserade mönstren. Returnera JSON:
     } catch {
       parsed = { patterns: [] };
     }
-    const patterns = Array.isArray(parsed.patterns) ? parsed.patterns : [];
+    const patterns = (Array.isArray(parsed.patterns) ? parsed.patterns : [])
+      .filter((p: any) => String(p?.pattern_type ?? "").toLowerCase() !== "medication");
 
     // Wipe gamla insikter och skriv nya
     await sb.from("pattern_insights").delete().eq("user_id", userId);

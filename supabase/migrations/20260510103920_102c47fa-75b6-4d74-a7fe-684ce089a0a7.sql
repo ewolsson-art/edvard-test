@@ -1,0 +1,1 @@
+DELETE FROM public.pattern_insights WHERE pattern_type = 'medication';
