@@ -1,8 +1,9 @@
 import { useEffect, useMemo, useState } from 'react';
 import { format, parseISO, formatDistanceToNow } from 'date-fns';
 import { sv } from 'date-fns/locale';
-import { ChevronDown, Loader2, RefreshCw } from 'lucide-react';
+import { Loader2, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
 import {
   usePatternInsights,
