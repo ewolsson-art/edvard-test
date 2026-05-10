@@ -614,7 +614,7 @@ const Overview = () => {
           <div className="flex-1 min-w-0 space-y-6">
             <NewUserOverviewHint entryCount={entries.length} />
             
-            {showMood && sectionView === 'calendar' && (
+            {showMood && (
               <section className="space-y-4">
                      {view === 'week' && (
                        <WeekCalendar
@@ -648,37 +648,6 @@ const Overview = () => {
                       </div>
                     )}
               </section>
-            )}
-
-            {/* Stats view: episode bands + summary + patterns CTA */}
-            {sectionView === 'stats' && (
-              <div className="space-y-6">
-                {/* === EPISODE BANDS START === (safe to delete this block to remove the feature) */}
-                <EpisodeBands entries={entries} days={14} />
-                {/* === EPISODE BANDS END === */}
-                <OverviewSummary
-                  stats={stats}
-                  entries={entries}
-                  periodLabel={label}
-                  sleepBadDays={0}
-                  showSleep={false}
-                />
-                <Link
-                  to="/monster"
-                  className="group flex items-center gap-4 p-4 rounded-2xl bg-gradient-to-br from-[hsl(280_70%_60%/0.08)] to-[hsl(45_85%_55%/0.08)] border border-border/30 hover:border-border/60 transition-colors"
-                >
-                  <div className="h-11 w-11 shrink-0 rounded-2xl bg-gradient-to-br from-[hsl(45_85%_60%)] to-[hsl(280_70%_60%)] grid place-items-center text-xl shadow-sm">
-                    ✨
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-[14px] font-semibold text-foreground/90">Dina mönster</p>
-                    <p className="text-[12px] text-muted-foreground leading-snug">
-                      AI:n hittar återkommande sekvenser i din historik
-                    </p>
-                  </div>
-                  <span className="text-muted-foreground/60 group-hover:text-foreground/80 transition-colors">→</span>
-                </Link>
-              </div>
             )}
 
           </div>
