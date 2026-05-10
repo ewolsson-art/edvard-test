@@ -33,7 +33,6 @@ const ConfirmEmail = () => {
   const next = params.get("next") || "/slutfor-profil";
 
   useEffect(() => {
-    // If link is malformed (missing token), bail to login with a helpful message.
     if (!tokenHash) {
       navigate(
         `/logga-in?error=${encodeURIComponent(
@@ -41,48 +40,47 @@ const ConfirmEmail = () => {
         )}`,
         { replace: true }
       );
-    }
-  }, [tokenHash, navigate]);
-
-  const handleConfirm = async () => {
-    if (!tokenHash) return;
-    setStatus("verifying");
-    setErrorMsg(null);
-
-    const type = ALLOWED_TYPES.includes(typeParam) ? typeParam : "signup";
-
-    const { data, error } = await supabase.auth.verifyOtp({
-      token_hash: tokenHash,
-      type: type as any,
-    });
-
-    if (error) {
-      setStatus("error");
-      const friendly =
-        error.message?.toLowerCase().includes("expired") ||
-        error.message?.toLowerCase().includes("invalid")
-          ? "Bekräftelselänken har gått ut eller redan använts. Begär en ny inloggningslänk."
-          : error.message || "Något gick fel. Försök igen.";
-      setErrorMsg(friendly);
       return;
     }
 
-    // Wait for session to be fully persisted before navigating, otherwise
-    // CompleteProfile's auth-state check can fire before useAuth updates and
-    // bounce the user to /logga-in.
-    let session = data.session;
-    if (!session) {
-      for (let i = 0; i < 20; i++) {
-        const { data: s } = await supabase.auth.getSession();
-        if (s.session) { session = s.session; break; }
-        await new Promise((r) => setTimeout(r, 100));
-      }
-    }
+    let cancelled = false;
+    const run = async () => {
+      setStatus("verifying");
+      const type = ALLOWED_TYPES.includes(typeParam) ? typeParam : "signup";
+      const { data, error } = await supabase.auth.verifyOtp({
+        token_hash: tokenHash,
+        type: type as any,
+      });
 
-    // Recovery flows go to reset-password; everything else to next.
-    const target = type === "recovery" ? "/aterstall-losenord" : next;
-    navigate(target, { replace: true });
-  };
+      if (cancelled) return;
+
+      if (error) {
+        const friendly =
+          error.message?.toLowerCase().includes("expired") ||
+          error.message?.toLowerCase().includes("invalid")
+            ? "Bekräftelselänken har gått ut eller redan använts. Begär en ny inloggningslänk."
+            : error.message || "Något gick fel. Försök igen.";
+        setStatus("error");
+        setErrorMsg(friendly);
+        return;
+      }
+
+      let session = data.session;
+      if (!session) {
+        for (let i = 0; i < 20; i++) {
+          const { data: s } = await supabase.auth.getSession();
+          if (s.session) { session = s.session; break; }
+          await new Promise((r) => setTimeout(r, 100));
+        }
+      }
+
+      const target = type === "recovery" ? "/aterstall-losenord" : next;
+      navigate(target, { replace: true });
+    };
+
+    run();
+    return () => { cancelled = true; };
+  }, [tokenHash, typeParam, next, navigate]);
 
   return (
     <DarkNightBackground>
@@ -94,32 +92,23 @@ const ConfirmEmail = () => {
       <main className="flex-1 flex items-center justify-center p-5">
         <div className="w-full max-w-md text-center animate-fade-in">
           <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-[hsl(45_85%_55%)]/10 mb-4">
-            <MailCheck className="w-6 h-6 text-[hsl(45_85%_55%)]" />
+            {status === "error" ? (
+              <MailCheck className="w-6 h-6 text-[hsl(45_85%_55%)]" />
+            ) : (
+              <Loader2 className="w-6 h-6 text-[hsl(45_85%_55%)] animate-spin" />
+            )}
           </div>
           <h1 className="font-display text-2xl md:text-3xl font-bold mb-2">
-            Bekräfta din e-post
+            {status === "error" ? "Något gick fel" : "Bekräftar din e-post…"}
           </h1>
           <p className="text-sm text-white/60 mb-8">
-            Klicka på knappen nedan för att slutföra din inloggning.
+            {status === "error"
+              ? "Vi kunde inte slutföra bekräftelsen."
+              : "Ett ögonblick, du loggas in automatiskt."}
           </p>
 
-          <button
-            onClick={handleConfirm}
-            disabled={status === "verifying" || !tokenHash}
-            className="w-full h-14 rounded-2xl text-[15px] font-semibold bg-[hsl(45_85%_55%)] text-[hsl(230_30%_5%)] hover:bg-[hsl(45_85%_65%)] shadow-[0_4px_20px_-4px_hsl(45_85%_55%/0.4)] hover:shadow-[0_6px_28px_-4px_hsl(45_85%_55%/0.5)] transition-all duration-300 flex items-center justify-center gap-2 disabled:opacity-50"
-          >
-            {status === "verifying" ? (
-              <>
-                <Loader2 className="w-5 h-5 animate-spin" />
-                Bekräftar…
-              </>
-            ) : (
-              "Bekräfta e-post"
-            )}
-          </button>
-
           {status === "error" && errorMsg && (
-            <div className="mt-6 p-4 rounded-xl bg-white/[0.04] ring-1 ring-white/[0.08] text-left">
+            <div className="mt-2 p-4 rounded-xl bg-white/[0.04] ring-1 ring-white/[0.08] text-left">
               <p className="text-sm text-white/80">{errorMsg}</p>
               <button
                 onClick={() => navigate("/logga-in")}
