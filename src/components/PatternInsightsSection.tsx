@@ -148,7 +148,9 @@ export function PatternInsightsSection() {
 
   const sorted = useMemo(() => {
     const severityRank: Record<string, number> = { warning: 0, attention: 1, info: 2 };
-    return [...insights].sort((a, b) => {
+    return [...insights]
+      .filter((i) => i.pattern_type !== 'medication')
+      .sort((a, b) => {
       const s = severityRank[a.severity] - severityRank[b.severity];
       if (s !== 0) return s;
       return b.confidence - a.confidence;
