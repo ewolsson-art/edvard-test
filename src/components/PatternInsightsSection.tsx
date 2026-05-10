@@ -49,13 +49,12 @@ function PatternCard({ insight }: { insight: PatternInsight }) {
   const meta = TYPE_META[insight.pattern_type] ?? TYPE_META.general;
 
   return (
-    <div className="rounded-2xl bg-card/70 border border-border/30 overflow-hidden transition-colors hover:bg-card/90">
+    <>
       <button
         type="button"
-        onClick={() => setOpen((v) => !v)}
-        className="w-full text-left flex items-center gap-3 p-3"
+        onClick={() => setOpen(true)}
+        className="w-full text-left flex items-center gap-3 p-3 rounded-2xl bg-card/70 border border-border/30 transition-colors hover:bg-card/90"
       >
-        {/* Colorful icon orb */}
         <div
           className={cn(
             'shrink-0 h-11 w-11 rounded-2xl bg-gradient-to-br grid place-items-center text-xl shadow-sm',
@@ -80,42 +79,76 @@ function PatternCard({ insight }: { insight: PatternInsight }) {
           </h3>
         </div>
 
-        <div className="shrink-0 flex flex-col items-end gap-1">
+        <div className="shrink-0">
           <ConfidenceBar value={insight.confidence} />
-          <ChevronDown
-            className={cn(
-              'h-3.5 w-3.5 text-muted-foreground/60 transition-transform',
-              open && 'rotate-180',
-            )}
-          />
         </div>
       </button>
 
-      {open && (
-        <div className="px-3 pb-3 pl-[68px] -mt-1 space-y-2 animate-in fade-in slide-in-from-top-1 duration-200">
-          <p className="text-[13px] text-muted-foreground leading-relaxed">
-            {insight.description}
-          </p>
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent className="max-w-md rounded-3xl">
+          <DialogHeader className="space-y-3">
+            <div className="flex items-center gap-3">
+              <div
+                className={cn(
+                  'shrink-0 h-12 w-12 rounded-2xl bg-gradient-to-br grid place-items-center text-2xl shadow-sm',
+                  meta.gradient,
+                )}
+              >
+                <span className="drop-shadow-sm">{meta.emoji}</span>
+              </div>
+              <div className="min-w-0 text-left">
+                <div className="flex items-center gap-1.5">
+                  <span className={cn('h-1.5 w-1.5 rounded-full', SEVERITY_DOT[insight.severity] ?? SEVERITY_DOT.info)} />
+                  <span className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">
+                    {meta.label}
+                  </span>
+                  {insight.occurrences > 1 && (
+                    <span className="text-[10px] text-muted-foreground/70">· {insight.occurrences}×</span>
+                  )}
+                </div>
+                <DialogTitle className="text-[17px] font-semibold leading-snug text-left">
+                  {insight.title}
+                </DialogTitle>
+              </div>
+            </div>
+            <DialogDescription className="text-[14px] text-foreground/80 leading-relaxed text-left">
+              {insight.description}
+            </DialogDescription>
+          </DialogHeader>
+
           {insight.supporting_dates.length > 0 && (
-            <div className="flex flex-wrap gap-1">
-              {insight.supporting_dates.slice(0, 12).map((d) => (
-                <span
-                  key={d}
-                  className="text-[10.5px] px-1.5 py-0.5 rounded-md bg-foreground/[0.06] text-foreground/65 tabular-nums"
-                >
-                  {format(parseISO(d), 'd MMM', { locale: sv })}
-                </span>
-              ))}
-              {insight.supporting_dates.length > 12 && (
-                <span className="text-[10.5px] px-1.5 py-0.5 text-muted-foreground/60">
-                  +{insight.supporting_dates.length - 12}
-                </span>
-              )}
+            <div className="space-y-2 pt-1">
+              <p className="text-[11px] uppercase tracking-wider text-muted-foreground font-medium">
+                Datum i mönstret
+              </p>
+              <div className="flex flex-wrap gap-1.5">
+                {insight.supporting_dates.slice(0, 24).map((d) => (
+                  <span
+                    key={d}
+                    className="text-[11px] px-2 py-0.5 rounded-md bg-foreground/[0.06] text-foreground/70 tabular-nums"
+                  >
+                    {format(parseISO(d), 'd MMM', { locale: sv })}
+                  </span>
+                ))}
+                {insight.supporting_dates.length > 24 && (
+                  <span className="text-[11px] px-2 py-0.5 text-muted-foreground/60">
+                    +{insight.supporting_dates.length - 24}
+                  </span>
+                )}
+              </div>
             </div>
           )}
-        </div>
-      )}
-    </div>
+
+          <div className="flex items-center gap-2 pt-2">
+            <span className="text-[11px] text-muted-foreground">Säkerhet</span>
+            <ConfidenceBar value={insight.confidence} />
+            <span className="text-[11px] text-muted-foreground tabular-nums">
+              {Math.round(insight.confidence * 100)}%
+            </span>
+          </div>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }
 
