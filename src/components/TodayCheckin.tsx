@@ -913,6 +913,18 @@ export function TodayCheckin({
                 </button>
               ))
             }
+            {/* Förslag baserade på tidigare in-checkningar */}
+            {suggestedPriorTags.map(s => (
+              <button
+                key={`prior-${s.name}`}
+                onClick={() => handleTagToggle(s.name)}
+                className="px-4 py-2.5 rounded-full border border-dashed border-border/40 text-sm font-medium text-muted-foreground/80 hover:text-foreground hover:border-border/70 hover:bg-white/[0.03] transition-all duration-200 active:scale-95"
+                title="Från dina tidigare in-checkningar"
+              >
+                <span className="mr-1.5 opacity-60">↺</span>
+                {s.name}
+              </button>
+            ))}
             {/* Add custom tag button — progressive disclosure */}
             {!showCustomTagInput ? (
               <button
