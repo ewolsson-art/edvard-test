@@ -236,7 +236,7 @@ Hitta de starkaste, mest faktabaserade mönstren. Returnera JSON:
 {
   "patterns": [
     {
-      "pattern_type": "transition|trigger|cycle|seasonal|recovery|characteristic_chain|general",
+      "pattern_type": "trigger|transition|cycle",
       "title": "Kort rubrik (max 60 tecken)",
       "description": "1–3 meningar som förklarar mönstret konkret med siffror/exempel.",
       "confidence": 0.0-1.0,
