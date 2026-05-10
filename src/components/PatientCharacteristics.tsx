@@ -92,18 +92,22 @@ export const PatientCharacteristics = ({ patientId, latestMood, isShared, patien
                 </div>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div>
-                  <p className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground mb-2">Egna</p>
-                  <div className="flex flex-wrap gap-2">
-                    {manualChars.length === 0 ? (
-                      <p className="text-sm text-muted-foreground italic">{t('patientChars.noCharacteristics')}</p>
-                    ) : manualChars.map(char => (
-                      <Badge key={char.id} variant="secondary" className={`${s.badgeStyle} py-1.5 px-3`}>{char.name}</Badge>
-                    ))}
+                {!checkinOnly && (
+                  <div>
+                    <p className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground mb-2">Egna</p>
+                    <div className="flex flex-wrap gap-2">
+                      {manualChars.length === 0 ? (
+                        <p className="text-sm text-muted-foreground italic">{t('patientChars.noCharacteristics')}</p>
+                      ) : manualChars.map(char => (
+                        <Badge key={char.id} variant="secondary" className={`${s.badgeStyle} py-1.5 px-3`}>{char.name}</Badge>
+                      ))}
+                    </div>
                   </div>
-                </div>
+                )}
                 <div>
-                  <p className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground mb-2">Från in-checkningar</p>
+                  {!checkinOnly && (
+                    <p className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground mb-2">Från in-checkningar</p>
+                  )}
                   <div className="flex flex-wrap gap-2">
                     {checkinChars.length === 0 ? (
                       <p className="text-sm text-muted-foreground italic">Inga ännu</p>
