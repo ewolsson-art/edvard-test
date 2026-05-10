@@ -260,7 +260,12 @@ async function handleWebhook(req: Request): Promise<Response> {
   if (rawUrl) {
     try {
       const parsed = new URL(rawUrl)
-      tokenHash = tokenHash || parsed.searchParams.get('token_hash') || undefined
+      // Supabase verify URLs use `token` as the query param (it's the
+      // token_hash). Also accept the explicit `token_hash` name as fallback.
+      tokenHash = tokenHash
+        || parsed.searchParams.get('token_hash')
+        || parsed.searchParams.get('token')
+        || undefined
       actionType = parsed.searchParams.get('type') || actionType
     } catch (_) {
       // ignore parse errors, fall through to fallback
