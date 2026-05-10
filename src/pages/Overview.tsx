@@ -697,9 +697,10 @@ const Overview = () => {
               </section>
             )}
 
-            {/* Stats view: pattern detection + summary */}
+            {/* Stats view: AI patterns + episode bands + summary */}
             {sectionView === 'stats' && (
-              <>
+              <div className="space-y-6">
+                <PatternInsightsSection />
                 {/* === EPISODE BANDS START === (safe to delete this block to remove the feature) */}
                 <EpisodeBands entries={entries} days={14} />
                 {/* === EPISODE BANDS END === */}
@@ -710,7 +711,7 @@ const Overview = () => {
                   sleepBadDays={0}
                   showSleep={false}
                 />
-              </>
+              </div>
             )}
 
           </div>
