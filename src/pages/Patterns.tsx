@@ -1,7 +1,6 @@
 import { PatternInsightsSection } from '@/components/PatternInsightsSection';
 import { TurtleLogo } from '@/components/TurtleLogo';
 import { OverviewSummary } from '@/components/OverviewSummary';
-import { EpisodeBands } from '@/components/EpisodeBands';
 import { useMoodData } from '@/hooks/useMoodData';
 
 export default function Patterns() {
