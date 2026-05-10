@@ -1,5 +1,5 @@
 import { useState, useMemo, useCallback, useRef, useEffect } from 'react';
-import { CalendarDays, BarChart3 } from 'lucide-react';
+
 import { AnimatedPage } from '@/components/AnimatedPage';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { format, startOfWeek, endOfWeek, addWeeks, subWeeks, eachDayOfInterval, addMonths, subMonths, startOfMonth, endOfMonth, isBefore, startOfDay, isToday } from 'date-fns';
