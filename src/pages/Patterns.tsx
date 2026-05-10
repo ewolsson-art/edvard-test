@@ -77,6 +77,7 @@ export default function Patterns() {
             patientId={user.id}
             latestMood={latestMood as any}
             isShared={true}
+            checkinOnly
           />
         )}
 
