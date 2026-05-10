@@ -83,7 +83,6 @@ export function MonthCalendar({
     const total = buckets.elevated + buckets.stable + buckets.depressed;
     const order: MoodGroup[] = ['elevated', 'stable', 'depressed'];
     const stats = order
-      .filter((g) => buckets[g] > 0)
       .map((g) => ({
         group: g,
         count: buckets[g],
