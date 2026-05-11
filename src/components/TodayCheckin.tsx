@@ -635,8 +635,9 @@ export function TodayCheckin({
             {heroSub}
           </motion.p>
 
-          {/* Empatiskt budskap för låga mood — pedagogiskt & varmt */}
-          {isLowMood && encouragementData.goodDaysCount > 0 && (
+          {/* Empatiskt budskap för låga mood — pedagogiskt & varmt.
+              Visas inte för retroaktiva dagar — håll det enkelt där. */}
+          {!isRetroDay && isLowMood && encouragementData.goodDaysCount > 0 && (
             <motion.div
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
@@ -690,6 +691,21 @@ export function TodayCheckin({
                 )}
               </div>
             </motion.div>
+          )}
+
+          {/* Sista retro-dagen klar — låt användaren manuellt gå till idag
+              istället för att kastas tillbaka i ett tomt incheckningsformulär. */}
+          {isLastRetro && onSelectDate && (
+            <motion.button
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4, type: 'spring', stiffness: 260, damping: 24 }}
+              onClick={() => onSelectDate(new Date())}
+              className="mb-4 inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-[hsl(45_85%_55%)] text-[hsl(225_30%_7%)] font-bold text-[15px] tracking-wide shadow-[0_4px_24px_hsl(45_85%_55%/0.35)] hover:bg-[hsl(45_85%_62%)] active:scale-[0.98] transition-all duration-200"
+            >
+              Till idag
+              <ChevronRight className="w-4 h-4" />
+            </motion.button>
           )}
 
           {/* Edit-länk */}
