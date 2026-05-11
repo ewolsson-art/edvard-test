@@ -544,23 +544,36 @@ export function TodayCheckin({
     const moodColorVar = todayEntry ? moodColorVars[todayEntry.mood] : 'var(--primary)';
     const moodColor = `hsl(${moodColorVar})`;
 
+    // Retroaktiv incheckning: enklare copy, ingen pedagogisk uppmuntran.
+    const isRetroDay = !isDisplayToday;
+    const isLastRetro = !!retroProgress && retroProgress.current === retroProgress.total;
+    const retroDateLabel = format(displayDate, 'EEEE d MMM', { locale: sv });
+
     // Personlig hälsning baserat på stämningsläge
     const namePart = firstName?.trim() ? `, ${firstName.trim()}` : '';
-    const heroTitle = isLowMood
-      ? `Tack för att du loggade idag${namePart}`
-      : isHighMood
-        ? `Bra att du fångar känslan${namePart}`
-        : isStable
-          ? `Snyggt jobbat${namePart}`
-          : `Klart${namePart}`;
+    const heroTitle = isRetroDay
+      ? (isLastRetro
+          ? `Din streak är räddad${namePart}`
+          : 'Sparat')
+      : isLowMood
+        ? `Tack för att du loggade idag${namePart}`
+        : isHighMood
+          ? `Bra att du fångar känslan${namePart}`
+          : isStable
+            ? `Snyggt jobbat${namePart}`
+            : `Klart${namePart}`;
 
-    const heroSub = isLowMood
-      ? 'En tung dag är också värd att se. Var snäll mot dig själv ikväll.'
-      : isHighMood
-        ? 'Försök hitta en lugn stund — bra för balansen över tid.'
-        : isStable
-          ? 'Stabilitet är en superkraft. Fortsätt med det du gör.'
-          : 'Din incheckning är sparad.';
+    const heroSub = isRetroDay
+      ? (isLastRetro
+          ? `${streakData.currentStreak} ${streakData.currentStreak === 1 ? 'dag' : 'dagar'} i rad`
+          : retroDateLabel.charAt(0).toUpperCase() + retroDateLabel.slice(1))
+      : isLowMood
+        ? 'En tung dag är också värd att se. Var snäll mot dig själv ikväll.'
+        : isHighMood
+          ? 'Försök hitta en lugn stund — bra för balansen över tid.'
+          : isStable
+            ? 'Stabilitet är en superkraft. Fortsätt med det du gör.'
+            : 'Din incheckning är sparad.';
 
     return (
       <div className="fade-in h-full md:h-auto flex flex-col items-center justify-center px-5 py-12 relative overflow-hidden">
