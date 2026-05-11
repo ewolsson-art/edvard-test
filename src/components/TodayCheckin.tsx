@@ -544,23 +544,36 @@ export function TodayCheckin({
     const moodColorVar = todayEntry ? moodColorVars[todayEntry.mood] : 'var(--primary)';
     const moodColor = `hsl(${moodColorVar})`;
 
+    // Retroaktiv incheckning: enklare copy, ingen pedagogisk uppmuntran.
+    const isRetroDay = !isDisplayToday;
+    const isLastRetro = !!retroProgress && retroProgress.current === retroProgress.total;
+    const retroDateLabel = format(displayDate, 'EEEE d MMM', { locale: sv });
+
     // Personlig hälsning baserat på stämningsläge
     const namePart = firstName?.trim() ? `, ${firstName.trim()}` : '';
-    const heroTitle = isLowMood
-      ? `Tack för att du loggade idag${namePart}`
-      : isHighMood
-        ? `Bra att du fångar känslan${namePart}`
-        : isStable
-          ? `Snyggt jobbat${namePart}`
-          : `Klart${namePart}`;
+    const heroTitle = isRetroDay
+      ? (isLastRetro
+          ? `Din streak är räddad${namePart}`
+          : 'Sparat')
+      : isLowMood
+        ? `Tack för att du loggade idag${namePart}`
+        : isHighMood
+          ? `Bra att du fångar känslan${namePart}`
+          : isStable
+            ? `Snyggt jobbat${namePart}`
+            : `Klart${namePart}`;
 
-    const heroSub = isLowMood
-      ? 'En tung dag är också värd att se. Var snäll mot dig själv ikväll.'
-      : isHighMood
-        ? 'Försök hitta en lugn stund — bra för balansen över tid.'
-        : isStable
-          ? 'Stabilitet är en superkraft. Fortsätt med det du gör.'
-          : 'Din incheckning är sparad.';
+    const heroSub = isRetroDay
+      ? (isLastRetro
+          ? `${streakData.currentStreak} ${streakData.currentStreak === 1 ? 'dag' : 'dagar'} i rad`
+          : retroDateLabel.charAt(0).toUpperCase() + retroDateLabel.slice(1))
+      : isLowMood
+        ? 'En tung dag är också värd att se. Var snäll mot dig själv ikväll.'
+        : isHighMood
+          ? 'Försök hitta en lugn stund — bra för balansen över tid.'
+          : isStable
+            ? 'Stabilitet är en superkraft. Fortsätt med det du gör.'
+            : 'Din incheckning är sparad.';
 
     return (
       <div className="fade-in h-full md:h-auto flex flex-col items-center justify-center px-5 py-12 relative overflow-hidden">
@@ -622,8 +635,9 @@ export function TodayCheckin({
             {heroSub}
           </motion.p>
 
-          {/* Empatiskt budskap för låga mood — pedagogiskt & varmt */}
-          {isLowMood && encouragementData.goodDaysCount > 0 && (
+          {/* Empatiskt budskap för låga mood — pedagogiskt & varmt.
+              Visas inte för retroaktiva dagar — håll det enkelt där. */}
+          {!isRetroDay && isLowMood && encouragementData.goodDaysCount > 0 && (
             <motion.div
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
@@ -677,6 +691,21 @@ export function TodayCheckin({
                 )}
               </div>
             </motion.div>
+          )}
+
+          {/* Sista retro-dagen klar — låt användaren manuellt gå till idag
+              istället för att kastas tillbaka i ett tomt incheckningsformulär. */}
+          {isLastRetro && onSelectDate && (
+            <motion.button
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4, type: 'spring', stiffness: 260, damping: 24 }}
+              onClick={() => onSelectDate(new Date())}
+              className="mb-4 inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-[hsl(45_85%_55%)] text-[hsl(225_30%_7%)] font-bold text-[15px] tracking-wide shadow-[0_4px_24px_hsl(45_85%_55%/0.35)] hover:bg-[hsl(45_85%_62%)] active:scale-[0.98] transition-all duration-200"
+            >
+              Till idag
+              <ChevronRight className="w-4 h-4" />
+            </motion.button>
           )}
 
           {/* Edit-länk */}

@@ -82,24 +82,20 @@ const Index = () => {
 
   const handleSaveCheckin = async (data: CheckinData): Promise<boolean> => {
     const result = await saveCheckin(selectedDateStr, data);
-    if (result && !isSelectedToday) {
-      // We're inside a retroactive flow.
-      setTimeout(() => {
-        if (retroBatch && retroBatch.index < retroBatch.dates.length - 1) {
-          // More missed days to fill in — jump to the next one.
+    if (result && !isSelectedToday && retroBatch) {
+      // Inside a retroactive flow — auto-advance only while there are more
+      // missed days. On the LAST day we stay on the completion screen so
+      // the user sees the restored streak and can tap "Till idag" themselves.
+      if (retroBatch.index < retroBatch.dates.length - 1) {
+        setTimeout(() => {
           const nextIndex = retroBatch.index + 1;
           const nextDateStr = retroBatch.dates[nextIndex];
           const nextDate = parseISO(nextDateStr);
           setRetroBatch({ ...retroBatch, index: nextIndex });
           setSelectedDate(nextDate);
           setSearchParams({ date: nextDateStr });
-        } else {
-          // Batch complete (or single retro day) — return to today.
-          setRetroBatch(null);
-          setSelectedDate(new Date());
-          setSearchParams({});
-        }
-      }, 3600);
+        }, 2400);
+      }
     }
     return result ?? false;
   };
@@ -182,7 +178,7 @@ const Index = () => {
             customAnswers={customAnswers}
             onSaveCustomAnswers={async (answers) => saveAnswers(selectedDateStr, answers)}
             selectedDate={selectedDate}
-            onSelectDate={(date) => { setSelectedDate(date); setSearchParams(isToday(date) ? {} : { date: format(date, 'yyyy-MM-dd') }); }}
+            onSelectDate={(date) => { if (isToday(date)) setRetroBatch(null); setSelectedDate(date); setSearchParams(isToday(date) ? {} : { date: format(date, 'yyyy-MM-dd') }); }}
           />
         )}
       </div>
