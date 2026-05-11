@@ -178,7 +178,7 @@ const Index = () => {
             customAnswers={customAnswers}
             onSaveCustomAnswers={async (answers) => saveAnswers(selectedDateStr, answers)}
             selectedDate={selectedDate}
-            onSelectDate={(date) => { setSelectedDate(date); setSearchParams(isToday(date) ? {} : { date: format(date, 'yyyy-MM-dd') }); }}
+            onSelectDate={(date) => { if (isToday(date)) setRetroBatch(null); setSelectedDate(date); setSearchParams(isToday(date) ? {} : { date: format(date, 'yyyy-MM-dd') }); }}
           />
         )}
       </div>
