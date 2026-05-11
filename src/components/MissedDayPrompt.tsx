@@ -51,7 +51,7 @@ export function MissedDayPrompt({
   const restDays = missedDays.slice(1);
 
   return (
-    <div className="fade-in h-full md:h-auto flex flex-col justify-center px-5 pt-12 pb-6 md:pt-4 md:glass-card md:p-12 md:max-h-[calc(100vh-4rem)] md:border md:bg-card/80 md:rounded-2xl md:shadow-sm">
+    <div className="fade-in h-full md:h-auto flex flex-col justify-center px-5 pt-12 pb-6 md:pt-4 md:glass-card md:p-12 md:max-h-[calc(100vh-4rem)] md:rounded-2xl md:shadow-sm md:bg-foreground/[0.03] md:backdrop-blur-sm">
       <div className="flex flex-col items-center text-center mb-7">
         <div className="w-24 h-24 mb-6 flex items-center justify-center">
           <TurtleLogo size="lg" animated={false} mood="depressed" className="scale-[2]" />
