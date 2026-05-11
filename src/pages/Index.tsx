@@ -105,28 +105,10 @@ const Index = () => {
   };
 
   if (!isLoaded || !medsLoaded || profileLoading || prefsLoading || !customQLoaded) {
-    // Skelett som matchar incheckningskortets layout — ingen helsides-spinner.
-    // Användaren ser strukturen omedelbart medan data laddar (~100-300ms).
+    // Tom container — låter AnimatedPage fade:a in det riktiga kortet utan
+    // ett skelett som "blinkar" till och swappas. Ingen hopp-effekt.
     return (
-      <div className="fixed inset-0 md:relative md:h-screen flex items-center justify-center md:py-4 md:px-5 overflow-hidden">
-        <div className="w-full h-full md:h-auto md:max-w-xl">
-          <div className="fade-in relative h-full md:h-auto flex flex-col justify-center px-5 pt-12 pb-4 md:pt-4 md:p-12 md:max-h-[calc(100vh-4rem)] md:rounded-2xl md:bg-foreground/[0.03] md:backdrop-blur-sm animate-pulse">
-            <div className="flex items-center justify-between h-10 mb-4">
-              <div className="h-5 w-24 rounded-full bg-foreground/[0.06]" />
-              <div className="h-8 w-32 rounded-full bg-foreground/[0.06]" />
-            </div>
-            <div className="flex flex-col items-center gap-6 py-8">
-              <div className="h-7 w-48 rounded-full bg-foreground/[0.06]" />
-              <div className="h-44 w-44 rounded-full bg-foreground/[0.05]" />
-              <div className="h-3 w-64 rounded-full bg-foreground/[0.05]" />
-              <div className="h-3 w-40 rounded-full bg-foreground/[0.05]" />
-            </div>
-            <div className="mt-auto pt-6">
-              <div className="h-14 w-full rounded-full bg-foreground/[0.06]" />
-            </div>
-          </div>
-        </div>
-      </div>
+      <div className="fixed inset-0 md:relative md:h-screen flex items-center justify-center md:py-4 md:px-5 overflow-hidden" />
     );
   }
 
