@@ -20,10 +20,12 @@ export function AuthNavbar() {
     setDemoLoading(true);
     setIsMobileMenuOpen(false);
     try {
-      await startDemoSession();
+      const { error } = await startDemoSession();
+      if (error) throw error;
       navigate('/', { replace: true });
     } catch (e: any) {
       toast({ title: 'Kunde inte starta demo', description: e?.message ?? 'Försök igen', variant: 'destructive' });
+    } finally {
       setDemoLoading(false);
     }
   };
