@@ -252,17 +252,31 @@ const Onboarding = () => {
                         className="group flex flex-col items-center text-center gap-3 px-4 py-7 rounded-3xl bg-gradient-to-b from-white/[0.06] to-white/[0.02] ring-1 ring-white/[0.08] hover:ring-[hsl(45_85%_55%/0.5)] hover:from-[hsl(45_85%_55%/0.08)] hover:to-white/[0.02] hover:-translate-y-0.5 hover:shadow-[0_12px_40px_-12px_hsl(45_85%_55%/0.4)] transition-all duration-300 disabled:opacity-50"
                       >
                         <div className="w-16 h-16 rounded-full bg-gradient-to-br from-[hsl(45_85%_55%/0.18)] to-[hsl(45_85%_55%/0.06)] ring-1 ring-[hsl(45_85%_55%/0.2)] flex items-center justify-center group-hover:scale-105 transition-transform duration-300">
-                          {demoRoleLoading === role ? (
-                            <Loader2 className="w-6 h-6 text-[hsl(45_85%_55%)] animate-spin" />
-                          ) : (
-                            <Icon className="w-6 h-6 text-[hsl(45_85%_55%)]" strokeWidth={1.75} />
-                          )}
+                          <Icon className="w-6 h-6 text-[hsl(45_85%_55%)]" strokeWidth={1.75} />
                         </div>
                         <p className="text-[15px] font-semibold text-white leading-tight">{label}</p>
                         <p className="text-[12px] text-white/50 leading-snug">{desc}</p>
                       </button>
                     ))}
                   </div>
+
+                  {demoRoleLoading && (
+                    <div className="fixed inset-0 z-[60] flex flex-col items-center justify-center bg-[hsl(230_30%_5%)]/85 backdrop-blur-md animate-fade-in">
+                      <div className="animate-scale-in">
+                        <TurtleLogo size="hero" animated className="w-32 h-32 md:w-40 md:h-40 drop-shadow-[0_8px_32px_hsl(45_85%_55%/0.35)]" />
+                      </div>
+                      <p className="mt-6 text-base font-medium text-white/90 tracking-tight">
+                        {demoRoleLoading === 'doctor' && 'Förbereder läkarvyn…'}
+                        {demoRoleLoading === 'relative' && 'Kopplar dig till personerna du följer…'}
+                        {demoRoleLoading === 'patient' && 'Hämtar ditt mående…'}
+                      </p>
+                      <div className="mt-3 flex items-center gap-1.5">
+                        <span className="w-1.5 h-1.5 rounded-full bg-[hsl(45_85%_55%)] animate-pulse" style={{ animationDelay: '0ms' }} />
+                        <span className="w-1.5 h-1.5 rounded-full bg-[hsl(45_85%_55%)] animate-pulse" style={{ animationDelay: '200ms' }} />
+                        <span className="w-1.5 h-1.5 rounded-full bg-[hsl(45_85%_55%)] animate-pulse" style={{ animationDelay: '400ms' }} />
+                      </div>
+                    </div>
+                  )}
                 </>
               ) : (
                 <>
