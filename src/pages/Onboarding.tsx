@@ -10,11 +10,11 @@ import { useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { 
   Loader2, Brain, Moon, Utensils, Dumbbell, Pill, 
-  ArrowRight, ArrowLeft, CheckCircle2
+  ArrowRight, ArrowLeft, CheckCircle2, Heart, Stethoscope, User
 } from 'lucide-react';
 import { Logo } from '@/components/Logo';
 import { TurtleLogo } from '@/components/TurtleLogo';
-import { isDemoUser } from '@/lib/demoMode';
+import { isDemoUser, setDemoRole } from '@/lib/demoMode';
 import { DarkNightBackground } from '@/components/DarkNightBackground';
 import { cn } from '@/lib/utils';
 import { useTranslation } from 'react-i18next';
@@ -64,6 +64,7 @@ const Onboarding = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const isDemo = isDemoUser(user);
+  const [demoRoleLoading, setDemoRoleLoading] = useState<'patient' | 'relative' | 'doctor' | null>(null);
 
   const DRAFT_KEY = user ? `toddy_onboarding_draft_${user.id}` : null;
   const loadDraft = () => {
@@ -234,13 +235,45 @@ const Onboarding = () => {
                     ))}
                   </div>
 
-                  <Button
-                    onClick={handleNext}
-                    className="w-full h-14 rounded-2xl text-base font-semibold bg-[hsl(45_85%_55%)] text-[hsl(230_30%_5%)] hover:bg-[hsl(45_85%_65%)] shadow-[0_4px_20px_-4px_hsl(45_85%_55%/0.4)] hover:shadow-[0_6px_28px_-4px_hsl(45_85%_55%/0.5)] hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 mt-8"
-                  >
-                    Visa mig runt
-                    <ArrowRight className="w-5 h-5 ml-2" />
-                  </Button>
+                  <p className="text-xs text-white/40 mt-6 mb-3 uppercase tracking-wider font-medium">
+                    Testa som
+                  </p>
+                  <div className="w-full space-y-2">
+                    {([
+                      { role: 'patient', label: 'Bipolär', desc: 'Följ ditt eget mående och se mönster', icon: User },
+                      { role: 'relative', label: 'Anhörig', desc: 'Stötta någon nära som lever med bipolär', icon: Heart },
+                      { role: 'doctor', label: 'Läkare', desc: 'Se översikt över dina patienter', icon: Stethoscope },
+                    ] as const).map(({ role, label, desc, icon: Icon }) => (
+                      <button
+                        key={role}
+                        disabled={demoRoleLoading !== null}
+                        onClick={async () => {
+                          setDemoRoleLoading(role);
+                          try {
+                            await setDemoRole(role);
+                            queryClient.invalidateQueries();
+                            navigate('/', { replace: true });
+                          } catch {
+                            setDemoRoleLoading(null);
+                          }
+                        }}
+                        className="w-full flex items-center gap-3 p-4 rounded-2xl bg-white/[0.04] ring-1 ring-white/[0.08] hover:ring-[hsl(45_85%_55%/0.4)] hover:bg-white/[0.06] transition-all text-left disabled:opacity-50"
+                      >
+                        <div className="w-10 h-10 rounded-xl bg-[hsl(45_85%_55%/0.12)] flex items-center justify-center shrink-0">
+                          {demoRoleLoading === role ? (
+                            <Loader2 className="w-4 h-4 text-[hsl(45_85%_55%)] animate-spin" />
+                          ) : (
+                            <Icon className="w-4 h-4 text-[hsl(45_85%_55%)]" />
+                          )}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-semibold text-white">{label}</p>
+                          <p className="text-xs text-white/50 mt-0.5">{desc}</p>
+                        </div>
+                        <ArrowRight className="w-4 h-4 text-white/30 shrink-0" />
+                      </button>
+                    ))}
+                  </div>
                 </>
               ) : (
                 <>
