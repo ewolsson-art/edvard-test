@@ -275,9 +275,8 @@ export function isDemoUser(user: { user_metadata?: Record<string, unknown> } | n
  * via DB-triggern; den här låter användaren testa anhörig- eller läkarvyn.
  */
 export async function setDemoRole(role: "patient" | "relative" | "doctor"): Promise<void> {
-  try {
-    await supabase.auth.updateUser({ data: { role } });
-  } catch { /* ignore */ }
+  const { error: metadataError } = await supabase.auth.updateUser({ data: { role } });
+  if (metadataError) throw metadataError;
 
   const { data: { user } } = await supabase.auth.getUser();
   if (user) {
@@ -296,21 +295,28 @@ export async function setDemoRole(role: "patient" | "relative" | "doctor"): Prom
   }
 
   if (role !== "patient") {
-    await supabase.rpc("assign_initial_role", { _role: role });
+    const { data: assigned, error: roleError } = await supabase.rpc("assign_initial_role", { _role: role });
+    if (roleError) throw roleError;
+    if (!assigned) throw new Error("Kunde inte byta demoroll");
 
     // Vänta tills DB-rollen verkligen är uppdaterad innan vi går vidare,
     // annars hinner ProtectedRoute läsa gamla rollen ('patient') och redirecta
     // läkare/anhörig tillbaka till '/' — det orsakar "måste klicka två gånger".
     if (user) {
+      let roleReady = false;
       for (let i = 0; i < 20; i++) {
         const { data: r } = await supabase
           .from("user_roles")
           .select("role")
           .eq("user_id", user.id)
           .maybeSingle();
-        if (r?.role === role) break;
+        if (r?.role === role) {
+          roleReady = true;
+          break;
+        }
         await new Promise((res) => setTimeout(res, 100));
       }
+      if (!roleReady) throw new Error("Demorollen hann inte uppdateras");
     }
 
     // Seedar 3 fejk-patienter + godkända kopplingar så anhörig/läkare har någon att följa direkt
