@@ -64,6 +64,7 @@ const Onboarding = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const isDemo = isDemoUser(user);
+  const [demoRoleLoading, setDemoRoleLoading] = useState<'patient' | 'relative' | 'doctor' | null>(null);
 
   const DRAFT_KEY = user ? `toddy_onboarding_draft_${user.id}` : null;
   const loadDraft = () => {
