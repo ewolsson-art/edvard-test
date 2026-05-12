@@ -33,6 +33,7 @@ import { YearHeatmap } from '@/components/YearHeatmap';
 import { RelativeCommentDialog } from '@/components/RelativeCommentDialog';
 import { PatientAIInsights } from '@/components/PatientAIInsights';
 import { PatientCharacteristics } from '@/components/PatientCharacteristics';
+import { PatientPatternInsightsSection } from '@/components/PatientPatternInsightsSection';
 import { MoodStats as MoodStatsType, ExerciseType, QualityType } from '@/types/mood';
 import { Loader2, ChevronLeft, Radio, Pill, Check, X, Moon, Utensils, Dumbbell, Stethoscope, BarChart3, CalendarDays } from 'lucide-react';
 import { OverviewSummary } from '@/components/OverviewSummary';
@@ -474,17 +475,73 @@ export function PatientOverview({ connection, onBack, hideExtras = false }: Pati
       )}
 
       {/* Stats view */}
-      {showStats && (
-        <>
-          <OverviewSummary
-            stats={stats}
-            entries={entries}
-            periodLabel={label}
-            sleepBadDays={0}
-            showSleep={false}
-          />
-        </>
-      )}
+      {showStats && (() => {
+        // All-time aggregate stats across full shared history
+        let se = 0, e = 0, sme = 0, st = 0, smd = 0, d = 0, sd = 0;
+        entries.forEach(en => {
+          switch (en.mood) {
+            case 'severe_elevated': se++; break;
+            case 'elevated': e++; break;
+            case 'somewhat_elevated': sme++; break;
+            case 'stable': st++; break;
+            case 'somewhat_depressed': smd++; break;
+            case 'depressed': d++; break;
+            case 'severe_depressed': sd++; break;
+          }
+        });
+        const totalAll = se + e + sme + st + smd + d + sd;
+        const allTimeStats: MoodStatsType = {
+          severe_elevated: se, elevated: e, somewhat_elevated: sme, stable: st,
+          somewhat_depressed: smd, depressed: d, severe_depressed: sd,
+          unregistered: 0, total: totalAll, totalDays: totalAll,
+        };
+        return (
+          <div className="space-y-8">
+            <OverviewSummary
+              stats={stats}
+              entries={entries}
+              periodLabel={label}
+              sleepBadDays={0}
+              showSleep={false}
+            />
+
+            {entries.length > 0 && (
+              <section className="space-y-3">
+                <header className="px-1">
+                  <h2 className="text-[17px] font-semibold leading-tight">Hela historiken</h2>
+                  <p className="text-[11px] text-muted-foreground/80 leading-tight">
+                    {entries.length} check-ins totalt
+                  </p>
+                </header>
+                <OverviewSummary
+                  stats={allTimeStats}
+                  entries={entries}
+                  periodLabel="Hela historiken"
+                  sleepBadDays={0}
+                  showSleep={false}
+                />
+              </section>
+            )}
+
+            {isDoctorViewing && connection.share_mood && (
+              <PatientCharacteristics
+                patientId={connection.patient_id}
+                latestMood={(latestMoodEntry?.mood ?? null) as any}
+                isShared={true}
+                checkinOnly
+              />
+            )}
+
+            {isDoctorViewing && (
+              <PatientPatternInsightsSection
+                patientId={connection.patient_id}
+                isShared={'share_ai_insights' in connection && connection.share_ai_insights === true}
+                patientName={patientName}
+              />
+            )}
+          </div>
+        );
+      })()}
 
       {/* View tabs — same pill style as patient's own Overview */}
       {!showStats && (
