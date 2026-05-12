@@ -268,6 +268,9 @@ const Onboarding = () => {
                 </>
               ) : (
                 <>
+                  <div className="mb-6 animate-scale-in">
+                    <TurtleLogo size="hero" animated className="w-32 h-32 md:w-40 md:h-40 drop-shadow-[0_8px_32px_hsl(45_85%_55%/0.2)]" />
+                  </div>
                   <h1 className="text-2xl md:text-3xl font-bold text-white font-display tracking-tight leading-snug">
                     Hej. Vad fint att du är här.
                   </h1>
