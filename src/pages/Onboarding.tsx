@@ -238,7 +238,7 @@ const Onboarding = () => {
                         disabled={demoRoleLoading !== null}
                         onClick={async () => {
                           setDemoRoleLoading(role);
-                          const minDelay = new Promise((r) => setTimeout(r, 1500));
+                          const minDelay = new Promise((r) => setTimeout(r, 3500));
                           try {
                             await setDemoRole(role);
                             await queryClient.invalidateQueries();
