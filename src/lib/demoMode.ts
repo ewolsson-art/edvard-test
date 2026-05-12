@@ -138,6 +138,15 @@ function buildScript(days: number): DayEntry[] {
 }
 
 export async function startDemoSession(): Promise<{ error: Error | null }> {
+  // If a session already exists, sign out first — signInAnonymously
+  // fails ("Load failed") when called with an active session.
+  try {
+    const { data: existing } = await supabase.auth.getSession();
+    if (existing.session) {
+      await supabase.auth.signOut({ scope: "local" } as any);
+    }
+  } catch { /* ignore */ }
+
   const { data, error } = await supabase.auth.signInAnonymously();
   if (error || !data.user) {
     return { error: error ?? new Error("Kunde inte starta demo") };
