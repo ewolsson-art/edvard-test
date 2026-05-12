@@ -238,6 +238,8 @@ const Onboarding = () => {
                         disabled={demoRoleLoading !== null}
                         onClick={async () => {
                           setDemoRoleLoading(role);
+                          // App-level overlay so it survives ProtectedRoute redirect
+                          startDemoTransition(role);
                           const minDelay = new Promise((r) => setTimeout(r, 3500));
                           try {
                             await setDemoRole(role);
