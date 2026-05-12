@@ -124,6 +124,14 @@ export function AuthNavbar() {
               >
                 {t('nav.createAccount')}
               </button>
+              <button
+                onClick={handleDemo}
+                disabled={demoLoading}
+                className="block text-left text-3xl font-bold text-white/70 tracking-tight hover:text-white transition-colors inline-flex items-center gap-3 disabled:opacity-60"
+              >
+                {demoLoading && <Loader2 className="h-6 w-6 animate-spin" />}
+                Demokonto
+              </button>
             </div>
           </div>
 
