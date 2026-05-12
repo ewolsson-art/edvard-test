@@ -90,6 +90,22 @@ const Login = () => {
     setIsSubmitting(false);
   };
 
+  const handleDemo = async () => {
+    if (demoLoading) return;
+    setDemoLoading(true);
+    const { error } = await startDemoSession();
+    if (error) {
+      setDemoLoading(false);
+      toast({
+        title: "Kunde inte starta demo",
+        description: "Försök igen om en stund.",
+        variant: "destructive",
+      });
+      return;
+    }
+    navigate("/", { replace: true });
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[hsl(230_30%_5%)]">
