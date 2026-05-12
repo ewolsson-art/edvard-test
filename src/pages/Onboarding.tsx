@@ -207,10 +207,10 @@ const Onboarding = () => {
                     Demo
                   </span>
                   <h1 className="text-2xl md:text-3xl font-bold text-white font-display tracking-tight leading-snug">
-                    Kika runt – det här är bara på låtsas.
+                    Välkommen på en rundtur av Toddy
                   </h1>
                   <p className="mt-3 text-[15px] text-white/60 max-w-sm leading-relaxed">
-                    Inget riktigt konto, ingen riktig data – bara ett demokonto så du kan klicka runt och se hur Toddy funkar. Vill du spara på riktigt skapar du ett eget konto sen.
+                    Med ett demokonto kan du utforska plattformen utan att själv skapa ett konto.
                   </p>
 
                   <p className="text-[11px] text-white/40 mt-6 mb-3 uppercase tracking-wider font-medium">
