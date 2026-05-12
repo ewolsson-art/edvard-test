@@ -150,7 +150,7 @@ const Notifications = () => {
 
   if (isLoading) {
     return (
-      <div className="p-5 md:p-8 max-w-2xl md:mx-0">
+      <div className="p-5 md:p-8 max-w-4xl md:mx-0">
         <h1 className="font-display text-3xl font-bold mb-2">{t('notificationsPage.title')}</h1>
         <div className="flex justify-center py-12"><div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin" /></div>
       </div>
@@ -158,7 +158,7 @@ const Notifications = () => {
   }
 
   return (
-    <div className="p-5 md:p-8 max-w-2xl md:mx-0 pb-24">
+    <div className="p-5 md:p-8 max-w-4xl md:mx-0 pb-24">
       <div className="flex items-center justify-between mb-1">
         <h1 className="font-display text-3xl font-bold">{t('notificationsPage.title')}</h1>
         {unreadCount > 0 && (
