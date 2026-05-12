@@ -1,7 +1,11 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { Loader2 } from "lucide-react";
 import { TurtleLogo } from "@/components/TurtleLogo";
 import { useHaptics } from "@/hooks/useHaptics";
+import { startDemoSession } from "@/lib/demoMode";
+import { useToast } from "@/hooks/use-toast";
 
 /**
  * Native app landing screen — shown only inside the iOS/Android app shell.
