@@ -109,7 +109,9 @@ const AppLayout = ({ children }: { children: React.ReactNode }) => (
         aria-label="Huvudinnehåll"
       >
         <DemoBanner />
-        {children}
+        {/* Inner Suspense: keeps sidebar/tabbar mounted while the next page chunk loads.
+            Fallback is null so cached chunks swap instantly with no flash. */}
+        <Suspense fallback={null}>{children}</Suspense>
       </main>
     </div>
     {/* Mobile: bottom tab bar */}
