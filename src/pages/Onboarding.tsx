@@ -63,6 +63,7 @@ const Onboarding = () => {
   const { createPreferences } = useUserPreferences();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const isDemo = isDemoUser(user);
 
   const DRAFT_KEY = user ? `toddy_onboarding_draft_${user.id}` : null;
   const loadDraft = () => {
