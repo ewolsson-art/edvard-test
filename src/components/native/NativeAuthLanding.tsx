@@ -113,6 +113,21 @@ export function NativeAuthLanding() {
             {t("nav.login")}
           </button>
 
+          <button
+            onClick={handleDemo}
+            disabled={demoLoading}
+            className="w-full h-[52px] rounded-full text-white/70 font-medium text-[15px] active:scale-[0.97] active:text-white transition-all duration-150 disabled:opacity-60 flex items-center justify-center gap-2"
+          >
+            {demoLoading ? (
+              <>
+                <Loader2 className="h-4 w-4 animate-spin" />
+                Förbereder demo…
+              </>
+            ) : (
+              <>Testa utan konto →</>
+            )}
+          </button>
+
           <p className="text-center text-xs text-white/35 pt-3 px-4 leading-relaxed">
             Genom att fortsätta godkänner du våra villkor och vår integritetspolicy.
           </p>
