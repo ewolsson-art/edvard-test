@@ -10,11 +10,11 @@ import { useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { 
   Loader2, Brain, Moon, Utensils, Dumbbell, Pill, 
-  ArrowRight, ArrowLeft, CheckCircle2
+  ArrowRight, ArrowLeft, CheckCircle2, Heart, Stethoscope, User
 } from 'lucide-react';
 import { Logo } from '@/components/Logo';
 import { TurtleLogo } from '@/components/TurtleLogo';
-import { isDemoUser } from '@/lib/demoMode';
+import { isDemoUser, setDemoRole } from '@/lib/demoMode';
 import { DarkNightBackground } from '@/components/DarkNightBackground';
 import { cn } from '@/lib/utils';
 import { useTranslation } from 'react-i18next';
