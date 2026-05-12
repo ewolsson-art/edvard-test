@@ -238,9 +238,11 @@ const Onboarding = () => {
                         disabled={demoRoleLoading !== null}
                         onClick={async () => {
                           setDemoRoleLoading(role);
+                          const minDelay = new Promise((r) => setTimeout(r, 1500));
                           try {
                             await setDemoRole(role);
                             await queryClient.invalidateQueries();
+                            await minDelay;
                             const dest = role === 'doctor' ? '/lakare' : role === 'relative' ? '/anhorig' : '/';
                             navigate(dest, { replace: true });
                           } catch {
