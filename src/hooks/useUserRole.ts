@@ -4,6 +4,9 @@ import { useAuth } from './useAuth';
 
 export type AppRole = 'patient' | 'doctor' | 'relative' | 'admin';
 
+const isAppRole = (value: unknown): value is AppRole =>
+  value === 'patient' || value === 'doctor' || value === 'relative' || value === 'admin';
+
 export function useUserRole() {
   const { user } = useAuth();
   const [role, setRole] = useState<AppRole | null>(null);
@@ -16,6 +19,20 @@ export function useUserRole() {
       return;
     }
 
+    const metaRole = user.user_metadata?.role;
+    const isDemo = Boolean(user.user_metadata?.is_demo);
+
+    // Demo users can switch roles from the onboarding demo cards. Trust the
+    // just-updated demo metadata immediately so routing does not read a stale
+    // DB role and bounce/spin before navigation completes.
+    if (isDemo && isAppRole(metaRole)) {
+      setRole(metaRole);
+      setIsLoading(false);
+      return;
+    }
+
+    setIsLoading(true);
+
     const fetchRole = async () => {
       const { data, error } = await supabase
         .from('user_roles')
@@ -24,27 +41,9 @@ export function useUserRole() {
         .maybeSingle();
 
       if (!error && data) {
-        const dbRole = data.role as AppRole;
-        // If metadata indicates a different role and it was recently assigned,
-        // trust metadata (handles race where DB trigger set 'patient' but assign_initial_role updated to 'relative')
-        const metaRole = user.user_metadata?.role as AppRole | undefined;
-        if (metaRole && ['patient', 'doctor', 'relative'].includes(metaRole) && dbRole === 'patient' && metaRole !== 'patient') {
-          // Re-fetch once more after a short delay to let the DB catch up
-          const { data: retryData } = await supabase
-            .from('user_roles')
-            .select('role')
-            .eq('user_id', user.id)
-            .maybeSingle();
-          setRole((retryData?.role as AppRole) || metaRole);
-        } else {
-          setRole(dbRole);
-        }
+        setRole(data.role as AppRole);
       } else {
-        // Fallback to user metadata role if DB hasn't been updated yet
-        const metaRole = user.user_metadata?.role as AppRole | undefined;
-        if (metaRole && ['patient', 'doctor', 'relative'].includes(metaRole)) {
-          setRole(metaRole);
-        }
+        setRole(null);
       }
       setIsLoading(false);
     };
