@@ -13,7 +13,7 @@ import { CheckinData } from '@/types/mood';
 import { TodayCheckin } from '@/components/TodayCheckin';
 import { MissedDayPrompt } from '@/components/MissedDayPrompt';
 
-import { FirstRunTour } from '@/components/FirstRunTour';
+
 
 const Index = () => {
   const [searchParams, setSearchParams] = useSearchParams();
