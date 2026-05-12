@@ -15,6 +15,7 @@ import {
 import { Logo } from '@/components/Logo';
 import { TurtleLogo } from '@/components/TurtleLogo';
 import { isDemoUser, setDemoRole } from '@/lib/demoMode';
+import { startDemoTransition } from '@/components/DemoTransitionOverlay';
 import { DarkNightBackground } from '@/components/DarkNightBackground';
 import { cn } from '@/lib/utils';
 import { useTranslation } from 'react-i18next';
