@@ -76,6 +76,35 @@ export function useRelativeConnections() {
     fetchConnections();
   }, [fetchConnections]);
 
+  // Demo-seed och nya kopplingar kan landa precis efter mount —
+  // lyssna på inserts/updates och retry:a kort om listan är tom.
+  useEffect(() => {
+    if (!user) return;
+    const channel = supabase
+      .channel(`rel-conn-${user.id}`)
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'patient_relative_connections', filter: `relative_id=eq.${user.id}` },
+        () => { fetchConnections(); }
+      )
+      .subscribe();
+
+    // Fallback: om vi inte fick något direkt, refetcha några gånger
+    const timers: number[] = [];
+    [800, 2000, 4000].forEach((ms) => {
+      timers.push(window.setTimeout(() => fetchConnections(), ms));
+    });
+
+    const onFocus = () => fetchConnections();
+    window.addEventListener('focus', onFocus);
+
+    return () => {
+      supabase.removeChannel(channel);
+      timers.forEach((t) => window.clearTimeout(t));
+      window.removeEventListener('focus', onFocus);
+    };
+  }, [user, fetchConnections]);
+
   const requestPatientAccess = useCallback(async (patientEmail: string) => {
     if (!user) return { success: false, error: 'Inte inloggad' };
 
