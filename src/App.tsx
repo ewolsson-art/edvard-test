@@ -15,6 +15,7 @@ import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { NotificationSchedulerProvider } from "@/components/NotificationSchedulerProvider";
 import { BottomTabBar } from "@/components/native/BottomTabBar";
 import { DemoBanner } from "@/components/DemoBanner";
+import { DemoTransitionOverlay } from "@/components/DemoTransitionOverlay";
 import { NativeShellInit } from "@/components/native/NativeShellInit";
 import { NativeAppGate } from "@/components/native/NativeAppGate";
 import { useAuth } from "@/hooks/useAuth";
@@ -147,6 +148,7 @@ const App = () => (
           <NativeShellInit />
           <Toaster />
           <Sonner />
+          <DemoTransitionOverlay />
           <OfflineBanner />
           <MobileWebNotice />
           <NativeAppGate>
