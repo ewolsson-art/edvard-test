@@ -1,15 +1,18 @@
 import { useEffect, useState } from "react";
 import { TurtleLogo } from "@/components/TurtleLogo";
 
-type DemoRole = "patient" | "relative" | "doctor";
+type DemoRole = "setup" | "patient" | "relative" | "doctor";
 
 interface State {
   role: DemoRole;
   startedAt: number;
+  minDurationMs: number;
+  autoHide: boolean;
 }
 
-const EVENT = "toddy:demo-transition";
 const DURATION_MS = 3500;
+const START_EVENT = "toddy:demo-transition:start";
+const COMPLETE_EVENT = "toddy:demo-transition:complete";
 
 /**
  * Show the playful turtle loader from the moment the user picks a demo role
@@ -17,9 +20,21 @@ const DURATION_MS = 3500;
  * route change that ProtectedRoute triggers when the role flips — otherwise
  * the overlay would die together with the Onboarding component.
  */
-export function startDemoTransition(role: DemoRole) {
-  const detail: State = { role, startedAt: Date.now() };
-  window.dispatchEvent(new CustomEvent<State>(EVENT, { detail }));
+export function startDemoTransition(
+  role: DemoRole,
+  options: { minDurationMs?: number; autoHide?: boolean } = {}
+) {
+  const detail: State = {
+    role,
+    startedAt: Date.now(),
+    minDurationMs: options.minDurationMs ?? DURATION_MS,
+    autoHide: options.autoHide ?? true,
+  };
+  window.dispatchEvent(new CustomEvent<State>(START_EVENT, { detail }));
+}
+
+export function completeDemoTransition() {
+  window.dispatchEvent(new Event(COMPLETE_EVENT));
 }
 
 export function DemoTransitionOverlay() {
@@ -30,13 +45,26 @@ export function DemoTransitionOverlay() {
       const detail = (e as CustomEvent<State>).detail;
       setState(detail);
     };
-    window.addEventListener(EVENT, onStart);
-    return () => window.removeEventListener(EVENT, onStart);
+    const onComplete = () => {
+      setState((current) => {
+        if (!current) return null;
+        const remaining = Math.max(0, current.minDurationMs - (Date.now() - current.startedAt));
+        window.setTimeout(() => setState(null), remaining + 250);
+        return current;
+      });
+    };
+    window.addEventListener(START_EVENT, onStart);
+    window.addEventListener(COMPLETE_EVENT, onComplete);
+    return () => {
+      window.removeEventListener(START_EVENT, onStart);
+      window.removeEventListener(COMPLETE_EVENT, onComplete);
+    };
   }, []);
 
   useEffect(() => {
     if (!state) return;
-    const remaining = Math.max(0, DURATION_MS - (Date.now() - state.startedAt));
+    if (!state.autoHide) return;
+    const remaining = Math.max(0, state.minDurationMs - (Date.now() - state.startedAt));
     const t = setTimeout(() => setState(null), remaining);
     return () => clearTimeout(t);
   }, [state]);
