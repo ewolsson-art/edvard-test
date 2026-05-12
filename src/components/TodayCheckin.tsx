@@ -256,17 +256,9 @@ export function TodayCheckin({
     return Array.from(counts.values()).sort((a, b) => b.count - a.count).slice(0, 6);
   }, [userCheckinChars, moodTypeForSuggestions, checkinData.mood, checkinData.tags, MOOD_TAGS]);
 
-  // Auto-mark scheduled medications as taken when entering medication step for the first time.
-  // Vid behov-mediciner är frivilliga och förkryssas aldrig.
+  // Medicin är en ren ja/nej-fråga — inget förkryssas automatiskt.
+  // Användaren svarar själv genom att trycka Ja eller Nej.
   const hasPrefilled = useRef(false);
-  useEffect(() => {
-    if (currentStep === 'medication' && activeMedications.length > 0 && medicationsTakenToday.length === 0 && !hasPrefilled.current) {
-      hasPrefilled.current = true;
-      activeMedications
-        .filter(med => med.frequency !== 'as_needed')
-        .forEach(med => onToggleMedication(med.id, true));
-    }
-  }, [currentStep, activeMedications, medicationsTakenToday.length, onToggleMedication]);
 
   // Scroll comment area into view when shown
   useEffect(() => {
@@ -475,9 +467,11 @@ export function TodayCheckin({
     );
   };
 
+  // Behandla alla aktiva mediciner som en enda ja/nej-fråga — systemet ska
+  // inte särskilja på "vid behov" vs "schemalagt".
   const hasMedications = activeMedications.length > 0;
-  const scheduledMedications = activeMedications.filter(m => m.frequency !== 'as_needed');
-  const asNeededMedications = activeMedications.filter(m => m.frequency === 'as_needed');
+  const scheduledMedications = activeMedications;
+  const asNeededMedications: Medication[] = [];
   const scheduledTakenCount = scheduledMedications.filter(m => medicationsTakenToday.includes(m.id)).length;
   const allScheduledTaken = scheduledMedications.length > 0 && scheduledTakenCount === scheduledMedications.length;
   const noScheduledTaken = scheduledMedications.length > 0 && scheduledTakenCount === 0;
