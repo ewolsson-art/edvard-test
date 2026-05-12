@@ -194,7 +194,7 @@ const Onboarding = () => {
 
       {/* Main content */}
       <main className="flex-1 flex flex-col items-center px-6 py-4 overflow-y-auto">
-        <div className="w-full max-w-md">
+        <div className={cn("w-full", isDemo ? "max-w-3xl" : "max-w-md")}>
           {/* Step 1: Welcome (demo-aware) */}
           {step === 1 && (
             <div className="animate-fade-in flex flex-col items-center text-center">
@@ -216,11 +216,11 @@ const Onboarding = () => {
                   <p className="text-[11px] text-white/40 mt-6 mb-3 uppercase tracking-wider font-medium">
                     Testa som
                   </p>
-                  <div className="w-full space-y-2">
+                  <div className="w-full grid grid-cols-1 sm:grid-cols-3 gap-2.5">
                     {([
                       { role: 'patient', label: 'Bipolär', desc: 'Följ mående och se mönster', icon: User },
                       { role: 'relative', label: 'Anhörig', desc: 'Stötta någon nära', icon: Heart },
-                      { role: 'doctor', label: 'Läkare', desc: 'Översikt över patienter', icon: Stethoscope },
+                      { role: 'doctor', label: 'Läkare', desc: 'Översikt över personer', icon: Stethoscope },
                     ] as const).map(({ role, label, desc, icon: Icon }) => (
                       <button
                         key={role}
@@ -235,20 +235,17 @@ const Onboarding = () => {
                             setDemoRoleLoading(null);
                           }
                         }}
-                        className="w-full flex items-center gap-3 px-4 py-3.5 rounded-2xl bg-white/[0.04] ring-1 ring-white/[0.08] hover:ring-[hsl(45_85%_55%/0.4)] hover:bg-white/[0.06] transition-all text-left disabled:opacity-50"
+                        className="flex flex-col items-center text-center gap-2 px-4 py-5 rounded-2xl bg-white/[0.04] ring-1 ring-white/[0.08] hover:ring-[hsl(45_85%_55%/0.4)] hover:bg-white/[0.06] transition-all disabled:opacity-50"
                       >
-                        <div className="w-10 h-10 rounded-xl bg-[hsl(45_85%_55%/0.12)] flex items-center justify-center shrink-0">
+                        <div className="w-11 h-11 rounded-xl bg-[hsl(45_85%_55%/0.12)] flex items-center justify-center">
                           {demoRoleLoading === role ? (
-                            <Loader2 className="w-4 h-4 text-[hsl(45_85%_55%)] animate-spin" />
+                            <Loader2 className="w-5 h-5 text-[hsl(45_85%_55%)] animate-spin" />
                           ) : (
-                            <Icon className="w-4 h-4 text-[hsl(45_85%_55%)]" />
+                            <Icon className="w-5 h-5 text-[hsl(45_85%_55%)]" />
                           )}
                         </div>
-                        <div className="flex-1 min-w-0">
-                          <p className="text-[15px] font-semibold text-white leading-tight">{label}</p>
-                          <p className="text-[12px] text-white/50 mt-0.5 leading-tight">{desc}</p>
-                        </div>
-                        <ArrowRight className="w-4 h-4 text-white/30 shrink-0" />
+                        <p className="text-[15px] font-semibold text-white leading-tight">{label}</p>
+                        <p className="text-[12px] text-white/50 leading-tight">{desc}</p>
                       </button>
                     ))}
                   </div>
