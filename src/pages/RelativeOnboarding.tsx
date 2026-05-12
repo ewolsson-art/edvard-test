@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { Navigate } from 'react-router-dom';
 import { z } from 'zod';
 import { useUserPreferences } from '@/hooks/useUserPreferences';
 import { useRelativeConnections } from '@/hooks/useRelativeConnections';
@@ -9,12 +10,28 @@ import { DarkNightBackground } from '@/components/DarkNightBackground';
 import { Input } from '@/components/ui/input';
 import { supabase } from '@/integrations/supabase/client';
 import { useTranslation } from 'react-i18next';
+import { useAuth } from '@/hooks/useAuth';
+import { isDemoUser } from '@/lib/demoMode';
 
 const RelativeOnboarding = () => {
   const { t } = useTranslation();
+  const { user } = useAuth();
+  const { createPreferences } = useUserPreferences();
+
+  // Demoanvändare har redan seedade fejk-personer kopplade — hoppa över detta steg helt
+  useEffect(() => {
+    if (isDemoUser(user)) {
+      createPreferences({ include_mood: false, include_sleep: false, include_eating: false, include_exercise: false, include_medication: false }).catch(() => {});
+    }
+  }, [user, createPreferences]);
+
+  if (isDemoUser(user)) {
+    return <Navigate to="/anhorig" replace />;
+  }
+
   const emailSchema = z.string().email({ message: t('relativeOnboarding.invalidEmail') });
   const { toast } = useToast();
-  const { createPreferences } = useUserPreferences();
+  
   const { requestPatientAccess, pendingFromPatients, isLoading, refetch } = useRelativeConnections();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [email, setEmail] = useState('');
