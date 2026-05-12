@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import { Logo } from '@/components/Logo';
 import { TurtleLogo } from '@/components/TurtleLogo';
+import { isDemoUser } from '@/lib/demoMode';
 import { DarkNightBackground } from '@/components/DarkNightBackground';
 import { cn } from '@/lib/utils';
 import { useTranslation } from 'react-i18next';
@@ -62,6 +63,7 @@ const Onboarding = () => {
   const { createPreferences } = useUserPreferences();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const isDemo = isDemoUser(user);
 
   const DRAFT_KEY = user ? `toddy_onboarding_draft_${user.id}` : null;
   const loadDraft = () => {
@@ -200,40 +202,77 @@ const Onboarding = () => {
       {/* Main content */}
       <main className="flex-1 flex flex-col items-center px-6 pt-6 overflow-y-auto">
         <div className="w-full max-w-sm">
-          {/* Step 1: Welcome */}
+          {/* Step 1: Welcome (demo-aware) */}
           {step === 1 && (
             <div className="animate-fade-in flex flex-col items-center text-center pt-4">
               <div className="mb-6 animate-scale-in">
                 <TurtleLogo size="hero" animated className="w-32 h-32 md:w-40 md:h-40 drop-shadow-[0_8px_32px_hsl(45_85%_55%/0.2)]" />
               </div>
 
-              <h1 className="text-2xl md:text-3xl font-bold text-white font-display tracking-tight leading-snug">
-                Hej. Vad fint att du är här.
-              </h1>
-              <p className="mt-3 text-sm text-white/60 max-w-xs leading-relaxed">
-                Toddy är en lugn liten plats för dig som lever med bipolär. Vi hjälper dig att se mönster i ditt mående – inget krav, inga rätt eller fel.
-              </p>
+              {isDemo ? (
+                <>
+                  <span className="inline-flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-wider text-[hsl(45_85%_55%)] bg-[hsl(45_85%_55%/0.1)] px-2.5 py-1 rounded-full mb-3">
+                    Demo
+                  </span>
+                  <h1 className="text-2xl md:text-3xl font-bold text-white font-display tracking-tight leading-snug">
+                    Välkommen in på en titt.
+                  </h1>
+                  <p className="mt-3 text-sm text-white/60 max-w-xs leading-relaxed">
+                    Det här är en rundtur i Toddy. Du behöver inte skapa konto för att klicka runt – när du vill spara på riktigt, registrerar du dig efteråt.
+                  </p>
 
-              <div className="mt-6 flex flex-col gap-2 w-full text-left">
-                {[
-                  'Tar ungefär 1 minut om dagen',
-                  'Du delar bara det du själv vill',
-                  'Byggt med människor som lever med bipolär'
-                ].map((line) => (
-                  <div key={line} className="flex items-center gap-2.5 text-xs text-white/55">
-                    <CheckCircle2 className="w-3.5 h-3.5 text-[hsl(45_85%_55%)] shrink-0" />
-                    <span>{line}</span>
+                  <div className="mt-6 flex flex-col gap-2 w-full text-left">
+                    {[
+                      'All data du ser är slumpmässigt påhittad',
+                      'Den är inte knuten till någon riktig person',
+                      'Ingenting du gör här sparas permanent',
+                    ].map((line) => (
+                      <div key={line} className="flex items-center gap-2.5 text-xs text-white/55">
+                        <CheckCircle2 className="w-3.5 h-3.5 text-[hsl(45_85%_55%)] shrink-0" />
+                        <span>{line}</span>
+                      </div>
+                    ))}
                   </div>
-                ))}
-              </div>
 
-              <Button 
-                onClick={handleNext} 
-                className="w-full h-14 rounded-2xl text-base font-semibold bg-[hsl(45_85%_55%)] text-[hsl(230_30%_5%)] hover:bg-[hsl(45_85%_65%)] shadow-[0_4px_20px_-4px_hsl(45_85%_55%/0.4)] hover:shadow-[0_6px_28px_-4px_hsl(45_85%_55%/0.5)] hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 mt-8"
-              >
-                Då börjar vi
-                <ArrowRight className="w-5 h-5 ml-2" />
-              </Button>
+                  <Button
+                    onClick={handleNext}
+                    className="w-full h-14 rounded-2xl text-base font-semibold bg-[hsl(45_85%_55%)] text-[hsl(230_30%_5%)] hover:bg-[hsl(45_85%_65%)] shadow-[0_4px_20px_-4px_hsl(45_85%_55%/0.4)] hover:shadow-[0_6px_28px_-4px_hsl(45_85%_55%/0.5)] hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 mt-8"
+                  >
+                    Visa mig runt
+                    <ArrowRight className="w-5 h-5 ml-2" />
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <h1 className="text-2xl md:text-3xl font-bold text-white font-display tracking-tight leading-snug">
+                    Hej. Vad fint att du är här.
+                  </h1>
+                  <p className="mt-3 text-sm text-white/60 max-w-xs leading-relaxed">
+                    Toddy är en lugn liten plats för dig som lever med bipolär. Vi hjälper dig att se mönster i ditt mående – inget krav, inga rätt eller fel.
+                  </p>
+
+                  <div className="mt-6 flex flex-col gap-2 w-full text-left">
+                    {[
+                      'Tar ungefär 1 minut om dagen',
+                      'Du delar bara det du själv vill',
+                      'Byggt med människor som lever med bipolär'
+                    ].map((line) => (
+                      <div key={line} className="flex items-center gap-2.5 text-xs text-white/55">
+                        <CheckCircle2 className="w-3.5 h-3.5 text-[hsl(45_85%_55%)] shrink-0" />
+                        <span>{line}</span>
+                      </div>
+                    ))}
+                  </div>
+
+                  <Button
+                    onClick={handleNext}
+                    className="w-full h-14 rounded-2xl text-base font-semibold bg-[hsl(45_85%_55%)] text-[hsl(230_30%_5%)] hover:bg-[hsl(45_85%_65%)] shadow-[0_4px_20px_-4px_hsl(45_85%_55%/0.4)] hover:shadow-[0_6px_28px_-4px_hsl(45_85%_55%/0.5)] hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 mt-8"
+                  >
+                    Då börjar vi
+                    <ArrowRight className="w-5 h-5 ml-2" />
+                  </Button>
+                </>
+              )}
             </div>
           )}
 
