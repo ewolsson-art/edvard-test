@@ -212,7 +212,8 @@ export async function startDemoSession(): Promise<{ error: Error | null }> {
     const days = 90;
     const script = buildScript(days);
     const today = new Date();
-    const moodRows = script.map((entry, i) => {
+    // Hoppa över dagens entry så incheckningskortet alltid visas för demo-användaren
+    const moodRows = script.slice(0, -1).map((entry, i) => {
       const date = format(subDays(today, days - 1 - i), "yyyy-MM-dd");
       return {
         user_id: userId,
