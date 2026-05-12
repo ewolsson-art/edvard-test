@@ -498,6 +498,31 @@ export function PatientOverview({ connection, onBack, hideExtras = false }: Pati
         };
         return (
           <div className="space-y-8">
+            {/* Episodtidslinje — kärnvyn för läkare: episoder över dagar–veckor */}
+            {entries.length >= 3 && (
+              <section className="space-y-3">
+                <header className="px-1">
+                  <h2 className="text-[17px] font-semibold leading-tight">Episoder senaste 90 dagarna</h2>
+                  <p className="text-[11px] text-muted-foreground/80 leading-tight">
+                    Tidslinje över upp- och nedstämda perioder, blandtecken och prodromer
+                  </p>
+                </header>
+                <EpisodeBands entries={entries} days={90} />
+              </section>
+            )}
+
+            {entries.length >= 3 && (
+              <section className="space-y-3">
+                <header className="px-1">
+                  <h2 className="text-[17px] font-semibold leading-tight">Senaste 14 dagarna</h2>
+                  <p className="text-[11px] text-muted-foreground/80 leading-tight">
+                    Närbild på det aktuella förloppet
+                  </p>
+                </header>
+                <EpisodeBands entries={entries} days={14} />
+              </section>
+            )}
+
             <OverviewSummary
               stats={stats}
               entries={entries}
