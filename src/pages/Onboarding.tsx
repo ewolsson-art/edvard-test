@@ -175,7 +175,7 @@ const Onboarding = () => {
   return (
     <DarkNightBackground>
       {/* Header with progress */}
-      <header className="p-3">
+      <header className="p-2">
         <div className="max-w-lg mx-auto">
           <div className="flex items-center justify-between mb-2">
             <Logo className="[&_span]:!bg-none [&_span]:!text-white" />
@@ -193,48 +193,47 @@ const Onboarding = () => {
       </header>
 
       {/* Main content */}
-      <main className="flex-1 flex flex-col items-center px-6 pt-6 overflow-y-auto">
+      <main className="flex-1 flex flex-col items-center px-6 py-3 overflow-y-auto">
         <div className="w-full max-w-sm">
           {/* Step 1: Welcome (demo-aware) */}
           {step === 1 && (
-            <div className="animate-fade-in flex flex-col items-center text-center pt-4">
-              <div className="mb-6 animate-scale-in">
-                <TurtleLogo size="hero" animated className="w-32 h-32 md:w-40 md:h-40 drop-shadow-[0_8px_32px_hsl(45_85%_55%/0.2)]" />
-              </div>
-
+            <div className="animate-fade-in flex flex-col items-center text-center">
               {isDemo ? (
                 <>
-                  <span className="inline-flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-wider text-[hsl(45_85%_55%)] bg-[hsl(45_85%_55%/0.1)] px-2.5 py-1 rounded-full mb-3">
+                  <div className="mb-3 animate-scale-in">
+                    <TurtleLogo size="hero" animated className="w-20 h-20 md:w-24 md:h-24 drop-shadow-[0_8px_32px_hsl(45_85%_55%/0.2)]" />
+                  </div>
+                  <span className="inline-flex items-center gap-1.5 text-[10px] font-medium uppercase tracking-wider text-[hsl(45_85%_55%)] bg-[hsl(45_85%_55%/0.1)] px-2 py-0.5 rounded-full mb-2">
                     Demo
                   </span>
-                  <h1 className="text-2xl md:text-3xl font-bold text-white font-display tracking-tight leading-snug">
+                  <h1 className="text-xl md:text-2xl font-bold text-white font-display tracking-tight leading-snug">
                     Välkommen in på en titt.
                   </h1>
-                  <p className="mt-3 text-sm text-white/60 max-w-xs leading-relaxed">
-                    Det här är en rundtur i Toddy. Du behöver inte skapa konto för att klicka runt – när du vill spara på riktigt, registrerar du dig efteråt.
+                  <p className="mt-2 text-[13px] text-white/60 max-w-xs leading-relaxed">
+                    En rundtur i Toddy – inget konto behövs. När du vill spara på riktigt registrerar du dig efteråt.
                   </p>
 
-                  <div className="mt-6 flex flex-col gap-2 w-full text-left">
+                  <div className="mt-3 flex flex-col gap-1.5 w-full text-left">
                     {[
-                      'All data du ser är slumpmässigt påhittad',
-                      'Den är inte knuten till någon riktig person',
-                      'Ingenting du gör här sparas permanent',
+                      'All data är slumpmässigt påhittad',
+                      'Inte knuten till någon riktig person',
+                      'Inget du gör sparas permanent',
                     ].map((line) => (
-                      <div key={line} className="flex items-center gap-2.5 text-xs text-white/55">
-                        <CheckCircle2 className="w-3.5 h-3.5 text-[hsl(45_85%_55%)] shrink-0" />
+                      <div key={line} className="flex items-center gap-2 text-[11px] text-white/55">
+                        <CheckCircle2 className="w-3 h-3 text-[hsl(45_85%_55%)] shrink-0" />
                         <span>{line}</span>
                       </div>
                     ))}
                   </div>
 
-                  <p className="text-xs text-white/40 mt-6 mb-3 uppercase tracking-wider font-medium">
+                  <p className="text-[10px] text-white/40 mt-4 mb-2 uppercase tracking-wider font-medium">
                     Testa som
                   </p>
-                  <div className="w-full space-y-2">
+                  <div className="w-full space-y-1.5">
                     {([
-                      { role: 'patient', label: 'Bipolär', desc: 'Följ ditt eget mående och se mönster', icon: User },
-                      { role: 'relative', label: 'Anhörig', desc: 'Stötta någon nära som lever med bipolär', icon: Heart },
-                      { role: 'doctor', label: 'Läkare', desc: 'Se översikt över dina patienter', icon: Stethoscope },
+                      { role: 'patient', label: 'Bipolär', desc: 'Följ mående och se mönster', icon: User },
+                      { role: 'relative', label: 'Anhörig', desc: 'Stötta någon nära', icon: Heart },
+                      { role: 'doctor', label: 'Läkare', desc: 'Översikt över patienter', icon: Stethoscope },
                     ] as const).map(({ role, label, desc, icon: Icon }) => (
                       <button
                         key={role}
@@ -249,26 +248,29 @@ const Onboarding = () => {
                             setDemoRoleLoading(null);
                           }
                         }}
-                        className="w-full flex items-center gap-3 p-4 rounded-2xl bg-white/[0.04] ring-1 ring-white/[0.08] hover:ring-[hsl(45_85%_55%/0.4)] hover:bg-white/[0.06] transition-all text-left disabled:opacity-50"
+                        className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white/[0.04] ring-1 ring-white/[0.08] hover:ring-[hsl(45_85%_55%/0.4)] hover:bg-white/[0.06] transition-all text-left disabled:opacity-50"
                       >
-                        <div className="w-10 h-10 rounded-xl bg-[hsl(45_85%_55%/0.12)] flex items-center justify-center shrink-0">
+                        <div className="w-8 h-8 rounded-lg bg-[hsl(45_85%_55%/0.12)] flex items-center justify-center shrink-0">
                           {demoRoleLoading === role ? (
-                            <Loader2 className="w-4 h-4 text-[hsl(45_85%_55%)] animate-spin" />
+                            <Loader2 className="w-3.5 h-3.5 text-[hsl(45_85%_55%)] animate-spin" />
                           ) : (
-                            <Icon className="w-4 h-4 text-[hsl(45_85%_55%)]" />
+                            <Icon className="w-3.5 h-3.5 text-[hsl(45_85%_55%)]" />
                           )}
                         </div>
                         <div className="flex-1 min-w-0">
-                          <p className="text-sm font-semibold text-white">{label}</p>
-                          <p className="text-xs text-white/50 mt-0.5">{desc}</p>
+                          <p className="text-[13px] font-semibold text-white leading-tight">{label}</p>
+                          <p className="text-[11px] text-white/50 mt-0.5 leading-tight">{desc}</p>
                         </div>
-                        <ArrowRight className="w-4 h-4 text-white/30 shrink-0" />
+                        <ArrowRight className="w-3.5 h-3.5 text-white/30 shrink-0" />
                       </button>
                     ))}
                   </div>
                 </>
               ) : (
                 <>
+                  <div className="mb-6 animate-scale-in">
+                    <TurtleLogo size="hero" animated className="w-32 h-32 md:w-40 md:h-40 drop-shadow-[0_8px_32px_hsl(45_85%_55%/0.2)]" />
+                  </div>
                   <h1 className="text-2xl md:text-3xl font-bold text-white font-display tracking-tight leading-snug">
                     Hej. Vad fint att du är här.
                   </h1>
