@@ -194,7 +194,7 @@ const Onboarding = () => {
 
       {/* Main content */}
       <main className="flex-1 flex flex-col items-center px-6 py-4 overflow-y-auto">
-        <div className="w-full max-w-md">
+        <div className={cn("w-full", isDemo ? "max-w-3xl" : "max-w-md")}>
           {/* Step 1: Welcome (demo-aware) */}
           {step === 1 && (
             <div className="animate-fade-in flex flex-col items-center text-center">
