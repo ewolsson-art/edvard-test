@@ -38,7 +38,7 @@ export default function Patterns() {
         <div className="absolute bottom-0 left-1/3 w-[450px] h-[450px] rounded-full bg-[hsl(190_75%_55%/0.08)] blur-3xl" />
       </div>
 
-      <div className="max-w-2xl mx-auto md:mx-0 px-5 md:px-8 pt-10 pb-24 space-y-10 animate-fade-in">
+      <div className="max-w-4xl mx-auto md:mx-0 px-5 md:px-8 pt-10 pb-24 space-y-10 animate-fade-in">
         {/* Hero */}
         <header className="space-y-4 text-center sm:text-left">
           <div className="flex justify-center sm:justify-start">
