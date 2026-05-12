@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 import { Menu, X, Loader2 } from 'lucide-react';
 import { startDemoSession } from '@/lib/demoMode';
+import { completeDemoTransition, startDemoTransition } from '@/components/DemoTransitionOverlay';
 import { useToast } from '@/hooks/use-toast';
 
 export function AuthNavbar() {
@@ -19,11 +20,14 @@ export function AuthNavbar() {
     if (demoLoading) return;
     setDemoLoading(true);
     setIsMobileMenuOpen(false);
+    startDemoTransition('setup', { autoHide: false });
     try {
       const { error } = await startDemoSession();
       if (error) throw error;
       navigate('/', { replace: true });
+      completeDemoTransition();
     } catch (e: any) {
+      completeDemoTransition();
       toast({ title: 'Kunde inte starta demo', description: e?.message ?? 'Försök igen', variant: 'destructive' });
     } finally {
       setDemoLoading(false);
