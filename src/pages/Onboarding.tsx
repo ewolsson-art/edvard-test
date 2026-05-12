@@ -229,8 +229,9 @@ const Onboarding = () => {
                           setDemoRoleLoading(role);
                           try {
                             await setDemoRole(role);
-                            queryClient.invalidateQueries();
-                            navigate('/', { replace: true });
+                            await queryClient.invalidateQueries();
+                            const dest = role === 'doctor' ? '/lakare' : role === 'relative' ? '/anhorig' : '/';
+                            navigate(dest, { replace: true });
                           } catch {
                             setDemoRoleLoading(null);
                           }
