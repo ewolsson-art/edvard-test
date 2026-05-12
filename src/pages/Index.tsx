@@ -152,7 +152,7 @@ const Index = () => {
 
   return (
     <AnimatedPage className="fixed inset-0 md:relative md:h-screen flex items-center justify-center md:py-4 md:px-5 overflow-hidden">
-      <FirstRunTour />
+      
       <div className="w-full h-full md:h-auto md:max-w-xl relative">
         {shouldShowMissedPrompt ? (
           <MissedDayPrompt
