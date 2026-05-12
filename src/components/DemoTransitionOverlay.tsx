@@ -1,48 +1,17 @@
 import { useEffect, useState } from "react";
 import { TurtleLogo } from "@/components/TurtleLogo";
-
-type DemoRole = "setup" | "patient" | "relative" | "doctor";
-
-interface State {
-  role: DemoRole;
-  startedAt: number;
-  minDurationMs: number;
-  autoHide: boolean;
-}
-
-const DURATION_MS = 3500;
-const START_EVENT = "toddy:demo-transition:start";
-const COMPLETE_EVENT = "toddy:demo-transition:complete";
-
-/**
- * Show the playful turtle loader from the moment the user picks a demo role
- * until the destination page is mounted. Lives at App level so it survives the
- * route change that ProtectedRoute triggers when the role flips — otherwise
- * the overlay would die together with the Onboarding component.
- */
-export function startDemoTransition(
-  role: DemoRole,
-  options: { minDurationMs?: number; autoHide?: boolean } = {}
-) {
-  const detail: State = {
-    role,
-    startedAt: Date.now(),
-    minDurationMs: options.minDurationMs ?? DURATION_MS,
-    autoHide: options.autoHide ?? true,
-  };
-  window.dispatchEvent(new CustomEvent<State>(START_EVENT, { detail }));
-}
-
-export function completeDemoTransition() {
-  window.dispatchEvent(new Event(COMPLETE_EVENT));
-}
+import {
+  DEMO_TRANSITION_COMPLETE_EVENT,
+  DEMO_TRANSITION_START_EVENT,
+  type DemoTransitionState,
+} from "@/lib/demoTransition";
 
 export function DemoTransitionOverlay() {
-  const [state, setState] = useState<State | null>(null);
+  const [state, setState] = useState<DemoTransitionState | null>(null);
 
   useEffect(() => {
     const onStart = (e: Event) => {
-      const detail = (e as CustomEvent<State>).detail;
+      const detail = (e as CustomEvent<DemoTransitionState>).detail;
       setState(detail);
     };
     const onComplete = () => {
@@ -53,11 +22,11 @@ export function DemoTransitionOverlay() {
         return current;
       });
     };
-    window.addEventListener(START_EVENT, onStart);
-    window.addEventListener(COMPLETE_EVENT, onComplete);
+    window.addEventListener(DEMO_TRANSITION_START_EVENT, onStart);
+    window.addEventListener(DEMO_TRANSITION_COMPLETE_EVENT, onComplete);
     return () => {
-      window.removeEventListener(START_EVENT, onStart);
-      window.removeEventListener(COMPLETE_EVENT, onComplete);
+      window.removeEventListener(DEMO_TRANSITION_START_EVENT, onStart);
+      window.removeEventListener(DEMO_TRANSITION_COMPLETE_EVENT, onComplete);
     };
   }, []);
 
