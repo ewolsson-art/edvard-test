@@ -475,9 +475,11 @@ export function TodayCheckin({
     );
   };
 
+  // Behandla alla aktiva mediciner som en enda ja/nej-fråga — systemet ska
+  // inte särskilja på "vid behov" vs "schemalagt".
   const hasMedications = activeMedications.length > 0;
-  const scheduledMedications = activeMedications.filter(m => m.frequency !== 'as_needed');
-  const asNeededMedications = activeMedications.filter(m => m.frequency === 'as_needed');
+  const scheduledMedications = activeMedications;
+  const asNeededMedications: Medication[] = [];
   const scheduledTakenCount = scheduledMedications.filter(m => medicationsTakenToday.includes(m.id)).length;
   const allScheduledTaken = scheduledMedications.length > 0 && scheduledTakenCount === scheduledMedications.length;
   const noScheduledTaken = scheduledMedications.length > 0 && scheduledTakenCount === 0;
