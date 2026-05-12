@@ -270,5 +270,11 @@ export async function setDemoRole(role: "patient" | "relative" | "doctor"): Prom
   } catch { /* ignore */ }
   if (role !== "patient") {
     await supabase.rpc("assign_initial_role", { _role: role });
+    // Seedar 3 fejk-patienter + godkända kopplingar så anhörig/läkare har någon att följa direkt
+    try {
+      await supabase.functions.invoke("seed-demo-connections", { body: { role } });
+    } catch (e) {
+      console.warn("[demo] kunde inte seeda kopplingar:", e);
+    }
   }
 }
