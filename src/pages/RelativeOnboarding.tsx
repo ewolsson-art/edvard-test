@@ -31,7 +31,7 @@ const RelativeOnboarding = () => {
 
   const emailSchema = z.string().email({ message: t('relativeOnboarding.invalidEmail') });
   const { toast } = useToast();
-  const { createPreferences } = useUserPreferences();
+  
   const { requestPatientAccess, pendingFromPatients, isLoading, refetch } = useRelativeConnections();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [email, setEmail] = useState('');
