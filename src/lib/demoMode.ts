@@ -297,6 +297,22 @@ export async function setDemoRole(role: "patient" | "relative" | "doctor"): Prom
 
   if (role !== "patient") {
     await supabase.rpc("assign_initial_role", { _role: role });
+
+    // Vänta tills DB-rollen verkligen är uppdaterad innan vi går vidare,
+    // annars hinner ProtectedRoute läsa gamla rollen ('patient') och redirecta
+    // läkare/anhörig tillbaka till '/' — det orsakar "måste klicka två gånger".
+    if (user) {
+      for (let i = 0; i < 20; i++) {
+        const { data: r } = await supabase
+          .from("user_roles")
+          .select("role")
+          .eq("user_id", user.id)
+          .maybeSingle();
+        if (r?.role === role) break;
+        await new Promise((res) => setTimeout(res, 100));
+      }
+    }
+
     // Seedar 3 fejk-patienter + godkända kopplingar så anhörig/läkare har någon att följa direkt
     try {
       await supabase.functions.invoke("seed-demo-connections", { body: { role } });
