@@ -14,6 +14,7 @@ import { AuthProvider } from "@/hooks/useAuth";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { NotificationSchedulerProvider } from "@/components/NotificationSchedulerProvider";
 import { BottomTabBar } from "@/components/native/BottomTabBar";
+import { DemoBanner } from "@/components/DemoBanner";
 import { NativeShellInit } from "@/components/native/NativeShellInit";
 import { NativeAppGate } from "@/components/native/NativeAppGate";
 import { useAuth } from "@/hooks/useAuth";
@@ -107,6 +108,7 @@ const AppLayout = ({ children }: { children: React.ReactNode }) => (
         role="main"
         aria-label="Huvudinnehåll"
       >
+        <DemoBanner />
         {children}
       </main>
     </div>
