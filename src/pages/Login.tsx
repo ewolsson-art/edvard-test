@@ -71,10 +71,12 @@ const Login = () => {
     if (!validateForm()) return;
     
     setIsSubmitting(true);
+    startDemoTransition("login", { autoHide: false });
 
     const { error } = await signIn(email, password);
 
     if (error) {
+      completeDemoTransition();
       let errorMessage = t("auth.loginError");
       if (error.message.includes("Invalid login credentials")) {
         errorMessage = t("auth.wrongCredentials");
@@ -86,8 +88,11 @@ const Login = () => {
         description: errorMessage,
         variant: "destructive",
       });
+      setIsSubmitting(false);
+      return;
     }
 
+    // Keep overlay up; redirect effect will unmount this page.
     setIsSubmitting(false);
   };
 
