@@ -25,6 +25,7 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [validationErrors, setValidationErrors] = useState<{ email?: string; password?: string }>({});
+  const [demoLoading, setDemoLoading] = useState(false);
   const [searchParams] = useSearchParams();
   const isVerified = searchParams.get("verified") === "true";
 
