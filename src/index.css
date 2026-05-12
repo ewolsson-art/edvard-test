@@ -267,6 +267,11 @@
   }
 }
 
+@keyframes demo-progress {
+  from { width: 0%; }
+  to { width: 100%; }
+}
+
 @layer components {
   .mood-btn {
     @apply relative overflow-hidden transition-all duration-300 ease-out;
