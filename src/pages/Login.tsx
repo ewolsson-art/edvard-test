@@ -9,9 +9,10 @@ import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 
 import { DarkNightBackground } from "@/components/DarkNightBackground";
-import { Eye, EyeOff, Loader2, Mail, CheckCircle2, Lock, ShieldCheck, ArrowLeft } from "lucide-react";
+import { Eye, EyeOff, Loader2, Mail, CheckCircle2, Lock, ShieldCheck, ArrowLeft, Sparkles } from "lucide-react";
 import { TurtleLogo } from "@/components/TurtleLogo";
 import { useTranslation } from 'react-i18next';
+import { startDemoSession } from "@/lib/demoMode";
 
 const loginSchema = z.object({
   email: z.string().email(),
@@ -24,6 +25,7 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [validationErrors, setValidationErrors] = useState<{ email?: string; password?: string }>({});
+  const [demoLoading, setDemoLoading] = useState(false);
   const [searchParams] = useSearchParams();
   const isVerified = searchParams.get("verified") === "true";
 
@@ -86,6 +88,22 @@ const Login = () => {
     }
 
     setIsSubmitting(false);
+  };
+
+  const handleDemo = async () => {
+    if (demoLoading) return;
+    setDemoLoading(true);
+    const { error } = await startDemoSession();
+    if (error) {
+      setDemoLoading(false);
+      toast({
+        title: "Kunde inte starta demo",
+        description: "Försök igen om en stund.",
+        variant: "destructive",
+      });
+      return;
+    }
+    navigate("/", { replace: true });
   };
 
   if (loading) {
@@ -251,6 +269,31 @@ const Login = () => {
               )}
             </Button>
           </form>
+
+          {/* Demo divider + CTA */}
+          <div className="mt-5 flex items-center gap-3 animate-fade-in">
+            <div className="h-px flex-1 bg-white/[0.06]" />
+            <span className="text-[11px] text-white/25 uppercase tracking-wider">eller</span>
+            <div className="h-px flex-1 bg-white/[0.06]" />
+          </div>
+          <button
+            type="button"
+            onClick={handleDemo}
+            disabled={demoLoading || isSubmitting}
+            className="mt-4 w-full h-12 rounded-full text-[15px] font-medium bg-white/[0.04] hover:bg-white/[0.07] text-white/80 hover:text-white border border-white/[0.08] transition-all duration-200 flex items-center justify-center gap-2 disabled:opacity-60 animate-fade-in"
+          >
+            {demoLoading ? (
+              <>
+                <Loader2 className="h-4 w-4 animate-spin" />
+                Förbereder demo…
+              </>
+            ) : (
+              <>
+                <Sparkles className="h-4 w-4 text-[hsl(45_85%_55%)]" />
+                Testa utan att skapa konto
+              </>
+            )}
+          </button>
 
           {/* Security signal */}
           <div className="mt-6 flex items-center justify-center gap-1.5 animate-fade-in">

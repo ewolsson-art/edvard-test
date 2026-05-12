@@ -1,7 +1,11 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { Loader2 } from "lucide-react";
 import { TurtleLogo } from "@/components/TurtleLogo";
 import { useHaptics } from "@/hooks/useHaptics";
+import { startDemoSession } from "@/lib/demoMode";
+import { useToast } from "@/hooks/use-toast";
 
 /**
  * Native app landing screen — shown only inside the iOS/Android app shell.
@@ -12,6 +16,8 @@ export function NativeAuthLanding() {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const { tap } = useHaptics();
+  const { toast } = useToast();
+  const [demoLoading, setDemoLoading] = useState(false);
 
   const handlePrimary = () => {
     tap();
@@ -21,6 +27,19 @@ export function NativeAuthLanding() {
   const handleSecondary = () => {
     tap();
     navigate("/logga-in");
+  };
+
+  const handleDemo = async () => {
+    if (demoLoading) return;
+    tap();
+    setDemoLoading(true);
+    const { error } = await startDemoSession();
+    if (error) {
+      setDemoLoading(false);
+      toast({ title: "Kunde inte starta demo", description: "Försök igen om en stund.", variant: "destructive" });
+      return;
+    }
+    navigate("/", { replace: true });
   };
 
   return (
@@ -92,6 +111,21 @@ export function NativeAuthLanding() {
             className="w-full h-[56px] rounded-full bg-white/[0.06] text-white font-semibold text-[17px] border border-white/10 active:scale-[0.97] active:bg-white/[0.10] transition-all duration-150"
           >
             {t("nav.login")}
+          </button>
+
+          <button
+            onClick={handleDemo}
+            disabled={demoLoading}
+            className="w-full h-[52px] rounded-full text-white/70 font-medium text-[15px] active:scale-[0.97] active:text-white transition-all duration-150 disabled:opacity-60 flex items-center justify-center gap-2"
+          >
+            {demoLoading ? (
+              <>
+                <Loader2 className="h-4 w-4 animate-spin" />
+                Förbereder demo…
+              </>
+            ) : (
+              <>Testa utan konto →</>
+            )}
           </button>
 
           <p className="text-center text-xs text-white/35 pt-3 px-4 leading-relaxed">
