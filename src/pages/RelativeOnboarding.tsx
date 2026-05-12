@@ -15,6 +15,20 @@ import { isDemoUser } from '@/lib/demoMode';
 
 const RelativeOnboarding = () => {
   const { t } = useTranslation();
+  const { user } = useAuth();
+  const { createPreferences } = useUserPreferences();
+
+  // Demoanvändare har redan seedade fejk-personer kopplade — hoppa över detta steg helt
+  useEffect(() => {
+    if (isDemoUser(user)) {
+      createPreferences({ include_mood: false, include_sleep: false, include_eating: false, include_exercise: false, include_medication: false }).catch(() => {});
+    }
+  }, [user, createPreferences]);
+
+  if (isDemoUser(user)) {
+    return <Navigate to="/anhorig" replace />;
+  }
+
   const emailSchema = z.string().email({ message: t('relativeOnboarding.invalidEmail') });
   const { toast } = useToast();
   const { createPreferences } = useUserPreferences();
