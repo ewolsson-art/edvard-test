@@ -122,3 +122,21 @@ export async function startDemoSession(): Promise<{ error: Error | null }> {
 export function isDemoUser(user: { user_metadata?: Record<string, unknown> } | null | undefined): boolean {
   return Boolean(user?.user_metadata?.is_demo);
 }
+
+/**
+ * Byter rollen för en demo-session. Standardrollen är 'patient' (bipolär)
+ * via DB-triggern; den här låter användaren testa anhörig- eller läkarvyn.
+ */
+export async function setDemoRole(role: "patient" | "relative" | "doctor"): Promise<void> {
+  // Uppdatera metadata så useUserRole-fallback också vet rätt roll direkt
+  try {
+    await supabase.auth.updateUser({ data: { role } });
+  } catch {
+    /* ignore */
+  }
+  // RPC tillåter byte från default 'patient' till relative/doctor/patient
+  if (role !== "patient") {
+    await supabase.rpc("assign_initial_role", { _role: role });
+  }
+}
+
