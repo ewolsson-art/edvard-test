@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 import { Menu, X, Loader2 } from 'lucide-react';
 import { startDemoSession } from '@/lib/demoMode';
-import { completeDemoTransition, startDemoTransition } from '@/components/DemoTransitionOverlay';
+import { completeDemoTransition, startDemoTransition } from '@/lib/demoTransition';
 import { useToast } from '@/hooks/use-toast';
 
 export function AuthNavbar() {

@@ -13,7 +13,7 @@ import { Eye, EyeOff, Loader2, Mail, CheckCircle2, Lock, ShieldCheck, ArrowLeft,
 import { TurtleLogo } from "@/components/TurtleLogo";
 import { useTranslation } from 'react-i18next';
 import { startDemoSession } from "@/lib/demoMode";
-import { completeDemoTransition, startDemoTransition } from "@/components/DemoTransitionOverlay";
+import { completeDemoTransition, startDemoTransition } from "@/lib/demoTransition";
 
 const loginSchema = z.object({
   email: z.string().email(),
