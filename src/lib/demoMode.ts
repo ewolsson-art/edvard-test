@@ -147,17 +147,16 @@ export async function startDemoSession(): Promise<{ error: Error | null }> {
     }
   } catch { /* ignore */ }
 
-  const { data, error } = await supabase.auth.signInAnonymously();
+  // Pass metadata directly into signInAnonymously so we don't trigger a
+  // second auth state change (USER_UPDATED) right after SIGNED_IN — that's
+  // what made /onboarding mount, render, and then re-mount/re-load once more.
+  const { data, error } = await supabase.auth.signInAnonymously({
+    options: { data: { is_demo: true, first_name: "Alex", profile_completed: true } },
+  });
   if (error || !data.user) {
     return { error: error ?? new Error("Kunde inte starta demo") };
   }
   const userId = data.user.id;
-
-  try {
-    await supabase.auth.updateUser({
-      data: { is_demo: true, first_name: "Alex", profile_completed: true },
-    });
-  } catch { /* ignore */ }
 
   await supabase.from("profiles").upsert(
     { user_id: userId, first_name: "Alex" },
