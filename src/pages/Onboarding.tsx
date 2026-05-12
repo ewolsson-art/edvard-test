@@ -76,7 +76,7 @@ const Onboarding = () => {
   };
   const draft = loadDraft();
 
-  const [step, setStep] = useState<number>(draft?.step ?? 1);
+  const [step, setStep] = useState<number>(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   
   // Step data
