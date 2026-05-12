@@ -13,7 +13,7 @@ export const DemoBanner = () => {
 
   return (
     <Link
-      to="/signup"
+      to="/skapa-konto"
       aria-label="Skapa eget konto"
       className="fixed z-40 right-4 bottom-[calc(env(safe-area-inset-bottom)+5rem)] md:bottom-6 inline-flex items-center gap-2 h-12 px-5 rounded-full bg-[hsl(45_85%_55%)] text-[hsl(230_30%_5%)] text-sm font-semibold hover:bg-[hsl(45_85%_65%)] active:scale-[0.97] transition-all shadow-[0_8px_28px_-6px_hsl(45_85%_55%/0.55)] ring-1 ring-[hsl(45_85%_55%/0.3)]"
     >
