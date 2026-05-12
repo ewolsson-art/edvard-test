@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { Navigate } from 'react-router-dom';
 import { z } from 'zod';
 import { useUserPreferences } from '@/hooks/useUserPreferences';
 import { useRelativeConnections } from '@/hooks/useRelativeConnections';
@@ -9,6 +10,8 @@ import { DarkNightBackground } from '@/components/DarkNightBackground';
 import { Input } from '@/components/ui/input';
 import { supabase } from '@/integrations/supabase/client';
 import { useTranslation } from 'react-i18next';
+import { useAuth } from '@/hooks/useAuth';
+import { isDemoUser } from '@/lib/demoMode';
 
 const RelativeOnboarding = () => {
   const { t } = useTranslation();
