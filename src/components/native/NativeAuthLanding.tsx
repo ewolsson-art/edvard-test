@@ -6,6 +6,7 @@ import { TurtleLogo } from "@/components/TurtleLogo";
 import { useHaptics } from "@/hooks/useHaptics";
 import { startDemoSession } from "@/lib/demoMode";
 import { useToast } from "@/hooks/use-toast";
+import { completeDemoTransition, startDemoTransition } from "@/components/DemoTransitionOverlay";
 
 /**
  * Native app landing screen — shown only inside the iOS/Android app shell.
@@ -33,13 +34,16 @@ export function NativeAuthLanding() {
     if (demoLoading) return;
     tap();
     setDemoLoading(true);
+    startDemoTransition("setup", { autoHide: false });
     const { error } = await startDemoSession();
     if (error) {
       setDemoLoading(false);
+      completeDemoTransition();
       toast({ title: "Kunde inte starta demo", description: "Försök igen om en stund.", variant: "destructive" });
       return;
     }
     navigate("/", { replace: true });
+    completeDemoTransition();
   };
 
   return (
