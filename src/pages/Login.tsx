@@ -13,6 +13,7 @@ import { Eye, EyeOff, Loader2, Mail, CheckCircle2, Lock, ShieldCheck, ArrowLeft,
 import { TurtleLogo } from "@/components/TurtleLogo";
 import { useTranslation } from 'react-i18next';
 import { startDemoSession } from "@/lib/demoMode";
+import { completeDemoTransition, startDemoTransition } from "@/components/DemoTransitionOverlay";
 
 const loginSchema = z.object({
   email: z.string().email(),
@@ -93,9 +94,11 @@ const Login = () => {
   const handleDemo = async () => {
     if (demoLoading) return;
     setDemoLoading(true);
+    startDemoTransition("setup", { autoHide: false });
     const { error } = await startDemoSession();
     if (error) {
       setDemoLoading(false);
+      completeDemoTransition();
       toast({
         title: "Kunde inte starta demo",
         description: "Försök igen om en stund.",
@@ -104,6 +107,7 @@ const Login = () => {
       return;
     }
     navigate("/", { replace: true });
+    completeDemoTransition();
   };
 
   if (loading) {
