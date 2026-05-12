@@ -240,7 +240,7 @@ const Onboarding = () => {
                         onClick={async () => {
                           setDemoRoleLoading(role);
                           // App-level overlay so it survives ProtectedRoute redirect
-                          startDemoTransition(role, { autoHide: false });
+                          startDemoTransition("login", { autoHide: false });
                           try {
                             await setDemoRole(role);
                             await queryClient.invalidateQueries();
