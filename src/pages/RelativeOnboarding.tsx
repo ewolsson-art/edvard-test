@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Navigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { z } from 'zod';
 import { useUserPreferences } from '@/hooks/useUserPreferences';
 import { useRelativeConnections } from '@/hooks/useRelativeConnections';
@@ -17,16 +17,19 @@ const RelativeOnboarding = () => {
   const { t } = useTranslation();
   const { user } = useAuth();
   const { createPreferences } = useUserPreferences();
+  const navigate = useNavigate();
+  const isDemo = isDemoUser(user);
 
   // Demoanvändare har redan seedade fejk-personer kopplade — hoppa över detta steg helt
   useEffect(() => {
-    if (isDemoUser(user)) {
-      createPreferences({ include_mood: false, include_sleep: false, include_eating: false, include_exercise: false, include_medication: false }).catch(() => {});
+    if (isDemo) {
+      createPreferences({ include_mood: false, include_sleep: false, include_eating: false, include_exercise: false, include_medication: false })
+        .finally(() => navigate('/anhorig', { replace: true }));
     }
-  }, [user, createPreferences]);
+  }, [isDemo, createPreferences, navigate]);
 
-  if (isDemoUser(user)) {
-    return <Navigate to="/anhorig" replace />;
+  if (isDemo) {
+    return <DarkNightBackground><div className="flex-1 flex items-center justify-center"><Loader2 className="h-8 w-8 animate-spin text-[hsl(45_85%_55%)]" /></div></DarkNightBackground>;
   }
 
   const emailSchema = z.string().email({ message: t('relativeOnboarding.invalidEmail') });
