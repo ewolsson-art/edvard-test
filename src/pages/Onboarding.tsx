@@ -54,7 +54,7 @@ const CHECKIN_OPTIONS = [
 ];
 
 
-const TOTAL_STEPS = 2;
+const TOTAL_STEPS = 1;
 
 const Onboarding = () => {
   const { t } = useTranslation();
@@ -107,15 +107,7 @@ const Onboarding = () => {
   const hasAnySelection = Object.values(selections).some(Boolean);
 
   const handleNext = () => {
-    // Step 2 (categories) is the last step → submit
-    if (step === 2) {
-      handleSubmit();
-      return;
-    }
-    const next = step + 1;
-    if (next <= TOTAL_STEPS) {
-      setStep(next);
-    }
+    handleSubmit();
   };
 
   const handleBack = () => {
