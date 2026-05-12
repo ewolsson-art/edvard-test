@@ -148,6 +148,7 @@ const App = () => (
           <NativeShellInit />
           <Toaster />
           <Sonner />
+          <DemoTransitionOverlay />
           <OfflineBanner />
           <MobileWebNotice />
           <NativeAppGate>
