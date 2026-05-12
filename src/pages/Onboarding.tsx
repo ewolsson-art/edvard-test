@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import { Logo } from '@/components/Logo';
 import { TurtleLogo } from '@/components/TurtleLogo';
+import { isDemoUser } from '@/lib/demoMode';
 import { DarkNightBackground } from '@/components/DarkNightBackground';
 import { cn } from '@/lib/utils';
 import { useTranslation } from 'react-i18next';
