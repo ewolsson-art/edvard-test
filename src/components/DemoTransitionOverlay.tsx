@@ -106,16 +106,16 @@ export function DemoTransitionOverlay() {
         </div>
       </div>
       <p className="relative mt-8 text-xl md:text-2xl font-semibold text-white tracking-tight text-center font-display">
-        {state.role === "setup" && "Förbereder demot"}
-        {state.role === "doctor" && "Förbereder läkarvyn"}
-        {state.role === "relative" && "Kopplar dig till personerna du följer"}
-        {state.role === "patient" && "Hämtar ditt mående"}
+        {state.role === "setup" && "Sätter upp ditt demokonto"}
+        {state.role === "doctor" && "Sätter upp ditt demokonto"}
+        {state.role === "relative" && "Sätter upp ditt demokonto"}
+        {state.role === "patient" && "Sätter upp ditt demokonto"}
       </p>
       <p className="relative mt-3 text-sm md:text-base text-white/55 max-w-sm text-center leading-relaxed">
-        {state.role === "setup" && "Toddy skapar ett tillfälligt demokonto med exempeldata åt dig."}
-        {state.role === "doctor" && "Vi laddar in dina demo-användare och deras senaste mående."}
-        {state.role === "relative" && "Vi sätter upp tre fejk-användare som du följer som anhörig."}
-        {state.role === "patient" && "Vi laddar in 90 dagars demo-historik åt dig."}
+        {state.role === "setup" && "Toddy förbereder ett tillfälligt demokonto åt dig."}
+        {state.role === "doctor" && "Toddy förbereder ett tillfälligt demokonto åt dig."}
+        {state.role === "relative" && "Toddy förbereder ett tillfälligt demokonto åt dig."}
+        {state.role === "patient" && "Toddy förbereder ett tillfälligt demokonto åt dig."}
       </p>
       <div className="relative mt-8 w-56 h-1 rounded-full bg-white/10 overflow-hidden">
         <div
