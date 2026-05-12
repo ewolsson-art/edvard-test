@@ -41,7 +41,7 @@ export function DemoTransitionOverlay() {
   if (!state) return null;
 
   return (
-    <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-[hsl(230_30%_5%)]/95 backdrop-blur-xl animate-fade-in px-6">
+    <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-[hsl(230_30%_5%)] animate-fade-in px-6">
       <div className="animate-scale-in">
         <TurtleLogo
           size="hero"
