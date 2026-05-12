@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { Navigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
@@ -8,6 +9,7 @@ import { DarkNightBackground } from '@/components/DarkNightBackground';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { useDoctorConnections } from '@/hooks/useDoctorConnections';
+import { isDemoUser } from '@/lib/demoMode';
 import { z } from 'zod';
 
 const emailSchema = z.string().email();
@@ -18,6 +20,29 @@ const DoctorOnboarding = () => {
   const { requestPatientAccess } = useDoctorConnections();
   const [email, setEmail] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    if (!user || !isDemoUser(user)) return;
+    supabase
+      .from('user_preferences')
+      .upsert(
+        {
+          user_id: user.id,
+          onboarding_completed: true,
+          include_mood: false,
+          include_sleep: false,
+          include_eating: false,
+          include_exercise: false,
+          include_medication: false,
+        },
+        { onConflict: 'user_id' },
+      )
+      .then(() => {});
+  }, [user]);
+
+  if (user && isDemoUser(user)) {
+    return <Navigate to="/lakare" replace />;
+  }
 
   const completeOnboarding = async () => {
     if (!user) return false;
