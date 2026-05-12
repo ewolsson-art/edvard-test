@@ -1,4 +1,4 @@
-export type DemoTransitionRole = "setup" | "patient" | "relative" | "doctor";
+export type DemoTransitionRole = "setup" | "patient" | "relative" | "doctor" | "login";
 
 export interface DemoTransitionState {
   role: DemoTransitionRole;

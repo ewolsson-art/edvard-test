@@ -71,10 +71,12 @@ const Login = () => {
     if (!validateForm()) return;
     
     setIsSubmitting(true);
+    startDemoTransition("login", { autoHide: false });
 
     const { error } = await signIn(email, password);
 
     if (error) {
+      completeDemoTransition();
       let errorMessage = t("auth.loginError");
       if (error.message.includes("Invalid login credentials")) {
         errorMessage = t("auth.wrongCredentials");
@@ -86,8 +88,11 @@ const Login = () => {
         description: errorMessage,
         variant: "destructive",
       });
+      setIsSubmitting(false);
+      return;
     }
 
+    // Keep overlay up; redirect effect will unmount this page.
     setIsSubmitting(false);
   };
 
@@ -158,10 +163,14 @@ const Login = () => {
             <button
               type="button"
               onClick={async () => {
+                startDemoTransition("login", { autoHide: false });
                 const result = await lovable.auth.signInWithOAuth("google", {
                   redirect_uri: window.location.origin,
                 });
-                if (result.error) toast({ title: t("common.somethingWrong"), variant: "destructive" });
+                if (result.error) {
+                  completeDemoTransition();
+                  toast({ title: t("common.somethingWrong"), variant: "destructive" });
+                }
                 if (!result.redirected && !result.error) navigate("/oversikt", { replace: true });
               }}
               className="w-full h-14 rounded-2xl bg-foreground/[0.03] ring-1 ring-white/[0.08] hover:ring-white/[0.18] hover:bg-foreground/[0.05] text-white text-[15px] font-semibold flex items-center justify-center gap-3 transition-all duration-300"
@@ -177,10 +186,14 @@ const Login = () => {
             <button
               type="button"
               onClick={async () => {
+                startDemoTransition("login", { autoHide: false });
                 const result = await lovable.auth.signInWithOAuth("apple", {
                   redirect_uri: window.location.origin,
                 });
-                if (result.error) toast({ title: t("common.somethingWrong"), variant: "destructive" });
+                if (result.error) {
+                  completeDemoTransition();
+                  toast({ title: t("common.somethingWrong"), variant: "destructive" });
+                }
                 if (!result.redirected && !result.error) navigate("/oversikt", { replace: true });
               }}
               className="w-full h-14 rounded-2xl bg-foreground/[0.03] ring-1 ring-white/[0.08] hover:ring-white/[0.18] hover:bg-foreground/[0.05] text-white text-[15px] font-semibold flex items-center justify-center gap-3 transition-all duration-300"
