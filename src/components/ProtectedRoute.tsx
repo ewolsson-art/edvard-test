@@ -18,6 +18,7 @@ export function ProtectedRoute({ children, skipOnboardingCheck = false }: Protec
   const { profile, isLoading: profileLoading } = useProfile();
   const location = useLocation();
   const isOAuthAccount = Boolean(user?.app_metadata?.provider || user?.user_metadata?.provider_id || user?.user_metadata?.iss);
+  const isDemo = Boolean(user?.user_metadata?.is_demo);
 
   // Wait for all loading states to complete
   if (authLoading || prefsLoading || roleLoading || profileLoading) {
@@ -59,7 +60,7 @@ export function ProtectedRoute({ children, skipOnboardingCheck = false }: Protec
   // Relatives: Redirect to relative dashboard, they can only view patient data
   if (isRelative) {
     // Check if relative needs onboarding
-    if (!skipOnboardingCheck && needsOnboarding && location.pathname !== '/anhorig-onboarding') {
+    if (!isDemo && !skipOnboardingCheck && needsOnboarding && location.pathname !== '/anhorig-onboarding') {
       return <Navigate to="/anhorig-onboarding" replace />;
     }
     
