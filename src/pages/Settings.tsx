@@ -260,7 +260,7 @@ const Settings = () => {
 
   return (
     <div className="p-5 md:p-8 pb-24">
-        <div className="max-w-2xl mx-auto md:mx-0">
+        <div className="max-w-4xl mx-auto md:mx-0">
         <h1 className="font-display text-2xl font-bold mb-1">{t('settings.title')}</h1>
         <p className="text-[13px] text-foreground/30 mb-10">{t('settings.subtitle')}</p>
 
@@ -289,7 +289,7 @@ function SubPage({ title, onBack, children }: { title: string; onBack: () => voi
   const { t } = useTranslation();
   return (
     <div className="p-5 md:p-8 pb-24 animate-fade-in">
-      <div className="max-w-2xl mx-auto md:mx-0">
+      <div className="max-w-4xl mx-auto md:mx-0">
         <div className="flex items-center gap-3 mb-6">
           <button onClick={onBack} className="p-2 -ml-2 rounded-lg hover:bg-muted transition-colors" aria-label={t('common.back')}>
             <ChevronRight className="w-5 h-5 rotate-180 text-foreground" />
