@@ -15,7 +15,7 @@ import {
 import { Logo } from '@/components/Logo';
 import { TurtleLogo } from '@/components/TurtleLogo';
 import { isDemoUser, setDemoRole } from '@/lib/demoMode';
-import { startDemoTransition } from '@/components/DemoTransitionOverlay';
+import { completeDemoTransition, startDemoTransition } from '@/lib/demoTransition';
 import { DarkNightBackground } from '@/components/DarkNightBackground';
 import { cn } from '@/lib/utils';
 import { useTranslation } from 'react-i18next';
@@ -240,16 +240,16 @@ const Onboarding = () => {
                         onClick={async () => {
                           setDemoRoleLoading(role);
                           // App-level overlay so it survives ProtectedRoute redirect
-                          startDemoTransition(role);
-                          const minDelay = new Promise((r) => setTimeout(r, 3500));
+                          startDemoTransition(role, { autoHide: false });
                           try {
                             await setDemoRole(role);
                             await queryClient.invalidateQueries();
-                            await minDelay;
                             const dest = role === 'doctor' ? '/lakare' : role === 'relative' ? '/anhorig' : '/';
                             navigate(dest, { replace: true });
+                            completeDemoTransition();
                           } catch {
                             setDemoRoleLoading(null);
+                            completeDemoTransition();
                           }
                         }}
                         className="group flex flex-col items-center text-center gap-3 px-4 py-7 rounded-3xl bg-gradient-to-b from-white/[0.06] to-white/[0.02] ring-1 ring-white/[0.08] hover:ring-[hsl(45_85%_55%/0.5)] hover:from-[hsl(45_85%_55%/0.08)] hover:to-white/[0.02] hover:-translate-y-0.5 hover:shadow-[0_12px_40px_-12px_hsl(45_85%_55%/0.4)] transition-all duration-300 disabled:opacity-50"

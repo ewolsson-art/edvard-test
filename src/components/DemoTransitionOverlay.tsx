@@ -1,42 +1,39 @@
 import { useEffect, useState } from "react";
 import { TurtleLogo } from "@/components/TurtleLogo";
-
-type DemoRole = "patient" | "relative" | "doctor";
-
-interface State {
-  role: DemoRole;
-  startedAt: number;
-}
-
-const EVENT = "toddy:demo-transition";
-const DURATION_MS = 3500;
-
-/**
- * Show the playful turtle loader from the moment the user picks a demo role
- * until the destination page is mounted. Lives at App level so it survives the
- * route change that ProtectedRoute triggers when the role flips — otherwise
- * the overlay would die together with the Onboarding component.
- */
-export function startDemoTransition(role: DemoRole) {
-  const detail: State = { role, startedAt: Date.now() };
-  window.dispatchEvent(new CustomEvent<State>(EVENT, { detail }));
-}
+import {
+  DEMO_TRANSITION_COMPLETE_EVENT,
+  DEMO_TRANSITION_START_EVENT,
+  type DemoTransitionState,
+} from "@/lib/demoTransition";
 
 export function DemoTransitionOverlay() {
-  const [state, setState] = useState<State | null>(null);
+  const [state, setState] = useState<DemoTransitionState | null>(null);
 
   useEffect(() => {
     const onStart = (e: Event) => {
-      const detail = (e as CustomEvent<State>).detail;
+      const detail = (e as CustomEvent<DemoTransitionState>).detail;
       setState(detail);
     };
-    window.addEventListener(EVENT, onStart);
-    return () => window.removeEventListener(EVENT, onStart);
+    const onComplete = () => {
+      setState((current) => {
+        if (!current) return null;
+        const remaining = Math.max(0, current.minDurationMs - (Date.now() - current.startedAt));
+        window.setTimeout(() => setState(null), remaining + 250);
+        return current;
+      });
+    };
+    window.addEventListener(DEMO_TRANSITION_START_EVENT, onStart);
+    window.addEventListener(DEMO_TRANSITION_COMPLETE_EVENT, onComplete);
+    return () => {
+      window.removeEventListener(DEMO_TRANSITION_START_EVENT, onStart);
+      window.removeEventListener(DEMO_TRANSITION_COMPLETE_EVENT, onComplete);
+    };
   }, []);
 
   useEffect(() => {
     if (!state) return;
-    const remaining = Math.max(0, DURATION_MS - (Date.now() - state.startedAt));
+    if (!state.autoHide) return;
+    const remaining = Math.max(0, state.minDurationMs - (Date.now() - state.startedAt));
     const t = setTimeout(() => setState(null), remaining);
     return () => clearTimeout(t);
   }, [state]);
@@ -53,11 +50,13 @@ export function DemoTransitionOverlay() {
         />
       </div>
       <p className="mt-8 text-xl md:text-2xl font-semibold text-white tracking-tight text-center font-display">
+        {state.role === "setup" && "Förbereder demot"}
         {state.role === "doctor" && "Förbereder läkarvyn"}
         {state.role === "relative" && "Kopplar dig till personerna du följer"}
         {state.role === "patient" && "Hämtar ditt mående"}
       </p>
       <p className="mt-3 text-sm md:text-base text-white/55 max-w-sm text-center leading-relaxed">
+        {state.role === "setup" && "Toddy skapar ett tillfälligt demokonto med exempeldata åt dig."}
         {state.role === "doctor" && "Vi laddar in dina demo-användare och deras senaste mående."}
         {state.role === "relative" && "Vi sätter upp tre fejk-användare som du följer som anhörig."}
         {state.role === "patient" && "Vi laddar in 90 dagars demo-historik åt dig."}
