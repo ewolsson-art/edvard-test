@@ -177,8 +177,19 @@ const Onboarding = () => {
       {/* Header with progress */}
       <header className="p-2">
         <div className="max-w-lg mx-auto">
-          <div className="flex items-center justify-between mb-2">
-            <Logo className="[&_span]:!bg-none [&_span]:!text-white" />
+          <div className="flex items-center justify-between mb-2 gap-2">
+            {isDemo ? (
+              <button
+                onClick={async () => { try { await supabase.auth.signOut(); } catch {} navigate('/'); }}
+                className="inline-flex items-center gap-1 text-xs text-white/60 hover:text-white transition-colors -ml-1 px-1 py-1"
+                aria-label="Tillbaka till startsidan"
+              >
+                <ArrowLeft className="w-4 h-4" />
+                Tillbaka
+              </button>
+            ) : (
+              <Logo className="[&_span]:!bg-none [&_span]:!text-white" />
+            )}
             <span className="text-xs text-white/50 font-medium">
               {t('onboarding.step')} {actualStep} {t('onboarding.of')} {actualTotalSteps}
             </span>
