@@ -16,6 +16,8 @@ export function NativeAuthLanding() {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const { tap } = useHaptics();
+  const { toast } = useToast();
+  const [demoLoading, setDemoLoading] = useState(false);
 
   const handlePrimary = () => {
     tap();
@@ -25,6 +27,19 @@ export function NativeAuthLanding() {
   const handleSecondary = () => {
     tap();
     navigate("/logga-in");
+  };
+
+  const handleDemo = async () => {
+    if (demoLoading) return;
+    tap();
+    setDemoLoading(true);
+    const { error } = await startDemoSession();
+    if (error) {
+      setDemoLoading(false);
+      toast({ title: "Kunde inte starta demo", description: "Försök igen om en stund.", variant: "destructive" });
+      return;
+    }
+    navigate("/", { replace: true });
   };
 
   return (
