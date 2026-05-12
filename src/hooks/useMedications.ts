@@ -321,19 +321,13 @@ export function useMedications() {
     const s = (m.status as string) ?? (m.active ? 'current' : 'previous');
     return s !== 'previous';
   };
-  // Treat meds whose name signals "as needed" (vid behov / prn / as needed) as
-  // as_needed even if their stored frequency is daily — så de inte förkryssas.
-  const isAsNeededByName = (m: Medication) => {
-    const n = (m.name || '').toLowerCase();
-    return /\b(vid behov|v\.?b\.?|prn|as needed|at needed)\b/.test(n);
-  };
-  const isAsNeeded = (m: Medication) => m.frequency === 'as_needed' || isAsNeededByName(m);
-  const currentMedications = medications.filter(m => isCurrentStatus(m) && !isAsNeeded(m));
-  const asNeededMedications = medications.filter(m => isCurrentStatus(m) && isAsNeeded(m));
+  const currentMedications = medications.filter(m => isCurrentStatus(m) && m.frequency !== 'as_needed');
+  const asNeededMedications = medications.filter(m => isCurrentStatus(m) && m.frequency === 'as_needed');
   const previousMedications = medications.filter(m => !isCurrentStatus(m));
 
-  // Backwards compat aliases
-  const activeMedications = currentMedications;
+  // activeMedications = ALLA pågående mediciner (incl. vid behov). Systemet
+  // behandlar medicin som en enkel ja/nej-fråga och bryr sig inte om typ.
+  const activeMedications = medications.filter(isCurrentStatus);
   const inactiveMedications = previousMedications;
 
   return {
