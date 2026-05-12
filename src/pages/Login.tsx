@@ -45,6 +45,7 @@ const Login = () => {
       } else {
         navigate("/oversikt", { replace: true });
       }
+      completeDemoTransition();
     }
   }, [user, loading, profileLoading, profile, navigate]);
 
