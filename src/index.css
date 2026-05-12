@@ -272,6 +272,29 @@
   to { width: 100%; }
 }
 
+@keyframes demo-float {
+  0%, 100% { transform: translateY(0) rotate(-1.5deg); }
+  50%      { transform: translateY(-10px) rotate(1.5deg); }
+}
+
+@keyframes demo-halo {
+  0%, 100% { opacity: 0.45; transform: scale(1); }
+  50%      { opacity: 0.75; transform: scale(1.08); }
+}
+
+@keyframes demo-aurora {
+  0%   { transform: translate3d(-8%, -4%, 0) scale(1); }
+  50%  { transform: translate3d(6%, 4%, 0) scale(1.15); }
+  100% { transform: translate3d(-8%, -4%, 0) scale(1); }
+}
+
+@keyframes demo-spark {
+  0%   { transform: translateY(0) translateX(0); opacity: 0; }
+  10%  { opacity: 0.7; }
+  90%  { opacity: 0.5; }
+  100% { transform: translateY(-120vh) translateX(20px); opacity: 0; }
+}
+
 @layer components {
   .mood-btn {
     @apply relative overflow-hidden transition-all duration-300 ease-out;
