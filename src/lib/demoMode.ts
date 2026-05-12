@@ -2,72 +2,181 @@ import { supabase } from "@/integrations/supabase/client";
 import { format, subDays } from "date-fns";
 
 /**
- * Demo-läge: skapar ett anonymt konto via Supabase och seedar ~14 dagars
- * realistisk historik så användaren direkt ser översikt, kalender och
- * insikter. Inga uppgifter, en knapptryckning.
- *
- * Anonyma konton får en riktig auth.uid() vilket gör att RLS funkar
- * normalt och datat är isolerat per session/enhet.
+ * Demo-läge: skapar ett anonymt konto via Supabase och seedar ~90 dagars
+ * realistisk historik så användaren direkt ser översikt, kalender, mönster
+ * och insikter. Inga uppgifter, en knapptryckning.
  */
 
-// Realistisk 14-dagars historik som visar variation utan att vara dramatisk.
-// Mix av stable, somewhat_elevated, somewhat_depressed och en topp/dal.
-const MOOD_SCRIPT: Array<{
-  mood: string;
-  energy?: string;
-  sleep?: string;
-  eating?: string;
-  exercised?: boolean;
-  tags?: string[];
-  comment?: string;
-}> = [
-  { mood: "stable", energy: "normal", sleep: "good", eating: "normal", exercised: true, tags: ["Lugn", "Fokuserad"] },
-  { mood: "stable", energy: "normal", sleep: "good", eating: "normal", exercised: false },
-  { mood: "somewhat_elevated", energy: "high", sleep: "ok", eating: "normal", tags: ["Energisk", "Social"] },
-  { mood: "somewhat_elevated", energy: "high", sleep: "poor", eating: "low", exercised: true, tags: ["Tankeflöde"] },
-  { mood: "stable", energy: "normal", sleep: "good", eating: "normal", exercised: true },
-  { mood: "somewhat_depressed", energy: "low", sleep: "poor", eating: "low", tags: ["Trött", "Nedstämd"], comment: "Tung morgon" },
-  { mood: "somewhat_depressed", energy: "low", sleep: "good", eating: "normal", tags: ["Trött"] },
-  { mood: "stable", energy: "normal", sleep: "good", eating: "normal", exercised: true, tags: ["Lugn"] },
-  { mood: "stable", energy: "normal", sleep: "good", eating: "normal", exercised: false },
-  { mood: "somewhat_elevated", energy: "high", sleep: "ok", eating: "normal", exercised: true, tags: ["Social", "Kreativ"] },
-  { mood: "stable", energy: "normal", sleep: "good", eating: "normal", exercised: true },
-  { mood: "somewhat_depressed", energy: "low", sleep: "poor", eating: "low", tags: ["Stress"] },
-  { mood: "stable", energy: "normal", sleep: "good", eating: "normal", exercised: true, tags: ["Fokuserad"] },
-  { mood: "stable", energy: "normal", sleep: "good", eating: "normal" },
-];
+const MOODS = [
+  "very_depressed",
+  "depressed",
+  "somewhat_depressed",
+  "stable",
+  "somewhat_elevated",
+  "elevated",
+  "very_elevated",
+] as const;
+
+type Mood = typeof MOODS[number];
+
+// Deterministisk pseudo-random så varje demo-konto ser likadant ut
+function mulberry32(seed: number) {
+  let a = seed;
+  return () => {
+    a |= 0;
+    a = (a + 0x6d2b79f5) | 0;
+    let t = a;
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+type DayEntry = {
+  mood: Mood;
+  energy: "low" | "normal" | "high";
+  sleep: "very_poor" | "poor" | "ok" | "good" | "very_good";
+  eating: "very_low" | "low" | "normal" | "high" | "very_high";
+  exercised: boolean;
+  exercise_types: string[];
+  tags: string[];
+  comment: string | null;
+  side_effects: string[];
+};
+
+// Skapar 90 dagar: två milda hypomani-perioder, en längre nedstämd period,
+// resten stabilt. Återspeglar typ II-mönster utan att bli dramatiskt.
+function buildScript(days: number): DayEntry[] {
+  const rand = mulberry32(42);
+  const script: DayEntry[] = [];
+
+  // Definiera "episodfönster" (relativa dag-index från start)
+  const lowStart = days - 75; // ~2 veckor nedstämd
+  const lowEnd = lowStart + 14;
+  const hypoStart = days - 50;
+  const hypoEnd = hypoStart + 8;
+  const hypo2Start = days - 20;
+  const hypo2End = hypo2Start + 5;
+
+  const positiveTags = ["Lugn", "Fokuserad", "Tacksam", "Närvarande", "Glad"];
+  const elevatedTags = ["Energisk", "Social", "Kreativ", "Tankeflöde", "Pratsam", "Lite för mycket"];
+  const lowTags = ["Trött", "Nedstämd", "Tung", "Isolerad", "Stress", "Orolig"];
+  const exerciseTypes = ["Promenad", "Yoga", "Styrka", "Löpning", "Cykling"];
+  const sideEffects = ["Trötthet", "Muntorrhet", "Yrsel"];
+
+  for (let i = 0; i < days; i++) {
+    let mood: Mood;
+    let baseTags: string[];
+    let energyBias: number; // 0 low ... 1 high
+
+    if (i >= lowStart && i < lowEnd) {
+      const r = rand();
+      mood = r < 0.25 ? "depressed" : r < 0.85 ? "somewhat_depressed" : "stable";
+      baseTags = lowTags;
+      energyBias = 0.15;
+    } else if ((i >= hypoStart && i < hypoEnd) || (i >= hypo2Start && i < hypo2End)) {
+      const r = rand();
+      mood = r < 0.2 ? "elevated" : r < 0.85 ? "somewhat_elevated" : "stable";
+      baseTags = elevatedTags;
+      energyBias = 0.85;
+    } else {
+      const r = rand();
+      mood =
+        r < 0.08 ? "somewhat_depressed" :
+        r < 0.18 ? "somewhat_elevated" :
+        "stable";
+      baseTags = positiveTags;
+      energyBias = 0.5;
+    }
+
+    const energy: DayEntry["energy"] =
+      energyBias < 0.3 ? "low" : energyBias > 0.7 ? "high" : rand() < 0.2 ? (rand() < 0.5 ? "low" : "high") : "normal";
+
+    // Sömn följer episod (U-form: hypomani = för lite, deppigt = för mycket eller dåligt)
+    let sleep: DayEntry["sleep"];
+    if (energyBias > 0.7) {
+      sleep = rand() < 0.6 ? "poor" : "ok";
+    } else if (energyBias < 0.3) {
+      sleep = rand() < 0.4 ? "very_good" : rand() < 0.5 ? "poor" : "ok";
+    } else {
+      sleep = rand() < 0.7 ? "good" : rand() < 0.5 ? "ok" : "very_good";
+    }
+
+    // Aptit (U-form): hypo = lite, depp = lite eller mycket
+    let eating: DayEntry["eating"];
+    if (energyBias > 0.7) {
+      eating = rand() < 0.5 ? "low" : "normal";
+    } else if (energyBias < 0.3) {
+      eating = rand() < 0.4 ? "low" : rand() < 0.5 ? "high" : "normal";
+    } else {
+      eating = "normal";
+    }
+
+    const exercised = energyBias < 0.3 ? rand() < 0.2 : rand() < 0.55;
+    const exercise_types = exercised ? [exerciseTypes[Math.floor(rand() * exerciseTypes.length)]] : [];
+
+    const tagCount = Math.floor(rand() * 2) + (mood === "stable" ? 0 : 1);
+    const tags: string[] = [];
+    for (let t = 0; t < tagCount; t++) {
+      const tag = baseTags[Math.floor(rand() * baseTags.length)];
+      if (!tags.includes(tag)) tags.push(tag);
+    }
+
+    const comments = energyBias < 0.3
+      ? ["Tung morgon", "Orkade inte mycket idag", "Behövde sova länge"]
+      : energyBias > 0.7
+        ? ["Massor av idéer", "Svårt att varva ner", "Pratade non-stop"]
+        : ["Bra dag", "Lugnt och fint", "Vanlig dag"];
+    const comment = rand() < 0.18 ? comments[Math.floor(rand() * comments.length)] : null;
+
+    const side_effects = rand() < 0.08 ? [sideEffects[Math.floor(rand() * sideEffects.length)]] : [];
+
+    script.push({ mood, energy, sleep, eating, exercised, exercise_types, tags, comment, side_effects });
+  }
+
+  return script;
+}
 
 export async function startDemoSession(): Promise<{ error: Error | null }> {
-  // 1) Skapa anonym session
   const { data, error } = await supabase.auth.signInAnonymously();
   if (error || !data.user) {
     return { error: error ?? new Error("Kunde inte starta demo") };
   }
   const userId = data.user.id;
 
-  // Markera kontot som demo så vi kan visa badge/copy och hantera
-  // konvertering senare.
   try {
     await supabase.auth.updateUser({
-      data: {
-        is_demo: true,
-        first_name: "Demo",
-        profile_completed: true,
-      },
+      data: { is_demo: true, first_name: "Alex", profile_completed: true },
     });
-  } catch {
-    // ignorera — inte kritiskt
-  }
+  } catch { /* ignore */ }
 
-  // 2) Skapa profil-rad
   await supabase.from("profiles").upsert(
-    { user_id: userId, first_name: "Demo" },
+    { user_id: userId, first_name: "Alex" },
     { onConflict: "user_id" }
   );
 
-  // 3) Seed: en aktiv medicin + 14 dagars mood-entries
   try {
-    const { data: med } = await supabase
+    // Diagnos
+    await supabase.from("diagnoses").insert({
+      user_id: userId,
+      name: "Bipolär typ II",
+      diagnosed_at: format(subDays(new Date(), 540), "yyyy-MM-dd"),
+    });
+
+    // Karaktäristika (egna mönster användaren upptäckt)
+    const characteristics = [
+      { name: "Sover dåligt → uppvarvad nästa dag", mood_type: "elevated" },
+      { name: "Sociala sammanhang ger energi", mood_type: "elevated" },
+      { name: "Mörka kvällar drar ner mig", mood_type: "depressed" },
+      { name: "Promenader hjälper alltid", mood_type: "stable" },
+      { name: "Koffein efter 14 = orolig sömn", mood_type: "elevated" },
+    ];
+    await supabase.from("characteristics").insert(
+      characteristics.map((c) => ({ user_id: userId, name: c.name, mood_type: c.mood_type, source: "manual" }))
+    );
+
+    // Mediciner: en aktiv stämningsstabiliserare + en utsatt
+    const { data: med1 } = await supabase
       .from("medications")
       .insert({
         user_id: userId,
@@ -76,43 +185,71 @@ export async function startDemoSession(): Promise<{ error: Error | null }> {
         frequency: "daily",
         status: "current",
         active: true,
-        started_at: format(subDays(new Date(), 60), "yyyy-MM-dd"),
+        started_at: format(subDays(new Date(), 180), "yyyy-MM-dd"),
         indication: "Stämningsstabiliserare",
+        side_effects: ["Trötthet"],
+        effectiveness: "good",
+        notes: "Hjälpt mot djupa svackor.",
       })
       .select()
       .single();
 
+    await supabase.from("medications").insert({
+      user_id: userId,
+      name: "Sertralin",
+      dosage: "50 mg",
+      frequency: "daily",
+      status: "stopped",
+      active: false,
+      started_at: format(subDays(new Date(), 365), "yyyy-MM-dd"),
+      stopped_at: format(subDays(new Date(), 200), "yyyy-MM-dd"),
+      indication: "SSRI – utsatt pga risk för uppvarvning",
+      stop_reason: "Triggade hypomani",
+      effectiveness: "poor",
+    });
+
+    // 90 dagars mood-historik
+    const days = 90;
+    const script = buildScript(days);
     const today = new Date();
-    const moodRows = MOOD_SCRIPT.map((entry, i) => {
-      const date = format(subDays(today, MOOD_SCRIPT.length - 1 - i), "yyyy-MM-dd");
+    const moodRows = script.map((entry, i) => {
+      const date = format(subDays(today, days - 1 - i), "yyyy-MM-dd");
       return {
         user_id: userId,
         date,
         mood: entry.mood,
-        energy_level: entry.energy ?? null,
-        sleep_quality: entry.sleep ?? null,
-        eating_quality: entry.eating ?? null,
-        exercised: entry.exercised ?? null,
-        tags: entry.tags ?? [],
-        comment: entry.comment ?? null,
+        energy_level: entry.energy,
+        sleep_quality: entry.sleep,
+        eating_quality: entry.eating,
+        exercised: entry.exercised,
+        exercise_types: entry.exercise_types,
+        tags: entry.tags,
+        comment: entry.comment,
+        medication_side_effects: entry.side_effects,
       };
     });
     await supabase.from("mood_entries").insert(moodRows);
 
-    // Seed medication_logs så följsamhet ser realistisk ut (~85%)
-    if (med?.id) {
-      const medLogs = moodRows
-        .filter((_, i) => i % 7 !== 3) // hoppa över ~1 dag/vecka
-        .map((r) => ({
-          user_id: userId,
-          medication_id: med.id,
-          date: r.date,
-          taken: true,
-        }));
-      await supabase.from("medication_logs").insert(medLogs);
+    // Medication logs ~88% följsamhet de senaste 180 dagarna
+    if (med1?.id) {
+      const rand = mulberry32(7);
+      const logs: Array<{ user_id: string; medication_id: string; date: string; taken: boolean }> = [];
+      for (let i = 0; i < 180; i++) {
+        if (rand() < 0.88) {
+          logs.push({
+            user_id: userId,
+            medication_id: med1.id,
+            date: format(subDays(today, i), "yyyy-MM-dd"),
+            taken: true,
+          });
+        }
+      }
+      // Insert i chunks om 500 för att undvika payload-gränser
+      for (let i = 0; i < logs.length; i += 500) {
+        await supabase.from("medication_logs").insert(logs.slice(i, i + 500));
+      }
     }
   } catch (e) {
-    // Seed-fel ska inte hindra demo — användaren kan fortfarande testa
     console.warn("[demo] seed warning:", e);
   }
 
@@ -128,15 +265,10 @@ export function isDemoUser(user: { user_metadata?: Record<string, unknown> } | n
  * via DB-triggern; den här låter användaren testa anhörig- eller läkarvyn.
  */
 export async function setDemoRole(role: "patient" | "relative" | "doctor"): Promise<void> {
-  // Uppdatera metadata så useUserRole-fallback också vet rätt roll direkt
   try {
     await supabase.auth.updateUser({ data: { role } });
-  } catch {
-    /* ignore */
-  }
-  // RPC tillåter byte från default 'patient' till relative/doctor/patient
+  } catch { /* ignore */ }
   if (role !== "patient") {
     await supabase.rpc("assign_initial_role", { _role: role });
   }
 }
-
