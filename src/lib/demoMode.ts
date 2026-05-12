@@ -268,6 +268,23 @@ export async function setDemoRole(role: "patient" | "relative" | "doctor"): Prom
   try {
     await supabase.auth.updateUser({ data: { role } });
   } catch { /* ignore */ }
+
+  const { data: { user } } = await supabase.auth.getUser();
+  if (user) {
+    await supabase.from("user_preferences").upsert(
+      {
+        user_id: user.id,
+        onboarding_completed: true,
+        include_mood: role === "patient",
+        include_sleep: role === "patient",
+        include_eating: role === "patient",
+        include_exercise: role === "patient",
+        include_medication: role === "patient",
+      },
+      { onConflict: "user_id" }
+    );
+  }
+
   if (role !== "patient") {
     await supabase.rpc("assign_initial_role", { _role: role });
     // Seedar 3 fejk-patienter + godkända kopplingar så anhörig/läkare har någon att följa direkt
