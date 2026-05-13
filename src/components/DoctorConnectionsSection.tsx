@@ -224,7 +224,7 @@ export const DoctorConnectionsSection = ({ hideHeader = false }: { hideHeader?: 
         </Dialog>
       </div>
 
-      <p className="text-xs text-muted-foreground">{t("doctorConnections.manageAccess")}</p>
+      {!hideHeader && <p className="text-xs text-muted-foreground">{t("doctorConnections.manageAccess")}</p>}
 
       {/* Pending requests from doctors */}
       {pendingFromDoctors.length > 0 && (
