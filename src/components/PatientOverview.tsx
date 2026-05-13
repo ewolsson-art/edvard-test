@@ -55,7 +55,7 @@ interface PatientOverviewProps {
 
 type ViewType = 'week' | 'month' | 'year';
 
-export function PatientOverview({ connection, onBack, hideExtras = false }: PatientOverviewProps) {
+export function PatientOverview({ connection, onBack, hideExtras = false, hideHeader = false, hideProfileCard = false }: PatientOverviewProps) {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [view, setView] = useState<ViewType>('month');
