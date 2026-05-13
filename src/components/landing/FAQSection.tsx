@@ -40,10 +40,10 @@ export function FAQSection() {
         <div className="max-w-3xl mx-auto">
           <div className="text-center mb-14 md:mb-16">
             <p className="text-sm uppercase tracking-widest text-[hsl(45_85%_55%)]/80 mb-3">
-              Vanliga frågor
+              {eyebrow}
             </p>
             <h2 className="text-3xl md:text-5xl font-display font-bold text-white tracking-tight">
-              Allt du undrar om Toddy
+              {heading}
             </h2>
           </div>
 
