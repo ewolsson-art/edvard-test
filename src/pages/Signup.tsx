@@ -77,6 +77,8 @@ const Signup = () => {
   const [phone, setPhone] = useState("");
   const [otpCode, setOtpCode] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [resendCooldown, setResendCooldown] = useState(0);
+  const [resending, setResending] = useState(false);
 
   const { user, loading, signInWithOtp, verifyOtp } = useAuth();
   const { t } = useTranslation();
