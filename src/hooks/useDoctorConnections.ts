@@ -31,7 +31,10 @@ export function useDoctorConnections() {
   const [isLoading, setIsLoading] = useState(true);
 
   const fetchConnections = useCallback(async () => {
-    if (!user) return;
+    if (!user) {
+      setIsLoading(false);
+      return;
+    }
 
     const { data, error } = await supabase
       .from('patient_doctor_connections')
@@ -41,33 +44,49 @@ export function useDoctorConnections() {
 
     if (error) {
       console.error('Error fetching connections:', error);
-    } else {
-      // Fetch patient profiles and emails for each connection
-      const connectionsWithProfiles = await Promise.all(
-        (data || []).map(async (conn) => {
-          // Fetch profile
-          const { data: profile } = await supabase
+      setIsLoading(false);
+      return;
+    }
+
+    // Enrich each connection independently so a single failure (RPC,
+    // missing profile, network blip) does NOT void the whole list —
+    // earlier this caused the doctor home screen to show 0 users while
+    // a second mount on /mina-patienter happened to succeed.
+    const connectionsWithProfiles = await Promise.all(
+      (data || []).map(async (conn) => {
+        let profile: { first_name: string | null; last_name: string | null } | undefined;
+        let email: string | undefined;
+
+        try {
+          const { data: profileData } = await supabase
             .from('profiles')
             .select('first_name, last_name')
             .eq('user_id', conn.patient_id)
             .maybeSingle();
+          profile = profileData || undefined;
+        } catch (e) {
+          console.warn('[useDoctorConnections] profile fetch failed', conn.patient_id, e);
+        }
 
-          // Fetch email via RPC function
-          const { data: email } = await supabase
+        try {
+          const { data: emailData } = await supabase
             .rpc('get_patient_email_for_doctor', {
               p_patient_id: conn.patient_id,
               p_doctor_id: user.id,
             });
+          email = (emailData as string | null) || undefined;
+        } catch (e) {
+          console.warn('[useDoctorConnections] email rpc failed', conn.patient_id, e);
+        }
 
-          return {
-            ...conn,
-            patient_profile: profile || undefined,
-            patient_email: email || undefined,
-          } as PatientConnection;
-        })
-      );
-      setConnections(connectionsWithProfiles);
-    }
+        return {
+          ...conn,
+          patient_profile: profile,
+          patient_email: email,
+        } as PatientConnection;
+      })
+    );
+    setConnections(connectionsWithProfiles);
     setIsLoading(false);
   }, [user]);
 
