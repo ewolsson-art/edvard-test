@@ -154,7 +154,7 @@ export const DoctorConnectionsSection = ({ hideHeader = false }: { hideHeader?: 
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
+        <div className={`flex items-center gap-2 ${hideHeader ? 'hidden' : ''}`}>
           <Stethoscope className="w-5 h-5 text-primary" />
           <h3 className="text-lg font-semibold">{t("doctorConnections.myDoctors")}</h3>
           {pendingFromDoctors.length > 0 && (
