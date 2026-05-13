@@ -1,4 +1,5 @@
 import { AuthNavbar } from "@/components/AuthNavbar";
+import { SEO } from "@/components/seo/SEO";
 import { Link } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
 
@@ -6,6 +7,7 @@ const PrivacyPolicy = () => {
   const { t } = useTranslation();
   return (
     <div className="min-h-screen flex flex-col bg-background">
+      <SEO title="Integritetspolicy – så hanterar Toddy dina uppgifter" description="Läs hur Toddy samlar in, lagrar och skyddar dina personuppgifter och hälsodata enligt GDPR." path="/integritet" />
       <AuthNavbar />
       <main className="flex-1 pt-24 pb-16 px-4 md:px-8">
         <div className="max-w-3xl mx-auto prose prose-neutral dark:prose-invert">

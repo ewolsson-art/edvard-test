@@ -1,0 +1,31 @@
+# Toddy
+
+> Toddy är en svensk digital stämningsdagbok för personer med bipolär sjukdom – logga mående, sömn och mediciner, upptäck mönster över tid och dela tryggt med vården och anhöriga.
+
+Toddy hjälper användare att förstå sina egna mönster genom dagliga incheckningar (mående, sömn, aptit, energi, kännetecken och mediciner). Plattformen är byggd specifikt för bipolär sjukdom (typ I, typ II och cyklotymi) och stöder även anhöriga och vårdgivare med säker delning och rapporter.
+
+## Pages
+
+- [Hem](/): Översikt av Toddy och vad plattformen gör.
+- [Så funkar det](/sa-funkar-det): Tre steg – checka in dagligen, upptäck mönster, dela med vården.
+- [Om oss](/om-oss): Vår mission, värderingar och team bakom Toddy.
+- [För användare](/for-anvandare): Funktioner för dig som lever med bipolär sjukdom.
+- [För anhöriga](/for-anhoriga): Hur du kan följa och stötta en närstående.
+- [För vårdgivare](/for-vardgivare): Realtidsinsikt och strukturerade rapporter för vården.
+- [Samarbetspartners](/samarbetspartners): Forskning, vård- och brukarorganisationer vi samarbetar med.
+- [Blogg](/blogg): Artiklar om bipolär sjukdom, sömn, anhörigskap och stämningsdagbok.
+
+## Blog
+
+- [Vad är en stämningsdagbok?](/blogg/vad-ar-en-stamningsdagbok): Komplett guide till stämningsdagbok 2026.
+- [Tidiga varningstecken vid bipolär](/blogg/tidiga-varningstecken-bipolar): Så känner du igen prodromer.
+- [Skillnad nedstämdhet och depression](/blogg/skillnad-nedstamdhet-depression): När bör du söka hjälp?
+- [Sömn och psykisk hälsa](/blogg/somn-och-psykisk-halsa): Varför timmarna spelar roll.
+- [Anhörig till någon med psykisk ohälsa](/blogg/anhorig-psykisk-ohalsa): Konkret stöd för anhöriga.
+
+## Optional
+
+- [Integritet](/integritet): Personuppgiftspolicy.
+- [Villkor](/villkor): Användarvillkor.
+- [Logga in](/logga-in): Inloggningssida.
+- [Skapa konto](/skapa-konto): Registreringssida.

@@ -1,5 +1,8 @@
 User-agent: *
 Allow: /
+Disallow: /auth
+Disallow: /auth/callback
+Disallow: /for-patienter
 Disallow: /idag
 Disallow: /oversikt
 Disallow: /profil

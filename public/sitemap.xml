@@ -17,4 +17,6 @@
   <url><loc>https://toddy.se/villkor</loc><changefreq>yearly</changefreq><priority>0.4</priority></url>
   <url><loc>https://toddy.se/logga-in</loc><changefreq>yearly</changefreq><priority>0.3</priority></url>
   <url><loc>https://toddy.se/skapa-konto</loc><changefreq>yearly</changefreq><priority>0.3</priority></url>
+  <url><loc>https://toddy.se/glomt-losenord</loc><changefreq>yearly</changefreq><priority>0.2</priority></url>
+  <url><loc>https://toddy.se/aterstall-losenord</loc><changefreq>yearly</changefreq><priority>0.2</priority></url>
 </urlset>
