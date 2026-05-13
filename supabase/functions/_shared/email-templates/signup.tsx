@@ -96,21 +96,31 @@ const container = {
 }
 
 const hero = {
-  backgroundColor: '#0E1626',
-  padding: '40px 24px 28px',
+  backgroundColor: '#FFF8E5',
+  padding: '36px 24px 28px',
   textAlign: 'center' as const,
+  borderBottom: '1px solid #F2E6BE',
 }
 
 const mascot = {
   display: 'block',
-  margin: '0 auto 12px',
+  margin: '0 auto 8px',
+  backgroundColor: '#FFF8E5',
+  borderRadius: '12px',
 }
 
 const brand = {
-  color: '#E8B931',
-  fontSize: '14px',
+  color: '#0E1626',
+  fontSize: '28px',
   fontWeight: 700,
-  letterSpacing: '4px',
+  letterSpacing: '-0.5px',
+  margin: '8px 0 2px',
+}
+
+const tagline = {
+  color: '#8A7A4A',
+  fontSize: '13px',
+  fontWeight: 500,
   margin: 0,
 }
 
