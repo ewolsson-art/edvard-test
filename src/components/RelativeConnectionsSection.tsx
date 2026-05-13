@@ -20,7 +20,7 @@ import { useTranslation } from 'react-i18next';
 
 const emailSchema = z.string().email();
 
-export const RelativeConnectionsSection = () => {
+export const RelativeConnectionsSection = ({ hideHeader = false }: { hideHeader?: boolean } = {}) => {
   const { t } = useTranslation();
   const { 
     connections, 
