@@ -78,6 +78,7 @@ const CompleteProfile = lazy(() => import("./pages/CompleteProfile"));
 const Community = lazy(() => import("./pages/Community"));
 const CommunityThread = lazy(() => import("./pages/CommunityThread"));
 const Notifications = lazy(() => import("./pages/Notifications"));
+const Unsubscribe = lazy(() => import("./pages/Unsubscribe"));
 const Insights = lazy(() => import("./pages/Insights"));
 const BadDay = lazy(() => import("./pages/BadDay"));
 const Diagnoses = lazy(() => import("./pages/Diagnoses"));
