@@ -167,7 +167,7 @@ export const RelativeConnectionsSection = ({ hideHeader = false }: { hideHeader?
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
+      <div className={`flex items-center justify-between ${hideHeader ? 'sr-only' : ''}`}>
         <div className="flex items-center gap-2">
           <Users className="w-5 h-5 text-primary" />
           <h3 className="text-lg font-semibold">{t("relativeConnections.myRelatives")}</h3>
