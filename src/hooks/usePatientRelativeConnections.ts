@@ -116,6 +116,24 @@ export function usePatientRelativeConnections() {
       return { success: false, error: 'Kunde inte skicka inbjudan' };
     }
 
+    const inviterName =
+      (user.user_metadata?.first_name as string | undefined) ||
+      (user.email?.split('@')[0] ?? 'En användare');
+    supabase.functions
+      .invoke('send-transactional-email', {
+        body: {
+          templateName: 'care-team-invitation',
+          recipientEmail: relativeEmail,
+          idempotencyKey: `invite-relative-${user.id}-${relativeId}`,
+          templateData: {
+            inviterName,
+            inviterRole: 'patient',
+            recipientRole: 'relative',
+          },
+        },
+      })
+      .catch((e) => console.warn('invite email failed', e));
+
     toast({ title: "Inbjudan skickad!" });
     await fetchConnections();
     return { success: true };
