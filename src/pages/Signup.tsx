@@ -97,6 +97,35 @@ const Signup = () => {
     }
   }, [user, loading, navigate]);
 
+  // Starta 30s nedräkning så fort vi landar på "kolla din mejl"-vyn
+  useEffect(() => {
+    if (step !== "email-sent") return;
+    setResendCooldown(30);
+    const id = setInterval(() => {
+      setResendCooldown((s) => (s <= 1 ? 0 : s - 1));
+    }, 1000);
+    return () => clearInterval(id);
+  }, [step]);
+
+  const handleResendEmail = async () => {
+    if (resendCooldown > 0 || resending || !email) return;
+    setResending(true);
+    const { error } = await signInWithOtp(email.trim(), role!);
+    setResending(false);
+    if (error) {
+      toast({ title: t("common.somethingWrong"), description: error.message, variant: "destructive" });
+      return;
+    }
+    toast({ title: "Ny länk skickad", description: "Kolla inkorgen (och skräpposten)." });
+    setResendCooldown(30);
+    const id = setInterval(() => {
+      setResendCooldown((s) => {
+        if (s <= 1) { clearInterval(id); return 0; }
+        return s - 1;
+      });
+    }, 1000);
+  };
+
   const handleToggleCheckin = (id: keyof CheckinSelections) => {
     setCheckinSelections(prev => ({ ...prev, [id]: !prev[id] }));
   };
