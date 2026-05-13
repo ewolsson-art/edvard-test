@@ -35,9 +35,9 @@ export const SignupEmail = ({ confirmationUrl }: SignupEmailProps) => (
         <Section style={hero}>
           <Img
             src={MASCOT_URL}
-            alt="🐢"
-            width="96"
-            height="96"
+            alt="Toddy"
+            width="128"
+            height="128"
             style={mascot}
           />
           <Text style={brand}>Toddy</Text>
