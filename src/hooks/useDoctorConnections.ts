@@ -179,6 +179,24 @@ export function useDoctorConnections() {
       return { success: false, error: 'Kunde inte skicka förfrågan' };
     }
 
+    const inviterName =
+      (user.user_metadata?.first_name as string | undefined) ||
+      (user.email?.split('@')[0] ?? 'En vårdgivare');
+    supabase.functions
+      .invoke('send-transactional-email', {
+        body: {
+          templateName: 'care-team-invitation',
+          recipientEmail: patientEmail,
+          idempotencyKey: `request-doctor-${user.id}-${patientId}`,
+          templateData: {
+            inviterName,
+            inviterRole: 'doctor',
+            recipientRole: 'patient',
+          },
+        },
+      })
+      .catch((e) => console.warn('invite email failed', e));
+
     toast({ title: "Förfrågan skickad!" });
     await fetchConnections();
     return { success: true };

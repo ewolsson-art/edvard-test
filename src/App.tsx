@@ -78,6 +78,7 @@ const CompleteProfile = lazy(() => import("./pages/CompleteProfile"));
 const Community = lazy(() => import("./pages/Community"));
 const CommunityThread = lazy(() => import("./pages/CommunityThread"));
 const Notifications = lazy(() => import("./pages/Notifications"));
+const Unsubscribe = lazy(() => import("./pages/Unsubscribe"));
 const Insights = lazy(() => import("./pages/Insights"));
 const BadDay = lazy(() => import("./pages/BadDay"));
 const Diagnoses = lazy(() => import("./pages/Diagnoses"));
@@ -180,7 +181,8 @@ const App = () => (
             <Route path="/aterstall-losenord" element={<ResetPassword />} />
             <Route path="/auth/callback" element={<AuthCallback />} />
             <Route path="/bekrafta" element={<ConfirmEmail />} />
-            <Route path="/slutfor-profil" element={<CompleteProfile />} />
+           <Route path="/slutfor-profil" element={<CompleteProfile />} />
+           <Route path="/unsubscribe" element={<Unsubscribe />} />
             <Route path="/onboarding" element={
               <ProtectedRoute skipOnboardingCheck>
                 <Onboarding />
