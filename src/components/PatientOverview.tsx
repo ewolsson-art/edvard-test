@@ -430,6 +430,7 @@ export function PatientOverview({ connection, onBack, hideExtras = false, hideHe
   return (
     <div className="space-y-6">
       {/* Header — sticky so name stays visible while scrolling */}
+      {!hideHeader && (
       <div className="sticky top-0 z-30 -mx-5 md:-mx-8 px-5 md:px-8 py-3 bg-background/85 backdrop-blur-md border-b border-border/30">
         <div className="flex items-center gap-3">
           <Button variant="ghost" size="icon" onClick={onBack} className="shrink-0">
@@ -463,8 +464,9 @@ export function PatientOverview({ connection, onBack, hideExtras = false, hideHe
           </button>
         </div>
       </div>
+      )}
 
-      {!hideExtras && (
+      {!hideExtras && !hideProfileCard && (
         <PatientProfileCard
           patientName={patientName}
           patientEmail={connection.patient_email}
