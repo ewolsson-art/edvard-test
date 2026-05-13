@@ -48,9 +48,10 @@ const BlogPost = () => {
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <SEO
-        title={`${post.title} | Toddy`}
+        title={post.title.length > 52 ? post.title : `${post.title} | Toddy`}
         description={post.description}
         path={`/blogg/${post.slug}`}
+        ogType="article"
       />
       <Helmet>
         <script type="application/ld+json">{JSON.stringify(articleSchema)}</script>

@@ -5,13 +5,20 @@ interface SEOProps {
   description: string;
   path?: string;
   image?: string;
+  ogType?: "website" | "article";
 }
 
 /**
  * Per-page SEO. Sätter title, description, canonical och OG/Twitter-taggar.
  * Använd på varje publik (utloggad) sida.
  */
-export function SEO({ title, description, path = "/", image = "https://toddy.se/og-image.png?v=2" }: SEOProps) {
+export function SEO({
+  title,
+  description,
+  path = "/",
+  image = "https://toddy.se/og-image.png?v=2",
+  ogType = "website",
+}: SEOProps) {
   const url = `https://toddy.se${path}`;
   return (
     <Helmet>
@@ -19,6 +26,7 @@ export function SEO({ title, description, path = "/", image = "https://toddy.se/
       <meta name="description" content={description} />
       <link rel="canonical" href={url} />
 
+      <meta property="og:type" content={ogType} />
       <meta property="og:title" content={title} />
       <meta property="og:description" content={description} />
       <meta property="og:url" content={url} />
