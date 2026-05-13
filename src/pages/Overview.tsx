@@ -3,7 +3,7 @@ import { useState, useMemo, useCallback, useRef, useEffect } from 'react';
 import { AnimatedPage } from '@/components/AnimatedPage';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { format, startOfWeek, endOfWeek, addWeeks, subWeeks, eachDayOfInterval, addMonths, subMonths, startOfMonth, endOfMonth, isBefore, startOfDay, isToday } from 'date-fns';
-import { sv } from 'date-fns/locale';
+import { useDateLocale } from '@/lib/dateLocale';
 import { useMoodData } from '@/hooks/useMoodData';
 import { useMedications } from '@/hooks/useMedications';
 import { useUserPreferences } from '@/hooks/useUserPreferences';
@@ -48,6 +48,7 @@ type ViewType = 'week' | 'month' | 'year';
 
 const Overview = () => {
   const { t } = useTranslation();
+  const dateLocale = useDateLocale();
   const [searchParams, setSearchParams] = useSearchParams();
   
   // Parse period parameter (format: "2026-01" for month, "2026" for year)
@@ -209,7 +210,7 @@ const Overview = () => {
 
   const weekStart = startOfWeek(currentWeek, { weekStartsOn: 1 });
   const weekEnd = endOfWeek(currentWeek, { weekStartsOn: 1 });
-  const weekLabel = `${format(weekStart, 'd MMM', { locale: sv })} – ${format(weekEnd, 'd MMM yyyy', { locale: sv })}`;
+  const weekLabel = `${format(weekStart, 'd MMM', { locale: dateLocale })} – ${format(weekEnd, 'd MMM yyyy', { locale: dateLocale })}`;
 
   // Month data
   const monthMoodData = useMemo(() => {
@@ -393,7 +394,7 @@ const Overview = () => {
     return result;
   }, [currentMonth, getMedicationsTakenOnDate, activeMedications, logs]);
 
-  const monthLabel = format(currentMonth, 'MMMM yyyy', { locale: sv });
+  const monthLabel = format(currentMonth, 'MMMM yyyy', { locale: dateLocale });
 
   // Year data
   const yearEntries = useMemo(() => {
@@ -573,7 +574,7 @@ const Overview = () => {
         <header className="sticky top-12 sm:top-14 md:top-0 z-20 bg-background pb-4 -mt-5 pt-5 md:-mt-8 md:pt-8 -mx-5 px-5 md:-mx-8 md:px-8 after:content-[''] after:absolute after:inset-x-0 after:-bottom-1 after:h-2 after:bg-gradient-to-b after:from-background after:to-transparent">
           <div className="mb-2">
             <div className="flex items-baseline justify-between mb-1">
-              <h1 className="font-display text-2xl font-bold text-foreground">Översikt</h1>
+              <h1 className="font-display text-2xl font-bold text-foreground">{t('overview.title')}</h1>
               <div className="flex items-center gap-4">
                 <button
                   onClick={() => {
@@ -586,20 +587,20 @@ const Overview = () => {
                   }}
                   className="text-sm font-semibold text-primary px-3 py-1 rounded-full border border-primary/30 bg-primary/5 hover:bg-primary/10 transition-colors"
                 >
-                  Idag
+                  {t('overview.today')}
                 </button>
                 <span className="text-xl font-semibold text-muted-foreground">{currentYear}</span>
               </div>
             </div>
-            <p className="text-[13px] text-foreground/30">Se dina mönster och trender över tid.</p>
+            <p className="text-[13px] text-foreground/30">{t('overview.seePatterns')}</p>
           </div>
           
           <div className="flex items-center gap-3">
             <Tabs value={view} onValueChange={handleViewChange} className="flex-1">
               <TabsList className="inline-flex w-full h-9 bg-foreground/[0.03] p-0.5 rounded-full gap-0">
-                <TabsTrigger value="week" className="flex-1 text-xs font-semibold px-2 py-1 rounded-full hover:bg-foreground/[0.05] data-[state=active]:bg-foreground/[0.06] data-[state=active]:text-foreground data-[state=active]:shadow-none">V</TabsTrigger>
-                <TabsTrigger value="month" className="flex-1 text-xs font-semibold px-2 py-1 rounded-full hover:bg-foreground/[0.05] data-[state=active]:bg-foreground/[0.06] data-[state=active]:text-foreground data-[state=active]:shadow-none">M</TabsTrigger>
-                <TabsTrigger value="year" className="flex-1 text-xs font-semibold px-2 py-1 rounded-full hover:bg-foreground/[0.05] data-[state=active]:bg-foreground/[0.06] data-[state=active]:text-foreground data-[state=active]:shadow-none">ÅR</TabsTrigger>
+                <TabsTrigger value="week" className="flex-1 text-xs font-semibold px-2 py-1 rounded-full hover:bg-foreground/[0.05] data-[state=active]:bg-foreground/[0.06] data-[state=active]:text-foreground data-[state=active]:shadow-none">{t('overview.week')}</TabsTrigger>
+                <TabsTrigger value="month" className="flex-1 text-xs font-semibold px-2 py-1 rounded-full hover:bg-foreground/[0.05] data-[state=active]:bg-foreground/[0.06] data-[state=active]:text-foreground data-[state=active]:shadow-none">{t('overview.month')}</TabsTrigger>
+                <TabsTrigger value="year" className="flex-1 text-xs font-semibold px-2 py-1 rounded-full hover:bg-foreground/[0.05] data-[state=active]:bg-foreground/[0.06] data-[state=active]:text-foreground data-[state=active]:shadow-none">{t('overview.year')}</TabsTrigger>
               </TabsList>
             </Tabs>
           </div>
