@@ -1,4 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
+import { Capacitor } from '@capacitor/core';
+import { LocalNotifications } from '@capacitor/local-notifications';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
@@ -16,6 +18,8 @@ export interface NotificationPreferences {
   updated_at: string;
 }
 
+const isNative = Capacitor.isNativePlatform();
+
 export function useNotificationPreferences() {
   const [preferences, setPreferences] = useState<NotificationPreferences | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -23,11 +27,20 @@ export function useNotificationPreferences() {
   const { user } = useAuth();
   const { toast } = useToast();
 
-  // Check notification permission
+  // Check notification permission (native + web)
   useEffect(() => {
-    if ('Notification' in window) {
-      setPermissionStatus(Notification.permission);
-    }
+    (async () => {
+      if (isNative) {
+        try {
+          const res = await LocalNotifications.checkPermissions();
+          setPermissionStatus(res.display === 'granted' ? 'granted' : res.display === 'denied' ? 'denied' : 'default');
+        } catch (e) {
+          console.error('LocalNotifications.checkPermissions failed', e);
+        }
+      } else if ('Notification' in window) {
+        setPermissionStatus(Notification.permission);
+      }
+    })();
   }, []);
 
   // Fetch preferences
@@ -57,11 +70,30 @@ export function useNotificationPreferences() {
   }, [user]);
 
   const requestPermission = useCallback(async (): Promise<boolean> => {
+    if (isNative) {
+      try {
+        const res = await LocalNotifications.requestPermissions();
+        const granted = res.display === 'granted';
+        setPermissionStatus(granted ? 'granted' : 'denied');
+        if (!granted) {
+          toast({
+            title: 'Tillåtelse nekad',
+            description: 'Aktivera notiser i iOS-inställningar för Toddy för att få påminnelser.',
+            variant: 'destructive',
+          });
+        }
+        return granted;
+      } catch (e) {
+        console.error('LocalNotifications.requestPermissions failed', e);
+        return false;
+      }
+    }
+
     if (!('Notification' in window)) {
       toast({
-        title: "Notiser stöds inte",
-        description: "Din webbläsare stöder inte push-notiser.",
-        variant: "destructive",
+        title: 'Notiser stöds inte',
+        description: 'Din webbläsare stöder inte notiser.',
+        variant: 'destructive',
       });
       return false;
     }
@@ -71,9 +103,9 @@ export function useNotificationPreferences() {
 
     if (permission !== 'granted') {
       toast({
-        title: "Tillåtelse nekad",
-        description: "Du behöver tillåta notiser i webbläsaren för att få påminnelser.",
-        variant: "destructive",
+        title: 'Tillåtelse nekad',
+        description: 'Du behöver tillåta notiser i webbläsaren för att få påminnelser.',
+        variant: 'destructive',
       });
       return false;
     }
@@ -86,7 +118,6 @@ export function useNotificationPreferences() {
 
     try {
       if (preferences) {
-        // Update existing
         const { error } = await supabase
           .from('notification_preferences')
           .update(updates)
@@ -96,7 +127,6 @@ export function useNotificationPreferences() {
 
         setPreferences(prev => prev ? { ...prev, ...updates } : null);
       } else {
-        // Insert new
         const { data, error } = await supabase
           .from('notification_preferences')
           .insert({ user_id: user.id, ...updates })
@@ -109,33 +139,21 @@ export function useNotificationPreferences() {
       }
 
       toast({
-        title: "Inställningar sparade",
-        description: "Dina notifikationsinställningar har uppdaterats.",
+        title: 'Inställningar sparade',
+        description: 'Dina notisinställningar har uppdaterats.',
       });
 
       return true;
     } catch (error) {
       console.error('Error updating notification preferences:', error);
       toast({
-        title: "Fel",
-        description: "Kunde inte spara inställningarna.",
-        variant: "destructive",
+        title: 'Fel',
+        description: 'Kunde inte spara inställningarna.',
+        variant: 'destructive',
       });
       return false;
     }
   }, [user, preferences, toast]);
-
-  const scheduleNotification = useCallback((title: string, body: string, delay: number) => {
-    if (permissionStatus !== 'granted') return;
-
-    setTimeout(() => {
-      new Notification(title, {
-        body,
-        icon: '/favicon.ico',
-        tag: title, // Prevents duplicate notifications
-      });
-    }, delay);
-  }, [permissionStatus]);
 
   return {
     preferences,
@@ -143,6 +161,5 @@ export function useNotificationPreferences() {
     permissionStatus,
     requestPermission,
     updatePreferences,
-    scheduleNotification,
   };
 }
