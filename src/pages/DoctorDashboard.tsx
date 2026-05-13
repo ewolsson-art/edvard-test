@@ -184,7 +184,7 @@ const DoctorDashboard = () => {
               <p className="text-muted-foreground">{t('doctorDashboard.requestAccessOrWait')}</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="flex flex-col gap-3">
               {approvedConnections.map((c) => {
                 const status = statuses[c.patient_id];
                 const meta = status ? STATUS_META[status.status] : STATUS_META.unknown;
@@ -197,36 +197,44 @@ const DoctorDashboard = () => {
                     ? 'Incheckad igår'
                     : `${status.daysSince} dagar sedan`;
                 return (
-                  <div key={c.id} className="bg-foreground/[0.03] backdrop-blur-sm rounded-2xl p-6 cursor-pointer transition-colors hover:bg-foreground/[0.05]" onClick={() => navigate(`/patient/${c.patient_id}`)}>
-                    <div className="flex items-start justify-between mb-4">
-                      <div className="relative">
-                        <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
-                          <span className="text-lg font-semibold text-primary">{getPatientInitial(c)}</span>
-                        </div>
-                        <span
-                          className="absolute -bottom-0.5 -right-0.5 w-4 h-4 rounded-full border-2 border-background"
-                          style={{ backgroundColor: meta.color }}
-                          aria-label={meta.label}
-                        />
+                  <div
+                    key={c.id}
+                    className="w-full bg-foreground/[0.03] backdrop-blur-sm rounded-2xl p-5 sm:p-6 cursor-pointer transition-colors hover:bg-foreground/[0.05] flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6"
+                    onClick={() => navigate(`/patient/${c.patient_id}`)}
+                  >
+                    <div className="relative flex-shrink-0">
+                      <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
+                        <span className="text-lg font-semibold text-primary">{getPatientInitial(c)}</span>
                       </div>
-                      <Button size="sm" variant="ghost"><Eye className="w-4 h-4 mr-1" />{t('doctorDashboard.show')}</Button>
+                      <span
+                        className="absolute -bottom-0.5 -right-0.5 w-4 h-4 rounded-full border-2 border-background"
+                        style={{ backgroundColor: meta.color }}
+                        aria-label={meta.label}
+                      />
                     </div>
-                    <h3 className="font-semibold mb-1">{getPatientName(c)}</h3>
-                    {c.patient_email && c.patient_profile?.first_name && (
-                      <p className="text-xs text-muted-foreground mb-1 truncate">{c.patient_email}</p>
-                    )}
-                    <p className="text-sm text-muted-foreground mb-3">
-                      <span className="font-medium" style={{ color: meta.color }}>{meta.label}</span>
-                      {' · '}
-                      <span className="text-muted-foreground">{sinceLabel}</span>
-                    </p>
-                    <div className="flex flex-wrap gap-1">
+
+                    <div className="flex-1 min-w-0">
+                      <h3 className="font-semibold truncate">{getPatientName(c)}</h3>
+                      {c.patient_email && c.patient_profile?.first_name && (
+                        <p className="text-xs text-muted-foreground truncate">{c.patient_email}</p>
+                      )}
+                      <p className="text-sm mt-1">
+                        <span className="font-medium" style={{ color: meta.color }}>{meta.label}</span>
+                        <span className="text-muted-foreground">{' · '}{sinceLabel}</span>
+                      </p>
+                    </div>
+
+                    <div className="flex flex-wrap gap-1 sm:justify-end sm:max-w-xs">
                       {c.share_mood && <span className="text-xs bg-primary/10 text-primary px-2 py-0.5 rounded">{t('doctorDashboard.mood')}</span>}
                       {c.share_sleep && <span className="text-xs bg-primary/10 text-primary px-2 py-0.5 rounded">{t('doctorDashboard.sleep')}</span>}
                       {c.share_eating && <span className="text-xs bg-primary/10 text-primary px-2 py-0.5 rounded">{t('doctorDashboard.diet')}</span>}
                       {c.share_exercise && <span className="text-xs bg-primary/10 text-primary px-2 py-0.5 rounded">{t('doctorDashboard.exercise')}</span>}
                       {c.share_medication && <span className="text-xs bg-primary/10 text-primary px-2 py-0.5 rounded">{t('doctorDashboard.medication')}</span>}
                     </div>
+
+                    <Button size="sm" variant="ghost" className="flex-shrink-0 self-start sm:self-center">
+                      <Eye className="w-4 h-4 mr-1" />{t('doctorDashboard.show')}
+                    </Button>
                   </div>
                 );
               })}
