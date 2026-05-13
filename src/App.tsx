@@ -181,7 +181,8 @@ const App = () => (
             <Route path="/aterstall-losenord" element={<ResetPassword />} />
             <Route path="/auth/callback" element={<AuthCallback />} />
             <Route path="/bekrafta" element={<ConfirmEmail />} />
-            <Route path="/slutfor-profil" element={<CompleteProfile />} />
+           <Route path="/slutfor-profil" element={<CompleteProfile />} />
+           <Route path="/unsubscribe" element={<Unsubscribe />} />
             <Route path="/onboarding" element={
               <ProtectedRoute skipOnboardingCheck>
                 <Onboarding />
