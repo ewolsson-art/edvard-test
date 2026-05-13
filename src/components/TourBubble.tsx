@@ -47,6 +47,17 @@ export const TourBubble = () => {
     if (typeof window === 'undefined') return;
     const key = `${STORAGE_KEY}.${user.id}`;
     if (localStorage.getItem(key) === '1') return;
+
+    // Only show for brand-new users — accounts created within the last 10 minutes.
+    // Existing users (e.g. ewolsson@gmail.com) get silently marked as dismissed.
+    const createdAt = user.created_at ? new Date(user.created_at).getTime() : 0;
+    const ageMs = Date.now() - createdAt;
+    const TEN_MIN = 10 * 60 * 1000;
+    if (!createdAt || ageMs > TEN_MIN) {
+      localStorage.setItem(key, '1');
+      return;
+    }
+
     const t = setTimeout(() => {
       setMounted(true);
       // peek the bubble open the first time so user notices it
