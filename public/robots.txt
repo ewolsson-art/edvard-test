@@ -1,6 +1,8 @@
 User-agent: *
 Allow: /
-Disallow: /idag
+Disallow: /auth
+Disallow: /auth/callback
+Disallow: /for-patienter
 Disallow: /oversikt
 Disallow: /profil
 Disallow: /installningar
