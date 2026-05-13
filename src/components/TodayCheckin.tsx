@@ -851,7 +851,48 @@ export function TodayCheckin({
           </div>
 
           {checkinData.mood && (
-            <div className="flex flex-col items-stretch gap-2 pt-4 pb-2 max-w-md mx-auto w-full">
+            <div className="flex flex-col items-stretch gap-3 pt-4 pb-2 max-w-md mx-auto w-full">
+              {/* Friendly thought chip — works in both quick & detailed mode */}
+              <button
+                type="button"
+                onClick={() => setShowComment('mood')}
+                className={cn(
+                  "group relative w-full rounded-2xl px-4 py-3 text-left transition-all duration-200",
+                  "border border-dashed",
+                  "active:scale-[0.99]",
+                  checkinData.moodComment
+                    ? "bg-primary/[0.06] border-primary/30 hover:bg-primary/[0.09] hover:border-primary/40"
+                    : "bg-foreground/[0.025] border-foreground/15 hover:bg-foreground/[0.05] hover:border-foreground/25"
+                )}
+                aria-label={checkinData.moodComment ? t('checkin.editThought') : t('checkin.thoughtAboutDay')}
+              >
+                <div className="flex items-start gap-3">
+                  <span
+                    aria-hidden
+                    className="text-xl leading-none mt-0.5 transition-transform duration-300 group-hover:rotate-[-8deg] group-hover:scale-110"
+                  >
+                    💭
+                  </span>
+                  <div className="flex-1 min-w-0">
+                    {checkinData.moodComment ? (
+                      <>
+                        <p className="text-[11px] uppercase tracking-[0.12em] font-semibold text-primary/70 mb-1">
+                          {t('checkin.editThought')}
+                        </p>
+                        <p className="text-sm text-foreground/85 leading-snug line-clamp-2">
+                          {checkinData.moodComment}
+                        </p>
+                      </>
+                    ) : (
+                      <p className="text-sm font-medium text-foreground/70 group-hover:text-foreground/90 transition-colors">
+                        {t('checkin.thoughtAboutDay')}
+                      </p>
+                    )}
+                  </div>
+                  <Pencil className="w-3.5 h-3.5 text-muted-foreground/40 group-hover:text-muted-foreground/70 transition-colors mt-1 flex-shrink-0" />
+                </div>
+              </button>
+
               <button
                 onClick={() => {
                   if (checkinMode === 'quick') {
@@ -867,6 +908,7 @@ export function TodayCheckin({
               </button>
             </div>
           )}
+          {renderCommentSection('mood')}
         </div>
       )}
 
