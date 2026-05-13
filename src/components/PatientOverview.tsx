@@ -49,6 +49,8 @@ interface PatientOverviewProps {
   connection: PatientConnection;
   onBack: () => void;
   hideExtras?: boolean;
+  hideHeader?: boolean;
+  hideProfileCard?: boolean;
 }
 
 type ViewType = 'week' | 'month' | 'year';
