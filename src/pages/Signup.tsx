@@ -8,6 +8,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { DarkNightBackground } from "@/components/DarkNightBackground";
+import { SEO } from "@/components/seo/SEO";
 import { TurtleLogo } from "@/components/TurtleLogo";
 import {
   ArrowRight, ArrowLeft, Loader2, Mail, User, Users, Stethoscope,
@@ -234,6 +235,7 @@ const Signup = () => {
 
   return (
     <DarkNightBackground>
+      <SEO title="Skapa konto på Toddy – stämningsdagbok" description="Skapa ditt kostnadsfria Toddy-konto och börja följa ditt mående, sömn och mediciner redan idag." path="/skapa-konto" />
       <div className="flex flex-1 items-center justify-center px-6 pt-5 md:pt-6 pb-5" role="main">
         <div className="w-full max-w-sm">
 

@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 
 import { DarkNightBackground } from "@/components/DarkNightBackground";
+import { SEO } from "@/components/seo/SEO";
 import { Eye, EyeOff, Loader2, Mail, CheckCircle2, Lock, ShieldCheck, ArrowLeft, Sparkles } from "lucide-react";
 import { TurtleLogo } from "@/components/TurtleLogo";
 import { useTranslation } from 'react-i18next';
@@ -126,6 +127,7 @@ const Login = () => {
 
   return (
     <DarkNightBackground>
+      <SEO title="Logga in på Toddy – stämningsdagbok" description="Logga in på ditt Toddy-konto för att fortsätta logga ditt mående och följa dina mönster." path="/logga-in" />
       <div className="flex flex-1 items-center justify-center px-6 pt-12 pb-12 min-h-screen">
         <div className="w-full max-w-sm">
 
