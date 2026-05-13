@@ -153,10 +153,10 @@ const Profile = () => {
     return <Navigate to="/mediciner" replace />;
   }
   if (view === 'doctors') {
-    return <SubPage title={t('profile.caregivers')} onBack={() => setView('main')}><DoctorConnectionsSection /></SubPage>;
+    return <SubPage title={t('profile.caregivers')} onBack={() => setView('main')}><DoctorConnectionsSection hideHeader /></SubPage>;
   }
   if (view === 'relatives') {
-    return <SubPage title={t('profile.relatives')} onBack={() => setView('main')}><RelativeConnectionsSection /></SubPage>;
+    return <SubPage title={t('profile.relatives')} onBack={() => setView('main')}><RelativeConnectionsSection hideHeader /></SubPage>;
   }
   if (view === 'diagnoses') {
     return <SubPage title={t('profile.diagnoses')} onBack={() => setView('main')}><DiagnosesSection /></SubPage>;
