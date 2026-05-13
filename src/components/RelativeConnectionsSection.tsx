@@ -256,7 +256,7 @@ export const RelativeConnectionsSection = ({ hideHeader = false }: { hideHeader?
         </Dialog>
       </div>
 
-      <p className="text-xs text-muted-foreground">{t("relativeConnections.manageAccess")}</p>
+      {!hideHeader && <p className="text-xs text-muted-foreground">{t("relativeConnections.manageAccess")}</p>}
 
       {pendingFromRelatives.length > 0 && (
         <div className="space-y-2">
