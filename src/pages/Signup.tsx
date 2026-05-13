@@ -579,8 +579,20 @@ const Signup = () => {
               </div>
 
               <p className="mt-5 text-sm text-white/50">
-                Hittar du inte mejlet? Kolla skräpposten — det kan ta upp till en minut.
+                Mejlet kan ta upp till en minut. Glöm inte skräpposten.
               </p>
+
+              <button
+                onClick={handleResendEmail}
+                disabled={resendCooldown > 0 || resending}
+                className="mt-4 text-sm font-medium text-[hsl(45_85%_55%)] hover:text-[hsl(45_85%_65%)] disabled:text-white/30 disabled:cursor-not-allowed transition-colors"
+              >
+                {resending
+                  ? "Skickar…"
+                  : resendCooldown > 0
+                    ? `Skicka igen om ${resendCooldown}s`
+                    : "Skicka mejlet igen"}
+              </button>
             </div>
           )}
 
