@@ -19,6 +19,17 @@ interface YearHeatmapProps {
 
 
 export const YearHeatmap = memo(function YearHeatmap({ year, entries, medicationDates = [], onPrevYear, onNextYear, onMonthClick }: YearHeatmapProps) {
+  const { t } = useTranslation();
+  const dateLocale = useDateLocale();
+  const dayHeaders = t('overview.weekDayHeaders', { returnObjects: true }) as string[];
+  const monthNames = useMemo(
+    () => Array.from({ length: 12 }, (_, i) => {
+      const name = format(new Date(year, i, 1), 'LLLL', { locale: dateLocale });
+      return name.charAt(0).toUpperCase() + name.slice(1);
+    }),
+    [dateLocale, year]
+  );
+
   const moodMap = useMemo(() => {
     const map: Record<string, MoodType> = {};
     entries.forEach(entry => {
