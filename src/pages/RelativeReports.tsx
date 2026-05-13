@@ -231,152 +231,99 @@ const RelativeReports = () => {
     if (!reportData || !selectedConnection) return;
 
     const patientName = getPatientName(selectedConnection);
-    const { default: jsPDF } = await import('jspdf');
-    const doc = new jsPDF();
-    const pageWidth = doc.internal.pageSize.getWidth();
-    const margin = 20;
-    let y = 25;
+    const { generateReportPdf } = await import('@/lib/reportPdf');
 
-    // Header
-    doc.setFontSize(24);
-    doc.setTextColor(51, 65, 85);
-    doc.text(t('relativeReports.healthReport'), margin, y);
-    y += 10;
-
-    doc.setFontSize(12);
-    doc.setTextColor(100, 116, 139);
-    const periodText = `${format(reportData.period.start, 'd MMMM', { locale: sv })} - ${format(reportData.period.end, 'd MMMM yyyy', { locale: sv })}`;
-    doc.text(periodText, margin, y);
-    y += 5;
-    
-    doc.text(t('relativeReports.patient') + ': ' + patientName, margin, y);
-    y += 5;
-    doc.text(t('relativeReports.generated') + ': ' + format(new Date(), 'd MMMM yyyy', { locale: sv }), margin, y);
-    y += 15;
-
-    // Summary box
-    doc.setFillColor(241, 245, 249);
-    doc.roundedRect(margin, y, pageWidth - margin * 2, 25, 3, 3, 'F');
-    y += 8;
-    doc.setFontSize(11);
-    doc.setTextColor(51, 65, 85);
-    doc.text(t('relativeReports.summaryLabel') + ': ' + reportData.period.registeredDays + '/' + reportData.period.totalDays, margin + 5, y);
-    y += 7;
-    const registrationRate = Math.round((reportData.period.registeredDays / reportData.period.totalDays) * 100);
-    doc.setTextColor(100, 116, 139);
-    doc.text(t('relativeReports.registrationRate') + ': ' + registrationRate + '%', margin + 5, y);
-    y += 20;
-
-    // Sections
-    const addSection = (title: string, icon: string, stats: string[], insight: string, color: number[]) => {
-      if (y > 250) {
-        doc.addPage();
-        y = 25;
-      }
-
-      doc.setFillColor(color[0], color[1], color[2]);
-      doc.roundedRect(margin, y, pageWidth - margin * 2, 8, 2, 2, 'F');
-      doc.setFontSize(14);
-      doc.setTextColor(255, 255, 255);
-      doc.text(`${icon} ${title}`, margin + 5, y + 6);
-      y += 15;
-
-      doc.setFontSize(11);
-      doc.setTextColor(51, 65, 85);
-      stats.forEach(stat => {
-        doc.text(`• ${stat}`, margin + 5, y);
-        y += 7;
-      });
-
-      y += 3;
-      doc.setFillColor(248, 250, 252);
-      const insightLines = doc.splitTextToSize(insight, pageWidth - margin * 2 - 10);
-      const insightHeight = insightLines.length * 6 + 8;
-      doc.roundedRect(margin, y, pageWidth - margin * 2, insightHeight, 2, 2, 'F');
-      doc.setFontSize(10);
-      doc.setTextColor(71, 85, 105);
-      doc.text(insightLines, margin + 5, y + 6);
-      y += insightHeight + 10;
-    };
+    const sections = [];
 
     if (includeMood && selectedConnection.share_mood && reportData.mood.total > 0) {
-      addSection(
-        t('relativeReports.mood'),
-        '💙',
-        [
+      const stablePct = reportData.mood.total > 0
+        ? Math.round((reportData.mood.stable / reportData.mood.total) * 100)
+        : 0;
+      sections.push({
+        title: t('relativeReports.mood'),
+        tag: 'M',
+        color: [212, 165, 116] as [number, number, number],
+        progress: stablePct,
+        progressLabel: `${stablePct}% stabila dagar`,
+        stats: [
           t('reports.elevatedDays', { count: reportData.mood.elevated }),
           t('reports.stableDays', { count: reportData.mood.stable }),
           t('reports.depressedDays', { count: reportData.mood.depressed }),
         ],
-        reportData.mood.insight,
-        [100, 116, 139]
-      );
+        insight: reportData.mood.insight,
+      });
     }
 
     if (includeSleep && selectedConnection.share_sleep && reportData.sleep.total > 0) {
-      addSection(
-        t('relativeReports.sleep'),
-        '🌙',
-        [
+      sections.push({
+        title: t('relativeReports.sleep'),
+        tag: 'S',
+        color: [120, 134, 196] as [number, number, number],
+        progress: reportData.sleep.percentage,
+        progressLabel: `${reportData.sleep.percentage}% bra sömn`,
+        stats: [
           t('reports.goodSleep', { count: reportData.sleep.good, percentage: reportData.sleep.percentage }),
           t('reports.badSleep', { count: reportData.sleep.bad }),
         ],
-        reportData.sleep.insight,
-        [99, 102, 241]
-      );
+        insight: reportData.sleep.insight,
+      });
     }
 
     if (includeEating && selectedConnection.share_eating && reportData.eating.total > 0) {
-      addSection(
-        t('relativeReports.food'),
-        '🍽️',
-        [
+      sections.push({
+        title: t('relativeReports.food'),
+        tag: 'K',
+        color: [216, 168, 80] as [number, number, number],
+        progress: reportData.eating.percentage,
+        progressLabel: `${reportData.eating.percentage}% bra dagar`,
+        stats: [
           t('reports.goodEating', { count: reportData.eating.good, percentage: reportData.eating.percentage }),
           t('reports.badEating', { count: reportData.eating.bad }),
         ],
-        reportData.eating.insight,
-        [234, 179, 8]
-      );
+        insight: reportData.eating.insight,
+      });
     }
 
     if (includeExercise && selectedConnection.share_exercise && reportData.exercise.total > 0) {
-      addSection(
-        t('relativeReports.exercise'),
-        '💪',
-        [
+      sections.push({
+        title: t('relativeReports.exercise'),
+        tag: 'T',
+        color: [120, 168, 124] as [number, number, number],
+        progress: reportData.exercise.percentage,
+        progressLabel: `${reportData.exercise.percentage}% aktiva dagar`,
+        stats: [
           t('reports.exerciseDays', { exercised: reportData.exercise.exercised, total: reportData.exercise.total, percentage: reportData.exercise.percentage }),
         ],
-        reportData.exercise.insight,
-        [34, 197, 94]
-      );
+        insight: reportData.exercise.insight,
+      });
     }
 
     if (includeMedication && selectedConnection.share_medication && activeMedications.length > 0) {
-      addSection(
-        t('relativeReports.medication'),
-        '💊',
-        [
+      sections.push({
+        title: t('relativeReports.medication'),
+        tag: 'L',
+        color: [168, 130, 196] as [number, number, number],
+        progress: reportData.medication.percentage,
+        progressLabel: `${reportData.medication.percentage}% följsamhet`,
+        stats: [
           t('reports.medicationDays', { taken: reportData.medication.taken, total: reportData.medication.total, percentage: reportData.medication.percentage }),
         ],
-        reportData.medication.insight,
-        [168, 85, 247]
-      );
+        insight: reportData.medication.insight,
+      });
     }
 
-    // Footer
-    if (y > 270) {
-      doc.addPage();
-      y = 25;
-    }
-    y = doc.internal.pageSize.getHeight() - 15;
-    doc.setFontSize(9);
-    doc.setTextColor(148, 163, 184);
-    doc.text('Generated with Toddy', margin, y);
-    doc.text('www.toddy.se', pageWidth - margin - 40, y);
-
-    // Save
-    const filename = `halsorapport-${patientName.replace(/\s+/g, '-').toLowerCase()}-${format(reportData.period.start, 'yyyy-MM-dd')}-${format(reportData.period.end, 'yyyy-MM-dd')}.pdf`;
-    doc.save(filename);
+    await generateReportPdf({
+      title: t('relativeReports.healthReport'),
+      periodStart: reportData.period.start,
+      periodEnd: reportData.period.end,
+      forLine: `För ${patientName}`,
+      registeredDays: reportData.period.registeredDays,
+      totalDays: reportData.period.totalDays,
+      registrationLabel: 'Registrerade dagar',
+      registrationRateLabel: 'Registreringsgrad',
+      sections,
+      filename: `halsorapport-${patientName.replace(/\s+/g, '-').toLowerCase()}-${format(reportData.period.start, 'yyyy-MM-dd')}-${format(reportData.period.end, 'yyyy-MM-dd')}.pdf`,
+    });
   };
 
   if (connectionsLoading) {
