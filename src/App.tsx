@@ -14,6 +14,7 @@ import { AuthProvider } from "@/hooks/useAuth";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { NotificationSchedulerProvider } from "@/components/NotificationSchedulerProvider";
 import { BottomTabBar } from "@/components/native/BottomTabBar";
+import { TourBubble } from "@/components/TourBubble";
 import { DemoBanner } from "@/components/DemoBanner";
 import { DemoTransitionOverlay } from "@/components/DemoTransitionOverlay";
 import { NativeShellInit } from "@/components/native/NativeShellInit";
@@ -117,6 +118,7 @@ const AppLayout = ({ children }: { children: React.ReactNode }) => (
     </div>
     {/* Mobile: bottom tab bar */}
     <BottomTabBar />
+    <TourBubble />
   </SidebarProvider>
 );
 
