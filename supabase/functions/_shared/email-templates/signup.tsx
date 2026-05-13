@@ -23,7 +23,7 @@ interface SignupEmailProps {
 }
 
 const MASCOT_URL =
-  'https://phudximaihknfsmkizix.supabase.co/storage/v1/object/public/email-assets/toddy-mascot.png?v=4'
+  'https://www.toddy.se/email/toddy-mascot.png?v=5'
 
 export const SignupEmail = ({ confirmationUrl }: SignupEmailProps) => (
   <Html lang="sv" dir="ltr">
