@@ -20,7 +20,7 @@ import { useTranslation } from 'react-i18next';
 
 const emailSchema = z.string().email();
 
-export const DoctorConnectionsSection = () => {
+export const DoctorConnectionsSection = ({ hideHeader = false }: { hideHeader?: boolean } = {}) => {
   const { t } = useTranslation();
   const { 
     connections, 
