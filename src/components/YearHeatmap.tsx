@@ -1,6 +1,6 @@
 import { useMemo, memo } from 'react';
 import { format, startOfMonth, endOfMonth, eachDayOfInterval, getDay, isToday } from 'date-fns';
-import { sv } from 'date-fns/locale';
+import { useDateLocale } from '@/lib/dateLocale';
 import { ChevronLeft } from 'lucide-react';
 import { MoodEntry, MoodType } from '@/types/mood';
 import { cn } from '@/lib/utils';
@@ -17,14 +17,6 @@ interface YearHeatmapProps {
   onMonthClick?: (month: number) => void;
 }
 
-const monthNames = [
-  'Januari', 'Februari', 'Mars',
-  'April', 'Maj', 'Juni',
-  'Juli', 'Augusti', 'September',
-  'Oktober', 'November', 'December'
-];
-
-const dayHeaders = ['M', 'T', 'O', 'T', 'F', 'L', 'S'];
 
 export const YearHeatmap = memo(function YearHeatmap({ year, entries, medicationDates = [], onPrevYear, onNextYear, onMonthClick }: YearHeatmapProps) {
   const moodMap = useMemo(() => {
