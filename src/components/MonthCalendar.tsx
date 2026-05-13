@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { format, startOfMonth, endOfMonth, startOfWeek, endOfWeek, eachDayOfInterval, isSameMonth, isToday, isBefore, startOfDay } from 'date-fns';
-import { sv } from 'date-fns/locale';
+import { useDateLocale } from '@/lib/dateLocale';
 import { ChevronLeft, Pill, MessageCircle, X, ArrowUp, ArrowDown, Minus } from 'lucide-react';
 import { MoodType } from '@/types/mood';
 import { useDiagnosisConfig } from '@/hooks/useDiagnosisConfig';
@@ -23,7 +23,7 @@ interface MonthCalendarProps {
   hideNavigation?: boolean;
 }
 
-const weekDays = ['M', 'T', 'O', 'T', 'F', 'L', 'S'];
+
 
 export function MonthCalendar({ 
   currentDate, 
@@ -36,6 +36,9 @@ export function MonthCalendar({
   onDayDoubleClick,
   hideNavigation = false,
 }: MonthCalendarProps) {
+  const { t } = useTranslation();
+  const dateLocale = useDateLocale();
+  const weekDays = t('overview.weekDayHeaders', { returnObjects: true }) as string[];
   const { moodLabels } = useDiagnosisConfig();
   const days = useMemo(() => {
     const start = startOfWeek(startOfMonth(currentDate), { weekStartsOn: 1 });
@@ -43,7 +46,7 @@ export function MonthCalendar({
     return eachDayOfInterval({ start, end });
   }, [currentDate]);
 
-  const monthName = format(currentDate, 'MMMM', { locale: sv });
+  const monthName = format(currentDate, 'MMMM', { locale: dateLocale });
 
   // Build weeks for cleaner rendering
   const weeks = useMemo(() => {
@@ -225,9 +228,9 @@ export function MonthCalendar({
               const moodBg = turtleMood ? moodBgMap[turtleMood] ?? '' : '';
 
               const tooltipText = mood
-                ? `${format(day, 'd MMMM', { locale: sv })} — ${moodLabels[mood]}`
+                ? `${format(day, 'd MMMM', { locale: dateLocale })} — ${moodLabels[mood]}`
                 : showMissed
-                  ? `${format(day, 'd MMMM', { locale: sv })} — Ej registrerad`
+                  ? `${format(day, 'd MMMM', { locale: dateLocale })} — ${t('overview.notRegistered')}`
                   : undefined;
 
               const dayButton = (

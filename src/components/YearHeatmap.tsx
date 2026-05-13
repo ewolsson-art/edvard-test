@@ -1,6 +1,6 @@
 import { useMemo, memo } from 'react';
 import { format, startOfMonth, endOfMonth, eachDayOfInterval, getDay, isToday } from 'date-fns';
-import { sv } from 'date-fns/locale';
+import { useDateLocale } from '@/lib/dateLocale';
 import { ChevronLeft } from 'lucide-react';
 import { MoodEntry, MoodType } from '@/types/mood';
 import { cn } from '@/lib/utils';
@@ -17,16 +17,19 @@ interface YearHeatmapProps {
   onMonthClick?: (month: number) => void;
 }
 
-const monthNames = [
-  'Januari', 'Februari', 'Mars',
-  'April', 'Maj', 'Juni',
-  'Juli', 'Augusti', 'September',
-  'Oktober', 'November', 'December'
-];
-
-const dayHeaders = ['M', 'T', 'O', 'T', 'F', 'L', 'S'];
 
 export const YearHeatmap = memo(function YearHeatmap({ year, entries, medicationDates = [], onPrevYear, onNextYear, onMonthClick }: YearHeatmapProps) {
+  const { t } = useTranslation();
+  const dateLocale = useDateLocale();
+  const dayHeaders = t('overview.weekDayHeaders', { returnObjects: true }) as string[];
+  const monthNames = useMemo(
+    () => Array.from({ length: 12 }, (_, i) => {
+      const name = format(new Date(year, i, 1), 'LLLL', { locale: dateLocale });
+      return name.charAt(0).toUpperCase() + name.slice(1);
+    }),
+    [dateLocale, year]
+  );
+
   const moodMap = useMemo(() => {
     const map: Record<string, MoodType> = {};
     entries.forEach(entry => {
