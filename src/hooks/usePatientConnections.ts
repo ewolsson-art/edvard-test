@@ -120,6 +120,25 @@ export function usePatientConnections() {
       return { success: false, error: 'Kunde inte skicka inbjudan' };
     }
 
+    // Skicka inbjudningsmejl till läkaren (best-effort, blockera inte UI)
+    const inviterName =
+      (user.user_metadata?.first_name as string | undefined) ||
+      (user.email?.split('@')[0] ?? 'En användare');
+    supabase.functions
+      .invoke('send-transactional-email', {
+        body: {
+          templateName: 'care-team-invitation',
+          recipientEmail: doctorEmail,
+          idempotencyKey: `invite-doctor-${user.id}-${doctorId}`,
+          templateData: {
+            inviterName,
+            inviterRole: 'patient',
+            recipientRole: 'doctor',
+          },
+        },
+      })
+      .catch((e) => console.warn('invite email failed', e));
+
     toast({ title: "Inbjudan skickad!" });
     await fetchConnections();
     return { success: true };
