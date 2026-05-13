@@ -31,16 +31,17 @@ export const SignupEmail = ({ confirmationUrl }: SignupEmailProps) => (
     <Preview>Välkommen till Toddy — bekräfta din e-post</Preview>
     <Body style={main}>
       <Container style={container}>
-        {/* Mörkt brand-block med maskoten */}
+        {/* Brand-block med maskoten — fungerar även om bilder blockeras */}
         <Section style={hero}>
           <Img
             src={MASCOT_URL}
-            alt="Toddy"
-            width="120"
-            height="120"
+            alt="🐢"
+            width="96"
+            height="96"
             style={mascot}
           />
-          <Text style={brand}>TODDY</Text>
+          <Text style={brand}>Toddy</Text>
+          <Text style={tagline}>din lugna stämningsdagbok</Text>
         </Section>
 
         <Section style={content}>
