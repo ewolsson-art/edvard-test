@@ -1,4 +1,5 @@
 import { AuthNavbar } from '@/components/AuthNavbar';
+import { SEO } from '@/components/seo/SEO';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 import { Handshake, Building2, GraduationCap, Heart, Mail, ArrowRight } from 'lucide-react';
@@ -16,6 +17,7 @@ const Partners = () => {
 
   return (
     <div className="min-h-screen flex flex-col">
+      <SEO title="Samarbetspartners – vård, forskning och brukarorganisationer | Toddy" description="Toddy samarbetar med vård, forskning och brukarorganisationer för att förbättra vardagen för personer med bipolär sjukdom." path="/samarbetspartners" />
       <AuthNavbar />
       
       <main className="flex-1 pt-20">
