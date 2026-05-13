@@ -2008,5 +2008,43 @@
     "medication": "Medication",
     "yes": "Yes",
     "no": "No"
+  },
+  "landingFaq": {
+    "eyebrow": "Frequently asked questions",
+    "heading": "Everything you wonder about Toddy",
+    "items": [
+      {
+        "question": "What is Toddy?",
+        "answer": "Toddy is a mood journal built specifically for people living with bipolar disorder — type I, type II or cyclothymia. We are not a general mental health app. Everything — from the mood scale covering both elevated states and depression, to sleep, energy and medication tracking — is designed around how bipolar episodes look and unfold over days and weeks. You log daily and Toddy helps you see patterns, catch early warning signs and share the data with your doctor or loved ones."
+      },
+      {
+        "question": "What does Toddy cost?",
+        "answer": "Toddy is free to use. We believe tools for managing bipolar disorder should be available to everyone who needs them. If we add premium features in the future, the core functionality will always remain free."
+      },
+      {
+        "question": "How long does a daily entry take?",
+        "answer": "About 30 seconds per day. We've designed the check-in to be as fast as possible — pick a level for mood (from severely depressed to severely elevated), sleep and energy. You can add more detail if you want, but it's never required. One check-in per day is enough — bipolar episodes unfold over days and weeks, not hours."
+      },
+      {
+        "question": "Is my data secure?",
+        "answer": "Yes. We encrypt all data, store it within the EU and never share it with third parties without your explicit consent. You can export or permanently delete all your data at any time from settings."
+      },
+      {
+        "question": "Can my doctor see my data?",
+        "answer": "Only if you choose to share it. You can generate a report for a specific time period and share it with your care provider via a secure link, or invite your doctor to a connection where they get continuous insight — especially valuable when following up on medication like lithium or lamotrigine, or for catching episodes between visits."
+      },
+      {
+        "question": "Does Toddy work if I don't have a diagnosis?",
+        "answer": "Toddy is built specifically for bipolar disorder — not mental health in general. But you don't need a formal diagnosis to use the app. Many people use Toddy to gather data before a first doctor's visit, or to investigate whether their mood patterns suggest bipolarity (for example type II, which is often missed as unipolar depression). If you're looking for a tool purely for anxiety or stress without any suspicion of bipolarity, other apps may suit you better."
+      },
+      {
+        "question": "Can loved ones follow my progress?",
+        "answer": "Yes, if you invite them. Toddy has a dedicated view for relatives where a partner, parent or close friend can see your mood and get alerts if something looks concerning. This is especially important in bipolar disorder because the lack of insight during elevated episodes can make it hard to notice when things are spiralling — loved ones often see the signs first. You decide exactly what details are shared."
+      },
+      {
+        "question": "What does Toddy do with my data?",
+        "answer": "We use your data solely to give you insights and functionality inside the app. We never sell data, never show ads, and never train external AI models on your data. Want to know more — read our privacy policy."
+      }
+    ]
   }
 }
