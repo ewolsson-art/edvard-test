@@ -20,7 +20,7 @@ import { useTranslation } from 'react-i18next';
 
 const emailSchema = z.string().email();
 
-export const RelativeConnectionsSection = () => {
+export const RelativeConnectionsSection = ({ hideHeader = false }: { hideHeader?: boolean } = {}) => {
   const { t } = useTranslation();
   const { 
     connections, 
@@ -168,7 +168,7 @@ export const RelativeConnectionsSection = () => {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
+        <div className={`flex items-center gap-2 ${hideHeader ? 'hidden' : ''}`}>
           <Users className="w-5 h-5 text-primary" />
           <h3 className="text-lg font-semibold">{t("relativeConnections.myRelatives")}</h3>
           {pendingFromRelatives.length > 0 && (
@@ -256,7 +256,7 @@ export const RelativeConnectionsSection = () => {
         </Dialog>
       </div>
 
-      <p className="text-xs text-muted-foreground">{t("relativeConnections.manageAccess")}</p>
+      {!hideHeader && <p className="text-xs text-muted-foreground">{t("relativeConnections.manageAccess")}</p>}
 
       {pendingFromRelatives.length > 0 && (
         <div className="space-y-2">

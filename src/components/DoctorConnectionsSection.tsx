@@ -20,7 +20,7 @@ import { useTranslation } from 'react-i18next';
 
 const emailSchema = z.string().email();
 
-export const DoctorConnectionsSection = () => {
+export const DoctorConnectionsSection = ({ hideHeader = false }: { hideHeader?: boolean } = {}) => {
   const { t } = useTranslation();
   const { 
     connections, 
@@ -154,7 +154,7 @@ export const DoctorConnectionsSection = () => {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
+        <div className={`flex items-center gap-2 ${hideHeader ? 'hidden' : ''}`}>
           <Stethoscope className="w-5 h-5 text-primary" />
           <h3 className="text-lg font-semibold">{t("doctorConnections.myDoctors")}</h3>
           {pendingFromDoctors.length > 0 && (
@@ -224,7 +224,7 @@ export const DoctorConnectionsSection = () => {
         </Dialog>
       </div>
 
-      <p className="text-xs text-muted-foreground">{t("doctorConnections.manageAccess")}</p>
+      {!hideHeader && <p className="text-xs text-muted-foreground">{t("doctorConnections.manageAccess")}</p>}
 
       {/* Pending requests from doctors */}
       {pendingFromDoctors.length > 0 && (
