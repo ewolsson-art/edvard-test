@@ -1,5 +1,5 @@
 import { format, isToday, isBefore, startOfDay } from 'date-fns';
-import { sv } from 'date-fns/locale';
+import { useDateLocale } from '@/lib/dateLocale';
 import { ChevronLeft, Pill, X } from 'lucide-react';
 import { MoodEntry, MoodType } from '@/types/mood';
 import { useDiagnosisConfig } from '@/hooks/useDiagnosisConfig';
@@ -20,7 +20,7 @@ interface WeekCalendarProps {
   onDayDoubleClick?: (date: Date) => void;
 }
 
-const weekDayHeaders = ['M', 'T', 'O', 'T', 'F', 'L', 'S'];
+
 
 export function WeekCalendar({
   weekDays,
@@ -33,6 +33,8 @@ export function WeekCalendar({
   onDayDoubleClick,
 }: WeekCalendarProps) {
   const { t } = useTranslation();
+  const dateLocale = useDateLocale();
+  const weekDayHeaders = t('overview.weekDayHeaders', { returnObjects: true }) as string[];
   const { moodLabels } = useDiagnosisConfig();
   return (
     <div className="fade-in">
@@ -41,7 +43,7 @@ export function WeekCalendar({
         <button
           onClick={onPrevWeek}
           className="text-primary hover:opacity-70 transition-opacity flex-shrink-0"
-          aria-label="Föregående vecka"
+          aria-label={t('overview.prevWeek')}
         >
           <ChevronLeft className="w-5 h-5" />
         </button>
@@ -51,7 +53,7 @@ export function WeekCalendar({
         <button
           onClick={onNextWeek}
           className="text-primary hover:opacity-70 transition-opacity rotate-180 flex-shrink-0"
-          aria-label="Nästa vecka"
+          aria-label={t('overview.nextWeek')}
         >
           <ChevronLeft className="w-5 h-5" />
         </button>
@@ -89,9 +91,9 @@ export function WeekCalendar({
                 : '';
 
           const tooltipText = mood
-            ? `${format(day, 'd MMMM', { locale: sv })} — ${moodLabels[mood]}`
+            ? `${format(day, 'd MMMM', { locale: dateLocale })} — ${moodLabels[mood]}`
             : showMissed
-              ? `${format(day, 'd MMMM', { locale: sv })} — Ej registrerad`
+              ? `${format(day, 'd MMMM', { locale: dateLocale })} — ${t('overview.notRegistered')}`
               : undefined;
 
           const dayButton = (
