@@ -118,8 +118,12 @@ export const TourBubble = () => {
           </AnimatePresence>
 
           <button
-            onClick={() => setBubbleOpen((b) => !b)}
-            aria-label={bubbleOpen ? 'Stäng rundtur' : 'Öppna rundtur'}
+            onClick={() => {
+              setIndex(0);
+              setBubbleOpen(false);
+              setTourOpen(true);
+            }}
+            aria-label="Starta rundtur – Så funkar Toddy"
             className="relative w-14 h-14 rounded-full bg-[hsl(230_30%_10%)] ring-1 ring-white/10 shadow-xl flex items-center justify-center hover:scale-105 active:scale-95 transition-transform"
           >
             <TurtleLogo size="sm" animated className="w-10 h-10" />
