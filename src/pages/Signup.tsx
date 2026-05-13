@@ -77,6 +77,8 @@ const Signup = () => {
   const [phone, setPhone] = useState("");
   const [otpCode, setOtpCode] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [resendCooldown, setResendCooldown] = useState(0);
+  const [resending, setResending] = useState(false);
 
   const { user, loading, signInWithOtp, verifyOtp } = useAuth();
   const { t } = useTranslation();
@@ -94,6 +96,35 @@ const Signup = () => {
       }
     }
   }, [user, loading, navigate]);
+
+  // Starta 30s nedräkning så fort vi landar på "kolla din mejl"-vyn
+  useEffect(() => {
+    if (step !== "email-sent") return;
+    setResendCooldown(30);
+    const id = setInterval(() => {
+      setResendCooldown((s) => (s <= 1 ? 0 : s - 1));
+    }, 1000);
+    return () => clearInterval(id);
+  }, [step]);
+
+  const handleResendEmail = async () => {
+    if (resendCooldown > 0 || resending || !email) return;
+    setResending(true);
+    const { error } = await signInWithOtp(email.trim(), role!);
+    setResending(false);
+    if (error) {
+      toast({ title: t("common.somethingWrong"), description: error.message, variant: "destructive" });
+      return;
+    }
+    toast({ title: "Ny länk skickad", description: "Kolla inkorgen (och skräpposten)." });
+    setResendCooldown(30);
+    const id = setInterval(() => {
+      setResendCooldown((s) => {
+        if (s <= 1) { clearInterval(id); return 0; }
+        return s - 1;
+      });
+    }, 1000);
+  };
 
   const handleToggleCheckin = (id: keyof CheckinSelections) => {
     setCheckinSelections(prev => ({ ...prev, [id]: !prev[id] }));
@@ -548,8 +579,20 @@ const Signup = () => {
               </div>
 
               <p className="mt-5 text-sm text-white/50">
-                Hittar du inte mejlet? Kolla skräpposten — det kan ta upp till en minut.
+                Mejlet kan ta upp till en minut. Glöm inte skräpposten.
               </p>
+
+              <button
+                onClick={handleResendEmail}
+                disabled={resendCooldown > 0 || resending}
+                className="mt-4 text-sm font-medium text-[hsl(45_85%_55%)] hover:text-[hsl(45_85%_65%)] disabled:text-white/30 disabled:cursor-not-allowed transition-colors"
+              >
+                {resending
+                  ? "Skickar…"
+                  : resendCooldown > 0
+                    ? `Skicka igen om ${resendCooldown}s`
+                    : "Skicka mejlet igen"}
+              </button>
             </div>
           )}
 
