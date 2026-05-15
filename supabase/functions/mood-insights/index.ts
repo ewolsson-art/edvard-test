@@ -157,7 +157,11 @@ interface StructuredInsight {
        );
      }
  
-     const prompt = buildPrompt(summaryData, historicalPatterns, currentWarnings, characteristics || [], diagnoses || [], historicalEntries.length);
+    const recentComments = historicalEntries
+      .filter(e => e.comment && e.comment.trim().length > 0)
+      .slice(-8)
+      .map(e => `${e.date}: "${e.comment!.trim()}"`);
+    const prompt = buildPrompt(summaryData, historicalPatterns, currentWarnings, characteristics || [], diagnoses || [], historicalEntries.length, recentComments);
      
      const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
        method: "POST",
