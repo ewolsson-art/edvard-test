@@ -476,7 +476,8 @@ interface StructuredInsight {
    warnings: CurrentWarning[],
    characteristics: { name: string; mood_type: string }[],
    diagnoses: { name: string }[],
-   totalHistoricalDays: number
+   totalHistoricalDays: number,
+   recentComments: string[] = []
  ): string {
    const diagnosisText = diagnoses.length > 0 
      ? `Diagnoser: ${diagnoses.map(d => d.name).join(', ')}`
