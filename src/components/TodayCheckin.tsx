@@ -852,48 +852,51 @@ export function TodayCheckin({
             />
           </div>
 
-          <div className="flex flex-col items-stretch gap-3 pt-4 pb-2 max-w-md mx-auto w-full">
-              {/* Pratbubbla — pill med text, placerad direkt ovanför Klar */}
-              <div className="flex justify-center">
-                <button
-                  type="button"
-                  onClick={() => setShowComment('mood')}
-                  aria-label={checkinData.moodComment ? t('checkin.editThought') : t('checkin.thoughtAboutDay')}
-                  className={cn(
-                    "group relative inline-flex items-center gap-2 pl-3 pr-4 py-2 rounded-full transition-all duration-200 active:scale-[0.97]",
-                    checkinData.moodComment
-                      ? "bg-primary/10 hover:bg-primary/15 ring-1 ring-primary/30 text-primary"
-                      : "bg-foreground/[0.04] hover:bg-foreground/[0.08] text-muted-foreground hover:text-foreground/80"
-                  )}
-                >
-                  <span aria-hidden className="text-lg leading-none transition-transform duration-300 group-hover:rotate-[-8deg] group-hover:scale-110">
-                    💭
-                  </span>
-                  <span className="text-sm font-medium tracking-tight max-w-[220px] truncate">
-                    {checkinData.moodComment
-                      ? checkinData.moodComment
-                      : t('checkin.thoughtAboutDay')}
-                  </span>
-                  {checkinData.moodComment && (
-                    <span className="w-1.5 h-1.5 rounded-full bg-[hsl(45_85%_55%)] flex-shrink-0" />
-                  )}
-                </button>
-              </div>
+          <div className="flex flex-col items-center gap-5 pt-6 pb-2 max-w-md mx-auto w-full">
+              {/* Pratbubbla — pill med text, placerad ovanför Klar */}
+              <button
+                type="button"
+                onClick={() => setShowComment('mood')}
+                aria-label={checkinData.moodComment ? t('checkin.editThought') : t('checkin.thoughtAboutDay')}
+                className={cn(
+                  "group relative inline-flex items-center gap-2 pl-3 pr-4 py-2 rounded-full transition-all duration-200 active:scale-[0.97]",
+                  checkinData.moodComment
+                    ? "bg-primary/10 hover:bg-primary/15 ring-1 ring-primary/30 text-primary"
+                    : "bg-foreground/[0.04] hover:bg-foreground/[0.08] text-muted-foreground hover:text-foreground/80"
+                )}
+              >
+                <span aria-hidden className="text-lg leading-none transition-transform duration-300 group-hover:rotate-[-8deg] group-hover:scale-110">
+                  💭
+                </span>
+                <span className="text-sm font-medium tracking-tight max-w-[220px] truncate">
+                  {checkinData.moodComment
+                    ? checkinData.moodComment
+                    : t('checkin.thoughtAboutDay')}
+                </span>
+                {checkinData.moodComment && (
+                  <span className="w-1.5 h-1.5 rounded-full bg-[hsl(45_85%_55%)] flex-shrink-0" />
+                )}
+              </button>
 
               {checkinData.mood && (
-                <button
+                <motion.button
+                  initial={{ opacity: 0, y: 6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.25, ease: 'easeOut' }}
+                  whileTap={{ scale: 0.97 }}
                   onClick={() => {
+                    hapticTap();
                     if (checkinMode === 'quick') {
                       handleCompleteWithData({ mood: checkinData.mood });
                     } else {
                       handleMoodContinue();
                     }
                   }}
-                  className="px-8 py-3.5 rounded-full bg-[hsl(45_85%_55%)] text-[hsl(225_30%_7%)] font-bold text-base tracking-wide shadow-[0_4px_24px_hsl(45_85%_55%/0.35)] hover:shadow-[0_8px_32px_hsl(45_85%_55%/0.5)] hover:bg-[hsl(45_85%_62%)] hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 inline-flex items-center justify-center gap-1.5"
+                  className="w-full max-w-[280px] px-8 py-3.5 rounded-full bg-[hsl(45_85%_55%)] text-[hsl(225_30%_7%)] font-bold text-base tracking-wide shadow-[0_2px_14px_hsl(45_85%_55%/0.22)] hover:shadow-[0_4px_22px_hsl(45_85%_55%/0.32)] hover:bg-[hsl(45_85%_62%)] transition-[background-color,box-shadow] duration-200 inline-flex items-center justify-center gap-1.5"
                 >
                   {checkinMode === 'quick' ? t('checkin.saveCheckin') : t('common.continue')}
                   <ChevronRight className="w-4 h-4" />
-                </button>
+                </motion.button>
               )}
             </div>
           {renderCommentSection('mood')}
