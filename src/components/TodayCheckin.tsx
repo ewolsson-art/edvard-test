@@ -933,17 +933,39 @@ export function TodayCheckin({
                   whileTap={{ scale: 0.97 }}
                   onClick={() => {
                     hapticTap();
+                    setAutoSaveDeadline(null);
                     if (checkinMode === 'quick') {
-                      handleCompleteWithData({ mood: checkinData.mood });
+                      handleCompleteWithData({ mood: checkinData.mood, moodComment: checkinData.moodComment });
                     } else {
                       handleMoodContinue();
                     }
                   }}
-                  className="w-full max-w-[280px] px-8 py-3.5 rounded-full bg-[hsl(45_85%_55%)] text-[hsl(225_30%_7%)] font-bold text-base tracking-wide shadow-[0_2px_14px_hsl(45_85%_55%/0.22)] hover:shadow-[0_4px_22px_hsl(45_85%_55%/0.32)] hover:bg-[hsl(45_85%_62%)] transition-[background-color,box-shadow] duration-200 inline-flex items-center justify-center gap-1.5"
+                  className="relative overflow-hidden w-full max-w-[280px] px-8 py-3.5 rounded-full bg-[hsl(45_85%_55%)] text-[hsl(225_30%_7%)] font-bold text-base tracking-wide shadow-[0_2px_14px_hsl(45_85%_55%/0.22)] hover:shadow-[0_4px_22px_hsl(45_85%_55%/0.32)] hover:bg-[hsl(45_85%_62%)] transition-[background-color,box-shadow] duration-200 inline-flex items-center justify-center gap-1.5"
                 >
-                  {checkinMode === 'quick' ? t('checkin.saveCheckin') : t('common.continue')}
-                  <ChevronRight className="w-4 h-4" />
+                  {/* Autosave fyll-progress (snabbläge) */}
+                  {checkinMode === 'quick' && autoSaveDeadline && (
+                    <span
+                      aria-hidden
+                      className="absolute inset-y-0 left-0 bg-[hsl(225_30%_7%)]/15 pointer-events-none"
+                      style={{ width: `${autoSaveProgress * 100}%`, transition: 'width 80ms linear' }}
+                    />
+                  )}
+                  <span className="relative inline-flex items-center gap-1.5">
+                    {checkinMode === 'quick'
+                      ? (autoSaveDeadline ? t('checkin.savingNow') : t('checkin.saveCheckin'))
+                      : t('common.continue')}
+                    <ChevronRight className="w-4 h-4" />
+                  </span>
                 </motion.button>
+              )}
+              {checkinMode === 'quick' && autoSaveDeadline && (
+                <button
+                  type="button"
+                  onClick={() => setAutoSaveDeadline(null)}
+                  className="text-[12px] text-muted-foreground/60 hover:text-foreground/80 -mt-2"
+                >
+                  {t('checkin.cancelAutosave')}
+                </button>
               )}
             </div>
           {renderCommentSection('mood')}
