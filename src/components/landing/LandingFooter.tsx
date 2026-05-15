@@ -39,7 +39,29 @@ function FooterSkyline() {
 }
 
 export function LandingFooter() {
+export function LandingFooter() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
+  const { toast } = useToast();
+  const [demoLoading, setDemoLoading] = useState(false);
+
+  const handleDemo = async () => {
+    if (demoLoading) return;
+    setDemoLoading(true);
+    startDemoTransition('setup', { autoHide: false });
+    try {
+      const { error } = await startDemoSession();
+      if (error) throw error;
+      navigate('/', { replace: true });
+      completeDemoTransition();
+    } catch (e: any) {
+      completeDemoTransition();
+      toast({ title: 'Kunde inte starta demo', description: e?.message ?? 'Försök igen', variant: 'destructive' });
+    } finally {
+      setDemoLoading(false);
+    }
+  };
+
   return (
     <footer className="relative z-10 bg-[hsl(225_30%_5%)] pt-20 pb-6 overflow-hidden">
       <FooterSkyline />
