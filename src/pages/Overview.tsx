@@ -41,6 +41,7 @@ import { useCharacteristics } from '@/hooks/useCharacteristics';
 import { MoodStats as MoodStatsType, ExerciseType, QualityType } from '@/types/mood';
 import { Last30DaysOverview } from '@/components/Last30DaysOverview';
 import { NewUserOverviewHint } from '@/components/NewUserOverviewHint';
+import { EpisodeWarningBanner } from '@/components/EpisodeWarningBanner';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Dumbbell, Moon, Utensils } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
