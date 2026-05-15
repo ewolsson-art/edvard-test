@@ -337,7 +337,45 @@ export function TodayCheckin({
 
   const handleMoodSelect = (mood: MoodType) => {
     setCheckinData(prev => ({ ...prev, mood }));
+    if (checkinMode === 'quick' && currentStep === 'mood' && !isCheckinComplete && !todayEntry) {
+      userTouchedMoodRef.current = true;
+      setAutoSaveDeadline(Date.now() + AUTOSAVE_MS);
+    }
   };
+
+  // Avbryt autosave om läge byts, steg byts, kommentar öppnas eller incheckning visas redan
+  useEffect(() => {
+    if (checkinMode !== 'quick' || currentStep !== 'mood' || showComment) {
+      setAutoSaveDeadline(null);
+      setAutoSaveProgress(0);
+    }
+  }, [checkinMode, currentStep, showComment]);
+
+  // Tickar progress (0..1) och triggar spara när deadline nås
+  useEffect(() => {
+    if (!autoSaveDeadline) {
+      setAutoSaveProgress(0);
+      return;
+    }
+    const start = autoSaveDeadline - AUTOSAVE_MS;
+    let raf = 0;
+    const tick = () => {
+      const now = Date.now();
+      const p = Math.min(1, (now - start) / AUTOSAVE_MS);
+      setAutoSaveProgress(p);
+      if (now >= autoSaveDeadline) {
+        setAutoSaveDeadline(null);
+        setAutoSaveProgress(0);
+        if (checkinData.mood) {
+          handleCompleteWithData({ mood: checkinData.mood, moodComment: checkinData.moodComment });
+        }
+      } else {
+        raf = requestAnimationFrame(tick);
+      }
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [autoSaveDeadline, checkinData.mood, checkinData.moodComment]);
 
   const handleMoodContinue = () => {
     if (checkinData.mood) {
