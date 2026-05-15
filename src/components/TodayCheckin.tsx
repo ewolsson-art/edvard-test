@@ -851,24 +851,29 @@ export function TodayCheckin({
           </div>
 
           <div className="flex flex-col items-stretch gap-3 pt-4 pb-2 max-w-md mx-auto w-full">
-              {/* Pratbubbla — minimal, bara ikon tills man klickar */}
+              {/* Pratbubbla — pill med text, placerad direkt ovanför Klar */}
               <div className="flex justify-center">
                 <button
                   type="button"
                   onClick={() => setShowComment('mood')}
                   aria-label={checkinData.moodComment ? t('checkin.editThought') : t('checkin.thoughtAboutDay')}
                   className={cn(
-                    "group relative w-12 h-12 rounded-full flex items-center justify-center transition-all duration-200 active:scale-95",
+                    "group relative inline-flex items-center gap-2 pl-3 pr-4 py-2 rounded-full transition-all duration-200 active:scale-[0.97]",
                     checkinData.moodComment
-                      ? "bg-primary/10 hover:bg-primary/15 ring-1 ring-primary/30"
-                      : "bg-foreground/[0.04] hover:bg-foreground/[0.08]"
+                      ? "bg-primary/10 hover:bg-primary/15 ring-1 ring-primary/30 text-primary"
+                      : "bg-foreground/[0.04] hover:bg-foreground/[0.08] text-muted-foreground hover:text-foreground/80"
                   )}
                 >
-                  <span aria-hidden className="text-2xl leading-none transition-transform duration-300 group-hover:rotate-[-8deg] group-hover:scale-110">
+                  <span aria-hidden className="text-lg leading-none transition-transform duration-300 group-hover:rotate-[-8deg] group-hover:scale-110">
                     💭
                   </span>
+                  <span className="text-sm font-medium tracking-tight max-w-[220px] truncate">
+                    {checkinData.moodComment
+                      ? checkinData.moodComment
+                      : t('checkin.thoughtAboutDay')}
+                  </span>
                   {checkinData.moodComment && (
-                    <span className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-[hsl(45_85%_55%)] ring-2 ring-background" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-[hsl(45_85%_55%)] flex-shrink-0" />
                   )}
                 </button>
               </div>
