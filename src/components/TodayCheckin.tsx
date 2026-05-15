@@ -185,6 +185,13 @@ export function TodayCheckin({
 
   const [checkinMode, setCheckinMode] = useState<'quick' | 'detailed'>('quick');
 
+  // Auto-save countdown för snabbläget — användaren rör sliden, väntar 1.5s, sparas.
+  // Avbryts om de rör igen, byter steg/läge, eller trycker "Spara nu".
+  const AUTOSAVE_MS = 1500;
+  const [autoSaveDeadline, setAutoSaveDeadline] = useState<number | null>(null);
+  const [autoSaveProgress, setAutoSaveProgress] = useState(0); // 0..1
+  const userTouchedMoodRef = useRef(false);
+
   // Fixed step sets:
   //   Quick    = mood only (+ tags)
   //   Detailed = mood + medication + sleep (+ tags + custom questions)
