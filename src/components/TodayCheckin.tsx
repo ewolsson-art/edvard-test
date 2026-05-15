@@ -850,9 +850,8 @@ export function TodayCheckin({
             />
           </div>
 
-          {checkinData.mood && (
-            <div className="flex flex-col items-stretch gap-3 pt-4 pb-2 max-w-md mx-auto w-full">
-              {/* Friendly thought chip — works in both quick & detailed mode */}
+          <div className="flex flex-col items-stretch gap-3 pt-4 pb-2 max-w-md mx-auto w-full">
+              {/* Friendly thought chip — alltid synlig på humörsteget så det är tydligt */}
               <button
                 type="button"
                 onClick={() => setShowComment('mood')}
