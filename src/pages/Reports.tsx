@@ -1,15 +1,18 @@
 import { useState, useMemo } from 'react';
-import { format, subMonths, startOfMonth, endOfMonth, eachDayOfInterval, isWithinInterval, parseISO } from 'date-fns';
+import { format, subMonths, startOfMonth, endOfMonth, eachDayOfInterval, isWithinInterval, parseISO, subDays } from 'date-fns';
 import { sv } from 'date-fns/locale';
-import { Calendar as CalendarIcon, Download, TrendingUp, TrendingDown, Minus, Heart, Moon, Utensils, Dumbbell, Pill } from 'lucide-react';
+import { Calendar as CalendarIcon, Download, TrendingUp, TrendingDown, Minus, Heart, Moon, Utensils, Dumbbell, Pill, FileText, QrCode } from 'lucide-react';
 import { useMoodData } from '@/hooks/useMoodData';
 import { useMedications } from '@/hooks/useMedications';
 import { useUserPreferences } from '@/hooks/useUserPreferences';
 import { useProfile } from '@/hooks/useProfile';
+import { usePatternInsights } from '@/hooks/usePatternInsights';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { DoctorQRDialog } from '@/components/DoctorQRDialog';
+import { useToast } from '@/hooks/use-toast';
 
 import { useTranslation } from 'react-i18next';
 
