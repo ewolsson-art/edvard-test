@@ -484,6 +484,8 @@
     "detailedCheckin": "Detailed",
     "checkinMode": "Check-in mode",
     "saveCheckin": "Done",
+    "savingNow": "Saving…",
+    "cancelAutosave": "Cancel — pick again",
     "bothCountStreak": "Both count toward your streak",
     "continueAnyway": "Continue anyway",
     "cancel": "Cancel",

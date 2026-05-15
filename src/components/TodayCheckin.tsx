@@ -185,6 +185,13 @@ export function TodayCheckin({
 
   const [checkinMode, setCheckinMode] = useState<'quick' | 'detailed'>('quick');
 
+  // Auto-save countdown för snabbläget — användaren rör sliden, väntar 1.5s, sparas.
+  // Avbryts om de rör igen, byter steg/läge, eller trycker "Spara nu".
+  const AUTOSAVE_MS = 1500;
+  const [autoSaveDeadline, setAutoSaveDeadline] = useState<number | null>(null);
+  const [autoSaveProgress, setAutoSaveProgress] = useState(0); // 0..1
+  const userTouchedMoodRef = useRef(false);
+
   // Fixed step sets:
   //   Quick    = mood only (+ tags)
   //   Detailed = mood + medication + sleep (+ tags + custom questions)
@@ -330,7 +337,45 @@ export function TodayCheckin({
 
   const handleMoodSelect = (mood: MoodType) => {
     setCheckinData(prev => ({ ...prev, mood }));
+    if (checkinMode === 'quick' && currentStep === 'mood' && !isCheckinComplete && !todayEntry) {
+      userTouchedMoodRef.current = true;
+      setAutoSaveDeadline(Date.now() + AUTOSAVE_MS);
+    }
   };
+
+  // Avbryt autosave om läge byts, steg byts, kommentar öppnas eller incheckning visas redan
+  useEffect(() => {
+    if (checkinMode !== 'quick' || currentStep !== 'mood' || showComment) {
+      setAutoSaveDeadline(null);
+      setAutoSaveProgress(0);
+    }
+  }, [checkinMode, currentStep, showComment]);
+
+  // Tickar progress (0..1) och triggar spara när deadline nås
+  useEffect(() => {
+    if (!autoSaveDeadline) {
+      setAutoSaveProgress(0);
+      return;
+    }
+    const start = autoSaveDeadline - AUTOSAVE_MS;
+    let raf = 0;
+    const tick = () => {
+      const now = Date.now();
+      const p = Math.min(1, (now - start) / AUTOSAVE_MS);
+      setAutoSaveProgress(p);
+      if (now >= autoSaveDeadline) {
+        setAutoSaveDeadline(null);
+        setAutoSaveProgress(0);
+        if (checkinData.mood) {
+          handleCompleteWithData({ mood: checkinData.mood, moodComment: checkinData.moodComment });
+        }
+      } else {
+        raf = requestAnimationFrame(tick);
+      }
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [autoSaveDeadline, checkinData.mood, checkinData.moodComment]);
 
   const handleMoodContinue = () => {
     if (checkinData.mood) {
@@ -888,17 +933,39 @@ export function TodayCheckin({
                   whileTap={{ scale: 0.97 }}
                   onClick={() => {
                     hapticTap();
+                    setAutoSaveDeadline(null);
                     if (checkinMode === 'quick') {
-                      handleCompleteWithData({ mood: checkinData.mood });
+                      handleCompleteWithData({ mood: checkinData.mood, moodComment: checkinData.moodComment });
                     } else {
                       handleMoodContinue();
                     }
                   }}
-                  className="w-full max-w-[280px] px-8 py-3.5 rounded-full bg-[hsl(45_85%_55%)] text-[hsl(225_30%_7%)] font-bold text-base tracking-wide shadow-[0_2px_14px_hsl(45_85%_55%/0.22)] hover:shadow-[0_4px_22px_hsl(45_85%_55%/0.32)] hover:bg-[hsl(45_85%_62%)] transition-[background-color,box-shadow] duration-200 inline-flex items-center justify-center gap-1.5"
+                  className="relative overflow-hidden w-full max-w-[280px] px-8 py-3.5 rounded-full bg-[hsl(45_85%_55%)] text-[hsl(225_30%_7%)] font-bold text-base tracking-wide shadow-[0_2px_14px_hsl(45_85%_55%/0.22)] hover:shadow-[0_4px_22px_hsl(45_85%_55%/0.32)] hover:bg-[hsl(45_85%_62%)] transition-[background-color,box-shadow] duration-200 inline-flex items-center justify-center gap-1.5"
                 >
-                  {checkinMode === 'quick' ? t('checkin.saveCheckin') : t('common.continue')}
-                  <ChevronRight className="w-4 h-4" />
+                  {/* Autosave fyll-progress (snabbläge) */}
+                  {checkinMode === 'quick' && autoSaveDeadline && (
+                    <span
+                      aria-hidden
+                      className="absolute inset-y-0 left-0 bg-[hsl(225_30%_7%)]/15 pointer-events-none"
+                      style={{ width: `${autoSaveProgress * 100}%`, transition: 'width 80ms linear' }}
+                    />
+                  )}
+                  <span className="relative inline-flex items-center gap-1.5">
+                    {checkinMode === 'quick'
+                      ? (autoSaveDeadline ? t('checkin.savingNow') : t('checkin.saveCheckin'))
+                      : t('common.continue')}
+                    <ChevronRight className="w-4 h-4" />
+                  </span>
                 </motion.button>
+              )}
+              {checkinMode === 'quick' && autoSaveDeadline && (
+                <button
+                  type="button"
+                  onClick={() => setAutoSaveDeadline(null)}
+                  className="text-[12px] text-muted-foreground/60 hover:text-foreground/80 -mt-2"
+                >
+                  {t('checkin.cancelAutosave')}
+                </button>
               )}
             </div>
           {renderCommentSection('mood')}
