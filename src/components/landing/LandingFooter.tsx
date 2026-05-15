@@ -1,6 +1,11 @@
-import { Link } from "react-router-dom";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { TurtleLogo } from "@/components/TurtleLogo";
 import { useTranslation } from 'react-i18next';
+import { Loader2 } from 'lucide-react';
+import { startDemoSession } from '@/lib/demoMode';
+import { completeDemoTransition, startDemoTransition } from '@/lib/demoTransition';
+import { useToast } from '@/hooks/use-toast';
 
 function FooterSkyline() {
   return (
@@ -35,6 +40,27 @@ function FooterSkyline() {
 
 export function LandingFooter() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
+  const { toast } = useToast();
+  const [demoLoading, setDemoLoading] = useState(false);
+
+  const handleDemo = async () => {
+    if (demoLoading) return;
+    setDemoLoading(true);
+    startDemoTransition('setup', { autoHide: false });
+    try {
+      const { error } = await startDemoSession();
+      if (error) throw error;
+      navigate('/', { replace: true });
+      completeDemoTransition();
+    } catch (e: any) {
+      completeDemoTransition();
+      toast({ title: 'Kunde inte starta demo', description: e?.message ?? 'Försök igen', variant: 'destructive' });
+    } finally {
+      setDemoLoading(false);
+    }
+  };
+
   return (
     <footer className="relative z-10 bg-[hsl(225_30%_5%)] pt-20 pb-6 overflow-hidden">
       <FooterSkyline />
@@ -66,8 +92,16 @@ export function LandingFooter() {
           </div>
         </div>
         <div className="h-px bg-white/[0.06] mb-5" />
-        <div className="flex items-center justify-center text-xs text-white/30">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-white/30">
           <span>© {new Date().getFullYear()} Toddy. {t('footer.allRightsReserved')}</span>
+          <button
+            onClick={handleDemo}
+            disabled={demoLoading}
+            className="inline-flex items-center gap-2 text-white/40 hover:text-white/70 transition-colors disabled:opacity-60"
+          >
+            {demoLoading && <Loader2 className="h-3 w-3 animate-spin" />}
+            Prova demokonto
+          </button>
         </div>
       </div>
     </footer>

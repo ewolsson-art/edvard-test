@@ -4,35 +4,12 @@ import { useTranslation } from 'react-i18next';
 import { Logo } from '@/components/Logo';
 import { Button } from '@/components/ui/button';
 import { LanguageSwitcher } from '@/components/LanguageSwitcher';
-import { Menu, X, Loader2 } from 'lucide-react';
-import { startDemoSession } from '@/lib/demoMode';
-import { completeDemoTransition, startDemoTransition } from '@/lib/demoTransition';
-import { useToast } from '@/hooks/use-toast';
+import { Menu, X } from 'lucide-react';
 
 export function AuthNavbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [demoLoading, setDemoLoading] = useState(false);
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const { toast } = useToast();
-
-  const handleDemo = async () => {
-    if (demoLoading) return;
-    setDemoLoading(true);
-    setIsMobileMenuOpen(false);
-    startDemoTransition('setup', { autoHide: false });
-    try {
-      const { error } = await startDemoSession();
-      if (error) throw error;
-      navigate('/', { replace: true });
-      completeDemoTransition();
-    } catch (e: any) {
-      completeDemoTransition();
-      toast({ title: 'Kunde inte starta demo', description: e?.message ?? 'Försök igen', variant: 'destructive' });
-    } finally {
-      setDemoLoading(false);
-    }
-  };
 
   const navItems = [
     { label: t('nav.aboutUs'), href: '/om-oss' },
@@ -66,14 +43,6 @@ export function AuthNavbar() {
                 </button>
               ))}
               <LanguageSwitcher variant="navbar" />
-              <button
-                onClick={handleDemo}
-                disabled={demoLoading}
-                className="px-4 py-2 text-sm font-medium text-white/70 hover:text-white hover:bg-white/10 rounded-lg transition-all duration-200 inline-flex items-center gap-2 disabled:opacity-60"
-              >
-                {demoLoading && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
-                Demokonto
-              </button>
               <button
                 onClick={() => navigate("/logga-in")}
                 className="ml-1 px-5 py-2 text-sm font-semibold text-white/80 border border-white/25 rounded-full hover:bg-white hover:text-[hsl(225_30%_7%)] hover:border-white transition-all duration-200"
@@ -129,14 +98,6 @@ export function AuthNavbar() {
                 className="block text-left text-3xl font-bold text-white tracking-tight hover:text-white/80 transition-colors"
               >
                 {t('nav.createAccount')}
-              </button>
-              <button
-                onClick={handleDemo}
-                disabled={demoLoading}
-                className="block text-left text-3xl font-bold text-white/70 tracking-tight hover:text-white transition-colors inline-flex items-center gap-3 disabled:opacity-60"
-              >
-                {demoLoading && <Loader2 className="h-6 w-6 animate-spin" />}
-                Demokonto
               </button>
             </div>
           </div>
