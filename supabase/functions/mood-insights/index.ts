@@ -526,7 +526,7 @@ interface StructuredInsight {
  🔗 KORRELATIONER:
  - Dagar med dålig sömn och sänkt mående: ${data.sleepMoodCorrelation.badSleepDepressed}
  - Dagar med bra sömn och stabilt/förhöjt mående: ${data.sleepMoodCorrelation.goodSleepStable}
- 
+${recentComments.length > 0 ? `\n💬 ANVÄNDARENS EGNA TANKAR (senaste ${recentComments.length} kommentarer — viktig kvalitativ kontext, väg in i analysen):\n${recentComments.map(c => `- ${c}`).join('\n')}\n` : ''}
  INSTRUKTIONER:
  1. OM det finns aktiva varningar: Börja med en tydlig men empatisk varning som refererar till historiska mönster
  2. Referera till specifika historiska mönster när du ger råd (t.ex. "Förra gången du hade dålig sömn 5 dagar i rad ledde det till...")
