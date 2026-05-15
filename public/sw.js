@@ -1,6 +1,5 @@
-const CACHE_NAME = 'toddy-v2-oauth-safe';
+const CACHE_NAME = 'toddy-v3-no-html-cache';
 const STATIC_ASSETS = [
-  '/',
   '/manifest.json',
   '/favicon.svg',
 ];
@@ -30,26 +29,21 @@ self.addEventListener('fetch', (event) => {
   if (url.pathname.startsWith('/rest/') || url.pathname.startsWith('/auth/') || url.hostname.includes('supabase')) return;
 
   // NEVER intercept OAuth broker paths or auth callbacks/errors — these must always hit the network.
-  // A cached/navigation fallback here can break Google's one-time authorization code exchange.
   if (url.pathname.startsWith('/~oauth') || url.hostname === 'oauth.lovable.app') return;
-  if (request.mode === 'navigate') {
-    const search = url.search || '';
-    const hash = url.hash || '';
-    if (
-      /[?&](code|token_hash|provider_token|error)=/.test(search) ||
-      hash.includes('access_token') ||
-      hash.includes('type=') ||
-      hash.includes('error=')
-    ) {
-      return;
-    }
+
+  // NEVER cache navigations / HTML documents — stale index.html references deleted hashed JS chunks
+  // and causes "Importing a module script failed" / blank screen after a deploy.
+  if (request.mode === 'navigate' || request.destination === 'document') {
+    return; // let the browser hit the network
   }
+
+  // Only cache hashed static assets (JS/CSS/fonts/images). These are content-hashed so safe to cache.
+  if (!url.pathname.match(/\.(js|css|svg|png|jpg|jpeg|woff2?)$/)) return;
 
   event.respondWith(
     fetch(request)
       .then((response) => {
-        // Cache successful responses for static assets
-        if (response.ok && (url.pathname.match(/\.(js|css|svg|png|jpg|woff2?)$/) || url.pathname === '/')) {
+        if (response.ok) {
           const clone = response.clone();
           caches.open(CACHE_NAME).then((cache) => cache.put(request, clone));
         }
