@@ -25,6 +25,7 @@ import { FullscreenComment } from '@/components/FullscreenComment';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { MilestoneInfo } from '@/hooks/useStreak';
 import { useTranslation } from 'react-i18next';
+import { useHaptics } from '@/hooks/useHaptics';
 import { motion } from 'framer-motion';
 import { useAuth } from '@/hooks/useAuth';
 import { usePatientCharacteristics } from '@/hooks/usePatientCharacteristics';
