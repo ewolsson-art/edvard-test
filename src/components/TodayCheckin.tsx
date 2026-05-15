@@ -889,13 +889,25 @@ export function TodayCheckin({
             </div>
           </div>
 
-          {/* Mood selector — slider on all devices */}
+          {/* Mood selector — swipe i snabbläge, slider i utförligt */}
           <div className="flex-1 flex flex-col justify-center">
-            <VerticalMoodSlider
-              options={moodButtons.map(b => ({ mood: b.mood, label: b.label, sublabel: b.sublabel }))}
-              value={checkinData.mood}
-              onSelect={handleMoodSelect}
-            />
+            {checkinMode === 'quick' ? (
+              <SwipeMoodSelector
+                initialMood={checkinData.mood}
+                onSelect={(mood) => {
+                  hapticTap();
+                  setCheckinData(prev => ({ ...prev, mood }));
+                  setAutoSaveDeadline(null);
+                  handleCompleteWithData({ mood, moodComment: checkinData.moodComment });
+                }}
+              />
+            ) : (
+              <VerticalMoodSlider
+                options={moodButtons.map(b => ({ mood: b.mood, label: b.label, sublabel: b.sublabel }))}
+                value={checkinData.mood}
+                onSelect={handleMoodSelect}
+              />
+            )}
           </div>
 
           <div className="flex flex-col items-center gap-5 pt-6 pb-2 max-w-md mx-auto w-full">
@@ -926,7 +938,8 @@ export function TodayCheckin({
                 </button>
               )}
 
-              {checkinData.mood && (
+              {/* Save-knapp visas bara i utförligt läge — snabbläget har egen Välj-knapp i SwipeMoodSelector */}
+              {checkinMode === 'detailed' && checkinData.mood && (
                 <motion.button
                   initial={{ opacity: 0, y: 6 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -934,39 +947,15 @@ export function TodayCheckin({
                   whileTap={{ scale: 0.97 }}
                   onClick={() => {
                     hapticTap();
-                    setAutoSaveDeadline(null);
-                    if (checkinMode === 'quick') {
-                      handleCompleteWithData({ mood: checkinData.mood, moodComment: checkinData.moodComment });
-                    } else {
-                      handleMoodContinue();
-                    }
+                    handleMoodContinue();
                   }}
                   className="relative overflow-hidden w-full max-w-[280px] px-8 py-3.5 rounded-full bg-[hsl(45_85%_55%)] text-[hsl(225_30%_7%)] font-bold text-base tracking-wide shadow-[0_2px_14px_hsl(45_85%_55%/0.22)] hover:shadow-[0_4px_22px_hsl(45_85%_55%/0.32)] hover:bg-[hsl(45_85%_62%)] transition-[background-color,box-shadow] duration-200 inline-flex items-center justify-center gap-1.5"
                 >
-                  {/* Autosave fyll-progress (snabbläge) */}
-                  {checkinMode === 'quick' && autoSaveDeadline && (
-                    <span
-                      aria-hidden
-                      className="absolute inset-y-0 left-0 bg-[hsl(225_30%_7%)]/15 pointer-events-none"
-                      style={{ width: `${autoSaveProgress * 100}%`, transition: 'width 80ms linear' }}
-                    />
-                  )}
                   <span className="relative inline-flex items-center gap-1.5">
-                    {checkinMode === 'quick'
-                      ? (autoSaveDeadline ? t('checkin.savingNow') : t('checkin.saveCheckin'))
-                      : t('common.continue')}
+                    {t('common.continue')}
                     <ChevronRight className="w-4 h-4" />
                   </span>
                 </motion.button>
-              )}
-              {checkinMode === 'quick' && autoSaveDeadline && (
-                <button
-                  type="button"
-                  onClick={() => setAutoSaveDeadline(null)}
-                  className="text-[12px] text-muted-foreground/60 hover:text-foreground/80 -mt-2"
-                >
-                  {t('checkin.cancelAutosave')}
-                </button>
               )}
             </div>
           {renderCommentSection('mood')}
