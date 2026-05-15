@@ -1,6 +1,11 @@
-import { Link } from "react-router-dom";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { TurtleLogo } from "@/components/TurtleLogo";
 import { useTranslation } from 'react-i18next';
+import { Loader2 } from 'lucide-react';
+import { startDemoSession } from '@/lib/demoMode';
+import { completeDemoTransition, startDemoTransition } from '@/lib/demoTransition';
+import { useToast } from '@/hooks/use-toast';
 
 function FooterSkyline() {
   return (
