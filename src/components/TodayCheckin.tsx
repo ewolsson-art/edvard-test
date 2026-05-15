@@ -914,16 +914,6 @@ export function TodayCheckin({
               <ChevronLeft className="w-4 h-4" />
               {t('common.back')}
             </Button>
-            <button
-              onClick={() => setShowComment(showComment === 'mood' ? null : 'mood')}
-              className={cn(
-                "p-2 rounded-xl transition-colors",
-                showComment === 'mood' ? "bg-primary/10 text-primary" : "text-muted-foreground/50 hover:text-muted-foreground/80 hover:bg-muted/30"
-              )}
-              aria-label={t('checkin.addComment')}
-            >
-              <MessageSquarePlus className="w-5 h-5" />
-            </button>
           </div>
 
           {/* Heading */}
