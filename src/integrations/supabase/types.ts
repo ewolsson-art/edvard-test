@@ -1036,6 +1036,36 @@ export type Database = {
         }
         Relationships: []
       }
+      thought_analysis: {
+        Row: {
+          analyzed_at: string
+          comment_excerpt: string | null
+          date: string
+          id: string
+          sentiment: number
+          themes: string[]
+          user_id: string
+        }
+        Insert: {
+          analyzed_at?: string
+          comment_excerpt?: string | null
+          date: string
+          id?: string
+          sentiment?: number
+          themes?: string[]
+          user_id: string
+        }
+        Update: {
+          analyzed_at?: string
+          comment_excerpt?: string | null
+          date?: string
+          id?: string
+          sentiment?: number
+          themes?: string[]
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_learned_insights: {
         Row: {
           category: string | null
