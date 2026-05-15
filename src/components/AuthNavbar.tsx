@@ -67,14 +67,6 @@ export function AuthNavbar() {
               ))}
               <LanguageSwitcher variant="navbar" />
               <button
-                onClick={handleDemo}
-                disabled={demoLoading}
-                className="px-4 py-2 text-sm font-medium text-white/70 hover:text-white hover:bg-white/10 rounded-lg transition-all duration-200 inline-flex items-center gap-2 disabled:opacity-60"
-              >
-                {demoLoading && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
-                Demokonto
-              </button>
-              <button
                 onClick={() => navigate("/logga-in")}
                 className="ml-1 px-5 py-2 text-sm font-semibold text-white/80 border border-white/25 rounded-full hover:bg-white hover:text-[hsl(225_30%_7%)] hover:border-white transition-all duration-200"
               >
