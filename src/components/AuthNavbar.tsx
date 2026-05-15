@@ -4,35 +4,12 @@ import { useTranslation } from 'react-i18next';
 import { Logo } from '@/components/Logo';
 import { Button } from '@/components/ui/button';
 import { LanguageSwitcher } from '@/components/LanguageSwitcher';
-import { Menu, X, Loader2 } from 'lucide-react';
-import { startDemoSession } from '@/lib/demoMode';
-import { completeDemoTransition, startDemoTransition } from '@/lib/demoTransition';
-import { useToast } from '@/hooks/use-toast';
+import { Menu, X } from 'lucide-react';
 
 export function AuthNavbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [demoLoading, setDemoLoading] = useState(false);
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const { toast } = useToast();
-
-  const handleDemo = async () => {
-    if (demoLoading) return;
-    setDemoLoading(true);
-    setIsMobileMenuOpen(false);
-    startDemoTransition('setup', { autoHide: false });
-    try {
-      const { error } = await startDemoSession();
-      if (error) throw error;
-      navigate('/', { replace: true });
-      completeDemoTransition();
-    } catch (e: any) {
-      completeDemoTransition();
-      toast({ title: 'Kunde inte starta demo', description: e?.message ?? 'Försök igen', variant: 'destructive' });
-    } finally {
-      setDemoLoading(false);
-    }
-  };
 
   const navItems = [
     { label: t('nav.aboutUs'), href: '/om-oss' },
