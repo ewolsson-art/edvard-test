@@ -153,6 +153,7 @@ export function TodayCheckin({
   onSelectDate,
 }: TodayCheckinProps) {
   const { t } = useTranslation();
+  const { tap: hapticTap } = useHaptics();
   const { moodLabels, moodSublabels, moodTags: diagnosisMoodTags } = useDiagnosisConfig();
   const sleepSliderOptions = useSleepSliderOptions();
   
