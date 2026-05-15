@@ -39,7 +39,6 @@ function FooterSkyline() {
 }
 
 export function LandingFooter() {
-export function LandingFooter() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { toast } = useToast();
