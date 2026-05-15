@@ -165,7 +165,8 @@ Deno.serve(async (req) => {
       const side = e.medication_side_effects?.length
         ? `, biverk: [${e.medication_side_effects.join(", ")}]`
         : "";
-      return `${e.date}: ${MOOD_LABELS[e.mood] ?? e.mood}${energy}${sleep}${eat}${ex}${tags}${side}`;
+      const note = e.comment?.trim() ? `, tanke: "${e.comment.trim().slice(0, 140)}"` : "";
+      return `${e.date}: ${MOOD_LABELS[e.mood] ?? e.mood}${energy}${sleep}${eat}${ex}${tags}${side}${note}`;
     });
 
     // Medicin-event (start/stopp)

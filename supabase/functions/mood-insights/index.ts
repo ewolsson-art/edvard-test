@@ -157,7 +157,11 @@ interface StructuredInsight {
        );
      }
  
-     const prompt = buildPrompt(summaryData, historicalPatterns, currentWarnings, characteristics || [], diagnoses || [], historicalEntries.length);
+    const recentComments = historicalEntries
+      .filter(e => e.comment && e.comment.trim().length > 0)
+      .slice(-8)
+      .map(e => `${e.date}: "${e.comment!.trim()}"`);
+    const prompt = buildPrompt(summaryData, historicalPatterns, currentWarnings, characteristics || [], diagnoses || [], historicalEntries.length, recentComments);
      
      const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
        method: "POST",
@@ -472,7 +476,8 @@ interface StructuredInsight {
    warnings: CurrentWarning[],
    characteristics: { name: string; mood_type: string }[],
    diagnoses: { name: string }[],
-   totalHistoricalDays: number
+   totalHistoricalDays: number,
+   recentComments: string[] = []
  ): string {
    const diagnosisText = diagnoses.length > 0 
      ? `Diagnoser: ${diagnoses.map(d => d.name).join(', ')}`
@@ -521,7 +526,7 @@ interface StructuredInsight {
  🔗 KORRELATIONER:
  - Dagar med dålig sömn och sänkt mående: ${data.sleepMoodCorrelation.badSleepDepressed}
  - Dagar med bra sömn och stabilt/förhöjt mående: ${data.sleepMoodCorrelation.goodSleepStable}
- 
+${recentComments.length > 0 ? `\n💬 ANVÄNDARENS EGNA TANKAR (senaste ${recentComments.length} kommentarer — viktig kvalitativ kontext, väg in i analysen):\n${recentComments.map(c => `- ${c}`).join('\n')}\n` : ''}
  INSTRUKTIONER:
  1. OM det finns aktiva varningar: Börja med en tydlig men empatisk varning som refererar till historiska mönster
  2. Referera till specifika historiska mönster när du ger råd (t.ex. "Förra gången du hade dålig sömn 5 dagar i rad ledde det till...")
