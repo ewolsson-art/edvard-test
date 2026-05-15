@@ -892,21 +892,22 @@ export function TodayCheckin({
                 </div>
               </button>
 
-              <button
-                onClick={() => {
-                  if (checkinMode === 'quick') {
-                    handleCompleteWithData({ mood: checkinData.mood });
-                  } else {
-                    handleMoodContinue();
-                  }
-                }}
-                className="px-8 py-3.5 rounded-full bg-[hsl(45_85%_55%)] text-[hsl(225_30%_7%)] font-bold text-base tracking-wide shadow-[0_4px_24px_hsl(45_85%_55%/0.35)] hover:shadow-[0_8px_32px_hsl(45_85%_55%/0.5)] hover:bg-[hsl(45_85%_62%)] hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 inline-flex items-center justify-center gap-1.5"
-              >
-                {checkinMode === 'quick' ? t('checkin.saveCheckin') : t('common.continue')}
-                <ChevronRight className="w-4 h-4" />
-              </button>
+              {checkinData.mood && (
+                <button
+                  onClick={() => {
+                    if (checkinMode === 'quick') {
+                      handleCompleteWithData({ mood: checkinData.mood });
+                    } else {
+                      handleMoodContinue();
+                    }
+                  }}
+                  className="px-8 py-3.5 rounded-full bg-[hsl(45_85%_55%)] text-[hsl(225_30%_7%)] font-bold text-base tracking-wide shadow-[0_4px_24px_hsl(45_85%_55%/0.35)] hover:shadow-[0_8px_32px_hsl(45_85%_55%/0.5)] hover:bg-[hsl(45_85%_62%)] hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 inline-flex items-center justify-center gap-1.5"
+                >
+                  {checkinMode === 'quick' ? t('checkin.saveCheckin') : t('common.continue')}
+                  <ChevronRight className="w-4 h-4" />
+                </button>
+              )}
             </div>
-          )}
           {renderCommentSection('mood')}
         </div>
       )}
