@@ -484,6 +484,8 @@
     "detailedCheckin": "Utförlig",
     "checkinMode": "Typ av incheckning",
     "saveCheckin": "Klar",
+    "savingNow": "Sparar…",
+    "cancelAutosave": "Avbryt — välj om",
     "bothCountStreak": "Båda räknas till din streak",
     "continueAnyway": "Fortsätt ändå",
     "cancel": "Avbryt",
