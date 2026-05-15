@@ -853,30 +853,32 @@ export function TodayCheckin({
           </div>
 
           <div className="flex flex-col items-center gap-5 pt-6 pb-2 max-w-md mx-auto w-full">
-              {/* Pratbubbla — pill med text, placerad ovanför Klar */}
-              <button
-                type="button"
-                onClick={() => setShowComment('mood')}
-                aria-label={checkinData.moodComment ? t('checkin.editThought') : t('checkin.thoughtAboutDay')}
-                className={cn(
-                  "group relative inline-flex items-center gap-2 pl-3 pr-4 py-2 rounded-full transition-all duration-200 active:scale-[0.97]",
-                  checkinData.moodComment
-                    ? "bg-primary/10 hover:bg-primary/15 ring-1 ring-primary/30 text-primary"
-                    : "bg-foreground/[0.04] hover:bg-foreground/[0.08] text-muted-foreground hover:text-foreground/80"
-                )}
-              >
-                <span aria-hidden className="text-lg leading-none transition-transform duration-300 group-hover:rotate-[-8deg] group-hover:scale-110">
-                  💭
-                </span>
-                <span className="text-sm font-medium tracking-tight max-w-[220px] truncate">
-                  {checkinData.moodComment
-                    ? checkinData.moodComment
-                    : t('checkin.thoughtAboutDay')}
-                </span>
-                {checkinData.moodComment && (
-                  <span className="w-1.5 h-1.5 rounded-full bg-[hsl(45_85%_55%)] flex-shrink-0" />
-                )}
-              </button>
+              {/* Pratbubbla — visas bara i snabbläge här; i utförligt läge flyttas den till tags-steget */}
+              {checkinMode === 'quick' && (
+                <button
+                  type="button"
+                  onClick={() => setShowComment('mood')}
+                  aria-label={checkinData.moodComment ? t('checkin.editThought') : t('checkin.thoughtAboutDay')}
+                  className={cn(
+                    "group relative inline-flex items-center gap-2 pl-3 pr-4 py-2 rounded-full transition-all duration-200 active:scale-[0.97]",
+                    checkinData.moodComment
+                      ? "bg-primary/10 hover:bg-primary/15 ring-1 ring-primary/30 text-primary"
+                      : "bg-foreground/[0.04] hover:bg-foreground/[0.08] text-muted-foreground hover:text-foreground/80"
+                  )}
+                >
+                  <span aria-hidden className="text-lg leading-none transition-transform duration-300 group-hover:rotate-[-8deg] group-hover:scale-110">
+                    💭
+                  </span>
+                  <span className="text-sm font-medium tracking-tight max-w-[220px] truncate">
+                    {checkinData.moodComment
+                      ? checkinData.moodComment
+                      : t('checkin.thoughtAboutDay')}
+                  </span>
+                  {checkinData.moodComment && (
+                    <span className="w-1.5 h-1.5 rounded-full bg-[hsl(45_85%_55%)] flex-shrink-0" />
+                  )}
+                </button>
+              )}
 
               {checkinData.mood && (
                 <motion.button
