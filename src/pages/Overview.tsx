@@ -609,6 +609,7 @@ const Overview = () => {
         <div className="lg:flex lg:gap-8">
           {/* Main calendar area */}
           <div className="flex-1 min-w-0 space-y-6">
+            <EpisodeWarningBanner entries={entries} />
             <NewUserOverviewHint entryCount={entries.length} />
             
             {showMood && (
