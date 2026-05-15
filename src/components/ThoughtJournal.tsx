@@ -77,6 +77,7 @@ export function ThoughtJournal() {
       {selected && (
         <DayDetailDialog
           entry={selected}
+          date={parseISO(selected.date)}
           open={!!selected}
           onOpenChange={(o) => { if (!o) setSelected(null); }}
         />
