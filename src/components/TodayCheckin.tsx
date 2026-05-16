@@ -892,15 +892,27 @@ export function TodayCheckin({
           {/* Mood selector — swipe i snabbläge, slider i utförligt */}
           <div className="flex-1 flex flex-col justify-center">
             {checkinMode === 'quick' ? (
-              <SwipeMoodSelector
-                initialMood={checkinData.mood}
-                onSelect={(mood) => {
-                  hapticTap();
-                  setCheckinData(prev => ({ ...prev, mood }));
-                  setAutoSaveDeadline(null);
-                  handleCompleteWithData({ mood, moodComment: checkinData.moodComment });
-                }}
-              />
+              isMobile ? (
+                <SwipeMoodSelector
+                  initialMood={checkinData.mood}
+                  onSelect={(mood) => {
+                    hapticTap();
+                    setCheckinData(prev => ({ ...prev, mood }));
+                    setAutoSaveDeadline(null);
+                    handleCompleteWithData({ mood, moodComment: checkinData.moodComment });
+                  }}
+                />
+              ) : (
+                <MoodTapButtons
+                  value={checkinData.mood}
+                  onSelect={(mood) => {
+                    hapticTap();
+                    setCheckinData(prev => ({ ...prev, mood }));
+                    setAutoSaveDeadline(null);
+                    handleCompleteWithData({ mood, moodComment: checkinData.moodComment });
+                  }}
+                />
+              )
             ) : (
               <VerticalMoodSlider
                 options={moodButtons.map(b => ({ mood: b.mood, label: b.label, sublabel: b.sublabel }))}
