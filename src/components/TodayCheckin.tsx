@@ -896,8 +896,6 @@ export function TodayCheckin({
                 onSelect={(mood) => {
                   hapticTap();
                   setCheckinData(prev => ({ ...prev, mood }));
-                  setAutoSaveDeadline(null);
-                  handleCompleteWithData({ mood, moodComment: checkinData.moodComment });
                 }}
               />
             ) : (
