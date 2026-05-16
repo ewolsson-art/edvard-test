@@ -70,27 +70,71 @@ export function SwipeMoodSelector({ onSelect, initialMood }: SwipeMoodSelectorPr
     snapTo(activeIndex + indexChange);
   }, [isDragging, dragOffset, activeIndex, snapTo]);
 
-  // Wheel / trackpad scroll → swipe (non-passive so we can preventDefault)
-  const wheelAccum = useRef(0);
-  const wheelTimer = useRef<ReturnType<typeof setTimeout>>();
+  // Click-sound (ratchet) via WebAudio — short, dry tick
+  const audioCtxRef = useRef<AudioContext | null>(null);
+  const playTick = useCallback(() => {
+    try {
+      if (!audioCtxRef.current) {
+        const Ctx = (window.AudioContext || (window as any).webkitAudioContext);
+        if (!Ctx) return;
+        audioCtxRef.current = new Ctx();
+      }
+      const ctx = audioCtxRef.current;
+      if (ctx.state === 'suspended') ctx.resume();
+      const now = ctx.currentTime;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'square';
+      osc.frequency.setValueAtTime(1800, now);
+      osc.frequency.exponentialRampToValueAtTime(900, now + 0.04);
+      gain.gain.setValueAtTime(0.0001, now);
+      gain.gain.exponentialRampToValueAtTime(0.18, now + 0.005);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.06);
+      osc.connect(gain).connect(ctx.destination);
+      osc.start(now);
+      osc.stop(now + 0.07);
+    } catch {}
+  }, []);
+
+  // Wheel / trackpad → one snap per "burst", with cooldown so you can't fly past
+  const lastStepAt = useRef(0);
+  const wheelResetTimer = useRef<ReturnType<typeof setTimeout>>();
+  const wheelArmed = useRef(true); // must see a low-velocity gap to re-arm
   useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
+    const COOLDOWN_MS = 220;
+    const TRIGGER = 18;
     const onWheel = (e: WheelEvent) => {
       e.preventDefault();
-      wheelAccum.current += e.deltaY;
-      const threshold = 40;
-      if (Math.abs(wheelAccum.current) >= threshold) {
-        const dir = wheelAccum.current > 0 ? 1 : -1;
-        wheelAccum.current = 0;
-        setActiveIndex(prev => Math.max(0, Math.min(MOODS.length - 1, prev + dir)));
-      }
-      if (wheelTimer.current) clearTimeout(wheelTimer.current);
-      wheelTimer.current = setTimeout(() => { wheelAccum.current = 0; }, 150);
+      const now = performance.now();
+      if (wheelResetTimer.current) clearTimeout(wheelResetTimer.current);
+      // Re-arm after a short pause in scrolling
+      wheelResetTimer.current = setTimeout(() => { wheelArmed.current = true; }, 90);
+      if (!wheelArmed.current) return;
+      if (now - lastStepAt.current < COOLDOWN_MS) return;
+      if (Math.abs(e.deltaY) < TRIGGER) return;
+      const dir = e.deltaY > 0 ? 1 : -1;
+      wheelArmed.current = false;
+      lastStepAt.current = now;
+      setActiveIndex(prev => {
+        const next = Math.max(0, Math.min(MOODS.length - 1, prev + dir));
+        if (next !== prev) playTick();
+        return next;
+      });
     };
     el.addEventListener('wheel', onWheel, { passive: false });
     return () => el.removeEventListener('wheel', onWheel);
-  }, []);
+  }, [playTick]);
+
+  // Tick on any activeIndex change from touch/drag/click too
+  const prevIndexForSound = useRef(activeIndex);
+  useEffect(() => {
+    if (prevIndexForSound.current !== activeIndex) {
+      playTick();
+      prevIndexForSound.current = activeIndex;
+    }
+  }, [activeIndex, playTick]);
 
   // Mouse support for desktop
   const handleMouseDown = useCallback((e: React.MouseEvent) => {
