@@ -176,7 +176,7 @@ export function SwipeMoodSelector({ onSelect, initialMood }: SwipeMoodSelectorPr
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
         onMouseDown={handleMouseDown}
-        onWheel={handleWheel}
+        
       >
         {/* Gradient masks */}
         <div className="absolute inset-x-0 top-0 h-16 bg-gradient-to-b from-background to-transparent z-10 pointer-events-none" />
