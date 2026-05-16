@@ -17,9 +17,7 @@ import { Progress } from '@/components/ui/progress';
 import { StreakBadge } from '@/components/StreakBadge';
 import { CelebrationAnimation } from '@/components/CelebrationAnimation';
 import { VerticalMoodSlider } from '@/components/VerticalMoodSlider';
-import { SwipeMoodSelector } from '@/components/SwipeMoodSelector';
 import { VerticalScaleSlider, ScaleOption } from '@/components/VerticalScaleSlider';
-import { MoodTapButtons } from '@/components/MoodTapButtons';
 import { TurtleLogo } from '@/components/TurtleLogo';
 import { getTurtleMoodForMood } from '@/lib/moodTurtle';
 import { FullscreenComment } from '@/components/FullscreenComment';
@@ -892,28 +890,16 @@ export function TodayCheckin({
           {/* Mood selector — swipe i snabbläge, slider i utförligt */}
           <div className="flex-1 flex flex-col justify-center">
             {checkinMode === 'quick' ? (
-              isMobile ? (
-                <SwipeMoodSelector
-                  initialMood={checkinData.mood}
-                  onSelect={(mood) => {
-                    hapticTap();
-                    setCheckinData(prev => ({ ...prev, mood }));
-                    setAutoSaveDeadline(null);
-                    handleCompleteWithData({ mood, moodComment: checkinData.moodComment });
-                  }}
-                />
-              ) : (
-                <MoodTapButtons
-                  options={moodButtons.map(b => ({ mood: b.mood, label: b.label, sublabel: b.sublabel }))}
-                  value={checkinData.mood}
-                  onSelect={(mood) => {
-                    hapticTap();
-                    setCheckinData(prev => ({ ...prev, mood }));
-                    setAutoSaveDeadline(null);
-                    handleCompleteWithData({ mood, moodComment: checkinData.moodComment });
-                  }}
-                />
-              )
+              <VerticalMoodSlider
+                options={moodButtons.map(b => ({ mood: b.mood, label: b.label, sublabel: b.sublabel }))}
+                value={checkinData.mood}
+                onSelect={(mood) => {
+                  hapticTap();
+                  setCheckinData(prev => ({ ...prev, mood }));
+                  setAutoSaveDeadline(null);
+                  handleCompleteWithData({ mood, moodComment: checkinData.moodComment });
+                }}
+              />
             ) : (
               <VerticalMoodSlider
                 options={moodButtons.map(b => ({ mood: b.mood, label: b.label, sublabel: b.sublabel }))}
