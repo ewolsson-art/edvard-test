@@ -904,6 +904,7 @@ export function TodayCheckin({
                 />
               ) : (
                 <MoodTapButtons
+                  options={moodButtons.map(b => ({ mood: b.mood, label: b.label, sublabel: b.sublabel }))}
                   value={checkinData.mood}
                   onSelect={(mood) => {
                     hapticTap();
