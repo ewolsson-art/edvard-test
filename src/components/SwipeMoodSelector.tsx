@@ -70,20 +70,26 @@ export function SwipeMoodSelector({ onSelect, initialMood }: SwipeMoodSelectorPr
     snapTo(activeIndex + indexChange);
   }, [isDragging, dragOffset, activeIndex, snapTo]);
 
-  // Wheel / trackpad scroll → swipe
+  // Wheel / trackpad scroll → swipe (non-passive so we can preventDefault)
   const wheelAccum = useRef(0);
   const wheelTimer = useRef<ReturnType<typeof setTimeout>>();
-  const handleWheel = useCallback((e: React.WheelEvent) => {
-    e.preventDefault();
-    wheelAccum.current += e.deltaY;
-    const threshold = 40;
-    if (Math.abs(wheelAccum.current) >= threshold) {
-      const dir = wheelAccum.current > 0 ? 1 : -1;
-      wheelAccum.current = 0;
-      setActiveIndex(prev => Math.max(0, Math.min(MOODS.length - 1, prev + dir)));
-    }
-    if (wheelTimer.current) clearTimeout(wheelTimer.current);
-    wheelTimer.current = setTimeout(() => { wheelAccum.current = 0; }, 150);
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const onWheel = (e: WheelEvent) => {
+      e.preventDefault();
+      wheelAccum.current += e.deltaY;
+      const threshold = 40;
+      if (Math.abs(wheelAccum.current) >= threshold) {
+        const dir = wheelAccum.current > 0 ? 1 : -1;
+        wheelAccum.current = 0;
+        setActiveIndex(prev => Math.max(0, Math.min(MOODS.length - 1, prev + dir)));
+      }
+      if (wheelTimer.current) clearTimeout(wheelTimer.current);
+      wheelTimer.current = setTimeout(() => { wheelAccum.current = 0; }, 150);
+    };
+    el.addEventListener('wheel', onWheel, { passive: false });
+    return () => el.removeEventListener('wheel', onWheel);
   }, []);
 
   // Mouse support for desktop
@@ -170,7 +176,7 @@ export function SwipeMoodSelector({ onSelect, initialMood }: SwipeMoodSelectorPr
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
         onMouseDown={handleMouseDown}
-        onWheel={handleWheel}
+        
       >
         {/* Gradient masks */}
         <div className="absolute inset-x-0 top-0 h-16 bg-gradient-to-b from-background to-transparent z-10 pointer-events-none" />
