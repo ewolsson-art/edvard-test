@@ -935,8 +935,7 @@ export function TodayCheckin({
                 </button>
               )}
 
-              {/* Save-knapp visas bara i utförligt läge — snabbläget har egen Välj-knapp i SwipeMoodSelector */}
-              {checkinMode === 'detailed' && checkinData.mood && (
+              {checkinData.mood && (
                 <motion.button
                   initial={{ opacity: 0, y: 6 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -944,12 +943,17 @@ export function TodayCheckin({
                   whileTap={{ scale: 0.97 }}
                   onClick={() => {
                     hapticTap();
-                    handleMoodContinue();
+                    if (checkinMode === 'quick') {
+                      setAutoSaveDeadline(null);
+                      handleCompleteWithData({ mood: checkinData.mood, moodComment: checkinData.moodComment });
+                    } else {
+                      handleMoodContinue();
+                    }
                   }}
                   className="relative overflow-hidden w-full max-w-[280px] px-8 py-3.5 rounded-full bg-[hsl(45_85%_55%)] text-[hsl(225_30%_7%)] font-bold text-base tracking-wide shadow-[0_2px_14px_hsl(45_85%_55%/0.22)] hover:shadow-[0_4px_22px_hsl(45_85%_55%/0.32)] hover:bg-[hsl(45_85%_62%)] transition-[background-color,box-shadow] duration-200 inline-flex items-center justify-center gap-1.5"
                 >
                   <span className="relative inline-flex items-center gap-1.5">
-                    {t('common.continue')}
+                    {checkinMode === 'quick' ? 'Klar' : t('common.continue')}
                     <ChevronRight className="w-4 h-4" />
                   </span>
                 </motion.button>
