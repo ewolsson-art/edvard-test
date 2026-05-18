@@ -43,6 +43,54 @@ Deno.serve(async (req) => {
     const iso = (ts: number) => new Date(ts).toISOString();
     const dateOnly = (ts: number) => new Date(ts).toISOString().slice(0, 10);
 
+    // --- Detalj-läge: ?user_id=xxx returnerar detaljerad data för en användare ---
+    const url = new URL(req.url);
+    const detailUserId = url.searchParams.get("user_id");
+    if (detailUserId) {
+      const { data: authUser } = await admin.auth.admin.getUserById(detailUserId);
+      const u = authUser?.user;
+      if (!u) {
+        return new Response(JSON.stringify({ error: "User not found" }), {
+          status: 404, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+      const [{ count: checkinsTotal }, { data: recentCheckins }, { data: pageViews }, { data: roles }] = await Promise.all([
+        admin.from("mood_entries").select("id", { count: "exact", head: true }).eq("user_id", detailUserId),
+        admin.from("mood_entries").select("date, mood, created_at").eq("user_id", detailUserId).order("created_at", { ascending: false }).limit(20),
+        admin.from("page_views").select("path, created_at").eq("user_id", detailUserId).order("created_at", { ascending: false }).limit(5000),
+        admin.from("user_roles").select("role").eq("user_id", detailUserId),
+      ]);
+
+      // Aggregera sidor
+      const pageCounts: Record<string, number> = {};
+      let lastVisit: string | null = null;
+      (pageViews ?? []).forEach((p: any) => {
+        pageCounts[p.path] = (pageCounts[p.path] ?? 0) + 1;
+        if (!lastVisit || p.created_at > lastVisit) lastVisit = p.created_at;
+      });
+      const topPages = Object.entries(pageCounts)
+        .map(([path, count]) => ({ path, count }))
+        .sort((a, b) => b.count - a.count)
+        .slice(0, 25);
+
+      return new Response(JSON.stringify({
+        user: {
+          id: u.id,
+          email: u.email ?? null,
+          createdAt: u.created_at,
+          lastSignInAt: u.last_sign_in_at ?? null,
+          roles: (roles ?? []).map((r: any) => r.role),
+        },
+        checkinsTotal: checkinsTotal ?? 0,
+        recentCheckins: recentCheckins ?? [],
+        pageViewsTotal: (pageViews ?? []).length,
+        lastVisit,
+        topPages,
+      }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    }
+
+
+
     // --- Användare (auth) — paginera och bygg demo-set att exkludera ---
     const demoIds = new Set<string>();
     let newLast7 = 0, newLast30 = 0;
