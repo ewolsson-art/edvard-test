@@ -86,6 +86,9 @@ export default function Admin() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [userQuery, setUserQuery] = useState('');
+  const [detail, setDetail] = useState<UserDetail | null>(null);
+  const [detailLoading, setDetailLoading] = useState(false);
+  const [detailEmail, setDetailEmail] = useState<string | null>(null);
 
   const load = async () => {
     setLoading(true);
@@ -94,6 +97,35 @@ export default function Admin() {
     if (error) setError(error.message);
     else setStats(data as Stats);
     setLoading(false);
+  };
+
+  const openDetail = async (userId: string, email: string | null) => {
+    setDetail(null);
+    setDetailEmail(email);
+    setDetailLoading(true);
+    const { data, error } = await supabase.functions.invoke('admin-stats', {
+      body: undefined,
+      method: 'GET' as any,
+      // @ts-ignore — query forwarded via URL
+    });
+    // Fallback: använd fetch direkt med query-param
+    try {
+      const { data: session } = await supabase.auth.getSession();
+      const url = `https://phudximaihknfsmkizix.supabase.co/functions/v1/admin-stats?user_id=${encodeURIComponent(userId)}`;
+      const res = await fetch(url, {
+        headers: {
+          Authorization: `Bearer ${session.session?.access_token ?? ''}`,
+          apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
+        },
+      });
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error ?? 'Kunde inte hämta');
+      setDetail(json as UserDetail);
+    } catch (e: any) {
+      setError(e.message);
+    } finally {
+      setDetailLoading(false);
+    }
   };
 
   useEffect(() => { if (isAdmin) load(); }, [isAdmin]);
