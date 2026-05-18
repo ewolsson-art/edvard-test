@@ -66,6 +66,7 @@ export default function Admin() {
   const [stats, setStats] = useState<Stats | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [userQuery, setUserQuery] = useState('');
 
   const load = async () => {
     setLoading(true);
