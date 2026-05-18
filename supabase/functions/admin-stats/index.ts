@@ -47,6 +47,7 @@ Deno.serve(async (req) => {
     const demoIds = new Set<string>();
     let newLast7 = 0, newLast30 = 0;
     let realUsersTotal = 0;
+    const realUsers: Array<{ id: string; email: string | null; created_at: string; last_sign_in_at: string | null }> = [];
     const perPage = 1000;
     let page = 1;
     while (true) {
@@ -60,6 +61,12 @@ Deno.serve(async (req) => {
         const created = new Date(u.created_at).getTime();
         if (now - created <= 7 * day) newLast7++;
         if (now - created <= 30 * day) newLast30++;
+        realUsers.push({
+          id: u.id,
+          email: u.email ?? null,
+          created_at: u.created_at,
+          last_sign_in_at: u.last_sign_in_at ?? null,
+        });
       }
       if (pageData.users.length < perPage) break;
       page++;
@@ -153,6 +160,36 @@ Deno.serve(async (req) => {
       if (dailyMap[r.date]) dailyMap[r.date].checkins++;
     });
 
+    // --- Per-användare-aktivitet ---
+    const perUserCheckins: Record<string, { total: number; last30: number; lastDate: string | null }> = {};
+    for (const r of realCheckins) {
+      const u = r.user_id as string;
+      if (!perUserCheckins[u]) perUserCheckins[u] = { total: 0, last30: 0, lastDate: null };
+      perUserCheckins[u].total++;
+      if (r.date >= cutoff30) perUserCheckins[u].last30++;
+      if (!perUserCheckins[u].lastDate || r.date > perUserCheckins[u].lastDate!) {
+        perUserCheckins[u].lastDate = r.date;
+      }
+    }
+    const userActivity = realUsers
+      .map((u) => {
+        const c = perUserCheckins[u.id] ?? { total: 0, last30: 0, lastDate: null };
+        return {
+          id: u.id,
+          email: u.email,
+          createdAt: u.created_at,
+          lastSignInAt: u.last_sign_in_at,
+          checkinsTotal: c.total,
+          checkinsLast30: c.last30,
+          lastCheckinDate: c.lastDate,
+        };
+      })
+      .sort((a, b) => {
+        const ta = a.lastSignInAt ? new Date(a.lastSignInAt).getTime() : 0;
+        const tb = b.lastSignInAt ? new Date(b.lastSignInAt).getTime() : 0;
+        return tb - ta;
+      });
+
     return new Response(JSON.stringify({
       generatedAt: iso(now),
       users: {
@@ -182,6 +219,7 @@ Deno.serve(async (req) => {
         relativeApproved: relativeConn ?? 0,
       },
       daily30d: Object.values(dailyMap),
+      userActivity,
     }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
   } catch (e: any) {
     console.error("admin-stats error", e);
