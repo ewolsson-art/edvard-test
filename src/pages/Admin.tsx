@@ -51,6 +51,15 @@ const MOOD_LABELS: Record<string, string> = {
   severe_depressed: 'Kraftigt nedstämd',
 };
 
+function fmtDate(s: string | null) {
+  if (!s) return '—';
+  return new Date(s).toLocaleDateString('sv-SE');
+}
+function fmtDateTime(s: string | null) {
+  if (!s) return 'Aldrig';
+  return new Date(s).toLocaleString('sv-SE', { dateStyle: 'short', timeStyle: 'short' });
+}
+
 const MOOD_COLOR: Record<string, string> = {
   severe_elevated: 'hsl(35 95% 55%)',
   elevated: 'hsl(45 90% 55%)',
