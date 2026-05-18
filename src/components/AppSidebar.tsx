@@ -91,7 +91,7 @@ export function AppSidebar() {
   const location = useLocation();
   const { user, signOut } = useAuth();
   const { firstName, fullName, avatarUrl } = useProfile();
-  const { isDoctor, isPatient, isRelative, isLoading: roleLoading } = useUserRole();
+  const { isDoctor, isPatient, isRelative, isAdmin, isLoading: roleLoading } = useUserRole();
   const { hasPending } = usePendingNotifications();
   const { unreadCount: notifUnread } = useNotifications();
   const { t } = useTranslation();
@@ -113,7 +113,6 @@ export function AppSidebar() {
     );
   }
 
-  const { isAdmin } = useUserRole();
   let navGroups = isDoctor ? doctorNavGroups : isRelative ? relativeNavGroups : patientNavGroups;
   if (isAdmin) {
     navGroups = [
