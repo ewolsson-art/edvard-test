@@ -157,6 +157,7 @@ const App = () => (
           <MobileWebNotice />
           <NativeAppGate>
           <BrowserRouter>
+            <PageTracker />
             <div className="min-h-screen" role="application" aria-label="Toddy - Moodtracker">
             <Suspense fallback={
               <div className="min-h-screen bg-background flex items-center justify-center">
