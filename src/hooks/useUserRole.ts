@@ -37,11 +37,14 @@ export function useUserRole() {
       const { data, error } = await supabase
         .from('user_roles')
         .select('role')
-        .eq('user_id', user.id)
-        .maybeSingle();
+        .eq('user_id', user.id);
 
-      if (!error && data) {
-        setRole(data.role as AppRole);
+      if (!error && data && data.length > 0) {
+        const roles = data.map((r) => r.role as AppRole);
+        // Prioritera admin > doctor > relative > patient
+        const priority: AppRole[] = ['admin', 'doctor', 'relative', 'patient'];
+        const chosen = priority.find((p) => roles.includes(p)) ?? roles[0];
+        setRole(chosen);
       } else {
         setRole(null);
       }
