@@ -334,6 +334,80 @@ export default function Admin() {
           </div>
         )}
       </div>
+
+      <Dialog open={!!detailEmail} onOpenChange={(o) => { if (!o) { setDetailEmail(null); setDetail(null); } }}>
+        <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto bg-background border-white/10">
+          <DialogHeader>
+            <DialogTitle className="text-white/90 truncate">{detailEmail ?? 'Användare'}</DialogTitle>
+          </DialogHeader>
+          {detailLoading && (
+            <div className="flex items-center justify-center py-12">
+              <Loader2 className="w-6 h-6 animate-spin text-white/40" />
+            </div>
+          )}
+          {detail && (
+            <div className="space-y-6 pt-2">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                <Kpi icon={<Heart className="w-4 h-4" />} label="Check-ins totalt" value={detail.checkinsTotal} />
+                <Kpi icon={<Activity className="w-4 h-4" />} label="Sidvisningar" value={detail.pageViewsTotal} />
+                <Kpi icon={<TrendingUp className="w-4 h-4" />} label="Senaste inloggning" value={fmtDateTime(detail.user.lastSignInAt)} />
+                <Kpi icon={<Users className="w-4 h-4" />} label="Senaste sidvisning" value={detail.lastVisit ? fmtDateTime(detail.lastVisit) : '—'} />
+              </div>
+
+              <div>
+                <h3 className="text-sm font-semibold text-white/80 mb-3">Roller</h3>
+                <div className="flex flex-wrap gap-2">
+                  {detail.user.roles.length === 0 && <span className="text-sm text-white/40">Inga roller</span>}
+                  {detail.user.roles.map(r => (
+                    <span key={r} className="text-xs px-3 py-1 rounded-full bg-white/[0.06] text-white/75 border border-white/[0.08]">{r}</span>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <h3 className="text-sm font-semibold text-white/80 mb-3">Mest besökta sidor</h3>
+                {detail.topPages.length === 0 ? (
+                  <p className="text-sm text-white/40">Ingen sidvisning loggad än. (Loggning aktiverades nyligen.)</p>
+                ) : (
+                  <ul className="space-y-1.5">
+                    {detail.topPages.map(p => {
+                      const max = detail.topPages[0].count;
+                      const pct = (p.count / max) * 100;
+                      return (
+                        <li key={p.path} className="text-sm">
+                          <div className="flex justify-between mb-1">
+                            <span className="text-white/80 font-mono text-xs truncate max-w-[60%]">{p.path}</span>
+                            <span className="text-white/45 tabular-nums">{p.count}</span>
+                          </div>
+                          <div className="h-1 bg-white/[0.04] rounded-full overflow-hidden">
+                            <div className="h-full bg-primary/70" style={{ width: `${pct}%` }} />
+                          </div>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                )}
+              </div>
+
+              <div>
+                <h3 className="text-sm font-semibold text-white/80 mb-3">Senaste check-ins</h3>
+                {detail.recentCheckins.length === 0 ? (
+                  <p className="text-sm text-white/40">Inga check-ins</p>
+                ) : (
+                  <ul className="space-y-1 text-sm">
+                    {detail.recentCheckins.map((c, i) => (
+                      <li key={i} className="flex justify-between border-b border-white/[0.04] pb-1.5">
+                        <span className="text-white/70">{c.date}</span>
+                        <span className="text-white/55">{c.mood}</span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
