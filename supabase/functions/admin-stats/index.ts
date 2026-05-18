@@ -160,6 +160,36 @@ Deno.serve(async (req) => {
       if (dailyMap[r.date]) dailyMap[r.date].checkins++;
     });
 
+    // --- Per-användare-aktivitet ---
+    const perUserCheckins: Record<string, { total: number; last30: number; lastDate: string | null }> = {};
+    for (const r of realCheckins) {
+      const u = r.user_id as string;
+      if (!perUserCheckins[u]) perUserCheckins[u] = { total: 0, last30: 0, lastDate: null };
+      perUserCheckins[u].total++;
+      if (r.date >= cutoff30) perUserCheckins[u].last30++;
+      if (!perUserCheckins[u].lastDate || r.date > perUserCheckins[u].lastDate!) {
+        perUserCheckins[u].lastDate = r.date;
+      }
+    }
+    const userActivity = realUsers
+      .map((u) => {
+        const c = perUserCheckins[u.id] ?? { total: 0, last30: 0, lastDate: null };
+        return {
+          id: u.id,
+          email: u.email,
+          createdAt: u.created_at,
+          lastSignInAt: u.last_sign_in_at,
+          checkinsTotal: c.total,
+          checkinsLast30: c.last30,
+          lastCheckinDate: c.lastDate,
+        };
+      })
+      .sort((a, b) => {
+        const ta = a.lastSignInAt ? new Date(a.lastSignInAt).getTime() : 0;
+        const tb = b.lastSignInAt ? new Date(b.lastSignInAt).getTime() : 0;
+        return tb - ta;
+      });
+
     return new Response(JSON.stringify({
       generatedAt: iso(now),
       users: {
@@ -189,6 +219,7 @@ Deno.serve(async (req) => {
         relativeApproved: relativeConn ?? 0,
       },
       daily30d: Object.values(dailyMap),
+      userActivity,
     }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
   } catch (e: any) {
     console.error("admin-stats error", e);
