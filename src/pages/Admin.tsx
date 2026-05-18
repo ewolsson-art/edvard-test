@@ -234,6 +234,51 @@ export default function Admin() {
               </Card>
             </div>
 
+            {/* Per-user activity */}
+            <Card className="p-6 bg-white/[0.02] border-white/[0.06]">
+              <div className="flex items-center justify-between gap-4 mb-4">
+                <h2 className="text-sm font-semibold text-white/80">Användaraktivitet</h2>
+                <input
+                  type="text"
+                  placeholder="Sök e-post..."
+                  value={userQuery}
+                  onChange={(e) => setUserQuery(e.target.value)}
+                  className="text-base md:text-sm px-3 py-1.5 rounded-full bg-white/[0.04] border border-white/[0.08] text-white/80 placeholder:text-white/30 focus:outline-none focus:border-white/20 w-56"
+                />
+              </div>
+              <div className="overflow-x-auto -mx-6">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="text-left text-[11px] uppercase tracking-wide text-white/35 border-b border-white/[0.06]">
+                      <th className="px-6 py-2 font-medium">E-post</th>
+                      <th className="px-2 py-2 font-medium">Skapad</th>
+                      <th className="px-2 py-2 font-medium">Senaste inloggning</th>
+                      <th className="px-2 py-2 font-medium text-right">Check-ins (30d)</th>
+                      <th className="px-2 py-2 font-medium text-right">Totalt</th>
+                      <th className="px-6 py-2 font-medium">Senaste check-in</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {stats.userActivity
+                      .filter(u => !userQuery || (u.email ?? '').toLowerCase().includes(userQuery.toLowerCase()))
+                      .map(u => (
+                        <tr key={u.id} className="border-b border-white/[0.04] hover:bg-white/[0.02]">
+                          <td className="px-6 py-2 text-white/85 truncate max-w-[220px]">{u.email ?? '—'}</td>
+                          <td className="px-2 py-2 text-white/55">{fmtDate(u.createdAt)}</td>
+                          <td className="px-2 py-2 text-white/85">{fmtDateTime(u.lastSignInAt)}</td>
+                          <td className="px-2 py-2 text-right tabular-nums text-white/85">{u.checkinsLast30}</td>
+                          <td className="px-2 py-2 text-right tabular-nums text-white/55">{u.checkinsTotal}</td>
+                          <td className="px-6 py-2 text-white/55">{u.lastCheckinDate ?? '—'}</td>
+                        </tr>
+                      ))}
+                  </tbody>
+                </table>
+                {stats.userActivity.length === 0 && (
+                  <p className="text-sm text-white/40 px-6 py-4">Ingen data</p>
+                )}
+              </div>
+            </Card>
+
             <p className="text-xs text-white/30 text-center pt-4">
               Genererat {new Date(stats.generatedAt).toLocaleString('sv-SE')}
             </p>
