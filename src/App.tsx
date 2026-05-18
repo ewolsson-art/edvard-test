@@ -298,6 +298,11 @@ const App = () => (
                 <AppLayout><AskToddy /></AppLayout>
               </ProtectedRoute>
             } />
+            <Route path="/admin" element={
+              <ProtectedRoute>
+                <AppLayout><Admin /></AppLayout>
+              </ProtectedRoute>
+            } />
 
             <Route path="/patient/:patientId" element={
               <ProtectedRoute>
