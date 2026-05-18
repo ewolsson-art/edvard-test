@@ -103,12 +103,6 @@ export default function Admin() {
     setDetail(null);
     setDetailEmail(email);
     setDetailLoading(true);
-    const { data, error } = await supabase.functions.invoke('admin-stats', {
-      body: undefined,
-      method: 'GET' as any,
-      // @ts-ignore — query forwarded via URL
-    });
-    // Fallback: använd fetch direkt med query-param
     try {
       const { data: session } = await supabase.auth.getSession();
       const url = `https://phudximaihknfsmkizix.supabase.co/functions/v1/admin-stats?user_id=${encodeURIComponent(userId)}`;
