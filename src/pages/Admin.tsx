@@ -30,6 +30,15 @@ interface Stats {
   community: { posts: number; replies: number };
   connections: { doctorApproved: number; relativeApproved: number };
   daily30d: { date: string; checkins: number }[];
+  userActivity: {
+    id: string;
+    email: string | null;
+    createdAt: string;
+    lastSignInAt: string | null;
+    checkinsTotal: number;
+    checkinsLast30: number;
+    lastCheckinDate: string | null;
+  }[];
 }
 
 const MOOD_LABELS: Record<string, string> = {
