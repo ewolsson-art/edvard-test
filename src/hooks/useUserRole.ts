@@ -7,14 +7,16 @@ export type AppRole = 'patient' | 'doctor' | 'relative' | 'admin';
 const isAppRole = (value: unknown): value is AppRole =>
   value === 'patient' || value === 'doctor' || value === 'relative' || value === 'admin';
 
+const PRIORITY: AppRole[] = ['admin', 'doctor', 'relative', 'patient'];
+
 export function useUserRole() {
   const { user } = useAuth();
-  const [role, setRole] = useState<AppRole | null>(null);
+  const [roles, setRoles] = useState<AppRole[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     if (!user) {
-      setRole(null);
+      setRoles([]);
       setIsLoading(false);
       return;
     }
@@ -22,50 +24,51 @@ export function useUserRole() {
     const metaRole = user.user_metadata?.role;
     const isDemo = Boolean(user.user_metadata?.is_demo);
 
-    // Demo users can switch roles from the onboarding demo cards. Trust the
-    // just-updated demo metadata immediately so routing does not read a stale
-    // DB role and bounce/spin before navigation completes.
     if (isDemo && isAppRole(metaRole)) {
-      setRole(metaRole);
+      setRoles([metaRole]);
       setIsLoading(false);
       return;
     }
 
     setIsLoading(true);
 
-    const fetchRole = async () => {
+    const fetchRoles = async () => {
       const { data, error } = await supabase
         .from('user_roles')
         .select('role')
-        .eq('user_id', user.id)
-        .maybeSingle();
+        .eq('user_id', user.id);
 
       if (!error && data) {
-        setRole(data.role as AppRole);
+        setRoles(data.map((r) => r.role as AppRole));
       } else {
-        setRole(null);
+        setRoles([]);
       }
       setIsLoading(false);
     };
 
-    fetchRole();
+    fetchRoles();
   }, [user]);
 
-  // SECURITY: Role changes are no longer allowed from the client
-  // All new users are automatically assigned role by the database trigger
-  // based on metadata passed during signup
   const setUserRole = useCallback(async (_newRole: AppRole) => {
     console.warn('Role changes are not allowed from the client for security reasons');
     return false;
   }, []);
 
-  const isDoctor = role === 'doctor';
-  const isPatient = role === 'patient';
-  const isRelative = role === 'relative';
-  const isAdmin = role === 'admin';
+  const isDoctor = roles.includes('doctor');
+  const isPatient = roles.includes('patient');
+  const isRelative = roles.includes('relative');
+  const isAdmin = roles.includes('admin');
+
+  // För kod som fortfarande läser en enskild "role" — välj högst prioriterade.
+  // Admin är dock vanligtvis också användare; behåll därför patient om båda finns
+  // så att vanlig navigation (sidebar, ProtectedRoute) ej bryts.
+  let primaryRole: AppRole | null = null;
+  if (isPatient) primaryRole = 'patient';
+  else primaryRole = PRIORITY.find((p) => roles.includes(p)) ?? null;
 
   return {
-    role,
+    role: primaryRole,
+    roles,
     isDoctor,
     isPatient,
     isRelative,
