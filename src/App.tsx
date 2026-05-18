@@ -22,6 +22,9 @@ import { NativeAppGate } from "@/components/native/NativeAppGate";
 import { useAuth } from "@/hooks/useAuth";
 
 import { preloadCriticalRoutes } from "@/lib/routePreload";
+import { usePageTracking } from "@/hooks/usePageTracking";
+
+function PageTracker() { usePageTracking(); return null; }
 
 // Preload critical chunks on idle so navigation is instant.
 const preloadDashboard = () => {
@@ -157,6 +160,7 @@ const App = () => (
           <MobileWebNotice />
           <NativeAppGate>
           <BrowserRouter>
+            <PageTracker />
             <div className="min-h-screen" role="application" aria-label="Toddy - Moodtracker">
             <Suspense fallback={
               <div className="min-h-screen bg-background flex items-center justify-center">

@@ -653,6 +653,27 @@ export type Database = {
         }
         Relationships: []
       }
+      page_views: {
+        Row: {
+          created_at: string
+          id: string
+          path: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          path: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          path?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       patient_doctor_connections: {
         Row: {
           chat_enabled: boolean
