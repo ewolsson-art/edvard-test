@@ -47,6 +47,7 @@ Deno.serve(async (req) => {
     const demoIds = new Set<string>();
     let newLast7 = 0, newLast30 = 0;
     let realUsersTotal = 0;
+    const realUsers: Array<{ id: string; email: string | null; created_at: string; last_sign_in_at: string | null }> = [];
     const perPage = 1000;
     let page = 1;
     while (true) {
@@ -60,6 +61,12 @@ Deno.serve(async (req) => {
         const created = new Date(u.created_at).getTime();
         if (now - created <= 7 * day) newLast7++;
         if (now - created <= 30 * day) newLast30++;
+        realUsers.push({
+          id: u.id,
+          email: u.email ?? null,
+          created_at: u.created_at,
+          last_sign_in_at: u.last_sign_in_at ?? null,
+        });
       }
       if (pageData.users.length < perPage) break;
       page++;
