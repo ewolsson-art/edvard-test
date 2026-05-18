@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { CalendarDays, BarChart3, LogOut, UserCircle, Users, Home, FileText, Settings, MessageCircle, Bell, Sparkles, Stethoscope, Loader2, Bot, Activity } from "lucide-react";
+import { CalendarDays, BarChart3, LogOut, UserCircle, Users, Home, FileText, Settings, MessageCircle, Bell, Sparkles, Stethoscope, Loader2, Bot, Activity, Shield } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { NavLink } from "@/components/NavLink";
@@ -113,7 +113,19 @@ export function AppSidebar() {
     );
   }
 
-  const navGroups = isDoctor ? doctorNavGroups : isRelative ? relativeNavGroups : patientNavGroups;
+  const { isAdmin } = useUserRole();
+  let navGroups = isDoctor ? doctorNavGroups : isRelative ? relativeNavGroups : patientNavGroups;
+  if (isAdmin) {
+    navGroups = [
+      ...navGroups,
+      {
+        labelKey: "sidebar.admin",
+        items: [
+          { titleKey: "sidebar.adminDashboard", url: "/admin", icon: Shield },
+        ],
+      },
+    ];
+  }
   const homeUrl = isDoctor ? "/lakare" : isRelative ? "/anhorig" : "/";
 
   const getInitials = () => {

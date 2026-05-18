@@ -83,6 +83,7 @@ const Insights = lazy(() => import("./pages/Insights"));
 const BadDay = lazy(() => import("./pages/BadDay"));
 const Diagnoses = lazy(() => import("./pages/Diagnoses"));
 const AskToddy = lazy(() => import("./pages/AskToddy"));
+const Admin = lazy(() => import("./pages/Admin"));
 const Blog = lazy(() => import("./pages/Blog"));
 const BlogPost = lazy(() => import("./pages/BlogPost"));
 
@@ -295,6 +296,11 @@ const App = () => (
             <Route path="/fraga" element={
               <ProtectedRoute>
                 <AppLayout><AskToddy /></AppLayout>
+              </ProtectedRoute>
+            } />
+            <Route path="/admin" element={
+              <ProtectedRoute>
+                <AppLayout><Admin /></AppLayout>
               </ProtectedRoute>
             } />
 

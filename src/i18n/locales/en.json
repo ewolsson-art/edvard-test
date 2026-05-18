@@ -133,7 +133,9 @@
     "myUsers": "My users",
     "myProfile": "My profile",
     "signOut": "Sign out",
-    "signingOut": "Signing out..."
+    "signingOut": "Signing out...",
+    "admin": "Admin",
+    "adminDashboard": "Statistics"
   },
   "landing": {
     "heroTitle": "Track your mood with",

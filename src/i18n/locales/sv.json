@@ -133,7 +133,9 @@
     "myUsers": "Mina användare",
     "myProfile": "Min profil",
     "signOut": "Logga ut",
-    "signingOut": "Loggar ut..."
+    "signingOut": "Loggar ut...",
+    "admin": "Admin",
+    "adminDashboard": "Statistik"
   },
   "landing": {
     "heroTitle": "Följ ditt mående med",
