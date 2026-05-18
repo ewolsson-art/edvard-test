@@ -307,7 +307,11 @@ export default function Admin() {
                     {stats.userActivity
                       .filter(u => !userQuery || (u.email ?? '').toLowerCase().includes(userQuery.toLowerCase()))
                       .map(u => (
-                        <tr key={u.id} className="border-b border-white/[0.04] hover:bg-white/[0.02]">
+                        <tr
+                          key={u.id}
+                          onClick={() => openDetail(u.id, u.email)}
+                          className="border-b border-white/[0.04] hover:bg-white/[0.04] cursor-pointer transition-colors"
+                        >
                           <td className="px-6 py-2 text-white/85 truncate max-w-[220px]">{u.email ?? '—'}</td>
                           <td className="px-2 py-2 text-white/55">{fmtDate(u.createdAt)}</td>
                           <td className="px-2 py-2 text-white/85">{fmtDateTime(u.lastSignInAt)}</td>
