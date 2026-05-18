@@ -29,10 +29,10 @@ Deno.serve(async (req) => {
 
     const admin = createClient(SUPABASE_URL, SERVICE_KEY);
 
-    // Verifiera adminroll
-    const { data: roleRow } = await admin
-      .from("user_roles").select("role").eq("user_id", userData.user.id).maybeSingle();
-    if (roleRow?.role !== "admin") {
+    // Verifiera adminroll (användaren kan ha flera roller)
+    const { data: adminRows, error: roleErr } = await admin
+      .from("user_roles").select("role").eq("user_id", userData.user.id).eq("role", "admin");
+    if (roleErr || !adminRows || adminRows.length === 0) {
       return new Response(JSON.stringify({ error: "Forbidden" }), {
         status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
