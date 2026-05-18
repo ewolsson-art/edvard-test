@@ -1,11 +1,21 @@
 import { useEffect, useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Users, Activity, MessageCircle, Heart, TrendingUp, Loader2, RefreshCw } from 'lucide-react';
+import { Users, Activity, MessageCircle, Heart, TrendingUp, Loader2, RefreshCw, X } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useUserRole } from '@/hooks/useUserRole';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+
+interface UserDetail {
+  user: { id: string; email: string | null; createdAt: string; lastSignInAt: string | null; roles: string[] };
+  checkinsTotal: number;
+  recentCheckins: { date: string; mood: string; created_at: string }[];
+  pageViewsTotal: number;
+  lastVisit: string | null;
+  topPages: { path: string; count: number }[];
+}
 
 interface Stats {
   generatedAt: string;
