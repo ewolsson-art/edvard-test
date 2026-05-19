@@ -436,3 +436,122 @@ function Row({ label, value }: { label: string; value: number | string }) {
     </li>
   );
 }
+
+interface FeedbackRow {
+  id: string;
+  user_id: string | null;
+  user_email: string | null;
+  message: string;
+  category: string | null;
+  status: string;
+  created_at: string;
+}
+
+function FeedbackPanel() {
+  const [rows, setRows] = useState<FeedbackRow[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [showAll, setShowAll] = useState(false);
+
+  const load = async () => {
+    setLoading(true);
+    const { data } = await supabase
+      .from('feedback')
+      .select('id, user_id, user_email, message, category, status, created_at')
+      .order('created_at', { ascending: false })
+      .limit(200);
+    setRows((data ?? []) as FeedbackRow[]);
+    setLoading(false);
+  };
+
+  useEffect(() => { load(); }, []);
+
+  const markRead = async (id: string) => {
+    await supabase.from('feedback').update({ status: 'read' }).eq('id', id);
+    setRows(prev => prev.map(r => r.id === id ? { ...r, status: 'read' } : r));
+  };
+  const remove = async (id: string) => {
+    await supabase.from('feedback').delete().eq('id', id);
+    setRows(prev => prev.filter(r => r.id !== id));
+  };
+
+  const visible = showAll ? rows : rows.filter(r => r.status !== 'read');
+  const unreadCount = rows.filter(r => r.status !== 'read').length;
+
+  return (
+    <Card className="p-6 bg-white/[0.02] border-white/[0.06]">
+      <div className="flex items-center justify-between gap-4 mb-4">
+        <div className="flex items-center gap-2">
+          <h2 className="text-sm font-semibold text-white/80">Feedback från användare</h2>
+          {unreadCount > 0 && (
+            <span className="inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 rounded-full bg-[hsl(45_85%_55%)] text-[hsl(225_30%_7%)] text-[11px] font-bold tabular-nums">
+              {unreadCount}
+            </span>
+          )}
+        </div>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => setShowAll(v => !v)}
+            className="text-xs text-white/55 hover:text-white/85 transition-colors"
+          >
+            {showAll ? 'Visa endast nya' : `Visa alla (${rows.length})`}
+          </button>
+          <Button variant="outline" size="sm" onClick={load} disabled={loading} className="gap-2 rounded-full h-7 text-xs">
+            {loading ? <Loader2 className="w-3 h-3 animate-spin" /> : <RefreshCw className="w-3 h-3" />}
+          </Button>
+        </div>
+      </div>
+
+      {loading && rows.length === 0 ? (
+        <div className="flex items-center justify-center py-8">
+          <Loader2 className="w-5 h-5 animate-spin text-white/30" />
+        </div>
+      ) : visible.length === 0 ? (
+        <p className="text-sm text-white/40 py-3">
+          {showAll ? 'Ingen feedback ännu.' : 'Inga nya meddelanden.'}
+        </p>
+      ) : (
+        <ul className="space-y-3">
+          {visible.map(r => (
+            <li
+              key={r.id}
+              className={`rounded-2xl p-4 border ${r.status === 'read' ? 'border-white/[0.04] bg-white/[0.01]' : 'border-[hsl(45_85%_55%/0.18)] bg-[hsl(45_85%_55%/0.04)]'}`}
+            >
+              <div className="flex items-start justify-between gap-3 mb-2">
+                <div className="min-w-0">
+                  <p className="text-[13px] font-medium text-white/85 truncate">
+                    {r.user_email ?? 'Anonym'}
+                  </p>
+                  <p className="text-[11px] text-white/40">
+                    {new Date(r.created_at).toLocaleString('sv-SE', { dateStyle: 'short', timeStyle: 'short' })}
+                    {r.category ? <span className="ml-2 px-1.5 py-0.5 rounded-full bg-white/[0.06] text-white/55">{r.category}</span> : null}
+                  </p>
+                </div>
+                <div className="flex items-center gap-1 shrink-0">
+                  {r.status !== 'read' && (
+                    <button
+                      onClick={() => markRead(r.id)}
+                      className="text-[11px] px-2.5 py-1 rounded-full text-white/65 hover:text-white hover:bg-white/[0.06] transition-colors"
+                    >
+                      Markera läst
+                    </button>
+                  )}
+                  <button
+                    onClick={() => remove(r.id)}
+                    aria-label="Radera"
+                    className="w-6 h-6 rounded-full flex items-center justify-center text-white/40 hover:text-destructive hover:bg-destructive/10 transition-colors"
+                  >
+                    <X className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              </div>
+              <p className="text-[14px] text-white/85 whitespace-pre-wrap leading-relaxed">
+                {r.message}
+              </p>
+            </li>
+          ))}
+        </ul>
+      )}
+    </Card>
+  );
+}
+
