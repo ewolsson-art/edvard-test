@@ -177,7 +177,7 @@ export default function Admin() {
               <h2 className="text-sm font-semibold text-white/80 mb-4">Check-ins per dag (senaste 30)</h2>
               <div className="flex items-end gap-1 h-32">
                 {stats.daily30d.map(d => (
-                  <div key={d.date} className="flex-1 flex flex-col items-center justify-end group" title={`${d.date}: ${d.checkins}`}>
+                  <div key={d.date} className="flex-1 h-full flex flex-col items-center justify-end group" title={`${d.date}: ${d.checkins}`}>
                     <div
                       className="w-full rounded-sm bg-primary/70 hover:bg-primary transition-colors"
                       style={{ height: `${(d.checkins / maxDaily) * 100}%`, minHeight: d.checkins > 0 ? 2 : 0 }}
