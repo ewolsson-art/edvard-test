@@ -207,7 +207,7 @@ export function WelcomeBackDialog({
                   className="w-full inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full hover:bg-foreground/5 active:scale-[0.98] transition-all duration-200 text-muted-foreground hover:text-foreground text-[13px] font-medium"
                 >
                   <MessageCircleHeart className="w-4 h-4" />
-                  Skicka feedback eller önska en funktion
+                  Kan vi göra Toddy bättre? Skicka valfritt anonymt feedback-meddelande till oss!
                 </button>
               ) : sent ? (
                 <motion.div
