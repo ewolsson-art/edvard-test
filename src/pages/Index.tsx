@@ -12,6 +12,9 @@ import { StreakBadge } from '@/components/StreakBadge';
 import { CheckinData } from '@/types/mood';
 import { TodayCheckin } from '@/components/TodayCheckin';
 import { MissedDayPrompt } from '@/components/MissedDayPrompt';
+import { WelcomeBackDialog } from '@/components/WelcomeBackDialog';
+import { useAuth } from '@/hooks/useAuth';
+import { differenceInDays } from 'date-fns';
 
 
 
