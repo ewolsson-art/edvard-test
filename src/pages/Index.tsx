@@ -37,6 +37,7 @@ const Index = () => {
     isMedicationTakenOnDate,
   } = useMedications();
 
+  const { user } = useAuth();
   const { firstName, isLoading: profileLoading } = useProfile();
   const { preferences, loading: prefsLoading } = useUserPreferences();
   const { questions: customQuestions, isLoaded: customQLoaded, getAnswersForDate, saveAnswers } = useCustomCheckinQuestions();
