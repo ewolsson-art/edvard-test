@@ -328,6 +328,10 @@ export default function Admin() {
               </div>
             </Card>
 
+            <FeedbackPanel />
+
+
+
             <p className="text-xs text-white/30 text-center pt-4">
               Genererat {new Date(stats.generatedAt).toLocaleString('sv-SE')}
             </p>
