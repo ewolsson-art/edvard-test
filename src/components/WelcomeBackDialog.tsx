@@ -241,24 +241,30 @@ export function WelcomeBackDialog({
                   {error && (
                     <p className="text-[12px] text-destructive px-1">{error}</p>
                   )}
-                  <div className="flex items-center gap-2 pt-1">
-                    <button
-                      onClick={() => { setShowFeedback(false); setFeedback(''); setError(null); }}
-                      disabled={sending}
-                      className="flex-1 px-4 py-2.5 rounded-full text-[13px] font-semibold text-muted-foreground hover:text-foreground hover:bg-foreground/5 transition-colors disabled:opacity-50"
-                    >
-                      Avbryt
-                    </button>
+                  <div className="flex flex-col gap-2 pt-1">
                     <button
                       onClick={submitFeedback}
                       disabled={sending || feedback.trim().length < 3}
-                      className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-full bg-[hsl(45_85%_55%)] text-[hsl(225_30%_7%)] font-bold text-[13px] hover:bg-[hsl(45_85%_62%)] active:scale-[0.98] transition-all disabled:opacity-50 disabled:hover:bg-[hsl(45_85%_55%)] disabled:cursor-not-allowed"
+                      className="w-full inline-flex items-center justify-center gap-2.5 px-6 py-4 rounded-full bg-[hsl(45_85%_55%)] text-[hsl(225_30%_7%)] font-bold text-[15px] shadow-[0_8px_24px_-6px_hsl(45_85%_55%/0.55)] hover:bg-[hsl(45_85%_62%)] hover:shadow-[0_10px_28px_-6px_hsl(45_85%_55%/0.7)] active:scale-[0.98] transition-all disabled:opacity-40 disabled:hover:bg-[hsl(45_85%_55%)] disabled:cursor-not-allowed disabled:shadow-none"
                     >
                       {sending ? (
-                        <Loader2 className="w-4 h-4 animate-spin" />
+                        <>
+                          <Loader2 className="w-4 h-4 animate-spin" />
+                          Skickar...
+                        </>
                       ) : (
-                        <>Skicka <Send className="w-3.5 h-3.5" /></>
+                        <>
+                          <Send className="w-4 h-4" />
+                          Skicka meddelande
+                        </>
                       )}
+                    </button>
+                    <button
+                      onClick={() => { setShowFeedback(false); setFeedback(''); setError(null); }}
+                      disabled={sending}
+                      className="w-full px-4 py-2 rounded-full text-[13px] font-medium text-muted-foreground hover:text-foreground hover:bg-foreground/5 transition-colors disabled:opacity-50"
+                    >
+                      Avbryt
                     </button>
                   </div>
                 </motion.div>
