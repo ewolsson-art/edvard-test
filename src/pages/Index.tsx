@@ -12,6 +12,9 @@ import { StreakBadge } from '@/components/StreakBadge';
 import { CheckinData } from '@/types/mood';
 import { TodayCheckin } from '@/components/TodayCheckin';
 import { MissedDayPrompt } from '@/components/MissedDayPrompt';
+import { WelcomeBackDialog } from '@/components/WelcomeBackDialog';
+import { useAuth } from '@/hooks/useAuth';
+import { differenceInDays } from 'date-fns';
 
 
 
@@ -34,6 +37,7 @@ const Index = () => {
     isMedicationTakenOnDate,
   } = useMedications();
 
+  const { user } = useAuth();
   const { firstName, isLoading: profileLoading } = useProfile();
   const { preferences, loading: prefsLoading } = useUserPreferences();
   const { questions: customQuestions, isLoaded: customQLoaded, getAnswersForDate, saveAnswers } = useCustomCheckinQuestions();
@@ -182,6 +186,25 @@ const Index = () => {
           />
         )}
       </div>
+      {(() => {
+        const lastDate = streakData.lastCheckinDate;
+        const daysSince = lastDate ? differenceInDays(new Date(), parseISO(lastDate)) : 0;
+        if (!lastDate || daysSince < 2 || !user?.id) return null;
+        return (
+          <WelcomeBackDialog
+            daysSinceLastCheckin={daysSince}
+            currentStreak={streakData.currentStreak}
+            potentialStreak={streakData.potentialStreak}
+            firstName={firstName}
+            absenceKey={`${user.id}:${lastDate}`}
+            onRestoreStreak={() => {
+              if (streakData.missedDays.length > 0) handlePickMissedDay(parseISO(streakData.missedDays[0]));
+            }}
+            onStartFresh={() => { setMissedPromptDismissed(true); }}
+            onClose={() => {}}
+          />
+        );
+      })()}
     </AnimatedPage>
   );
 };
