@@ -94,7 +94,7 @@ export function WelcomeBackDialog({
               transition={{ delay: 0.15, duration: 1.2, ease: 'easeOut' }}
               className="w-24 h-24 mb-5 flex items-center justify-center"
             >
-              <TurtleLogo size="lg" animated={false} mood="content" className="scale-[2]" />
+              <TurtleLogo size="lg" animated={false} className="scale-[2]" />
             </motion.div>
 
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[hsl(45_85%_55%/0.14)] border border-[hsl(45_85%_55%/0.25)] mb-3">
