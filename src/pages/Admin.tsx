@@ -175,9 +175,12 @@ export default function Admin() {
             {/* Daily checkins bar chart */}
             <Card className="p-6 bg-white/[0.02] border-white/[0.06]">
               <h2 className="text-sm font-semibold text-white/80 mb-4">Check-ins per dag (senaste 30)</h2>
-              <div className="flex items-end gap-1 h-32">
+              <div className="flex items-end gap-1 h-40">
                 {stats.daily30d.map(d => (
                   <div key={d.date} className="flex-1 h-full flex flex-col items-center justify-end group" title={`${d.date}: ${d.checkins}`}>
+                    <span className="text-[10px] font-medium text-white/60 mb-1 tabular-nums">
+                      {d.checkins > 0 ? d.checkins : ''}
+                    </span>
                     <div
                       className="w-full rounded-sm bg-primary/70 hover:bg-primary transition-colors"
                       style={{ height: `${(d.checkins / maxDaily) * 100}%`, minHeight: d.checkins > 0 ? 2 : 0 }}
