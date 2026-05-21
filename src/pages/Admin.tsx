@@ -126,6 +126,51 @@ export default function Admin() {
 
   useEffect(() => { if (isAdmin) load(); }, [isAdmin]);
 
+  const { toast } = useToast();
+  const [pushTesting, setPushTesting] = useState(false);
+
+  const sendTestPush = async () => {
+    setPushTesting(true);
+    try {
+      if (!Capacitor.isNativePlatform()) {
+        toast({
+          title: 'Endast i native-appen',
+          description: 'Test-notiser fungerar bara i Toddy-appen på iOS/Android, inte i webbläsaren.',
+          variant: 'destructive',
+        });
+        return;
+      }
+      const perm = await LocalNotifications.checkPermissions();
+      if (perm.display !== 'granted') {
+        const req = await LocalNotifications.requestPermissions();
+        if (req.display !== 'granted') {
+          toast({
+            title: 'Tillstånd saknas',
+            description: 'Notiser är avstängda i iOS-inställningarna. Aktivera dem under Inställningar → Toddy → Notiser.',
+            variant: 'destructive',
+          });
+          return;
+        }
+      }
+      await LocalNotifications.schedule({
+        notifications: [{
+          id: Math.floor(Math.random() * 100000),
+          title: 'Toddy – test',
+          body: 'Push fungerar. Allt grönt på iOS-byggget.',
+          schedule: { at: new Date(Date.now() + 3000) },
+        }],
+      });
+      toast({
+        title: 'Test-notis schemalagd',
+        description: 'Du bör se notisen om 3 sekunder. Lås gärna skärmen för att verifiera lock-screen-rendering.',
+      });
+    } catch (e: any) {
+      toast({ title: 'Kunde inte skicka', description: e.message ?? 'Okänt fel', variant: 'destructive' });
+    } finally {
+      setPushTesting(false);
+    }
+  };
+
   if (roleLoading) {
     return <div className="min-h-screen flex items-center justify-center">
       <Loader2 className="w-6 h-6 animate-spin text-white/40" />
