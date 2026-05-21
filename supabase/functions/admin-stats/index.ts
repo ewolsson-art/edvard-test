@@ -120,7 +120,10 @@ Deno.serve(async (req) => {
       page++;
       if (page > 50) break; // safety
     }
-    const notDemo = (uid: string | null | undefined) => !!uid && !demoIds.has(uid);
+    const realUserIds = new Set(realUsers.map((u) => u.id));
+    // Riktig användare = finns i auth.users OCH är inte demo-flaggad.
+    // Detta exkluderar även "orphan"-rader (t.ex. raderade demo-konton vars data ligger kvar).
+    const notDemo = (uid: string | null | undefined) => !!uid && realUserIds.has(uid);
     const totalUsers = realUsersTotal;
 
     // --- Rollfördelning (exkl. demo) ---
