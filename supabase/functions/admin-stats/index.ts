@@ -246,7 +246,6 @@ Deno.serve(async (req) => {
       },
       health: {
         topDiagnoses,
-        topMedications,
       },
       community: {
         posts: forumPosts ?? 0,
