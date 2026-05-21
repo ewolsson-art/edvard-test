@@ -168,19 +168,6 @@ Deno.serve(async (req) => {
       .map(([name, set]) => ({ name, users: set.size }))
       .sort((a, b) => b.users - a.users).slice(0, 10);
 
-    // --- Mediciner (exkl. demo) ---
-    const { data: medRows } = await admin
-      .from("medications").select("name, user_id").eq("active", true);
-    const medCount: Record<string, Set<string>> = {};
-    (medRows ?? []).forEach((r: any) => {
-      if (!notDemo(r.user_id)) return;
-      const k = (r.name ?? "").trim().toLowerCase();
-      if (!k) return;
-      (medCount[k] ??= new Set()).add(r.user_id);
-    });
-    const topMedications = Object.entries(medCount)
-      .map(([name, set]) => ({ name, users: set.size }))
-      .sort((a, b) => b.users - a.users).slice(0, 10);
 
     // --- Onboarding-completion (exkl. demo) ---
     const { data: profileRows } = await admin
@@ -259,7 +246,6 @@ Deno.serve(async (req) => {
       },
       health: {
         topDiagnoses,
-        topMedications,
       },
       community: {
         posts: forumPosts ?? 0,
