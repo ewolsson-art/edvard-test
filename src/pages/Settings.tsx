@@ -280,6 +280,16 @@ const Settings = () => {
           <SettingsRow icon={Download} label={t('settings.exportData')} description={t('settings.exportDesc')} onClick={() => setView('export')} />
           <SettingsRow icon={Trash2} label={t('settings.deleteAccount')} destructive onClick={() => setView('delete')} />
         </SettingsGroup>
+
+        <div className="mt-4 mb-2 rounded-2xl bg-foreground/[0.03] p-4 ring-1 ring-border/20">
+          <div className="flex items-start gap-3">
+            <AlertTriangle className="w-4 h-4 text-foreground/40 flex-shrink-0 mt-0.5" />
+            <div className="text-[12px] leading-relaxed text-foreground/55">
+              <p className="font-medium text-foreground/70 mb-1">Toddy ersätter inte vård</p>
+              <p>Toddy är ett stöd för egenuppföljning – inte medicinsk rådgivning, diagnos eller behandling. Vid akut kris ring <span className="font-semibold text-foreground/80">112</span>. För psykiatrisk hjälp ring <span className="font-semibold text-foreground/80">1177</span>. Vid självmordstankar ring Mind Självmordslinjen <span className="font-semibold text-foreground/80">90101</span>.</p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

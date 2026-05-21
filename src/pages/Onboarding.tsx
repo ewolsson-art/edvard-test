@@ -297,6 +297,11 @@ const Onboarding = () => {
                     Då börjar vi
                     <ArrowRight className="w-5 h-5 ml-2" />
                   </Button>
+
+                  <p className="mt-4 text-[11px] leading-relaxed text-white/40 text-center max-w-xs">
+                    Toddy ersätter inte vård. Vid akut kris ring <span className="text-white/60 font-semibold">112</span>, för psykiatrisk hjälp <span className="text-white/60 font-semibold">1177</span>, vid självmordstankar <span className="text-white/60 font-semibold">90101</span>.
+                  </p>
+
                 </>
               )}
             </div>
