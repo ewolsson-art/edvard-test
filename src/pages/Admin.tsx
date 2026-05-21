@@ -35,7 +35,6 @@ interface Stats {
   };
   health: {
     topDiagnoses: { name: string; users: number }[];
-    topMedications: { name: string; users: number }[];
   };
   community: { posts: number; replies: number };
   connections: { doctorApproved: number; relativeApproved: number };
