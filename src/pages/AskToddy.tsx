@@ -277,7 +277,7 @@ export default function AskToddy() {
       {/* === Composer === */}
       <div className="shrink-0 px-3 md:px-8 pt-2 pb-3 md:pb-5 bg-gradient-to-t from-background via-background/95 to-background/0">
         <div className="max-w-2xl mx-auto">
-          <div className="relative flex items-end rounded-[28px] bg-foreground/[0.04] ring-1 ring-foreground/10 focus-within:ring-foreground/25 transition-all">
+          <div className="relative flex items-end rounded-[28px] bg-foreground/[0.04] ring-1 ring-foreground/10 transition-all">
             <textarea
               ref={textareaRef}
               value={input}
@@ -296,8 +296,8 @@ export default function AskToddy() {
               className={cn(
                 "absolute right-2 bottom-2 h-9 w-9 rounded-full flex items-center justify-center transition-all",
                 input.trim() && !isLoading
-                  ? "bg-[hsl(45_85%_55%)] text-[hsl(225_30%_7%)] hover:bg-[hsl(45_85%_62%)] active:scale-95 shadow-[0_2px_12px_hsl(45_85%_55%/0.35)]"
-                  : "bg-foreground/10 text-foreground/30 cursor-not-allowed",
+                  ? "bg-foreground/[0.08] text-foreground/70 hover:bg-foreground/[0.14] active:scale-95"
+                  : "bg-foreground/[0.04] text-foreground/20 cursor-not-allowed",
               )}
             >
               {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <ArrowUp className="w-4 h-4" strokeWidth={2.5} />}
