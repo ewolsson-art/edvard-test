@@ -1,9 +1,12 @@
 import { useEffect, useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Users, Activity, MessageCircle, Heart, TrendingUp, Loader2, RefreshCw, X } from 'lucide-react';
+import { Users, Activity, MessageCircle, Heart, TrendingUp, Loader2, RefreshCw, X, Bell } from 'lucide-react';
+import { Capacitor } from '@capacitor/core';
+import { LocalNotifications } from '@capacitor/local-notifications';
 import { supabase } from '@/integrations/supabase/client';
 import { useUserRole } from '@/hooks/useUserRole';
+import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
