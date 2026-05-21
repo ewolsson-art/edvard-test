@@ -247,19 +247,6 @@ export default function Admin() {
                 )}
               </Card>
 
-              {/* Top medications */}
-              <Card className="p-6 bg-white/[0.02] border-white/[0.06]">
-                <h2 className="text-sm font-semibold text-white/80 mb-4">Vanligaste mediciner (aktiva)</h2>
-                {stats.health.topMedications.length === 0 ? (
-                  <p className="text-sm text-white/40">Ingen data</p>
-                ) : (
-                  <ul className="space-y-2 text-sm">
-                    {stats.health.topMedications.map(m => (
-                      <Row key={m.name} label={m.name} value={`${m.users} anv.`} />
-                    ))}
-                  </ul>
-                )}
-              </Card>
 
               {/* Community */}
               <Card className="p-6 bg-white/[0.02] border-white/[0.06]">
