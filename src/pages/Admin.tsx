@@ -211,7 +211,24 @@ export default function Admin() {
 
         {stats && (
           <div className="space-y-8">
-            {/* KPI row */}
+            {/* Push test (native only) */}
+            <Card className="p-5 bg-white/[0.02] border-white/[0.06] flex items-center justify-between gap-4 flex-wrap">
+              <div className="flex items-start gap-3 min-w-0">
+                <Bell className="w-4 h-4 text-white/40 mt-0.5 flex-shrink-0" />
+                <div className="min-w-0">
+                  <p className="text-sm font-medium text-white/80">Verifiera push-notiser</p>
+                  <p className="text-xs text-white/40 mt-0.5">
+                    Skickar en lokal test-notis om 3 sekunder via OS:et. Fungerar bara i den installerade Toddy-appen, inte i webbläsaren.
+                  </p>
+                </div>
+              </div>
+              <Button onClick={sendTestPush} disabled={pushTesting} size="sm" className="rounded-full gap-2 flex-shrink-0">
+                {pushTesting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Bell className="w-3.5 h-3.5" />}
+                Skicka test
+              </Button>
+            </Card>
+
+
             <section className="grid grid-cols-2 md:grid-cols-4 gap-3">
               <Kpi icon={<Users className="w-4 h-4" />} label="Totalt antal användare" value={stats.users.total} />
               <Kpi icon={<TrendingUp className="w-4 h-4" />} label="Nya senaste 7 dagarna" value={stats.users.newLast7} sub={`${stats.users.newLast30} senaste 30 dgr`} />
