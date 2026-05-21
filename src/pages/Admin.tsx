@@ -136,7 +136,7 @@ export default function Admin() {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="max-w-6xl mx-auto px-5 md:px-8 py-8 md:py-12">
+      <div className="max-w-4xl mx-auto md:mx-0 px-5 md:px-8 py-8 md:py-12">
         <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="mb-8 flex items-center justify-between gap-4">
           <div>
             <h1 className="font-display text-3xl md:text-4xl font-semibold tracking-tight">Admin</h1>
