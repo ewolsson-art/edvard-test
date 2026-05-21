@@ -1,9 +1,12 @@
 import { useEffect, useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Users, Activity, MessageCircle, Heart, TrendingUp, Loader2, RefreshCw, X } from 'lucide-react';
+import { Users, Activity, MessageCircle, Heart, TrendingUp, Loader2, RefreshCw, X, Bell } from 'lucide-react';
+import { Capacitor } from '@capacitor/core';
+import { LocalNotifications } from '@capacitor/local-notifications';
 import { supabase } from '@/integrations/supabase/client';
 import { useUserRole } from '@/hooks/useUserRole';
+import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
@@ -123,6 +126,51 @@ export default function Admin() {
 
   useEffect(() => { if (isAdmin) load(); }, [isAdmin]);
 
+  const { toast } = useToast();
+  const [pushTesting, setPushTesting] = useState(false);
+
+  const sendTestPush = async () => {
+    setPushTesting(true);
+    try {
+      if (!Capacitor.isNativePlatform()) {
+        toast({
+          title: 'Endast i native-appen',
+          description: 'Test-notiser fungerar bara i Toddy-appen på iOS/Android, inte i webbläsaren.',
+          variant: 'destructive',
+        });
+        return;
+      }
+      const perm = await LocalNotifications.checkPermissions();
+      if (perm.display !== 'granted') {
+        const req = await LocalNotifications.requestPermissions();
+        if (req.display !== 'granted') {
+          toast({
+            title: 'Tillstånd saknas',
+            description: 'Notiser är avstängda i iOS-inställningarna. Aktivera dem under Inställningar → Toddy → Notiser.',
+            variant: 'destructive',
+          });
+          return;
+        }
+      }
+      await LocalNotifications.schedule({
+        notifications: [{
+          id: Math.floor(Math.random() * 100000),
+          title: 'Toddy – test',
+          body: 'Push fungerar. Allt grönt på iOS-byggget.',
+          schedule: { at: new Date(Date.now() + 3000) },
+        }],
+      });
+      toast({
+        title: 'Test-notis schemalagd',
+        description: 'Du bör se notisen om 3 sekunder. Lås gärna skärmen för att verifiera lock-screen-rendering.',
+      });
+    } catch (e: any) {
+      toast({ title: 'Kunde inte skicka', description: e.message ?? 'Okänt fel', variant: 'destructive' });
+    } finally {
+      setPushTesting(false);
+    }
+  };
+
   if (roleLoading) {
     return <div className="min-h-screen flex items-center justify-center">
       <Loader2 className="w-6 h-6 animate-spin text-white/40" />
@@ -163,7 +211,24 @@ export default function Admin() {
 
         {stats && (
           <div className="space-y-8">
-            {/* KPI row */}
+            {/* Push test (native only) */}
+            <Card className="p-5 bg-white/[0.02] border-white/[0.06] flex items-center justify-between gap-4 flex-wrap">
+              <div className="flex items-start gap-3 min-w-0">
+                <Bell className="w-4 h-4 text-white/40 mt-0.5 flex-shrink-0" />
+                <div className="min-w-0">
+                  <p className="text-sm font-medium text-white/80">Verifiera push-notiser</p>
+                  <p className="text-xs text-white/40 mt-0.5">
+                    Skickar en lokal test-notis om 3 sekunder via OS:et. Fungerar bara i den installerade Toddy-appen, inte i webbläsaren.
+                  </p>
+                </div>
+              </div>
+              <Button onClick={sendTestPush} disabled={pushTesting} size="sm" className="rounded-full gap-2 flex-shrink-0">
+                {pushTesting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Bell className="w-3.5 h-3.5" />}
+                Skicka test
+              </Button>
+            </Card>
+
+
             <section className="grid grid-cols-2 md:grid-cols-4 gap-3">
               <Kpi icon={<Users className="w-4 h-4" />} label="Totalt antal användare" value={stats.users.total} />
               <Kpi icon={<TrendingUp className="w-4 h-4" />} label="Nya senaste 7 dagarna" value={stats.users.newLast7} sub={`${stats.users.newLast30} senaste 30 dgr`} />
