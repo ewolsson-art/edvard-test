@@ -160,9 +160,9 @@ export function CelebrationAnimation({
   );
 
   useEffect(() => {
-    const t1 = setTimeout(() => setPhase(1), 200);
-    const t2 = setTimeout(() => setPhase(2), 800);
-    const t3 = setTimeout(() => setPhase(3), 1400);
+    const t1 = setTimeout(() => setPhase(1), 400);
+    const t2 = setTimeout(() => setPhase(2), 1400);
+    const t3 = setTimeout(() => setPhase(3), 2600);
     return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); };
   }, []);
 
@@ -193,10 +193,11 @@ export function CelebrationAnimation({
               '--x': `${Math.random() * 100}%`,
               '--drift': `${(Math.random() - 0.5) * 150}px`,
               '--spin': `${Math.random() * 720 - 360}deg`,
-              '--delay': `${Math.random() * 0.6}s`,
+              '--delay': `${Math.random() * 1.2}s`,
               '--size': `${6 + Math.random() * 10}px`,
               '--color': confettiPalette[Math.floor(Math.random() * confettiPalette.length)],
               '--shape': Math.random() > 0.5 ? '50%' : '2px',
+              '--fall-duration': `${2.5 + Math.random() * 2}s`,
             } as React.CSSProperties}
           />
         ))}
@@ -235,10 +236,10 @@ export function CelebrationAnimation({
       {/* Hero icon — milestone emoji, mood icon, or default turtle */}
       <div
         className={cn(
-          "relative z-10 transition-all duration-700",
+          "relative z-10 transition-all duration-[1200ms]",
           phase >= 1 ? "scale-100 opacity-100 translate-y-0" : "scale-0 opacity-0 translate-y-8",
         )}
-        style={{ transitionTimingFunction: 'cubic-bezier(0.34, 1.56, 0.64, 1)' }}
+        style={{ transitionTimingFunction: 'cubic-bezier(1, 0, 0, 1)' }}
       >
         <div
           className="absolute inset-[-24px] rounded-full blur-2xl animate-pulse"
@@ -297,9 +298,11 @@ export function CelebrationAnimation({
       )}
 
       <div className={cn(
-        "relative z-10 mt-6 text-center transition-all duration-700 px-6",
+        "relative z-10 mt-6 text-center transition-all duration-1000 px-6",
         phase >= 2 ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0",
-      )}>
+      )}
+      style={{ transitionTimingFunction: 'cubic-bezier(0.25, 0.1, 1, 1)' }}
+      >
         <p className={cn(
           "font-bold text-foreground font-display",
           isMilestone ? "text-3xl md:text-4xl" : "text-2xl md:text-3xl",
@@ -309,9 +312,11 @@ export function CelebrationAnimation({
       </div>
 
       <div className={cn(
-        "relative z-10 mt-3 text-center transition-all duration-700 px-8 max-w-[340px]",
+        "relative z-10 mt-3 text-center transition-all duration-1000 px-8 max-w-[340px]",
         phase >= 3 ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0",
-      )}>
+      )}
+      style={{ transitionTimingFunction: 'cubic-bezier(0.25, 0.1, 1, 1)' }}
+      >
         <p className="text-base text-muted-foreground leading-relaxed">
           {subMessage}
         </p>
