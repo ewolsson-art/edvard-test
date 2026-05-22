@@ -41,6 +41,7 @@ interface Stats {
   };
   community: { posts: number; replies: number };
   connections: { doctorApproved: number; relativeApproved: number };
+  pageViews?: { total: number; last7: number; last30: number; topPaths: { path: string; count: number }[] };
   daily30d: { date: string; checkins: number }[];
   userActivity: {
     id: string;
