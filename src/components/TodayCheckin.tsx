@@ -670,7 +670,7 @@ export function TodayCheckin({
             initial={{ opacity: 0, y: 6 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.32, duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-            className="text-[13.5px] text-foreground/50 leading-relaxed max-w-[340px] mx-auto text-center mb-6"
+            className="text-[14px] text-foreground/55 leading-relaxed max-w-[320px] mx-auto text-center mb-10"
           >
             {heroSub}
           </motion.p>
@@ -682,52 +682,41 @@ export function TodayCheckin({
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.6, type: 'spring', stiffness: 260, damping: 24 }}
-              className="mb-6 max-w-[340px] w-full overflow-hidden rounded-2xl border border-foreground/10 bg-foreground/[0.03] backdrop-blur-sm"
+              className="relative mb-8 w-full max-w-[360px] overflow-hidden rounded-3xl p-[1px] bg-gradient-to-b from-foreground/15 via-foreground/[0.04] to-transparent"
             >
-              {/* Färgad accent-stripe */}
-              <div
-                className="h-[3px] w-full"
-                style={{ background: `linear-gradient(90deg, transparent, ${moodColor}, transparent)` }}
-              />
-
-              <div className="px-5 py-4">
+              <div className="rounded-[23px] bg-[hsl(225_25%_5%)]/80 backdrop-blur-md px-6 py-5 text-left">
                 {/* Header: ikon + label */}
-                <div className="flex items-center gap-2 mb-3">
-                  <div
-                    className="w-7 h-7 rounded-full flex items-center justify-center shrink-0"
-                    style={{ backgroundColor: moodColor.replace(')', ' / 0.15)') }}
-                  >
-                    <Heart
-                      className="w-3.5 h-3.5"
-                      style={{ color: moodColor, fill: moodColor.replace(')', ' / 0.4)') }}
-                    />
-                  </div>
-                  <span className="text-[10.5px] uppercase tracking-[0.12em] font-semibold text-foreground/45">
+                <div className="flex items-center gap-2 mb-4">
+                  <Heart
+                    className="w-3.5 h-3.5 shrink-0"
+                    style={{ color: moodColor, fill: moodColor.replace(')', ' / 0.35)') }}
+                  />
+                  <span className="text-[10px] uppercase tracking-[0.2em] font-bold text-foreground/40">
                     En liten påminnelse
                   </span>
                 </div>
 
                 {/* Pedagogisk mätare: senaste bra dag */}
                 {encouragementData.daysSinceGood !== null && encouragementData.daysSinceGood <= 14 ? (
-                  <div className="text-left space-y-3">
-                    <p className="text-[15px] leading-snug text-foreground/90 font-medium">
+                  <>
+                    <h3 className="text-[16px] leading-snug text-foreground/90 font-medium mb-2">
                       För <span style={{ color: moodColor }}>{encouragementData.daysSinceGood}</span>{' '}
                       {encouragementData.daysSinceGood === 1 ? 'dag' : 'dagar'} sedan mådde du bra.
-                    </p>
-                    <p className="text-[13px] leading-relaxed text-foreground/55">
+                    </h3>
+                    <p className="text-[13px] leading-relaxed text-foreground/50">
                       Måendet rör sig i vågor — det här är en svacka, inte en slutpunkt. Var snäll mot dig själv idag.
                     </p>
-                  </div>
+                  </>
                 ) : (
-                  <div className="text-left space-y-3">
-                    <p className="text-[15px] leading-snug text-foreground/90 font-medium">
+                  <>
+                    <h3 className="text-[16px] leading-snug text-foreground/90 font-medium mb-2">
                       Du har haft <span style={{ color: moodColor }}>{encouragementData.goodDaysCount}</span> bra{' '}
                       {encouragementData.goodDaysCount === 1 ? 'dag' : 'dagar'} i år.
-                    </p>
-                    <p className="text-[13px] leading-relaxed text-foreground/55">
+                    </h3>
+                    <p className="text-[13px] leading-relaxed text-foreground/50">
                       Bättre stunder kommer tillbaka. Att checka in idag är ett steg i rätt riktning.
                     </p>
-                  </div>
+                  </>
                 )}
               </div>
             </motion.div>
