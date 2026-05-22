@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Users, Activity, MessageCircle, Heart, TrendingUp, Loader2, RefreshCw, X, Bell } from 'lucide-react';
+import { Users, Activity, MessageCircle, Heart, TrendingUp, Loader2, RefreshCw, X, Bell, Eye } from 'lucide-react';
 import { Capacitor } from '@capacitor/core';
 import { LocalNotifications } from '@capacitor/local-notifications';
 import { supabase } from '@/integrations/supabase/client';
@@ -41,6 +41,7 @@ interface Stats {
   };
   community: { posts: number; replies: number };
   connections: { doctorApproved: number; relativeApproved: number };
+  pageViews?: { total: number; last7: number; last30: number; topPaths: { path: string; count: number }[] };
   daily30d: { date: string; checkins: number }[];
   userActivity: {
     id: string;
@@ -234,6 +235,14 @@ export default function Admin() {
               <Kpi icon={<TrendingUp className="w-4 h-4" />} label="Nya senaste 7 dagarna" value={stats.users.newLast7} sub={`${stats.users.newLast30} senaste 30 dgr`} />
               <Kpi icon={<Activity className="w-4 h-4" />} label="Aktiva senaste 7 dgr" value={stats.users.activeLast7} sub={`${stats.users.activeLast30} senaste 30 dgr`} />
               <Kpi icon={<Heart className="w-4 h-4" />} label="Check-ins totalt" value={stats.checkins.total} sub={`${stats.checkins.last30} senaste 30 dgr`} />
+              {stats.pageViews && (
+                <Kpi
+                  icon={<Eye className="w-4 h-4" />}
+                  label="Sidvisningar totalt"
+                  value={stats.pageViews.total}
+                  sub={`${stats.pageViews.last7} sen. 7 dgr · ${stats.pageViews.last30} sen. 30 dgr`}
+                />
+              )}
             </section>
 
             {/* Daily checkins bar chart */}
@@ -331,6 +340,27 @@ export default function Admin() {
                   <Row label="Anhörig ↔ användare" value={stats.connections.relativeApproved} />
                 </ul>
               </Card>
+
+              {/* Top sidor */}
+              {stats.pageViews && (
+                <Card className="p-6 bg-white/[0.02] border-white/[0.06] md:col-span-2">
+                  <h2 className="text-sm font-semibold text-white/80 mb-4 flex items-center gap-2">
+                    <Eye className="w-4 h-4" /> Mest besökta sidor (30 dgr)
+                  </h2>
+                  {stats.pageViews.topPaths.length === 0 ? (
+                    <p className="text-sm text-white/40">Ingen data</p>
+                  ) : (
+                    <ul className="space-y-2 text-sm">
+                      {stats.pageViews.topPaths.map(p => (
+                        <Row key={p.path} label={p.path} value={p.count} />
+                      ))}
+                    </ul>
+                  )}
+                  <p className="text-[11px] text-white/30 mt-3">
+                    Endast inloggade användare spåras (exkl. demo). Anonyma besök på toddy.se räknas ej.
+                  </p>
+                </Card>
+              )}
             </div>
 
             {/* Per-user activity */}
