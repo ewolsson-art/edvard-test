@@ -235,6 +235,14 @@ export default function Admin() {
               <Kpi icon={<TrendingUp className="w-4 h-4" />} label="Nya senaste 7 dagarna" value={stats.users.newLast7} sub={`${stats.users.newLast30} senaste 30 dgr`} />
               <Kpi icon={<Activity className="w-4 h-4" />} label="Aktiva senaste 7 dgr" value={stats.users.activeLast7} sub={`${stats.users.activeLast30} senaste 30 dgr`} />
               <Kpi icon={<Heart className="w-4 h-4" />} label="Check-ins totalt" value={stats.checkins.total} sub={`${stats.checkins.last30} senaste 30 dgr`} />
+              {stats.pageViews && (
+                <Kpi
+                  icon={<Eye className="w-4 h-4" />}
+                  label="Sidvisningar totalt"
+                  value={stats.pageViews.total}
+                  sub={`${stats.pageViews.last7} sen. 7 dgr · ${stats.pageViews.last30} sen. 30 dgr`}
+                />
+              )}
             </section>
 
             {/* Daily checkins bar chart */}
