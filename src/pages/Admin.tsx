@@ -621,6 +621,26 @@ function Row({ label, value }: { label: string; value: number | string }) {
   );
 }
 
+function UtmList({ title, items }: { title: string; items: { k: string; v: number }[] }) {
+  return (
+    <div>
+      <h4 className="text-[11px] font-semibold text-white/45 uppercase tracking-wide mb-2">{title}</h4>
+      {items.length === 0 ? (
+        <p className="text-xs text-white/30">—</p>
+      ) : (
+        <ul className="space-y-1.5 text-sm">
+          {items.map(it => (
+            <li key={it.k} className="flex justify-between gap-2">
+              <span className="text-white/75 truncate">{it.k}</span>
+              <span className="text-white/45 tabular-nums">{it.v}</span>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+}
+
 interface FeedbackRow {
   id: string;
   user_id: string | null;
