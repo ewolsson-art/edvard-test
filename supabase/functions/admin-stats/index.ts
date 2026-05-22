@@ -57,21 +57,33 @@ Deno.serve(async (req) => {
       const [{ count: checkinsTotal }, { data: recentCheckins }, { data: pageViews }, { data: roles }] = await Promise.all([
         admin.from("mood_entries").select("id", { count: "exact", head: true }).eq("user_id", detailUserId),
         admin.from("mood_entries").select("date, mood, created_at").eq("user_id", detailUserId).order("created_at", { ascending: false }).limit(20),
-        admin.from("page_views").select("path, created_at").eq("user_id", detailUserId).order("created_at", { ascending: false }).limit(5000),
+        admin.from("page_views").select("path, referrer, utm_source, utm_medium, utm_campaign, created_at").eq("user_id", detailUserId).order("created_at", { ascending: false }).limit(5000),
         admin.from("user_roles").select("role").eq("user_id", detailUserId),
       ]);
 
-      // Aggregera sidor
       const pageCounts: Record<string, number> = {};
+      const refCounts: Record<string, number> = {};
+      const utmCounts: Record<string, number> = {};
       let lastVisit: string | null = null;
+      let firstTouch: { referrer: string | null; utm_source: string | null; utm_medium: string | null; utm_campaign: string | null; at: string } | null = null;
       (pageViews ?? []).forEach((p: any) => {
         pageCounts[p.path] = (pageCounts[p.path] ?? 0) + 1;
+        if (p.referrer) refCounts[p.referrer] = (refCounts[p.referrer] ?? 0) + 1;
+        if (p.utm_source) utmCounts[p.utm_source] = (utmCounts[p.utm_source] ?? 0) + 1;
         if (!lastVisit || p.created_at > lastVisit) lastVisit = p.created_at;
+        if (!firstTouch || p.created_at < firstTouch.at) {
+          firstTouch = {
+            referrer: p.referrer ?? null,
+            utm_source: p.utm_source ?? null,
+            utm_medium: p.utm_medium ?? null,
+            utm_campaign: p.utm_campaign ?? null,
+            at: p.created_at,
+          };
+        }
       });
-      const topPages = Object.entries(pageCounts)
-        .map(([path, count]) => ({ path, count }))
-        .sort((a, b) => b.count - a.count)
-        .slice(0, 25);
+      const topPages = Object.entries(pageCounts).map(([path, count]) => ({ path, count })).sort((a, b) => b.count - a.count).slice(0, 25);
+      const topReferrers = Object.entries(refCounts).map(([referrer, count]) => ({ referrer, count })).sort((a, b) => b.count - a.count).slice(0, 10);
+      const topUtm = Object.entries(utmCounts).map(([source, count]) => ({ source, count })).sort((a, b) => b.count - a.count).slice(0, 10);
 
       return new Response(JSON.stringify({
         user: {
@@ -85,7 +97,10 @@ Deno.serve(async (req) => {
         recentCheckins: recentCheckins ?? [],
         pageViewsTotal: (pageViews ?? []).length,
         lastVisit,
+        firstTouch,
         topPages,
+        topReferrers,
+        topUtm,
       }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
 
