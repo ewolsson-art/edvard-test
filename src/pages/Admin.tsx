@@ -525,6 +525,34 @@ export default function Admin() {
               </div>
 
               <div>
+                <h3 className="text-sm font-semibold text-white/80 mb-3 flex items-center gap-2">
+                  <Globe className="w-3.5 h-3.5" /> Varifrån de kom (first-touch)
+                </h3>
+                {detail.firstTouch ? (
+                  <div className="rounded-2xl border border-white/[0.06] bg-white/[0.02] p-4 text-sm space-y-1.5">
+                    <Row label="Referrer" value={detail.firstTouch.referrer ?? '—'} />
+                    <Row label="UTM source" value={detail.firstTouch.utm_source ?? '—'} />
+                    <Row label="UTM medium" value={detail.firstTouch.utm_medium ?? '—'} />
+                    <Row label="UTM campaign" value={detail.firstTouch.utm_campaign ?? '—'} />
+                    <Row label="Första besök" value={fmtDateTime(detail.firstTouch.at)} />
+                  </div>
+                ) : (
+                  <p className="text-sm text-white/40">Ingen källdata registrerad.</p>
+                )}
+                {(detail.topReferrers.length > 0 || detail.topUtm.length > 0) && (
+                  <div className="grid sm:grid-cols-2 gap-4 mt-4">
+                    {detail.topReferrers.length > 0 && (
+                      <UtmList title="Top referrers" items={detail.topReferrers.map(x => ({ k: x.referrer, v: x.count }))} />
+                    )}
+                    {detail.topUtm.length > 0 && (
+                      <UtmList title="Top UTM source" items={detail.topUtm.map(x => ({ k: x.source, v: x.count }))} />
+                    )}
+                  </div>
+                )}
+              </div>
+
+
+              <div>
                 <h3 className="text-sm font-semibold text-white/80 mb-3">Mest besökta sidor</h3>
                 {detail.topPages.length === 0 ? (
                   <p className="text-sm text-white/40">Ingen sidvisning loggad än. (Loggning aktiverades nyligen.)</p>
