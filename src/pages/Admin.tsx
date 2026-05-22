@@ -11,13 +11,24 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 
+interface FirstTouch {
+  referrer: string | null;
+  utm_source: string | null;
+  utm_medium: string | null;
+  utm_campaign: string | null;
+  at: string;
+}
+
 interface UserDetail {
   user: { id: string; email: string | null; createdAt: string; lastSignInAt: string | null; roles: string[] };
   checkinsTotal: number;
   recentCheckins: { date: string; mood: string; created_at: string }[];
   pageViewsTotal: number;
   lastVisit: string | null;
+  firstTouch: FirstTouch | null;
   topPages: { path: string; count: number }[];
+  topReferrers: { referrer: string; count: number }[];
+  topUtm: { source: string; count: number }[];
 }
 
 interface Stats {
@@ -41,7 +52,17 @@ interface Stats {
   };
   community: { posts: number; replies: number };
   connections: { doctorApproved: number; relativeApproved: number };
-  pageViews?: { total: number; last7: number; last30: number; topPaths: { path: string; count: number }[] };
+  pageViews?: {
+    total: number;
+    last7: number;
+    last30: number;
+    topPaths: { path: string; count: number }[];
+    topReferrers: { referrer: string; count: number }[];
+    topUtmSources: { source: string; count: number }[];
+    topUtmMediums: { medium: string; count: number }[];
+    topUtmCampaigns: { campaign: string; count: number }[];
+    acquisitionBreakdown: { source: string; users: number }[];
+  };
   daily30d: { date: string; checkins: number }[];
   userActivity: {
     id: string;
@@ -51,6 +72,7 @@ interface Stats {
     checkinsTotal: number;
     checkinsLast30: number;
     lastCheckinDate: string | null;
+    source: string | null;
   }[];
 }
 
