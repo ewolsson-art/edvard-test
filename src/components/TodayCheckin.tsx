@@ -443,7 +443,7 @@ export function TodayCheckin({
       setTimeout(() => {
         setCurrentStep('complete');
         setIsEditing(false);
-      }, 3500);
+      }, 5500);
     }
   };
 
@@ -454,7 +454,7 @@ export function TodayCheckin({
       setTimeout(() => {
         setCurrentStep('complete');
         setIsEditing(false);
-      }, 3500);
+      }, 5500);
     }
   };
 
