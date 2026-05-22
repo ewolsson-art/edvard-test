@@ -271,6 +271,12 @@ Deno.serve(async (req) => {
         doctorApproved: doctorConn ?? 0,
         relativeApproved: relativeConn ?? 0,
       },
+      pageViews: {
+        total: pageViewsTotalAll ?? 0,
+        last7: pvLast7,
+        last30: pvLast30,
+        topPaths,
+      },
       daily30d: Object.values(dailyMap),
       userActivity,
     }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
