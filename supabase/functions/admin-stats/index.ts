@@ -287,6 +287,7 @@ Deno.serve(async (req) => {
     const userActivity = realUsers
       .map((u) => {
         const c = perUserCheckins[u.id] ?? { total: 0, last30: 0, lastDate: null };
+        const ft = firstTouchByUser[u.id];
         return {
           id: u.id,
           email: u.email,
@@ -295,6 +296,7 @@ Deno.serve(async (req) => {
           checkinsTotal: c.total,
           checkinsLast30: c.last30,
           lastCheckinDate: c.lastDate,
+          source: ft ? (ft.utm_source || ft.referrer || null) : null,
         };
       })
       .sort((a, b) => {
