@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Users, Activity, MessageCircle, Heart, TrendingUp, Loader2, RefreshCw, X, Bell, Eye } from 'lucide-react';
+import { Users, Activity, MessageCircle, Heart, TrendingUp, Loader2, RefreshCw, X, Bell, Eye, Globe } from 'lucide-react';
 import { Capacitor } from '@capacitor/core';
 import { LocalNotifications } from '@capacitor/local-notifications';
 import { supabase } from '@/integrations/supabase/client';
