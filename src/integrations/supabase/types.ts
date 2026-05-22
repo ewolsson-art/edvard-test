@@ -691,19 +691,31 @@ export type Database = {
           created_at: string
           id: string
           path: string
+          referrer: string | null
           user_id: string
+          utm_campaign: string | null
+          utm_medium: string | null
+          utm_source: string | null
         }
         Insert: {
           created_at?: string
           id?: string
           path: string
+          referrer?: string | null
           user_id: string
+          utm_campaign?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
         }
         Update: {
           created_at?: string
           id?: string
           path?: string
+          referrer?: string | null
           user_id?: string
+          utm_campaign?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
         }
         Relationships: []
       }

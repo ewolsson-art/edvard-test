@@ -57,21 +57,33 @@ Deno.serve(async (req) => {
       const [{ count: checkinsTotal }, { data: recentCheckins }, { data: pageViews }, { data: roles }] = await Promise.all([
         admin.from("mood_entries").select("id", { count: "exact", head: true }).eq("user_id", detailUserId),
         admin.from("mood_entries").select("date, mood, created_at").eq("user_id", detailUserId).order("created_at", { ascending: false }).limit(20),
-        admin.from("page_views").select("path, created_at").eq("user_id", detailUserId).order("created_at", { ascending: false }).limit(5000),
+        admin.from("page_views").select("path, referrer, utm_source, utm_medium, utm_campaign, created_at").eq("user_id", detailUserId).order("created_at", { ascending: false }).limit(5000),
         admin.from("user_roles").select("role").eq("user_id", detailUserId),
       ]);
 
-      // Aggregera sidor
       const pageCounts: Record<string, number> = {};
+      const refCounts: Record<string, number> = {};
+      const utmCounts: Record<string, number> = {};
       let lastVisit: string | null = null;
+      let firstTouch: { referrer: string | null; utm_source: string | null; utm_medium: string | null; utm_campaign: string | null; at: string } | null = null;
       (pageViews ?? []).forEach((p: any) => {
         pageCounts[p.path] = (pageCounts[p.path] ?? 0) + 1;
+        if (p.referrer) refCounts[p.referrer] = (refCounts[p.referrer] ?? 0) + 1;
+        if (p.utm_source) utmCounts[p.utm_source] = (utmCounts[p.utm_source] ?? 0) + 1;
         if (!lastVisit || p.created_at > lastVisit) lastVisit = p.created_at;
+        if (!firstTouch || p.created_at < firstTouch.at) {
+          firstTouch = {
+            referrer: p.referrer ?? null,
+            utm_source: p.utm_source ?? null,
+            utm_medium: p.utm_medium ?? null,
+            utm_campaign: p.utm_campaign ?? null,
+            at: p.created_at,
+          };
+        }
       });
-      const topPages = Object.entries(pageCounts)
-        .map(([path, count]) => ({ path, count }))
-        .sort((a, b) => b.count - a.count)
-        .slice(0, 25);
+      const topPages = Object.entries(pageCounts).map(([path, count]) => ({ path, count })).sort((a, b) => b.count - a.count).slice(0, 25);
+      const topReferrers = Object.entries(refCounts).map(([referrer, count]) => ({ referrer, count })).sort((a, b) => b.count - a.count).slice(0, 10);
+      const topUtm = Object.entries(utmCounts).map(([source, count]) => ({ source, count })).sort((a, b) => b.count - a.count).slice(0, 10);
 
       return new Response(JSON.stringify({
         user: {
@@ -85,7 +97,10 @@ Deno.serve(async (req) => {
         recentCheckins: recentCheckins ?? [],
         pageViewsTotal: (pageViews ?? []).length,
         lastVisit,
+        firstTouch,
         topPages,
+        topReferrers,
+        topUtm,
       }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
 
@@ -192,17 +207,61 @@ Deno.serve(async (req) => {
     const { count: pageViewsTotalAll } = await admin
       .from("page_views").select("id", { count: "exact", head: true });
     const { data: pvRecent } = await admin
-      .from("page_views").select("path, user_id, created_at")
+      .from("page_views").select("path, user_id, referrer, utm_source, utm_medium, utm_campaign, created_at")
       .gte("created_at", iso(now - 30 * day))
       .limit(20000);
     const pvFiltered = (pvRecent ?? []).filter((r: any) => notDemo(r.user_id));
     const pvLast7 = pvFiltered.filter((r: any) => new Date(r.created_at).getTime() >= now - 7 * day).length;
     const pvLast30 = pvFiltered.length;
     const pathCounts: Record<string, number> = {};
-    pvFiltered.forEach((r: any) => { pathCounts[r.path] = (pathCounts[r.path] ?? 0) + 1; });
-    const topPaths = Object.entries(pathCounts)
-      .map(([path, count]) => ({ path, count }))
-      .sort((a, b) => b.count - a.count).slice(0, 15);
+    const referrerCounts: Record<string, number> = {};
+    const utmSourceCounts: Record<string, number> = {};
+    const utmMediumCounts: Record<string, number> = {};
+    const utmCampaignCounts: Record<string, number> = {};
+    pvFiltered.forEach((r: any) => {
+      pathCounts[r.path] = (pathCounts[r.path] ?? 0) + 1;
+      if (r.referrer) referrerCounts[r.referrer] = (referrerCounts[r.referrer] ?? 0) + 1;
+      if (r.utm_source) utmSourceCounts[r.utm_source] = (utmSourceCounts[r.utm_source] ?? 0) + 1;
+      if (r.utm_medium) utmMediumCounts[r.utm_medium] = (utmMediumCounts[r.utm_medium] ?? 0) + 1;
+      if (r.utm_campaign) utmCampaignCounts[r.utm_campaign] = (utmCampaignCounts[r.utm_campaign] ?? 0) + 1;
+    });
+    const topPaths = Object.entries(pathCounts).map(([path, count]) => ({ path, count })).sort((a, b) => b.count - a.count).slice(0, 15);
+    const topReferrers = Object.entries(referrerCounts).map(([referrer, count]) => ({ referrer, count })).sort((a, b) => b.count - a.count).slice(0, 15);
+    const topUtmSources = Object.entries(utmSourceCounts).map(([source, count]) => ({ source, count })).sort((a, b) => b.count - a.count).slice(0, 10);
+    const topUtmMediums = Object.entries(utmMediumCounts).map(([medium, count]) => ({ medium, count })).sort((a, b) => b.count - a.count).slice(0, 10);
+    const topUtmCampaigns = Object.entries(utmCampaignCounts).map(([campaign, count]) => ({ campaign, count })).sort((a, b) => b.count - a.count).slice(0, 10);
+
+    // --- First-touch per användare (all-time, för "varifrån de kom") ---
+    const { data: allPv } = await admin
+      .from("page_views").select("user_id, referrer, utm_source, utm_medium, utm_campaign, created_at")
+      .order("created_at", { ascending: true })
+      .limit(50000);
+    const firstTouchByUser: Record<string, { referrer: string | null; utm_source: string | null; at: string }> = {};
+    (allPv ?? []).forEach((r: any) => {
+      if (!notDemo(r.user_id)) return;
+      if (!firstTouchByUser[r.user_id]) {
+        firstTouchByUser[r.user_id] = {
+          referrer: r.referrer ?? null,
+          utm_source: r.utm_source ?? null,
+          at: r.created_at,
+        };
+      }
+    });
+
+    // Acquisition-sammanfattning: hur många användare per source
+    const acquisitionCounts: Record<string, number> = {};
+    let directCount = 0;
+    Object.values(firstTouchByUser).forEach((ft) => {
+      const src = ft.utm_source || ft.referrer;
+      if (!src) directCount++;
+      else acquisitionCounts[src] = (acquisitionCounts[src] ?? 0) + 1;
+    });
+    const acquisitionBreakdown = Object.entries(acquisitionCounts)
+      .map(([source, users]) => ({ source, users }))
+      .sort((a, b) => b.users - a.users)
+      .slice(0, 15);
+    if (directCount > 0) acquisitionBreakdown.unshift({ source: 'Direkt / okänt', users: directCount });
+
 
     // --- Daglig serie (check-ins, exkl. demo) ---
     const dailyMap: Record<string, { date: string; checkins: number }> = {};
@@ -228,6 +287,7 @@ Deno.serve(async (req) => {
     const userActivity = realUsers
       .map((u) => {
         const c = perUserCheckins[u.id] ?? { total: 0, last30: 0, lastDate: null };
+        const ft = firstTouchByUser[u.id];
         return {
           id: u.id,
           email: u.email,
@@ -236,6 +296,7 @@ Deno.serve(async (req) => {
           checkinsTotal: c.total,
           checkinsLast30: c.last30,
           lastCheckinDate: c.lastDate,
+          source: ft ? (ft.utm_source || ft.referrer || null) : null,
         };
       })
       .sort((a, b) => {
@@ -276,6 +337,11 @@ Deno.serve(async (req) => {
         last7: pvLast7,
         last30: pvLast30,
         topPaths,
+        topReferrers,
+        topUtmSources,
+        topUtmMediums,
+        topUtmCampaigns,
+        acquisitionBreakdown,
       },
       daily30d: Object.values(dailyMap),
       userActivity,

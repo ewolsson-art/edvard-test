@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Users, Activity, MessageCircle, Heart, TrendingUp, Loader2, RefreshCw, X, Bell, Eye } from 'lucide-react';
+import { Users, Activity, MessageCircle, Heart, TrendingUp, Loader2, RefreshCw, X, Bell, Eye, Globe } from 'lucide-react';
 import { Capacitor } from '@capacitor/core';
 import { LocalNotifications } from '@capacitor/local-notifications';
 import { supabase } from '@/integrations/supabase/client';
@@ -11,13 +11,24 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 
+interface FirstTouch {
+  referrer: string | null;
+  utm_source: string | null;
+  utm_medium: string | null;
+  utm_campaign: string | null;
+  at: string;
+}
+
 interface UserDetail {
   user: { id: string; email: string | null; createdAt: string; lastSignInAt: string | null; roles: string[] };
   checkinsTotal: number;
   recentCheckins: { date: string; mood: string; created_at: string }[];
   pageViewsTotal: number;
   lastVisit: string | null;
+  firstTouch: FirstTouch | null;
   topPages: { path: string; count: number }[];
+  topReferrers: { referrer: string; count: number }[];
+  topUtm: { source: string; count: number }[];
 }
 
 interface Stats {
@@ -41,7 +52,17 @@ interface Stats {
   };
   community: { posts: number; replies: number };
   connections: { doctorApproved: number; relativeApproved: number };
-  pageViews?: { total: number; last7: number; last30: number; topPaths: { path: string; count: number }[] };
+  pageViews?: {
+    total: number;
+    last7: number;
+    last30: number;
+    topPaths: { path: string; count: number }[];
+    topReferrers: { referrer: string; count: number }[];
+    topUtmSources: { source: string; count: number }[];
+    topUtmMediums: { medium: string; count: number }[];
+    topUtmCampaigns: { campaign: string; count: number }[];
+    acquisitionBreakdown: { source: string; users: number }[];
+  };
   daily30d: { date: string; checkins: number }[];
   userActivity: {
     id: string;
@@ -51,6 +72,7 @@ interface Stats {
     checkinsTotal: number;
     checkinsLast30: number;
     lastCheckinDate: string | null;
+    source: string | null;
   }[];
 }
 
@@ -361,6 +383,48 @@ export default function Admin() {
                   </p>
                 </Card>
               )}
+
+              {/* Acquisition: varifrån användarna kommer (first-touch all-time) */}
+              {stats.pageViews && (
+                <Card className="p-6 bg-white/[0.02] border-white/[0.06] md:col-span-2">
+                  <h2 className="text-sm font-semibold text-white/80 mb-4 flex items-center gap-2">
+                    <Globe className="w-4 h-4" /> Varifrån användarna kommer
+                  </h2>
+                  <p className="text-[11px] text-white/40 mb-4">
+                    First-touch per användare: första referrer eller UTM-källa vi såg. "Direkt / okänt" = ingen referrer (skrev URL, app, bokmärke) eller besök innan spårning aktiverades.
+                  </p>
+                  {stats.pageViews.acquisitionBreakdown.length === 0 ? (
+                    <p className="text-sm text-white/40">Ingen källdata ännu.</p>
+                  ) : (
+                    <ul className="space-y-2 text-sm">
+                      {stats.pageViews.acquisitionBreakdown.map(a => (
+                        <Row key={a.source} label={a.source} value={`${a.users} anv.`} />
+                      ))}
+                    </ul>
+                  )}
+
+                  {stats.pageViews.topReferrers.length > 0 && (
+                    <div className="mt-6 pt-5 border-t border-white/[0.06]">
+                      <h3 className="text-xs font-semibold text-white/60 mb-3 uppercase tracking-wide">Top referrers (30 dgr · alla besök)</h3>
+                      <ul className="space-y-1.5 text-sm">
+                        {stats.pageViews.topReferrers.map(r => (
+                          <Row key={r.referrer} label={r.referrer} value={r.count} />
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
+                  {(stats.pageViews.topUtmSources.length > 0 ||
+                    stats.pageViews.topUtmMediums.length > 0 ||
+                    stats.pageViews.topUtmCampaigns.length > 0) && (
+                    <div className="mt-6 pt-5 border-t border-white/[0.06] grid sm:grid-cols-3 gap-5">
+                      <UtmList title="UTM source" items={stats.pageViews.topUtmSources.map(x => ({ k: x.source, v: x.count }))} />
+                      <UtmList title="UTM medium" items={stats.pageViews.topUtmMediums.map(x => ({ k: x.medium, v: x.count }))} />
+                      <UtmList title="UTM campaign" items={stats.pageViews.topUtmCampaigns.map(x => ({ k: x.campaign, v: x.count }))} />
+                    </div>
+                  )}
+                </Card>
+              )}
             </div>
 
             {/* Per-user activity */}
@@ -380,6 +444,7 @@ export default function Admin() {
                   <thead>
                     <tr className="text-left text-[11px] uppercase tracking-wide text-white/35 border-b border-white/[0.06]">
                       <th className="px-6 py-2 font-medium">E-post</th>
+                      <th className="px-2 py-2 font-medium">Källa</th>
                       <th className="px-2 py-2 font-medium">Skapad</th>
                       <th className="px-2 py-2 font-medium">Senaste inloggning</th>
                       <th className="px-2 py-2 font-medium text-right">Check-ins (30d)</th>
@@ -397,6 +462,13 @@ export default function Admin() {
                           className="border-b border-white/[0.04] hover:bg-white/[0.04] cursor-pointer transition-colors"
                         >
                           <td className="px-6 py-2 text-white/85 truncate max-w-[220px]">{u.email ?? '—'}</td>
+                          <td className="px-2 py-2 text-white/55 truncate max-w-[140px]">
+                            {u.source ? (
+                              <span className="inline-block px-2 py-0.5 rounded-full bg-white/[0.05] text-white/75 text-[11px]">{u.source}</span>
+                            ) : (
+                              <span className="text-white/30 text-[11px]">direkt</span>
+                            )}
+                          </td>
                           <td className="px-2 py-2 text-white/55">{fmtDate(u.createdAt)}</td>
                           <td className="px-2 py-2 text-white/85">{fmtDateTime(u.lastSignInAt)}</td>
                           <td className="px-2 py-2 text-right tabular-nums text-white/85">{u.checkinsLast30}</td>
@@ -451,6 +523,34 @@ export default function Admin() {
                   ))}
                 </div>
               </div>
+
+              <div>
+                <h3 className="text-sm font-semibold text-white/80 mb-3 flex items-center gap-2">
+                  <Globe className="w-3.5 h-3.5" /> Varifrån de kom (first-touch)
+                </h3>
+                {detail.firstTouch ? (
+                  <div className="rounded-2xl border border-white/[0.06] bg-white/[0.02] p-4 text-sm space-y-1.5">
+                    <Row label="Referrer" value={detail.firstTouch.referrer ?? '—'} />
+                    <Row label="UTM source" value={detail.firstTouch.utm_source ?? '—'} />
+                    <Row label="UTM medium" value={detail.firstTouch.utm_medium ?? '—'} />
+                    <Row label="UTM campaign" value={detail.firstTouch.utm_campaign ?? '—'} />
+                    <Row label="Första besök" value={fmtDateTime(detail.firstTouch.at)} />
+                  </div>
+                ) : (
+                  <p className="text-sm text-white/40">Ingen källdata registrerad.</p>
+                )}
+                {(detail.topReferrers.length > 0 || detail.topUtm.length > 0) && (
+                  <div className="grid sm:grid-cols-2 gap-4 mt-4">
+                    {detail.topReferrers.length > 0 && (
+                      <UtmList title="Top referrers" items={detail.topReferrers.map(x => ({ k: x.referrer, v: x.count }))} />
+                    )}
+                    {detail.topUtm.length > 0 && (
+                      <UtmList title="Top UTM source" items={detail.topUtm.map(x => ({ k: x.source, v: x.count }))} />
+                    )}
+                  </div>
+                )}
+              </div>
+
 
               <div>
                 <h3 className="text-sm font-semibold text-white/80 mb-3">Mest besökta sidor</h3>
@@ -518,6 +618,26 @@ function Row({ label, value }: { label: string; value: number | string }) {
       <span className="text-white/65 capitalize">{label}</span>
       <span className="text-white/90 font-medium tabular-nums">{value}</span>
     </li>
+  );
+}
+
+function UtmList({ title, items }: { title: string; items: { k: string; v: number }[] }) {
+  return (
+    <div>
+      <h4 className="text-[11px] font-semibold text-white/45 uppercase tracking-wide mb-2">{title}</h4>
+      {items.length === 0 ? (
+        <p className="text-xs text-white/30">—</p>
+      ) : (
+        <ul className="space-y-1.5 text-sm">
+          {items.map(it => (
+            <li key={it.k} className="flex justify-between gap-2">
+              <span className="text-white/75 truncate">{it.k}</span>
+              <span className="text-white/45 tabular-nums">{it.v}</span>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
   );
 }
 
