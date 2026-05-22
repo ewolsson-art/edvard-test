@@ -235,10 +235,10 @@ export function CelebrationAnimation({
       {/* Hero icon — milestone emoji, mood icon, or default turtle */}
       <div
         className={cn(
-          "relative z-10 transition-all duration-700",
+          "relative z-10 transition-all duration-[1200ms]",
           phase >= 1 ? "scale-100 opacity-100 translate-y-0" : "scale-0 opacity-0 translate-y-8",
         )}
-        style={{ transitionTimingFunction: 'cubic-bezier(0.34, 1.56, 0.64, 1)' }}
+        style={{ transitionTimingFunction: 'cubic-bezier(1, 0, 0, 1)' }}
       >
         <div
           className="absolute inset-[-24px] rounded-full blur-2xl animate-pulse"
