@@ -444,6 +444,7 @@ export default function Admin() {
                   <thead>
                     <tr className="text-left text-[11px] uppercase tracking-wide text-white/35 border-b border-white/[0.06]">
                       <th className="px-6 py-2 font-medium">E-post</th>
+                      <th className="px-2 py-2 font-medium">Källa</th>
                       <th className="px-2 py-2 font-medium">Skapad</th>
                       <th className="px-2 py-2 font-medium">Senaste inloggning</th>
                       <th className="px-2 py-2 font-medium text-right">Check-ins (30d)</th>
@@ -461,6 +462,13 @@ export default function Admin() {
                           className="border-b border-white/[0.04] hover:bg-white/[0.04] cursor-pointer transition-colors"
                         >
                           <td className="px-6 py-2 text-white/85 truncate max-w-[220px]">{u.email ?? '—'}</td>
+                          <td className="px-2 py-2 text-white/55 truncate max-w-[140px]">
+                            {u.source ? (
+                              <span className="inline-block px-2 py-0.5 rounded-full bg-white/[0.05] text-white/75 text-[11px]">{u.source}</span>
+                            ) : (
+                              <span className="text-white/30 text-[11px]">direkt</span>
+                            )}
+                          </td>
                           <td className="px-2 py-2 text-white/55">{fmtDate(u.createdAt)}</td>
                           <td className="px-2 py-2 text-white/85">{fmtDateTime(u.lastSignInAt)}</td>
                           <td className="px-2 py-2 text-right tabular-nums text-white/85">{u.checkinsLast30}</td>
