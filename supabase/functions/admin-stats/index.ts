@@ -188,6 +188,22 @@ Deno.serve(async (req) => {
     const doctorConn = (doctorConnRows ?? []).filter((r: any) => notDemo(r.patient_id) && notDemo(r.doctor_id)).length;
     const relativeConn = (relativeConnRows ?? []).filter((r: any) => notDemo(r.patient_id) && notDemo(r.relative_id)).length;
 
+    // --- Sidvisningar (page_views — endast inloggade, exkl. demo) ---
+    const { count: pageViewsTotalAll } = await admin
+      .from("page_views").select("id", { count: "exact", head: true });
+    const { data: pvRecent } = await admin
+      .from("page_views").select("path, user_id, created_at")
+      .gte("created_at", iso(now - 30 * day))
+      .limit(20000);
+    const pvFiltered = (pvRecent ?? []).filter((r: any) => notDemo(r.user_id));
+    const pvLast7 = pvFiltered.filter((r: any) => new Date(r.created_at).getTime() >= now - 7 * day).length;
+    const pvLast30 = pvFiltered.length;
+    const pathCounts: Record<string, number> = {};
+    pvFiltered.forEach((r: any) => { pathCounts[r.path] = (pathCounts[r.path] ?? 0) + 1; });
+    const topPaths = Object.entries(pathCounts)
+      .map(([path, count]) => ({ path, count }))
+      .sort((a, b) => b.count - a.count).slice(0, 15);
+
     // --- Daglig serie (check-ins, exkl. demo) ---
     const dailyMap: Record<string, { date: string; checkins: number }> = {};
     for (let i = 29; i >= 0; i--) {
