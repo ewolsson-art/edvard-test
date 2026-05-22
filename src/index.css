@@ -1013,7 +1013,7 @@
   height: var(--size);
   background: var(--color);
   border-radius: var(--shape);
-  animation: celebration-confetti-fall 2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+  animation: celebration-confetti-fall var(--fall-duration, 3s) cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
   animation-delay: var(--delay);
   opacity: 0;
 }
