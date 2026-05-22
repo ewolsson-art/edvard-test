@@ -340,6 +340,27 @@ export default function Admin() {
                   <Row label="Anhörig ↔ användare" value={stats.connections.relativeApproved} />
                 </ul>
               </Card>
+
+              {/* Top sidor */}
+              {stats.pageViews && (
+                <Card className="p-6 bg-white/[0.02] border-white/[0.06] md:col-span-2">
+                  <h2 className="text-sm font-semibold text-white/80 mb-4 flex items-center gap-2">
+                    <Eye className="w-4 h-4" /> Mest besökta sidor (30 dgr)
+                  </h2>
+                  {stats.pageViews.topPaths.length === 0 ? (
+                    <p className="text-sm text-white/40">Ingen data</p>
+                  ) : (
+                    <ul className="space-y-2 text-sm">
+                      {stats.pageViews.topPaths.map(p => (
+                        <Row key={p.path} label={p.path} value={p.count} />
+                      ))}
+                    </ul>
+                  )}
+                  <p className="text-[11px] text-white/30 mt-3">
+                    Endast inloggade användare spåras (exkl. demo). Anonyma besök på toddy.se räknas ej.
+                  </p>
+                </Card>
+              )}
             </div>
 
             {/* Per-user activity */}
