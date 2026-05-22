@@ -297,9 +297,11 @@ export function CelebrationAnimation({
       )}
 
       <div className={cn(
-        "relative z-10 mt-6 text-center transition-all duration-700 px-6",
+        "relative z-10 mt-6 text-center transition-all duration-1000 px-6",
         phase >= 2 ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0",
-      )}>
+      )}
+      style={{ transitionTimingFunction: 'cubic-bezier(0.25, 0.1, 1, 1)' }}
+      >
         <p className={cn(
           "font-bold text-foreground font-display",
           isMilestone ? "text-3xl md:text-4xl" : "text-2xl md:text-3xl",
@@ -309,9 +311,11 @@ export function CelebrationAnimation({
       </div>
 
       <div className={cn(
-        "relative z-10 mt-3 text-center transition-all duration-700 px-8 max-w-[340px]",
+        "relative z-10 mt-3 text-center transition-all duration-1000 px-8 max-w-[340px]",
         phase >= 3 ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0",
-      )}>
+      )}
+      style={{ transitionTimingFunction: 'cubic-bezier(0.25, 0.1, 1, 1)' }}
+      >
         <p className="text-base text-muted-foreground leading-relaxed">
           {subMessage}
         </p>
