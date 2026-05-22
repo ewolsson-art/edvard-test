@@ -193,10 +193,11 @@ export function CelebrationAnimation({
               '--x': `${Math.random() * 100}%`,
               '--drift': `${(Math.random() - 0.5) * 150}px`,
               '--spin': `${Math.random() * 720 - 360}deg`,
-              '--delay': `${Math.random() * 0.6}s`,
+              '--delay': `${Math.random() * 1.2}s`,
               '--size': `${6 + Math.random() * 10}px`,
               '--color': confettiPalette[Math.floor(Math.random() * confettiPalette.length)],
               '--shape': Math.random() > 0.5 ? '50%' : '2px',
+              '--fall-duration': `${2.5 + Math.random() * 2}s`,
             } as React.CSSProperties}
           />
         ))}
