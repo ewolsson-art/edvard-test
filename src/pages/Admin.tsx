@@ -383,6 +383,48 @@ export default function Admin() {
                   </p>
                 </Card>
               )}
+
+              {/* Acquisition: varifrån användarna kommer (first-touch all-time) */}
+              {stats.pageViews && (
+                <Card className="p-6 bg-white/[0.02] border-white/[0.06] md:col-span-2">
+                  <h2 className="text-sm font-semibold text-white/80 mb-4 flex items-center gap-2">
+                    <Globe className="w-4 h-4" /> Varifrån användarna kommer
+                  </h2>
+                  <p className="text-[11px] text-white/40 mb-4">
+                    First-touch per användare: första referrer eller UTM-källa vi såg. "Direkt / okänt" = ingen referrer (skrev URL, app, bokmärke) eller besök innan spårning aktiverades.
+                  </p>
+                  {stats.pageViews.acquisitionBreakdown.length === 0 ? (
+                    <p className="text-sm text-white/40">Ingen källdata ännu.</p>
+                  ) : (
+                    <ul className="space-y-2 text-sm">
+                      {stats.pageViews.acquisitionBreakdown.map(a => (
+                        <Row key={a.source} label={a.source} value={`${a.users} anv.`} />
+                      ))}
+                    </ul>
+                  )}
+
+                  {stats.pageViews.topReferrers.length > 0 && (
+                    <div className="mt-6 pt-5 border-t border-white/[0.06]">
+                      <h3 className="text-xs font-semibold text-white/60 mb-3 uppercase tracking-wide">Top referrers (30 dgr · alla besök)</h3>
+                      <ul className="space-y-1.5 text-sm">
+                        {stats.pageViews.topReferrers.map(r => (
+                          <Row key={r.referrer} label={r.referrer} value={r.count} />
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
+                  {(stats.pageViews.topUtmSources.length > 0 ||
+                    stats.pageViews.topUtmMediums.length > 0 ||
+                    stats.pageViews.topUtmCampaigns.length > 0) && (
+                    <div className="mt-6 pt-5 border-t border-white/[0.06] grid sm:grid-cols-3 gap-5">
+                      <UtmList title="UTM source" items={stats.pageViews.topUtmSources.map(x => ({ k: x.source, v: x.count }))} />
+                      <UtmList title="UTM medium" items={stats.pageViews.topUtmMediums.map(x => ({ k: x.medium, v: x.count }))} />
+                      <UtmList title="UTM campaign" items={stats.pageViews.topUtmCampaigns.map(x => ({ k: x.campaign, v: x.count }))} />
+                    </div>
+                  )}
+                </Card>
+              )}
             </div>
 
             {/* Per-user activity */}
