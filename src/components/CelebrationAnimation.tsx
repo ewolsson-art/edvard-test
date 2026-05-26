@@ -97,11 +97,9 @@ export function CelebrationAnimation({
     365: { emoji: '🐢', title: t('celebration.milestone365Title'), subtitle: t('celebration.milestone365Sub') },
   }), [t]);
 
-  // Mood-personalized message pools — Swedish, empathetic, never dismissive of low moods.
+  // Mood-personalized message pools — Swedish, observational, never evaluative.
   const personalizedMessages = useMemo(() => {
     const name = firstName?.trim();
-    const namePart = name ? `${name}, ` : '';
-    const namePartCap = name ? `${name}!` : '';
 
     if (isLowMood(mood)) {
       return {
@@ -120,9 +118,9 @@ export function CelebrationAnimation({
     if (isHighMood(mood)) {
       return {
         titles: [
-          name ? `Du brinner idag, ${name}` : 'Du brinner idag',
-          'Härlig energi!',
-          namePartCap ? `Snyggt, ${namePartCap}` : 'Snyggt jobbat!',
+          name ? `Dagen är loggad, ${name}` : 'Dagen är loggad',
+          'Energin noterad',
+          name ? `Hej ${name}, din incheckning är sparad` : 'Incheckning sparad',
         ],
         subs: [
           'Försök ta en lugn paus någon gång under dagen.',
@@ -131,15 +129,15 @@ export function CelebrationAnimation({
         ],
       };
     }
-    // stable / unknown — warm neutral
+    // stable / unknown — neutral, observational
     return {
       titles: [
-        namePartCap ? `Bra jobbat, ${namePartCap}` : 'Bra jobbat!',
-        'Snyggt incheckat',
+        name ? `Hej ${name}, dagen är loggad` : 'Dagen är loggad',
+        'Incheckning sparad',
         'En dag till i loggen',
       ],
       subs: [
-        'Stabilitet är en superkraft.',
+        'Stabilitet ger tydligare mönster över tid.',
         'Små steg, stor skillnad över tid.',
         'Du bygger en värdefull bild av ditt mående.',
       ],
