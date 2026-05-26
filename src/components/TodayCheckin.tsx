@@ -589,18 +589,18 @@ export function TodayCheckin({
     const isLastRetro = !!retroProgress && retroProgress.current === retroProgress.total;
     const retroDateLabel = format(displayDate, 'EEEE d MMM', { locale: sv });
 
-    // Personlig hälsning baserat på stämningsläge
+    // Personlig hälsning baserat på stämningsläge — alltid neutral, aldrig värderande
     const namePart = firstName?.trim() ? `, ${firstName.trim()}` : '';
     const heroTitle = isRetroDay
       ? (isLastRetro
-          ? `Din streak är räddad${namePart}`
+          ? `Dina missade dagar är ifyllda${namePart}`
           : 'Sparat')
       : isLowMood
         ? `Tack för att du loggade idag${namePart}`
         : isHighMood
-          ? `Bra att du fångar känslan${namePart}`
+          ? `Känslan är noterad${namePart}`
           : isStable
-            ? `Snyggt jobbat${namePart}`
+            ? `Dagen är loggad${namePart}`
             : `Klart${namePart}`;
 
     const heroSub = isRetroDay
@@ -612,7 +612,7 @@ export function TodayCheckin({
         : isHighMood
           ? 'Försök hitta en lugn stund — bra för balansen över tid.'
           : isStable
-            ? 'Stabilitet är en superkraft. Fortsätt med det du gör.'
+            ? 'Stabilitet ger tydligare mönster över tid.'
             : 'Din incheckning är sparad.';
 
     return (
