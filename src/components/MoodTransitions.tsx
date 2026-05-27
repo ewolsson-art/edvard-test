@@ -14,7 +14,7 @@ interface Phase {
 
 const PHASE_META: Record<PhaseKind, { label: string; color: string; dot: string }> = {
   elevated:  { label: 'Uppvarvad', color: 'text-orange-300', dot: 'bg-orange-400' },
-  depressed: { label: 'Nedstämd',  color: 'text-blue-300',   dot: 'bg-blue-400' },
+  depressed: { label: 'Nedstämd',  color: 'text-red-400',   dot: 'bg-red-400' },
   mixed:     { label: 'Blandad',   color: 'text-red-300',    dot: 'bg-red-400' },
   stable:    { label: 'Stabil',    color: 'text-emerald-300',dot: 'bg-emerald-400' },
 };
