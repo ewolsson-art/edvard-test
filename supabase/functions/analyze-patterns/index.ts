@@ -344,6 +344,10 @@ Returnera JSON:
       await sb.from("pattern_insights").insert(rows);
     }
 
+    const diag = `raw=${rawPatterns.length} afterMed=${afterMed.length} afterOcc=${afterOcc.length} final=${patterns.length}` +
+      (rawPatterns.length === 0 ? ` content=${String(content).slice(0, 600)}` : "") +
+      (rawPatterns.length > 0 && patterns.length === 0 ? ` filtered_sample=${JSON.stringify(rawPatterns[0]).slice(0, 600)}` : "");
+
     await sb.from("pattern_analysis_runs").upsert(
       {
         user_id: userId,
@@ -351,7 +355,7 @@ Returnera JSON:
         entries_analyzed: moodEntries.length,
         patterns_found: patterns.length,
         status: "success",
-        error_message: null,
+        error_message: diag,
       },
       { onConflict: "user_id" },
     );
