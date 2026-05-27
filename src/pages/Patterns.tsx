@@ -39,24 +39,6 @@ export default function Patterns() {
   const { user } = useAuth();
   const latestMood = entries.length > 0 ? entries[entries.length - 1].mood : null;
 
-  // Stats across full history (for OverviewSummary).
-  const stats = (() => {
-    let severe_elevated = 0, elevated = 0, somewhat_elevated = 0, stable = 0,
-        somewhat_depressed = 0, depressed = 0, severe_depressed = 0;
-    entries.forEach(e => {
-      switch (e.mood) {
-        case 'severe_elevated': severe_elevated++; break;
-        case 'elevated': elevated++; break;
-        case 'somewhat_elevated': somewhat_elevated++; break;
-        case 'stable': stable++; break;
-        case 'somewhat_depressed': somewhat_depressed++; break;
-        case 'depressed': depressed++; break;
-        case 'severe_depressed': severe_depressed++; break;
-      }
-    });
-    const total = severe_elevated + elevated + somewhat_elevated + stable + somewhat_depressed + depressed + severe_depressed;
-    return { severe_elevated, elevated, somewhat_elevated, stable, somewhat_depressed, depressed, severe_depressed, unregistered: 0, total, totalDays: total };
-  })();
 
   // Context line: check-ins last 30 days
   const last30Count = (() => {
