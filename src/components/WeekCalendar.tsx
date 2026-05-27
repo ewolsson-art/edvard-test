@@ -61,12 +61,24 @@ export function WeekCalendar({
 
       {/* Weekday headers */}
       <div className="grid grid-cols-7 mb-1">
-        {weekDayHeaders.map((day, i) => (
-          <div key={i} className="text-center text-sm font-semibold text-muted-foreground py-2">
-            {day}
-          </div>
-        ))}
+        {weekDayHeaders.map((day, i) => {
+          const headerIsToday = weekDays[i] && isToday(weekDays[i]);
+          return (
+            <div
+              key={i}
+              className={cn(
+                "text-center text-sm py-2 transition-colors",
+                headerIsToday
+                  ? "font-bold text-[hsl(45_85%_55%)]"
+                  : "font-semibold text-muted-foreground",
+              )}
+            >
+              {day}
+            </div>
+          );
+        })}
       </div>
+
 
       {/* Day cells */}
       <div className="grid grid-cols-7">
