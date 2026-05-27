@@ -1,5 +1,5 @@
-import { useMemo } from 'react';
-import { ArrowRight, Repeat } from 'lucide-react';
+import { useMemo, useState } from 'react';
+import { ArrowRight, Repeat, ChevronDown } from 'lucide-react';
 import { detectEpisodes, type Episode, type EpisodeKind } from '@/lib/episodeDetection';
 import { useMoodData } from '@/hooks/useMoodData';
 
@@ -36,7 +36,6 @@ const dayDiff = (a: string, b: string) =>
 
 function buildPhases(episodes: Episode[]): Phase[] {
   if (episodes.length === 0) return [];
-  // Collapse consecutive episodes of the same phase kind
   const raw: Phase[] = episodes.map(e => ({
     kind: episodeToPhase(e.kind),
     startDate: e.startDate,
@@ -55,7 +54,6 @@ function buildPhases(episodes: Episode[]): Phase[] {
     }
   }
 
-  // Insert stable phases in gaps ≥ 5 days
   const withStable: Phase[] = [];
   for (let i = 0; i < phases.length; i++) {
     withStable.push(phases[i]);
@@ -88,8 +86,9 @@ interface Transition {
 
 export function MoodTransitions() {
   const { entries, isLoaded } = useMoodData();
+  const [expanded, setExpanded] = useState<Set<string>>(new Set());
 
-  const { transitions, phases, grouped } = useMemo(() => {
+  const { phases, grouped, totalTransitions } = useMemo(() => {
     const eps = detectEpisodes(entries);
     const phs = buildPhases(eps);
     const trans: Transition[] = [];
@@ -105,10 +104,20 @@ export function MoodTransitions() {
       g.get(key)!.push(t);
     }
     const sorted = [...g.entries()].sort((a, b) => b[1].length - a[1].length);
-    return { transitions: trans, phases: phs, grouped: sorted };
+    return { phases: phs, grouped: sorted, totalTransitions: trans.length };
   }, [entries]);
 
+  const toggle = (key: string) =>
+    setExpanded(prev => {
+      const next = new Set(prev);
+      next.has(key) ? next.delete(key) : next.add(key);
+      return next;
+    });
+
   if (!isLoaded) return null;
+
+  const topKey = grouped[0]?.[0];
+  const topCount = grouped[0]?.[1].length ?? 0;
 
   return (
     <section className="space-y-4">
@@ -117,7 +126,7 @@ export function MoodTransitions() {
         <h2 className="text-lg font-semibold">Hur du rör dig mellan faser</h2>
       </div>
       <p className="text-sm text-muted-foreground leading-relaxed">
-        Varje gång ditt mående har skiftat tydligt — t.ex. från en uppvarvad period till en nedstämd. Här ser du alla övergångar i din historik.
+        Baserat på alla dina incheckningar — vilka övergångar mellan faser som är vanligast i din historik.
       </p>
 
       {phases.length < 2 ? (
@@ -127,54 +136,94 @@ export function MoodTransitions() {
           </p>
         </div>
       ) : (
-        <div className="space-y-3">
-          {grouped.map(([key, list]) => {
-            const [fromK, toK] = key.split('->') as [PhaseKind, PhaseKind];
-            const fromMeta = PHASE_META[fromK];
-            const toMeta = PHASE_META[toK];
-            return (
-              <div key={key} className="rounded-2xl border border-border/20 bg-card/40 backdrop-blur-sm overflow-hidden">
-                <div className="flex items-center justify-between px-5 py-4 border-b border-border/10">
-                  <div className="flex items-center gap-2.5 text-[15px] font-medium">
-                    <span className={`inline-flex items-center gap-1.5 ${fromMeta.color}`}>
-                      <span className={`w-2 h-2 rounded-full ${fromMeta.dot}`} />
-                      {fromMeta.label}
-                    </span>
-                    <ArrowRight className="h-4 w-4 text-muted-foreground/60" />
-                    <span className={`inline-flex items-center gap-1.5 ${toMeta.color}`}>
-                      <span className={`w-2 h-2 rounded-full ${toMeta.dot}`} />
-                      {toMeta.label}
-                    </span>
-                  </div>
-                  <span className="text-xs text-muted-foreground tabular-nums">
-                    {list.length} {list.length === 1 ? 'gång' : 'gånger'}
-                  </span>
-                </div>
-                <ul className="divide-y divide-border/10">
-                  {list
-                    .slice()
-                    .sort((a, b) => b.fromPhase.startDate.localeCompare(a.fromPhase.startDate))
-                    .map((t, i) => (
-                      <li key={i} className="px-5 py-3 text-[13px] text-foreground/80 leading-relaxed">
-                        <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
-                          <span className="text-muted-foreground/70">
-                            {fmt(t.fromPhase.startDate)} – {fmt(t.fromPhase.endDate)}
-                          </span>
-                          <span className="text-muted-foreground/40">→</span>
-                          <span className="text-foreground/90">
-                            {fmt(t.toPhase.startDate)} – {fmt(t.toPhase.endDate)}
-                          </span>
-                        </div>
-                        <div className="text-[11px] text-muted-foreground/50 mt-0.5">
-                          {t.fromPhase.days} dagar {PHASE_META[t.from].label.toLowerCase()} → {t.toPhase.days} dagar {PHASE_META[t.to].label.toLowerCase()}
-                        </div>
-                      </li>
-                    ))}
-                </ul>
+        <>
+          {topKey && (
+            <div className="rounded-2xl border border-[hsl(45_85%_55%)]/30 bg-[hsl(45_85%_55%)]/5 px-5 py-4">
+              <div className="text-[11px] uppercase tracking-wider text-[hsl(45_85%_55%)]/80 font-medium mb-1.5">
+                Vanligast
               </div>
-            );
-          })}
-        </div>
+              <div className="flex items-center gap-2.5 text-[15px] font-medium">
+                {(() => {
+                  const [f, t] = topKey.split('->') as [PhaseKind, PhaseKind];
+                  return (
+                    <>
+                      <span className={`inline-flex items-center gap-1.5 ${PHASE_META[f].color}`}>
+                        <span className={`w-2 h-2 rounded-full ${PHASE_META[f].dot}`} />
+                        {PHASE_META[f].label}
+                      </span>
+                      <ArrowRight className="h-4 w-4 text-muted-foreground/60" />
+                      <span className={`inline-flex items-center gap-1.5 ${PHASE_META[t].color}`}>
+                        <span className={`w-2 h-2 rounded-full ${PHASE_META[t].dot}`} />
+                        {PHASE_META[t].label}
+                      </span>
+                      <span className="ml-auto text-xs text-muted-foreground tabular-nums">
+                        {topCount} av {totalTransitions}
+                      </span>
+                    </>
+                  );
+                })()}
+              </div>
+            </div>
+          )}
+
+          <div className="space-y-2">
+            {grouped.map(([key, list]) => {
+              const [fromK, toK] = key.split('->') as [PhaseKind, PhaseKind];
+              const fromMeta = PHASE_META[fromK];
+              const toMeta = PHASE_META[toK];
+              const isOpen = expanded.has(key);
+              return (
+                <div key={key} className="rounded-2xl border border-border/20 bg-card/40 backdrop-blur-sm overflow-hidden">
+                  <button
+                    onClick={() => toggle(key)}
+                    className="w-full flex items-center justify-between px-5 py-4 hover:bg-card/60 transition-colors"
+                  >
+                    <div className="flex items-center gap-2.5 text-[15px] font-medium">
+                      <span className={`inline-flex items-center gap-1.5 ${fromMeta.color}`}>
+                        <span className={`w-2 h-2 rounded-full ${fromMeta.dot}`} />
+                        {fromMeta.label}
+                      </span>
+                      <ArrowRight className="h-4 w-4 text-muted-foreground/60" />
+                      <span className={`inline-flex items-center gap-1.5 ${toMeta.color}`}>
+                        <span className={`w-2 h-2 rounded-full ${toMeta.dot}`} />
+                        {toMeta.label}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <span className="text-xs text-muted-foreground tabular-nums">
+                        {list.length} {list.length === 1 ? 'gång' : 'gånger'}
+                      </span>
+                      <ChevronDown className={`h-4 w-4 text-muted-foreground/60 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+                    </div>
+                  </button>
+                  {isOpen && (
+                    <ul className="divide-y divide-border/10 border-t border-border/10">
+                      {list
+                        .slice()
+                        .sort((a, b) => b.fromPhase.startDate.localeCompare(a.fromPhase.startDate))
+                        .map((t, i) => (
+                          <li key={i} className="px-5 py-3 text-[13px] text-foreground/80 leading-relaxed">
+                            <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
+                              <span className="text-muted-foreground/70">
+                                {fmt(t.fromPhase.startDate)} – {fmt(t.fromPhase.endDate)}
+                              </span>
+                              <span className="text-muted-foreground/40">→</span>
+                              <span className="text-foreground/90">
+                                {fmt(t.toPhase.startDate)} – {fmt(t.toPhase.endDate)}
+                              </span>
+                            </div>
+                            <div className="text-[11px] text-muted-foreground/50 mt-0.5">
+                              {t.fromPhase.days} dagar {PHASE_META[t.from].label.toLowerCase()} → {t.toPhase.days} dagar {PHASE_META[t.to].label.toLowerCase()}
+                            </div>
+                          </li>
+                        ))}
+                    </ul>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </>
       )}
     </section>
   );
