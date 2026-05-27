@@ -44,7 +44,7 @@ interface TodayCheckinProps {
   yearEntries: MoodEntry[];
   firstName: string | null;
   onSaveCheckin: (data: CheckinData) => Promise<boolean>;
-  onToggleMedication: (medicationId: string, taken: boolean) => void;
+  onToggleMedication: (medicationId: string, taken: boolean, options?: { silent?: boolean }) => void;
   preferences: UserPreferences | null;
   streakData: StreakData;
   /** When inside a retroactive multi-day batch: { current: 1-based, total } */
@@ -1348,7 +1348,7 @@ export function TodayCheckin({
               <div className="grid grid-cols-2 gap-3">
                 <button
                   onClick={() => {
-                    scheduledMedications.forEach(med => onToggleMedication(med.id, true));
+                    scheduledMedications.forEach(med => onToggleMedication(med.id, true, { silent: true }));
                   }}
                   className={cn(
                     "flex flex-col items-center justify-center gap-2 p-6 rounded-2xl border transition-all active:scale-[0.98]",
@@ -1362,7 +1362,7 @@ export function TodayCheckin({
                 </button>
                 <button
                   onClick={() => {
-                    scheduledMedications.forEach(med => onToggleMedication(med.id, false));
+                    scheduledMedications.forEach(med => onToggleMedication(med.id, false, { silent: true }));
                   }}
                   className={cn(
                     "flex flex-col items-center justify-center gap-2 p-6 rounded-2xl border transition-all active:scale-[0.98]",
