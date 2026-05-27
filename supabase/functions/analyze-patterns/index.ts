@@ -304,13 +304,20 @@ Returnera JSON:
       parsed = { patterns: [] };
     }
     const BANNED = /(instabil|blandat tillstånd|blandepisod|manisk|deprimerad|patient|diagnos|klinisk|prodrom|affektiv|psykiatrisk)/i;
-    const patterns = (Array.isArray(parsed.patterns) ? parsed.patterns : [])
-      .filter((p: any) => String(p?.pattern_type ?? "").toLowerCase() !== "medication")
-      .filter((p: any) => (Number(p?.occurrences) || 0) >= 2)
-      .filter((p: any) => {
-        const txt = `${p?.title ?? ""} ${p?.description ?? ""} ${p?.why_it_matters ?? ""} ${p?.what_to_do ?? ""}`;
-        return !BANNED.test(txt);
-      });
+    const rawPatterns = Array.isArray(parsed.patterns) ? parsed.patterns : [];
+    const afterMed = rawPatterns.filter((p: any) => String(p?.pattern_type ?? "").toLowerCase() !== "medication");
+    const afterOcc = afterMed.filter((p: any) => (Number(p?.occurrences) || 0) >= 2);
+    const patterns = afterOcc.filter((p: any) => {
+      const txt = `${p?.title ?? ""} ${p?.description ?? ""} ${p?.why_it_matters ?? ""} ${p?.what_to_do ?? ""}`;
+      return !BANNED.test(txt);
+    });
+    console.log(`[ap] user=${userId} raw=${rawPatterns.length} afterMed=${afterMed.length} afterOcc=${afterOcc.length} final=${patterns.length}`);
+    if (rawPatterns.length > 0 && patterns.length === 0) {
+      console.log(`[ap] all filtered. sample=`, JSON.stringify(rawPatterns).slice(0, 1500));
+    }
+    if (rawPatterns.length === 0) {
+      console.log(`[ap] AI returned 0. content=`, String(content).slice(0, 1200));
+    }
 
     // Wipe gamla insikter och skriv nya
     await sb.from("pattern_insights").delete().eq("user_id", userId);
