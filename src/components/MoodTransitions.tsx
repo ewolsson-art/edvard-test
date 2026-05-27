@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { ArrowRight, Repeat, ChevronDown } from 'lucide-react';
+import { ArrowRight, Repeat, ChevronDown, Flame, CloudRain, CloudLightning, Leaf, type LucideIcon } from 'lucide-react';
 import { detectEpisodes, type Episode, type EpisodeKind } from '@/lib/episodeDetection';
 import { useMoodData } from '@/hooks/useMoodData';
 
@@ -12,11 +12,11 @@ interface Phase {
   days: number;
 }
 
-const PHASE_META: Record<PhaseKind, { label: string; color: string; dot: string }> = {
-  elevated:  { label: 'Uppvarvad', color: 'text-orange-300', dot: 'bg-orange-400' },
-  depressed: { label: 'Nedstämd',  color: 'text-red-400',   dot: 'bg-red-400' },
-  mixed:     { label: 'Blandad',   color: 'text-red-300',    dot: 'bg-red-400' },
-  stable:    { label: 'Stabil',    color: 'text-emerald-300',dot: 'bg-emerald-400' },
+const PHASE_META: Record<PhaseKind, { label: string; color: string; dot: string; icon: LucideIcon; tint: string; ring: string }> = {
+  elevated:  { label: 'Uppvarvad', color: 'text-orange-300',  dot: 'bg-orange-400',  icon: Flame,          tint: 'bg-orange-500/10',  ring: 'ring-orange-400/30' },
+  depressed: { label: 'Nedstämd',  color: 'text-red-400',     dot: 'bg-red-400',     icon: CloudRain,      tint: 'bg-red-500/10',     ring: 'ring-red-400/30' },
+  mixed:     { label: 'Blandad',   color: 'text-red-300',     dot: 'bg-red-400',     icon: CloudLightning, tint: 'bg-fuchsia-500/10', ring: 'ring-fuchsia-400/30' },
+  stable:    { label: 'Stabil',    color: 'text-emerald-300', dot: 'bg-emerald-400', icon: Leaf,           tint: 'bg-emerald-500/10', ring: 'ring-emerald-400/30' },
 };
 
 const SWE_MONTHS = ['jan', 'feb', 'mars', 'april', 'maj', 'juni', 'juli', 'aug', 'sept', 'okt', 'nov', 'dec'];
