@@ -192,11 +192,23 @@ export function MonthCalendar({
 
       {/* Weekday headers */}
       <div className="grid grid-cols-7 mb-1">
-        {weekDays.map((day, i) => (
-          <div key={i} className="text-center text-sm font-semibold text-muted-foreground py-2">
-            {day}
-          </div>
-        ))}
+        {weekDays.map((day, i) => {
+          const todayDow = new Date().getDay();
+          const headerIsToday = todayDow === ((i + 1) % 7);
+          return (
+            <div
+              key={i}
+              className={cn(
+                "text-center text-sm py-2 transition-colors",
+                headerIsToday
+                  ? "font-bold text-[hsl(45_85%_55%)]"
+                  : "font-semibold text-muted-foreground",
+              )}
+            >
+              {day}
+            </div>
+          );
+        })}
       </div>
 
       {/* Calendar grid */}
@@ -245,7 +257,8 @@ export function MonthCalendar({
                     isCurrentMonth && "hover:scale-105 hover:z-10",
                     moodBg,
                     showMissed && "bg-muted-foreground/10",
-                    isTodayDate && "ring-1 ring-foreground/30",
+                    isTodayDate && !mood && "bg-[hsl(45_85%_55%/0.10)] ring-1 ring-[hsl(45_85%_55%/0.55)] shadow-[0_0_18px_-4px_hsl(45_85%_55%/0.45)]",
+                    isTodayDate && mood && "ring-2 ring-[hsl(45_85%_55%/0.75)] shadow-[0_0_18px_-4px_hsl(45_85%_55%/0.55)]",
                   )}
                 >
                   {mood ? (
