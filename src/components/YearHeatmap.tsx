@@ -165,9 +165,10 @@ export const YearHeatmap = memo(function YearHeatmap({ year, entries, medication
                           <span className={cn(
                             "relative flex items-center justify-center w-full aspect-square max-w-[34px] rounded-md leading-none font-medium tabular-nums transition-transform group-hover:scale-[1.01]",
                             moodBg,
-                            isTodayDate && !mood && "ring-2 ring-primary",
-                            isTodayDate && mood && "ring-2 ring-primary ring-offset-1 ring-offset-background",
-                            !mood && "text-[10px] text-muted-foreground/55"
+                            isTodayDate && !mood && "bg-[hsl(45_85%_55%/0.10)] ring-1 ring-[hsl(45_85%_55%/0.55)] shadow-[0_0_12px_-3px_hsl(45_85%_55%/0.40)]",
+                            isTodayDate && mood && "ring-2 ring-[hsl(45_85%_55%/0.75)] shadow-[0_0_12px_-3px_hsl(45_85%_55%/0.50)]",
+                            !mood && !isTodayDate && "text-[10px] text-muted-foreground/55",
+                            isTodayDate && !mood && "text-[10px] text-[hsl(45_85%_55%)] font-bold"
                           )}>
                             {mood ? (
                               <TurtleLogo size="sm" animated={false} mood={tm} framing="face" className="h-[78%] w-[78%]" />
