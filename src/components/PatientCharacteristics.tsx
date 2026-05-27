@@ -1,4 +1,5 @@
-import { Zap, Cloud, Lock, Sun } from 'lucide-react';
+import { Zap, Cloud, Lock, Sun, ChevronDown } from 'lucide-react';
+import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { usePatientCharacteristics } from '@/hooks/usePatientCharacteristics';
@@ -78,7 +79,6 @@ export const PatientCharacteristics = ({ patientId, latestMood, isShared, patien
         {sections.map(s => {
           const Icon = s.icon;
           const manualChars = s.chars.filter(c => (c.source ?? 'manual') === 'manual');
-          // Slå ihop check-in-kännetecken (samma namn räknas samman)
           const checkinMap = new Map<string, { name: string; count: number; id: string }>();
           s.chars
             .filter(c => c.source === 'checkin')
@@ -89,49 +89,91 @@ export const PatientCharacteristics = ({ patientId, latestMood, isShared, patien
               else checkinMap.set(key, { name: c.name, count: 1, id: c.id });
             });
           const checkinChars = Array.from(checkinMap.values()).sort((a, b) => b.count - a.count);
+          const totalCount = manualChars.length + checkinChars.length;
           return (
-            <Card key={s.key} className="bg-foreground/[0.03] backdrop-blur-sm border-transparent transition-all duration-300">
-              <CardHeader className="pb-3">
-                <div className="flex items-center gap-2">
-                  <div className={`p-2 rounded-lg ${s.iconBg}`}><Icon className={`h-4 w-4 ${s.iconColor}`} /></div>
-                  <div><CardTitle className="text-base">{s.title}</CardTitle></div>
-                </div>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                {!checkinOnly && (
-                  <div>
-                    <p className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground mb-2">Egna</p>
-                    <div className="flex flex-wrap gap-2">
-                      {manualChars.length === 0 ? (
-                        <p className="text-sm text-muted-foreground italic">{t('patientChars.noCharacteristics')}</p>
-                      ) : manualChars.map(char => (
-                        <Badge key={char.id} variant="secondary" className={`${s.badgeStyle} py-1.5 px-3`}>{char.name}</Badge>
-                      ))}
-                    </div>
-                  </div>
-                )}
-                <div>
-                  {!checkinOnly && (
-                    <p className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground mb-2">Från in-checkningar</p>
-                  )}
-                  <div className="flex flex-wrap gap-2">
-                    {checkinChars.length === 0 ? (
-                      <p className="text-sm text-muted-foreground italic">Inga ännu</p>
-                    ) : checkinChars.map(c => (
-                      <Badge key={c.id} variant="outline" className="py-1.5 px-3 gap-1.5 border-dashed">
-                        <span>{c.name}</span>
-                        {c.count > 1 && (
-                          <span className="text-[10px] font-semibold text-muted-foreground">×{c.count}</span>
-                        )}
-                      </Badge>
-                    ))}
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+            <CollapsibleSection
+              key={s.key}
+              section={s}
+              Icon={Icon}
+              totalCount={totalCount}
+              manualChars={manualChars}
+              checkinChars={checkinChars}
+              checkinOnly={checkinOnly}
+              t={t}
+            />
           );
         })}
       </div>
     </div>
+  );
+};
+
+interface CollapsibleSectionProps {
+  section: any;
+  Icon: any;
+  totalCount: number;
+  manualChars: any[];
+  checkinChars: { name: string; count: number; id: string }[];
+  checkinOnly: boolean;
+  t: any;
+}
+
+const CollapsibleSection = ({ section: s, Icon, totalCount, manualChars, checkinChars, checkinOnly, t }: CollapsibleSectionProps) => {
+  const [open, setOpen] = useState(false);
+  return (
+    <Card className="bg-foreground/[0.03] backdrop-blur-sm border-transparent transition-all duration-300">
+      <button
+        type="button"
+        onClick={() => setOpen(o => !o)}
+        className="w-full text-left"
+        aria-expanded={open}
+      >
+        <CardHeader className="pb-3">
+          <div className="flex items-center gap-2">
+            <div className={`p-2 rounded-lg ${s.iconBg}`}><Icon className={`h-4 w-4 ${s.iconColor}`} /></div>
+            <div className="flex-1 min-w-0">
+              <CardTitle className="text-base">{s.title}</CardTitle>
+            </div>
+            {totalCount > 0 && (
+              <span className="text-xs text-muted-foreground tabular-nums">{totalCount}</span>
+            )}
+            <ChevronDown className={cn('h-4 w-4 text-muted-foreground transition-transform', open && 'rotate-180')} />
+          </div>
+        </CardHeader>
+      </button>
+      {open && (
+        <CardContent className="space-y-4">
+          {!checkinOnly && (
+            <div>
+              <p className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground mb-2">Egna</p>
+              <div className="flex flex-wrap gap-2">
+                {manualChars.length === 0 ? (
+                  <p className="text-sm text-muted-foreground italic">{t('patientChars.noCharacteristics')}</p>
+                ) : manualChars.map(char => (
+                  <Badge key={char.id} variant="secondary" className={`${s.badgeStyle} py-1.5 px-3`}>{char.name}</Badge>
+                ))}
+              </div>
+            </div>
+          )}
+          <div>
+            {!checkinOnly && (
+              <p className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground mb-2">Från in-checkningar</p>
+            )}
+            <div className="flex flex-wrap gap-2">
+              {checkinChars.length === 0 ? (
+                <p className="text-sm text-muted-foreground italic">Inga ännu</p>
+              ) : checkinChars.map(c => (
+                <Badge key={c.id} variant="outline" className="py-1.5 px-3 gap-1.5 border-dashed">
+                  <span>{c.name}</span>
+                  {c.count > 1 && (
+                    <span className="text-[10px] font-semibold text-muted-foreground">×{c.count}</span>
+                  )}
+                </Badge>
+              ))}
+            </div>
+          </div>
+        </CardContent>
+      )}
+    </Card>
   );
 };
