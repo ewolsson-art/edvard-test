@@ -44,7 +44,7 @@ interface TodayCheckinProps {
   yearEntries: MoodEntry[];
   firstName: string | null;
   onSaveCheckin: (data: CheckinData) => Promise<boolean>;
-  onToggleMedication: (medicationId: string, taken: boolean) => void;
+  onToggleMedication: (medicationId: string, taken: boolean, options?: { silent?: boolean }) => void;
   preferences: UserPreferences | null;
   streakData: StreakData;
   /** When inside a retroactive multi-day batch: { current: 1-based, total } */
