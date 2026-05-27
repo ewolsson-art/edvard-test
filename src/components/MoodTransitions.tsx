@@ -137,16 +137,17 @@ export function MoodTransitions() {
         </div>
       ) : (
         <>
-          {topKey && (
-            <div className="rounded-2xl border border-[hsl(45_85%_55%)]/30 bg-[hsl(45_85%_55%)]/5 px-5 py-4">
-              <div className="text-[11px] uppercase tracking-wider text-[hsl(45_85%_55%)]/80 font-medium mb-1.5">
-                Vanligast
-              </div>
-              <div className="flex items-center gap-2.5 text-[15px] font-medium">
-                {(() => {
-                  const [f, t] = topKey.split('->') as [PhaseKind, PhaseKind];
+          {topCount > 0 && (() => {
+            const tops = grouped.filter(([, l]) => l.length === topCount);
+            return (
+              <div className="rounded-2xl border border-[hsl(45_85%_55%)]/30 bg-[hsl(45_85%_55%)]/5 px-5 py-4 space-y-2.5">
+                <div className="text-[11px] uppercase tracking-wider text-[hsl(45_85%_55%)]/80 font-medium">
+                  {tops.length > 1 ? `Vanligast (${tops.length} delar förstaplatsen)` : 'Vanligast'}
+                </div>
+                {tops.map(([key, list]) => {
+                  const [f, t] = key.split('->') as [PhaseKind, PhaseKind];
                   return (
-                    <>
+                    <div key={key} className="flex items-center gap-2.5 text-[15px] font-medium">
                       <span className={`inline-flex items-center gap-1.5 ${PHASE_META[f].color}`}>
                         <span className={`w-2 h-2 rounded-full ${PHASE_META[f].dot}`} />
                         {PHASE_META[f].label}
@@ -157,14 +158,15 @@ export function MoodTransitions() {
                         {PHASE_META[t].label}
                       </span>
                       <span className="ml-auto text-xs text-muted-foreground tabular-nums">
-                        {topCount} av {totalTransitions}
+                        {list.length} av {totalTransitions}
                       </span>
-                    </>
+                    </div>
                   );
-                })()}
+                })}
               </div>
-            </div>
-          )}
+            );
+          })()}
+
 
           <div className="space-y-2">
             {grouped.map(([key, list]) => {
