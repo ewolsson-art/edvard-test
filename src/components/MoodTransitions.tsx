@@ -87,6 +87,7 @@ interface Transition {
 export function MoodTransitions() {
   const { entries, isLoaded } = useMoodData();
   const [expanded, setExpanded] = useState<Set<string>>(new Set());
+  const [showAll, setShowAll] = useState(false);
 
   const { phases, grouped, totalTransitions } = useMemo(() => {
     const eps = detectEpisodes(entries);
