@@ -22,7 +22,7 @@ export function ThoughtSentimentChart() {
       <div className="rounded-2xl bg-foreground/[0.03] p-5 space-y-3">
         <div className="flex items-center gap-2">
           <Sparkles className="w-4 h-4 text-primary" />
-          <h3 className="font-medium text-foreground/80">Tonen i dina tankar</h3>
+          <h3 className="font-medium text-foreground/80">Tankar över tid</h3>
         </div>
         <p className="text-sm text-muted-foreground">
           Skriv en tanke i några check-ins så analyserar AI:n tonen över tid.
@@ -60,7 +60,7 @@ export function ThoughtSentimentChart() {
         <div>
           <div className="flex items-center gap-2">
             <Sparkles className="w-4 h-4 text-primary" />
-            <h3 className="font-medium text-foreground/80">Tonen i dina tankar</h3>
+            <h3 className="font-medium text-foreground/80">Tankar över tid</h3>
           </div>
           <p className={`text-sm mt-1 flex items-center gap-1.5 ${trendColor}`}>
             <TrendIcon className="w-3.5 h-3.5" />
