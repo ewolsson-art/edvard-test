@@ -204,21 +204,34 @@ export function MoodTransitions() {
                         .slice()
                         .sort((a, b) => b.fromPhase.startDate.localeCompare(a.fromPhase.startDate))
                         .map((t, i) => (
-                          <li key={i} className="px-5 py-3 text-[13px] text-foreground/80 leading-relaxed">
-                            <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
-                              <span className="text-muted-foreground/70">
-                                {fmt(t.fromPhase.startDate)} – {fmt(t.fromPhase.endDate)}
-                              </span>
-                              <span className="text-muted-foreground/40">→</span>
-                              <span className="text-foreground/90">
-                                {fmt(t.toPhase.startDate)} – {fmt(t.toPhase.endDate)}
-                              </span>
-                            </div>
-                            <div className="text-[11px] text-muted-foreground/50 mt-0.5">
-                              {t.fromPhase.days} dagar {PHASE_META[t.from].label.toLowerCase()} → {t.toPhase.days} dagar {PHASE_META[t.to].label.toLowerCase()}
+                          <li key={i} className="px-5 py-3 text-[13px] leading-relaxed space-y-1.5">
+                            <div className="space-y-1">
+                              <div className="flex items-baseline gap-2">
+                                <span className={`text-[10px] uppercase tracking-wider ${fromMeta.color} opacity-80 w-16 shrink-0`}>
+                                  {fromMeta.label}
+                                </span>
+                                <span className={fromMeta.color}>
+                                  {fmt(t.fromPhase.startDate)} – {fmt(t.fromPhase.endDate)}
+                                </span>
+                                <span className="text-muted-foreground/40 ml-1">
+                                  ({t.fromPhase.days} dagar)
+                                </span>
+                              </div>
+                              <div className="flex items-baseline gap-2">
+                                <span className={`text-[10px] uppercase tracking-wider ${toMeta.color} opacity-80 w-16 shrink-0`}>
+                                  {toMeta.label}
+                                </span>
+                                <span className={toMeta.color}>
+                                  {fmt(t.toPhase.startDate)} – {fmt(t.toPhase.endDate)}
+                                </span>
+                                <span className="text-muted-foreground/40 ml-1">
+                                  ({t.toPhase.days} dagar)
+                                </span>
+                              </div>
                             </div>
                           </li>
                         ))}
+
                     </ul>
                   )}
                 </div>
