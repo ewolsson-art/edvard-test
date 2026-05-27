@@ -34,6 +34,7 @@ interface PostCardProps {
 }
 
 export const PostCard = ({ post, userId, onToggleReaction, onDeletePost, onCreateReply, onDeleteReply, onVotePoll, expanded = false }: PostCardProps) => {
+  const { t } = useTranslation();
   const [showReplies, setShowReplies] = useState(expanded);
 
   const [replyContent, setReplyContent] = useState('');
@@ -60,7 +61,6 @@ export const PostCard = ({ post, userId, onToggleReaction, onDeletePost, onCreat
   };
 
   const handleLike = () => {
-  const { t } = useTranslation();
     if (!userId) return;
     if (!post.user_has_reacted) {
       setHeartAnimation(true);
