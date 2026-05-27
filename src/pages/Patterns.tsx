@@ -107,7 +107,13 @@ export default function Patterns() {
               title="Hur det ser ut nu"
               hint="En snabb överblick av ditt mående den senaste tiden."
             >
-              <OverviewSummary />
+              <OverviewSummary
+                stats={stats as any}
+                entries={entries as any}
+                periodLabel="Hela historiken"
+                sleepBadDays={0}
+                showSleep={false}
+              />
             </Section>
           )}
 
