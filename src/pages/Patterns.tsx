@@ -66,9 +66,8 @@ export default function Patterns() {
             </h1>
           </div>
           <p className="text-[14px] text-muted-foreground max-w-xl leading-relaxed">
-            En sammanhängande läsning av din historik — från hur det ser ut nu,
-            till vad som kännetecknar dig, hur du rör dig mellan faser och vilka
-            mönster AI:n hittar.
+            En sammanhängande läsning av det som återkommer — vad som kännetecknar dig,
+            hur du rör dig mellan faser och vilka mönster AI:n hittar över tid.
           </p>
         </header>
 
