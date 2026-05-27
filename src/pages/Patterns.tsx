@@ -83,9 +83,6 @@ export default function Patterns() {
           />
         )}
 
-        {/* Tonen i tankarna */}
-        <ThoughtSentimentChart />
-
         {/* Övergångar mellan faser */}
         <MoodTransitions />
 
