@@ -1,8 +1,6 @@
 import { PatternInsightsSection } from '@/components/PatternInsightsSection';
 import { TurtleLogo } from '@/components/TurtleLogo';
-import { OverviewSummary } from '@/components/OverviewSummary';
 import { PatientCharacteristics } from '@/components/PatientCharacteristics';
-import { ThoughtJournal } from '@/components/ThoughtJournal';
 import { MoodTransitions } from '@/components/MoodTransitions';
 import { useMoodData } from '@/hooks/useMoodData';
 import { useAuth } from '@/hooks/useAuth';
@@ -41,24 +39,6 @@ export default function Patterns() {
   const { user } = useAuth();
   const latestMood = entries.length > 0 ? entries[entries.length - 1].mood : null;
 
-  // Stats across full history (for OverviewSummary).
-  const stats = (() => {
-    let severe_elevated = 0, elevated = 0, somewhat_elevated = 0, stable = 0,
-        somewhat_depressed = 0, depressed = 0, severe_depressed = 0;
-    entries.forEach(e => {
-      switch (e.mood) {
-        case 'severe_elevated': severe_elevated++; break;
-        case 'elevated': elevated++; break;
-        case 'somewhat_elevated': somewhat_elevated++; break;
-        case 'stable': stable++; break;
-        case 'somewhat_depressed': somewhat_depressed++; break;
-        case 'depressed': depressed++; break;
-        case 'severe_depressed': severe_depressed++; break;
-      }
-    });
-    const total = severe_elevated + elevated + somewhat_elevated + stable + somewhat_depressed + depressed + severe_depressed;
-    return { severe_elevated, elevated, somewhat_elevated, stable, somewhat_depressed, depressed, severe_depressed, unregistered: 0, total, totalDays: total };
-  })();
 
   // Context line: check-ins last 30 days
   const last30Count = (() => {
@@ -86,9 +66,8 @@ export default function Patterns() {
             </h1>
           </div>
           <p className="text-[14px] text-muted-foreground max-w-xl leading-relaxed">
-            En sammanhängande läsning av din historik — från hur det ser ut nu,
-            till vad som kännetecknar dig, hur du rör dig mellan faser och vilka
-            mönster AI:n hittar.
+            En sammanhängande läsning av det som återkommer — vad som kännetecknar dig,
+            hur du rör dig mellan faser och vilka mönster AI:n hittar över tid.
           </p>
         </header>
 
@@ -104,25 +83,9 @@ export default function Patterns() {
 
         {/* Sections */}
         <div className="space-y-16">
-          {isLoaded && (
-            <Section
-              number="01"
-              title="Hur det ser ut nu"
-              hint="En översikt av hur dina dagar fördelat sig — fler stabila dagar är målet, extremerna är det vi vill minimera."
-            >
-              <OverviewSummary
-                stats={stats}
-                entries={entries}
-                periodLabel="Hela din historik"
-                sleepBadDays={0}
-                showSleep={false}
-              />
-            </Section>
-          )}
-
           {user?.id && (
             <Section
-              number="02"
+              number="01"
               title="Vad som kännetecknar dig"
               hint="Återkommande symtom, känslor och beteenden du själv noterat vid incheckningar."
             >
@@ -136,7 +99,7 @@ export default function Patterns() {
           )}
 
           <Section
-            number="03"
+            number="02"
             title="Hur du rör dig mellan faser"
             hint="Vanliga övergångar i ditt mående och hur länge sedan de hände senast."
           >
@@ -144,19 +107,11 @@ export default function Patterns() {
           </Section>
 
           <Section
-            number="04"
+            number="03"
             title="Mönster AI:n hittat"
             hint="Återkommande sekvenser, triggers och cykler över längre tid — det du själv kan ha svårt att se i stunden."
           >
             <PatternInsightsSection />
-          </Section>
-
-          <Section
-            number="05"
-            title="Dina egna ord"
-            hint="Anteckningar och tankar du skrivit ner — råmaterialet bakom mönstren."
-          >
-            <ThoughtJournal />
           </Section>
         </div>
       </div>
