@@ -90,7 +90,7 @@ export function ThoughtJournal() {
     <section className="space-y-4">
       <button
         onClick={() => setOpen((o) => !o)}
-        className="w-full rounded-2xl bg-foreground/[0.03] hover:bg-foreground/[0.05] transition-colors p-5 flex flex-col items-center gap-3"
+        className="w-full rounded-2xl bg-foreground/[0.03] hover:bg-foreground/[0.05] transition-colors p-5 flex flex-col items-start gap-3"
       >
         <BookIllustration open={open} />
         <div className="flex items-center gap-2">
