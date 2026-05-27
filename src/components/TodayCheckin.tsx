@@ -1348,7 +1348,7 @@ export function TodayCheckin({
               <div className="grid grid-cols-2 gap-3">
                 <button
                   onClick={() => {
-                    scheduledMedications.forEach(med => onToggleMedication(med.id, true));
+                    scheduledMedications.forEach(med => onToggleMedication(med.id, true, { silent: true }));
                   }}
                   className={cn(
                     "flex flex-col items-center justify-center gap-2 p-6 rounded-2xl border transition-all active:scale-[0.98]",
@@ -1362,7 +1362,7 @@ export function TodayCheckin({
                 </button>
                 <button
                   onClick={() => {
-                    scheduledMedications.forEach(med => onToggleMedication(med.id, false));
+                    scheduledMedications.forEach(med => onToggleMedication(med.id, false, { silent: true }));
                   }}
                   className={cn(
                     "flex flex-col items-center justify-center gap-2 p-6 rounded-2xl border transition-all active:scale-[0.98]",
