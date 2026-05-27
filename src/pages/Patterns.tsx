@@ -4,6 +4,7 @@ import { OverviewSummary } from '@/components/OverviewSummary';
 import { PatientCharacteristics } from '@/components/PatientCharacteristics';
 import { ThoughtSentimentChart } from '@/components/ThoughtSentimentChart';
 import { ThoughtJournal } from '@/components/ThoughtJournal';
+import { MoodTransitions } from '@/components/MoodTransitions';
 import { useMoodData } from '@/hooks/useMoodData';
 import { useAuth } from '@/hooks/useAuth';
 
