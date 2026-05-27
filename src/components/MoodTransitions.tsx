@@ -87,6 +87,7 @@ interface Transition {
 export function MoodTransitions() {
   const { entries, isLoaded } = useMoodData();
   const [expanded, setExpanded] = useState<Set<string>>(new Set());
+  const [showAll, setShowAll] = useState(false);
 
   const { phases, grouped, totalTransitions } = useMemo(() => {
     const eps = detectEpisodes(entries);
@@ -168,76 +169,89 @@ export function MoodTransitions() {
           })()}
 
 
-          <div className="space-y-2">
-            {grouped.map(([key, list]) => {
-              const [fromK, toK] = key.split('->') as [PhaseKind, PhaseKind];
-              const fromMeta = PHASE_META[fromK];
-              const toMeta = PHASE_META[toK];
-              const isOpen = expanded.has(key);
-              return (
-                <div key={key} className="rounded-2xl border border-border/20 bg-card/40 backdrop-blur-sm overflow-hidden">
-                  <button
-                    onClick={() => toggle(key)}
-                    className="w-full flex items-center justify-between px-5 py-4 hover:bg-card/60 transition-colors"
-                  >
-                    <div className="flex items-center gap-2.5 text-[15px] font-medium">
-                      <span className={`inline-flex items-center gap-1.5 ${fromMeta.color}`}>
-                        <span className={`w-2 h-2 rounded-full ${fromMeta.dot}`} />
-                        {fromMeta.label}
-                      </span>
-                      <ArrowRight className="h-4 w-4 text-muted-foreground/60" />
-                      <span className={`inline-flex items-center gap-1.5 ${toMeta.color}`}>
-                        <span className={`w-2 h-2 rounded-full ${toMeta.dot}`} />
-                        {toMeta.label}
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <span className="text-xs text-muted-foreground tabular-nums">
-                        {list.length} {list.length === 1 ? 'gång' : 'gånger'}
-                      </span>
-                      <ChevronDown className={`h-4 w-4 text-muted-foreground/60 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
-                    </div>
-                  </button>
-                  {isOpen && (
-                    <ul className="divide-y divide-border/10 border-t border-border/10">
-                      {list
-                        .slice()
-                        .sort((a, b) => b.fromPhase.startDate.localeCompare(a.fromPhase.startDate))
-                        .map((t, i) => (
-                          <li key={i} className="px-5 py-3 text-[13px] leading-relaxed space-y-1.5">
-                            <div className="space-y-1">
-                              <div className="flex items-baseline gap-2">
-                                <span className={`text-[10px] uppercase tracking-wider ${fromMeta.color} opacity-80 w-16 shrink-0`}>
-                                  {fromMeta.label}
-                                </span>
-                                <span className={fromMeta.color}>
-                                  {fmt(t.fromPhase.startDate)} – {fmt(t.fromPhase.endDate)}
-                                </span>
-                                <span className="text-muted-foreground/40 ml-1">
-                                  ({t.fromPhase.days} dagar)
-                                </span>
-                              </div>
-                              <div className="flex items-baseline gap-2">
-                                <span className={`text-[10px] uppercase tracking-wider ${toMeta.color} opacity-80 w-16 shrink-0`}>
-                                  {toMeta.label}
-                                </span>
-                                <span className={toMeta.color}>
-                                  {fmt(t.toPhase.startDate)} – {fmt(t.toPhase.endDate)}
-                                </span>
-                                <span className="text-muted-foreground/40 ml-1">
-                                  ({t.toPhase.days} dagar)
-                                </span>
-                              </div>
-                            </div>
-                          </li>
-                        ))}
+          <button
+            onClick={() => setShowAll(s => !s)}
+            className="w-full flex items-center justify-between rounded-2xl border border-border/20 bg-card/40 backdrop-blur-sm px-5 py-3 hover:bg-card/60 transition-colors"
+            aria-expanded={showAll}
+          >
+            <span className="text-sm font-medium">Alla övergångar</span>
+            <div className="flex items-center gap-3">
+              <span className="text-xs text-muted-foreground tabular-nums">{grouped.length}</span>
+              <ChevronDown className={`h-4 w-4 text-muted-foreground/60 transition-transform ${showAll ? 'rotate-180' : ''}`} />
+            </div>
+          </button>
 
-                    </ul>
-                  )}
-                </div>
-              );
-            })}
-          </div>
+          {showAll && (
+            <div className="space-y-2">
+              {grouped.map(([key, list]) => {
+                const [fromK, toK] = key.split('->') as [PhaseKind, PhaseKind];
+                const fromMeta = PHASE_META[fromK];
+                const toMeta = PHASE_META[toK];
+                const isOpen = expanded.has(key);
+                return (
+                  <div key={key} className="rounded-2xl border border-border/20 bg-card/40 backdrop-blur-sm overflow-hidden">
+                    <button
+                      onClick={() => toggle(key)}
+                      className="w-full flex items-center justify-between px-5 py-4 hover:bg-card/60 transition-colors"
+                    >
+                      <div className="flex items-center gap-2.5 text-[15px] font-medium">
+                        <span className={`inline-flex items-center gap-1.5 ${fromMeta.color}`}>
+                          <span className={`w-2 h-2 rounded-full ${fromMeta.dot}`} />
+                          {fromMeta.label}
+                        </span>
+                        <ArrowRight className="h-4 w-4 text-muted-foreground/60" />
+                        <span className={`inline-flex items-center gap-1.5 ${toMeta.color}`}>
+                          <span className={`w-2 h-2 rounded-full ${toMeta.dot}`} />
+                          {toMeta.label}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <span className="text-xs text-muted-foreground tabular-nums">
+                          {list.length} {list.length === 1 ? 'gång' : 'gånger'}
+                        </span>
+                        <ChevronDown className={`h-4 w-4 text-muted-foreground/60 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+                      </div>
+                    </button>
+                    {isOpen && (
+                      <ul className="divide-y divide-border/10 border-t border-border/10">
+                        {list
+                          .slice()
+                          .sort((a, b) => b.fromPhase.startDate.localeCompare(a.fromPhase.startDate))
+                          .map((t, i) => (
+                            <li key={i} className="px-5 py-3 text-[13px] leading-relaxed space-y-1.5">
+                              <div className="space-y-1">
+                                <div className="flex items-baseline gap-2">
+                                  <span className={`text-[10px] uppercase tracking-wider ${fromMeta.color} opacity-80 w-16 shrink-0`}>
+                                    {fromMeta.label}
+                                  </span>
+                                  <span className={fromMeta.color}>
+                                    {fmt(t.fromPhase.startDate)} – {fmt(t.fromPhase.endDate)}
+                                  </span>
+                                  <span className="text-muted-foreground/40 ml-1">
+                                    ({t.fromPhase.days} dagar)
+                                  </span>
+                                </div>
+                                <div className="flex items-baseline gap-2">
+                                  <span className={`text-[10px] uppercase tracking-wider ${toMeta.color} opacity-80 w-16 shrink-0`}>
+                                    {toMeta.label}
+                                  </span>
+                                  <span className={toMeta.color}>
+                                    {fmt(t.toPhase.startDate)} – {fmt(t.toPhase.endDate)}
+                                  </span>
+                                  <span className="text-muted-foreground/40 ml-1">
+                                    ({t.toPhase.days} dagar)
+                                  </span>
+                                </div>
+                              </div>
+                            </li>
+                          ))}
+                      </ul>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </>
       )}
     </section>
