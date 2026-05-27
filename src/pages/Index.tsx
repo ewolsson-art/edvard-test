@@ -104,8 +104,8 @@ const Index = () => {
     return result ?? false;
   };
 
-  const handleToggleMedication = (medicationId: string, taken: boolean) => {
-    logMedication(medicationId, selectedDateStr, taken);
+  const handleToggleMedication = (medicationId: string, taken: boolean, options?: { silent?: boolean }) => {
+    logMedication(medicationId, selectedDateStr, taken, options);
   };
 
   if (!isLoaded || !medsLoaded || profileLoading || prefsLoading || !customQLoaded) {
