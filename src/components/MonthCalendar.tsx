@@ -192,11 +192,23 @@ export function MonthCalendar({
 
       {/* Weekday headers */}
       <div className="grid grid-cols-7 mb-1">
-        {weekDays.map((day, i) => (
-          <div key={i} className="text-center text-sm font-semibold text-muted-foreground py-2">
-            {day}
-          </div>
-        ))}
+        {weekDays.map((day, i) => {
+          const todayDow = new Date().getDay();
+          const headerIsToday = todayDow === ((i + 1) % 7);
+          return (
+            <div
+              key={i}
+              className={cn(
+                "text-center text-sm py-2 transition-colors",
+                headerIsToday
+                  ? "font-bold text-[hsl(45_85%_55%)]"
+                  : "font-semibold text-muted-foreground",
+              )}
+            >
+              {day}
+            </div>
+          );
+        })}
       </div>
 
       {/* Calendar grid */}
@@ -245,13 +257,17 @@ export function MonthCalendar({
                     isCurrentMonth && "hover:scale-105 hover:z-10",
                     moodBg,
                     showMissed && "bg-muted-foreground/10",
-                    isTodayDate && "ring-1 ring-foreground/30",
+                    isTodayDate && !mood && "bg-[hsl(45_85%_55%/0.10)] ring-1 ring-[hsl(45_85%_55%/0.55)] shadow-[0_0_18px_-4px_hsl(45_85%_55%/0.45)]",
+                    isTodayDate && mood && "ring-2 ring-[hsl(45_85%_55%/0.75)] shadow-[0_0_18px_-4px_hsl(45_85%_55%/0.55)]",
                   )}
                 >
                   {mood ? (
                     <>
                       <TurtleLogo size="lg" animated={false} mood={getTurtleMoodForMood(mood)} framing="face" className="h-16 w-16 drop-shadow-[0_2px_3px_hsl(0_0%_0%/0.45)]" />
-                      <span className="absolute top-2 right-3 text-sm font-bold leading-none text-foreground drop-shadow-[0_1px_2px_hsl(var(--background))]">
+                      <span className={cn(
+                        "absolute top-2 right-3 text-sm font-bold leading-none drop-shadow-[0_1px_2px_hsl(var(--background))]",
+                        isTodayDate ? "text-[hsl(45_85%_55%)]" : "text-foreground",
+                      )}>
                         {dayOfMonth}
                       </span>
                       {(() => {
@@ -273,9 +289,10 @@ export function MonthCalendar({
                     </>
                   ) : (
                     <span className={cn(
-                      "flex items-center justify-center text-base font-semibold leading-none",
-                      isTodayDate && "text-foreground font-bold text-lg",
-                      isCurrentMonth && "text-foreground/60",
+                      "flex items-center justify-center leading-none",
+                      isTodayDate
+                        ? "text-[hsl(45_85%_55%)] font-bold text-lg"
+                        : "text-base font-semibold text-foreground/60",
                       !isCurrentMonth && "text-muted-foreground"
                     )}>
                       {dayOfMonth}
