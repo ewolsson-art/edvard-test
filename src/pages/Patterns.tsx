@@ -2,7 +2,6 @@ import { PatternInsightsSection } from '@/components/PatternInsightsSection';
 import { TurtleLogo } from '@/components/TurtleLogo';
 import { OverviewSummary } from '@/components/OverviewSummary';
 import { PatientCharacteristics } from '@/components/PatientCharacteristics';
-import { ThoughtSentimentChart } from '@/components/ThoughtSentimentChart';
 import { ThoughtJournal } from '@/components/ThoughtJournal';
 import { MoodTransitions } from '@/components/MoodTransitions';
 import { useMoodData } from '@/hooks/useMoodData';
