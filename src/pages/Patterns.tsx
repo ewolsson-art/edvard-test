@@ -6,13 +6,42 @@ import { ThoughtJournal } from '@/components/ThoughtJournal';
 import { MoodTransitions } from '@/components/MoodTransitions';
 import { useMoodData } from '@/hooks/useMoodData';
 import { useAuth } from '@/hooks/useAuth';
+import { ReactNode } from 'react';
+
+type SectionProps = {
+  number: string;
+  title: string;
+  hint: string;
+  children: ReactNode;
+};
+
+function Section({ number, title, hint, children }: SectionProps) {
+  return (
+    <section className="space-y-4 scroll-mt-20">
+      <div className="flex items-baseline gap-3">
+        <span className="text-xs font-mono text-muted-foreground/60 tracking-widest pt-1">
+          {number}
+        </span>
+        <div className="space-y-1 flex-1 min-w-0">
+          <h2 className="text-xl font-semibold tracking-tight text-foreground">
+            {title}
+          </h2>
+          <p className="text-[13px] text-muted-foreground/80 leading-relaxed">
+            {hint}
+          </p>
+        </div>
+      </div>
+      <div className="pl-0 sm:pl-9">{children}</div>
+    </section>
+  );
+}
 
 export default function Patterns() {
   const { entries, isLoaded } = useMoodData();
   const { user } = useAuth();
   const latestMood = entries.length > 0 ? entries[entries.length - 1].mood : null;
 
-  // Build aggregate stats across all entries (used by OverviewSummary header).
+  // Stats across full history (for OverviewSummary).
   const stats = (() => {
     let severe_elevated = 0, elevated = 0, somewhat_elevated = 0, stable = 0,
         somewhat_depressed = 0, depressed = 0, severe_depressed = 0;
@@ -31,66 +60,105 @@ export default function Patterns() {
     return { severe_elevated, elevated, somewhat_elevated, stable, somewhat_depressed, depressed, severe_depressed, unregistered: 0, total, totalDays: total };
   })();
 
+  // Context line: check-ins last 30 days
+  const last30Count = (() => {
+    const cutoff = Date.now() - 30 * 24 * 60 * 60 * 1000;
+    return entries.filter(e => new Date(e.date).getTime() >= cutoff).length;
+  })();
+
   return (
     <div className="min-h-screen w-full relative overflow-hidden">
-      {/* Lekfulla bakgrundsformer */}
+      {/* Single subtle background accent */}
       <div className="pointer-events-none absolute inset-0 -z-10">
-        <div className="absolute -top-32 -left-32 w-[500px] h-[500px] rounded-full bg-[hsl(280_70%_60%/0.10)] blur-3xl" />
-        <div className="absolute top-40 -right-40 w-[600px] h-[600px] rounded-full bg-[hsl(45_85%_55%/0.10)] blur-3xl" />
-        <div className="absolute bottom-0 left-1/3 w-[450px] h-[450px] rounded-full bg-[hsl(190_75%_55%/0.08)] blur-3xl" />
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] rounded-full bg-[hsl(45_85%_55%/0.05)] blur-3xl" />
       </div>
 
-      <div className="max-w-4xl mx-auto md:mx-0 px-5 md:px-8 pt-10 pb-24 space-y-10 animate-fade-in">
-        {/* Hero */}
-        <header className="space-y-4 text-center sm:text-left">
-          <div className="flex justify-center sm:justify-start">
-            <div className="relative">
-              <div className="absolute inset-0 rounded-full bg-gradient-to-br from-[hsl(45_85%_60%/0.4)] to-[hsl(280_70%_60%/0.3)] blur-xl" />
-              <TurtleLogo size="lg" animated={false} className="relative h-16 w-16" />
+      <div className="max-w-3xl mx-auto md:mx-0 px-5 md:px-8 pt-10 pb-24 animate-fade-in">
+        {/* Compact hero: turtle badge inline with title */}
+        <header className="space-y-3 mb-4">
+          <div className="flex items-center gap-3">
+            <div className="relative shrink-0">
+              <div className="absolute inset-0 rounded-full bg-[hsl(45_85%_55%/0.25)] blur-md" />
+              <TurtleLogo size="sm" animated={false} className="relative h-9 w-9" />
             </div>
-          </div>
-          <div className="space-y-2">
-            <h1 className="text-3xl sm:text-4xl font-bold tracking-tight bg-gradient-to-br from-foreground to-foreground/60 bg-clip-text text-transparent">
+            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">
               Dina mönster
             </h1>
-            <p className="text-[15px] text-muted-foreground max-w-md mx-auto sm:mx-0 leading-relaxed">
-              AI:n läser hela din historik och letar efter återkommande sekvenser, triggers och cykler i hur du mår.
-            </p>
           </div>
+          <p className="text-[14px] text-muted-foreground max-w-xl leading-relaxed">
+            En sammanhängande läsning av din historik — från hur det ser ut nu,
+            till vad som kännetecknar dig, hur du rör dig mellan faser och vilka
+            mönster AI:n hittar.
+          </p>
         </header>
 
-        {/* Statistik flyttad från Översikt */}
+        {/* Context line */}
         {isLoaded && (
-          <section className="space-y-6">
-            
-            <OverviewSummary
-              stats={stats}
-              entries={entries}
-              periodLabel="Hela din historik"
-              sleepBadDays={0}
-              showSleep={false}
-            />
-          </section>
+          <div className="mb-12 inline-flex items-center gap-2 rounded-full border border-border/50 bg-card/40 px-3 py-1.5 text-[12px] text-muted-foreground">
+            <span className="h-1.5 w-1.5 rounded-full bg-[hsl(45_85%_55%)]" />
+            {entries.length === 0
+              ? 'Inga incheckningar ännu'
+              : `${entries.length} incheckningar totalt · ${last30Count} de senaste 30 dagarna`}
+          </div>
         )}
 
-        {/* Kännetecken */}
-        {user?.id && (
-          <PatientCharacteristics
-            patientId={user.id}
-            latestMood={latestMood as any}
-            isShared={true}
-            checkinOnly
-          />
-        )}
+        {/* Sections */}
+        <div className="space-y-16">
+          {isLoaded && (
+            <Section
+              number="01"
+              title="Hur det ser ut nu"
+              hint="En översikt av hur dina dagar fördelat sig — fler stabila dagar är målet, extremerna är det vi vill minimera."
+            >
+              <OverviewSummary
+                stats={stats}
+                entries={entries}
+                periodLabel="Hela din historik"
+                sleepBadDays={0}
+                showSleep={false}
+              />
+            </Section>
+          )}
 
-        {/* Övergångar mellan faser */}
-        <MoodTransitions />
+          {user?.id && (
+            <Section
+              number="02"
+              title="Vad som kännetecknar dig"
+              hint="Återkommande symtom, känslor och beteenden du själv noterat vid incheckningar."
+            >
+              <PatientCharacteristics
+                patientId={user.id}
+                latestMood={latestMood as any}
+                isShared={true}
+                checkinOnly
+              />
+            </Section>
+          )}
 
-        {/* AI-mönster */}
-        <PatternInsightsSection />
+          <Section
+            number="03"
+            title="Hur du rör dig mellan faser"
+            hint="Vanliga övergångar i ditt mående och hur länge sedan de hände senast."
+          >
+            <MoodTransitions />
+          </Section>
 
-        {/* Tankedagbok */}
-        <ThoughtJournal />
+          <Section
+            number="04"
+            title="Mönster AI:n hittat"
+            hint="Återkommande sekvenser, triggers och cykler över längre tid — det du själv kan ha svårt att se i stunden."
+          >
+            <PatternInsightsSection />
+          </Section>
+
+          <Section
+            number="05"
+            title="Dina egna ord"
+            hint="Anteckningar och tankar du skrivit ner — råmaterialet bakom mönstren."
+          >
+            <ThoughtJournal />
+          </Section>
+        </div>
       </div>
     </div>
   );
