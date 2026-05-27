@@ -146,7 +146,7 @@ export function MoodTransitions() {
             const medalLabel = ['Vanligast', '2:a vanligast', '3:e vanligast'];
 
             return (
-              <div className="space-y-2">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 {top3.map(([key, list], idx) => {
                   const [f, t] = key.split('->') as [PhaseKind, PhaseKind];
                   const FromIcon = PHASE_META[f].icon;
@@ -159,40 +159,38 @@ export function MoodTransitions() {
                   return (
                     <div
                       key={key}
-                      className={`rounded-2xl px-5 py-4 border backdrop-blur-sm ${
+                      className={`rounded-2xl px-4 py-3 border backdrop-blur-sm ${
                         isTop
                           ? 'border-[hsl(45_85%_55%)]/30 bg-[hsl(45_85%_55%)]/5'
                           : 'border-border/20 bg-card/40'
                       }`}
                     >
-                      <div className="flex items-center justify-between mb-2.5">
-                        <span className={`text-[11px] uppercase tracking-wider font-medium ${
+                      <div className="flex items-center justify-between mb-2">
+                        <span className={`text-[10px] uppercase tracking-wider font-medium ${
                           isTop ? 'text-[hsl(45_85%_55%)]/80' : 'text-muted-foreground/70'
                         }`}>
                           {medalLabel[idx]}
                         </span>
-                        <span className="text-xs text-muted-foreground tabular-nums">
-                          {list.length} av {totalTransitions}
+                        <span className="text-[11px] text-muted-foreground tabular-nums">
+                          {list.length}
                         </span>
                       </div>
-                      <div className="flex items-center gap-3">
-                        <span className={`inline-flex items-center justify-center h-10 w-10 rounded-full ring-1 ${PHASE_META[f].tint} ${PHASE_META[f].ring}`}>
-                          <FromIcon className={`h-5 w-5 ${PHASE_META[f].color}`} />
+                      <div className="flex items-center gap-2">
+                        <span className={`inline-flex items-center justify-center h-8 w-8 rounded-full ring-1 ${PHASE_META[f].tint} ${PHASE_META[f].ring}`}>
+                          <FromIcon className={`h-4 w-4 ${PHASE_META[f].color}`} />
                         </span>
-                        <ArrowRight className="h-4 w-4 text-muted-foreground/60 shrink-0" />
-                        <span className={`inline-flex items-center justify-center h-10 w-10 rounded-full ring-1 ${PHASE_META[t].tint} ${PHASE_META[t].ring}`}>
-                          <ToIcon className={`h-5 w-5 ${PHASE_META[t].color}`} />
+                        <ArrowRight className="h-3.5 w-3.5 text-muted-foreground/60 shrink-0" />
+                        <span className={`inline-flex items-center justify-center h-8 w-8 rounded-full ring-1 ${PHASE_META[t].tint} ${PHASE_META[t].ring}`}>
+                          <ToIcon className={`h-4 w-4 ${PHASE_META[t].color}`} />
                         </span>
-                        <div className="ml-1 min-w-0 flex-1">
-                          <div className="text-[15px] font-medium leading-tight">
-                            <span className={PHASE_META[f].color}>{PHASE_META[f].label}</span>
-                            <span className="text-muted-foreground/60"> → </span>
-                            <span className={PHASE_META[t].color}>{PHASE_META[t].label}</span>
-                          </div>
-                          <div className="text-xs text-muted-foreground mt-0.5 tabular-nums">
-                            {since === 0 ? 'idag' : since === 1 ? 'igår' : `${since} dagar sedan senast`}
-                          </div>
-                        </div>
+                      </div>
+                      <div className="mt-2 text-[13px] font-medium leading-tight">
+                        <span className={PHASE_META[f].color}>{PHASE_META[f].label}</span>
+                        <span className="text-muted-foreground/60"> → </span>
+                        <span className={PHASE_META[t].color}>{PHASE_META[t].label}</span>
+                      </div>
+                      <div className="text-[11px] text-muted-foreground mt-0.5 tabular-nums">
+                        {since === 0 ? 'idag' : since === 1 ? 'igår' : `${since} dagar sedan`}
                       </div>
                     </div>
                   );
