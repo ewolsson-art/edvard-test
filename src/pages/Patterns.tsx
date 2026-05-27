@@ -2,6 +2,8 @@ import { PatternInsightsSection } from '@/components/PatternInsightsSection';
 import { TurtleLogo } from '@/components/TurtleLogo';
 import { PatientCharacteristics } from '@/components/PatientCharacteristics';
 import { MoodTransitions } from '@/components/MoodTransitions';
+import { OverviewSummary } from '@/components/OverviewSummary';
+import { ThoughtJournal } from '@/components/ThoughtJournal';
 import { useMoodData } from '@/hooks/useMoodData';
 import { useAuth } from '@/hooks/useAuth';
 import { ReactNode } from 'react';
