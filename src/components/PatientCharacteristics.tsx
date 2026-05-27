@@ -1,4 +1,5 @@
-import { Zap, Cloud, Lock, Sun } from 'lucide-react';
+import { Zap, Cloud, Lock, Sun, ChevronDown } from 'lucide-react';
+import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { usePatientCharacteristics } from '@/hooks/usePatientCharacteristics';
