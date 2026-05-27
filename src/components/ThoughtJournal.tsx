@@ -16,7 +16,7 @@ const moodColor = (mood: string): string => {
 
 function BookIllustration({ open }: { open: boolean }) {
   return (
-    <div className="relative h-32 w-full flex items-center justify-center" style={{ perspective: 800 }}>
+    <div className="relative h-32 w-full flex items-center justify-start" style={{ perspective: 800 }}>
       {/* Book base / pages */}
       <div className="relative" style={{ width: 140, height: 100 }}>
         {/* Back cover */}
