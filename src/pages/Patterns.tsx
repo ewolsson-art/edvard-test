@@ -85,9 +85,19 @@ export default function Patterns() {
 
         {/* Sections */}
         <div className="space-y-16">
-          {user?.id && (
+          {isLoaded && (
             <Section
               number="01"
+              title="Hur det ser ut nu"
+              hint="En snabb överblick av ditt mående den senaste tiden."
+            >
+              <OverviewSummary />
+            </Section>
+          )}
+
+          {user?.id && (
+            <Section
+              number="02"
               title="Vad som kännetecknar dig"
               hint="Återkommande symtom, känslor och beteenden du själv noterat vid incheckningar."
             >
@@ -101,7 +111,7 @@ export default function Patterns() {
           )}
 
           <Section
-            number="02"
+            number="03"
             title="Hur du rör dig mellan faser"
             hint="Vanliga övergångar i ditt mående och hur länge sedan de hände senast."
           >
@@ -109,11 +119,19 @@ export default function Patterns() {
           </Section>
 
           <Section
-            number="03"
+            number="04"
             title="Mönster AI:n hittat"
             hint="Återkommande sekvenser, triggers och cykler över längre tid — det du själv kan ha svårt att se i stunden."
           >
             <PatternInsightsSection />
+          </Section>
+
+          <Section
+            number="05"
+            title="Dina egna ord"
+            hint="Dagboksanteckningar som ger sammanhang åt siffrorna."
+          >
+            <ThoughtJournal />
           </Section>
         </div>
       </div>
