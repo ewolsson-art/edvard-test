@@ -83,25 +83,9 @@ export default function Patterns() {
 
         {/* Sections */}
         <div className="space-y-16">
-          {isLoaded && (
-            <Section
-              number="01"
-              title="Hur det ser ut nu"
-              hint="En översikt av hur dina dagar fördelat sig — fler stabila dagar är målet, extremerna är det vi vill minimera."
-            >
-              <OverviewSummary
-                stats={stats}
-                entries={entries}
-                periodLabel="Hela din historik"
-                sleepBadDays={0}
-                showSleep={false}
-              />
-            </Section>
-          )}
-
           {user?.id && (
             <Section
-              number="02"
+              number="01"
               title="Vad som kännetecknar dig"
               hint="Återkommande symtom, känslor och beteenden du själv noterat vid incheckningar."
             >
@@ -115,7 +99,7 @@ export default function Patterns() {
           )}
 
           <Section
-            number="03"
+            number="02"
             title="Hur du rör dig mellan faser"
             hint="Vanliga övergångar i ditt mående och hur länge sedan de hände senast."
           >
@@ -123,19 +107,11 @@ export default function Patterns() {
           </Section>
 
           <Section
-            number="04"
+            number="03"
             title="Mönster AI:n hittat"
             hint="Återkommande sekvenser, triggers och cykler över längre tid — det du själv kan ha svårt att se i stunden."
           >
             <PatternInsightsSection />
-          </Section>
-
-          <Section
-            number="05"
-            title="Dina egna ord"
-            hint="Anteckningar och tankar du skrivit ner — råmaterialet bakom mönstren."
-          >
-            <ThoughtJournal />
           </Section>
         </div>
       </div>
