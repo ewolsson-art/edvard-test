@@ -2,6 +2,8 @@ import { PatternInsightsSection } from '@/components/PatternInsightsSection';
 import { TurtleLogo } from '@/components/TurtleLogo';
 import { PatientCharacteristics } from '@/components/PatientCharacteristics';
 import { MoodTransitions } from '@/components/MoodTransitions';
+import { OverviewSummary } from '@/components/OverviewSummary';
+import { ThoughtJournal } from '@/components/ThoughtJournal';
 import { useMoodData } from '@/hooks/useMoodData';
 import { useAuth } from '@/hooks/useAuth';
 import { ReactNode } from 'react';
@@ -39,12 +41,28 @@ export default function Patterns() {
   const { user } = useAuth();
   const latestMood = entries.length > 0 ? entries[entries.length - 1].mood : null;
 
-
   // Context line: check-ins last 30 days
   const last30Count = (() => {
     const cutoff = Date.now() - 30 * 24 * 60 * 60 * 1000;
     return entries.filter(e => new Date(e.date).getTime() >= cutoff).length;
   })();
+
+  // Aggregate stats across all entries
+  const stats = (() => {
+    let severe_elevated = 0, elevated = 0, somewhat_elevated = 0, stable = 0, somewhat_depressed = 0, depressed = 0, severe_depressed = 0;
+    entries.forEach(e => {
+      if (e.mood === 'severe_elevated') severe_elevated++;
+      else if (e.mood === 'elevated') elevated++;
+      else if (e.mood === 'somewhat_elevated') somewhat_elevated++;
+      else if (e.mood === 'stable') stable++;
+      else if (e.mood === 'somewhat_depressed') somewhat_depressed++;
+      else if (e.mood === 'depressed') depressed++;
+      else if (e.mood === 'severe_depressed') severe_depressed++;
+    });
+    const total = severe_elevated + elevated + somewhat_elevated + stable + somewhat_depressed + depressed + severe_depressed;
+    return { severe_elevated, elevated, somewhat_elevated, stable, somewhat_depressed, depressed, severe_depressed, unregistered: 0, total, totalDays: total };
+  })();
+
 
   return (
     <div className="min-h-screen w-full relative overflow-hidden">
@@ -83,9 +101,25 @@ export default function Patterns() {
 
         {/* Sections */}
         <div className="space-y-16">
-          {user?.id && (
+          {isLoaded && (
             <Section
               number="01"
+              title="Hur det ser ut nu"
+              hint="En snabb överblick av ditt mående den senaste tiden."
+            >
+              <OverviewSummary
+                stats={stats as any}
+                entries={entries as any}
+                periodLabel="Hela historiken"
+                sleepBadDays={0}
+                showSleep={false}
+              />
+            </Section>
+          )}
+
+          {user?.id && (
+            <Section
+              number="02"
               title="Vad som kännetecknar dig"
               hint="Återkommande symtom, känslor och beteenden du själv noterat vid incheckningar."
             >
@@ -99,7 +133,7 @@ export default function Patterns() {
           )}
 
           <Section
-            number="02"
+            number="03"
             title="Hur du rör dig mellan faser"
             hint="Vanliga övergångar i ditt mående och hur länge sedan de hände senast."
           >
@@ -107,11 +141,19 @@ export default function Patterns() {
           </Section>
 
           <Section
-            number="03"
+            number="04"
             title="Mönster AI:n hittat"
             hint="Återkommande sekvenser, triggers och cykler över längre tid — det du själv kan ha svårt att se i stunden."
           >
             <PatternInsightsSection />
+          </Section>
+
+          <Section
+            number="05"
+            title="Dina egna ord"
+            hint="Dagboksanteckningar som ger sammanhang åt siffrorna."
+          >
+            <ThoughtJournal />
           </Section>
         </div>
       </div>
