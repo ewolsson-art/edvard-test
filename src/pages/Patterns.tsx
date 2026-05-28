@@ -110,17 +110,14 @@ export default function Patterns() {
           )}
 
           {user?.id && (
-            <Section
-              number="02"
-              title="Vad som kännetecknar dig"
-            >
+            <div className="scroll-mt-20">
               <PatientCharacteristics
                 patientId={user.id}
                 latestMood={latestMood as any}
                 isShared={true}
                 checkinOnly
               />
-            </Section>
+            </div>
           )}
 
           <Section
