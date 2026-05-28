@@ -161,7 +161,8 @@ export function CelebrationAnimation({
     const t1 = setTimeout(() => setPhase(1), 400);
     const t2 = setTimeout(() => setPhase(2), 1400);
     const t3 = setTimeout(() => setPhase(3), 2600);
-    return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); };
+    const t4 = setTimeout(() => setPhase(4), 3800);
+    return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); clearTimeout(t4); };
   }, []);
 
   // Calmer celebration for low moods, exuberant for milestones / high
