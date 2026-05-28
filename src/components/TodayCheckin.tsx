@@ -1014,87 +1014,124 @@ export function TodayCheckin({
             );
           })()}
 
-          {/* Färdiga taggar — prioriterat, visas först */}
-          {checkinData.mood && MOOD_TAGS[checkinData.mood]?.length > 0 && (
-            <div className="mb-8">
-              <h3 className="text-[13px] font-semibold text-foreground/85 mb-3 tracking-tight">
-                Vad känner du igen idag?
-              </h3>
-              <div className="flex flex-wrap gap-2.5">
-                {MOOD_TAGS[checkinData.mood].map(({ value, label, emoji }) => {
-                  const selected = (checkinData.tags || []).includes(value);
-                  return (
-                    <button
-                      key={value}
-                      type="button"
-                      onClick={() => { hapticTap(); handleTagToggle(value); }}
-                      className={cn(
-                        "px-4 py-2.5 rounded-full border text-[13px] font-medium transition-all duration-200 active:scale-95",
-                        selected
-                          ? "bg-primary/15 border-primary/40 text-primary shadow-[0_0_0_1px_hsl(var(--primary)/0.25)]"
-                          : "border-border/40 text-muted-foreground/85 hover:border-border/70 hover:bg-white/[0.03]"
-                      )}
-                    >
-                      {selected && <Check className="w-3 h-3 mr-1 inline" />}
-                      <span className="mr-1">{emoji}</span>
-                      {label}
-                    </button>
-                  );
-                })}
+          {/* Färdiga taggar — anpassade efter dagens betyg */}
+          {(() => {
+            const rating = getDayRatingFromTags(checkinData.tags);
+            if (!rating) return null;
+            const RATING_TAGS: Record<DayRating, { value: string; label: string; emoji: string }[]> = {
+              good: [
+                { value: 'energisk', label: 'Energisk', emoji: '⚡' },
+                { value: 'kreativ', label: 'Kreativ', emoji: '💡' },
+                { value: 'positiv', label: 'Positiv', emoji: '😊' },
+                { value: 'social', label: 'Social', emoji: '👥' },
+                { value: 'produktiv', label: 'Produktiv', emoji: '🚀' },
+                { value: 'motiverad', label: 'Motiverad', emoji: '🎯' },
+                { value: 'lugn', label: 'Lugn', emoji: '🌿' },
+                { value: 'tacksam', label: 'Tacksam', emoji: '🙏' },
+              ],
+              ok: [
+                { value: 'vanlig', label: 'Vanlig dag', emoji: '🙂' },
+                { value: 'fokuserad', label: 'Fokuserad', emoji: '🎯' },
+                { value: 'avslappnad', label: 'Avslappnad', emoji: '😌' },
+                { value: 'trött', label: 'Trött', emoji: '😴' },
+                { value: 'neutral', label: 'Neutral', emoji: '😐' },
+                { value: 'social', label: 'Social', emoji: '👥' },
+              ],
+              bad: [
+                { value: 'trött', label: 'Trött', emoji: '😩' },
+                { value: 'stress', label: 'Stress', emoji: '😖' },
+                { value: 'nedstämd', label: 'Nedstämd', emoji: '🌧️' },
+                { value: 'otålig', label: 'Otålig', emoji: '⏳' },
+                { value: 'rastlös', label: 'Rastlös', emoji: '🌀' },
+                { value: 'sömnsvårt', label: 'Sömnsvårt', emoji: '🌙' },
+                { value: 'orolig', label: 'Orolig', emoji: '😟' },
+                { value: 'ensam', label: 'Ensam', emoji: '🫥' },
+              ],
+            };
+            const tagsForRating = RATING_TAGS[rating];
+            const standardValues = new Set(tagsForRating.map(t => t.value));
+            return (
+              <div className="mb-8">
+                <h3 className="text-[13px] font-semibold text-foreground/85 mb-3 tracking-tight">
+                  Vad känner du igen idag?
+                </h3>
+                <div className="flex flex-wrap gap-2.5">
+                  {tagsForRating.map(({ value, label, emoji }) => {
+                    const selected = (checkinData.tags || []).includes(value);
+                    return (
+                      <button
+                        key={value}
+                        type="button"
+                        onClick={() => { hapticTap(); handleTagToggle(value); }}
+                        className={cn(
+                          "px-4 py-2.5 rounded-full border text-[13px] font-medium transition-all duration-200 active:scale-95",
+                          selected
+                            ? "bg-primary/15 border-primary/40 text-primary shadow-[0_0_0_1px_hsl(var(--primary)/0.25)]"
+                            : "border-border/40 text-muted-foreground/85 hover:border-border/70 hover:bg-white/[0.03]"
+                        )}
+                      >
+                        {selected && <Check className="w-3 h-3 mr-1 inline" />}
+                        <span className="mr-1">{emoji}</span>
+                        {label}
+                      </button>
+                    );
+                  })}
 
-                {/* Egna taggar redan tillagda */}
-                {(checkinData.tags || [])
-                  .filter(tag => !tag.startsWith(DAY_RATING_TAG_PREFIX) && !MOOD_TAGS[checkinData.mood!]?.some(o => o.value === tag))
-                  .map(tag => (
-                    <button
-                      key={tag}
-                      type="button"
-                      onClick={() => { hapticTap(); handleTagToggle(tag); }}
-                      className="px-4 py-2.5 rounded-full border bg-primary/15 border-primary/40 text-primary text-[13px] font-medium shadow-[0_0_0_1px_hsl(var(--primary)/0.25)] transition-all duration-200 active:scale-95"
-                    >
-                      <Check className="w-3 h-3 mr-1 inline" />
-                      {tag}
-                    </button>
-                  ))}
+                  {/* Egna taggar redan tillagda */}
+                  {(checkinData.tags || [])
+                    .filter(tag => !tag.startsWith(DAY_RATING_TAG_PREFIX) && !standardValues.has(tag))
+                    .map(tag => (
+                      <button
+                        key={tag}
+                        type="button"
+                        onClick={() => { hapticTap(); handleTagToggle(tag); }}
+                        className="px-4 py-2.5 rounded-full border bg-primary/15 border-primary/40 text-primary text-[13px] font-medium shadow-[0_0_0_1px_hsl(var(--primary)/0.25)] transition-all duration-200 active:scale-95"
+                      >
+                        <Check className="w-3 h-3 mr-1 inline" />
+                        {tag}
+                      </button>
+                    ))}
 
-                {/* Annan — egen tagg */}
-                {!showCustomTagInput ? (
-                  <button
-                    type="button"
-                    onClick={() => { hapticTap(); setShowCustomTagInput(true); }}
-                    className="px-4 py-2.5 rounded-full border border-dashed border-border/50 text-muted-foreground/80 text-[13px] font-medium hover:border-border/80 hover:bg-white/[0.03] transition-all duration-200 active:scale-95"
-                  >
-                    + Annan
-                  </button>
-                ) : (
-                  <input
-                    type="text"
-                    autoFocus
-                    placeholder="Egen tagg…"
-                    className="px-4 py-2.5 rounded-full border border-primary/40 bg-white/[0.03] text-base text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:ring-1 focus:ring-primary/30 transition-all w-40"
-                    maxLength={30}
-                    onKeyDown={(e: KeyboardEvent<HTMLInputElement>) => {
-                      if (e.key === 'Enter') {
-                        e.preventDefault();
-                        const input = e.target as HTMLInputElement;
-                        const val = input.value.trim().toLowerCase();
+                  {/* Annan — egen tagg */}
+                  {!showCustomTagInput ? (
+                    <button
+                      type="button"
+                      onClick={() => { hapticTap(); setShowCustomTagInput(true); }}
+                      className="px-4 py-2.5 rounded-full border border-dashed border-border/50 text-muted-foreground/80 text-[13px] font-medium hover:border-border/80 hover:bg-white/[0.03] transition-all duration-200 active:scale-95"
+                    >
+                      + Annan
+                    </button>
+                  ) : (
+                    <input
+                      type="text"
+                      autoFocus
+                      placeholder="Egen tagg…"
+                      className="px-4 py-2.5 rounded-full border border-primary/40 bg-white/[0.03] text-base text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:ring-1 focus:ring-primary/30 transition-all w-40"
+                      maxLength={30}
+                      onKeyDown={(e: KeyboardEvent<HTMLInputElement>) => {
+                        if (e.key === 'Enter') {
+                          e.preventDefault();
+                          const input = e.target as HTMLInputElement;
+                          const val = input.value.trim().toLowerCase();
+                          if (val && !(checkinData.tags || []).includes(val)) handleTagToggle(val);
+                          input.value = '';
+                          input.blur();
+                          setShowCustomTagInput(false);
+                        }
+                        if (e.key === 'Escape') setShowCustomTagInput(false);
+                      }}
+                      onBlur={(e) => {
+                        const val = e.target.value.trim().toLowerCase();
                         if (val && !(checkinData.tags || []).includes(val)) handleTagToggle(val);
-                        input.value = '';
-                        input.blur();
                         setShowCustomTagInput(false);
-                      }
-                      if (e.key === 'Escape') setShowCustomTagInput(false);
-                    }}
-                    onBlur={(e) => {
-                      const val = e.target.value.trim().toLowerCase();
-                      if (val && !(checkinData.tags || []).includes(val)) handleTagToggle(val);
-                      setShowCustomTagInput(false);
-                    }}
-                  />
-                )}
+                      }}
+                    />
+                  )}
+                </div>
               </div>
-            </div>
-          )}
+            );
+          })()}
+
 
           {/* Skriv en tanke — click-down accordion */}
           <div className="mb-2">
