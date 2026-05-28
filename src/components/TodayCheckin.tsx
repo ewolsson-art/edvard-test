@@ -1012,7 +1012,7 @@ export function TodayCheckin({
             );
           })()}
 
-          {/* Tanke om dagen — tydlig inline textarea */}
+          {/* Tanke om dagen — textarea ELLER färdiga taggar */}
           <div className="mb-6">
             <label htmlFor="thought-of-the-day" className="block text-[13px] font-semibold text-foreground/85 mb-2 tracking-tight">
               ✍️ Skriv en tanke om dagen
@@ -1023,7 +1023,7 @@ export function TodayCheckin({
               onChange={(e) => setCheckinData(prev => ({ ...prev, moodComment: e.target.value }))}
               placeholder="Vad rörde sig i ditt huvud idag? Något som hände, en känsla, en tanke…"
               maxLength={500}
-              rows={5}
+              rows={4}
               className="w-full resize-none text-base leading-relaxed bg-foreground/[0.03] border-border/40 placeholder:text-muted-foreground/40 focus-visible:ring-1 focus-visible:ring-primary/40 rounded-2xl px-4 py-3.5"
             />
             <div className="flex justify-end mt-1.5">
@@ -1031,7 +1031,43 @@ export function TodayCheckin({
                 {(checkinData.moodComment || '').length}/500
               </span>
             </div>
+
+            {/* Eller-skiljare + färdiga taggar baserat på valt stämningsläge */}
+            {checkinData.mood && MOOD_TAGS[checkinData.mood]?.length > 0 && (
+              <div className="mt-5">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="flex-1 h-px bg-border/40" />
+                  <span className="text-[11px] uppercase tracking-[0.15em] text-muted-foreground/45 font-medium">
+                    eller välj snabbt
+                  </span>
+                  <div className="flex-1 h-px bg-border/40" />
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {MOOD_TAGS[checkinData.mood].map(({ value, label, emoji }) => {
+                    const selected = (checkinData.tags || []).includes(value);
+                    return (
+                      <button
+                        key={value}
+                        type="button"
+                        onClick={() => { hapticTap(); handleTagToggle(value); }}
+                        className={cn(
+                          "px-3.5 py-2 rounded-full border text-[13px] font-medium transition-all duration-200 active:scale-95",
+                          selected
+                            ? "bg-primary/15 border-primary/40 text-primary"
+                            : "border-border/40 text-muted-foreground/85 hover:border-border/70 hover:bg-white/[0.03]"
+                        )}
+                      >
+                        {selected && <Check className="w-3 h-3 mr-1 inline" />}
+                        <span className="mr-1">{emoji}</span>
+                        {label}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
           </div>
+
 
           <div className="flex flex-col items-center gap-3 mt-auto pt-4 pb-2 max-w-md mx-auto w-full">
             <motion.button
