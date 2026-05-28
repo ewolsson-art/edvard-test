@@ -952,9 +952,9 @@ export function TodayCheckin({
 
       {/* Step: Day rating + tanke om dagen (snabbläge sida 2) */}
       {currentStep === 'day_rating' && (
-        <div className="step-slide-in flex flex-col flex-1" key={stepKey}>
+        <div className="step-slide-in flex flex-col flex-1 min-h-0 overflow-y-auto" key={stepKey}>
           {/* Toolbar */}
-          <div className="flex items-center justify-between h-10 mb-4">
+          <div className="flex items-center justify-between h-10 mb-3 flex-shrink-0">
             <Button variant="ghost" size="sm" onClick={goBack} className="gap-1.5 text-muted-foreground/60 -ml-2">
               <ChevronLeft className="w-4 h-4" />
               {t('common.back')}
@@ -962,12 +962,13 @@ export function TodayCheckin({
           </div>
 
           {/* Heading */}
-          <div className="mb-8">
-            <p className="text-muted-foreground/30 text-[11px] tracking-[0.15em] uppercase font-medium mb-3">{formattedDate}</p>
-            <h1 className="font-display text-[26px] sm:text-3xl font-bold tracking-tight leading-tight">
+          <div className="mb-5 flex-shrink-0">
+            <p className="text-muted-foreground/30 text-[11px] tracking-[0.15em] uppercase font-medium mb-2">{formattedDate}</p>
+            <h1 className="font-display text-[22px] sm:text-2xl font-bold tracking-tight leading-tight">
               Hur var din dag allmänt?
             </h1>
           </div>
+
 
           {/* Day rating — 3 stora val */}
           {(() => {
