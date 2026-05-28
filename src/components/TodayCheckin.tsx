@@ -245,6 +245,7 @@ export function TodayCheckin({
   const [showComment, setShowComment] = useState<Step | null>(null);
   const [showCustomTagInput, setShowCustomTagInput] = useState(false);
   const [showSideEffects, setShowSideEffects] = useState(false);
+  const [showThoughtInput, setShowThoughtInput] = useState(false);
   const commentRef = useRef<HTMLDivElement>(null);
   
   // Form data
