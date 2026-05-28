@@ -98,10 +98,7 @@ export default function Patterns() {
         {/* Sections */}
         <div className="space-y-16">
           {isLoaded && (
-            <Section
-              number="01"
-              title="Hur det ser ut nu"
-            >
+            <div className="scroll-mt-20">
               <OverviewSummary
                 stats={stats as any}
                 entries={entries as any}
@@ -109,7 +106,7 @@ export default function Patterns() {
                 sleepBadDays={0}
                 showSleep={false}
               />
-            </Section>
+            </div>
           )}
 
           {user?.id && (
