@@ -132,7 +132,20 @@ function getSmartFollowUp(mood: MoodType, energy?: EnergyType, t?: (key: string)
   return null;
 }
 
-type Step = 'mood' | 'tags' | 'sleep' | 'eating' | 'exercise' | 'medication' | 'custom_questions' | 'success-animation' | 'complete';
+type Step = 'mood' | 'day_rating' | 'tags' | 'sleep' | 'eating' | 'exercise' | 'medication' | 'custom_questions' | 'success-animation' | 'complete';
+
+type DayRating = 'bad' | 'ok' | 'good';
+const DAY_RATING_TAG_PREFIX = 'day:';
+const getDayRatingFromTags = (tags?: string[]): DayRating | undefined => {
+  const t = (tags || []).find(t => t.startsWith(DAY_RATING_TAG_PREFIX));
+  if (!t) return undefined;
+  const v = t.slice(DAY_RATING_TAG_PREFIX.length);
+  return v === 'bad' || v === 'ok' || v === 'good' ? v : undefined;
+};
+const setDayRatingInTags = (tags: string[] | undefined, rating: DayRating): string[] => {
+  const filtered = (tags || []).filter(t => !t.startsWith(DAY_RATING_TAG_PREFIX));
+  return [...filtered, `${DAY_RATING_TAG_PREFIX}${rating}`];
+};
 
 export function TodayCheckin({ 
   todayEntry, 
