@@ -1041,6 +1041,57 @@ export function TodayCheckin({
                     </button>
                   );
                 })}
+
+                {/* Egna taggar redan tillagda */}
+                {(checkinData.tags || [])
+                  .filter(tag => !tag.startsWith(DAY_RATING_TAG_PREFIX) && !MOOD_TAGS[checkinData.mood!]?.some(o => o.value === tag))
+                  .map(tag => (
+                    <button
+                      key={tag}
+                      type="button"
+                      onClick={() => { hapticTap(); handleTagToggle(tag); }}
+                      className="px-4 py-2.5 rounded-full border bg-primary/15 border-primary/40 text-primary text-[13px] font-medium shadow-[0_0_0_1px_hsl(var(--primary)/0.25)] transition-all duration-200 active:scale-95"
+                    >
+                      <Check className="w-3 h-3 mr-1 inline" />
+                      {tag}
+                    </button>
+                  ))}
+
+                {/* Annan — egen tagg */}
+                {!showCustomTagInput ? (
+                  <button
+                    type="button"
+                    onClick={() => { hapticTap(); setShowCustomTagInput(true); }}
+                    className="px-4 py-2.5 rounded-full border border-dashed border-border/50 text-muted-foreground/80 text-[13px] font-medium hover:border-border/80 hover:bg-white/[0.03] transition-all duration-200 active:scale-95"
+                  >
+                    + Annan
+                  </button>
+                ) : (
+                  <input
+                    type="text"
+                    autoFocus
+                    placeholder="Egen tagg…"
+                    className="px-4 py-2.5 rounded-full border border-primary/40 bg-white/[0.03] text-base text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:ring-1 focus:ring-primary/30 transition-all w-40"
+                    maxLength={30}
+                    onKeyDown={(e: KeyboardEvent<HTMLInputElement>) => {
+                      if (e.key === 'Enter') {
+                        e.preventDefault();
+                        const input = e.target as HTMLInputElement;
+                        const val = input.value.trim().toLowerCase();
+                        if (val && !(checkinData.tags || []).includes(val)) handleTagToggle(val);
+                        input.value = '';
+                        input.blur();
+                        setShowCustomTagInput(false);
+                      }
+                      if (e.key === 'Escape') setShowCustomTagInput(false);
+                    }}
+                    onBlur={(e) => {
+                      const val = e.target.value.trim().toLowerCase();
+                      if (val && !(checkinData.tags || []).includes(val)) handleTagToggle(val);
+                      setShowCustomTagInput(false);
+                    }}
+                  />
+                )}
               </div>
             </div>
           )}
