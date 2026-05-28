@@ -161,7 +161,8 @@ export function CelebrationAnimation({
     const t1 = setTimeout(() => setPhase(1), 400);
     const t2 = setTimeout(() => setPhase(2), 1400);
     const t3 = setTimeout(() => setPhase(3), 2600);
-    return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); };
+    const t4 = setTimeout(() => setPhase(4), 3800);
+    return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); clearTimeout(t4); };
   }, []);
 
   // Calmer celebration for low moods, exuberant for milestones / high
@@ -279,7 +280,14 @@ export function CelebrationAnimation({
             />
           </div>
         ) : (
-          <TurtleLogo size="hero" animated className="drop-shadow-[0_0_30px_hsl(45_85%_55%/0.3)]" />
+          <div className={cn(
+            "transition-all duration-700",
+            phase >= 4 ? "scale-100 opacity-100" : "scale-0 opacity-0",
+          )}
+          style={{ transitionTimingFunction: 'cubic-bezier(0.34, 1.56, 0.64, 1)' }}
+          >
+            <TurtleLogo size="hero" animated className="drop-shadow-[0_0_30px_hsl(45_85%_55%/0.3)]" />
+          </div>
         )}
       </div>
 
