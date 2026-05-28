@@ -151,10 +151,6 @@ export function MoodTransitions() {
                   const [f, t] = key.split('->') as [PhaseKind, PhaseKind];
                   const FromIcon = PHASE_META[f].icon;
                   const ToIcon = PHASE_META[t].icon;
-                  const latest = list
-                    .slice()
-                    .sort((a, b) => b.toPhase.endDate.localeCompare(a.toPhase.endDate))[0];
-                  const since = daysSince(latest.toPhase.endDate);
                   const isTop = idx === 0;
                   return (
                     <div
