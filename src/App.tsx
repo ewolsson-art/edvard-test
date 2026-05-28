@@ -1,4 +1,4 @@
-import { lazy, Suspense } from "react";
+import { Component, lazy, Suspense, type ReactNode } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { OfflineBanner } from "@/components/OfflineBanner";
@@ -25,6 +25,43 @@ import { preloadCriticalRoutes } from "@/lib/routePreload";
 import { usePageTracking } from "@/hooks/usePageTracking";
 
 function PageTracker() { usePageTracking(); return null; }
+
+class ChunkRecoveryBoundary extends Component<{ children: ReactNode }, { hasError: boolean }> {
+  state = { hasError: false };
+
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error: unknown) {
+    const message = error instanceof Error ? error.message : String(error);
+    const isChunkLoadFailure =
+      /Importing a module script failed|Failed to fetch dynamically imported module|Load failed/i.test(message);
+
+    if (isChunkLoadFailure && sessionStorage.getItem("toddy-chunk-reload-attempted") !== "true") {
+      sessionStorage.setItem("toddy-chunk-reload-attempted", "true");
+      if (window.caches) {
+        caches.keys().then((keys) => Promise.all(keys.map((key) => caches.delete(key)))).finally(() => {
+          window.location.reload();
+        });
+        return;
+      }
+      window.location.reload();
+    }
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="min-h-screen bg-background flex items-center justify-center">
+          <div className="h-6 w-6 rounded-full border-2 border-white/15 border-t-white/60 animate-spin" />
+        </div>
+      );
+    }
+
+    return this.props.children;
+  }
+}
 
 // Preload critical chunks on idle so navigation is instant.
 const preloadDashboard = () => {
@@ -162,6 +199,7 @@ const App = () => (
           <BrowserRouter>
             <PageTracker />
             <div className="min-h-screen" role="application" aria-label="Toddy - Moodtracker">
+            <ChunkRecoveryBoundary>
             <Suspense fallback={
               <div className="min-h-screen bg-background flex items-center justify-center">
                 <div className="h-6 w-6 rounded-full border-2 border-white/15 border-t-white/60 animate-spin" />
@@ -322,6 +360,7 @@ const App = () => (
               <Route path="*" element={<NotFound />} />
             </Routes>
             </Suspense>
+            </ChunkRecoveryBoundary>
             </div>
           </BrowserRouter>
           </NativeAppGate>
