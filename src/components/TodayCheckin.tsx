@@ -132,7 +132,20 @@ function getSmartFollowUp(mood: MoodType, energy?: EnergyType, t?: (key: string)
   return null;
 }
 
-type Step = 'mood' | 'tags' | 'sleep' | 'eating' | 'exercise' | 'medication' | 'custom_questions' | 'success-animation' | 'complete';
+type Step = 'mood' | 'day_rating' | 'tags' | 'sleep' | 'eating' | 'exercise' | 'medication' | 'custom_questions' | 'success-animation' | 'complete';
+
+type DayRating = 'bad' | 'ok' | 'good';
+const DAY_RATING_TAG_PREFIX = 'day:';
+const getDayRatingFromTags = (tags?: string[]): DayRating | undefined => {
+  const t = (tags || []).find(t => t.startsWith(DAY_RATING_TAG_PREFIX));
+  if (!t) return undefined;
+  const v = t.slice(DAY_RATING_TAG_PREFIX.length);
+  return v === 'bad' || v === 'ok' || v === 'good' ? v : undefined;
+};
+const setDayRatingInTags = (tags: string[] | undefined, rating: DayRating): string[] => {
+  const filtered = (tags || []).filter(t => !t.startsWith(DAY_RATING_TAG_PREFIX));
+  return [...filtered, `${DAY_RATING_TAG_PREFIX}${rating}`];
+};
 
 export function TodayCheckin({ 
   todayEntry, 
@@ -195,8 +208,11 @@ export function TodayCheckin({
   //   Quick    = mood only (+ tags)
   //   Detailed = mood + medication + sleep (+ tags + custom questions)
   const STEPS = useMemo(() => {
-    const steps: Step[] = ['mood', 'tags'];
-    if (checkinMode === 'detailed') {
+    const steps: Step[] = ['mood'];
+    if (checkinMode === 'quick') {
+      steps.push('day_rating');
+    } else {
+      steps.push('tags');
       steps.push('medication');
       steps.push('sleep');
       if (customQuestions.length > 0) steps.push('custom_questions');
@@ -336,21 +352,14 @@ export function TodayCheckin({
 
   const handleMoodSelect = (mood: MoodType) => {
     setCheckinData(prev => ({ ...prev, mood }));
-    if (checkinMode === 'quick' && currentStep === 'mood' && !isCheckinComplete && !todayEntry) {
-      userTouchedMoodRef.current = true;
-      setAutoSaveDeadline(Date.now() + AUTOSAVE_MS);
-    }
   };
 
-  // Avbryt autosave om läge byts, steg byts, kommentar öppnas eller incheckning visas redan
+  // Autosave behålls för bakåtkompatibilitet men aktiveras inte längre i snabbläget
   useEffect(() => {
-    if (checkinMode !== 'quick' || currentStep !== 'mood' || showComment) {
-      setAutoSaveDeadline(null);
-      setAutoSaveProgress(0);
-    }
+    setAutoSaveDeadline(null);
+    setAutoSaveProgress(0);
   }, [checkinMode, currentStep, showComment]);
 
-  // Tickar progress (0..1) och triggar spara när deadline nås
   useEffect(() => {
     if (!autoSaveDeadline) {
       setAutoSaveProgress(0);
@@ -365,21 +374,38 @@ export function TodayCheckin({
       if (now >= autoSaveDeadline) {
         setAutoSaveDeadline(null);
         setAutoSaveProgress(0);
-        if (checkinData.mood) {
-          handleCompleteWithData({ mood: checkinData.mood, moodComment: checkinData.moodComment });
-        }
       } else {
         raf = requestAnimationFrame(tick);
       }
     };
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
-  }, [autoSaveDeadline, checkinData.mood, checkinData.moodComment]);
+  }, [autoSaveDeadline]);
 
   const handleMoodContinue = () => {
     if (checkinData.mood) {
       navigateStep('tags');
     }
+  };
+
+  const handleQuickMoodContinue = () => {
+    if (checkinData.mood) {
+      navigateStep('day_rating');
+    }
+  };
+
+  const handleDayRatingSelect = (rating: DayRating) => {
+    hapticTap();
+    setCheckinData(prev => ({ ...prev, tags: setDayRatingInTags(prev.tags, rating) }));
+  };
+
+  const handleQuickFinish = () => {
+    if (!checkinData.mood) return;
+    handleCompleteWithData({
+      mood: checkinData.mood,
+      moodComment: checkinData.moodComment,
+      tags: checkinData.tags,
+    });
   };
 
   const handleTagToggle = (tag: string) => {
@@ -897,33 +923,6 @@ export function TodayCheckin({
           </div>
 
           <div className="flex flex-col items-center gap-5 pt-6 pb-2 max-w-md mx-auto w-full">
-              {/* Pratbubbla — visas bara i snabbläge här; i utförligt läge flyttas den till tags-steget */}
-              {checkinMode === 'quick' && (
-                <button
-                  type="button"
-                  onClick={() => setShowComment('mood')}
-                  aria-label={checkinData.moodComment ? t('checkin.editThought') : t('checkin.thoughtAboutDay')}
-                  className={cn(
-                    "group relative inline-flex items-center gap-2 pl-3 pr-4 py-2 rounded-full transition-all duration-200 active:scale-[0.97]",
-                    checkinData.moodComment
-                      ? "bg-primary/10 hover:bg-primary/15 ring-1 ring-primary/30 text-primary"
-                      : "bg-foreground/[0.04] hover:bg-foreground/[0.08] text-muted-foreground hover:text-foreground/80"
-                  )}
-                >
-                  <span aria-hidden className="text-lg leading-none transition-transform duration-300 group-hover:rotate-[-8deg] group-hover:scale-110">
-                    💭
-                  </span>
-                  <span className="text-sm font-medium tracking-tight max-w-[220px] truncate">
-                    {checkinData.moodComment
-                      ? checkinData.moodComment
-                      : t('checkin.thoughtAboutDay')}
-                  </span>
-                  {checkinData.moodComment && (
-                    <span className="w-1.5 h-1.5 rounded-full bg-[hsl(45_85%_55%)] flex-shrink-0" />
-                  )}
-                </button>
-              )}
-
               {checkinData.mood && (
                 <motion.button
                   initial={{ opacity: 0, y: 6 }}
@@ -933,8 +932,7 @@ export function TodayCheckin({
                   onClick={() => {
                     hapticTap();
                     if (checkinMode === 'quick') {
-                      setAutoSaveDeadline(null);
-                      handleCompleteWithData({ mood: checkinData.mood, moodComment: checkinData.moodComment });
+                      handleQuickMoodContinue();
                     } else {
                       handleMoodContinue();
                     }
@@ -942,7 +940,7 @@ export function TodayCheckin({
                   className="relative overflow-hidden w-full max-w-[280px] px-8 py-3.5 rounded-full bg-[hsl(45_85%_55%)] text-[hsl(225_30%_7%)] font-bold text-base tracking-wide shadow-[0_2px_14px_hsl(45_85%_55%/0.22)] hover:shadow-[0_4px_22px_hsl(45_85%_55%/0.32)] hover:bg-[hsl(45_85%_62%)] transition-[background-color,box-shadow] duration-200 inline-flex items-center justify-center gap-1.5"
                 >
                   <span className="relative inline-flex items-center gap-1.5">
-                    {checkinMode === 'quick' ? 'Klar' : t('common.continue')}
+                    {t('common.continue')}
                     <ChevronRight className="w-4 h-4" />
                   </span>
                 </motion.button>
@@ -951,6 +949,112 @@ export function TodayCheckin({
           {renderCommentSection('mood')}
         </div>
       )}
+
+      {/* Step: Day rating + tanke om dagen (snabbläge sida 2) */}
+      {currentStep === 'day_rating' && (
+        <div className="step-slide-in flex flex-col flex-1" key={stepKey}>
+          {/* Toolbar */}
+          <div className="flex items-center justify-between h-10 mb-4">
+            <Button variant="ghost" size="sm" onClick={goBack} className="gap-1.5 text-muted-foreground/60 -ml-2">
+              <ChevronLeft className="w-4 h-4" />
+              {t('common.back')}
+            </Button>
+          </div>
+
+          {/* Heading */}
+          <div className="mb-8">
+            <p className="text-muted-foreground/30 text-[11px] tracking-[0.15em] uppercase font-medium mb-3">{formattedDate}</p>
+            <h1 className="font-display text-[26px] sm:text-3xl font-bold tracking-tight leading-tight">
+              Hur var din dag allmänt?
+            </h1>
+          </div>
+
+          {/* Day rating — 3 stora val */}
+          {(() => {
+            const rating = getDayRatingFromTags(checkinData.tags);
+            const options: { value: DayRating; emoji: string; label: string; color: string }[] = [
+              { value: 'bad', emoji: '🌧️', label: 'Dålig', color: 'var(--mood-depressed)' },
+              { value: 'ok', emoji: '☁️', label: 'Okej', color: 'var(--mood-stable)' },
+              { value: 'good', emoji: '☀️', label: 'Bra', color: 'var(--mood-somewhat-elevated)' },
+            ];
+            return (
+              <div className="grid grid-cols-3 gap-3 mb-8">
+                {options.map(opt => {
+                  const selected = rating === opt.value;
+                  return (
+                    <button
+                      key={opt.value}
+                      type="button"
+                      onClick={() => handleDayRatingSelect(opt.value)}
+                      aria-pressed={selected}
+                      className={cn(
+                        "flex flex-col items-center justify-center gap-2 py-5 rounded-2xl border transition-all duration-200 active:scale-95",
+                        selected
+                          ? "border-transparent shadow-[0_4px_18px_hsl(var(--background)/0.4)]"
+                          : "border-border/40 bg-foreground/[0.02] hover:bg-foreground/[0.05] hover:border-border/70"
+                      )}
+                      style={selected ? {
+                        backgroundColor: `hsl(${opt.color} / 0.18)`,
+                        boxShadow: `0 0 0 2px hsl(${opt.color} / 0.45), 0 6px 22px hsl(${opt.color} / 0.25)`,
+                      } : undefined}
+                    >
+                      <span className="text-3xl leading-none" aria-hidden>{opt.emoji}</span>
+                      <span
+                        className="text-sm font-semibold tracking-tight"
+                        style={{ color: selected ? `hsl(${opt.color})` : undefined }}
+                      >
+                        {opt.label}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            );
+          })()}
+
+          {/* Tanke om dagen — tydlig inline textarea */}
+          <div className="mb-6">
+            <label htmlFor="thought-of-the-day" className="block text-[13px] font-semibold text-foreground/85 mb-2 tracking-tight">
+              ✍️ Skriv en tanke om dagen
+            </label>
+            <Textarea
+              id="thought-of-the-day"
+              value={checkinData.moodComment || ''}
+              onChange={(e) => setCheckinData(prev => ({ ...prev, moodComment: e.target.value }))}
+              placeholder="Vad rörde sig i ditt huvud idag? Något som hände, en känsla, en tanke…"
+              maxLength={500}
+              rows={5}
+              className="w-full resize-none text-base leading-relaxed bg-foreground/[0.03] border-border/40 placeholder:text-muted-foreground/40 focus-visible:ring-1 focus-visible:ring-primary/40 rounded-2xl px-4 py-3.5"
+            />
+            <div className="flex justify-end mt-1.5">
+              <span className="text-[11px] text-muted-foreground/50">
+                {(checkinData.moodComment || '').length}/500
+              </span>
+            </div>
+          </div>
+
+          <div className="flex flex-col items-center gap-3 mt-auto pt-4 pb-2 max-w-md mx-auto w-full">
+            <motion.button
+              whileTap={{ scale: 0.97 }}
+              onClick={() => { hapticTap(); handleQuickFinish(); }}
+              className="w-full max-w-[280px] px-8 py-3.5 rounded-full bg-[hsl(45_85%_55%)] text-[hsl(225_30%_7%)] font-bold text-base tracking-wide shadow-[0_2px_14px_hsl(45_85%_55%/0.22)] hover:shadow-[0_4px_22px_hsl(45_85%_55%/0.32)] hover:bg-[hsl(45_85%_62%)] transition-[background-color,box-shadow] duration-200 inline-flex items-center justify-center gap-1.5"
+            >
+              <span className="relative inline-flex items-center gap-1.5">
+                Klar
+                <Check className="w-4 h-4" />
+              </span>
+            </motion.button>
+            <button
+              type="button"
+              onClick={() => { hapticTap(); handleQuickFinish(); }}
+              className="text-[12.5px] text-muted-foreground/55 hover:text-muted-foreground transition-colors"
+            >
+              Hoppa över
+            </button>
+          </div>
+        </div>
+      )}
+
 
       {/* Step: Tags */}
       {currentStep === 'tags' && (
