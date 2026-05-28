@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo, useRef, KeyboardEvent } from 'react';
 import { format, differenceInDays, parseISO, isToday, isYesterday } from 'date-fns';
 import { sv } from 'date-fns/locale';
-import { Flame, Zap, Sun, Cloud, CloudRain, MessageSquarePlus, CheckCircle2, Pill, Pencil, Moon, MoonStar, CloudMoon, Utensils, Dumbbell, ThumbsUp, ThumbsDown, Check, X, ChevronRight, ChevronLeft, Heart, AlertTriangle, HelpCircle, CalendarIcon, Plus, Trophy, ListChecks } from 'lucide-react';
+import { Flame, Zap, Sun, Cloud, CloudRain, MessageSquarePlus, CheckCircle2, Pill, Pencil, Moon, MoonStar, CloudMoon, Utensils, Dumbbell, ThumbsUp, ThumbsDown, Check, X, ChevronRight, ChevronLeft, ChevronDown, Heart, AlertTriangle, HelpCircle, CalendarIcon, Plus, Trophy, ListChecks } from 'lucide-react';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { MoodType, MoodEntry, MOOD_LABELS, ENERGY_LABELS, QualityType, QUALITY_LABELS, CheckinData, EnergyType } from '@/types/mood';
@@ -245,6 +245,7 @@ export function TodayCheckin({
   const [showComment, setShowComment] = useState<Step | null>(null);
   const [showCustomTagInput, setShowCustomTagInput] = useState(false);
   const [showSideEffects, setShowSideEffects] = useState(false);
+  const [showThoughtInput, setShowThoughtInput] = useState(false);
   const commentRef = useRef<HTMLDivElement>(null);
   
   // Form data
@@ -1013,59 +1014,82 @@ export function TodayCheckin({
             );
           })()}
 
-          {/* Tanke om dagen — textarea ELLER färdiga taggar */}
-          <div className="mb-6">
-            <label htmlFor="thought-of-the-day" className="block text-[13px] font-semibold text-foreground/85 mb-2 tracking-tight">
-              ✍️ Skriv en tanke om dagen
-            </label>
-            <Textarea
-              id="thought-of-the-day"
-              value={checkinData.moodComment || ''}
-              onChange={(e) => setCheckinData(prev => ({ ...prev, moodComment: e.target.value }))}
-              placeholder="Vad rörde sig i ditt huvud idag? Något som hände, en känsla, en tanke…"
-              maxLength={500}
-              rows={4}
-              className="w-full resize-none text-base leading-relaxed bg-foreground/[0.03] border-border/40 placeholder:text-muted-foreground/40 focus-visible:ring-1 focus-visible:ring-primary/40 rounded-2xl px-4 py-3.5"
-            />
-            <div className="flex justify-end mt-1.5">
-              <span className="text-[11px] text-muted-foreground/50">
-                {(checkinData.moodComment || '').length}/500
-              </span>
-            </div>
-
-            {/* Eller-skiljare + färdiga taggar baserat på valt stämningsläge */}
-            {checkinData.mood && MOOD_TAGS[checkinData.mood]?.length > 0 && (
-              <div className="mt-5">
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="flex-1 h-px bg-border/40" />
-                  <span className="text-[11px] uppercase tracking-[0.15em] text-muted-foreground/45 font-medium">
-                    eller välj snabbt
-                  </span>
-                  <div className="flex-1 h-px bg-border/40" />
-                </div>
-                <div className="flex flex-wrap gap-2">
-                  {MOOD_TAGS[checkinData.mood].map(({ value, label, emoji }) => {
-                    const selected = (checkinData.tags || []).includes(value);
-                    return (
-                      <button
-                        key={value}
-                        type="button"
-                        onClick={() => { hapticTap(); handleTagToggle(value); }}
-                        className={cn(
-                          "px-3.5 py-2 rounded-full border text-[13px] font-medium transition-all duration-200 active:scale-95",
-                          selected
-                            ? "bg-primary/15 border-primary/40 text-primary"
-                            : "border-border/40 text-muted-foreground/85 hover:border-border/70 hover:bg-white/[0.03]"
-                        )}
-                      >
-                        {selected && <Check className="w-3 h-3 mr-1 inline" />}
-                        <span className="mr-1">{emoji}</span>
-                        {label}
-                      </button>
-                    );
-                  })}
-                </div>
+          {/* Färdiga taggar — prioriterat, visas först */}
+          {checkinData.mood && MOOD_TAGS[checkinData.mood]?.length > 0 && (
+            <div className="mb-8">
+              <h3 className="text-[13px] font-semibold text-foreground/85 mb-3 tracking-tight">
+                Vad känner du igen idag?
+              </h3>
+              <div className="flex flex-wrap gap-2.5">
+                {MOOD_TAGS[checkinData.mood].map(({ value, label, emoji }) => {
+                  const selected = (checkinData.tags || []).includes(value);
+                  return (
+                    <button
+                      key={value}
+                      type="button"
+                      onClick={() => { hapticTap(); handleTagToggle(value); }}
+                      className={cn(
+                        "px-4 py-2.5 rounded-full border text-[13px] font-medium transition-all duration-200 active:scale-95",
+                        selected
+                          ? "bg-primary/15 border-primary/40 text-primary shadow-[0_0_0_1px_hsl(var(--primary)/0.25)]"
+                          : "border-border/40 text-muted-foreground/85 hover:border-border/70 hover:bg-white/[0.03]"
+                      )}
+                    >
+                      {selected && <Check className="w-3 h-3 mr-1 inline" />}
+                      <span className="mr-1">{emoji}</span>
+                      {label}
+                    </button>
+                  );
+                })}
               </div>
+            </div>
+          )}
+
+          {/* Skriv en tanke — click-down accordion */}
+          <div className="mb-2">
+            <button
+              type="button"
+              onClick={() => { hapticTap(); setShowThoughtInput(prev => !prev); }}
+              className={cn(
+                "w-full flex items-center justify-between px-4 py-3.5 rounded-2xl border text-left transition-all duration-200",
+                showThoughtInput
+                  ? "border-primary/30 bg-primary/[0.04]"
+                  : "border-border/40 bg-foreground/[0.02] hover:bg-foreground/[0.04]"
+              )}
+            >
+              <span className="text-[13px] font-semibold text-foreground/85 tracking-tight">
+                {showThoughtInput ? '✍️ Skriv en tanke om dagen' : '✍️ Vill du skriva en tanke?'}
+              </span>
+              <ChevronDown
+                className={cn(
+                  "w-4 h-4 text-muted-foreground/60 transition-transform duration-200",
+                  showThoughtInput && "rotate-180"
+                )}
+              />
+            </button>
+
+            {showThoughtInput && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                exit={{ opacity: 0, height: 0 }}
+                className="mt-3 overflow-hidden"
+              >
+                <Textarea
+                  id="thought-of-the-day"
+                  value={checkinData.moodComment || ''}
+                  onChange={(e) => setCheckinData(prev => ({ ...prev, moodComment: e.target.value }))}
+                  placeholder="Vad rörde sig i ditt huvud idag? Något som hände, en känsla, en tanke…"
+                  maxLength={500}
+                  rows={4}
+                  className="w-full resize-none text-base leading-relaxed bg-foreground/[0.03] border-border/40 placeholder:text-muted-foreground/40 focus-visible:ring-1 focus-visible:ring-primary/40 rounded-2xl px-4 py-3.5"
+                />
+                <div className="flex justify-end mt-1.5">
+                  <span className="text-[11px] text-muted-foreground/50">
+                    {(checkinData.moodComment || '').length}/500
+                  </span>
+                </div>
+              </motion.div>
             )}
           </div>
 
