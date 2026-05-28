@@ -1,4 +1,4 @@
-const CACHE_NAME = 'toddy-v4-no-html-cache';
+const CACHE_NAME = 'toddy-v5-no-html-cache';
 const STATIC_ASSETS = [
   '/manifest.json',
   '/favicon.svg',
