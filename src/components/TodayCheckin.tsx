@@ -952,7 +952,7 @@ export function TodayCheckin({
 
       {/* Step: Day rating + tanke om dagen (snabbläge sida 2) */}
       {currentStep === 'day_rating' && (
-        <div className="step-slide-in flex flex-col flex-1 min-h-0 overflow-y-auto" key={stepKey}>
+        <div className="step-slide-in flex flex-col flex-1 min-h-0 overflow-y-auto px-1" key={stepKey}>
           {/* Toolbar */}
           <div className="flex items-center justify-between h-10 mb-3 flex-shrink-0">
             <Button variant="ghost" size="sm" onClick={goBack} className="gap-1.5 text-muted-foreground/60 -ml-2">
