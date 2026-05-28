@@ -124,12 +124,9 @@ export default function Patterns() {
             <MoodTransitions />
           </div>
 
-          <Section
-            number="04"
-            title="Mönster AI:n hittat"
-          >
+          <div className="scroll-mt-20">
             <PatternInsightsSection />
-          </Section>
+          </div>
 
           <Section
             number="05"
