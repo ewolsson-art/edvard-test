@@ -352,21 +352,14 @@ export function TodayCheckin({
 
   const handleMoodSelect = (mood: MoodType) => {
     setCheckinData(prev => ({ ...prev, mood }));
-    if (checkinMode === 'quick' && currentStep === 'mood' && !isCheckinComplete && !todayEntry) {
-      userTouchedMoodRef.current = true;
-      setAutoSaveDeadline(Date.now() + AUTOSAVE_MS);
-    }
   };
 
-  // Avbryt autosave om läge byts, steg byts, kommentar öppnas eller incheckning visas redan
+  // Autosave behålls för bakåtkompatibilitet men aktiveras inte längre i snabbläget
   useEffect(() => {
-    if (checkinMode !== 'quick' || currentStep !== 'mood' || showComment) {
-      setAutoSaveDeadline(null);
-      setAutoSaveProgress(0);
-    }
+    setAutoSaveDeadline(null);
+    setAutoSaveProgress(0);
   }, [checkinMode, currentStep, showComment]);
 
-  // Tickar progress (0..1) och triggar spara när deadline nås
   useEffect(() => {
     if (!autoSaveDeadline) {
       setAutoSaveProgress(0);
@@ -381,21 +374,38 @@ export function TodayCheckin({
       if (now >= autoSaveDeadline) {
         setAutoSaveDeadline(null);
         setAutoSaveProgress(0);
-        if (checkinData.mood) {
-          handleCompleteWithData({ mood: checkinData.mood, moodComment: checkinData.moodComment });
-        }
       } else {
         raf = requestAnimationFrame(tick);
       }
     };
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
-  }, [autoSaveDeadline, checkinData.mood, checkinData.moodComment]);
+  }, [autoSaveDeadline]);
 
   const handleMoodContinue = () => {
     if (checkinData.mood) {
       navigateStep('tags');
     }
+  };
+
+  const handleQuickMoodContinue = () => {
+    if (checkinData.mood) {
+      navigateStep('day_rating');
+    }
+  };
+
+  const handleDayRatingSelect = (rating: DayRating) => {
+    hapticTap();
+    setCheckinData(prev => ({ ...prev, tags: setDayRatingInTags(prev.tags, rating) }));
+  };
+
+  const handleQuickFinish = () => {
+    if (!checkinData.mood) return;
+    handleCompleteWithData({
+      mood: checkinData.mood,
+      moodComment: checkinData.moodComment,
+      tags: checkinData.tags,
+    });
   };
 
   const handleTagToggle = (tag: string) => {
