@@ -66,8 +66,8 @@ class ChunkRecoveryBoundary extends Component<{ children: ReactNode }, { hasErro
 // Preload critical chunks on idle so navigation is instant.
 const preloadDashboard = () => {
   preloadCriticalRoutes();
-  import("./hooks/useMoodData");
-  import("./hooks/useMedications");
+  import("./hooks/useMoodData").catch(() => {});
+  import("./hooks/useMedications").catch(() => {});
 };
 if (typeof window !== 'undefined') {
   if ('requestIdleCallback' in window) {
@@ -138,7 +138,7 @@ const queryClient = new QueryClient({
   },
 });
 
-const AppLayout = ({ children }: { children: React.ReactNode }) => (
+const AppLayout = ({ children }: { children: ReactNode }) => (
   <SidebarProvider>
     <SkipToContent />
     <div className="min-h-screen flex w-full">
