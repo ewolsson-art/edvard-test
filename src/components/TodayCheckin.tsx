@@ -1082,7 +1082,7 @@ export function TodayCheckin({
                   placeholder="Vad rörde sig i ditt huvud idag? Något som hände, en känsla, en tanke…"
                   maxLength={500}
                   rows={4}
-                  className="w-full resize-none text-base leading-relaxed bg-foreground/[0.03] border-border/40 placeholder:text-muted-foreground/40 focus-visible:ring-1 focus-visible:ring-primary/40 rounded-2xl px-4 py-3.5"
+                  className="w-full resize-none text-base leading-relaxed bg-foreground/[0.03] border-border/40 placeholder:text-muted-foreground/40 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-border/60 rounded-2xl px-4 py-3.5"
                 />
                 <div className="flex justify-end mt-1.5">
                   <span className="text-[11px] text-muted-foreground/50">
