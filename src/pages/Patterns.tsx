@@ -101,7 +101,6 @@ export default function Patterns() {
             <Section
               number="01"
               title="Hur det ser ut nu"
-              hint="En snabb överblick av ditt mående den senaste tiden."
             >
               <OverviewSummary
                 stats={stats as any}
@@ -117,7 +116,6 @@ export default function Patterns() {
             <Section
               number="02"
               title="Vad som kännetecknar dig"
-              hint="Återkommande symtom, känslor och beteenden du själv noterat vid incheckningar."
             >
               <PatientCharacteristics
                 patientId={user.id}
@@ -131,7 +129,6 @@ export default function Patterns() {
           <Section
             number="03"
             title="Hur du rör dig mellan faser"
-            hint="Vanliga övergångar i ditt mående och hur länge sedan de hände senast."
           >
             <MoodTransitions />
           </Section>
@@ -139,7 +136,6 @@ export default function Patterns() {
           <Section
             number="04"
             title="Mönster AI:n hittat"
-            hint="Återkommande sekvenser, triggers och cykler över längre tid — det du själv kan ha svårt att se i stunden."
           >
             <PatternInsightsSection />
           </Section>
@@ -147,7 +143,6 @@ export default function Patterns() {
           <Section
             number="05"
             title="Dina egna ord"
-            hint="Dagboksanteckningar som ger sammanhang åt siffrorna."
           >
             <ThoughtJournal />
           </Section>
