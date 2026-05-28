@@ -189,9 +189,6 @@ export function MoodTransitions() {
                         <span className="text-muted-foreground/60"> → </span>
                         <span className={PHASE_META[t].color}>{PHASE_META[t].label}</span>
                       </div>
-                      <div className="text-[11px] text-muted-foreground mt-0.5 tabular-nums">
-                        {since === 0 ? 'idag' : since === 1 ? 'igår' : `${since} dagar sedan`}
-                      </div>
                     </div>
                   );
                 })}
