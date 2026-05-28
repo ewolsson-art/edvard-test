@@ -120,12 +120,9 @@ export default function Patterns() {
             </div>
           )}
 
-          <Section
-            number="03"
-            title="Hur du rör dig mellan faser"
-          >
+          <div className="scroll-mt-20">
             <MoodTransitions />
-          </Section>
+          </div>
 
           <Section
             number="04"
