@@ -128,12 +128,9 @@ export default function Patterns() {
             <PatternInsightsSection />
           </div>
 
-          <Section
-            number="05"
-            title="Dina egna ord"
-          >
+          <div className="scroll-mt-20">
             <ThoughtJournal />
-          </Section>
+          </div>
         </div>
       </div>
     </div>
