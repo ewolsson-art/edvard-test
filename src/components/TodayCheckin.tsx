@@ -1073,7 +1073,7 @@ export function TodayCheckin({
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: 'auto' }}
                 exit={{ opacity: 0, height: 0 }}
-                className="mt-3 overflow-hidden"
+                className="mt-3 overflow-hidden px-1 -mx-1"
               >
                 <Textarea
                   id="thought-of-the-day"
