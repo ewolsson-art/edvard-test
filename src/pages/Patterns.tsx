@@ -11,24 +11,20 @@ import { ReactNode } from 'react';
 type SectionProps = {
   number: string;
   title: string;
-  hint: string;
   children: ReactNode;
 };
 
-function Section({ number, title, hint, children }: SectionProps) {
+function Section({ number, title, children }: SectionProps) {
   return (
     <section className="space-y-4 scroll-mt-20">
       <div className="flex items-baseline gap-3">
         <span className="text-xs font-mono text-muted-foreground/60 tracking-widest pt-1">
           {number}
         </span>
-        <div className="space-y-1 flex-1 min-w-0">
+        <div className="flex-1 min-w-0">
           <h2 className="text-xl font-semibold tracking-tight text-foreground">
             {title}
           </h2>
-          <p className="text-[13px] text-muted-foreground/80 leading-relaxed">
-            {hint}
-          </p>
         </div>
       </div>
       <div className="pl-0 sm:pl-9">{children}</div>
