@@ -950,6 +950,112 @@ export function TodayCheckin({
         </div>
       )}
 
+      {/* Step: Day rating + tanke om dagen (snabbläge sida 2) */}
+      {currentStep === 'day_rating' && (
+        <div className="step-slide-in flex flex-col flex-1" key={stepKey}>
+          {/* Toolbar */}
+          <div className="flex items-center justify-between h-10 mb-4">
+            <Button variant="ghost" size="sm" onClick={goBack} className="gap-1.5 text-muted-foreground/60 -ml-2">
+              <ChevronLeft className="w-4 h-4" />
+              {t('common.back')}
+            </Button>
+          </div>
+
+          {/* Heading */}
+          <div className="mb-8">
+            <p className="text-muted-foreground/30 text-[11px] tracking-[0.15em] uppercase font-medium mb-3">{formattedDate}</p>
+            <h1 className="font-display text-[26px] sm:text-3xl font-bold tracking-tight leading-tight">
+              Hur var din dag allmänt?
+            </h1>
+          </div>
+
+          {/* Day rating — 3 stora val */}
+          {(() => {
+            const rating = getDayRatingFromTags(checkinData.tags);
+            const options: { value: DayRating; emoji: string; label: string; color: string }[] = [
+              { value: 'bad', emoji: '🌧️', label: 'Dålig', color: 'var(--mood-depressed)' },
+              { value: 'ok', emoji: '☁️', label: 'Okej', color: 'var(--mood-stable)' },
+              { value: 'good', emoji: '☀️', label: 'Bra', color: 'var(--mood-somewhat-elevated)' },
+            ];
+            return (
+              <div className="grid grid-cols-3 gap-3 mb-8">
+                {options.map(opt => {
+                  const selected = rating === opt.value;
+                  return (
+                    <button
+                      key={opt.value}
+                      type="button"
+                      onClick={() => handleDayRatingSelect(opt.value)}
+                      aria-pressed={selected}
+                      className={cn(
+                        "flex flex-col items-center justify-center gap-2 py-5 rounded-2xl border transition-all duration-200 active:scale-95",
+                        selected
+                          ? "border-transparent shadow-[0_4px_18px_hsl(var(--background)/0.4)]"
+                          : "border-border/40 bg-foreground/[0.02] hover:bg-foreground/[0.05] hover:border-border/70"
+                      )}
+                      style={selected ? {
+                        backgroundColor: `hsl(${opt.color} / 0.18)`,
+                        boxShadow: `0 0 0 2px hsl(${opt.color} / 0.45), 0 6px 22px hsl(${opt.color} / 0.25)`,
+                      } : undefined}
+                    >
+                      <span className="text-3xl leading-none" aria-hidden>{opt.emoji}</span>
+                      <span
+                        className="text-sm font-semibold tracking-tight"
+                        style={{ color: selected ? `hsl(${opt.color})` : undefined }}
+                      >
+                        {opt.label}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            );
+          })()}
+
+          {/* Tanke om dagen — tydlig inline textarea */}
+          <div className="mb-6">
+            <label htmlFor="thought-of-the-day" className="block text-[13px] font-semibold text-foreground/85 mb-2 tracking-tight">
+              ✍️ Skriv en tanke om dagen
+            </label>
+            <Textarea
+              id="thought-of-the-day"
+              value={checkinData.moodComment || ''}
+              onChange={(e) => setCheckinData(prev => ({ ...prev, moodComment: e.target.value }))}
+              placeholder="Vad rörde sig i ditt huvud idag? Något som hände, en känsla, en tanke…"
+              maxLength={500}
+              rows={5}
+              className="w-full resize-none text-base leading-relaxed bg-foreground/[0.03] border-border/40 placeholder:text-muted-foreground/40 focus-visible:ring-1 focus-visible:ring-primary/40 rounded-2xl px-4 py-3.5"
+            />
+            <div className="flex justify-end mt-1.5">
+              <span className="text-[11px] text-muted-foreground/50">
+                {(checkinData.moodComment || '').length}/500
+              </span>
+            </div>
+          </div>
+
+          <div className="flex flex-col items-center gap-3 mt-auto pt-4 pb-2 max-w-md mx-auto w-full">
+            <motion.button
+              whileTap={{ scale: 0.97 }}
+              onClick={() => { hapticTap(); handleQuickFinish(); }}
+              className="w-full max-w-[280px] px-8 py-3.5 rounded-full bg-[hsl(45_85%_55%)] text-[hsl(225_30%_7%)] font-bold text-base tracking-wide shadow-[0_2px_14px_hsl(45_85%_55%/0.22)] hover:shadow-[0_4px_22px_hsl(45_85%_55%/0.32)] hover:bg-[hsl(45_85%_62%)] transition-[background-color,box-shadow] duration-200 inline-flex items-center justify-center gap-1.5"
+            >
+              <span className="relative inline-flex items-center gap-1.5">
+                Klar
+                <Check className="w-4 h-4" />
+              </span>
+            </motion.button>
+            <button
+              type="button"
+              onClick={() => { hapticTap(); handleQuickFinish(); }}
+              className="text-[12.5px] text-muted-foreground/55 hover:text-muted-foreground transition-colors"
+            >
+              Hoppa över
+            </button>
+          </div>
+        </div>
+      )}
+
+
       {/* Step: Tags */}
       {currentStep === 'tags' && (
         <div className="step-slide-in flex flex-col flex-1" key={stepKey}>
