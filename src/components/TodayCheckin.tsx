@@ -208,8 +208,11 @@ export function TodayCheckin({
   //   Quick    = mood only (+ tags)
   //   Detailed = mood + medication + sleep (+ tags + custom questions)
   const STEPS = useMemo(() => {
-    const steps: Step[] = ['mood', 'tags'];
-    if (checkinMode === 'detailed') {
+    const steps: Step[] = ['mood'];
+    if (checkinMode === 'quick') {
+      steps.push('day_rating');
+    } else {
+      steps.push('tags');
       steps.push('medication');
       steps.push('sleep');
       if (customQuestions.length > 0) steps.push('custom_questions');
