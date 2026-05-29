@@ -46,8 +46,14 @@ export function WeekCalendar({
     <div className="fade-in">
       {/* Header matching month view style */}
       {hideNavigation ? (
-        <div className="mb-2">
-          <h2 className="font-display text-base sm:text-lg font-semibold text-foreground/70">
+        <div className="mb-2 flex items-center gap-2">
+          {isCurrentWeek && (
+            <span className="h-2 w-2 rounded-full bg-primary flex-shrink-0" />
+          )}
+          <h2 className={cn(
+            "font-display text-base sm:text-lg font-semibold",
+            isCurrentWeek ? "text-foreground" : "text-foreground/70"
+          )}>
             {weekLabel}
           </h2>
         </div>
