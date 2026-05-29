@@ -51,10 +51,22 @@ export function WeekCalendar({
             <span className="h-2 w-2 rounded-full bg-primary flex-shrink-0" />
           )}
           <h2 className={cn(
-            "font-display text-base sm:text-lg font-semibold",
+            "font-display text-base sm:text-lg",
             isCurrentWeek ? "text-foreground" : "text-foreground/70"
           )}>
-            {weekLabel}
+            {(() => {
+              const sep = ' · ';
+              const idx = weekLabel.indexOf(sep);
+              if (idx >= 0) {
+                return (
+                  <>
+                    <span className="font-bold">{weekLabel.slice(0, idx)}</span>
+                    <span className="font-normal">{sep}{weekLabel.slice(idx + sep.length)}</span>
+                  </>
+                );
+              }
+              return <span className="font-semibold">{weekLabel}</span>;
+            })()}
           </h2>
         </div>
       ) : (
@@ -66,8 +78,20 @@ export function WeekCalendar({
           >
             <ChevronLeft className="w-5 h-5" />
           </button>
-          <h2 className="font-display text-lg sm:text-2xl font-semibold text-foreground/80 truncate">
-            {weekLabel}
+          <h2 className="font-display text-lg sm:text-2xl text-foreground/80 truncate">
+            {(() => {
+              const sep = ' · ';
+              const idx = weekLabel.indexOf(sep);
+              if (idx >= 0) {
+                return (
+                  <>
+                    <span className="font-bold">{weekLabel.slice(0, idx)}</span>
+                    <span className="font-normal">{sep}{weekLabel.slice(idx + sep.length)}</span>
+                  </>
+                );
+              }
+              return <span className="font-semibold">{weekLabel}</span>;
+            })()}
           </h2>
           <button
             onClick={onNextWeek}
