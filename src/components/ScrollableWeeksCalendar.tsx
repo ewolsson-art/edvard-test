@@ -104,13 +104,22 @@ export const ScrollableWeeksCalendar = forwardRef<
         const label = sameMonth
           ? `v.${weekNum} · ${format(weekStart, 'd', { locale: dateLocale })}–${format(weekEnd, 'd MMM', { locale: dateLocale })}`
           : `v.${weekNum} · ${format(weekStart, 'd MMM', { locale: dateLocale })}–${format(weekEnd, 'd MMM', { locale: dateLocale })}`;
+        const isCurrent = i === currentWeekIndex;
 
         return (
           <div
             key={i}
             ref={(el) => { weekRefs.current[i] = el; }}
-            className="scroll-mt-[220px] sm:scroll-mt-[230px] md:scroll-mt-[180px]"
+            className={cn(
+              'scroll-mt-[220px] sm:scroll-mt-[230px] md:scroll-mt-[180px] relative rounded-2xl transition-all',
+              isCurrent && 'bg-[hsl(45_85%_55%/0.05)] ring-1 ring-[hsl(45_85%_55%/0.35)] shadow-[0_0_30px_-12px_hsl(45_85%_55%/0.45)] px-3 py-3 -mx-3',
+            )}
           >
+            {isCurrent && (
+              <span className="absolute -top-2 left-4 px-2 py-0.5 rounded-full bg-[hsl(45_85%_55%)] text-[10px] font-bold uppercase tracking-wider text-background shadow-md">
+                Denna vecka
+              </span>
+            )}
             <WeekCalendar
               weekDays={weekDays}
               weekLabel={label}
