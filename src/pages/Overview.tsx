@@ -513,12 +513,15 @@ const Overview = () => {
 
   // === Scroll-zoom: skrolla upp vid toppen → mer översikt (vecka → månad → år) ===
   // Vi reagerar bara på uppåtskroll så att vanlig nedåtskroll i innehållet aldrig blockeras.
+  // Tröskel och cooldown är medvetet höga så att bytet känns långsamt och avsiktligt,
+  // istället för att hela nästa vy poppar in på en gång.
   useEffect(() => {
     const order: ViewType[] = ['week', 'month', 'year'];
     let accum = 0;
     let lastSwitch = 0;
-    const THRESHOLD = 110; // px att rulla innan vyn byts
-    const COOLDOWN = 600;  // ms innan nästa byte
+    let decayTimer: ReturnType<typeof setTimeout> | null = null;
+    const THRESHOLD = 420; // px att rulla innan vyn byts (mycket långsammare)
+    const COOLDOWN = 1100; // ms innan nästa byte
 
     const onWheel = (e: WheelEvent) => {
       // Bara vid toppen, och bara när man skrollar uppåt
@@ -533,6 +536,11 @@ const Overview = () => {
       if (idx >= order.length - 1) return; // redan i 'år'
 
       accum += e.deltaY;
+
+      // Mjuk decay: om man pausar skroll så ebbar ackumulerad rörelse ut långsamt
+      if (decayTimer) clearTimeout(decayTimer);
+      decayTimer = setTimeout(() => { accum = 0; }, 350);
+
       if (accum <= -THRESHOLD) {
         accum = 0;
         lastSwitch = now;
@@ -541,9 +549,13 @@ const Overview = () => {
     };
 
     window.addEventListener('wheel', onWheel, { passive: true });
-    return () => window.removeEventListener('wheel', onWheel);
+    return () => {
+      window.removeEventListener('wheel', onWheel);
+      if (decayTimer) clearTimeout(decayTimer);
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [view]);
+
 
   const selectedEntry = selectedDate 
     ? getEntryForDate(format(selectedDate, 'yyyy-MM-dd'))
@@ -649,6 +661,7 @@ const Overview = () => {
             
             {showMood && (
               <section className="space-y-4">
+                <div key={view} className="animate-in fade-in zoom-in-95 duration-700 ease-out">
                      {view === 'week' && (
                        <WeekCalendar
                          weekDays={weekDays}
@@ -680,8 +693,10 @@ const Overview = () => {
                           onMonthClick={handleMonthClick} />
                       </div>
                     )}
+                </div>
               </section>
             )}
+
 
           </div>
 
