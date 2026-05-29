@@ -20,6 +20,7 @@ interface WeekCalendarProps {
   onDayDoubleClick?: (date: Date) => void;
   hideNavigation?: boolean;
   hideWeekdayHeaders?: boolean;
+  isCurrentWeek?: boolean;
 }
 
 
