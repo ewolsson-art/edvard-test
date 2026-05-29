@@ -385,7 +385,7 @@ export function TodayCheckin({
 
   const handleMoodContinue = () => {
     if (checkinData.mood) {
-      navigateStep('tags');
+      navigateStep('day_rating');
     }
   };
 
