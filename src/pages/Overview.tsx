@@ -661,6 +661,7 @@ const Overview = () => {
             
             {showMood && (
               <section className="space-y-4">
+                <div key={view} className="animate-in fade-in zoom-in-95 duration-700 ease-out">
                      {view === 'week' && (
                        <WeekCalendar
                          weekDays={weekDays}
@@ -692,8 +693,10 @@ const Overview = () => {
                           onMonthClick={handleMonthClick} />
                       </div>
                     )}
+                </div>
               </section>
             )}
+
 
           </div>
 
