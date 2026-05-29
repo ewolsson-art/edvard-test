@@ -633,8 +633,13 @@ const Overview = () => {
                     const now = new Date();
                     setCurrentYear(now.getFullYear());
                     setCurrentMonth(new Date(now.getFullYear(), now.getMonth(), 1));
+                    setCurrentWeek(now);
                     setTimeout(() => {
-                      scrollableCalendarRef.current?.scrollToToday();
+                      if (view === 'week') {
+                        scrollableWeeksRef.current?.scrollToToday();
+                      } else {
+                        scrollableCalendarRef.current?.scrollToToday();
+                      }
                     }, 50);
                   }}
                   className="text-sm font-semibold text-primary px-3 py-1 rounded-full border border-primary/30 bg-primary/5 hover:bg-primary/10 transition-colors"
