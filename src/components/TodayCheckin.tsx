@@ -1185,21 +1185,32 @@ export function TodayCheckin({
           <div className="flex flex-col items-center gap-3 mt-auto pt-4 pb-2 max-w-md mx-auto w-full">
             <motion.button
               whileTap={{ scale: 0.97 }}
-              onClick={() => { hapticTap(); handleQuickFinish(); }}
+              onClick={() => {
+                hapticTap();
+                if (isLastStep('day_rating')) {
+                  handleQuickFinish();
+                } else {
+                  const next = getNextStep('day_rating');
+                  if (next === 'success-animation') handleCompleteWithData(checkinData);
+                  else navigateStep(next);
+                }
+              }}
               className="w-full max-w-[280px] px-8 py-3.5 rounded-full bg-[hsl(45_85%_55%)] text-[hsl(225_30%_7%)] font-bold text-base tracking-wide shadow-[0_2px_14px_hsl(45_85%_55%/0.22)] hover:shadow-[0_4px_22px_hsl(45_85%_55%/0.32)] hover:bg-[hsl(45_85%_62%)] transition-[background-color,box-shadow] duration-200 inline-flex items-center justify-center gap-1.5"
             >
               <span className="relative inline-flex items-center gap-1.5">
-                Klar
+                {isLastStep('day_rating') ? 'Klar' : 'Nästa'}
                 <Check className="w-4 h-4" />
               </span>
             </motion.button>
-            <button
-              type="button"
-              onClick={() => { hapticTap(); handleQuickFinish(); }}
-              className="text-[12.5px] text-muted-foreground/55 hover:text-muted-foreground transition-colors"
-            >
-              Hoppa över
-            </button>
+            {isLastStep('day_rating') && (
+              <button
+                type="button"
+                onClick={() => { hapticTap(); handleQuickFinish(); }}
+                className="text-[12.5px] text-muted-foreground/55 hover:text-muted-foreground transition-colors"
+              >
+                Hoppa över
+              </button>
+            )}
           </div>
         </div>
       )}
