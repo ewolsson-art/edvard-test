@@ -524,6 +524,9 @@ const Overview = () => {
     const COOLDOWN = 1100; // ms innan nästa byte
 
     const onWheel = (e: WheelEvent) => {
+      // Scroll-zoom är avstängd i vecko-vyn
+      if (view === 'week') return;
+
       // Bara vid toppen, och bara när man skrollar uppåt
       if (window.scrollY > 2 || e.deltaY >= 0) {
         if (e.deltaY >= 0) accum = 0;
