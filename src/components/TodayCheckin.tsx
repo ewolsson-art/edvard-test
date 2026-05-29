@@ -212,7 +212,7 @@ export function TodayCheckin({
     if (checkinMode === 'quick') {
       steps.push('day_rating');
     } else {
-      steps.push('tags');
+      steps.push('day_rating');
       steps.push('medication');
       steps.push('sleep');
       if (customQuestions.length > 0) steps.push('custom_questions');
