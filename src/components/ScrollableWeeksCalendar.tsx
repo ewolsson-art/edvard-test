@@ -110,16 +110,8 @@ export const ScrollableWeeksCalendar = forwardRef<
           <div
             key={i}
             ref={(el) => { weekRefs.current[i] = el; }}
-            className={cn(
-              'scroll-mt-[220px] sm:scroll-mt-[230px] md:scroll-mt-[180px] relative rounded-2xl transition-all',
-              isCurrent && 'bg-muted/30 ring-1 ring-border/40 shadow-sm px-3 py-3 -mx-3',
-            )}
+            className="scroll-mt-[220px] sm:scroll-mt-[230px] md:scroll-mt-[180px]"
           >
-            {isCurrent && (
-              <span className="absolute -top-2 left-4 px-2 py-0.5 rounded-full bg-background border border-border text-[10px] font-semibold uppercase tracking-wider text-muted-foreground shadow-sm">
-                Denna vecka
-              </span>
-            )}
             <WeekCalendar
               weekDays={weekDays}
               weekLabel={label}
@@ -128,6 +120,7 @@ export const ScrollableWeeksCalendar = forwardRef<
               onDayClick={onDayClick}
               hideNavigation
               hideWeekdayHeaders
+              isCurrentWeek={isCurrent}
             />
           </div>
         );
