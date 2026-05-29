@@ -18,6 +18,7 @@ import { ExerciseMonthCalendar } from '@/components/ExerciseMonthCalendar';
 import { SleepMonthCalendar } from '@/components/SleepMonthCalendar';
 import { EatingMonthCalendar } from '@/components/EatingMonthCalendar';
 import { ScrollableMonthsCalendar, ScrollableMonthsCalendarRef } from '@/components/ScrollableMonthsCalendar';
+import { ScrollableWeeksCalendar, ScrollableWeeksCalendarRef } from '@/components/ScrollableWeeksCalendar';
 
 import { SleepWeekCalendar } from '@/components/SleepWeekCalendar';
 import { EatingWeekCalendar } from '@/components/EatingWeekCalendar';
