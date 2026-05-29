@@ -1398,62 +1398,13 @@ export function TodayCheckin({
             </h1>
           </div>
 
-          {/* Sleep — vertikal lista i U-form (extremerna = varning) */}
+          {/* Sleep slider — samma design som tillstånd (horisontell slider med U-form) */}
           <div className="flex-1 flex flex-col justify-center">
-            {(() => {
-              // U-form-ordning uppifrån och ner: nästan inget → ovanligt lite → lagom → djupt lugn → för mycket
-              const order: QualityType[] = ['very_little', 'little', 'good', 'very_good', 'bad'];
-              const byValue = new Map(sleepSliderOptions.map(o => [o.value, o]));
-              const ordered = order.map(v => byValue.get(v)!).filter(Boolean);
-              return (
-                <div className="flex flex-col gap-2 w-full max-w-md mx-auto" role="radiogroup" aria-label={t('checkin.howDidYouSleep')}>
-                  {ordered.map((opt) => {
-                    const Icon = opt.icon;
-                    const selected = checkinData.sleepQuality === opt.value;
-                    return (
-                      <button
-                        key={opt.value}
-                        type="button"
-                        role="radio"
-                        aria-checked={selected}
-                        onClick={() => { hapticTap(); handleSleepSelect(opt.value); }}
-                        className={cn(
-                          "group flex items-center gap-3.5 w-full text-left rounded-2xl px-4 py-3.5 border transition-all duration-200 active:scale-[0.985]",
-                          selected
-                            ? "border-transparent"
-                            : "border-border/40 bg-foreground/[0.02] hover:bg-foreground/[0.05] hover:border-border/70"
-                        )}
-                        style={selected ? {
-                          backgroundColor: `hsl(${opt.color} / 0.14)`,
-                          boxShadow: `0 0 0 2px hsl(${opt.color} / 0.45), 0 6px 22px hsl(${opt.color} / 0.22)`,
-                        } : undefined}
-                      >
-                        <div
-                          className="flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center transition-colors duration-200"
-                          style={{
-                            background: `hsl(${opt.color} / ${selected ? 0.22 : 0.12})`,
-                            boxShadow: `inset 0 0 0 1px hsl(${opt.color} / ${selected ? 0.4 : 0.25})`,
-                          }}
-                        >
-                          <Icon className="w-5 h-5" style={{ color: `hsl(${opt.color})` }} strokeWidth={2.25} />
-                        </div>
-                        <div className="min-w-0 flex-1">
-                          <span
-                            className="block text-[15px] font-semibold leading-tight tracking-[-0.01em]"
-                            style={{ color: selected ? `hsl(${opt.color})` : undefined }}
-                          >
-                            {opt.label}
-                          </span>
-                          <span className="block text-[12px] leading-snug text-muted-foreground/80 mt-0.5">
-                            {opt.sublabel}
-                          </span>
-                        </div>
-                      </button>
-                    );
-                  })}
-                </div>
-              );
-            })()}
+            <VerticalScaleSlider<QualityType>
+              options={sleepSliderOptions}
+              value={checkinData.sleepQuality ?? 'good'}
+              onSelect={handleSleepSelect}
+            />
           </div>
 
           {checkinData.sleepQuality && (
