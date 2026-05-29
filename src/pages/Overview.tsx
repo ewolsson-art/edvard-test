@@ -511,6 +511,47 @@ const Overview = () => {
     }
   };
 
+  // === Scroll-zoom: skrolla upp vid toppen → mer översikt (vecka → månad → år) ===
+  // Skrolla ner vid toppen → mer detalj (år → månad → vecka)
+  useEffect(() => {
+    const order: ViewType[] = ['week', 'month', 'year'];
+    let accum = 0;
+    let lastSwitch = 0;
+    const THRESHOLD = 110; // px att rulla innan vyn byts
+    const COOLDOWN = 550;  // ms innan nästa byte
+
+    const onWheel = (e: WheelEvent) => {
+      // Bara reagera vid toppen av sidan så vanlig skroll fortsätter funka i innehållet
+      if (window.scrollY > 2) {
+        accum = 0;
+        return;
+      }
+      const now = Date.now();
+      if (now - lastSwitch < COOLDOWN) return;
+
+      const idx = order.indexOf(view);
+      accum += e.deltaY;
+
+      // Skrolla upp (deltaY negativt) → zooma ut
+      if (accum <= -THRESHOLD && idx < order.length - 1) {
+        e.preventDefault();
+        accum = 0;
+        lastSwitch = now;
+        handleViewChange(order[idx + 1]);
+      } else if (accum >= THRESHOLD && idx > 0) {
+        // Skrolla ner vid toppen → zooma in (innan sidan börjar skrolla)
+        e.preventDefault();
+        accum = 0;
+        lastSwitch = now;
+        handleViewChange(order[idx - 1]);
+      }
+    };
+
+    window.addEventListener('wheel', onWheel, { passive: false });
+    return () => window.removeEventListener('wheel', onWheel);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [view]);
+
   const selectedEntry = selectedDate 
     ? getEntryForDate(format(selectedDate, 'yyyy-MM-dd'))
     : undefined;
