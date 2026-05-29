@@ -105,7 +105,7 @@ export function WeekCalendar({
 
       {/* Weekday headers */}
       {!hideWeekdayHeaders && (
-        <div className="grid grid-cols-7 mb-1">
+        <div className="grid grid-cols-7 gap-1.5 mb-1">
           {weekDayHeaders.map((day, i) => {
             const headerIsToday = weekDays[i] && isToday(weekDays[i]);
             return (
