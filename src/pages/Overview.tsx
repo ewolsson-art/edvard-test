@@ -673,13 +673,11 @@ const Overview = () => {
               <section className="space-y-4">
                 <div key={view} className="animate-in fade-in slide-in-from-top-8 duration-700 ease-out">
                      {view === 'week' && (
-                       <WeekCalendar
-                         weekDays={weekDays}
+                       <ScrollableWeeksCalendar
+                         ref={scrollableWeeksRef}
+                         year={currentYear}
                          getEntryForDate={getEntryForDate}
                          getMedicationsTakenOnDate={getMedicationsTakenOnDate}
-                         onPrevWeek={() => setCurrentWeek(prev => subWeeks(prev, 1))}
-                         onNextWeek={() => setCurrentWeek(prev => addWeeks(prev, 1))}
-                         weekLabel={weekLabel}
                          onDayClick={handleDayClick}
                        />
                      )}
