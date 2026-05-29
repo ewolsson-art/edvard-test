@@ -512,42 +512,35 @@ const Overview = () => {
   };
 
   // === Scroll-zoom: skrolla upp vid toppen → mer översikt (vecka → månad → år) ===
-  // Skrolla ner vid toppen → mer detalj (år → månad → vecka)
+  // Vi reagerar bara på uppåtskroll så att vanlig nedåtskroll i innehållet aldrig blockeras.
   useEffect(() => {
     const order: ViewType[] = ['week', 'month', 'year'];
     let accum = 0;
     let lastSwitch = 0;
     const THRESHOLD = 110; // px att rulla innan vyn byts
-    const COOLDOWN = 550;  // ms innan nästa byte
+    const COOLDOWN = 600;  // ms innan nästa byte
 
     const onWheel = (e: WheelEvent) => {
-      // Bara reagera vid toppen av sidan så vanlig skroll fortsätter funka i innehållet
-      if (window.scrollY > 2) {
-        accum = 0;
+      // Bara vid toppen, och bara när man skrollar uppåt
+      if (window.scrollY > 2 || e.deltaY >= 0) {
+        if (e.deltaY >= 0) accum = 0;
         return;
       }
       const now = Date.now();
       if (now - lastSwitch < COOLDOWN) return;
 
       const idx = order.indexOf(view);
-      accum += e.deltaY;
+      if (idx >= order.length - 1) return; // redan i 'år'
 
-      // Skrolla upp (deltaY negativt) → zooma ut
-      if (accum <= -THRESHOLD && idx < order.length - 1) {
-        e.preventDefault();
+      accum += e.deltaY;
+      if (accum <= -THRESHOLD) {
         accum = 0;
         lastSwitch = now;
         handleViewChange(order[idx + 1]);
-      } else if (accum >= THRESHOLD && idx > 0) {
-        // Skrolla ner vid toppen → zooma in (innan sidan börjar skrolla)
-        e.preventDefault();
-        accum = 0;
-        lastSwitch = now;
-        handleViewChange(order[idx - 1]);
       }
     };
 
-    window.addEventListener('wheel', onWheel, { passive: false });
+    window.addEventListener('wheel', onWheel, { passive: true });
     return () => window.removeEventListener('wheel', onWheel);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [view]);
