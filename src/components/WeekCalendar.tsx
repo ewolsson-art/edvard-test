@@ -36,6 +36,7 @@ export function WeekCalendar({
   onDayDoubleClick,
   hideNavigation,
   hideWeekdayHeaders,
+  isCurrentWeek,
 }: WeekCalendarProps) {
   const { t } = useTranslation();
   const dateLocale = useDateLocale();
