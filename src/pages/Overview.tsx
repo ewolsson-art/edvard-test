@@ -18,6 +18,7 @@ import { ExerciseMonthCalendar } from '@/components/ExerciseMonthCalendar';
 import { SleepMonthCalendar } from '@/components/SleepMonthCalendar';
 import { EatingMonthCalendar } from '@/components/EatingMonthCalendar';
 import { ScrollableMonthsCalendar, ScrollableMonthsCalendarRef } from '@/components/ScrollableMonthsCalendar';
+import { ScrollableWeeksCalendar, ScrollableWeeksCalendarRef } from '@/components/ScrollableWeeksCalendar';
 
 import { SleepWeekCalendar } from '@/components/SleepWeekCalendar';
 import { EatingWeekCalendar } from '@/components/EatingWeekCalendar';
@@ -90,6 +91,7 @@ const Overview = () => {
   const [exerciseDialogDate, setExerciseDialogDate] = useState<Date | null>(null);
   
   const scrollableCalendarRef = useRef<ScrollableMonthsCalendarRef>(null);
+  const scrollableWeeksRef = useRef<ScrollableWeeksCalendarRef>(null);
   const navigate = useNavigate();
 
   const { entries, isLoaded, getEntryForDate, getEntriesForMonth, getEntriesForYear, getStatsForYear, updateExerciseTypes } = useMoodData();
@@ -631,8 +633,13 @@ const Overview = () => {
                     const now = new Date();
                     setCurrentYear(now.getFullYear());
                     setCurrentMonth(new Date(now.getFullYear(), now.getMonth(), 1));
+                    setCurrentWeek(now);
                     setTimeout(() => {
-                      scrollableCalendarRef.current?.scrollToToday();
+                      if (view === 'week') {
+                        scrollableWeeksRef.current?.scrollToToday();
+                      } else {
+                        scrollableCalendarRef.current?.scrollToToday();
+                      }
                     }, 50);
                   }}
                   className="text-sm font-semibold text-primary px-3 py-1 rounded-full border border-primary/30 bg-primary/5 hover:bg-primary/10 transition-colors"
@@ -666,13 +673,11 @@ const Overview = () => {
               <section className="space-y-4">
                 <div key={view} className="animate-in fade-in slide-in-from-top-8 duration-700 ease-out">
                      {view === 'week' && (
-                       <WeekCalendar
-                         weekDays={weekDays}
+                       <ScrollableWeeksCalendar
+                         ref={scrollableWeeksRef}
+                         year={currentYear}
                          getEntryForDate={getEntryForDate}
                          getMedicationsTakenOnDate={getMedicationsTakenOnDate}
-                         onPrevWeek={() => setCurrentWeek(prev => subWeeks(prev, 1))}
-                         onNextWeek={() => setCurrentWeek(prev => addWeeks(prev, 1))}
-                         weekLabel={weekLabel}
                          onDayClick={handleDayClick}
                        />
                      )}

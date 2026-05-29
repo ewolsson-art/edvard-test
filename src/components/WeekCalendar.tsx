@@ -14,10 +14,12 @@ interface WeekCalendarProps {
   weekLabel: string;
   getEntryForDate: (dateStr: string) => MoodEntry | undefined;
   getMedicationsTakenOnDate: (dateStr: string) => { name: string }[];
-  onPrevWeek: () => void;
-  onNextWeek: () => void;
+  onPrevWeek?: () => void;
+  onNextWeek?: () => void;
   onDayClick?: (date: Date) => void;
   onDayDoubleClick?: (date: Date) => void;
+  hideNavigation?: boolean;
+  hideWeekdayHeaders?: boolean;
 }
 
 
@@ -31,6 +33,8 @@ export function WeekCalendar({
   onNextWeek,
   onDayClick,
   onDayDoubleClick,
+  hideNavigation,
+  hideWeekdayHeaders,
 }: WeekCalendarProps) {
   const { t } = useTranslation();
   const dateLocale = useDateLocale();
@@ -39,45 +43,55 @@ export function WeekCalendar({
   return (
     <div className="fade-in">
       {/* Header matching month view style */}
-      <div className="flex items-center gap-2 mb-4">
-        <button
-          onClick={onPrevWeek}
-          className="text-primary hover:opacity-70 transition-opacity flex-shrink-0"
-          aria-label={t('overview.prevWeek')}
-        >
-          <ChevronLeft className="w-5 h-5" />
-        </button>
-        <h2 className="font-display text-lg sm:text-2xl font-semibold text-foreground/80 truncate">
-          {weekLabel}
-        </h2>
-        <button
-          onClick={onNextWeek}
-          className="text-primary hover:opacity-70 transition-opacity rotate-180 flex-shrink-0"
-          aria-label={t('overview.nextWeek')}
-        >
-          <ChevronLeft className="w-5 h-5" />
-        </button>
-      </div>
+      {hideNavigation ? (
+        <div className="mb-2">
+          <h2 className="font-display text-base sm:text-lg font-semibold text-foreground/70">
+            {weekLabel}
+          </h2>
+        </div>
+      ) : (
+        <div className="flex items-center gap-2 mb-4">
+          <button
+            onClick={onPrevWeek}
+            className="text-primary hover:opacity-70 transition-opacity flex-shrink-0"
+            aria-label={t('overview.prevWeek')}
+          >
+            <ChevronLeft className="w-5 h-5" />
+          </button>
+          <h2 className="font-display text-lg sm:text-2xl font-semibold text-foreground/80 truncate">
+            {weekLabel}
+          </h2>
+          <button
+            onClick={onNextWeek}
+            className="text-primary hover:opacity-70 transition-opacity rotate-180 flex-shrink-0"
+            aria-label={t('overview.nextWeek')}
+          >
+            <ChevronLeft className="w-5 h-5" />
+          </button>
+        </div>
+      )}
 
       {/* Weekday headers */}
-      <div className="grid grid-cols-7 mb-1">
-        {weekDayHeaders.map((day, i) => {
-          const headerIsToday = weekDays[i] && isToday(weekDays[i]);
-          return (
-            <div
-              key={i}
-              className={cn(
-                "text-center text-sm py-2 transition-colors",
-                headerIsToday
-                  ? "font-bold text-[hsl(45_85%_55%)]"
-                  : "font-semibold text-muted-foreground",
-              )}
-            >
-              {day}
-            </div>
-          );
-        })}
-      </div>
+      {!hideWeekdayHeaders && (
+        <div className="grid grid-cols-7 mb-1">
+          {weekDayHeaders.map((day, i) => {
+            const headerIsToday = weekDays[i] && isToday(weekDays[i]);
+            return (
+              <div
+                key={i}
+                className={cn(
+                  "text-center text-sm py-2 transition-colors",
+                  headerIsToday
+                    ? "font-bold text-[hsl(45_85%_55%)]"
+                    : "font-semibold text-muted-foreground",
+                )}
+              >
+                {day}
+              </div>
+            );
+          })}
+        </div>
+      )}
 
 
       {/* Day cells */}
