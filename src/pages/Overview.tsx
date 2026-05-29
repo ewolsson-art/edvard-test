@@ -91,6 +91,7 @@ const Overview = () => {
   const [exerciseDialogDate, setExerciseDialogDate] = useState<Date | null>(null);
   
   const scrollableCalendarRef = useRef<ScrollableMonthsCalendarRef>(null);
+  const scrollableWeeksRef = useRef<ScrollableWeeksCalendarRef>(null);
   const navigate = useNavigate();
 
   const { entries, isLoaded, getEntryForDate, getEntriesForMonth, getEntriesForYear, getStatsForYear, updateExerciseTypes } = useMoodData();
