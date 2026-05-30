@@ -207,12 +207,6 @@ export function WeekCalendar({
                 <X className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-8 w-8 text-muted-foreground opacity-25" strokeWidth={1.5} />
               )}
 
-              {/* Indicators */}
-              <div className="flex gap-1 mt-1 h-3">
-                {hasMeds && (
-                  <Pill className="h-3 w-3 text-primary/60" />
-                )}
-              </div>
             </button>
           );
 
