@@ -71,7 +71,7 @@ export function MoodStatsRow({ moods, className }: MoodStatsRowProps) {
             )}
             aria-label={`${percent}% ${groupLabel[group]}${isGroup ? ' — visa fördelning' : ''}`}
           >
-            <TurtleLogo size="sm" animated={false} mood={group} framing="face" className="h-5 w-5 shrink-0" />
+            <TurtleLogo size="sm" animated={false} mood={group} framing="full" className="h-5 w-5 shrink-0" />
             <span className="text-[12px] text-foreground/70">
               <span className="font-semibold text-foreground/85">{percent}%</span>{' '}
               <span className="text-foreground/55">{groupLabel[group]}</span>
