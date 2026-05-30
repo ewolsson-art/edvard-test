@@ -44,7 +44,6 @@ function HamburgerHeader() {
       <header className="relative z-20 px-5 pt-[max(env(safe-area-inset-top),0.75rem)]">
         <div className="max-w-md mx-auto flex items-center justify-between h-14">
           <Link to="/ladda-ner" className="flex items-center gap-2.5" aria-label="Toddy startsida">
-            <TurtleLogo size="sm" className="w-8 h-8" />
             <span className="text-lg font-display font-bold text-white tracking-tight">Toddy</span>
           </Link>
           <button
@@ -67,7 +66,6 @@ function HamburgerHeader() {
                 onClick={() => setOpen(false)}
                 className="flex items-center gap-2.5"
               >
-                <TurtleLogo size="sm" className="w-8 h-8" />
                 <span className="text-lg font-display font-bold text-white tracking-tight">Toddy</span>
               </Link>
               <button
