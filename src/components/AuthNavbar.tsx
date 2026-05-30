@@ -27,9 +27,14 @@ export function AuthNavbar() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
-            <div className="flex-shrink-0 cursor-pointer" onClick={() => navigate('/auth')}>
+            <button
+              type="button"
+              className="flex-shrink-0 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded"
+              onClick={() => navigate('/auth')}
+              aria-label="Till startsidan"
+            >
               <Logo size="sm" className="[&_span]:!bg-none [&_span]:!text-white" />
-            </div>
+            </button>
 
             {/* Desktop navigation - right aligned */}
             <div className="hidden md:flex items-center gap-1 ml-auto">

@@ -234,7 +234,14 @@ const DoctorHome = () => {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {approvedConnections.map((connection) => (
-                <div key={connection.id} className="bg-foreground/[0.03] backdrop-blur-sm rounded-2xl p-6 cursor-pointer transition-colors hover:bg-foreground/[0.05]" onClick={() => navigate(`/patient/${connection.patient_id}`)}>
+                <div
+                  key={connection.id}
+                  role="button"
+                  tabIndex={0}
+                  className="bg-foreground/[0.03] backdrop-blur-sm rounded-2xl p-6 cursor-pointer transition-colors hover:bg-foreground/[0.05] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                  onClick={() => navigate(`/patient/${connection.patient_id}`)}
+                  onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); navigate(`/patient/${connection.patient_id}`); } }}
+                >
                   <div className="flex items-start justify-between mb-4">
                     <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
                       <span className="text-lg font-semibold text-primary">{getPatientInitial(connection)}</span>
