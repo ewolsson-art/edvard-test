@@ -13,8 +13,8 @@ describe('diagnosisConfig', () => {
     expect(detectDiagnosisType([{ name: 'Bipolär sjukdom typ 1' }])).toBe('bipolar_1');
   });
 
-  it('detects bipolar type 2 from English name', () => {
-    expect(detectDiagnosisType([{ name: 'Bipolar II disorder' }])).toBe('bipolar_2');
+  it('detects bipolar type 2 from Swedish name', () => {
+    expect(detectDiagnosisType([{ name: 'Bipolär sjukdom typ 2' }])).toBe('bipolar_2');
   });
 
   it('detects cyklotymi', () => {
