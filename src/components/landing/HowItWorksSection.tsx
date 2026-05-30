@@ -135,7 +135,7 @@ function StepCard({
   isActive,
   onHover,
 }: {
-  step: { icon: any; image: string; title: string };
+  step: { icon: LucideIcon; image: string; title: string };
   index: number;
   visible: boolean;
   isActive: boolean;
@@ -226,7 +226,7 @@ function MobileStepCard({
   isActive,
   onTap,
 }: {
-  step: { icon: any; image: string; title: string };
+  step: { icon: LucideIcon; image: string; title: string };
   index: number;
   visible: boolean;
   isActive: boolean;
