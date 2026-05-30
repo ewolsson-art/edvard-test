@@ -113,6 +113,9 @@ export function WeekCalendar({
         </div>
       )}
 
+      {/* Mood stats for this week */}
+      <MoodStatsRow moods={weekMoods} className="mb-3" />
+
       {/* Weekday headers */}
       {!hideWeekdayHeaders && (
         <div className="grid grid-cols-7 gap-1.5 mb-1">
