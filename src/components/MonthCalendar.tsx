@@ -101,67 +101,8 @@ export function MonthCalendar({
         )}
       </div>
 
-      {/* Mood stats per month */}
-      {moodStats.length > 0 && (
-        <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 mb-4">
-          {moodStats.map(({ group, count, percent }) => {
-            const breakdown = groupMembers[group]
-              .map((m) => ({ mood: m, count: perMoodCounts[m] ?? 0 }))
-              .filter((b) => b.count > 0);
-            const isGroup = group !== 'stable';
-            const total = count;
-
-            const trigger = (
-              <button
-                type="button"
-                className={cn(
-                  'flex items-center gap-1.5 rounded-md px-1.5 py-0.5 -mx-1.5 transition-colors',
-                  isGroup && 'hover:bg-muted/40 cursor-pointer',
-                  !isGroup && 'cursor-default',
-                )}
-                aria-label={`${percent}% ${groupLabel[group]}${isGroup ? ' — visa fördelning' : ''}`}
-              >
-                  <TurtleLogo size="sm" animated={false} mood={group} framing="face" className="h-5 w-5 shrink-0" />
-                <span className="text-[12px] text-foreground/70">
-                  <span className="font-semibold text-foreground/85">{percent}%</span>{' '}
-                  <span className="text-foreground/55">{groupLabel[group]}</span>
-                </span>
-              </button>
-            );
-
-            if (!isGroup || breakdown.length <= 1) {
-              return <div key={group}>{trigger}</div>;
-            }
-
-            return (
-              <Popover key={group}>
-                <PopoverTrigger asChild>{trigger}</PopoverTrigger>
-                <PopoverContent side="top" align="start" className="w-56 p-3">
-                  <div className="text-[11px] uppercase tracking-wider text-muted-foreground mb-2 capitalize">
-                    {groupLabel[group]} — fördelning
-                  </div>
-                  <div className="space-y-1.5">
-                    {breakdown.map(({ mood, count: c }) => {
-                      const pct = total > 0 ? Math.round((c / total) * 100) : 0;
-                      return (
-                        <div key={mood} className="flex items-center justify-between gap-3 text-[13px]">
-                          <div className="flex items-center gap-2 min-w-0">
-                            <TurtleLogo size="sm" animated={false} mood={getTurtleMoodForMood(mood)} className="h-5 w-5 shrink-0" />
-                            <span className="truncate text-foreground/80">{moodLabels[mood]}</span>
-                          </div>
-                          <span className="text-foreground/60 tabular-nums shrink-0">
-                            {c} <span className="text-foreground/40">({pct}%)</span>
-                          </span>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </PopoverContent>
-              </Popover>
-            );
-          })}
-        </div>
-      )}
+      {/* Mood stats per month (shared with WeekCalendar via MoodStatsRow) */}
+      <MoodStatsRow moods={allMoods} className="mb-4" />
 
       {/* Weekday headers */}
       <div className="grid grid-cols-7 mb-1">
