@@ -114,7 +114,7 @@ export function WeekCalendar({
                 className={cn(
                   "text-center text-sm py-2 transition-colors",
                   headerIsToday
-                    ? "font-bold text-[hsl(45_85%_55%)]"
+                    ? "font-bold text-foreground"
                     : "font-semibold text-muted-foreground",
                 )}
               >
@@ -164,8 +164,8 @@ export function WeekCalendar({
                 "hover:scale-105 hover:z-10",
                 moodBg,
                 showMissed && "bg-muted-foreground/10",
-                isTodayDate && !mood && "bg-[hsl(45_85%_55%/0.10)] ring-1 ring-[hsl(45_85%_55%/0.55)] shadow-[0_0_18px_-4px_hsl(45_85%_55%/0.45)]",
-                isTodayDate && mood && "ring-2 ring-[hsl(45_85%_55%/0.75)] shadow-[0_0_18px_-4px_hsl(45_85%_55%/0.55)]",
+                isTodayDate && !mood && "bg-foreground/[0.06] ring-1 ring-foreground/40 shadow-[0_0_18px_-4px_hsl(var(--foreground)/0.35)]",
+                isTodayDate && mood && "ring-2 ring-foreground/60 shadow-[0_0_18px_-4px_hsl(var(--foreground)/0.45)]",
               )}
             >
               {mood ? (
@@ -173,7 +173,7 @@ export function WeekCalendar({
                   <TurtleLogo size="lg" animated={false} mood={getTurtleMoodForMood(mood)} framing="face" className="h-14 w-14 drop-shadow-[0_2px_3px_hsl(0_0%_0%/0.45)]" />
                   <span className={cn(
                     "absolute top-2 right-3 text-sm font-bold leading-none drop-shadow-[0_1px_2px_hsl(var(--background))]",
-                    isTodayDate ? "text-[hsl(45_85%_55%)]" : "text-foreground",
+                    "text-foreground",
                   )}>
                     {format(day, 'd')}
                   </span>
@@ -182,7 +182,7 @@ export function WeekCalendar({
                 <span className={cn(
                   "flex items-center justify-center leading-none",
                   isTodayDate
-                    ? "text-[hsl(45_85%_55%)] font-bold text-lg"
+                    ? "text-foreground font-bold text-lg"
                     : "text-base font-semibold text-foreground/60",
                 )}>
                   {format(day, 'd')}
