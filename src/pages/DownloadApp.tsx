@@ -1,6 +1,12 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Apple, Smartphone, Menu, X } from "lucide-react";
+import { Smartphone, Menu, X } from "lucide-react";
+
+const AppleLogo = ({ className }: { className?: string }) => (
+  <svg className={className} viewBox="0 0 384 512" fill="currentColor" aria-hidden="true">
+    <path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zM256.6 113c30-35.6 27.3-68 26.4-79.7-26.5 1.5-57.2 18-74.7 38.3-19.3 21.8-30.6 48.7-28.2 78.9 28.6 2.2 54.7-12.5 76.5-37.5z"/>
+  </svg>
+);
 import { TurtleLogo } from "@/components/TurtleLogo";
 import { SEO } from "@/components/seo/SEO";
 
@@ -214,7 +220,7 @@ export default function DownloadApp() {
           href={APP_STORE_URL}
           className="w-full inline-flex items-center justify-center gap-3 py-4 rounded-full bg-[hsl(45_85%_55%)] text-[hsl(225_30%_7%)] font-bold text-base tracking-wide shadow-[0_4px_24px_hsl(45_85%_55%/0.4)] hover:bg-[hsl(45_85%_62%)] active:scale-[0.98] transition-all mb-3"
         >
-          <Apple className="h-5 w-5" fill="currentColor" />
+          <AppleLogo className="h-5 w-5" />
           Ladda ner i App Store
         </a>
 
