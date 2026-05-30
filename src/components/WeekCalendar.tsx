@@ -71,7 +71,7 @@ export function WeekCalendar({
                 return (
                   <>
                     <span className="font-bold">{weekLabel.slice(0, idx)}</span>
-                    <span className="font-normal">{sep}{weekLabel.slice(idx + sep.length)}</span>
+                    <span className="font-normal text-sm sm:text-base">{sep}{weekLabel.slice(idx + sep.length)}</span>
                   </>
                 );
               }
