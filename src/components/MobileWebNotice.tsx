@@ -1,16 +1,19 @@
 import { useEffect, useState } from "react";
-import { Monitor, X } from "lucide-react";
+import { Apple, X } from "lucide-react";
+import { Link, useLocation } from "react-router-dom";
 import { useNativePlatform } from "@/hooks/useNativePlatform";
 
-const STORAGE_KEY = "toddy_mobile_web_notice_dismissed_v1";
+const STORAGE_KEY = "toddy_mobile_web_notice_dismissed_v2";
 
 /**
  * Shown only to users visiting the web version on a phone-sized screen
- * (not inside the native Capacitor app). Informs them that the site is
- * currently optimized for desktop. Dismissible per browser.
+ * (not inside the native Capacitor app). Promotes the native app download
+ * and links to /ladda-ner. Dismissible per browser, and hidden on the
+ * download page itself to avoid recursion.
  */
 export function MobileWebNotice() {
   const { isNative } = useNativePlatform();
+  const { pathname } = useLocation();
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -18,7 +21,7 @@ export function MobileWebNotice() {
     if (typeof window === "undefined") return;
 
     const check = () => {
-      const dismissed = localStorage.getItem(STORAGE_KEY) === "1";
+      const dismissed = sessionStorage.getItem(STORAGE_KEY) === "1";
       const isPhone = window.matchMedia("(max-width: 767px)").matches;
       setOpen(!dismissed && isPhone);
     };
@@ -29,11 +32,15 @@ export function MobileWebNotice() {
     return () => mql.removeEventListener("change", check);
   }, [isNative]);
 
-  if (isNative || !open) return null;
+  // Don't show on the download page itself or on auth callbacks / shared reports
+  const suppressedRoutes = ["/ladda-ner", "/auth/callback", "/rapport", "/unsubscribe"];
+  const isSuppressed = suppressedRoutes.some((r) => pathname.startsWith(r));
+
+  if (isNative || !open || isSuppressed) return null;
 
   const dismiss = () => {
     try {
-      localStorage.setItem(STORAGE_KEY, "1");
+      sessionStorage.setItem(STORAGE_KEY, "1");
     } catch {
       /* ignore */
     }
@@ -57,25 +64,33 @@ export function MobileWebNotice() {
         </button>
 
         <div className="mx-auto mb-5 h-16 w-16 rounded-2xl bg-[hsl(45_85%_55%/0.12)] flex items-center justify-center shadow-[0_8px_30px_-8px_hsl(45_85%_55%/0.4)]">
-          <Monitor className="h-8 w-8 text-[hsl(45_85%_55%)]" />
+          <Apple className="h-8 w-8 text-[hsl(45_85%_55%)]" fill="currentColor" />
         </div>
 
         <h2
           id="mobile-web-notice-title"
           className="text-2xl font-display font-bold text-white mb-3"
         >
-          Bäst på dator – för nu
+          Toddy finns som app
         </h2>
         <p className="text-base text-white/70 leading-relaxed mb-6">
-          Toddy är just nu optimerad för datorvisning. Du kan fortfarande använda sidan här
-          i mobilen, men upplevelsen blir bättre på en större skärm. En mobilapp är på väg.
+          Du får en mycket bättre upplevelse i vår iPhone-app. Ladda ner den
+          gratis i App Store — det tar bara några sekunder.
         </p>
+
+        <Link
+          to="/ladda-ner"
+          onClick={dismiss}
+          className="w-full inline-block py-3.5 rounded-full bg-[hsl(45_85%_55%)] text-[hsl(225_30%_7%)] font-bold text-base tracking-wide shadow-[0_4px_24px_hsl(45_85%_55%/0.35)] hover:bg-[hsl(45_85%_62%)] active:scale-[0.98] transition-all mb-3"
+        >
+          Ladda ner appen
+        </Link>
 
         <button
           onClick={dismiss}
-          className="w-full py-3.5 rounded-full bg-[hsl(45_85%_55%)] text-[hsl(225_30%_7%)] font-bold text-base tracking-wide shadow-[0_4px_24px_hsl(45_85%_55%/0.35)] hover:bg-[hsl(45_85%_62%)] active:scale-[0.98] transition-all"
+          className="w-full py-2 text-sm text-white/50 hover:text-white/80 transition-colors"
         >
-          Fortsätt ändå
+          Fortsätt i webbläsaren
         </button>
       </div>
     </div>
