@@ -346,11 +346,19 @@ const App = () => (
               </ProtectedRoute>
             } />
 
-            <Route path="/patient/:patientId" element={
+            {/* UX-6: canonical route is /personer/:patientId — "patient" is
+                clinical jargon. Old /patient/:patientId kept as redirect so
+                existing care-team links and bookmarks keep working. */}
+            <Route path="/personer/:patientId" element={
               <ProtectedRoute>
                 <AppLayout><PatientDetail /></AppLayout>
               </ProtectedRoute>
             } />
+            <Route
+              path="/patient/:patientId"
+              element={<Navigate to={location.pathname.replace(/^\/patient\//, '/personer/') + location.search} replace />}
+            />
+            
             <Route path="/mina-lakare" element={
               <ProtectedRoute>
                 <AppLayout><ManageConnections /></AppLayout>
