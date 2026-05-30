@@ -205,7 +205,7 @@ export default function DownloadApp() {
         </h1>
 
         <p className="text-[17px] text-white/55 leading-[1.45] max-w-[22rem] mb-12 font-light">
-          Toddy är gjord för mobilen. Check-ins, påminnelser och insikter — direkt i fickan.
+          Toddy är gjord för mobilen. Check-ins, påminnelser och insikter — direkt i fickan. Din personliga och interaktiva stämningsdagbok – direkt i fickan.
         </p>
 
         {/* CTA-stack */}
