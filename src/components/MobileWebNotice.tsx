@@ -15,6 +15,14 @@ const ALLOWED_MOBILE_ROUTES = [
   "/unsubscribe",
   "/integritet",
   "/villkor",
+  "/sa-funkar-det",
+  "/om-oss",
+  "/for-anvandare",
+  "/for-patienter",
+  "/for-vardgivare",
+  "/for-anhoriga",
+  "/samarbetspartners",
+  "/blogg",
 ];
 
 export function MobileWebNotice() {
