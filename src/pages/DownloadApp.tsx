@@ -224,9 +224,6 @@ export default function DownloadApp() {
           </div>
         </div>
 
-        <p className="text-[13px] text-white/30 max-w-[20rem] leading-relaxed">
-          Inloggning sker enbart i appen.
-        </p>
       </main>
 
       <PageFooter />
