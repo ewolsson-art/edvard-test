@@ -133,6 +133,7 @@ const AskToddy = lazy(() => import("./pages/AskToddy"));
 const Admin = lazy(() => import("./pages/Admin"));
 const Blog = lazy(() => import("./pages/Blog"));
 const BlogPost = lazy(() => import("./pages/BlogPost"));
+const DownloadApp = lazy(() => import("./pages/DownloadApp"));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -201,10 +202,10 @@ const App = () => (
           <Sonner />
           <DemoTransitionOverlay />
           <OfflineBanner />
-          <MobileWebNotice />
           <NativeAppGate>
           <BrowserRouter>
             <PageTracker />
+            <MobileWebNotice />
             <div className="min-h-dvh" role="application" aria-label="Toddy - Moodtracker">
             <ChunkRecoveryBoundary>
             <Suspense fallback={
@@ -225,6 +226,7 @@ const App = () => (
             <Route path="/blogg/:slug" element={<BlogPost />} />
             <Route path="/integritet" element={<PrivacyPolicy />} />
             <Route path="/villkor" element={<TermsOfService />} />
+            <Route path="/ladda-ner" element={<DownloadApp />} />
             <Route path="/logga-in" element={<Login />} />
             <Route path="/skapa-konto" element={<Signup />} />
             <Route path="/glomt-losenord" element={<ForgotPassword />} />
