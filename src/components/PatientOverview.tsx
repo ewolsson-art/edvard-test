@@ -433,7 +433,7 @@ export function PatientOverview({ connection, onBack, hideExtras = false, hideHe
       {!hideHeader && (
       <div className="sticky top-0 z-30 -mx-5 md:-mx-8 px-5 md:px-8 py-3 bg-background/85 backdrop-blur-md border-b border-border/30">
         <div className="flex items-center gap-3">
-          <Button variant="ghost" size="icon" onClick={onBack} className="shrink-0">
+          <Button variant="ghost" size="icon" onClick={onBack} className="shrink-0" aria-label="Tillbaka">
             <ChevronLeft className="w-5 h-5" />
           </Button>
           <div className="flex-1 min-w-0">

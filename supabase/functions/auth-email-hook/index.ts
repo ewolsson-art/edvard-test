@@ -10,11 +10,25 @@ import { RecoveryEmail } from '../_shared/email-templates/recovery.tsx'
 import { EmailChangeEmail } from '../_shared/email-templates/email-change.tsx'
 import { ReauthenticationEmail } from '../_shared/email-templates/reauthentication.tsx'
 
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers':
-    'authorization, x-client-info, apikey, content-type, x-lovable-signature, x-lovable-timestamp, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version',
+// This endpoint is called by Lovable's webhook infrastructure (server-to-server,
+// signature-verified). It is not intended for browser access, so we restrict CORS
+// to known first-party origins instead of "*".
+const ALLOWED_ORIGINS = new Set([
+  'https://toddy.se',
+  'https://www.toddy.se',
+  'https://app.toddy.se',
+  'https://edvard-test.lovable.app',
+])
+function buildCorsHeaders(origin: string | null) {
+  const allow = origin && ALLOWED_ORIGINS.has(origin) ? origin : 'https://toddy.se'
+  return {
+    'Access-Control-Allow-Origin': allow,
+    'Vary': 'Origin',
+    'Access-Control-Allow-Headers':
+      'authorization, x-client-info, apikey, content-type, x-lovable-signature, x-lovable-timestamp, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version',
+  }
 }
+const corsHeaders = buildCorsHeaders(null)
 
 const EMAIL_SUBJECTS: Record<string, string> = {
   signup: 'Bekräfta din e-post',

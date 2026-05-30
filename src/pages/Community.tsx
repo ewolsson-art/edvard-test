@@ -280,13 +280,13 @@ const Community = () => {
         <div className="fixed inset-0 z-50 flex flex-col bg-background/95 backdrop-blur-md animate-in fade-in duration-200">
           <div className="flex items-center justify-between px-4 py-3 border-b border-border/10">
             <span className="text-base font-semibold text-foreground">{t('communityPage.newPost')}</span>
-            <button onClick={() => { setDesktopFormOpen(false); setMobileFormOpen(false); }} className="text-muted-foreground hover:text-destructive transition-colors p-1">
+            <button onClick={() => { setDesktopFormOpen(false); setMobileFormOpen(false); }} className="text-muted-foreground hover:text-destructive transition-colors p-1" aria-label="Stäng">
               <X className="h-5 w-5" />
             </button>
           </div>
 
           <div className="flex-1 flex flex-col max-w-2xl w-full mx-auto p-4 overflow-y-auto">
-            <Input value={title} onChange={(e) => setTitle(e.target.value)} placeholder={t('communityPage.titlePlaceholder')} className="bg-transparent border border-white/20 focus-visible:ring-0 text-base font-semibold placeholder:text-muted-foreground/40 px-3 h-auto rounded-lg mb-3" maxLength={120} />
+            <Input aria-label={t('communityPage.titlePlaceholder')} value={title} onChange={(e) => setTitle(e.target.value)} placeholder={t('communityPage.titlePlaceholder')} className="bg-transparent border border-white/20 focus-visible:ring-1 focus-visible:ring-primary/50 text-base font-semibold placeholder:text-muted-foreground/40 px-3 h-auto rounded-lg mb-3" maxLength={120} />
             <div className="flex-1 flex flex-col border border-white/20 rounded-lg overflow-hidden min-h-[200px]">
               <Textarea value={content} onChange={(e) => setContent(e.target.value)} placeholder={t('communityPage.contentPlaceholder')} className="flex-1 min-h-[160px] bg-transparent border-0 resize-none focus-visible:ring-0 text-[15px] placeholder:text-muted-foreground/50 p-3" maxLength={2000} />
 
@@ -304,7 +304,7 @@ const Community = () => {
                   <span className="text-xs font-medium text-muted-foreground">{t('communityPage.pollOptions')}</span>
                   {pollOptions.map((opt, i) => (
                     <div key={i} className="flex items-center gap-2">
-                      <Input value={opt} onChange={(e) => { const next = [...pollOptions]; next[i] = e.target.value; setPollOptions(next); }} placeholder={`${t('communityPage.pollOptions').split(' ')[0]} ${i + 1}`} className="bg-transparent border border-white/20 focus-visible:ring-0 text-sm placeholder:text-muted-foreground/40 h-9 rounded-lg" maxLength={100} />
+                      <Input aria-label={`Omröstningsalternativ ${i + 1}`} value={opt} onChange={(e) => { const next = [...pollOptions]; next[i] = e.target.value; setPollOptions(next); }} placeholder={`${t('communityPage.pollOptions').split(' ')[0]} ${i + 1}`} className="bg-transparent border border-white/20 focus-visible:ring-1 focus-visible:ring-primary/50 text-sm placeholder:text-muted-foreground/40 h-9 rounded-lg" maxLength={100} />
                       {pollOptions.length > 2 && (
                         <button onClick={() => setPollOptions(pollOptions.filter((_, idx) => idx !== i))} className="text-muted-foreground/50 hover:text-destructive transition-colors shrink-0">
                           <Minus className="h-4 w-4" />

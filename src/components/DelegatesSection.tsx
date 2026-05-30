@@ -223,7 +223,7 @@ export function DelegatesSection() {
                 
                 <AlertDialog>
                   <AlertDialogTrigger asChild>
-                    <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive">
+                    <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive" aria-label="Ta bort ombud">
                       <Trash2 className="w-4 h-4" />
                     </Button>
                   </AlertDialogTrigger>

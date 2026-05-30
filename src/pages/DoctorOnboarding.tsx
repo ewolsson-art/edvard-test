@@ -116,11 +116,11 @@ const DoctorOnboarding = () => {
           </div>
 
           <div className="bg-white/[0.04] border border-white/10 rounded-3xl p-5 mb-4 backdrop-blur-sm">
-            <label htmlFor="patient-email" className="block text-sm font-medium text-white/80 mb-2">
+            <label htmlFor="invite-email" className="block text-sm font-medium text-white/80 mb-2">
               E-postadress
             </label>
             <Input
-              id="patient-email"
+              id="invite-email"
               type="email"
               inputMode="email"
               autoComplete="email"

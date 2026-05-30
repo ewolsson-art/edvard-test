@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
+import { createContext, useContext, useEffect, useMemo, useState, ReactNode } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 
@@ -135,8 +135,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       // Set state immediately for instant UI feedback
       setUser(null);
       setSession(null);
-      // Then tell Supabase (don't block on it)
-      await supabase.auth.signOut({ scope: 'local' });
+      // Global scope revokes the refresh token server-side so a stolen token
+      // (e.g. via XSS or shared device) cannot be reused.
+      await supabase.auth.signOut({ scope: 'global' });
     } catch (e) {
       console.error('Sign out error:', e);
       // Even if the API call fails, clear local state
@@ -145,11 +146,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  return (
-    <AuthContext.Provider value={{ user, session, loading, signUp, signIn, signInWithOtp, verifyOtp, signOut }}>
-      {children}
-    </AuthContext.Provider>
+  // Memoize provider value so token refreshes that don't change user/session
+  // don't cascade re-renders through every useAuth() consumer.
+  const value = useMemo(
+    () => ({ user, session, loading, signUp, signIn, signInWithOtp, verifyOtp, signOut }),
+    [user, session, loading]
   );
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
 export function useAuth() {

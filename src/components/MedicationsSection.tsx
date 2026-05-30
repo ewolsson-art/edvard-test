@@ -480,12 +480,13 @@ function MedicationRow({
           variant="ghost"
           className="h-7 w-7"
           onClick={() => handleEdit(med.id, med.name, med.dosage, med.started_at, med.frequency)}
+          aria-label={`Redigera ${med.name}`}
         >
           <Pencil className="h-3 w-3" />
         </Button>
         <AlertDialog>
           <AlertDialogTrigger asChild>
-            <Button size="icon" variant="ghost" className="h-7 w-7 text-destructive hover:text-destructive">
+            <Button size="icon" variant="ghost" className="h-7 w-7 text-destructive hover:text-destructive" aria-label={`Ta bort ${med.name}`}>
               <Trash2 className="h-3 w-3" />
             </Button>
           </AlertDialogTrigger>

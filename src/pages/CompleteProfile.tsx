@@ -73,7 +73,7 @@ const CompleteProfile = () => {
 
     setIsSubmitting(true);
 
-    const storedRole = localStorage.getItem("signup_role");
+    const storedRole = sessionStorage.getItem("signup_role") ?? localStorage.getItem("signup_role");
 
     const { error: updateError } = await supabase.auth.updateUser({
       password,
@@ -137,6 +137,7 @@ const CompleteProfile = () => {
         onboarding_completed: true,
       }, { onConflict: "user_id" });
 
+    sessionStorage.removeItem("signup_role");
     localStorage.removeItem("signup_role");
     localStorage.removeItem("signup_checkin_prefs");
 

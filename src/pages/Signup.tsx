@@ -134,7 +134,8 @@ const Signup = () => {
   const hasAnyCheckin = Object.values(checkinSelections).some(Boolean);
 
   const persistPreSignupData = () => {
-    if (role) localStorage.setItem("signup_role", role);
+    // sessionStorage: cleared on tab close, not readable across origins — reduces XSS-based role escalation risk.
+    if (role) sessionStorage.setItem("signup_role", role);
     localStorage.setItem("signup_checkin_prefs", JSON.stringify(checkinSelections));
   };
 

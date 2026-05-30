@@ -370,6 +370,7 @@ export const DoctorConnectionsSection = ({ hideHeader = false }: { hideHeader?: 
                   variant="ghost"
                   className="h-8 w-8"
                   onClick={() => removeConnection(connection.id)}
+                  aria-label="Ta bort koppling"
                 >
                   <Trash2 className="w-4 h-4 text-destructive" />
                 </Button>
