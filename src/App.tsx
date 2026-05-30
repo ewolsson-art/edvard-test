@@ -202,10 +202,10 @@ const App = () => (
           <Sonner />
           <DemoTransitionOverlay />
           <OfflineBanner />
-          <MobileWebNotice />
           <NativeAppGate>
           <BrowserRouter>
             <PageTracker />
+            <MobileWebNotice />
             <div className="min-h-dvh" role="application" aria-label="Toddy - Moodtracker">
             <ChunkRecoveryBoundary>
             <Suspense fallback={
