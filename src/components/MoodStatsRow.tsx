@@ -71,7 +71,17 @@ export function MoodStatsRow({ moods, className }: MoodStatsRowProps) {
             )}
             aria-label={`${percent}% ${groupLabel[group]}${isGroup ? ' — visa fördelning' : ''}`}
           >
-            <TurtleLogo size="sm" animated={false} mood={group} framing="full" className="h-5 w-5 shrink-0" />
+            <span
+              className={cn(
+                'inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full ring-1 overflow-hidden',
+                group === 'elevated' && 'bg-[hsl(45_95%_60%)] ring-[hsl(38_90%_45%)]',
+                group === 'stable' && 'bg-[hsl(142_60%_50%)] ring-[hsl(150_55%_35%)]',
+                group === 'depressed' && 'bg-[hsl(0_75%_58%)] ring-[hsl(0_70%_42%)]',
+              )}
+              aria-hidden
+            >
+              <TurtleLogo size="sm" animated={false} mood={group} framing="face" className="h-5 w-5" />
+            </span>
             <span className="text-[12px] text-foreground/70">
               <span className="font-semibold text-foreground/85">{percent}%</span>{' '}
               <span className="text-foreground/55">{groupLabel[group]}</span>
