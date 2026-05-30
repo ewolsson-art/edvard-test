@@ -145,7 +145,7 @@ const Login = () => {
           {/* Mascot + heading */}
           <div className="flex flex-col items-center text-center animate-fade-in">
             <div className="mb-4 opacity-90">
-              <TurtleLogo size="md" animated={false} />
+              <TurtleLogo size="md" animated={false} className="translate-x-[4px]" />
             </div>
             <h1 className="text-2xl md:text-3xl font-bold text-white font-display tracking-tight">
               {t("auth.welcomeBack")}
