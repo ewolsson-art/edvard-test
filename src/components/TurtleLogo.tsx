@@ -94,7 +94,10 @@ export function TurtleLogo({ size = 'md', animated = true, className, mood, fram
   const patternStroke = shell ? shell.patternStroke : 'hsl(var(--primary) / 0.3)';
 
   // 'face' framing crops the SVG viewBox to the head area so the expression dominates.
-  const viewBox = framing === 'face' ? '52 12 96 90' : '0 0 260 280';
+  // Full-body artwork is drawn ~23 units left of the viewBox center (artwork center ≈ x=107
+  // inside a 260-wide box). Shift viewBox x by -23 so the visible artwork is optically centered
+  // wherever the logo is rendered — avoids per-instance translate-x hacks.
+  const viewBox = framing === 'face' ? '52 12 96 90' : '-23 0 260 280';
 
   return (
     <div className={cn("relative", sizes[size], className)}>
