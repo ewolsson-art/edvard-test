@@ -1,9 +1,9 @@
 import { CalendarCheck, BarChart3, Share2, Heart, type LucideIcon } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from 'react-i18next';
-import toddyPencil from "@/assets/toddy-pencil.png";
-import toddyGraph from "@/assets/toddy-graph.png";
-import toddyShare from "@/assets/toddy-share.png";
+import toddyPencil from "@/assets/toddy-pencil.webp";
+import toddyGraph from "@/assets/toddy-graph.webp";
+import toddyShare from "@/assets/toddy-share.webp";
 
 const stepIcons = [CalendarCheck, BarChart3, Share2];
 const stepImages = [toddyPencil, toddyGraph, toddyShare];
