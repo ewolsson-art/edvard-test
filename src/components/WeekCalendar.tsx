@@ -114,7 +114,7 @@ export function WeekCalendar({
                 className={cn(
                   "text-center text-sm py-2 transition-colors",
                   headerIsToday
-                    ? "font-bold text-[hsl(45_85%_55%)]"
+                    ? "font-bold text-foreground"
                     : "font-semibold text-muted-foreground",
                 )}
               >
