@@ -61,7 +61,7 @@ export default function Patterns() {
 
 
   return (
-    <div className="min-h-screen w-full relative overflow-hidden">
+    <div className="min-h-dvh w-full relative overflow-hidden">
       {/* Single subtle background accent */}
       <div className="pointer-events-none absolute inset-0 -z-10">
         <div className="absolute top-0 right-0 w-[500px] h-[500px] rounded-full bg-[hsl(45_85%_55%/0.05)] blur-3xl" />

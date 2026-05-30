@@ -16,7 +16,7 @@ const Partners = () => {
   ];
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-dvh flex flex-col">
       <SEO title="Samarbetspartners – vård, forskning och brukarorganisationer | Toddy" description="Toddy samarbetar med vård, forskning och brukarorganisationer för att förbättra vardagen för personer med bipolär sjukdom." path="/samarbetspartners" />
       <AuthNavbar />
       

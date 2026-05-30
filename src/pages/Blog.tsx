@@ -7,7 +7,7 @@ import { ArrowRight } from "lucide-react";
 
 const Blog = () => {
   return (
-    <div className="min-h-screen flex flex-col bg-background">
+    <div className="min-h-dvh flex flex-col bg-background">
       <SEO
         title="Blogg – Toddy | Stämningsdagbok, bipolär, depression"
         description="Artiklar om psykisk hälsa, stämningsdagbok, bipolär sjukdom, depression och anhörigskap — skrivna med vården och forskningen som grund."

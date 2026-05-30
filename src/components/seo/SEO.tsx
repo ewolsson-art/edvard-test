@@ -16,7 +16,7 @@ export function SEO({
   title,
   description,
   path = "/",
-  image = "https://toddy.se/og-image.png?v=2",
+  image = "https://toddy.se/og-image.jpg?v=3",
   ogType = "website",
 }: SEOProps) {
   const url = `https://toddy.se${path}`;

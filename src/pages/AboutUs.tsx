@@ -10,7 +10,7 @@ const AboutUs = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-dvh flex flex-col">
       <SEO title="Om Toddy – stämningsdagbok byggd för bipolär" description="Vi bygger Toddy för att göra vardagen enklare för personer med bipolär sjukdom och deras nätverk. Läs om vår mission och våra värderingar." path="/om-oss" />
       <AuthNavbar />
       

@@ -90,12 +90,12 @@ const SharedReport = () => {
   const categories = report?.stats?.categories || [];
 
   if (loading) {
-    return (<div className="min-h-screen flex items-center justify-center bg-background"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>);
+    return (<div className="min-h-dvh flex items-center justify-center bg-background"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>);
   }
 
   if (error) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-background p-4">
+      <div className="min-h-dvh flex flex-col items-center justify-center bg-background p-4">
         <div className="text-center space-y-4">
           <FileText className="h-16 w-16 text-muted-foreground mx-auto" />
           <h1 className="text-2xl font-bold">{t('sharedReport.cannotShow')}</h1>
@@ -113,7 +113,7 @@ const SharedReport = () => {
   const inactiveMeds = medications.filter(m => !m.active);
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-dvh bg-background">
       <header className="border-b bg-card/50 backdrop-blur-sm sticky top-0 z-10">
         <div className="max-w-4xl mx-auto px-4 py-4 flex items-center justify-between">
           <Logo />

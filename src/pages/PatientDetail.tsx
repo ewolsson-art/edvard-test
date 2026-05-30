@@ -79,7 +79,7 @@ const PatientDetail = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-dvh flex items-center justify-center">
         <Loader2 className="w-8 h-8 animate-spin text-primary" />
       </div>
     );
@@ -87,7 +87,7 @@ const PatientDetail = () => {
 
   if (!normalizedConnection) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-dvh flex items-center justify-center">
         <div className="text-center">
           <h2 className="text-xl font-semibold mb-2">Användare hittades inte</h2>
           <p className="text-muted-foreground">Användaren finns inte eller är inte kopplad till dig.</p>
