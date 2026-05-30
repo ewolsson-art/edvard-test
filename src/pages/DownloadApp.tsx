@@ -135,11 +135,8 @@ export default function DownloadApp() {
         </ul>
 
         <p className="text-xs text-white/40 max-w-xs">
-          Du kan fortfarande{" "}
-          <Link to="/logga-in" className="text-white/70 underline">
-            logga in via webben
-          </Link>{" "}
-          om du föredrar det.
+          Toddy är en mobilapp. För att logga in eller skapa konto behöver du
+          ladda ner appen.
         </p>
       </main>
     </div>
