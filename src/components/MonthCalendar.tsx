@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { format, startOfMonth, endOfMonth, startOfWeek, endOfWeek, eachDayOfInterval, isSameMonth, isToday, isBefore, startOfDay } from 'date-fns';
 import { useDateLocale } from '@/lib/dateLocale';
-import { ChevronLeft, Pill, MessageCircle, X, ArrowUp, ArrowDown, Minus } from 'lucide-react';
+import { ChevronLeft, MessageCircle, X, ArrowUp, ArrowDown, Minus } from 'lucide-react';
 import { MoodType } from '@/types/mood';
 import { useDiagnosisConfig } from '@/hooks/useDiagnosisConfig';
 import { cn } from '@/lib/utils';

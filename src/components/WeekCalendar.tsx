@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { format, isToday, isBefore, startOfDay } from 'date-fns';
 import { useDateLocale } from '@/lib/dateLocale';
-import { ChevronLeft, Pill, X } from 'lucide-react';
+import { ChevronLeft, X } from 'lucide-react';
 import { MoodEntry, MoodType } from '@/types/mood';
 import { useDiagnosisConfig } from '@/hooks/useDiagnosisConfig';
 import { cn } from '@/lib/utils';
