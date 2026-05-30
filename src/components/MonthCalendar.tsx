@@ -10,6 +10,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { useTranslation } from 'react-i18next';
 import { TurtleLogo } from '@/components/TurtleLogo';
 import { getTurtleMoodForMood } from '@/lib/moodTurtle';
+import { MoodStatsRow } from '@/components/MoodStatsRow';
 
 interface MonthCalendarProps {
   currentDate: Date;
@@ -67,38 +68,10 @@ export function MonthCalendar({
   };
 
   // Mood distribution stats for this month — grouped into 3 buckets
-  type MoodGroup = 'elevated' | 'stable' | 'depressed';
-  const groupMembers: Record<MoodGroup, MoodType[]> = {
-    elevated: ['severe_elevated', 'elevated', 'somewhat_elevated'],
-    stable: ['stable'],
-    depressed: ['somewhat_depressed', 'depressed', 'severe_depressed'],
-  };
-
-  const { moodStats, perMoodCounts } = useMemo(() => {
-    const counts: Partial<Record<MoodType, number>> = {};
-    Object.values(moodData).forEach((m) => {
-      counts[m] = (counts[m] ?? 0) + 1;
-    });
-    const buckets: Record<MoodGroup, number> = { elevated: 0, stable: 0, depressed: 0 };
-    (Object.keys(groupMembers) as MoodGroup[]).forEach((g) => {
-      buckets[g] = groupMembers[g].reduce((sum, m) => sum + (counts[m] ?? 0), 0);
-    });
-    const total = buckets.elevated + buckets.stable + buckets.depressed;
-    const order: MoodGroup[] = ['elevated', 'stable', 'depressed'];
-    const stats = order
-      .map((g) => ({
-        group: g,
-        count: buckets[g],
-        percent: total > 0 ? Math.round((buckets[g] / total) * 100) : 0,
-      }));
-    return { moodStats: stats, perMoodCounts: counts };
-  }, [moodData]);
-
-  const groupLabel: Record<MoodGroup, string> = {
-    elevated: 'uppvarvad',
-    stable: moodLabels.stable.toLowerCase(),
-    depressed: 'nedstämd',
-  };
+  const allMoods = useMemo(
+    () => Object.values(moodData) as MoodType[],
+    [moodData],
+  );
 
   return (
     <div className="fade-in">
