@@ -182,28 +182,6 @@ export function OverviewSummary({ stats, entries, periodLabel }: OverviewSummary
         </div>
       </section>
 
-      {allTimeDistribution && (
-        <section className="rounded-2xl bg-foreground/[0.03] backdrop-blur-sm p-5">
-          <SectionHeader icon={CalendarCheck} title={t('overviewSummary.sinceStart')} />
-          <p className="text-xs text-muted-foreground mt-1 mb-3">
-            {t('overviewSummary.distributionOf', { count: entries.length })} {entries.length === 1 ? t('common.day') : t('common.days')}.
-          </p>
-          <div className="flex h-4 rounded-full overflow-hidden mb-3">
-            {allTimeDistribution.map(item => item.percentage > 0 && (
-              <div key={item.key} className={item.barClass} style={{ width: `${item.percentage}%` }} />
-            ))}
-          </div>
-          <div className="grid grid-cols-3 gap-3">
-            {allTimeDistribution.map(item => (
-              <div key={item.key} className="text-center">
-                <item.icon className={`w-4 h-4 mx-auto ${item.colorClass}`} />
-                <p className="text-lg font-bold mt-0.5">{item.count}</p>
-                <p className="text-xs text-muted-foreground">{item.percentage}%</p>
-              </div>
-            ))}
-          </div>
-        </section>
-      )}
 
       {allTimeDistribution && (
         <section className="rounded-2xl bg-foreground/[0.03] backdrop-blur-sm p-5">
