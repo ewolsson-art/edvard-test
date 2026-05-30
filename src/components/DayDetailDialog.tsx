@@ -1,6 +1,6 @@
 import { format, isBefore, startOfDay, isToday } from 'date-fns';
 import { sv, enUS } from 'date-fns/locale';
-import { Zap, Sun, CloudRain, Moon, Utensils, Dumbbell, Pill, MessageSquare, ThumbsUp, ThumbsDown, Check, X, Pencil, Plus } from 'lucide-react';
+import { Zap, Sun, CloudRain, Moon, Utensils, Dumbbell, Pill, MessageSquare, ThumbsUp, ThumbsDown, Check, X, Pencil, Plus, Tag, StickyNote } from 'lucide-react';
 import { MoodEntry, MoodType, QUALITY_LABELS, EXERCISE_TYPE_LABELS, MOOD_ICONS } from '@/types/mood';
 import { useDiagnosisConfig } from '@/hooks/useDiagnosisConfig';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
@@ -98,48 +98,108 @@ export function DayDetailDialog({
                 <p className="font-semibold">{moodLabels[entry.mood]}</p>
               </div>
             </div>
-            {entry.comment && (
-              <div className="mt-3 pt-3 border-t border-border/30">
-                <div className="flex items-start gap-2 text-sm text-muted-foreground">
-                  <MessageSquare className="w-4 h-4 mt-0.5 shrink-0" />
-                  <p>{entry.comment}</p>
-                </div>
-              </div>
-            )}
           </div>
 
-          {/* Grid for sleep/eating */}
+          {/* Grid for sleep/eating/exercise */}
           <div className="grid grid-cols-2 gap-3">
             {/* Sleep */}
             {entry.sleepQuality && (
-              <div className="p-3 rounded-xl bg-muted/30">
+              <div className="p-3 rounded-xl bg-muted/20 border border-border/40">
                 <div className="flex items-center gap-2 mb-1">
-                  <Moon className="w-4 h-4 text-primary" />
-                  <p className="text-xs text-muted-foreground uppercase tracking-wide">{t('dayDetail.sleep', 'Sömn')}</p>
+                  <Moon className="w-3.5 h-3.5 text-muted-foreground" />
+                  <p className="text-[11px] text-muted-foreground uppercase tracking-wide">{t('dayDetail.sleep', 'Sömn')}</p>
                 </div>
                 <div className="flex items-center gap-1.5">
                   {getQualityIcon(entry.sleepQuality)}
                   <span className="text-sm font-medium">{QUALITY_LABELS[entry.sleepQuality]}</span>
                 </div>
                 {entry.sleepComment && (
-                  <p className="text-xs text-muted-foreground mt-2 line-clamp-2">{entry.sleepComment}</p>
+                  <p className="text-xs text-muted-foreground/80 mt-2 line-clamp-2 italic">{entry.sleepComment}</p>
                 )}
               </div>
             )}
 
+            {/* Eating */}
+            {entry.eatingQuality && (
+              <div className="p-3 rounded-xl bg-muted/20 border border-border/40">
+                <div className="flex items-center gap-2 mb-1">
+                  <Utensils className="w-3.5 h-3.5 text-muted-foreground" />
+                  <p className="text-[11px] text-muted-foreground uppercase tracking-wide">{t('dayDetail.eating', 'Aptit')}</p>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  {getQualityIcon(entry.eatingQuality)}
+                  <span className="text-sm font-medium">{QUALITY_LABELS[entry.eatingQuality]}</span>
+                </div>
+                {entry.eatingComment && (
+                  <p className="text-xs text-muted-foreground/80 mt-2 line-clamp-2 italic">{entry.eatingComment}</p>
+                )}
+              </div>
+            )}
+
+            {/* Exercise */}
+            {entry.exercised !== undefined && (
+              <div className="p-3 rounded-xl bg-muted/20 border border-border/40">
+                <div className="flex items-center gap-2 mb-1">
+                  <Dumbbell className="w-3.5 h-3.5 text-muted-foreground" />
+                  <p className="text-[11px] text-muted-foreground uppercase tracking-wide">{t('dayDetail.exercise', 'Träning')}</p>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  {entry.exercised
+                    ? <Check className="w-3.5 h-3.5 text-mood-stable" />
+                    : <X className="w-3.5 h-3.5 text-muted-foreground" />}
+                  <span className="text-sm font-medium">{entry.exercised ? 'Ja' : 'Nej'}</span>
+                </div>
+                {entry.exerciseTypes && entry.exerciseTypes.length > 0 && (
+                  <p className="text-xs text-muted-foreground/80 mt-1.5 line-clamp-2">
+                    {entry.exerciseTypes.map(t => EXERCISE_TYPE_LABELS[t]).join(', ')}
+                  </p>
+                )}
+              </div>
+            )}
+
+            {/* Medications */}
+            {medicationsTaken.length > 0 && (
+              <div className="p-3 rounded-xl bg-muted/20 border border-border/40">
+                <div className="flex items-center gap-2 mb-1">
+                  <Pill className="w-3.5 h-3.5 text-muted-foreground" />
+                  <p className="text-[11px] text-muted-foreground uppercase tracking-wide">{t('dayDetail.medication', 'Medicin')}</p>
+                </div>
+                <div className="flex items-center gap-1.5 text-sm">
+                  <Check className="w-3.5 h-3.5 text-mood-stable" />
+                  <span className="font-medium">Ja</span>
+                </div>
+                <p className="text-xs text-muted-foreground/80 mt-1.5 line-clamp-2">
+                  {medicationsTaken.map(m => m.name).join(', ')}
+                </p>
+              </div>
+            )}
           </div>
 
-          {/* Medications */}
-          {medicationsTaken.length > 0 && (
-            <div className="p-3 rounded-xl bg-muted/30">
+          {/* Tags / characteristics */}
+          {entry.tags && entry.tags.length > 0 && (
+            <div className="p-3 rounded-xl bg-muted/20 border border-border/40">
               <div className="flex items-center gap-2 mb-2">
-                <Pill className="w-4 h-4 text-primary" />
-                <p className="text-xs text-muted-foreground uppercase tracking-wide">{t('dayDetail.medication', 'Medicin')}</p>
+                <Tag className="w-3.5 h-3.5 text-muted-foreground" />
+                <p className="text-[11px] text-muted-foreground uppercase tracking-wide">{t('dayDetail.tags', 'Karaktäristika')}</p>
               </div>
-              <div className="flex items-center gap-2 text-sm">
-                <Check className="w-3.5 h-3.5 text-mood-stable" />
-                <span className="font-medium">Ja</span>
+              <div className="flex flex-wrap gap-1.5">
+                {entry.tags.map((tag, i) => (
+                  <span key={i} className="px-2 py-0.5 rounded-full bg-background/60 border border-border/50 text-xs text-foreground/80">
+                    {tag}
+                  </span>
+                ))}
               </div>
+            </div>
+          )}
+
+          {/* General note (if separate from mood comment) */}
+          {entry.comment && (
+            <div className="p-3 rounded-xl bg-muted/20 border border-border/40">
+              <div className="flex items-center gap-2 mb-1.5">
+                <StickyNote className="w-3.5 h-3.5 text-muted-foreground" />
+                <p className="text-[11px] text-muted-foreground uppercase tracking-wide">{t('dayDetail.note', 'Anteckning')}</p>
+              </div>
+              <p className="text-sm text-foreground/80 italic leading-relaxed">{entry.comment}</p>
             </div>
           )}
 
