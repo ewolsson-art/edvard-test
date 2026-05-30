@@ -220,7 +220,7 @@ export default function DownloadApp() {
           href={APP_STORE_URL}
           className="w-full inline-flex items-center justify-center gap-3 py-4 rounded-full bg-[hsl(45_85%_55%)] text-[hsl(225_30%_7%)] font-bold text-base tracking-wide shadow-[0_4px_24px_hsl(45_85%_55%/0.4)] hover:bg-[hsl(45_85%_62%)] active:scale-[0.98] transition-all mb-3"
         >
-          <Apple className="h-5 w-5" fill="currentColor" />
+          <AppleLogo className="h-5 w-5" />
           Ladda ner i App Store
         </a>
 
