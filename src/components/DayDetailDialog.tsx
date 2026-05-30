@@ -168,9 +168,6 @@ export function DayDetailDialog({
                   <Check className="w-3.5 h-3.5 text-mood-stable" />
                   <span className="font-medium">Ja</span>
                 </div>
-                <p className="text-xs text-muted-foreground/80 mt-1.5 line-clamp-2">
-                  {medicationsTaken.map(m => m.name).join(', ')}
-                </p>
               </div>
             )}
           </div>
