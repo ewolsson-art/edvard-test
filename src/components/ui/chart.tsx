@@ -1,7 +1,25 @@
 import * as React from "react";
-import * as RechartsPrimitive from "recharts";
+// P-7: named imports instead of `import *` so unused recharts symbols
+// (BarChart, LineChart, PieChart, AreaChart, etc.) can be tree-shaken
+// out of the vendor-recharts chunk for routes that don't use them.
+import {
+  Legend as RechartsLegend,
+  ResponsiveContainer as RechartsResponsiveContainer,
+  Tooltip as RechartsTooltip,
+  type LegendProps as RechartsLegendProps,
+} from "recharts";
 
 import { cn } from "@/lib/utils";
+
+// Back-compat shim — chart.tsx historically referenced these via
+// `RechartsPrimitive.X`. Keep the namespace object to minimize diff and
+// avoid breaking any external imports of this module.
+const RechartsPrimitive = {
+  Legend: RechartsLegend,
+  ResponsiveContainer: RechartsResponsiveContainer,
+  Tooltip: RechartsTooltip,
+} as const;
+type LegendProps = RechartsLegendProps;
 
 // Format: { THEME_NAME: CSS_SELECTOR }
 const THEMES = { light: "", dark: ".dark" } as const;
