@@ -190,7 +190,7 @@ export default function DownloadApp() {
           <TurtleLogo
             size="hero"
             animated
-            className="relative w-64 h-64 drop-shadow-[0_20px_60px_hsl(45_90%_55%/0.45)]"
+            className="relative w-64 h-64 translate-x-[22px] drop-shadow-[0_20px_60px_hsl(45_90%_55%/0.45)]"
           />
         </div>
 
