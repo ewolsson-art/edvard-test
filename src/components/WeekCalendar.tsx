@@ -164,7 +164,7 @@ export function WeekCalendar({
                 "hover:scale-105 hover:z-10",
                 moodBg,
                 showMissed && "bg-muted-foreground/10",
-                isTodayDate && !mood && "bg-[hsl(45_85%_55%/0.10)] ring-1 ring-[hsl(45_85%_55%/0.55)] shadow-[0_0_18px_-4px_hsl(45_85%_55%/0.45)]",
+                isTodayDate && !mood && "bg-foreground/[0.06] ring-1 ring-foreground/40 shadow-[0_0_18px_-4px_hsl(var(--foreground)/0.35)]",
                 isTodayDate && mood && "ring-2 ring-[hsl(45_85%_55%/0.75)] shadow-[0_0_18px_-4px_hsl(45_85%_55%/0.55)]",
               )}
             >
