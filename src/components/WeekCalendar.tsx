@@ -173,7 +173,7 @@ export function WeekCalendar({
                   <TurtleLogo size="lg" animated={false} mood={getTurtleMoodForMood(mood)} framing="face" className="h-14 w-14 drop-shadow-[0_2px_3px_hsl(0_0%_0%/0.45)]" />
                   <span className={cn(
                     "absolute top-2 right-3 text-sm font-bold leading-none drop-shadow-[0_1px_2px_hsl(var(--background))]",
-                    isTodayDate ? "text-[hsl(45_85%_55%)]" : "text-foreground",
+                    "text-foreground",
                   )}>
                     {format(day, 'd')}
                   </span>
@@ -182,7 +182,7 @@ export function WeekCalendar({
                 <span className={cn(
                   "flex items-center justify-center leading-none",
                   isTodayDate
-                    ? "text-[hsl(45_85%_55%)] font-bold text-lg"
+                    ? "text-foreground font-bold text-lg"
                     : "text-base font-semibold text-foreground/60",
                 )}>
                   {format(day, 'd')}
