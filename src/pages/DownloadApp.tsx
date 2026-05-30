@@ -160,7 +160,7 @@ export default function DownloadApp() {
   }, []);
 
   return (
-    <div className="min-h-dvh bg-[hsl(225_30%_4%)] text-foreground overflow-x-hidden">
+    <div className="min-h-dvh bg-[hsl(225_30%_4%)] text-foreground overflow-x-hidden flex flex-col">
       <SEO
         title="Ladda ner Toddy-appen | iPhone & Android"
         description="Toddy finns nu som app i App Store. Din egna stämningsdagbok – alltid med dig i fickan."
@@ -178,9 +178,9 @@ export default function DownloadApp() {
 
       <HamburgerHeader />
 
-      <main className="relative z-10 px-6 pt-4 pb-12 max-w-md mx-auto flex flex-col items-center text-center">
+      <main className="relative z-10 flex-1 px-6 max-w-md mx-auto flex flex-col items-center justify-center text-center">
         {/* Hero-sköldpadda — stor, lugn, dramatisk */}
-        <div className="relative mt-6 mb-12 flex items-center justify-center">
+        <div className="relative mb-10 flex items-center justify-center">
           <div
             aria-hidden
             className="absolute inset-0 -m-16 rounded-full blur-[80px] opacity-80"
