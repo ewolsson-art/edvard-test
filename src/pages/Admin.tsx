@@ -140,8 +140,8 @@ export default function Admin() {
       const json = await res.json();
       if (!res.ok) throw new Error(json.error ?? 'Kunde inte hämta');
       setDetail(json as UserDetail);
-    } catch (e: any) {
-      setError(e.message);
+    } catch (e: unknown) {
+      setError(e instanceof Error ? e.message : String(e));
     } finally {
       setDetailLoading(false);
     }
@@ -187,8 +187,8 @@ export default function Admin() {
         title: 'Test-notis schemalagd',
         description: 'Du bör se notisen om 3 sekunder. Lås gärna skärmen för att verifiera lock-screen-rendering.',
       });
-    } catch (e: any) {
-      toast({ title: 'Kunde inte skicka', description: e.message ?? 'Okänt fel', variant: 'destructive' });
+    } catch (e: unknown) {
+      toast({ title: 'Kunde inte skicka', description: e instanceof Error ? e.message : 'Okänt fel', variant: 'destructive' });
     } finally {
       setPushTesting(false);
     }

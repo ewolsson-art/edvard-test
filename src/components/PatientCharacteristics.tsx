@@ -1,11 +1,11 @@
-import { Zap, Cloud, Lock, Sun, ChevronDown } from 'lucide-react';
+import { Zap, Cloud, Lock, Sun, ChevronDown, type LucideIcon } from 'lucide-react';
 import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { usePatientCharacteristics } from '@/hooks/usePatientCharacteristics';
 import { cn } from '@/lib/utils';
 import { MoodType } from '@/types/mood';
-import { useTranslation } from 'react-i18next';
+import { useTranslation, type TFunction } from 'i18next';
 
 interface PatientCharacteristicsProps {
   patientId: string;
@@ -108,14 +108,27 @@ export const PatientCharacteristics = ({ patientId, latestMood, isShared, patien
   );
 };
 
+interface CharacteristicItem {
+  id: string;
+  name: string;
+}
+
+interface CharacteristicSection {
+  key: string;
+  title: string;
+  iconBg: string;
+  iconColor: string;
+  badgeStyle: string;
+}
+
 interface CollapsibleSectionProps {
-  section: any;
-  Icon: any;
+  section: CharacteristicSection;
+  Icon: LucideIcon;
   totalCount: number;
-  manualChars: any[];
+  manualChars: CharacteristicItem[];
   checkinChars: { name: string; count: number; id: string }[];
   checkinOnly: boolean;
-  t: any;
+  t: TFunction;
 }
 
 const CollapsibleSection = ({ section: s, Icon, totalCount, manualChars, checkinChars, checkinOnly, t }: CollapsibleSectionProps) => {

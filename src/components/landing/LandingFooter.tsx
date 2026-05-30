@@ -53,9 +53,9 @@ export function LandingFooter() {
       if (error) throw error;
       navigate('/', { replace: true });
       completeDemoTransition();
-    } catch (e: any) {
+    } catch (e: unknown) {
       completeDemoTransition();
-      toast({ title: 'Kunde inte starta demo', description: e?.message ?? 'Försök igen', variant: 'destructive' });
+      toast({ title: 'Kunde inte starta demo', description: e instanceof Error ? e.message : 'Försök igen', variant: 'destructive' });
     } finally {
       setDemoLoading(false);
     }
