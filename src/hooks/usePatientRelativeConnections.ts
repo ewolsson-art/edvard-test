@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from './useAuth';
 import { useToast } from './use-toast';
+import { sendCareTeamInvite } from '@/lib/careTeamInvite';
 
 export interface RelativeConnection {
   id: string;
@@ -116,23 +117,14 @@ export function usePatientRelativeConnections() {
       return { success: false, error: 'Kunde inte skicka inbjudan' };
     }
 
-    const inviterName =
-      (user.user_metadata?.first_name as string | undefined) ||
-      (user.email?.split('@')[0] ?? 'En användare');
-    supabase.functions
-      .invoke('send-transactional-email', {
-        body: {
-          templateName: 'care-team-invitation',
-          recipientEmail: relativeEmail,
-          idempotencyKey: `invite-relative-${user.id}-${relativeId}`,
-          templateData: {
-            inviterName,
-            inviterRole: 'patient',
-            recipientRole: 'relative',
-          },
-        },
-      })
-      .catch((e) => console.warn('invite email failed', e));
+    sendCareTeamInvite({
+      user,
+      recipientEmail: relativeEmail,
+      recipientId: relativeId as string,
+      inviterRole: 'patient',
+      recipientRole: 'relative',
+      keyPrefix: 'invite-relative',
+    });
 
     toast({ title: "Inbjudan skickad!" });
     await fetchConnections();

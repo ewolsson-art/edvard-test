@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from './useAuth';
 import { useToast } from './use-toast';
+import { sendCareTeamInvite } from '@/lib/careTeamInvite';
 
 export interface DoctorConnection {
   id: string;
@@ -120,24 +121,14 @@ export function usePatientConnections() {
       return { success: false, error: 'Kunde inte skicka inbjudan' };
     }
 
-    // Skicka inbjudningsmejl till läkaren (best-effort, blockera inte UI)
-    const inviterName =
-      (user.user_metadata?.first_name as string | undefined) ||
-      (user.email?.split('@')[0] ?? 'En användare');
-    supabase.functions
-      .invoke('send-transactional-email', {
-        body: {
-          templateName: 'care-team-invitation',
-          recipientEmail: doctorEmail,
-          idempotencyKey: `invite-doctor-${user.id}-${doctorId}`,
-          templateData: {
-            inviterName,
-            inviterRole: 'patient',
-            recipientRole: 'doctor',
-          },
-        },
-      })
-      .catch((e) => console.warn('invite email failed', e));
+    sendCareTeamInvite({
+      user,
+      recipientEmail: doctorEmail,
+      recipientId: doctorId as string,
+      inviterRole: 'patient',
+      recipientRole: 'doctor',
+      keyPrefix: 'invite-doctor',
+    });
 
     toast({ title: "Inbjudan skickad!" });
     await fetchConnections();
