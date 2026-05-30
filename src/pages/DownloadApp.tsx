@@ -160,79 +160,72 @@ export default function DownloadApp() {
   }, []);
 
   return (
-    <div className="min-h-dvh bg-background text-foreground overflow-x-hidden">
+    <div className="min-h-dvh bg-[hsl(225_30%_4%)] text-foreground overflow-x-hidden">
       <SEO
         title="Ladda ner Toddy-appen | iPhone & Android"
         description="Toddy finns nu som app i App Store. Din egna stämningsdagbok – alltid med dig i fickan."
       />
 
-      {/* Bakgrundsglow */}
+      {/* Subtil bakgrundsglow — en enda källa, mjuk */}
       <div
         aria-hidden
-        className="fixed inset-0 pointer-events-none"
+        className="fixed inset-x-0 top-0 h-[80vh] pointer-events-none"
         style={{
           background:
-            "radial-gradient(ellipse 80% 50% at 50% 0%, hsl(45 60% 12% / 0.6), transparent 60%), radial-gradient(ellipse 60% 40% at 50% 100%, hsl(45 50% 10% / 0.4), transparent 60%)",
+            "radial-gradient(ellipse 70% 55% at 50% 30%, hsl(45 70% 14% / 0.55), transparent 70%)",
         }}
       />
 
       <HamburgerHeader />
 
-      <main className="relative z-10 px-5 pt-6 pb-8 max-w-md mx-auto flex flex-col items-center text-center">
-        {/* Mascot med golden halo */}
-        <div className="relative mb-8 mt-4">
+      <main className="relative z-10 px-6 pt-4 pb-12 max-w-md mx-auto flex flex-col items-center text-center">
+        {/* Hero-sköldpadda — stor, lugn, dramatisk */}
+        <div className="relative mt-6 mb-12 flex items-center justify-center">
           <div
             aria-hidden
-            className="absolute inset-0 -m-10 rounded-full blur-3xl"
+            className="absolute inset-0 -m-16 rounded-full blur-[80px] opacity-80"
             style={{
               background:
-                "radial-gradient(circle, hsl(45 90% 55% / 0.3), transparent 70%)",
+                "radial-gradient(circle, hsl(45 90% 55% / 0.35), transparent 65%)",
             }}
           />
           <TurtleLogo
             size="hero"
             animated
-            className="relative w-36 h-36 drop-shadow-[0_8px_40px_hsl(45_90%_55%/0.35)]"
+            className="relative w-64 h-64 drop-shadow-[0_20px_60px_hsl(45_90%_55%/0.45)]"
           />
         </div>
 
-        <p className="text-sm font-light tracking-[0.3em] uppercase text-[hsl(45_30%_75%/0.7)] mb-3">
+        <p className="text-[11px] font-medium tracking-[0.32em] uppercase text-[hsl(45_40%_75%/0.7)] mb-5">
           Nu i App Store
         </p>
 
-        <h1
-          className="text-5xl font-display font-bold tracking-tight leading-[1.05] mb-4"
-          style={{
-            textShadow:
-              "0 2px 32px hsl(45 90% 55% / 0.25), 0 0 60px hsl(45 80% 50% / 0.1)",
-          }}
-        >
-          Ta Toddy med dig
+        <h1 className="text-[44px] sm:text-5xl font-display font-semibold tracking-[-0.03em] leading-[1.02] text-white mb-5">
+          Ta Toddy<br />med dig.
         </h1>
 
-        <p className="text-base text-white/70 leading-relaxed max-w-sm mb-10">
-          Toddy är gjord för mobilen. Ladda ner appen och få full upplevelse —
-          check-ins, påminnelser och insikter direkt i fickan.
+        <p className="text-[17px] text-white/55 leading-[1.45] max-w-[22rem] mb-12 font-light">
+          Toddy är gjord för mobilen. Check-ins, påminnelser och insikter — direkt i fickan.
         </p>
 
-        {/* App Store CTA */}
-        <a
-          href={APP_STORE_URL}
-          className="w-full inline-flex items-center justify-center gap-3 py-4 rounded-full bg-[hsl(45_85%_55%)] text-[hsl(225_30%_7%)] font-bold text-base tracking-wide shadow-[0_4px_24px_hsl(45_85%_55%/0.4)] hover:bg-[hsl(45_85%_62%)] active:scale-[0.98] transition-all mb-3"
-        >
-          <AppleLogo className="h-5 w-5" />
-          Ladda ner i App Store
-        </a>
+        {/* CTA-stack */}
+        <div className="w-full space-y-3 mb-8">
+          <a
+            href={APP_STORE_URL}
+            className="w-full inline-flex items-center justify-center gap-2.5 h-14 rounded-2xl bg-[hsl(45_85%_55%)] text-[hsl(225_30%_7%)] font-semibold text-[15px] tracking-tight shadow-[0_8px_32px_hsl(45_85%_55%/0.35)] hover:bg-[hsl(45_85%_62%)] active:scale-[0.98] transition-all"
+          >
+            <AppleLogo className="h-[18px] w-[18px]" />
+            Ladda ner i App Store
+          </a>
 
-        {/* Android — kommer senare */}
-        <div className="w-full inline-flex items-center justify-center gap-3 py-4 rounded-full bg-white/[0.04] text-white/40 font-medium text-sm tracking-wide ring-1 ring-white/10 mb-10">
-          <Smartphone className="h-5 w-5" />
-          Android — kommer snart
+          <div className="w-full inline-flex items-center justify-center gap-2.5 h-14 rounded-2xl bg-white/[0.03] text-white/35 font-medium text-[14px] tracking-tight ring-1 ring-inset ring-white/[0.06]">
+            <Smartphone className="h-[18px] w-[18px]" />
+            Android — kommer snart
+          </div>
         </div>
 
-        <p className="text-sm text-white/50 max-w-sm">
-          Toddy är en mobilapp. För att logga in eller skapa konto behöver du
-          ladda ner appen.
+        <p className="text-[13px] text-white/30 max-w-[20rem] leading-relaxed">
+          Inloggning sker enbart i appen.
         </p>
       </main>
 
