@@ -79,10 +79,6 @@ export default function Patterns() {
               Dina mönster
             </h1>
           </div>
-          <p className="text-[14px] text-muted-foreground max-w-xl leading-relaxed">
-            En sammanhängande läsning av det som återkommer — vad som kännetecknar dig,
-            hur du rör dig mellan faser och vilka mönster AI:n hittar över tid.
-          </p>
         </header>
 
         {/* Context line */}
