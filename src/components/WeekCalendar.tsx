@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { format, isToday, isBefore, startOfDay } from 'date-fns';
 import { useDateLocale } from '@/lib/dateLocale';
 import { ChevronLeft, Pill, X } from 'lucide-react';
@@ -8,6 +9,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
 import { useTranslation } from 'react-i18next';
 import { TurtleLogo } from '@/components/TurtleLogo';
 import { getTurtleMoodForMood } from '@/lib/moodTurtle';
+import { MoodStatsRow } from '@/components/MoodStatsRow';
 
 interface WeekCalendarProps {
   weekDays: Date[];
@@ -42,6 +44,14 @@ export function WeekCalendar({
   const dateLocale = useDateLocale();
   const weekDayHeaders = t('overview.weekDayHeaders', { returnObjects: true }) as string[];
   const { moodLabels } = useDiagnosisConfig();
+
+  // Mood distribution for this week — same chip row as MonthCalendar.
+  const weekMoods = useMemo(() => {
+    return weekDays
+      .map((d) => getEntryForDate(format(d, 'yyyy-MM-dd'))?.mood as MoodType | undefined)
+      .filter((m): m is MoodType => !!m);
+  }, [weekDays, getEntryForDate]);
+
   return (
     <div className="fade-in">
       {/* Header matching month view style */}
@@ -102,6 +112,9 @@ export function WeekCalendar({
           </button>
         </div>
       )}
+
+      {/* Mood stats for this week */}
+      <MoodStatsRow moods={weekMoods} className="mb-3" />
 
       {/* Weekday headers */}
       {!hideWeekdayHeaders && (
