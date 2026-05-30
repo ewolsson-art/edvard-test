@@ -87,7 +87,7 @@ export const ScrollableWeeksCalendar = forwardRef<
               key={i}
               className={cn(
                 'text-center text-sm py-2',
-                headerIsToday ? 'font-bold text-[hsl(45_85%_55%)]' : 'font-semibold text-muted-foreground',
+                headerIsToday ? 'font-bold text-foreground' : 'font-semibold text-muted-foreground',
               )}
             >
               {day}
