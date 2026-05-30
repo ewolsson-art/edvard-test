@@ -195,7 +195,7 @@ export default function Admin() {
   };
 
   if (roleLoading) {
-    return <div className="min-h-screen flex items-center justify-center">
+    return <div className="min-h-dvh flex items-center justify-center">
       <Loader2 className="w-6 h-6 animate-spin text-white/40" />
     </div>;
   }
@@ -205,7 +205,7 @@ export default function Admin() {
   const maxDaily = stats ? Math.max(1, ...stats.daily30d.map(d => d.checkins)) : 1;
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-dvh bg-background">
       <div className="max-w-4xl mx-auto md:mx-0 px-5 md:px-8 py-8 md:py-12">
         <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="mb-8 flex items-center justify-between gap-4">
           <div>

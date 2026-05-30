@@ -26,7 +26,7 @@ const ForPatients = () => {
   ];
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-dvh flex flex-col">
       <SEO title="För användare – stämningsdagbok vid bipolär sjukdom | Toddy" description="Logga mående, sömn och mediciner. Visualisera mönster och dela tryggt med vården. Toddy är gjord för dig som lever med bipolär sjukdom." path="/for-anvandare" />
       <AuthNavbar />
       <main className="flex-1 pt-20">

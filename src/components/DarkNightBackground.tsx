@@ -8,7 +8,7 @@ interface DarkNightBackgroundProps {
 
 export function DarkNightBackground({ children, className, showStars = true }: DarkNightBackgroundProps) {
   return (
-    <div className={cn("min-h-screen flex flex-col relative overflow-x-hidden", className)}>
+    <div className={cn("min-h-dvh flex flex-col relative overflow-x-hidden", className)}>
       {/* Dark night sky gradient */}
       <div className="absolute inset-0 bg-gradient-to-b from-[hsl(230_30%_5%)] via-[hsl(225_35%_8%)] to-[hsl(220_30%_12%)]" />
 
@@ -34,7 +34,7 @@ export function DarkNightBackground({ children, className, showStars = true }: D
       )}
 
       {/* Content */}
-      <div className="relative z-10 flex flex-col min-h-screen">
+      <div className="relative z-10 flex flex-col min-h-dvh">
         {children}
       </div>
     </div>

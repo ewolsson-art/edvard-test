@@ -38,7 +38,7 @@ const DoctorDashboard = () => {
     else if (error) toast({ title: t('doctorDashboard.couldNotSendRequest'), description: error, variant: 'destructive' });
   };
 
-  if (isLoading) return <div className="min-h-screen flex items-center justify-center"><Loader2 className="w-8 h-8 animate-spin text-primary" /></div>;
+  if (isLoading) return <div className="min-h-dvh flex items-center justify-center"><Loader2 className="w-8 h-8 animate-spin text-primary" /></div>;
 
   const getPatientName = (c: PatientConnection) => {
     if (c.patient_profile?.first_name || c.patient_profile?.last_name) return [c.patient_profile.first_name, c.patient_profile.last_name].filter(Boolean).join(' ');

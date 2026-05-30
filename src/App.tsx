@@ -53,7 +53,7 @@ class ChunkRecoveryBoundary extends Component<{ children: ReactNode }, { hasErro
   render() {
     if (this.state.hasError) {
       return (
-        <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="min-h-dvh bg-background flex items-center justify-center">
           <div className="h-6 w-6 rounded-full border-2 border-white/15 border-t-white/60 animate-spin" />
         </div>
       );
@@ -141,7 +141,7 @@ const queryClient = new QueryClient({
 const AppLayout = ({ children }: { children: ReactNode }) => (
   <SidebarProvider>
     <SkipToContent />
-    <div className="min-h-screen flex w-full">
+    <div className="min-h-dvh flex w-full">
       {/* Desktop: keep sidebar */}
       <div className="hidden md:block">
         <AppSidebar />
@@ -170,7 +170,7 @@ const RootRoute = () => {
   const { user, loading } = useAuth();
   if (loading) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
+      <div className="min-h-dvh bg-background flex items-center justify-center">
         <div className="h-6 w-6 rounded-full border-2 border-white/15 border-t-white/60 animate-spin" />
       </div>
     );
@@ -198,10 +198,10 @@ const App = () => (
           <NativeAppGate>
           <BrowserRouter>
             <PageTracker />
-            <div className="min-h-screen" role="application" aria-label="Toddy - Moodtracker">
+            <div className="min-h-dvh" role="application" aria-label="Toddy - Moodtracker">
             <ChunkRecoveryBoundary>
             <Suspense fallback={
-              <div className="min-h-screen bg-background flex items-center justify-center">
+              <div className="min-h-dvh bg-background flex items-center justify-center">
                 <div className="h-6 w-6 rounded-full border-2 border-white/15 border-t-white/60 animate-spin" />
               </div>
             }>

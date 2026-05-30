@@ -15,7 +15,7 @@ const CommunityThread = () => {
   const post = posts.find(p => p.id === threadId);
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-dvh">
       <div className="p-5 md:p-8 max-w-2xl md:mx-0 space-y-4 pb-24">
         {/* Back button */}
         <button

@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 const TermsOfService = () => {
   const { t } = useTranslation();
   return (
-    <div className="min-h-screen flex flex-col bg-background">
+    <div className="min-h-dvh flex flex-col bg-background">
       <SEO title="Användarvillkor för Toddy – stämningsdagbok" description="Användarvillkor för Toddy. Läs vad som gäller när du använder vår digitala stämningsdagbok." path="/villkor" />
       <AuthNavbar />
       <main className="flex-1 pt-24 pb-16 px-4 md:px-8">

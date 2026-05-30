@@ -26,7 +26,7 @@ const ForCaregivers = () => {
   ];
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-dvh flex flex-col">
       <SEO title="För vårdgivare – realtidsinsikt vid bipolär sjukdom | Toddy" description="Få strukturerade rapporter och realtidsinsikt om dina användares mående. Toddy stöttar bättre samtal i vården." path="/for-vardgivare" />
       <AuthNavbar />
       <main className="flex-1 pt-20">

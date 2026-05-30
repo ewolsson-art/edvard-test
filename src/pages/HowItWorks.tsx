@@ -21,7 +21,7 @@ const HowItWorks = () => {
       <SEO title="Så funkar Toddy – stämningsdagbok i tre steg" description="Checka in dagligen, upptäck mönster och dela med vården. Så funkar Toddy – stämningsdagbok för bipolär sjukdom." path="/sa-funkar-det" />
       <AuthNavbar />
 
-      <div className="flex flex-col min-h-screen pt-16">
+      <div className="flex flex-col min-h-dvh pt-16">
         <section className="px-5 md:px-8 pt-12 md:pt-20 pb-8 md:pb-16">
           <div className="max-w-3xl mx-auto text-center">
             <h1 className="text-3xl md:text-5xl font-display font-bold text-white tracking-tight">

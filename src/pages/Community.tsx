@@ -113,7 +113,7 @@ const Community = () => {
   }, [posts]);
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-dvh">
       <div className="p-5 md:p-8 pb-24">
         <div className="flex gap-8">
           <div className="flex-1 max-w-2xl space-y-4 md:space-y-6">

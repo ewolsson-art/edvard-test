@@ -97,7 +97,7 @@ export default function Diagnoses() {
   const pendingDiagnosis = diagnoses.find((d) => d.id === pendingRemoveId);
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-dvh bg-background">
       {/* Header */}
       <header className="sticky top-0 z-20 backdrop-blur-xl bg-background/80 border-b border-border/40">
         <div className="max-w-2xl mx-auto px-5 md:px-8 py-4 flex items-center gap-3">

@@ -74,7 +74,7 @@ export default function Unsubscribe() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[hsl(225_30%_5%)] px-5">
+    <div className="min-h-dvh flex items-center justify-center bg-[hsl(225_30%_5%)] px-5">
       <div className="w-full max-w-md rounded-3xl border border-white/[0.06] bg-white/[0.02] p-8 text-center">
         <div className="flex justify-center mb-5">
           <TurtleLogo size="sm" className="w-12 h-12" />

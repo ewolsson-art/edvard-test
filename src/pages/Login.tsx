@@ -119,7 +119,7 @@ const Login = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[hsl(230_30%_5%)]">
+      <div className="min-h-dvh flex items-center justify-center bg-[hsl(230_30%_5%)]">
         <Loader2 className="h-8 w-8 animate-spin text-[hsl(45_85%_55%)]" />
       </div>
     );
@@ -128,7 +128,7 @@ const Login = () => {
   return (
     <DarkNightBackground>
       <SEO title="Logga in på Toddy – stämningsdagbok" description="Logga in på ditt Toddy-konto för att fortsätta logga ditt mående och följa dina mönster." path="/logga-in" />
-      <div className="flex flex-1 items-center justify-center px-6 pt-12 pb-12 min-h-screen">
+      <div className="flex flex-1 items-center justify-center px-6 pt-12 pb-12 min-h-dvh">
         <div className="w-full max-w-sm">
 
           {/* Back / cancel */}

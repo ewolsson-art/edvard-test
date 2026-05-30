@@ -46,7 +46,7 @@ const BlogPost = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-background">
+    <div className="min-h-dvh flex flex-col bg-background">
       <SEO
         title={post.title.length > 52 ? post.title : `${post.title} | Toddy`}
         description={post.description}

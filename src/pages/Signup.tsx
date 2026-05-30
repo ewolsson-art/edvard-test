@@ -222,7 +222,7 @@ const Signup = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[hsl(230_30%_5%)]">
+      <div className="min-h-dvh flex items-center justify-center bg-[hsl(230_30%_5%)]">
         <Loader2 className="h-8 w-8 animate-spin text-[hsl(45_85%_55%)]" />
       </div>
     );

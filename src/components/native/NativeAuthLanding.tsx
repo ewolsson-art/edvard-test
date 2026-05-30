@@ -47,7 +47,7 @@ export function NativeAuthLanding() {
   };
 
   return (
-    <div className="min-h-screen-safe flex flex-col bg-[hsl(225_30%_5%)] relative overflow-hidden">
+    <div className="min-h-dvh-safe flex flex-col bg-[hsl(225_30%_5%)] relative overflow-hidden">
       {/* Ambient gradient glow */}
       <div
         aria-hidden
