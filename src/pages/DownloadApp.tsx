@@ -1,22 +1,155 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { ArrowLeft, Apple, Smartphone, Sparkles, Shield, Heart } from "lucide-react";
+import { Apple, Smartphone, Sparkles, Shield, Heart, Menu, X } from "lucide-react";
 import { TurtleLogo } from "@/components/TurtleLogo";
 import { SEO } from "@/components/seo/SEO";
 
-// App Store-länken sätts när appen är publicerad. Tills dess länkar vi till
-// en "coming soon"-ankarpunkt så användaren inte hamnar i en bruten flow.
-const APP_STORE_URL = "https://apps.apple.com/app/toddy"; // TODO: uppdatera med riktig URL efter App Store-godkännande
+// App Store-länken sätts när appen är publicerad.
+const APP_STORE_URL = "https://apps.apple.com/app/toddy"; // TODO: uppdatera efter App Store-godkännande
 const PLAY_STORE_URL = ""; // Android kommer senare
+
+const NAV_LINKS = [
+  { label: "Så funkar det", to: "/sa-funkar-det" },
+  { label: "Om oss", to: "/om-oss" },
+  { label: "För användare", to: "/for-anvandare" },
+  { label: "För vårdgivare", to: "/for-vardgivare" },
+  { label: "För anhöriga", to: "/for-anhoriga" },
+  { label: "Blogg", to: "/blogg" },
+];
+
+const FOOTER_LINKS = [
+  { label: "Integritet", to: "/integritet" },
+  { label: "Villkor", to: "/villkor" },
+  { label: "Samarbetspartners", to: "/samarbetspartners" },
+];
+
+function HamburgerHeader() {
+  const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    document.body.style.overflow = open ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [open]);
+
+  return (
+    <>
+      <header className="relative z-20 px-5 pt-[max(env(safe-area-inset-top),0.75rem)]">
+        <div className="max-w-md mx-auto flex items-center justify-between h-14">
+          <Link to="/ladda-ner" className="flex items-center gap-2.5" aria-label="Toddy startsida">
+            <TurtleLogo size="sm" className="w-8 h-8" />
+            <span className="text-lg font-display font-bold text-white tracking-tight">Toddy</span>
+          </Link>
+          <button
+            type="button"
+            onClick={() => setOpen(true)}
+            aria-label="Öppna meny"
+            className="h-11 w-11 -mr-2 inline-flex items-center justify-center rounded-full text-white/80 hover:text-white hover:bg-white/[0.06] transition-colors"
+          >
+            <Menu className="h-6 w-6" />
+          </button>
+        </div>
+      </header>
+
+      {open && (
+        <div className="fixed inset-0 z-[9999] bg-black flex flex-col animate-fade-in">
+          <div className="px-5 pt-[max(env(safe-area-inset-top),0.75rem)]">
+            <div className="flex items-center justify-between h-14">
+              <Link
+                to="/ladda-ner"
+                onClick={() => setOpen(false)}
+                className="flex items-center gap-2.5"
+              >
+                <TurtleLogo size="sm" className="w-8 h-8" />
+                <span className="text-lg font-display font-bold text-white tracking-tight">Toddy</span>
+              </Link>
+              <button
+                type="button"
+                onClick={() => setOpen(false)}
+                aria-label="Stäng meny"
+                className="h-11 w-11 -mr-2 inline-flex items-center justify-center rounded-full text-white/70 hover:text-white hover:bg-white/[0.06] transition-colors"
+              >
+                <X className="h-6 w-6" />
+              </button>
+            </div>
+          </div>
+
+          <nav className="flex-1 flex flex-col px-8 pt-10 overflow-y-auto">
+            <ul className="space-y-5">
+              {NAV_LINKS.map((link) => (
+                <li key={link.to}>
+                  <Link
+                    to={link.to}
+                    onClick={() => setOpen(false)}
+                    className="block text-3xl font-display font-bold text-white tracking-tight hover:text-[hsl(45_85%_60%)] transition-colors"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+
+          <div className="px-8 pb-[max(env(safe-area-inset-bottom),2rem)] pt-6 border-t border-white/10 space-y-3">
+            {FOOTER_LINKS.map((link) => (
+              <Link
+                key={link.to}
+                to={link.to}
+                onClick={() => setOpen(false)}
+                className="block text-base text-white/50 hover:text-white/80 transition-colors"
+              >
+                {link.label}
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
+    </>
+  );
+}
+
+function PageFooter() {
+  return (
+    <footer className="relative z-10 mt-16 border-t border-white/10 bg-[hsl(225_30%_5%)]">
+      <div className="max-w-md mx-auto px-6 py-10">
+        <div className="flex items-center gap-3 mb-6">
+          <TurtleLogo size="sm" className="w-8 h-8" />
+          <span className="text-lg font-display font-bold text-white">Toddy</span>
+        </div>
+        <p className="text-sm text-white/50 leading-relaxed mb-8">
+          En digital stämningsdagbok för dig som lever med bipolär sjukdom.
+        </p>
+
+        <nav aria-label="Sidfot — navigation" className="grid grid-cols-2 gap-x-6 gap-y-3 mb-8">
+          {[...NAV_LINKS, ...FOOTER_LINKS].map((link) => (
+            <Link
+              key={link.to}
+              to={link.to}
+              className="text-sm text-white/60 hover:text-white transition-colors"
+            >
+              {link.label}
+            </Link>
+          ))}
+        </nav>
+
+        <div className="h-px bg-white/[0.06] mb-5" />
+        <p className="text-xs text-white/30">
+          © {new Date().getFullYear()} Toddy. Alla rättigheter förbehållna.
+        </p>
+      </div>
+    </footer>
+  );
+}
 
 /**
  * /ladda-ner — landningssida för mobila webbesökare.
- * Marknadsför native-appen och länkar till App Store. Designen följer
- * Toddys mörka tema med gyllene primärfärg och turtle-mascot.
+ * Helt egen header med hamburgarmeny och footer — INTE en popup.
+ * Inloggning/registrering är inte tillgängligt via mobil webb;
+ * användare måste ladda ner appen.
  */
 export default function DownloadApp() {
   useEffect(() => {
-    // Säkerställ mörk bakgrund även när sidan laddas direkt
     document.documentElement.classList.add("dark");
   }, []);
 
@@ -37,18 +170,9 @@ export default function DownloadApp() {
         }}
       />
 
-      {/* Tillbaka-länk */}
-      <div className="relative z-10 px-5 pt-[max(env(safe-area-inset-top),1rem)]">
-        <Link
-          to="/"
-          className="inline-flex items-center gap-1.5 text-sm text-white/60 hover:text-white transition-colors py-2"
-        >
-          <ArrowLeft className="h-4 w-4" />
-          Till webbplatsen
-        </Link>
-      </div>
+      <HamburgerHeader />
 
-      <main className="relative z-10 px-5 pt-6 pb-[max(env(safe-area-inset-bottom),2rem)] max-w-md mx-auto flex flex-col items-center text-center">
+      <main className="relative z-10 px-5 pt-6 pb-8 max-w-md mx-auto flex flex-col items-center text-center">
         {/* Mascot med golden halo */}
         <div className="relative mb-8 mt-4">
           <div
@@ -139,6 +263,8 @@ export default function DownloadApp() {
           ladda ner appen.
         </p>
       </main>
+
+      <PageFooter />
     </div>
   );
 }
