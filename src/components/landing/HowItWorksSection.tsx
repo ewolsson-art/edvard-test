@@ -1,4 +1,4 @@
-import { CalendarCheck, BarChart3, Share2, Heart } from "lucide-react";
+import { CalendarCheck, BarChart3, Share2, Heart, type LucideIcon } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from 'react-i18next';
 import toddyPencil from "@/assets/toddy-pencil.png";
@@ -135,7 +135,7 @@ function StepCard({
   isActive,
   onHover,
 }: {
-  step: { icon: any; image: string; title: string };
+  step: { icon: LucideIcon; image: string; title: string };
   index: number;
   visible: boolean;
   isActive: boolean;
@@ -226,7 +226,7 @@ function MobileStepCard({
   isActive,
   onTap,
 }: {
-  step: { icon: any; image: string; title: string };
+  step: { icon: LucideIcon; image: string; title: string };
   index: number;
   visible: boolean;
   isActive: boolean;
