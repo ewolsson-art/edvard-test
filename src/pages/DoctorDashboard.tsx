@@ -200,7 +200,7 @@ const DoctorDashboard = () => {
                   <div
                     key={c.id}
                     className="w-full bg-foreground/[0.03] backdrop-blur-sm rounded-2xl p-5 sm:p-6 cursor-pointer transition-colors hover:bg-foreground/[0.05] flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6"
-                    onClick={() => navigate(`/patient/${c.patient_id}`)}
+                    onClick={() => navigate(`/personer/${c.patient_id}`)}
                   >
                     <div className="relative flex-shrink-0">
                       <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">

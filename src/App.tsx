@@ -5,7 +5,7 @@ import { OfflineBanner } from "@/components/OfflineBanner";
 import { MobileWebNotice } from "@/components/MobileWebNotice";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, useParams, useLocation } from "react-router-dom";
 import { ThemeProvider } from "next-themes";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
@@ -25,6 +25,13 @@ import { preloadCriticalRoutes } from "@/lib/routePreload";
 import { usePageTracking } from "@/hooks/usePageTracking";
 
 function PageTracker() { usePageTracking(); return null; }
+
+// UX-6: preserves query string + params when redirecting legacy /patient/* → /personer/*.
+function PatientToPersonerRedirect() {
+  const { patientId } = useParams();
+  const { search } = useLocation();
+  return <Navigate to={`/personer/${patientId ?? ''}${search}`} replace />;
+}
 
 class ChunkRecoveryBoundary extends Component<{ children: ReactNode }, { hasError: boolean }> {
   state = { hasError: false };
@@ -346,11 +353,16 @@ const App = () => (
               </ProtectedRoute>
             } />
 
-            <Route path="/patient/:patientId" element={
+            {/* UX-6: canonical route is /personer/:patientId — "patient" is
+                clinical jargon. Old /patient/:patientId kept as redirect so
+                existing care-team links and bookmarks keep working. */}
+            <Route path="/personer/:patientId" element={
               <ProtectedRoute>
                 <AppLayout><PatientDetail /></AppLayout>
               </ProtectedRoute>
             } />
+            <Route path="/patient/:patientId" element={<PatientToPersonerRedirect />} />
+            
             <Route path="/mina-lakare" element={
               <ProtectedRoute>
                 <AppLayout><ManageConnections /></AppLayout>

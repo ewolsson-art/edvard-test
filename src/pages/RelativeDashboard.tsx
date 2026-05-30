@@ -171,7 +171,7 @@ const RelativeDashboard = () => {
               const hasCheckedIn = entry !== null && entry !== undefined;
               const name = getPatientName(connection);
               return (
-                <button key={connection.id} className="group w-full text-left rounded-2xl border p-5 transition-all duration-200 hover:shadow-[0_0_24px_hsl(var(--primary)/0.06)] hover:border-foreground/15 hover:scale-[1.01] active:scale-[0.99] bg-foreground/[0.03] border-foreground/10 backdrop-blur-sm" onClick={() => navigate(`/patient/${connection.patient_id}`)}>
+                <button key={connection.id} className="group w-full text-left rounded-2xl border p-5 transition-all duration-200 hover:shadow-[0_0_24px_hsl(var(--primary)/0.06)] hover:border-foreground/15 hover:scale-[1.01] active:scale-[0.99] bg-foreground/[0.03] border-foreground/10 backdrop-blur-sm" onClick={() => navigate(`/personer/${connection.patient_id}`)}>
                   <div className="flex gap-4">
                     <Avatar className="w-12 h-12 shrink-0 ring-1 ring-white/[0.06]">
                       {connection.patient_profile?.avatar_url && <AvatarImage src={connection.patient_profile.avatar_url} alt={name} className="object-cover" />}

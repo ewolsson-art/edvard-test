@@ -182,7 +182,7 @@ export const RelativePatientConnectionsSection = () => {
                 className="gap-1"
                 asChild
               >
-                <a href={`/patient/${connection.patient_id}`}>
+                <a href={`/personer/${connection.patient_id}`}>
                   <Eye className="w-4 h-4" />
                   Visa
                 </a>
