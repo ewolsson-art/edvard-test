@@ -53,6 +53,7 @@ export function CustomQuestionsSection({ questions, onAdd, onRemove }: CustomQue
                 size="icon"
                 className="h-8 w-8 text-muted-foreground hover:text-destructive"
                 onClick={() => onRemove(q.id)}
+                aria-label="Ta bort fråga"
               >
                 <Trash2 className="w-4 h-4" />
               </Button>
@@ -69,12 +70,14 @@ export function CustomQuestionsSection({ questions, onAdd, onRemove }: CustomQue
           onKeyDown={(e) => { if (e.key === 'Enter') { (e.target as HTMLInputElement).blur(); handleAdd(); } }}
           maxLength={200}
           disabled={isAdding}
+          aria-label="Ny anpassad fråga"
         />
         <Button
           onClick={handleAdd}
           disabled={!newQuestion.trim() || isAdding}
           size="icon"
           className="shrink-0"
+          aria-label="Lägg till fråga"
         >
           <Plus className="w-4 h-4" />
         </Button>

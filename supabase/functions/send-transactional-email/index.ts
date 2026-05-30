@@ -25,9 +25,13 @@ function generateToken(): string {
     .join('')
 }
 
-// Auth note: this function uses verify_jwt = true in config.toml, so Supabase's
-// gateway validates the caller's JWT (anon or service_role) before the request
-// reaches this code. No in-function auth check is needed.
+// Auth note: verify_jwt = true gates anonymous requests, but a logged-in user
+// could still craft arbitrary {templateName, recipientEmail, templateData}.
+// We additionally require the caller to either:
+//   (a) hold the service_role JWT (used by edge functions / admin code), or
+//   (b) be sending to their own email address.
+// This prevents authenticated users from sending Toddy-branded emails to
+// arbitrary recipients (phishing) via this endpoint.
 
 Deno.serve(async (req) => {
   // Handle CORS preflight
@@ -115,6 +119,39 @@ Deno.serve(async (req) => {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       }
     )
+  }
+
+  // Authorization: must be service_role OR the caller's own email
+  const authHeader = req.headers.get('Authorization') || ''
+  const serviceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') || ''
+  const isServiceRole =
+    !!serviceKey && authHeader === `Bearer ${serviceKey}`
+  if (!isServiceRole) {
+    try {
+      const anonClient = createClient(
+        Deno.env.get('SUPABASE_URL')!,
+        Deno.env.get('SUPABASE_ANON_KEY') || Deno.env.get('SUPABASE_PUBLISHABLE_KEY') || '',
+        { global: { headers: { Authorization: authHeader } } }
+      )
+      const { data: { user } } = await anonClient.auth.getUser()
+      if (!user || !user.email) {
+        return new Response(
+          JSON.stringify({ error: 'Unauthorized' }),
+          { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        )
+      }
+      if (user.email.toLowerCase() !== effectiveRecipient.toLowerCase()) {
+        return new Response(
+          JSON.stringify({ error: 'Recipient must match authenticated user email' }),
+          { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        )
+      }
+    } catch (_authErr) {
+      return new Response(
+        JSON.stringify({ error: 'Unauthorized' }),
+        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      )
+    }
   }
 
   // Create Supabase client with service role (bypasses RLS)

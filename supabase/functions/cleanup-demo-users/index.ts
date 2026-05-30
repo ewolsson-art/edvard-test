@@ -21,7 +21,18 @@ Deno.serve(async (req) => {
   try {
     const url = Deno.env.get("SUPABASE_URL")!;
     const service = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+
+    // Authorization: only the service role (used by cron) may run this destructive cleanup.
+    const authHeader = req.headers.get("Authorization") || "";
+    if (authHeader !== `Bearer ${service}`) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
     const admin = createClient(url, service);
+
 
     const cutoff = Date.now() - MAX_AGE_HOURS * 60 * 60 * 1000;
 

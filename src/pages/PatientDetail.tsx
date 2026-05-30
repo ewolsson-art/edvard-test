@@ -105,12 +105,12 @@ const PatientDetail = () => {
       {/* Sticky compact header */}
       <div className="sticky top-0 z-30 bg-background/85 backdrop-blur-md border-b border-border/30">
         <div className="max-w-3xl mx-auto md:mx-0 px-5 md:px-8 py-3 flex items-center gap-3">
-          <Button variant="ghost" size="icon" onClick={handleBack} className="shrink-0">
+          <Button variant="ghost" size="icon" onClick={handleBack} className="shrink-0" aria-label="Tillbaka">
             <ChevronLeft className="w-5 h-5" />
           </Button>
           <div className="flex-1 min-w-0">
             <h1 className="font-display text-base font-semibold truncate">{patientName}</h1>
-            <p className="text-[11px] text-muted-foreground/60 truncate">{sinceLabel}</p>
+            <p className="text-[11px] text-muted-foreground truncate">{sinceLabel}</p>
           </div>
         </div>
       </div>

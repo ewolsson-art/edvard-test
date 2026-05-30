@@ -81,7 +81,10 @@ const AuthCallback = () => {
       const refreshToken = hashParams.get("refresh_token");
       const errorCode = hashParams.get("error_code") || searchParams.get("error_code");
       const errorDescription = hashParams.get("error_description") || searchParams.get("error_description");
-      const next = searchParams.get("next") || "/oversikt";
+      // Validate `next` to prevent open redirect: only allow same-origin paths starting with "/"
+      // (and not "//" which browsers treat as a protocol-relative URL).
+      const rawNext = searchParams.get("next") || "/oversikt";
+      const next = rawNext.startsWith("/") && !rawNext.startsWith("//") ? rawNext : "/oversikt";
 
       if (errorCode === "otp_expired" || errorDescription) {
         const msg = errorCode === "otp_expired"

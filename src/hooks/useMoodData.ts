@@ -9,11 +9,14 @@ import { toast as sonnerToast } from 'sonner';
 const MOOD_ENTRIES_KEY = 'mood-entries';
 
 async function fetchMoodEntries(userId: string): Promise<MoodEntry[]> {
+  // Cap at 730 entries (~2 years of daily check-ins) to avoid silently hitting
+  // Supabase's default 1000-row limit and losing older data without warning.
   const { data, error } = await supabase
     .from('mood_entries')
     .select('*')
     .eq('user_id', userId)
-    .order('date', { ascending: false });
+    .order('date', { ascending: false })
+    .limit(730);
 
   if (error) throw error;
 
