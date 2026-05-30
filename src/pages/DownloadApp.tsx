@@ -224,41 +224,7 @@ export default function DownloadApp() {
           Android — kommer snart
         </div>
 
-        {/* Funktioner */}
-        <ul className="w-full space-y-4 text-left mb-10">
-          {[
-            {
-              icon: Heart,
-              title: "Följ ditt mående",
-              desc: "Enkla check-ins varje dag — utan press.",
-            },
-            {
-              icon: Sparkles,
-              title: "AI-drivna insikter",
-              desc: "Upptäck mönster i sömn, energi och stämning.",
-            },
-            {
-              icon: Shield,
-              title: "Privat och säkert",
-              desc: "Din data tillhör dig — alltid krypterad.",
-            },
-          ].map(({ icon: Icon, title, desc }) => (
-            <li
-              key={title}
-              className="flex items-start gap-4 p-4 rounded-2xl bg-white/[0.03] ring-1 ring-white/[0.06]"
-            >
-              <div className="shrink-0 h-10 w-10 rounded-xl bg-[hsl(45_85%_55%/0.12)] flex items-center justify-center">
-                <Icon className="h-5 w-5 text-[hsl(45_85%_60%)]" />
-              </div>
-              <div>
-                <h3 className="text-base font-semibold text-white mb-0.5">{title}</h3>
-                <p className="text-sm text-white/60 leading-snug">{desc}</p>
-              </div>
-            </li>
-          ))}
-        </ul>
-
-        <p className="text-xs text-white/40 max-w-xs">
+        <p className="text-sm text-white/50 max-w-sm">
           Toddy är en mobilapp. För att logga in eller skapa konto behöver du
           ladda ner appen.
         </p>
