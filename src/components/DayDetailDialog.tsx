@@ -98,14 +98,6 @@ export function DayDetailDialog({
                 <p className="font-semibold">{moodLabels[entry.mood]}</p>
               </div>
             </div>
-            {entry.comment && (
-              <div className="mt-3 pt-3 border-t border-border/30">
-                <div className="flex items-start gap-2 text-sm text-muted-foreground">
-                  <MessageSquare className="w-4 h-4 mt-0.5 shrink-0" />
-                  <p>{entry.comment}</p>
-                </div>
-              </div>
-            )}
           </div>
 
           {/* Grid for sleep/eating/exercise */}
