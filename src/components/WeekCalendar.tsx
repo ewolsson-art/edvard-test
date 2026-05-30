@@ -165,7 +165,7 @@ export function WeekCalendar({
                 moodBg,
                 showMissed && "bg-muted-foreground/10",
                 isTodayDate && !mood && "bg-foreground/[0.06] ring-1 ring-foreground/40 shadow-[0_0_18px_-4px_hsl(var(--foreground)/0.35)]",
-                isTodayDate && mood && "ring-2 ring-[hsl(45_85%_55%/0.75)] shadow-[0_0_18px_-4px_hsl(45_85%_55%/0.55)]",
+                isTodayDate && mood && "ring-2 ring-foreground/60 shadow-[0_0_18px_-4px_hsl(var(--foreground)/0.45)]",
               )}
             >
               {mood ? (
