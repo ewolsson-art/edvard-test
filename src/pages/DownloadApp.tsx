@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Apple, Smartphone, Sparkles, Shield, Heart, Menu, X } from "lucide-react";
+import { Apple, Smartphone, Menu, X } from "lucide-react";
 import { TurtleLogo } from "@/components/TurtleLogo";
 import { SEO } from "@/components/seo/SEO";
 
