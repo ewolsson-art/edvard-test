@@ -75,7 +75,7 @@ export function AuthNavbar() {
         </div>
       </nav>
 
-      {/* Mobile menu - fullscreen overlay inspired by Residy */}
+      {/* Mobile menu - fullscreen overlay. Mobile web has no auth: nav links are primary. */}
       {isMobileMenuOpen && (
         <div className="md:hidden fixed inset-0 z-[9999] bg-black flex flex-col">
           {/* Close button top-right */}
@@ -89,35 +89,24 @@ export function AuthNavbar() {
             </button>
           </div>
 
-          {/* Primary links - large, bold, left-aligned */}
-          <div className="flex-1 flex flex-col px-8 pt-8">
-            <div className="space-y-4">
-              <button
-                onClick={() => { setIsMobileMenuOpen(false); navigate('/logga-in'); }}
-                className="block text-left text-3xl font-bold text-white tracking-tight hover:text-white/80 transition-colors"
-              >
-                {t('nav.login')}
-              </button>
-              <button
-                onClick={() => { setIsMobileMenuOpen(false); navigate('/skapa-konto'); }}
-                className="block text-left text-3xl font-bold text-white tracking-tight hover:text-white/80 transition-colors"
-              >
-                {t('nav.createAccount')}
-              </button>
-            </div>
-          </div>
+          {/* Primary nav links - large, bold, left-aligned */}
+          <nav className="flex-1 flex flex-col px-8 pt-8 overflow-y-auto">
+            <ul className="space-y-5">
+              {navItems.map((item) => (
+                <li key={item.href}>
+                  <button
+                    onClick={() => handleNavClick(item.href)}
+                    className="block text-left text-3xl font-display font-bold text-white tracking-tight hover:text-[hsl(45_85%_60%)] transition-colors"
+                  >
+                    {item.label}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </nav>
 
-          {/* Secondary links at the bottom */}
-          <div className="px-8 pb-12 space-y-3 border-t border-white/10 pt-6">
-            {navItems.map((item) => (
-              <button
-                key={item.href}
-                onClick={() => handleNavClick(item.href)}
-                className="block text-left text-base text-white/50 hover:text-white/80 transition-colors"
-              >
-                {item.label}
-              </button>
-            ))}
+          {/* Language switcher at the bottom */}
+          <div className="px-8 pb-12 border-t border-white/10 pt-6">
             <LanguageSwitcher variant="mobile-menu" />
           </div>
         </div>
