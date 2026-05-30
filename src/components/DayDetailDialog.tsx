@@ -1,6 +1,6 @@
 import { format, isBefore, startOfDay, isToday } from 'date-fns';
 import { sv, enUS } from 'date-fns/locale';
-import { Zap, Sun, CloudRain, Moon, Utensils, Dumbbell, Pill, MessageSquare, ThumbsUp, ThumbsDown, Check, X, Pencil, Plus } from 'lucide-react';
+import { Zap, Sun, CloudRain, Moon, Utensils, Dumbbell, Pill, MessageSquare, ThumbsUp, ThumbsDown, Check, X, Pencil, Plus, Tag, StickyNote } from 'lucide-react';
 import { MoodEntry, MoodType, QUALITY_LABELS, EXERCISE_TYPE_LABELS, MOOD_ICONS } from '@/types/mood';
 import { useDiagnosisConfig } from '@/hooks/useDiagnosisConfig';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
