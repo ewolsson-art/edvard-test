@@ -147,7 +147,7 @@ export function DayDetailDialog({
           {canEdit && (
             <button
               onClick={handleEditOrAdd}
-              className="w-full flex items-center justify-center gap-2 py-3 rounded-full border border-primary/30 bg-primary/5 text-primary font-semibold text-sm hover:bg-primary/10 active:scale-[0.97] transition-all"
+              className="w-full flex items-center justify-center gap-2 py-3 rounded-full border border-border bg-muted/30 text-muted-foreground font-medium text-sm hover:bg-muted/50 hover:text-foreground active:scale-[0.97] transition-all"
             >
               <Pencil className="w-4 h-4" />
               {t('dayDetail.editCheckin', 'Ändra incheckning')}
