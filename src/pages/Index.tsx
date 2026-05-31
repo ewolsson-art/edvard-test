@@ -188,11 +188,13 @@ const Index = () => {
       </div>
       {(() => {
         const lastDate = streakData.lastCheckinDate;
-        const daysSince = lastDate ? differenceInDays(new Date(), parseISO(lastDate)) : 0;
-        if (!lastDate || daysSince < 2 || !user?.id) return null;
+        // Faktiska missade dagar (exklusive idag) — inte kalenderavstånd. Annars
+        // räknas "idag" in fast användaren inte har "missat" idag ännu.
+        const missedCount = streakData.missedDays.length;
+        if (!lastDate || missedCount < 2 || !user?.id) return null;
         return (
           <WelcomeBackDialog
-            daysSinceLastCheckin={daysSince}
+            daysSinceLastCheckin={missedCount}
             currentStreak={streakData.currentStreak}
             potentialStreak={streakData.potentialStreak}
             firstName={firstName}
