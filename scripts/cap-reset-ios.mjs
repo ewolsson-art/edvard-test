@@ -40,6 +40,7 @@ if (existsSync(path.resolve("ios"))) {
 await run("npm", ["run", "build"]);
 await run("npx", ["cap", "add", "ios"]);
 await run("npx", ["cap", "sync", "ios"]);
+await run("node", ["scripts/install-ios-native-guard.mjs"]);
 
 removeServerUrl(path.resolve("capacitor.config.json"));
 removeServerUrl(path.resolve("ios/App/App/capacitor.config.json"));

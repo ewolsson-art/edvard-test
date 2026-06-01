@@ -39,6 +39,7 @@ function removeAppDerivedData() {
 function verifyNativeBundle() {
   const iosConfigPath = path.resolve("ios/App/App/capacitor.config.json");
   const iosPublicIndexPath = path.resolve("ios/App/App/public/index.html");
+  const storyboardPath = path.resolve("ios/App/App/Base.lproj/Main.storyboard");
 
   if (!existsSync(iosConfigPath)) {
     throw new Error("Saknar ios/App/App/capacitor.config.json efter sync.");
@@ -51,7 +52,11 @@ function verifyNativeBundle() {
   if (!existsSync(iosPublicIndexPath)) {
     throw new Error("Saknar ios/App/App/public/index.html — webbundlen är inte synkad till Xcode.");
   }
-  console.log("✅ Verifierat: iOS kör bundled app inne i WebView, utan extern URL.");
+  const storyboardText = readFileSync(storyboardPath, "utf8");
+  if (!storyboardText.includes("ToddyBridgeViewController")) {
+    throw new Error("iOS använder inte ToddyBridgeViewController — native navigation guard saknas.");
+  }
+  console.log("✅ Verifierat: iOS kör bundled app inne i WebView med native guard mot externa URL:er.");
 }
 
 const configPath = path.resolve("capacitor.config.json");
@@ -66,6 +71,7 @@ if (!existsSync(path.resolve("ios"))) {
 console.log("Bygger webben och synkar till Xcode...");
 await run("npm", ["run", "build"]);
 await run("npx", ["cap", "sync", "ios"]);
+await run("node", ["scripts/install-ios-native-guard.mjs"]);
 removeServerUrl(configPath);
 removeServerUrl(path.resolve("ios/App/App/capacitor.config.json"));
 verifyNativeBundle();
