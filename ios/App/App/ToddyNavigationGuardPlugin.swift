@@ -28,7 +28,7 @@ public class ToddyNavigationGuardPlugin: CAPPlugin, CAPBridgedPlugin {
         // This is the new strategy: never let Capacitor fall through to
         // UIApplication.shared.open(...), which is what opens Safari/external links.
         if scheme == "http" || scheme == "https" || absolute.contains("lovableproject") || absolute.contains("lovable.app") {
-            CAPLog.print("🛑 Blocked external top-level navigation: (url.absoluteString)")
+            CAPLog.print("🛑 Blocked external top-level navigation: \(url.absoluteString)")
             if let startURL = bridge?.config.serverURL {
                 DispatchQueue.main.async { [weak self] in
                     self?.bridge?.webView?.load(URLRequest(url: startURL))
