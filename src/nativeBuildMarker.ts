@@ -1,0 +1,1 @@
+export const NATIVE_BUILD_MARKER = "WEB_PREVIEW";
