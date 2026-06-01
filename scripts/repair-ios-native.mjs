@@ -1,10 +1,19 @@
 import { existsSync, readFileSync, writeFileSync, rmSync, readdirSync } from "node:fs";
-import { homedir } from "node:os";
+import { homedir, networkInterfaces } from "node:os";
 import { join } from "node:path";
 
 const rootConfigPath = "capacitor.config.json";
 const iosConfigPath = "ios/App/App/capacitor.config.json";
-const expectedUrl = "https://98da7b9e-4e91-4e4a-9b6d-1a1ba6269510.lovableproject.com?forceHideBadge=true&native=1&native_dev=1";
+function getLanIp() {
+  for (const entries of Object.values(networkInterfaces())) {
+    for (const entry of entries ?? []) {
+      if (entry.family === "IPv4" && !entry.internal) return entry.address;
+    }
+  }
+  return "localhost";
+}
+
+const expectedUrl = `http://${process.env.CAP_DEV_HOST || getLanIp()}:8080?native=1&native_dev=1`;
 
 const readJson = (path) => JSON.parse(readFileSync(path, "utf8"));
 const writeJson = (path, data) => writeFileSync(path, `${JSON.stringify(data, null, 2)}\n`);
