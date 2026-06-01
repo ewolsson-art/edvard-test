@@ -6,7 +6,7 @@ import path from "node:path";
 
 const BUILD_ID = new Date().toISOString().replace(/[-:.TZ]/g, "").slice(0, 14);
 const OFFLINE_APP_ID = "app.lovable.edvardtest.offline";
-const OFFLINE_APP_NAME = "Toddy Offline";
+const OFFLINE_APP_NAME = "Toddy";
 const OFFLINE_MARKER = `OFFLINE_IOS_${BUILD_ID}`;
 
 function run(command, args, options = {}) {
@@ -76,6 +76,7 @@ function patchNativeIdentityAndConfig() {
 
   let plist = readFileSync(plistPath, "utf8");
   plist = patchPlistValue(plist, "CFBundleDisplayName", OFFLINE_APP_NAME);
+  plist = patchPlistValue(plist, "CFBundleName", OFFLINE_APP_NAME);
   writeFileSync(plistPath, plist);
 
   let project = readFileSync(projectPath, "utf8");
@@ -125,7 +126,7 @@ function verifyOfflineBundle() {
     throw new Error("Main.storyboard använder inte ToddyBridgeViewController.");
   }
   if (!fileContains(path.resolve("ios/App/App/Info.plist"), OFFLINE_APP_NAME)) {
-    throw new Error("Info.plist visar inte Toddy Offline.");
+    throw new Error("Info.plist visar inte Toddy.");
   }
   if (!fileContains(path.resolve("ios/App/App.xcodeproj/project.pbxproj"), OFFLINE_APP_ID)) {
     throw new Error("Xcode-projektet har inte offline bundle id.");
