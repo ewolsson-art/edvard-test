@@ -1,3 +1,4 @@
+import { spawnSync } from "node:child_process";
 import { existsSync, readFileSync, writeFileSync, rmSync, readdirSync } from "node:fs";
 import { homedir } from "node:os";
 import { join } from "node:path";
@@ -20,6 +21,11 @@ if (existsSync(iosConfigPath)) {
   console.log(`Removed server.url from ${iosConfigPath}`);
 } else {
   console.log(`${iosConfigPath} not found yet. Run: npx cap sync ios`);
+}
+
+if (existsSync("ios/App/App.xcodeproj/project.pbxproj")) {
+  const result = spawnSync("node", ["scripts/install-ios-native-guard.mjs"], { stdio: "inherit" });
+  if (result.status !== 0) process.exit(result.status ?? 1);
 }
 
 const derivedDataPath = join(homedir(), "Library/Developer/Xcode/DerivedData");
