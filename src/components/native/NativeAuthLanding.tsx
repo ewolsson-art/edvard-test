@@ -10,8 +10,6 @@ import { useAuth } from "@/hooks/useAuth";
 import { useProfile } from "@/hooks/useProfile";
 import { useToast } from "@/hooks/use-toast";
 import { lovable } from "@/integrations/lovable/index";
-import { startDemoSession } from "@/lib/demoMode";
-import { completeDemoTransition, startDemoTransition } from "@/lib/demoTransition";
 
 const loginSchema = z.object({
   email: z.string().email(),
@@ -36,7 +34,6 @@ export function NativeAuthLanding() {
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
-  const [demoLoading, setDemoLoading] = useState(false);
 
   // If already signed in, route onward
   useEffect(() => {
@@ -48,7 +45,6 @@ export function NativeAuthLanding() {
       } else {
         navigate("/oversikt", { replace: true });
       }
-      completeDemoTransition();
     }
   }, [user, loading, profileLoading, profile, navigate]);
 
@@ -69,13 +65,10 @@ export function NativeAuthLanding() {
       setErrors(fieldErrors);
       return;
     }
-    setErrors({});
     setIsSubmitting(true);
     tap();
-    startDemoTransition("login", { autoHide: false });
     const { error } = await signIn(email, password);
     if (error) {
-      completeDemoTransition();
       setIsSubmitting(false);
       let msg = t("auth.loginError");
       if (error.message.includes("Invalid login credentials")) msg = t("auth.wrongCredentials");
@@ -88,31 +81,13 @@ export function NativeAuthLanding() {
 
   const handleOAuth = async (provider: "google" | "apple") => {
     tap();
-    startDemoTransition("login", { autoHide: false });
     const result = await lovable.auth.signInWithOAuth(provider, {
       redirect_uri: window.location.origin,
     });
     if (result.error) {
-      completeDemoTransition();
       toast({ title: t("common.somethingWrong"), variant: "destructive" });
     }
     if (!result.redirected && !result.error) navigate("/oversikt", { replace: true });
-  };
-
-  const handleDemo = async () => {
-    if (demoLoading) return;
-    tap();
-    setDemoLoading(true);
-    startDemoTransition("setup", { autoHide: false });
-    const { error } = await startDemoSession();
-    if (error) {
-      setDemoLoading(false);
-      completeDemoTransition();
-      toast({ title: "Kunde inte starta demo", description: "Försök igen om en stund.", variant: "destructive" });
-      return;
-    }
-    navigate("/", { replace: true });
-    completeDemoTransition();
   };
 
   return (
@@ -256,22 +231,6 @@ export function NativeAuthLanding() {
             </button>
           </div>
         </form>
-
-        {/* Demo link */}
-        <button
-          onClick={handleDemo}
-          disabled={demoLoading}
-          className="mt-4 mb-2 w-full h-[48px] rounded-full text-white/60 font-medium text-[14px] active:scale-[0.97] active:text-white transition-all duration-150 disabled:opacity-60 flex items-center justify-center gap-2"
-        >
-          {demoLoading ? (
-            <>
-              <Loader2 className="h-4 w-4 animate-spin" />
-              Förbereder demo…
-            </>
-          ) : (
-            <>Testa utan konto →</>
-          )}
-        </button>
       </div>
     </div>
   );
