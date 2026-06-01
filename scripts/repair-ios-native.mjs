@@ -4,7 +4,7 @@ import { join } from "node:path";
 
 const rootConfigPath = "capacitor.config.json";
 const iosConfigPath = "ios/App/App/capacitor.config.json";
-const expectedUrl = "https://98da7b9e-4e91-4e4a-9b6d-1a1ba6269510.lovableproject.com?forceHideBadge=true&native_v=20260601_1725";
+const expectedUrl = "https://98da7b9e-4e91-4e4a-9b6d-1a1ba6269510.lovableproject.com?forceHideBadge=true&native=1&native_v=20260601_1810";
 
 const readJson = (path) => JSON.parse(readFileSync(path, "utf8"));
 const writeJson = (path, data) => writeFileSync(path, `${JSON.stringify(data, null, 2)}\n`);
