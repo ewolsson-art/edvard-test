@@ -141,12 +141,10 @@ const Login = () => {
             <button
               type="button"
               onClick={async () => {
-                startDemoTransition("login", { autoHide: false });
                 const result = await lovable.auth.signInWithOAuth("google", {
                   redirect_uri: window.location.origin,
                 });
                 if (result.error) {
-                  completeDemoTransition();
                   toast({ title: t("common.somethingWrong"), variant: "destructive" });
                 }
                 if (!result.redirected && !result.error) navigate("/oversikt", { replace: true });
@@ -164,12 +162,10 @@ const Login = () => {
             <button
               type="button"
               onClick={async () => {
-                startDemoTransition("login", { autoHide: false });
                 const result = await lovable.auth.signInWithOAuth("apple", {
                   redirect_uri: window.location.origin,
                 });
                 if (result.error) {
-                  completeDemoTransition();
                   toast({ title: t("common.somethingWrong"), variant: "destructive" });
                 }
                 if (!result.redirected && !result.error) navigate("/oversikt", { replace: true });
