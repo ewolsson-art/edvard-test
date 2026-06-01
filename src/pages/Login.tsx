@@ -13,8 +13,6 @@ import { SEO } from "@/components/seo/SEO";
 import { Eye, EyeOff, Loader2, Mail, CheckCircle2, Lock, ShieldCheck, ArrowLeft, Sparkles } from "lucide-react";
 import { TurtleLogo } from "@/components/TurtleLogo";
 import { useTranslation } from 'react-i18next';
-import { startDemoSession } from "@/lib/demoMode";
-import { completeDemoTransition, startDemoTransition } from "@/lib/demoTransition";
 
 const loginSchema = z.object({
   email: z.string().email(),
@@ -27,7 +25,6 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [validationErrors, setValidationErrors] = useState<{ email?: string; password?: string }>({});
-  const [demoLoading, setDemoLoading] = useState(false);
   const [searchParams] = useSearchParams();
   const isVerified = searchParams.get("verified") === "true";
 
@@ -46,7 +43,6 @@ const Login = () => {
       } else {
         navigate("/oversikt", { replace: true });
       }
-      completeDemoTransition();
     }
   }, [user, loading, profileLoading, profile, navigate]);
 
@@ -73,12 +69,10 @@ const Login = () => {
     if (!validateForm()) return;
     
     setIsSubmitting(true);
-    startDemoTransition("login", { autoHide: false });
 
     const { error } = await signIn(email, password);
 
     if (error) {
-      completeDemoTransition();
       let errorMessage = t("auth.loginError");
       if (error.message.includes("Invalid login credentials")) {
         errorMessage = t("auth.wrongCredentials");
@@ -96,25 +90,6 @@ const Login = () => {
 
     // Keep overlay up; redirect effect will unmount this page.
     setIsSubmitting(false);
-  };
-
-  const handleDemo = async () => {
-    if (demoLoading) return;
-    setDemoLoading(true);
-    startDemoTransition("setup", { autoHide: false });
-    const { error } = await startDemoSession();
-    if (error) {
-      setDemoLoading(false);
-      completeDemoTransition();
-      toast({
-        title: "Kunde inte starta demo",
-        description: "Försök igen om en stund.",
-        variant: "destructive",
-      });
-      return;
-    }
-    navigate("/", { replace: true });
-    completeDemoTransition();
   };
 
   if (loading) {
@@ -166,12 +141,10 @@ const Login = () => {
             <button
               type="button"
               onClick={async () => {
-                startDemoTransition("login", { autoHide: false });
                 const result = await lovable.auth.signInWithOAuth("google", {
                   redirect_uri: window.location.origin,
                 });
                 if (result.error) {
-                  completeDemoTransition();
                   toast({ title: t("common.somethingWrong"), variant: "destructive" });
                 }
                 if (!result.redirected && !result.error) navigate("/oversikt", { replace: true });
@@ -189,12 +162,10 @@ const Login = () => {
             <button
               type="button"
               onClick={async () => {
-                startDemoTransition("login", { autoHide: false });
                 const result = await lovable.auth.signInWithOAuth("apple", {
                   redirect_uri: window.location.origin,
                 });
                 if (result.error) {
-                  completeDemoTransition();
                   toast({ title: t("common.somethingWrong"), variant: "destructive" });
                 }
                 if (!result.redirected && !result.error) navigate("/oversikt", { replace: true });
