@@ -1,6 +1,6 @@
 {
   "appId": "app.lovable.edvardtest",
-  "appName": "edvard-test",
+  "appName": "Toddy",
   "webDir": "dist",
   "plugins": {
     "SplashScreen": {
