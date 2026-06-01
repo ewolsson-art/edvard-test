@@ -12,7 +12,9 @@ const NATIVE_FLAG_KEY = 'toddy_is_native';
  *      we get a correct first paint even before the Capacitor JS bridge
  *      is fully ready. Persisted to localStorage so it survives in-app
  *      navigation that strips query params.
- *   3. localStorage flag from a previous detection
+ *   3. ?native_dev=1 URL flag — stable native development marker that does
+ *      not need changing for future React/CSS edits.
+ *   4. localStorage flag from a previous detection
  */
 function detectNative(): boolean {
   if (typeof window === 'undefined') return false;
@@ -23,7 +25,7 @@ function detectNative(): boolean {
   }
   try {
     const params = new URLSearchParams(window.location.search);
-    if (params.get('native') === '1') {
+    if (params.get('native') === '1' || params.get('native_dev') === '1') {
       try { localStorage.setItem(NATIVE_FLAG_KEY, '1'); } catch { /* ignore */ }
       return true;
     }
