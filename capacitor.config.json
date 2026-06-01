@@ -3,7 +3,7 @@
   "appName": "edvard-test",
   "webDir": "dist",
   "server": {
-    "url": "https://toddy.se?native_v=20260601_1530",
+    "url": "https://id-preview--98da7b9e-4e91-4e4a-9b6d-1a1ba6269510.lovable.app?forceHideBadge=true&native_v=20260601_1550",
     "cleartext": true
   },
   "plugins": {
