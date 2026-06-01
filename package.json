@@ -15,6 +15,7 @@
     "cap:android": "npx cap run android",
     "cap:sync": "npx cap sync",
     "cap:repair:ios": "node scripts/repair-ios-native.mjs && npx cap sync ios",
+    "cap:dev:ios": "node scripts/repair-ios-native.mjs && npx cap sync ios && npx cap open ios",
     "cap:open:ios": "npx cap open ios",
     "cap:open:android": "npx cap open android"
   },
