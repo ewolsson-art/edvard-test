@@ -17,6 +17,7 @@
     "cap:repair:ios": "node scripts/repair-ios-native.mjs && npx cap sync ios",
     "cap:dev:ios": "node scripts/cap-dev-ios.mjs",
     "cap:reset:ios": "node scripts/cap-reset-ios.mjs",
+    "cap:guard:ios": "node scripts/install-ios-native-guard.mjs",
     "cap:remote:ios": "node scripts/cap-remote-ios.mjs",
     "cap:serve:ios": "vite --host 0.0.0.0 --port 8080",
     "cap:build:ios": "node scripts/cap-mode.mjs local && npm run build && npx cap sync ios && npx cap open ios",
