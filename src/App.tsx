@@ -23,8 +23,17 @@ import { useAuth } from "@/hooks/useAuth";
 
 import { preloadCriticalRoutes } from "@/lib/routePreload";
 import { usePageTracking } from "@/hooks/usePageTracking";
+import { NATIVE_BUILD_MARKER } from "@/nativeBuildMarker";
 
 function PageTracker() { usePageTracking(); return null; }
+
+function NativeBuildMarker() {
+  return (
+    <div className="fixed left-2 top-[max(env(safe-area-inset-top),0.5rem)] z-[99999] rounded-full bg-primary px-2 py-1 text-[10px] font-bold text-primary-foreground shadow-lg md:hidden">
+      {NATIVE_BUILD_MARKER}
+    </div>
+  );
+}
 
 // UX-6: preserves query string + params when redirecting legacy /patient/* → /personer/*.
 function PatientToPersonerRedirect() {
@@ -195,6 +204,7 @@ const App = () => (
       <AuthProvider>
         <NotificationSchedulerProvider>
           <NativeShellInit />
+          <NativeBuildMarker />
           <Toaster />
           <Sonner />
           <DemoTransitionOverlay />
