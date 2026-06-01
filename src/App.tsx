@@ -283,18 +283,11 @@ const App = () => (
                 <AppLayout><CharacteristicDetail /></AppLayout>
               </ProtectedRoute>
             } />
-            <Route path="/community" element={<Navigate to="/forum" replace />} />
-            <Route path="/community/:threadId" element={<Navigate to="/forum/:threadId" replace />} />
-            <Route path="/forum" element={
-              <ProtectedRoute>
-                <AppLayout><Community /></AppLayout>
-              </ProtectedRoute>
-            } />
-            <Route path="/forum/:threadId" element={
-              <ProtectedRoute>
-                <AppLayout><CommunityThread /></AppLayout>
-              </ProtectedRoute>
-            } />
+            <Route path="/community" element={<Navigate to="/" replace />} />
+            <Route path="/community/:threadId" element={<Navigate to="/" replace />} />
+            <Route path="/forum" element={<Navigate to="/" replace />} />
+            <Route path="/forum/:threadId" element={<Navigate to="/" replace />} />
+
 
             <Route path="/mediciner" element={
               <ProtectedRoute>
@@ -341,11 +334,8 @@ const App = () => (
                 <AppLayout><Notifications /></AppLayout>
               </ProtectedRoute>
             } />
-            <Route path="/fraga" element={
-              <ProtectedRoute>
-                <AppLayout><AskToddy /></AppLayout>
-              </ProtectedRoute>
-            } />
+            <Route path="/fraga" element={<Navigate to="/" replace />} />
+
             <Route path="/admin" element={
               <ProtectedRoute>
                 <AppLayout><Admin /></AppLayout>

@@ -10,8 +10,6 @@ import { useToast } from '@/hooks/use-toast';
 import { useTranslation } from 'react-i18next';
 
 const TYPE_CONFIG: Record<string, { icon: typeof Bell; colorClass: string; bgClass: string }> = {
-  forum_reply: { icon: MessageCircle, colorClass: 'text-blue-400', bgClass: 'bg-blue-400/10' },
-  forum_like: { icon: Heart, colorClass: 'text-red-400', bgClass: 'bg-red-400/10' },
   connection_request: { icon: UserPlus, colorClass: 'text-primary', bgClass: 'bg-primary/10' },
   connection_approved: { icon: UserCheck, colorClass: 'text-mood-stable', bgClass: 'bg-mood-stable/10' },
   low_mood_alert: { icon: AlertTriangle, colorClass: 'text-amber-400', bgClass: 'bg-amber-400/10' },
@@ -142,8 +140,8 @@ const Notifications = () => {
       .forEach(n => deleteNotification(n.id));
   }, [isLoading, notifications, unreadCount, markAllAsRead, deleteNotification]);
 
-  const handleNavigate = (n: AppNotification) => {
-    if (n.reference_type === 'community_post' && n.reference_id) navigate(`/forum/${n.reference_id}`);
+  const handleNavigate = (_n: AppNotification) => {
+    // no-op: forum removed
   };
 
   const handleConnectionHandled = (notificationId: string) => deleteNotification(notificationId);

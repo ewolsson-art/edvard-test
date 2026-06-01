@@ -64,12 +64,11 @@ export function ProtectedRoute({ children, skipOnboardingCheck = false }: Protec
       return <Navigate to="/anhorig-onboarding" replace />;
     }
     
-    // Relatives can only access their dashboard, profile, reports, and patient detail views (no chat)
-    const relativeAllowedPaths = ['/anhorig', '/profil', '/anhorig-onboarding', '/anhorig-rapporter', '/forum', '/community', '/notiser', '/installningar'];
+    // Relatives can only access their dashboard, profile, reports, and patient detail views
+    const relativeAllowedPaths = ['/anhorig', '/profil', '/anhorig-onboarding', '/anhorig-rapporter', '/notiser', '/installningar'];
     const isPatientDetailPath = location.pathname.startsWith('/patient/');
-    const isForumThread = location.pathname.startsWith('/forum/') || location.pathname.startsWith('/community/');
     
-    if (!relativeAllowedPaths.includes(location.pathname) && !isPatientDetailPath && !isForumThread) {
+    if (!relativeAllowedPaths.includes(location.pathname) && !isPatientDetailPath) {
       return <Navigate to="/anhorig" replace />;
     }
     
