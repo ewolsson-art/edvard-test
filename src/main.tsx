@@ -1,5 +1,7 @@
 import "./index.css";
 
+console.info("[TODDY_NATIVE_URL_MARKER_20260601_1725]", window.location.href);
+
 const recoverFromModuleLoadFailure = async (error: unknown) => {
   const message = error instanceof Error ? error.message : String(error);
   const isModuleLoadFailure =
