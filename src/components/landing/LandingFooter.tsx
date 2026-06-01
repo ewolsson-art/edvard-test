@@ -1,7 +1,6 @@
 import { Link } from "react-router-dom";
 import { TurtleLogo } from "@/components/TurtleLogo";
 import { useTranslation } from 'react-i18next';
-import { useToast } from '@/hooks/use-toast';
 
 function FooterSkyline() {
   return (
