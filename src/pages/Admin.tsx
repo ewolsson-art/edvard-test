@@ -343,16 +343,8 @@ export default function Admin() {
               </Card>
 
 
-              {/* Community */}
-              <Card className="p-6 bg-white/[0.02] border-white/[0.06]">
-                <h2 className="text-sm font-semibold text-white/80 mb-4 flex items-center gap-2">
-                  <MessageCircle className="w-4 h-4" /> Forum
-                </h2>
-                <ul className="space-y-2 text-sm">
-                  <Row label="Inlägg totalt" value={stats.community.posts} />
-                  <Row label="Svar totalt" value={stats.community.replies} />
-                </ul>
-              </Card>
+
+
 
               {/* Connections */}
               <Card className="p-6 bg-white/[0.02] border-white/[0.06]">

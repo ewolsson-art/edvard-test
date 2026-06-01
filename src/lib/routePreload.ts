@@ -20,8 +20,6 @@ const loaders: Record<string, Loader> = {
   '/diagnoser': () => import('@/pages/Diagnoses'),
   '/kannetecken': () => import('@/pages/Characteristics'),
   '/notiser': () => import('@/pages/Notifications'),
-  '/forum': () => import('@/pages/Community'),
-  '/fraga': () => import('@/pages/AskToddy'),
   '/rapporter': () => import('@/pages/Reports'),
   '/anhorig': () => import('@/pages/RelativeDashboard'),
   '/anhorig-rapporter': () => import('@/pages/RelativeReports'),
@@ -53,5 +51,5 @@ export function preloadRoute(path: string) {
 
 /** Preload the routes most users hit right after login. */
 export function preloadCriticalRoutes() {
-  ['/', '/oversikt', '/profil', '/installningar', '/notiser', '/forum'].forEach(preloadRoute);
+  ['/', '/oversikt', '/profil', '/installningar', '/notiser'].forEach(preloadRoute);
 }

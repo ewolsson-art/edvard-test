@@ -32,14 +32,7 @@ const patientNavGroups = [
       { titleKey: "sidebar.today", url: "/", icon: CalendarDays, primary: true },
       { titleKey: "sidebar.overview", url: "/oversikt", icon: BarChart3 },
       { titleKey: "sidebar.patterns", url: "/monster", icon: Sparkles },
-      { titleKey: "sidebar.forum", url: "/forum", icon: MessageCircle },
       { titleKey: "sidebar.notifications", url: "/notiser", icon: Bell },
-    ],
-  },
-  {
-    labelKey: "sidebar.assistant",
-    items: [
-      { titleKey: "sidebar.askToddy", url: "/fraga", icon: Bot },
     ],
   },
   {
@@ -73,7 +66,6 @@ const relativeNavGroups = [
     labelKey: "sidebar.overview",
     items: [
       { titleKey: "sidebar.home", url: "/anhorig", icon: Home, primary: true },
-      { titleKey: "sidebar.forum", url: "/forum", icon: MessageCircle },
       { titleKey: "sidebar.notifications", url: "/notiser", icon: Bell },
     ],
   },

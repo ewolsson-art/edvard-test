@@ -46,9 +46,8 @@ export function BottomTabBar() {
   const patientTabs: TabItem[] = [
     { to: '/', label: t('sidebar.today'), icon: CalendarDays, exact: true },
     { to: '/oversikt', label: t('sidebar.overview'), icon: BarChart3 },
-    { to: '/forum', label: t('sidebar.forum'), icon: MessageCircle },
-    { to: '/fraga', label: t('sidebar.askToddy'), icon: Bot },
-    { to: '/profil', label: t('sidebar.myProfile'), icon: UserCircle, dot: hasPending || unreadCount > 0 },
+    { to: '/notiser', label: t('sidebar.notifications'), icon: Bell, badge: unreadCount },
+    { to: '/profil', label: t('sidebar.myProfile'), icon: UserCircle, dot: hasPending },
   ];
 
   const doctorTabs: TabItem[] = [
@@ -59,7 +58,6 @@ export function BottomTabBar() {
 
   const relativeTabs: TabItem[] = [
     { to: '/anhorig', label: t('sidebar.home'), icon: Home, exact: true },
-    { to: '/forum', label: t('sidebar.forum'), icon: MessageCircle },
     { to: '/notiser', label: t('sidebar.notifications'), icon: Bell, badge: unreadCount },
     { to: '/profil', label: t('sidebar.myProfile'), icon: UserCircle, dot: hasPending },
   ];

@@ -122,14 +122,11 @@ const ConfirmEmail = lazy(() => import("./pages/ConfirmEmail"));
 const Characteristics = lazy(() => import("./pages/Characteristics"));
 const CharacteristicDetail = lazy(() => import("./pages/CharacteristicDetail"));
 const CompleteProfile = lazy(() => import("./pages/CompleteProfile"));
-const Community = lazy(() => import("./pages/Community"));
-const CommunityThread = lazy(() => import("./pages/CommunityThread"));
 const Notifications = lazy(() => import("./pages/Notifications"));
 const Unsubscribe = lazy(() => import("./pages/Unsubscribe"));
 const Insights = lazy(() => import("./pages/Insights"));
 const BadDay = lazy(() => import("./pages/BadDay"));
 const Diagnoses = lazy(() => import("./pages/Diagnoses"));
-const AskToddy = lazy(() => import("./pages/AskToddy"));
 const Admin = lazy(() => import("./pages/Admin"));
 const Blog = lazy(() => import("./pages/Blog"));
 const BlogPost = lazy(() => import("./pages/BlogPost"));
@@ -286,18 +283,11 @@ const App = () => (
                 <AppLayout><CharacteristicDetail /></AppLayout>
               </ProtectedRoute>
             } />
-            <Route path="/community" element={<Navigate to="/forum" replace />} />
-            <Route path="/community/:threadId" element={<Navigate to="/forum/:threadId" replace />} />
-            <Route path="/forum" element={
-              <ProtectedRoute>
-                <AppLayout><Community /></AppLayout>
-              </ProtectedRoute>
-            } />
-            <Route path="/forum/:threadId" element={
-              <ProtectedRoute>
-                <AppLayout><CommunityThread /></AppLayout>
-              </ProtectedRoute>
-            } />
+            <Route path="/community" element={<Navigate to="/" replace />} />
+            <Route path="/community/:threadId" element={<Navigate to="/" replace />} />
+            <Route path="/forum" element={<Navigate to="/" replace />} />
+            <Route path="/forum/:threadId" element={<Navigate to="/" replace />} />
+
 
             <Route path="/mediciner" element={
               <ProtectedRoute>
@@ -344,11 +334,8 @@ const App = () => (
                 <AppLayout><Notifications /></AppLayout>
               </ProtectedRoute>
             } />
-            <Route path="/fraga" element={
-              <ProtectedRoute>
-                <AppLayout><AskToddy /></AppLayout>
-              </ProtectedRoute>
-            } />
+            <Route path="/fraga" element={<Navigate to="/" replace />} />
+
             <Route path="/admin" element={
               <ProtectedRoute>
                 <AppLayout><Admin /></AppLayout>
