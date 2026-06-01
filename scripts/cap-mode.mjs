@@ -37,6 +37,7 @@ if (mode === "local") {
   delete cfg.server;
   console.log("✅ capacitor.config.json -> LOCAL (bundled dist/, kör helt i appen)");
 } else {
+  console.warn("⚠️ REMOTE kan öppna webbinnehåll via server.url. Använd helst: npm run cap:dev:ios");
   cfg.server = { url: REMOTE_URL, cleartext: true };
   console.log(`✅ capacitor.config.json -> REMOTE (${REMOTE_URL})`);
 }
